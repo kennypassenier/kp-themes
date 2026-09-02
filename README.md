@@ -206,8 +206,8 @@ imports:
 Without it the switcher renders at 0×0 px with no error (found live in
 JobTracker's L0 demo, 2026-09-02; correction C3 there).
 
-## Known gap for English consumers
+## Labels in another language
 
-`ThemeSwitcher` renders the Dutch labels from `THEME_META` (Formeel, Licht,
-Donker, …) and has no `labels` prop yet; an English dashboard cannot rename
-them without forking the component. Planned for the next tag.
+`ThemeSwitcher` renders the Dutch labels from `THEME_META` by default; pass
+`labels={{ formal: 'Formal', light: 'Light', dark: 'Dark', cyberpunk: 'Cyberpunk', pastel: 'Pastel', terminal: 'Terminal', topo: 'Topographic' }}`
+to override any of them (v0.1.1).

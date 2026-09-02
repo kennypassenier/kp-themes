@@ -53,10 +53,12 @@ function CheckIcon({ className = '' }) {
  * @property {string} [label]         Accessible name of the trigger. Default: 'Thema kiezen'.
  * @property {string} [failedMessage] Shown when onChange refused the change. Default: 'Niet bewaard op de server — je keuze is teruggezet.'
  * @property {string} [className]     Extra classes on the wrapper.
+ * @property {Partial<Record<import('../hooks/use-theme.js').Theme, string>>} [labels]  Per-theme labels overriding the Dutch defaults (an English consumer passes its own).
  */
 
 /** @param {ThemeSwitcherProps} props */
 export default function ThemeSwitcher({
+    labels,
     themeOptions,
     label = 'Thema kiezen',
     failedMessage = 'Niet bewaard op de server — je keuze is teruggezet.',
@@ -129,7 +131,7 @@ export default function ThemeSwitcher({
                                     background: `linear-gradient(135deg, ${THEME_META[t].bg} 50%, ${THEME_META[t].primary} 50%)`,
                                 }}
                             />
-                            <span className="flex-1">{THEME_LABELS[t]}</span>
+                            <span className="flex-1">{labels?.[t] ?? THEME_LABELS[t]}</span>
                             {theme === t && <CheckIcon className="size-4" />}
                         </li>
                     ))}
