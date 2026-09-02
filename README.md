@@ -187,3 +187,27 @@ allow-git=root
 
 The package ships `.jsx` and `.js` sources for a bundler (Vite, esbuild);
 plain Node cannot import the `.jsx` files.
+
+## Tailwind consumers: add the package as a source
+
+Tailwind v4 generates only the utility classes it finds in the sources it
+scans, and it does not scan `node_modules`. The `ThemeSwitcher` and the fx
+components carry utility classes (`size-9`, `inline-flex`, …), so a Tailwind
+consumer must declare the package as a source in its CSS entry, next to the
+imports:
+
+```css
+@import 'tailwindcss';
+@source '../../../node_modules/@kp-soft/themes'; /* path relative to this file */
+@import '@kp-soft/themes/css';
+@import '@kp-soft/themes/css/tailwind-bridge';
+```
+
+Without it the switcher renders at 0×0 px with no error (found live in
+JobTracker's L0 demo, 2026-09-02; correction C3 there).
+
+## Known gap for English consumers
+
+`ThemeSwitcher` renders the Dutch labels from `THEME_META` (Formeel, Licht,
+Donker, …) and has no `labels` prop yet; an English dashboard cannot rename
+them without forking the component. Planned for the next tag.
