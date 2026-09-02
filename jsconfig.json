@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "noEmit": true
+    },
+    "include": ["index.js", "hooks", "components", "fx", "scripts"],
+    "exclude": ["node_modules"]
+}

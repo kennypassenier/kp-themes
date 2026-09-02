@@ -1,0 +1,336 @@
+/* @kp-soft/themes — css/cyberpunk-register.css
+   The cyberpunk register (CP-*): HUD chrome and motion, scoped to
+   [data-theme='cyberpunk'] and inert elsewhere. Opt-in: import it after
+   themes.css. The [data-slot='card'] / [data-slot='button'] selectors
+   are shadcn markup hooks; map them to your own selectors if you do not
+   use shadcn. Extracted from kp-soft resources/css/app.css at commit
+   2983abb on 2026-09-02. */
+
+/* ═══════════════════════════════════════════════════════════════════
+   Cyberpunk register (CP-*, chosen item by item on 2026-08-31; see
+   docs/FEATURES.md). Everything below is scoped to
+   [data-theme='cyberpunk'] and inert elsewhere. Guardrails: core text
+   passes AA without any glow, every animation sits inside
+   prefers-reduced-motion: no-preference, glow pulses animate opacity
+   on a pseudo-element only (never box-shadow directly).
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* CP-D1 + CP-D2: scanlines behind a CRT vignette, on the shared
+   texture layer (same machinery as the other registers). */
+[data-theme='cyberpunk'] {
+    --fx-texture:
+        radial-gradient(ellipse 120% 90% at 50% 45%, transparent 60%, hsl(262 60% 3% / 0.55) 100%),
+        repeating-linear-gradient(to bottom, hsl(190 80% 70% / 0.04) 0 1px, transparent 1px 3px);
+    --fx-texture-size: 100% 100%, auto;
+    --fx-texture-opacity: 1;
+}
+
+/* CP-A2: microlabels - uppercase mono with a diegetic prefix. The
+   class is a no-op in every other theme. */
+[data-theme='cyberpunk'] .microlabel {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted-foreground);
+}
+
+[data-theme='cyberpunk'] .microlabel::before {
+    content: '// ';
+    color: var(--accent);
+}
+
+/* CP-A5: neon caret in every input. */
+[data-theme='cyberpunk'] input,
+[data-theme='cyberpunk'] textarea {
+    caret-color: var(--primary);
+}
+
+/* CP-B4: card underglow - a neon line drawing itself along the bottom
+   edge on hover, instead of the wider shadow other themes use. */
+[data-theme='cyberpunk'] [data-slot='card'] {
+    position: relative;
+}
+
+[data-theme='cyberpunk'] [data-slot='card']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    background: var(--primary);
+    box-shadow: 0 0 12px var(--primary);
+    transition: width var(--fx-duration, 200ms) var(--fx-ease, ease);
+}
+
+[data-theme='cyberpunk'] [data-slot='card']:hover::after {
+    width: 100%;
+}
+
+/* CP-C1: the single clipped corner, bottom-right, cards and buttons. */
+[data-theme='cyberpunk'] [data-slot='card'],
+[data-theme='cyberpunk'] .fx-notch {
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch, 0px)), calc(100% - var(--fx-notch, 0px)) 100%, 0 100%);
+}
+
+[data-theme='cyberpunk'] [data-slot='button'] {
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+}
+
+/* CP-F2: button "charge" - a skewed light band sweeps through on
+   hover. Background-position only; no stacking-context tricks. */
+[data-theme='cyberpunk'] [data-slot='button'] {
+    background-image: linear-gradient(105deg, transparent 0 42%, hsl(180 95% 50% / 0.22) 42% 58%, transparent 58% 100%);
+    background-size: 280% 100%;
+    background-position: 105% 0;
+    background-repeat: no-repeat;
+    transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
+}
+
+[data-theme='cyberpunk'] [data-slot='button']:hover {
+    background-position: -5% 0;
+}
+
+/* CP-C2: HUD corner brackets (target lock) - top-left + bottom-right,
+   asymmetric like the notch. Applied to the focused puzzle cell. */
+[data-theme='cyberpunk'] .fx-brackets {
+    position: relative;
+}
+
+[data-theme='cyberpunk'] .fx-brackets::before,
+[data-theme='cyberpunk'] .fx-brackets::after {
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    pointer-events: none;
+}
+
+[data-theme='cyberpunk'] .fx-brackets::before {
+    top: -3px;
+    left: -3px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+}
+
+[data-theme='cyberpunk'] .fx-brackets::after {
+    bottom: -3px;
+    right: -3px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+}
+
+/* CP-C3: hairline connector after section headings, with a diamond
+   node at the joint - the HUD wireframe feel. */
+[data-theme='cyberpunk'] .fx-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+[data-theme='cyberpunk'] .fx-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+}
+
+[data-theme='cyberpunk'] .fx-rule::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex: none;
+    background: var(--primary);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+/* CP-F1: the scrollbar joins the theme. */
+[data-theme='cyberpunk'] {
+    scrollbar-color: hsl(315 95% 64% / 0.55) hsl(258 40% 8%);
+    scrollbar-width: thin;
+}
+
+[data-theme='cyberpunk'] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+[data-theme='cyberpunk'] ::-webkit-scrollbar-track {
+    background: hsl(258, 40%, 8%);
+}
+
+[data-theme='cyberpunk'] ::-webkit-scrollbar-thumb {
+    background: hsl(315 95% 64% / 0.5);
+    border: 2px solid hsl(258, 40%, 8%);
+}
+
+[data-theme='cyberpunk'] ::-webkit-scrollbar-thumb:hover {
+    background: hsl(315, 95%, 64%);
+}
+
+/* CP-B1: signal-yellow badge for the rare thing that demands eyes. */
+[data-theme='cyberpunk'] .fx-signal-badge {
+    background: var(--fx-signal) !important;
+    color: var(--fx-signal-foreground) !important;
+    border-color: transparent !important;
+}
+
+/* ── Motion (all inside the reduced-motion guard) ─────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* CP-B3: neon tube flicker - runs once when the class mounts. */
+    [data-theme='cyberpunk'] .fx-flicker {
+        animation: fx-flicker 1.1s linear 1 both;
+    }
+
+    /* CP-B2: pulsing glow lives on a pseudo-element and animates ONLY
+       opacity (animated box-shadow re-blurs every frame). */
+    [data-theme='cyberpunk'] .fx-pulse {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .fx-pulse::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        pointer-events: none;
+        box-shadow: 0 0 24px var(--primary);
+        opacity: 0.3;
+        animation: fx-pulse 2.6s ease-in-out infinite;
+    }
+
+    /* CP-A4: chromatic-aberration glitch on headings, hover-triggered,
+       never permanent. Needs data-text mirroring the heading. */
+    [data-theme='cyberpunk'] .fx-glitch {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .fx-glitch:hover::before,
+    [data-theme='cyberpunk'] .fx-glitch:hover::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: none;
+        -webkit-background-clip: initial;
+        background-clip: initial;
+    }
+
+    [data-theme='cyberpunk'] .fx-glitch:hover::before {
+        color: hsl(315, 95%, 64%);
+        animation: fx-glitch-a 340ms steps(2) 1 both;
+    }
+
+    [data-theme='cyberpunk'] .fx-glitch:hover::after {
+        color: hsl(180, 95%, 50%);
+        animation: fx-glitch-b 340ms steps(2) 1 both;
+    }
+
+    /* CP-F3: one short RGB split on image hover, then stillness. */
+    [data-theme='cyberpunk'] .fx-media:hover img,
+    [data-theme='cyberpunk'] .fx-media:hover iframe {
+        animation: fx-rgb-split 170ms steps(2) 1;
+    }
+
+    /* CP-F4: entering a puzzle value flashes cyan for one beat. */
+    [data-theme='cyberpunk'] .fx-cellpop {
+        animation: fx-cellflash 200ms steps(2) 1;
+    }
+}
+
+@keyframes fx-flicker {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    8% {
+        opacity: 0.35;
+    }
+    12% {
+        opacity: 1;
+    }
+    20% {
+        opacity: 0.6;
+    }
+    24% {
+        opacity: 1;
+    }
+    54% {
+        opacity: 0.85;
+    }
+    58% {
+        opacity: 1;
+    }
+}
+
+@keyframes fx-pulse {
+    50% {
+        opacity: 0.65;
+    }
+}
+
+@keyframes fx-glitch-a {
+    0% {
+        transform: translate(-2px, -1px);
+        clip-path: inset(12% 0 58% 0);
+    }
+    40% {
+        transform: translate(2px, 1px);
+        clip-path: inset(62% 0 8% 0);
+    }
+    80% {
+        transform: translate(-1px, 0);
+        clip-path: inset(35% 0 42% 0);
+    }
+    100% {
+        transform: none;
+        clip-path: inset(0 0 100% 0);
+    }
+}
+
+@keyframes fx-glitch-b {
+    0% {
+        transform: translate(2px, 1px);
+        clip-path: inset(55% 0 15% 0);
+    }
+    40% {
+        transform: translate(-2px, -1px);
+        clip-path: inset(10% 0 70% 0);
+    }
+    80% {
+        transform: translate(1px, 0);
+        clip-path: inset(45% 0 30% 0);
+    }
+    100% {
+        transform: none;
+        clip-path: inset(100% 0 0 0);
+    }
+}
+
+@keyframes fx-rgb-split {
+    0% {
+        filter: drop-shadow(2px 0 0 hsl(315 95% 64% / 0.8)) drop-shadow(-2px 0 0 hsl(180 95% 50% / 0.8));
+        transform: translateX(1px);
+    }
+    50% {
+        filter: drop-shadow(-2px 0 0 hsl(315 95% 64% / 0.8)) drop-shadow(2px 0 0 hsl(180 95% 50% / 0.8));
+        transform: translateX(-1px);
+    }
+    100% {
+        filter: none;
+        transform: none;
+    }
+}
+
+@keyframes fx-cellflash {
+    0% {
+        color: var(--accent);
+        text-shadow: 0 0 14px var(--accent);
+    }
+    100% {
+        text-shadow: none;
+    }
+}

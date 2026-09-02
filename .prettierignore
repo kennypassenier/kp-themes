@@ -1,0 +1,4 @@
+# Verbatim copies from kp-soft - not reformatted here.
+docs/
+node_modules/
+package-lock.json
