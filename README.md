@@ -174,3 +174,16 @@ additions are the status tokens and the de-Inertia'd hook API. The
 - The Tailwind `@apply` lines, `@plugin 'tailwindcss-animate'`, the
   `@source` for Laravel pagination, and the `.animate-float` utility.
 - A license (private package; decided in this project's Phase 3).
+
+## Installing from the git tag (npm 12)
+
+npm 12 refuses git dependencies unless the consumer opts in. Put this
+in the consumer's `.npmrc` (measured 2026-09-02: `root` installs, `none`
+refuses; the setting accepts only `all`, `none`, `root`):
+
+```
+allow-git=root
+```
+
+The package ships `.jsx` and `.js` sources for a bundler (Vite, esbuild);
+plain Node cannot import the `.jsx` files.
