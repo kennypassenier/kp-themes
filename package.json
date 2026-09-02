@@ -1,52 +1,52 @@
 {
-  "name": "@kp-soft/themes",
-  "version": "0.1.1",
-  "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
-  "private": true,
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kennypassenier/kp-themes.git"
-  },
-  "sideEffects": [
-    "*.css"
-  ],
-  "exports": {
-    ".": "./index.js",
-    "./fx": "./fx/index.js",
-    "./css": "./css/themes.css",
-    "./css/tailwind-bridge": "./css/tailwind-bridge.css",
-    "./css/register": "./css/cyberpunk-register.css",
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "index.js",
-    "hooks",
-    "components",
-    "fx",
-    "css",
-    "scripts",
-    "docs",
-    "README.md"
-  ],
-  "scripts": {
-    "check:contrast": "node scripts/check-contrast.mjs",
-    "format": "prettier --write .",
-    "gates": "npm run check:contrast && prettier --check ."
-  },
-  "peerDependencies": {
-    "motion": ">=12",
-    "react": ">=19"
-  },
-  "peerDependenciesMeta": {
-    "motion": {
-      "optional": true
+    "name": "@kp-soft/themes",
+    "version": "0.1.1",
+    "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
+    "private": true,
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kennypassenier/kp-themes.git"
+    },
+    "sideEffects": [
+        "*.css"
+    ],
+    "exports": {
+        ".": "./index.js",
+        "./fx": "./fx/index.js",
+        "./css": "./css/themes.css",
+        "./css/tailwind-bridge": "./css/tailwind-bridge.css",
+        "./css/register": "./css/cyberpunk-register.css",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "index.js",
+        "hooks",
+        "components",
+        "fx",
+        "css",
+        "scripts",
+        "docs",
+        "README.md"
+    ],
+    "scripts": {
+        "check:contrast": "node scripts/check-contrast.mjs",
+        "format": "prettier --write .",
+        "gates": "npm run check:contrast && prettier --check ."
+    },
+    "peerDependencies": {
+        "motion": ">=12",
+        "react": ">=19"
+    },
+    "peerDependenciesMeta": {
+        "motion": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "prettier": "^3.4.2"
+    },
+    "engines": {
+        "node": ">=26 <27"
     }
-  },
-  "devDependencies": {
-    "prettier": "^3.4.2"
-  },
-  "engines": {
-    "node": ">=26 <27"
-  }
 }
