@@ -15,7 +15,7 @@ Private git dependency, pinned to a tag (no registry):
 
 ```json
 "dependencies": {
-    "@kp-soft/themes": "github:kennypassenier/kp-themes#v0.1.0"
+    "@kp-soft/themes": "github:kennypassenier/kp-themes#v0.1.1"
 }
 ```
 
@@ -173,16 +173,19 @@ additions are the status tokens and the de-Inertia'd hook API. The
   `page-glitch`.
 - The Tailwind `@apply` lines, `@plugin 'tailwindcss-animate'`, the
   `@source` for Laravel pagination, and the `.animate-float` utility.
-- A license (private package; decided in this project's Phase 3).
+- A license. The repository is public (SCOPE S8); the licence itself is
+  decided in this project's Phase 3.
 
 ## Installing from the git tag (npm 12)
 
 npm 12 refuses git dependencies unless the consumer opts in. Put this
-in the consumer's `.npmrc` (measured 2026-09-02: `root` installs, `none`
-refuses; the setting accepts only `all`, `none`, `root`):
+in the consumer's `.npmrc` (the setting accepts only `all`, `none`,
+`root`; `none` refuses). Use `all`, not `root`: `root` covers only the
+root package, so it does not reach a package declared inside a
+workspace — which is how JobTracker, the one npm consumer, declares it.
 
 ```
-allow-git=root
+allow-git=all
 ```
 
 The package ships `.jsx` and `.js` sources for a bundler (Vite, esbuild);
