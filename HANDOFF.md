@@ -1,65 +1,59 @@
 # Handoff — kp-themes
 
-Startprompt voor een nieuwe Claude-sessie, geopend in `/home/kenny/Projects/kp-themes`:
+Startprompt voor een nieuwe Claude-sessie, geopend in
+`/home/kenny/Projects/kp-themes`:
 
 ---
 
-Dit is **kp-themes** (🎨), het npm-package `@kp-soft/themes` met de huisthema's.
+Dit is **kp-themes** (🎨), het npm-package `@kp-soft/themes`: de
+thuisbasis van de huisthema's en de referentie waar al Kenny's projecten
+naar wijzen zodat zijn apps er als één familie uitzien. Web vandaag, GUI
+(Avalonia) en TUI (Ratatui) later.
 
-**Waar het staat (2026-09-03):** Fase 0 van de dev-procedure LOOPT. Het
-scope-concept is geschreven en gecommit; de goedkeuringsgate is nog niet
-beantwoord. Lees in deze volgorde:
+**Waar het staat (2026-09-03):** Fase 0 is AF. De scope-gate is in vijf
+rondes beantwoord — achttien stellingen plus B1 — en het resultaat staat
+in `docs/SCOPE.md`. Er liep in diezelfde sessie ook één correctieronde
+(KT1), die is goedgekeurd. Lees in deze volgorde:
 
-1. `docs/SCOPE.md` — tien stellingen S1 t/m S10, gemarkeerd als DRAFT.
-   Dit is wat er goedgekeurd moet worden. Niet opnieuw afleiden, het
-   staat er al.
-2. `docs/REQUESTS_FROM_CONSUMERS.md` — geschreven door de
-   JobTracker-sessie (💼) op 2026-09-03, elke bewering gemeten. Dit is de
-   aanleiding voor het hele gesprek.
-3. `CLAUDE.md` en `README.md` in deze map.
+1. `CLAUDE.md` — het statusblok, de projectregel uit KT1, en wat Fase 1
+   en 2 erven.
+2. `docs/SCOPE.md` — de goedgekeurde scope. Niet heropenen buiten een
+   mini-ronde om.
+3. `docs/MINI_ROUNDS.md` — één openstaande meting (KT1-M1), die afgaat
+   bij het beslissingsformulier van Fase 2.
+4. `docs/REQUESTS_FROM_CONSUMERS.md` — waar dit alles mee begon.
 
-**De eerstvolgende stap is de Fase 0-gate**: één goedkeuringsformulier
-over die tien stellingen, per stelling `Klopt · Aanpassen · Schrappen ·
-Eigen antwoord`, plus een "mist er iets?"-item en een opmerkingenveld —
-volgens `~/Projects/dev-procedure/FORM_PROTOCOL.md`, dat je vers van
-schijf herleest vóór je het formulier bouwt.
+**De eerstvolgende stap is Fase 1: inventarisatie.** Dat is een
+brownfield-fase, dus de `inventory-scout`-subagent veegt de codebase door
+en levert de volledige lijst van wat er is. Fase 1 heeft géén eigen gate;
+die lijst is het ruwe materiaal voor het beslissingsformulier van Fase 2.
+Let bij die inventarisatie op wat S17 al vastlegt: de zeven thema's, de
+cyberpunk-fx, het register, de contrastcontrole en de Tailwind-koppeling
+zijn goedgekeurd voor gebruik; de picker is dat niet.
 
-**Waarom deze sessie in Claude Desktop hoort en niet in de Claude Code
-CLI:** de CLI heeft geen visualize-MCP, dus daar degraderen formulieren
-tot platte tekst. Gemeten: `~/.claude.json` bevat alleen `obsidian` en
-`home-assistant`, en `claude_desktop_config.json` heeft helemaal geen
-`mcpServers`-blok, dus visualize is een Desktop-connector en geen lokaal
-geconfigureerde server. Werkt het elicitation-widget hier ook niet, zeg
-dat dan expliciet en val terug op één gestructureerd tekstbericht
-(FORM_PROTOCOL §7) — niet op een zelfgebouwde widget.
+**Wat er in Fase 2 hoe dan ook op tafel ligt:** de ontbrekende tokens uit
+S6b (`--success`, `--warning`, `--info`, en hover/active/disabled), de
+herstructurering uit S18, de componentenset v1 uit S14, en de zeven
+anatomie-docs uit S12.
 
-**Waar het over gaat.** Drie consumenten gebruiken deze thema's nu. Twee
-ervan (📅 Almanac en 📬 kyu) hebben op 2026-09-03 binnen hetzelfde uur
-onafhankelijk dezelfde theme picker in vanilla JS nagebouwd, omdat de
-meegeleverde `ThemeSwitcher` React is en hun dashboards server-rendered
-HTML met Bootstrap 5 zijn. kyu heeft zijn versie uitgebracht in 2.2.0.
-Daarnaast bereikt de contrast-gate de consumenten niet, terwijl T17 dat
-wel beloofde.
-↳ _T17 = de beslissing in JobTracker Fase 3 (2026-09-02) die dit package
-liet ontstaan, met "elke consumer draait de contrast-gate op een
-versiebump" erin._
+**Over formulieren:** het elicitation-widget wérkt in de Claude Code CLI —
+dat is in de Fase 0-sessie gemeten, in tegenstelling tot wat hier eerder
+stond. Deze sessie hoeft dus niet naar Claude Desktop te verhuizen.
+Herlees `~/Projects/dev-procedure/FORM_PROTOCOL.md` vers van schijf vóór
+je een formulier bouwt, en houd je aan de projectregel uit KT1: elke
+controleerbare bewering in de uitleg van een formulier wordt in dezelfde
+beurt nagekeken, met bestand en regelnummer erbij.
 
-**Wat er al staat (v0.1.1):** een extractie uit kp-soft (commit
-`2983abb`): de zeven thema's (formal, light, dark, cyberpunk, pastel,
-terminal, topo) als CSS custom properties in `css/themes.css`, de
-Tailwind v4 bridge in `css/tailwind-bridge.css`, het cyberpunk-register
-in `css/cyberpunk-register.css`, de React-hook `useTheme` +
-`ThemeSwitcher` (zonder Inertia, met `onChange`-callback en een
-`labels`-prop), de vier cyberpunk fx-componenten in `fx/`, en
-`scripts/check-contrast.mjs` als contrast-gate. Nieuw t.o.v. kp-soft:
-zeven `--status-*`-tokenparen per thema voor JobTracker. `npm run gates`
-(contrast + prettier) moet groen zijn vóór elke commit.
-
-**Onderzoek:** het themaonderzoek uit kp-soft staat letterlijk in `docs/`
-(`THEMING.md`, `CYBERPUNK_THEME_RESEARCH.md`); vanaf nu is kp-themes de
-thuisbasis van de huisthema's.
+**Wat er technisch staat (v0.1.1):** een extractie uit kp-soft (commit
+`2983abb`): de zeven thema's als CSS custom properties in
+`css/themes.css`, de Tailwind-koppeling in `css/tailwind-bridge.css`, het
+cyberpunk-register in `css/cyberpunk-register.css`, de React-hook
+`useTheme` plus `ThemeSwitcher`, de vier cyberpunk fx-componenten in
+`fx/`, en `scripts/check-contrast.mjs` als contrastcontrole. `npm run
+gates` moet groen zijn vóór elke commit.
 
 ---
 
 Lees `~/Projects/dev-procedure/` (skill `/project-flow`) vóór je iets
-doet, en hernoem de sessie naar `🎨 kp-themes - Fase 0 - Idea & scope`.
+doet, en hernoem de sessie naar `🎨 kp-themes - Fase 1 - Inventory en
+exploration`.
