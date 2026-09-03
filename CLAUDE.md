@@ -51,7 +51,7 @@ session; its pending measurement sits in `docs/MINI_ROUNDS.md`.
 The gate ran in this Claude Code CLI session: the visualize elicitation
 widget was available here, contrary to what `HANDOFF.md` assumed.
 
-## What Phase 1 and 2 inherit
+## What the build phases inherit
 
 - **Approved for use (S17):** the seven themes, the cyberpunk fx, the
   register, the contrast check, the Tailwind binding.
