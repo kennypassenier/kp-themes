@@ -70,6 +70,8 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | HANDOFF.md                       | start prompt for a procedure session (Dutch)             |
 | docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                  |
 | docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                 |
+| docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                 |
+| docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups         |
 | docs/CORRECTIONS.md              | live-found faults and their approved measures            |
 | docs/MINI_ROUNDS.md              | open measurements and mini-rounds                        |
 | docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                 |
