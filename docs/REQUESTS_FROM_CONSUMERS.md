@@ -45,6 +45,63 @@ right now, and it costs three implementations that will drift.
 Whoever picks this up: talk to `almanac-1b` and `kyu-8a` first — they are
 mid-build and know exactly which parts they had to invent.
 
+### What kyu (📬) ended up building, 2026-09-03
+
+No longer mid-build: kyu shipped this in its 2.2.0 and Kenny approved
+moving it into this package. What follows is the working shape, so a
+kp-themes session starts from something proven rather than re-deriving
+it. It is offered, not imposed — the package may well want a different
+API.
+
+**The one design decision worth keeping.** kyu carries *no theme list in
+JavaScript at all*. The seven themes live once in its Rust source, are
+rendered server-side into the picker, and the script reads what it needs
+off that markup. That is what removes the failure mode named above: there
+is no second copy to go stale after an eighth theme is added. For a
+package-shipped picker the equivalent would be to derive the list from
+the DOM it is given, or from `THEME_META` if the consumer can import it —
+never from a literal in the picker.
+
+**The markup contract the script expects.** Any server that renders this
+shape can use the same script unchanged:
+
+```html
+<div data-theme-picker>
+  <button data-theme-trigger aria-haspopup="listbox" aria-expanded="false">…</button>
+  <ul data-theme-list role="listbox" hidden>
+    <li role="option" tabindex="0" data-theme="cyberpunk" data-dark="true"
+        aria-selected="false">…swatch…label…check…</li>
+  </ul>
+</div>
+```
+
+`data-dark` on each option is what lets the script toggle the `dark`
+class without knowing which themes are dark.
+
+**What it does beyond the React switcher**, because a non-Tailwind
+consumer needs it: it also sets `data-bs-theme` to `dark` or `light` on
+`<html>`. Without that, Bootstrap's own components stay light while the
+tokens go dark. A package-shipped picker probably wants this as an
+option rather than always-on.
+
+**Two things that cost kyu time and are not in the README.** First, the
+no-flash snippet has to run in `<head>` before first paint, and it must
+stay dumb — kyu's reads `localStorage` and sets `data-theme`, nothing
+more, because anything it knew about which themes are dark would be a
+second copy of that knowledge. The script settles the `dark` class a few
+milliseconds later. Second, the Bunny Fonts link is not optional for
+`formal`, `cyberpunk` and `terminal`: without it they fall back to
+Georgia and a generic monospace, and cyberpunk in particular reads as
+half-applied. That is in the README but easy to miss when you arrive via
+`themes.css`.
+
+The files are in `~/Projects/kyu`: `static/theme.js` (behaviour, ~130
+lines, no dependencies), `static/theme-bridge.css` (the Bootstrap
+mapping, which is consumer-specific and probably does NOT belong in the
+package), and `templates/layout.html` for the markup. The almanac session
+is taking the same shape, so a package version would replace two
+identical implementations rather than one.
+
 ## 2 · The contrast gate does not reach the consumers
 
 `scripts/check-contrast.mjs` here covers all seven themes including the
