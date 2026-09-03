@@ -26,10 +26,15 @@ This project follows the dev procedure in `~/Projects/dev-procedure/`
 
 | Field               | Value                                                    |
 | ------------------- | -------------------------------------------------------- |
-| Current phase       | not started (v0.1 extraction done outside the procedure) |
+| Current phase       | 0 — Idea & scope (draft written, gate open)              |
 | Last completed gate | none                                                     |
-| Next gate           | Phase 0 scope form (`/project-flow start`)               |
+| Next gate           | Phase 0 approval form over the 10 statements in SCOPE.md |
 | AFK mode            | off                                                      |
+
+Phase 0 started 2026-09-03. `docs/SCOPE.md` holds the drafted statements
+(S1-S10), marked DRAFT until Kenny answers the approval form. That form
+needs the elicitation widget, which the Claude Code CLI has no MCP server
+for — the gate therefore runs in a Claude Desktop session.
 
 ## Project documents
 
