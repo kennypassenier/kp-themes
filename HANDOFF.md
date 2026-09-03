@@ -4,6 +4,16 @@ Startprompt voor een nieuwe Claude-sessie, geopend in `/home/kenny/Projects/kp-t
 
 ---
 
+**Eerst lezen (2026-09-03):** `docs/REQUESTS_FROM_CONSUMERS.md`. Drie
+consumenten gebruiken deze thema's nu, en twee ervan (📅 Almanac en 📬 kyu)
+bouwen op dit moment onafhankelijk dezelfde theme picker na in vanilla JS,
+omdat de meegeleverde switcher React is en hun dashboards server-rendered
+HTML zijn. Daar staat ook waarom de contrast-gate de consumenten niet
+bereikt terwijl T17 dat wel beloofde. Kenny wil dat vanuit dít project
+gecoördineerd worden.
+
+---
+
 Dit is **kp-themes** (🎨), het npm-package `@kp-soft/themes` met de huisthema's.
 
 **Wat er al staat (v0.1.0, 2026-09-02):** een pure extractie uit kp-soft
