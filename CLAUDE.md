@@ -35,14 +35,16 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                                                |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| Current phase       | 0 — Idea & scope, complete                                                           |
-| Last completed gate | Phase 0 approval, 2026-09-03 (18 statements + B1, 5 rounds)                          |
-| Next gate           | Phase 2 feature decisions; Phase 1 is a brownfield inventory with no gate of its own |
-| AFK mode            | off                                                                                  |
+| Field               | Value                                                                            |
+| ------------------- | -------------------------------------------------------------------------------- |
+| Current phase       | 1 — Inventory & exploration, complete                                            |
+| Last completed gate | Phase 0 approval, 2026-09-03 (18 statements + B1, 5 rounds); Phase 1 has no gate |
+| Next gate           | Phase 2 feature decisions — two rating rounds plus the four mandatory items      |
+| AFK mode            | off                                                                              |
 
-Phase 0 ran on 2026-09-03 and is closed. `docs/SCOPE.md` holds the
+Phase 1 ran on 2026-09-03: `docs/INVENTORY.md` holds 99 units of behaviour
+across six ID groups, plus the ecosystem consultation that feeds Phase 2's
+mandatory item. Phase 0 ran the same day and is closed. `docs/SCOPE.md` holds the
 approved statements. Correction KT1 was raised and approved in the same
 session; its pending measurement sits in `docs/MINI_ROUNDS.md`.
 
@@ -67,6 +69,7 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | README.md                        | how to consume the package, tokens, provenance           |
 | HANDOFF.md                       | start prompt for a procedure session (Dutch)             |
 | docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                  |
+| docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                 |
 | docs/CORRECTIONS.md              | live-found faults and their approved measures            |
 | docs/MINI_ROUNDS.md              | open measurements and mini-rounds                        |
 | docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                 |
