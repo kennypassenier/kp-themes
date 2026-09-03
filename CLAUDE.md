@@ -35,18 +35,20 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                                            |
-| ------------------- | -------------------------------------------------------------------------------- |
-| Current phase       | 1 — Inventory & exploration, complete                                            |
-| Last completed gate | Phase 0 approval, 2026-09-03 (18 statements + B1, 5 rounds); Phase 1 has no gate |
-| Next gate           | Phase 2 feature decisions — two rating rounds plus the four mandatory items      |
-| AFK mode            | off                                                                              |
+| Field               | Value                                                             |
+| ------------------- | ----------------------------------------------------------------- |
+| Current phase       | 2 — Features, frozen 2026-09-04                                   |
+| Last completed gate | Phase 2 freeze, 2026-09-04 (35 features, 12 invariants, 4 rounds) |
+| Next gate           | Phase 3 tech choice                                               |
+| AFK mode            | off                                                               |
 
-Phase 1 ran on 2026-09-03: `docs/INVENTORY.md` holds 99 units of behaviour
-across six ID groups, plus the ecosystem consultation that feeds Phase 2's
-mandatory item. Phase 0 ran the same day and is closed. `docs/SCOPE.md` holds the
-approved statements. Correction KT1 was raised and approved in the same
-session; its pending measurement sits in `docs/MINI_ROUNDS.md`.
+Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
+29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
+the freeze, and `docs/DESIGN_INVARIANTS.md` holds the eleven rules that must
+hold in every theme together with a compliance table showing what the seven
+themes fail today. Phases 0 and 1 ran on 2026-09-03; `docs/SCOPE.md` holds the
+approved scope and `docs/INVENTORY.md` the 99 inventoried units. Correction
+KT1 and its follow-up sit in `docs/MINI_ROUNDS.md`.
 
 The gate ran in this Claude Code CLI session: the visualize elicitation
 widget was available here, contrary to what `HANDOFF.md` assumed.
@@ -70,6 +72,7 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | HANDOFF.md                       | start prompt for a procedure session (Dutch)             |
 | docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                  |
 | docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                 |
+| docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)    |
 | docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                 |
 | docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups         |
 | docs/CORRECTIONS.md              | live-found faults and their approved measures            |
