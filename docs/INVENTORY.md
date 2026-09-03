@@ -231,10 +231,20 @@ cyberpunk `'Chakra Petch', 'JetBrains Mono', …` (:227), terminal
 `'Share Tech Mono', …` (:344). In plain CSS the token is read exactly
 once, at `css/themes.css:485`, and only for `[data-theme='formal'] h1, h2`
 (T18). Cyberpunk's and terminal's display faces are therefore never
-applied by this stylesheet; they reach a page only via the Tailwind
-`--font-display` alias (B5) and a consumer writing `font-display` on an
-element. Half-built in the plain-CSS channel, complete in the Tailwind
-channel. The fonts themselves are not shipped (see "External
+applied by this stylesheet. The package offers two ways to reach them:
+the Tailwind `--font-display` alias (B5), or a consumer writing its own
+rule that reads the token.
+
+**Both plain-CSS consumers took the second route, independently and
+identically** (measured 2026-09-03). `~/Projects/kyu/static/theme-bridge.css:39-41`
+and `~/Projects/almanac/static/theme-bridge.css:53` both carry
+`h1, h2, h3, .h1, .h2, .h3, .navbar-brand { font-family: var(--theme-font-display, inherit); }`,
+and kyu's `templates/layout.html:26-27` loads the Bunny Fonts stylesheet
+including chakra-petch. So Chakra Petch **is** applied on the live kyu
+dashboard. The gap is not that the display face fails to arrive; it is
+that arriving takes two hand-written lines each consumer had to invent
+for itself — the same drift the framework-free picker exists to stop,
+in a second place. The fonts themselves are not shipped (see "External
 dependencies").
 
 ### T9 · `--font-sans` override in terminal
@@ -247,6 +257,18 @@ terminal block. No rule in `css/themes.css` or
 its own comment ("everything is mono", :293) holds only for a Tailwind
 consumer that uses `font-sans`, not for a plain-CSS or Bootstrap
 consumer.
+
+**And the two plain-CSS consumers ask for a token this package does not
+publish** (measured 2026-09-03). Both
+`~/Projects/kyu/static/theme-bridge.css:34` and
+`~/Projects/almanac/static/theme-bridge.css:47` set the body font from
+`var(--theme-font-body, var(--bs-font-sans-serif))`. `--theme-font-body`
+occurs zero times in `css/` here and zero times in either vendored copy,
+so both fall through to Bootstrap's sans-serif every time. Two consumers
+independently invented the same missing token name, which is a strong
+signal the package should publish it: kp-themes expresses "terminal's
+body is monospace" as `--font-sans`, a name neither consumer thinks to
+read.
 
 ### T10 · `--fx-signal` / `--fx-signal-foreground`
 
