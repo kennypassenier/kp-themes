@@ -14,6 +14,9 @@ import { readFileSync } from 'node:fs';
 import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
+import { checkStateVisibility, themes } from './check-invariants.mjs';
+
+/** @typedef {import('./check-invariants.mjs').Theme} Theme */
 
 test('AR8-D1: theme discovery finds a name containing a hyphen', () => {
     const css = "[data-theme='high-contrast'] {\n    --background: hsl(0, 0%, 100%);\n}";
@@ -105,4 +108,33 @@ test('DI7: a transition inside a no-preference guard is not reported', () => {
 test('DI7: a transition after a guard block has closed is reported', () => {
     const css = '@media (prefers-reduced-motion: no-preference) {\n  .a { transition: opacity 1s; }\n}\n.b {\n  transition: color 1s;\n}\n';
     assert.equal(unguardedMotion(css).length, 1);
+});
+
+// KT2, standing rule 8: the fault becomes a failing test before the fix.
+// This asserts the fault as it stands today, so the day the derivation is
+// repaired this test fails and has to be rewritten into its opposite —
+// which is the point. It is not a test of desired behaviour.
+
+test('KT2: the pressed state is invisible in the two opt-out themes', () => {
+    const opted = themes().filter(/** @param {Theme} t */ (t) => ['cyberpunk', 'terminal'].includes(t.name));
+    assert.equal(opted.length, 2, 'cyberpunk and terminal are the themes that took the smaller step');
+    for (const theme of opted) {
+        assert.ok(
+            checkStateVisibility(theme).length > 0,
+            `${theme.name} is expected to fail state visibility until KT2's fix lands; if it passes, rewrite this test`,
+        );
+    }
+});
+
+test('KT2: the five other themes clear the floor, give or take a hair', () => {
+    // light's --destructive-active lands at 9.996 — under a floor of 10 by
+    // four thousandths. Recorded rather than rounded away: it is the reason
+    // the correction form asks whether the floor is 10 or 9.5.
+    const others = themes().filter(/** @param {Theme} t */ (t) => !['cyberpunk', 'terminal'].includes(t.name));
+    const failures = others.flatMap(/** @param {Theme} t */ (t) => checkStateVisibility(t).map((p) => `${t.name}: ${p}`));
+    assert.deepEqual(
+        failures.map(/** @param {string} f */ (f) => f.split(':')[0]),
+        ['light'],
+        'only light is expected to graze the floor',
+    );
 });

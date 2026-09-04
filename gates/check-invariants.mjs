@@ -168,6 +168,46 @@ export function checkFocusRing(theme) {
     return problems;
 }
 
+/**
+ * KT2: a state nobody can see is not a state.
+ *
+ * Every derived state was checked for whether its own text still reads
+ * (checkStates below), and nothing ever asked the other question —
+ * whether the state differs perceptibly from the colour it came from. It
+ * does not: measured 2026-09-04, the pressed state lands 10.0 to 12.1
+ * from its base in five themes and 2.6 to 8.4 in cyberpunk and terminal,
+ * the two that took DI3's smaller-step opt-out.
+ *
+ * The floor is the pressed state only. Hover is deliberately subtle in
+ * every theme (2.4 to 3.4 here, which is the same order as Material's 8%
+ * state layer), and a floor that failed it would be arguing with every
+ * design system rather than with this one's own inconsistency.
+ *
+ * Not wired into the run yet: it fails today, on purpose. Standing rule 8
+ * says a live-found fault becomes a failing test before the fix, and the
+ * fix is Kenny's to approve (correction KT2).
+ *
+ * @param {Theme} theme
+ */
+export function checkStateVisibility(theme) {
+    const problems = [];
+    const dark = theme.tokens['color-scheme'] === 'dark';
+    const stepL = theme.derivation?.stepL ?? config.derivation.stepL;
+    const floor = config.stateVisibilityFloor?.value ?? 10;
+    for (const surface of INTERACTIVE) {
+        const base = theme.tokens[surface];
+        if (base === undefined) continue;
+        const active = derive(base, config.derivation.active, { towardsLight: dark, stepL });
+        const seen = distance(hsl(base), hsl(active));
+        if (seen < floor) {
+            problems.push(
+                `--${surface}-active is only ${seen.toFixed(1)} from --${surface} (floor ${floor}); pressing the control changes nothing anyone can see`,
+            );
+        }
+    }
+    return problems;
+}
+
 const INTERACTIVE = ['primary', 'secondary', 'accent', 'destructive'];
 
 /**

@@ -135,6 +135,7 @@ load is exactly what a file check reports as success.
 | Phase 4 freeze     | 2026-09-04 | AR0-AR16, after a critic pass                              | `docs/ARCHITECTURE_DECISIONS.md`                   |
 | Phase 5            | 2026-09-04 | eleven milestones, H1, H2, standing rules                  | this document                                      |
 | L0                 | 2026-09-04 | six report items, all signed off                           | this document                                      |
+| Toon-mij-dit round | 2026-09-04 | L2, L5, L6, L7 signed off after Kenny saw them; L7 signed off knowing the state-visibility fault runs separately | this document, `docs/CORRECTIONS.md` |
 | AFK report L1-L10  | 2026-09-04 | L1, L3, L4, L8, L9, L10 signed off; L2, L5, L6, L7 answered "toon mij dit"; both queued deviations go to their own mini-rounds; Pages switched on | this document, `docs/MINI_ROUNDS.md`               |
 
 ## Status
@@ -143,12 +144,12 @@ load is exactly what a file check reports as success.
 | --------- | --------------------------------------- |
 | L0        | **closed** 2026-09-04, all six report items signed off |
 | L1        | **closed** 2026-09-04, signed off in the AFK report |
-| L2        | built; Kenny asked to see the seven documents before signing off |
+| L2        | **closed** 2026-09-04, signed off after Kenny read the seven documents |
 | L3        | **closed** 2026-09-04, signed off in the AFK report; L3-EXIT goes to its own mini-round |
 | L4        | **closed** 2026-09-04, signed off in the AFK report — the picker is approved for use, closing S17 |
-| L5        | built; Kenny asked to see the showcase before signing off |
-| L6        | built; Kenny asked to see the links in the seven themes before signing off |
-| L7        | built; Kenny asked to see the components and the confirmation before signing off |
+| L5        | **closed** 2026-09-04, signed off after Kenny saw the published showcase |
+| L6        | **closed** 2026-09-04, signed off after Kenny saw the measured link contrast |
+| L7        | **closed** 2026-09-04, signed off with the state-visibility fault running separately as a correction |
 | L8        | **closed** 2026-09-04, signed off in the AFK report |
 | L9        | **closed** 2026-09-04, signed off in the AFK report |
 | L10       | **closed** 2026-09-04, signed off in the AFK report |

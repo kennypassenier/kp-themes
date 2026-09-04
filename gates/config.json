@@ -1,5 +1,5 @@
 {
-    "//": "House numbers that get tuned (standing rule 27, AR9). Standards constants — WCAG's 4.5, 3.0, three flashes per second, the 10% luminance change, 341x256 px — are pinned in the code with the reason, not here.",
+    "//": "House numbers that get tuned (standing rule 27, AR9). Standards constants \u2014 WCAG's 4.5, 3.0, three flashes per second, the 10% luminance change, 341x256 px \u2014 are pinned in the code with the reason, not here.",
     "derivation": {
         "//": "DI3, Carbon's grammar: hover is half a step, selected one, active two. Expressed in OKLCh lightness so a step looks the same size in every theme (AR4).",
         "stepL": 0.06,
@@ -9,11 +9,15 @@
         "disabled": 0
     },
     "perceptualDistanceFloor": {
-        "//": "DI4. Not a standard — WCAG has no such threshold. Below roughly 10 two colours read as the same; 12 leaves a margin.",
+        "//": "DI4. Not a standard \u2014 WCAG has no such threshold. Below roughly 10 two colours read as the same; 12 leaves a margin.",
         "value": 12
     },
     "textureOpacityCeiling": {
         "//": "DI9, from THEMING.md: the register layer must be felt, not seen.",
         "value": 0.06
+    },
+    "stateVisibilityFloor": {
+        "value": 10,
+        "why": "KT2: how far a pressed state must sit from its base colour before someone can see that they pressed it. House number on the same OKLab scale as perceptualDistanceFloor, not a standard \u2014 WCAG says nothing about state changes. Five themes reach 10.0 to 12.1 today; cyberpunk and terminal reach 2.6 to 8.4."
     }
 }
