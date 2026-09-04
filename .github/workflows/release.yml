@@ -1,6 +1,11 @@
 name: Release
 
-# TH18: SHA256SUMS beside every release tag. kyu and almanac vendor
+# TH18: SHA256SUMS beside every release tag.
+#
+# This project signs nothing: there is no key baked into anything, because
+# nothing here is an executable a consumer runs. The checksums are the
+# whole verification story, and they answer the question a vendoring
+# consumer actually has — "is this the file the tag says it is". kyu and almanac vendor
 # css/themes.css into a Rust binary's static directory rather than
 # installing it, so they have no npm to verify anything for them.
 #
@@ -30,11 +35,16 @@ jobs:
         run: ./.claude/hooks/gates.sh
       - name: Checksums
         run: npm run checksums
-      - name: Release
+      # A draft, never a published release. Pushing a tag is a technical
+      # act; publishing is Kenny's, and the two should not be the same
+      # keystroke. A draft can also be deleted without leaving a hole in
+      # the release list.
+      - name: Draft release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${GITHUB_REF_NAME}" \
+            --draft \
             --title "${GITHUB_REF_NAME}" \
-            --notes-file MIGRATION.md \
-            SHA256SUMS css/themes.css css/components.css
+            --notes-file CHANGELOG.md \
+            SHA256SUMS MIGRATION.md css/themes.css css/components.css
