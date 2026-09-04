@@ -51,6 +51,7 @@ const PAIRS = [
     ['sidebar-primary', 'sidebar-primary-foreground'],
     ['sidebar-accent', 'sidebar-accent-foreground'],
     ['background', 'primary'], // primary used as link text on the page bg
+    ['background', 'destructive'], // the picker's "not saved" line is destructive text on the page
     ...STATUS_NAMES.map((s) => [`status-${s}`, `status-${s}-foreground`]),
 ];
 // Accent surfaces carry large text/icons in this design system: 3:1.

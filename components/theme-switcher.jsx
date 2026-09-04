@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { THEME_LABELS, THEME_META, THEMES, useTheme } from '../hooks/use-theme.js';
+import { THEME_LABELS, THEMES, useTheme } from '../hooks/use-theme.js';
 
 // Dependency-free port of kp-soft's switcher: the shadcn DropdownMenu and
 // lucide icons are replaced by a plain button + listbox and two inline
@@ -52,6 +52,7 @@ function CheckIcon({ className = '' }) {
  * @property {import('../hooks/use-theme.js').UseThemeOptions} [themeOptions]  Passed straight to useTheme (preferred / fallback / onChange).
  * @property {string} [label]         Accessible name of the trigger. Default: 'Thema kiezen'.
  * @property {string} [failedMessage] Shown when onChange refused the change. Default: 'Niet bewaard op de server — je keuze is teruggezet.'
+ * @property {string} [storageMessage] Shown when the browser refused to store the choice. Default names blocked storage.
  * @property {string} [className]     Extra classes on the wrapper.
  * @property {Partial<Record<import('../hooks/use-theme.js').Theme, string>>} [labels]  Per-theme labels overriding the Dutch defaults (an English consumer passes its own).
  */
@@ -62,9 +63,10 @@ export default function ThemeSwitcher({
     themeOptions,
     label = 'Thema kiezen',
     failedMessage = 'Niet bewaard op de server — je keuze is teruggezet.',
+    storageMessage = 'Deze keuze wordt niet onthouden — opslag is geblokkeerd in deze browser.',
     className = '',
 }) {
-    const { theme, updateTheme, saveFailed } = useTheme(themeOptions);
+    const { theme, updateTheme, saveFailed, storageFailed } = useTheme(themeOptions);
     const [open, setOpen] = useState(false);
     /** @type {import('react').RefObject<HTMLDivElement | null>} */
     const wrapper = useRef(null);
@@ -105,11 +107,22 @@ export default function ThemeSwitcher({
                     aria-label={label}
                     className="bg-popover text-popover-foreground border-border absolute right-0 z-50 mt-1 w-44 rounded-md border p-1 shadow-md"
                 >
-                    {saveFailed && <li className="text-destructive px-2 py-1.5 text-xs">{failedMessage}</li>}
+                    {saveFailed && (
+                        <li className="text-destructive px-2 py-1.5 text-xs" data-kp-theme-status="">
+                            {failedMessage}
+                        </li>
+                    )}
+                    {storageFailed && (
+                        <li className="text-destructive px-2 py-1.5 text-xs" data-kp-theme-status="">
+                            {storageMessage}
+                        </li>
+                    )}
                     {THEMES.map((t) => (
                         <li
                             key={t}
                             role="option"
+                            data-kp-theme={t}
+                            data-selected={theme === t}
                             aria-selected={theme === t}
                             tabIndex={0}
                             onClick={() => {
@@ -125,12 +138,10 @@ export default function ThemeSwitcher({
                             }}
                             className="hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm"
                         >
-                            <span
-                                className="border-border inline-block size-4 rounded-full border"
-                                style={{
-                                    background: `linear-gradient(135deg, ${THEME_META[t].bg} 50%, ${THEME_META[t].primary} 50%)`,
-                                }}
-                            />
+                            {/* The swatch wears the theme it previews, so it
+                                shows the live colours rather than a copy of
+                                them kept in step by hand [AR11]. */}
+                            <span className="kp-swatch" data-theme={t} />
                             <span className="flex-1">{labels?.[t] ?? THEME_LABELS[t]}</span>
                             {theme === t && <CheckIcon className="size-4" />}
                         </li>

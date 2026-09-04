@@ -17,7 +17,12 @@
         "./css": "./css/themes.css",
         "./css/tailwind-bridge": "./css/tailwind-bridge.css",
         "./css/register": "./css/cyberpunk-register.css",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./js/core": "./js/theme-core.js",
+        "./js/picker": "./js/theme-picker.js",
+        "./js/registry": "./js/theme-registry.js",
+        "./js/no-flash": "./js/no-flash.js",
+        "./css/components": "./css/components.css"
     },
     "files": [
         "index.js",
@@ -40,7 +45,8 @@
         "test": "node --test gates/",
         "check:invariants": "node gates/check-invariants.mjs",
         "check:motion": "node gates/check-motion.mjs",
-        "check:compliance": "node gates/compliance.mjs --check"
+        "check:compliance": "node gates/compliance.mjs --check",
+        "test:browser": "playwright test"
     },
     "peerDependencies": {
         "motion": ">=12",
@@ -52,7 +58,10 @@
         }
     },
     "devDependencies": {
-        "prettier": "^3.4.2"
+        "@playwright/test": "^1.62.1",
+        "esbuild": "^0.28.2",
+        "prettier": "^3.4.2",
+        "react-dom": "^19.2.8"
     },
     "engines": {
         "node": ">=26 <27"

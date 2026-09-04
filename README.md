@@ -78,14 +78,20 @@ element so they resolve per subtree.
 
 ## Consume the JavaScript
 
+There are two channels, and they share one state. Use either, or both on
+the same page — a change in one updates the other.
+
+### React
+
 ```js
-import { ThemeSwitcher, THEME_META, THEMES, applyTheme, initializeTheme, useTheme } from '@kp-soft/themes';
+import { ThemeSwitcher, THEME_RECORDS, THEMES, applyTheme, initializeTheme, useTheme } from '@kp-soft/themes';
 import { BootSequence, DecipherText, DigitalRain, ScrambleNumber } from '@kp-soft/themes/fx';
 ```
 
-- `THEME_META` — `{ name: { label, dark, bg, fg, primary } }`, the one
-  client-side list of themes; `THEMES` is its key list. Labels are Dutch
-  (the apps' UI language).
+- `THEME_RECORDS` — `[{ name, label, dark }]`, generated from the token
+  sources, so it cannot disagree with the stylesheet about which themes
+  are dark. `THEMES` is the name list, `THEME_LABELS` the name→label map.
+  Labels are Dutch (the apps' UI language).
 - `applyTheme(name)` — sets `data-theme` and toggles `.dark`; every
   `useTheme()` instance on the page sees the change (a tiny external store,
   no provider needed).
@@ -97,13 +103,63 @@ saveFailed }`. Precedence: `preferred` (e.g. a member's server-saved
   `updateTheme(next)` applies + stores locally, then calls `onChange(next,
 previous)`; if that throws or returns a rejecting promise the change is
   reverted and `saveFailed` becomes true — persist server-side there.
-- `<ThemeSwitcher themeOptions label failedMessage className />` — a
-  dependency-free button + listbox with a two-colour swatch per theme and
-  a check mark on the current one. It uses Tailwind/shadcn class names;
+- `<ThemeSwitcher themeOptions label failedMessage storageMessage className />`
+  — a dependency-free button + listbox with a swatch per theme and a check
+  mark on the current one. The swatch wears the theme it previews, so it
+  shows that theme's live colours rather than a copy. It uses Tailwind/shadcn class names;
   restyle via `[data-theme-switcher]` if you are not on Tailwind.
+
+### Framework-free
+
+For a server that renders HTML and has no npm step. You write the markup,
+one module attaches the behaviour:
+
+```html
+<link rel="stylesheet" href="/vendor/kp-themes/css/themes.css" />
+<link rel="stylesheet" href="/vendor/kp-themes/css/components.css" />
+
+<div data-kp-theme-picker>
+    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formeel</button>
+    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Donker</button>
+</div>
+<p data-kp-theme-status hidden></p>
+
+<script type="module" src="/vendor/kp-themes/js/theme-picker.js"></script>
+```
+
+The script marks the chosen option (`aria-pressed`, `data-selected` and
+`.is-selected`), stores the choice, and says so in `[data-kp-theme-status]`
+when the browser refuses to store it. `@kp-soft/themes/js/core` exports the
+same primitives without the picker: `applyTheme`, `currentTheme`,
+`storeTheme`, `initializeTheme`, `onThemeChange`.
+
+### No flash on first paint
+
+Paste this in `<head>`, before the stylesheet. It deliberately knows
+nothing about which themes are dark — it copies a name, the stylesheet
+does the rest:
+
+```html
+<script>
+    (function () {
+        try {
+            var t = localStorage.getItem('theme');
+            if (t) document.documentElement.dataset.theme = t;
+        } catch (e) {}
+    })();
+</script>
+```
+
+An unknown stored value is corrected to `formal` as soon as the picker
+module loads.
+
+### Effects
+
 - fx: `BootSequence` (once per session, `lines` prop; needs `motion`),
   `DecipherText`, `DigitalRain`, `ScrambleNumber` — cyberpunk only, plain
-  or absent elsewhere and under `prefers-reduced-motion`.
+  or absent elsewhere and under `prefers-reduced-motion`. They keep
+  listening: turning that setting on mid-session stops them, without a
+  reload.
 
 Everything is plain JavaScript with JSDoc types (`jsconfig.json` has
 `checkJs`); editors pick up the types from your own `@types/react`.
@@ -231,6 +287,6 @@ JobTracker's L0 demo, 2026-09-02; correction C3 there).
 
 ## Labels in another language
 
-`ThemeSwitcher` renders the Dutch labels from `THEME_META` by default; pass
+`ThemeSwitcher` renders the Dutch labels from `THEME_RECORDS` by default; pass
 `labels={{ formal: 'Formal', light: 'Light', dark: 'Dark', cyberpunk: 'Cyberpunk', pastel: 'Pastel', terminal: 'Terminal', topo: 'Topographic' }}`
 to override any of them (v0.1.1).

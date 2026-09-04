@@ -19,3 +19,18 @@ jobs:
       - run: npm ci
       - name: Gates
         run: ./.claude/hooks/gates.sh
+
+  # Phase 5 decision H1: the fast gates block a commit, the browser tests
+  # block a merge. Separate job so a red browser run says so by name
+  # rather than hiding inside "gates".
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Behaviour suite, both channels
+        run: npm run test:browser

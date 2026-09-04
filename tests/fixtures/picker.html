@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8" />
+        <title>Theme picker — both channels</title>
+        <!-- The no-flash snippet, inline and before the stylesheet, exactly
+             as a server-rendered consumer would paste it [TH23]. -->
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem('theme');
+                    if (t) document.documentElement.dataset.theme = t;
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>Two pickers, one document</h1>
+
+        <!-- Channel A: framework-free. Markup a server wrote; the script
+             only attaches behaviour to it [T1]. -->
+        <section>
+            <h2>Framework-free</h2>
+            <div data-kp-theme-picker id="plain">
+                <!-- filled by the fixture script below, from the generated
+                     registry, so this page cannot disagree with the tokens -->
+            </div>
+            <p data-kp-theme-status hidden></p>
+        </section>
+
+        <!-- Channel B: React, mounted from a bundle. -->
+        <section>
+            <h2>React</h2>
+            <div id="react-mount"></div>
+        </section>
+
+        <script type="module">
+            import { THEMES } from '/js/theme-registry.js';
+
+            const host = document.getElementById('plain');
+            for (const t of THEMES) {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.dataset.kpTheme = t.name;
+                b.innerHTML = `<span class="kp-swatch" data-theme="${t.name}"></span>`;
+                b.append(t.label);
+                host.append(b);
+            }
+
+            // Imported after the options exist, because attaching on import
+            // is this channel's whole contract.
+            await import('/js/theme-picker.js');
+        </script>
+        <script type="module" src="/tests/fixtures/.build/react-mount.js"></script>
+    </body>
+</html>

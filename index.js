@@ -3,7 +3,7 @@ export {
     DEFAULT_THEME,
     STORAGE_KEY,
     THEME_LABELS,
-    THEME_META,
+    THEME_RECORDS,
     THEMES,
     applyTheme,
     initializeTheme,

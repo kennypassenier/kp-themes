@@ -78,6 +78,23 @@ L1 and L3 add — run in Node, take under a second, and block the commit.
 The browser tests block the merge instead, in CI. A gate slow enough to be
 worked around is not a gate.
 
+### Drills — a test counts once it has been shown to fail
+
+Rule 7d applies to the browser suite as much as to the Node gates. Two of
+the five picker behaviours are load-bearing enough to be worth proving,
+and both were made to fail on purpose before being restored.
+
+| Test | Injected fault | Result |
+| --- | --- | --- |
+| derives which themes are dark from the data | the dark set replaced by kyu's hand-written list of four | **red** in both channels, naming pastel; green again after restoring |
+| two pickers on one page stay in step | the shared bus stopped announcing changes | **red**; green again after restoring |
+
+A third came for free: the first version of the suite parsed the theme
+registry out of its own source text and produced an empty array, so the
+loop over seven themes iterated over nothing and passed. The suite now
+imports the generated module. A test that cannot fail is worse than no
+test, because it is counted.
+
 ## Standing rules
 
 Confirmed unchanged for this project at the Phase 5 gate. Four shape it
@@ -101,6 +118,7 @@ may depend on a path to a sibling project).
 | Mini-round: npm    | 2026-09-04 | S19 added, two constraints struck, S10 rewritten           | `docs/SCOPE.md`, `docs/FEATURES.md`                |
 | Phase 4 freeze     | 2026-09-04 | AR0-AR16, after a critic pass                              | `docs/ARCHITECTURE_DECISIONS.md`                   |
 | Phase 5            | 2026-09-04 | eleven milestones, H1, H2, standing rules                  | this document                                      |
+| L0                 | 2026-09-04 | six report items, all signed off                           | this document                                      |
 
 ## Status
 
@@ -110,4 +128,5 @@ may depend on a path to a sibling project).
 | L1        | built 2026-09-04, gate held for the AFK report |
 | L2        | built 2026-09-04, gate held for the AFK report |
 | L3        | built 2026-09-04, gate held for the AFK report; L3-EXIT queued |
-| L4-L10    | not started                             |
+| L4        | built 2026-09-04, gate held for the AFK report |
+| L5-L10    | not started                             |
