@@ -174,7 +174,10 @@ function Cases() {
                 <SplitPane start="Links" end="Rechts" />
             </div>
             <div data-test="react-date">
-                <DatePicker label="Van" />
+                {/* Dutch dates are typed into it, and the page says so where the data is [D5]. */}
+                <div lang="nl">
+                    <DatePicker label="Van" />
+                </div>
             </div>
             <div data-test="react-upload">
                 <Upload maxBytes={1024} />

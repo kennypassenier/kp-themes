@@ -14,6 +14,19 @@ const CHANNELS = [
     { name: 'React', tile: '[data-test="react-grid"] [data-kp-tile="cpu"]' },
 ];
 
+/**
+ * Where the tile says where it is. Since 3.0.0 the geometry is the
+ * tile's accessible DESCRIPTION and its name stays the consumer's
+ * ("CPU"): a label that was overwritten with "CPU, column 1…" on every
+ * move was the package renaming the consumer's tile [KT6].
+ *
+ * @param {import('@playwright/test').Locator} tile @param {string} words
+ */
+const saysWhereItIs = async (tile, words) => {
+    await expect(tile).toHaveAccessibleDescription(words);
+    await expect(tile).toHaveAccessibleName('CPU');
+};
+
 for (const channel of CHANNELS) {
     test.describe(`grid — ${channel.name}`, () => {
         test('the arrow keys move a tile [TH56]', async ({ page }) => {
@@ -52,11 +65,13 @@ for (const channel of CHANNELS) {
             await page.goto(URL);
             const tile = page.locator(channel.tile);
             // A tile that only announces itself by moving is one nobody without
-            // sight can arrange.
-            await expect(tile).toHaveAttribute('aria-label', S.tileLabel('CPU', 1, 1, 2, 1));
+            // sight can arrange. Drill: with the description line removed
+            // from place(), the framework-free case goes red on the first
+            // assertion.
+            await saysWhereItIs(tile, S.tileLabel('CPU', 1, 1, 2, 1));
             await tile.focus();
             await tile.press('ArrowRight');
-            await expect(tile).toHaveAttribute('aria-label', S.tileLabel('CPU', 2, 1, 2, 1));
+            await saysWhereItIs(tile, S.tileLabel('CPU', 2, 1, 2, 1));
         });
 
         test('the whole layout is handed to the consumer [TH56]', async ({ page }) => {

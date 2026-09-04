@@ -1808,6 +1808,12 @@
 
 /* --- Colour picker [TH57] -------------------------------------------- */
 
+/* A channel is a label and a slider that lay out as siblings of the
+ * others: the wrapper contributes nothing to the box tree. */
+.kp-colorpicker__channel {
+    display: contents;
+}
+
 .kp-colorpicker {
     display: grid;
     grid-template-columns: auto 1fr;

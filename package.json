@@ -127,6 +127,10 @@
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"
+        },
+        "./hooks/controllable": {
+            "types": "./hooks/use-controllable.d.ts",
+            "default": "./hooks/use-controllable.js"
         }
     },
     "types": "./index.d.ts",

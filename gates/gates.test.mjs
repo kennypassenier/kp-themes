@@ -243,7 +243,8 @@ test('TH43: a date field reads what people actually type', () => {
      * would stop noticing when it starts doing so.
      * @param {string} text */
     const iso = (text) => {
-        const date = parseDate(text);
+        // Explicit since 3.0.0: the default is the page's locale [D5].
+        const date = parseDate(text, 'nl-NL');
         assert.notEqual(date, null, `${text} should parse`);
         return toISO(/** @type {Date} */ (date));
     };
@@ -251,17 +252,17 @@ test('TH43: a date field reads what people actually type', () => {
     assert.equal(iso('04-09-2026'), '2026-09-04');
     assert.equal(iso('2026-09-04'), '2026-09-04');
     assert.equal(iso('04/09/2026'), '2026-09-04');
-    assert.equal(toDutch(/** @type {Date} */ (parseDate('2026-09-04'))), '04-09-2026');
+    assert.equal(toDutch(/** @type {Date} */ (parseDate('2026-09-04', 'nl-NL'))), '04-09-2026');
 });
 
 test('TH43: an impossible date is refused, not rounded', () => {
     // Without the round-trip check this parses as 3 March: a silent wrong
     // answer, which is worse than an error.
-    assert.equal(parseDate('31-02-2026'), null);
-    assert.equal(parseDate('32-01-2026'), null);
-    assert.equal(parseDate('04-13-2026'), null);
-    assert.equal(parseDate('vandaag'), null);
-    assert.equal(parseDate(''), null);
+    assert.equal(parseDate('31-02-2026', 'nl-NL'), null);
+    assert.equal(parseDate('32-01-2026', 'nl-NL'), null);
+    assert.equal(parseDate('04-13-2026', 'nl-NL'), null);
+    assert.equal(parseDate('vandaag', 'nl-NL'), null);
+    assert.equal(parseDate('', 'nl-NL'), null);
 });
 
 // KT5: the string gate. Every one of these was drilled against the real
