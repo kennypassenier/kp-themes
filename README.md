@@ -451,7 +451,7 @@ including the screen-reader-only announcements, which are the half that
 fails silently.
 
 ```js
-import { DEFAULT_STRINGS, STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings.js';
+import { DEFAULT_STRINGS, STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings';
 ```
 
 `DEFAULT_STRINGS` is the English set, frozen. `STRINGS_NL` is the Dutch
@@ -471,7 +471,7 @@ object into every component is the chore people do twice and then stop
 doing:
 
 ```jsx
-import { StringsProvider } from '@kp-soft/themes/hooks/use-strings.jsx';
+import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 
 <StringsProvider value={STRINGS_NL}>
     <App />

@@ -19,7 +19,7 @@ Dutch words back.
 ### If you want the Dutch back
 
 ```js
-import { STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings.js';
+import { STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings';
 
 setStrings(STRINGS_NL);
 ```
@@ -28,7 +28,7 @@ Once, at startup, before anything renders. In React you can also wrap the
 tree:
 
 ```jsx
-import { StringsProvider } from '@kp-soft/themes/hooks/use-strings.jsx';
+import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 
 <StringsProvider value={STRINGS_NL}>
     <App />
