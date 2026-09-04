@@ -41,6 +41,9 @@ node gates/generate-showcase.mjs --check
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 
+echo "→ types (the check jsconfig.json has always declared)"
+npx tsc --noEmit -p jsconfig.json
+
 echo "→ tests"
 node --test gates/ 2>&1 | tail -3
 

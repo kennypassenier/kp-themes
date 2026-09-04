@@ -12,6 +12,8 @@ import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import { hsl, contrast, distance, luminance, simulateDeuteranopia, derive } from './colour.mjs';
 
+/** @typedef {{name: string, tokens: Record<string,string>, derivation?: {stepL: number}}} Theme */
+
 const dir = new URL('../themes/', import.meta.url);
 const config = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 'utf8'));
 
@@ -25,14 +27,19 @@ const SURFACES = ['background', 'card', 'popover'];
 
 export function themes() {
     const order = JSON.parse(readFileSync(new URL('order.json', dir), 'utf8'));
-    return order.map((name) => {
-        const raw = JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'));
-        const tokens = Object.fromEntries(raw.entries.filter((e) => e.token !== undefined).map((e) => [e.token, e.value]));
-        return { name, tokens, derivation: raw.derivation };
-    });
+    return order.map(
+        /** @param {string} name */ (name) => {
+            const raw = JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'));
+            const tokens = Object.fromEntries(
+                raw.entries.filter(/** @param {any} e */ (e) => e.token !== undefined).map(/** @param {any} e */ (e) => [e.token, e.value]),
+            );
+            return { name, tokens, derivation: raw.derivation };
+        },
+    );
 }
 
 /** DI6: a theme says whether it is light or dark, and the layers rise. */
+/** @param {Theme} theme */
 export function checkColourScheme(theme) {
     const problems = [];
     // This checks the token, and only the token. Whether the browser ever
@@ -65,6 +72,7 @@ export function checkColourScheme(theme) {
 }
 
 /** DI1: a control's boundary reaches 3:1 against every surface it sits on. */
+/** @param {Theme} theme */
 export function checkBoundaries(theme) {
     const problems = [];
     for (const token of ['border-strong', 'input', 'selected']) {
@@ -100,6 +108,7 @@ export function checkBoundaries(theme) {
  */
 const OPPOSED = [['offer', 'rejected']];
 
+/** @param {Theme} theme */
 export function checkColourVision(theme) {
     const problems = [];
     for (const [a, b] of OPPOSED) {
@@ -131,6 +140,7 @@ export function checkColourVision(theme) {
  */
 const FOCUS_SURFACES = ['background', 'card', 'popover', 'primary', 'secondary', 'accent', 'destructive', 'muted', 'success', 'warning', 'info'];
 
+/** @param {Theme} theme */
 export function checkFocusRing(theme) {
     const problems = [];
     // Generated tokens are not in the authored source, so the values the
@@ -172,6 +182,7 @@ const INTERACTIVE = ['primary', 'secondary', 'accent', 'destructive'];
  * disabled control may fall below the floor, with the GOV.UK counter-case
  * kept beside it.
  */
+/** @param {Theme} theme */
 export function checkStates(theme) {
     const problems = [];
     const dark = theme.tokens['color-scheme'] === 'dark';

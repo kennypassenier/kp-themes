@@ -28,6 +28,7 @@ const CSS = ['../css/cyberpunk-register.css', '../css/_rules.css', '../css/compo
  * AR8: a gate says what it did not check, or it is not a gate. An
  * animation missing from both this list and the opacity analysis fails.
  */
+/** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
     'fx-glitch-a':
         'transform and clip-path on a text pseudo-element — no luminance change, and far under the 341x256 px area the threshold applies to',
@@ -87,6 +88,7 @@ export function flashesPerSecond(stops, durationMs) {
 }
 
 /** Every `animation:` shorthand, with the keyframe name and its duration. */
+/** @param {string} source */
 export function animations(source) {
     return [...source.matchAll(/animation:\s*([\w-]+)\s+([\d.]+)(m?s)/g)].map((m) => ({
         name: m[1],
@@ -95,8 +97,10 @@ export function animations(source) {
 }
 
 /** DI7: no transition or animation outside a reduced-motion guard. */
+/** @param {string} source @returns {{line: number, declaration: string}[]} */
 export function unguardedMotion(source) {
     const guards = [...source.matchAll(/@media\s*\(prefers-reduced-motion:\s*no-preference\)\s*\{/g)].map((m) => m.index);
+    /** @type {{line: number, declaration: string}[]} */
     const problems = [];
     for (const m of source.matchAll(/^\s*(transition|animation):/gm)) {
         // A declaration is guarded when it sits after a guard's opening brace

@@ -1,3 +1,7 @@
+// `motion` is an optional peer the consumer installs; this package does
+// not, so the type checker has nothing to read here. The import is real
+// at runtime for anyone who uses BootSequence.
+// @ts-ignore -- optional peer dependency, not installed in this repository
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from './use-reduced-motion.js';

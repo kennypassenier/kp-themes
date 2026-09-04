@@ -93,6 +93,8 @@ and both were made to fail on purpose before being restored.
 | the colour scheme reaches the browser (DI6) | found red, not made red: nothing applied `--color-scheme` at all | the fix made it green; the token gate had read pass throughout |
 | the destructive contract (DI10) | a destructive button shipped with neither undo nor confirmation | **red** in both channels — reported, and the button disarmed rather than left able to delete |
 | the badge contract (DI4) | a status badge with a colour and no words | **red** in both channels |
+| the contrast gate's completeness (TH15, AR8) | found red, not made red: `--chart-4` in pastel measured 2.20 against the page where 3.0 is the floor | fixed to 3.21; the gate now refuses any colour token that is in neither a pair list nor the exemption list |
+| the type check (TH19) | a string method called on a colour tuple | **red**, naming the file and line; green again after restoring |
 
 A third came for free: the first version of the suite parsed the theme
 registry out of its own source text and produced an empty array, so the
@@ -110,6 +112,15 @@ derivation steps, the perceptual-distance floor and the texture ceiling
 are configuration, while standards constants stay pinned with their
 reason), and rule 35 (every gate must run on the CI runner too, so none
 may depend on a path to a sibling project).
+
+### The L9 assembly drill, run 2026-09-04
+
+`git clone` into an empty directory, `npm ci`, and then: both generators
+report their output already matches, `gates.sh` runs green, regenerating
+`css/themes.css` leaves it byte-identical, and the showcase opens with
+seven theme blocks and no console errors. That last part is a browser
+test rather than a file-existence check — a generated page that throws on
+load is exactly what a file check reports as success.
 
 ## Gate log
 
@@ -138,4 +149,5 @@ may depend on a path to a sibling project).
 | L6        | built 2026-09-04, gate held for the AFK report |
 | L7        | built 2026-09-04, gate held for the AFK report |
 | L8        | built 2026-09-04, gate held for the AFK report |
-| L9-L10    | not started                             |
+| L9        | built 2026-09-04, gate held for the AFK report |
+| L10       | built 2026-09-04, gate held for the AFK report |

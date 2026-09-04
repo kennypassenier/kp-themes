@@ -16,8 +16,9 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
-        "noEmit": true
+        "noEmit": true,
+        "types": ["node", "react"]
     },
-    "include": ["index.js", "hooks", "components", "fx", "scripts"],
+    "include": ["index.js", "hooks", "components", "fx", "js", "gates", "showcase"],
     "exclude": ["node_modules"]
 }

@@ -23,6 +23,7 @@ const START = '<!-- compliance:start -->';
 const END = '<!-- compliance:end -->';
 
 /** Invariants asserted in prose because no gate reads them yet. */
+/** @type {Record<string, string>} */
 const NOT_GATED = {
     DI9: 'layer discipline is a review question about the generated stylesheet, not yet a check',
 };
@@ -51,13 +52,16 @@ function motionVerdicts() {
     return { flash: flash.every(Boolean), guard: guard.every(Boolean) };
 }
 
+/** @typedef {import('./check-invariants.mjs').Theme} Theme */
+
 export function table() {
     const all = themes();
     const scope = motionScope();
     const motion = motionVerdicts();
+    /** @param {boolean} ok */
     const verdict = (ok) => (ok ? 'pass' : 'FAIL');
 
-    /** @type {[string, (t: any) => string][]} */
+    /** @type {[string, (t: Theme) => string][]} */
     const rows = [
         ['DI1 boundaries at 3:1', (t) => verdict(checkBoundaries(t).length === 0)],
         ['DI2 two-channel focus ring', (t) => verdict(checkFocusRing(t).length === 0)],
@@ -69,9 +73,9 @@ export function table() {
     ];
 
     const lines = [
-        `| Invariant | ${all.map((t) => t.name).join(' | ')} |`,
+        `| Invariant | ${all.map(/** @param {Theme} t */ (t) => t.name).join(' | ')} |`,
         `| --- | ${all.map(() => '---').join(' | ')} |`,
-        ...rows.map(([label, f]) => `| ${label} | ${all.map((t) => f(t)).join(' | ')} |`),
+        ...rows.map(([label, f]) => `| ${label} | ${all.map(/** @param {Theme} t */ (t) => f(t)).join(' | ')} |`),
         ...Object.keys(NOT_GATED).map((id) => `| ${id} | ${all.map(() => 'not gated').join(' | ')} |`),
     ];
 

@@ -26,6 +26,7 @@ export function parseHsl(text) {
 
 /** @param {Hsl} c @returns {string} */
 export function formatHsl({ h, s, l }) {
+    /** @param {number} v @param {number} [p] */
     const r = (v, p = 0) => Number(v.toFixed(p));
     return `hsl(${r(h)}, ${r(s)}%, ${r(l)}%)`;
 }
@@ -63,7 +64,9 @@ export function rgbToHsl([r, g, b]) {
     return { h: (h + 360) % 360, s: s * 100, l: l * 100 };
 }
 
+/** @param {number} u */
 const srgbToLinear = (u) => (u <= 0.04045 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4);
+/** @param {number} u */
 const linearToSrgb = (u) => (u <= 0.0031308 ? u * 12.92 : 1.055 * u ** (1 / 2.4) - 0.055);
 
 /**
@@ -73,6 +76,7 @@ const linearToSrgb = (u) => (u <= 0.0031308 ? u * 12.92 : 1.055 * u ** (1 / 2.4)
  * @param {Rgb} rgb
  */
 export function luminance([r, g, b]) {
+    /** @param {number} u */
     const f = (u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4);
     return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
 }
@@ -142,6 +146,7 @@ export function distance(a, b) {
 }
 
 /** Convenience: parse an authored value straight to sRGB. */
+/** @param {string} text */
 export const hsl = (text) => hslToRgb(parseHsl(text));
 
 /**

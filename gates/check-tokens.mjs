@@ -24,10 +24,11 @@ export function themeOrder() {
  * @returns {Map<string, Set<string>>}
  */
 export function tokenNamesByTheme() {
+    /** @type {Map<string, Set<string>>} */
     const out = new Map();
     for (const name of themeOrder()) {
         const theme = JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'));
-        out.set(name, new Set(theme.entries.filter((e) => e.token !== undefined).map((e) => e.token)));
+        out.set(name, new Set(theme.entries.filter(/** @param {any} e */ (e) => e.token !== undefined).map(/** @param {any} e */ (e) => e.token)));
     }
     return out;
 }
@@ -41,13 +42,13 @@ export function tokenNamesByTheme() {
  */
 export function findAsymmetry(byTheme) {
     const themes = [...byTheme.keys()];
-    const all = new Set(themes.flatMap((t) => [...byTheme.get(t)]));
+    const all = new Set(themes.flatMap((t) => [...(byTheme.get(t) ?? [])]));
     return [...all]
         .sort()
         .map((token) => ({
             token,
-            have: themes.filter((t) => byTheme.get(t).has(token)),
-            missing: themes.filter((t) => !byTheme.get(t).has(token)),
+            have: themes.filter((t) => byTheme.get(t)?.has(token)),
+            missing: themes.filter((t) => !byTheme.get(t)?.has(token)),
         }))
         .filter((a) => a.missing.length > 0);
 }
@@ -88,6 +89,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
 
-    const common = [...byTheme.get(themes[0])].filter((t) => !known.has(t)).length;
+    const common = [...(byTheme.get(themes[0]) ?? [])].filter((t) => !known.has(t)).length;
     console.log(`All ${themes.length} themes declare the same ${common} token names (${known.size} known exceptions, L3 clears them).`);
 }
