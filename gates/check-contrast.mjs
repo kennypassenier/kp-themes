@@ -12,10 +12,24 @@ const target = process.argv[2] ? new URL(process.argv[2], `file://${process.cwd(
 const css = readFileSync(target, 'utf8');
 
 // Discovered from the stylesheet: every [data-theme='x'] block that
-// declares --background is a palette. A new theme is checked the moment
-// its CSS block exists - no list to keep in sync here.
-const THEMES = [...new Set([...css.matchAll(/\[data-theme='([a-z]+)'\]\s*\{[^}]*--background:/g)].map((m) => m[1]))];
-if (THEMES.length < 5) throw new Error(`theme discovery broke: only found [${THEMES}]`);
+// declares --background is a palette. The name pattern accepts digits and
+// hyphens - it used to accept lowercase letters only, so a theme called
+// `high-contrast` was silently skipped while the run reported that every
+// theme passed (AR8-D1, found by the Phase 4 critic pass). The count is
+// now checked against themes/order.json rather than a floor, so a theme
+// going missing is an error instead of a smaller green number.
+export function discoverThemesFromCss(source, { expect } = {}) {
+    const found = [...new Set([...source.matchAll(/\[data-theme='([a-z0-9-]+)'\]\s*\{[^}]*--background:/g)].map((m) => m[1]))];
+    if (expect !== undefined && found.length !== expect) {
+        throw new Error(`theme discovery broke: expected ${expect} themes, found ${found.length} [${found}]`);
+    }
+    return found;
+}
+
+/** The themes this stylesheet is supposed to contain, from the token source. */
+export const EXPECTED_THEMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+
+const THEMES = discoverThemesFromCss(css, { expect: EXPECTED_THEMES.length });
 
 // Application-pipeline status badges: text on a coloured plate.
 export const STATUS_NAMES = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'];

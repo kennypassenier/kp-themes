@@ -49,7 +49,7 @@ beurt nagekeken, met bestand en regelnummer erbij.
 `css/themes.css`, de Tailwind-koppeling in `css/tailwind-bridge.css`, het
 cyberpunk-register in `css/cyberpunk-register.css`, de React-hook
 `useTheme` plus `ThemeSwitcher`, de vier cyberpunk fx-componenten in
-`fx/`, en `scripts/check-contrast.mjs` als contrastcontrole. `npm run
+`fx/`, en `gates/check-contrast.mjs` als contrastcontrole. `npm run
 gates` moet groen zijn vóór elke commit.
 
 ---

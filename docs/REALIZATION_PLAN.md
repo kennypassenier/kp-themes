@@ -27,6 +27,15 @@ program still reported that nothing was built.
 | L9  | **Assembly and release**           | TH18, TH29, AR10, MR5-PAGES                  | A fresh clone in an empty directory builds, generates byte-identical output, passes every gate, and produces a showcase that opens. Not "the parts exist" — the whole does its job       |
 | L10 | The two desired items              | TH15, TH19                                   | Both run in the gates and have been red once                                                                                                                                            |
 
+**Amended 2026-09-04 at L0's gate, both ratified by Kenny.** T1 and T2
+move from L0 to L4: they decide the shape of the framework-free components
+and whether the hard ones are hand-written, and L0 has no component to
+decide about. And S18's directories are created when they have content
+rather than up front — the anatomy documents at L2, the per-theme
+stylesheet fragments at L3, `components/` and `showcase/` from L4 — so S18
+completes at L5. An empty directory promising future content is the same
+false structure this project has met three times.
+
 L9's exit criterion is also the restore drill Kenny consciously declined
 at M3. It arrives free here, because proving a fresh clone builds _is_
 that drill.
@@ -97,6 +106,6 @@ may depend on a path to a sibling project).
 
 | Milestone | Status                                  |
 | --------- | --------------------------------------- |
-| L0        | built 2026-09-04, awaiting its gate     |
-| L1        | next                                    |
+| L0        | **closed** 2026-09-04, all six report items signed off |
+| L1        | built 2026-09-04, gate held for the AFK report |
 | L2-L10    | not started                             |

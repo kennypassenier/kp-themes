@@ -1,0 +1,4 @@
+{
+    "//": "TH22 ratchet. These token names are not yet declared by every theme. The gate fails on any name NOT in this list, and also fails when a listed name has become symmetric \u2014 so the list can only shrink, and it cannot rot. L3 empties it (TH20). Do not add to it without a mini-round.",
+    "tokens": ["font-sans", "fx-duration", "fx-ease", "fx-notch", "fx-signal", "fx-signal-foreground", "theme-font-display"]
+}

@@ -23,13 +23,18 @@ node gates/generate-themes.mjs --check
 echo "→ prettier"
 npx prettier --check .
 
+echo "→ token parity across the seven themes (TH22)"
+node gates/check-tokens.mjs
+
 echo "→ contrast (WCAG AA over every declared pair)"
-node scripts/check-contrast.mjs
+node gates/check-contrast.mjs
+
+echo "→ tests"
+node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:
-#   L1  parity (TH22), expected-count assertions (AR8), artefact round-trip (AR1)
 #   L3  colour-vision distance (DI4), flash threshold (DI5), layer order (DI6)
-#   L4  node --test for anything that needs no DOM
+#   L5  the browser checks — but in CI, not here (decision H1)
 
 gate_tree_after=$(gate_tree_fingerprint)
 if [ "$gate_tree_before" != "$gate_tree_after" ]; then

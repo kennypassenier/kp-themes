@@ -133,7 +133,7 @@ your own `@theme` aliases.
 
 ```sh
 npm run check:contrast            # css/themes.css
-node scripts/check-contrast.mjs path/to/other.css
+node gates/check-contrast.mjs path/to/other.css
 npm run gates                     # contrast + prettier --check
 ```
 
@@ -159,7 +159,7 @@ Extracted from kp-soft at commit `2983abb`
 `resources/css/app.css`, `resources/js/hooks/use-appearance.tsx`,
 `resources/js/components/theme-switcher.tsx`,
 `resources/js/components/fx/{boot-sequence,decipher-text,digital-rain,scramble-number}.tsx`,
-`scripts/check-contrast.mjs`, `docs/THEMING.md`,
+`gates/check-contrast.mjs`, `docs/THEMING.md`,
 `docs/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
