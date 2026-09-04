@@ -159,3 +159,40 @@ export function derive(value, steps, { towardsLight, stepL }) {
     const L = Math.min(1, Math.max(0, c.L + (towardsLight ? 1 : -1) * steps * stepL));
     return formatHsl(rgbToHsl(oklchToRgb({ ...c, L })));
 }
+
+/**
+ * The visited-link colour, derived from the link colour [TH31].
+ *
+ * Browser-default blue scores 1.99, 2.09 and 2.06 against the three dark
+ * themes' backgrounds — unreadable, and the default purple is worse. So
+ * the link colour is the theme's own, and its visited state is derived
+ * from it the way purple-after-blue has always worked: same family,
+ * rotated round the hue wheel, slightly less saturated.
+ *
+ * Rotation first, lightness only if the rotation alone cannot clear the
+ * floor, because a hue change is the signal — a link that merely dims
+ * reads as a disabled link. Every candidate must clear AA text contrast
+ * on both surfaces a link sits on and stay a visible distance from the
+ * unvisited colour, or it is not a state anyone can perceive.
+ *
+ * @param {string} link the authored or derived link colour
+ * @param {string[]} surfaces the hsl() values it must be readable on
+ * @param {number} distanceFloor
+ * @returns {string | null} an hsl() value, or null when nothing clears
+ */
+export function deriveVisited(link, surfaces, distanceFloor) {
+    const base = hsl(link);
+    const c = rgbToOklch(base);
+    for (const dL of [0, -0.06, 0.06, -0.12, 0.12, -0.18, 0.18]) {
+        for (const dh of [45, -45, 60, -60, 30]) {
+            const candidate = oklchToRgb({
+                L: Math.min(1, Math.max(0, c.L + dL)),
+                C: c.C * 0.9,
+                h: (c.h + dh + 360) % 360,
+            });
+            const readable = surfaces.every((s) => contrast(candidate, hsl(s)) >= 4.5);
+            if (readable && distance(base, candidate) >= distanceFloor) return formatHsl(rgbToHsl(candidate));
+        }
+    }
+    return null;
+}

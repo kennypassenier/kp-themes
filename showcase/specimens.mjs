@@ -94,12 +94,64 @@ export const SPECIMENS = [
         html: () => `<div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>`,
     },
     {
+        id: 'links',
+        title: 'Links and selection',
+        note: 'The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme\u2019s own [TH31].',
+        html: () =>
+            `<p class="sc-text">Een <a href="#surfaces">gewone link</a>, een <a href="#already-visited-anchor">bezochte link</a> ` +
+            `en gewone tekst naast elkaar. Selecteer deze zin om de selectiekleur te zien.</p>`,
+    },
+    {
+        id: 'typography',
+        title: 'Ordinary text elements',
+        note: 'code, kbd, mark, blockquote, hr and list markers \u2014 the elements a page gets for free and a theme usually forgets [TH32].',
+        html: () =>
+            `<p class="sc-text">Inline <code>--background</code>, een toets <kbd>Ctrl</kbd>, en <mark>gemarkeerde tekst</mark>.</p>` +
+            `<pre><code>npm run gates</code></pre>` +
+            `<blockquote>Een thema moet compleet zijn.</blockquote>` +
+            `<ul><li>Eerste punt</li><li>Tweede punt</li></ul><hr />`,
+    },
+    {
+        id: 'data',
+        title: 'Showing data',
+        note: 'A long URL wraps instead of widening the page; digits line up between rows [TH33].',
+        html: () =>
+            `<p class="sc-url kp-url">https://voorbeeld.example/een/heel/lang/pad/dat-anders-de-pagina-breder-maakt?met=query&amp;en=meer</p>` +
+            `<p class="kp-id">a3f9-2b71-0c4d-8e15</p>` +
+            `<p class="kp-masked">\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 4417</p>` +
+            `<p class="kp-numeric">1.284,50 &middot; 998,00 &middot; 12,75</p>` +
+            `<p class="kp-timestamp">2026-09-04 14:07</p>` +
+            `<p class="kp-truncate">Deze zin wordt afgekapt met een ellips zodra de kolom smaller is dan de tekst zelf, in plaats van de rij hoger te maken.</p>` +
+            `<div class="kp-empty">Nog geen sollicitaties.</div>`,
+    },
+    {
+        id: 'browser',
+        title: 'The browser\u2019s own hooks',
+        note: 'Checkbox, placeholder, invalid and disabled \u2014 surfaces a stylesheet cannot repaint, only point at [TH34].',
+        html: () =>
+            `<div class="sc-row">` +
+            `<label><input type="checkbox" checked /> aangevinkt</label>` +
+            `<input type="text" placeholder="placeholder" />` +
+            `<input type="email" value="geen-adres" required />` +
+            `<button type="button" class="sc-button" disabled>uitgeschakeld</button>` +
+            `</div>`,
+    },
+    {
+        id: 'shell',
+        title: 'The page shell',
+        note: 'Tab here to see the skip link appear. Print this page to see the print rules [TH36].',
+        html: () =>
+            `<a class="kp-skip-link" href="#surfaces">Naar de inhoud</a>` +
+            `<div class="kp-error"><h1>404</h1><p>Deze pagina bestaat niet.</p></div>` +
+            `<footer class="kp-footer">kp-themes \u00b7 zeven thema\u2019s, \u00e9\u00e9n set tokens</footer>`,
+    },
+    {
         id: 'text',
         title: 'Body text',
         note: 'Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].',
         html: () =>
             `<p class="sc-text">De zeven thema's delen dezelfde tokens en dezelfde regels; wat verschilt is de kleur, ` +
-            `het contrast en de textuur. <a href="#surfaces">Een link</a> hoort leesbaar te zijn in elk thema — ook in ` +
-            `terminal, waar de standaardkleur van de browser tegen het fosforgroen vloekt.</p>`,
+            `het contrast en de textuur. <a href="#surfaces">Een link</a> is leesbaar in elk thema — ook in terminal, waar het ` +
+            `blauw van de browser tegen het fosforgroen vloekte.</p>`,
     },
 ];

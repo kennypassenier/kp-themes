@@ -88,6 +88,9 @@ and both were made to fail on purpose before being restored.
 | --- | --- | --- |
 | derives which themes are dark from the data | the dark set replaced by kyu's hand-written list of four | **red** in both channels, naming pastel; green again after restoring |
 | two pickers on one page stay in step | the shared bus stopped announcing changes | **red**; green again after restoring |
+| the focus ring pair (DI2) | a pastel with two near-identical grey rings | **red**, eight named violations; green again after restoring |
+| links clear AA on the page (TH31) | the link colour set back to the browser's own blue | **red** in exactly dark, cyberpunk and terminal — the three FEATURES.md names; green again after restoring |
+| the colour scheme reaches the browser (DI6) | found red, not made red: nothing applied `--color-scheme` at all | the fix made it green; the token gate had read pass throughout |
 
 A third came for free: the first version of the suite parsed the theme
 registry out of its own source text and produced an empty array, so the
@@ -130,4 +133,5 @@ may depend on a path to a sibling project).
 | L3        | built 2026-09-04, gate held for the AFK report; L3-EXIT queued |
 | L4        | built 2026-09-04, gate held for the AFK report |
 | L5        | built 2026-09-04, gate held for the AFK report |
-| L6-L10    | not started                             |
+| L6        | built 2026-09-04, gate held for the AFK report |
+| L7-L10    | not started                             |

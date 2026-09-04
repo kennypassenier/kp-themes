@@ -80,3 +80,104 @@
     color: var(--destructive);
     font-size: 0.875rem;
 }
+
+/* --- Showing data [TH33] --------------------------------------------
+ *
+ * Six patterns that are not components — nobody imports a "URL" — but
+ * that every data-heavy page rewrites badly. kyu hand-wrote three of
+ * them. The failures they prevent are specific: a URL that widens the
+ * page instead of wrapping, and numbers that jitter between rows because
+ * the digits are not the same width.
+ */
+
+/* A long URL or identifier wraps anywhere rather than pushing the page
+ * sideways — SC 1.4.10 again, and the reason kyu's dashboard scrolled. */
+.kp-url,
+.kp-id {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.kp-id {
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    font-size: 0.9em;
+}
+
+/* Tabular numerals: same-width digits, so a column of numbers lines up
+ * and does not shimmer as values change. */
+.kp-numeric,
+.kp-timestamp {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+}
+
+.kp-timestamp {
+    color: var(--muted-foreground);
+}
+
+/* A masked value keeps its shape without claiming to be the real one. */
+.kp-masked {
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    letter-spacing: 0.15em;
+    color: var(--muted-foreground);
+}
+
+/* One line, ellipsis, and the full text still reachable — a truncation
+ * without a title attribute hides data rather than shortening it. */
+.kp-truncate {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+/* An empty state says the list is empty; a blank area says the page is
+ * broken. */
+.kp-empty {
+    padding: 1.5rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    color: var(--muted-foreground);
+    text-align: center;
+}
+
+/* --- The page's shell [TH36] ---------------------------------------- */
+
+/* The skip link is visible only when focused, and then it must be
+ * unmissable: it is the first thing a keyboard user meets on the page. */
+.kp-skip-link {
+    position: absolute;
+    inset-inline-start: 0.5rem;
+    inset-block-start: -100%;
+    z-index: 100;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius, 0.5rem);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    text-decoration: underline;
+}
+
+.kp-skip-link:focus {
+    inset-block-start: 0.5rem;
+}
+
+.kp-footer {
+    padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+/* An error page is a message, not a wall: the destructive colour names
+ * the failure, the body text explains it on the ordinary surface. */
+.kp-error {
+    max-width: 60ch;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+.kp-error h1 {
+    color: var(--destructive);
+    margin-bottom: 0.5rem;
+}

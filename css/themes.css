@@ -88,6 +88,8 @@
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(218, 45%, 24%);
+    --link-visited: hsl(271, 49%, 12%);
     --focus-ring: hsl(220, 30%, 13%);
     --focus-ring-contrast: hsl(40, 25%, 97%);
     --primary-hover: hsl(218, 51%, 21%);
@@ -173,6 +175,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(243, 60%, 45%);
+    --link-visited: hsl(290, 77%, 30%);
     --focus-ring: hsl(224, 25%, 12%);
     --focus-ring-contrast: hsl(0, 0%, 100%);
     --primary-hover: hsl(246, 67%, 41%);
@@ -258,6 +262,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(255, 85%, 74%);
+    --link-visited: hsl(333, 63%, 66%);
     --focus-ring: hsl(220, 20%, 93%);
     --focus-ring-contrast: hsl(226, 22%, 8%);
     --primary-hover: hsl(255, 100%, 78%);
@@ -347,6 +353,8 @@
     --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(315, 95%, 64%);
+    --link-visited: hsl(360, 100%, 66%);
     --focus-ring: hsl(190, 60%, 92%);
     --focus-ring-contrast: hsl(258, 40%, 6%);
     --primary-hover: hsl(315, 100%, 66%);
@@ -432,6 +440,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(330, 55%, 42%);
+    --link-visited: hsl(26, 100%, 32%);
     --focus-ring: hsl(285, 25%, 20%);
     --focus-ring-contrast: hsl(285, 45%, 97%);
     --primary-hover: hsl(329, 61%, 38%);
@@ -517,6 +527,8 @@
     --theme-font-display: 'Share Tech Mono', ui-monospace, monospace;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(120, 90%, 50%);
+    --link-visited: hsl(176, 100%, 49%);
     --focus-ring: hsl(120, 85%, 68%);
     --focus-ring-contrast: hsl(120, 10%, 5%);
     --primary-hover: hsl(119, 95%, 55%);
@@ -602,6 +614,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(158, 42%, 24%);
+    --link-visited: hsl(189, 100%, 12%);
     --focus-ring: hsl(160, 28%, 14%);
     --focus-ring-contrast: hsl(42, 32%, 95%);
     --primary-hover: hsl(159, 50%, 21%);
@@ -796,4 +810,148 @@ body {
  */
 :root {
     color-scheme: var(--color-scheme);
+}
+
+/* ------------------------------------------------------------------
+   Element-level rules [L6].
+
+   Everything below styles plain HTML, not classes. A theme that leaves
+   these to the browser is not complete: the browser's own link blue
+   scores 1.99 against the dark theme's background, 2.09 against
+   cyberpunk's and 2.06 against terminal's, where 4.5 is the floor. A
+   consumer who takes this stylesheet and writes ordinary markup should
+   get a themed page, not a themed page with browser-default holes.
+   ------------------------------------------------------------------ */
+
+/* Links [TH31]. Underlined, always: colour is never the only carrier
+   (DI4), and a link that is only a colour disappears for anyone who
+   cannot see that colour. */
+a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+a:visited {
+    color: var(--link-visited);
+}
+
+a:hover {
+    text-decoration-thickness: 2px;
+}
+
+/* Text selection [TH31]. The primary pair, which the contrast gate
+   already holds at AA — the browser's default highlight ignores the
+   theme entirely and can land unreadably on a dark ground. */
+::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* Ordinary text elements [TH32]. */
+code,
+kbd,
+samp,
+pre {
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
+code,
+kbd,
+samp {
+    background: var(--muted);
+    color: var(--foreground);
+    padding: 0.1em 0.35em;
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    font-size: 0.9em;
+}
+
+kbd {
+    border: 1px solid var(--border-strong);
+    /* A key looks pressable; a code span does not. */
+    box-shadow: 0 1px 0 var(--border-strong);
+}
+
+pre {
+    background: var(--muted);
+    color: var(--foreground);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius, 0.5rem);
+    /* Long lines scroll inside the block instead of widening the page:
+       SC 1.4.10 asks for no two-dimensional scrolling of the document. */
+    overflow-x: auto;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+}
+
+mark {
+    background: var(--warning);
+    color: var(--warning-foreground);
+    padding: 0 0.15em;
+}
+
+blockquote {
+    margin-inline-start: 0;
+    padding-inline-start: 1rem;
+    border-inline-start: 3px solid var(--border-strong);
+    color: var(--muted-foreground);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+}
+
+::marker {
+    color: var(--muted-foreground);
+}
+
+/* The browser's own hooks [TH34]. These are the surfaces a stylesheet
+   cannot repaint — it can only tell the browser which colours to use. */
+:root {
+    accent-color: var(--primary);
+    caret-color: var(--foreground);
+}
+
+::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1; /* Firefox dims placeholders by default, on top of the colour. */
+}
+
+:disabled {
+    cursor: not-allowed;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+    border-color: var(--destructive);
+}
+
+/* Print [TH36]. Paper has no theme: ink is black, the ground is white,
+   and the decorative layers cost toner without carrying meaning. */
+@media print {
+    :root {
+        color-scheme: light;
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(0, 0%, 0%);
+    }
+
+    body::before {
+        display: none;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    /* A printed page cannot be clicked, so the address has to be on it. */
+    a[href^='http']::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        word-break: break-all;
+    }
 }

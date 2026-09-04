@@ -52,6 +52,11 @@ const PAIRS = [
     ['sidebar-accent', 'sidebar-accent-foreground'],
     ['background', 'primary'], // primary used as link text on the page bg
     ['background', 'destructive'], // the picker's "not saved" line is destructive text on the page
+    ['background', 'link'], // TH31: links, on the page and on a card
+    ['card', 'link'],
+    ['background', 'link-visited'],
+    ['card', 'link-visited'],
+    ['muted', 'foreground'], // TH32: code, pre and kbd sit on the muted surface
     ...STATUS_NAMES.map((s) => [`status-${s}`, `status-${s}-foreground`]),
 ];
 // Accent surfaces carry large text/icons in this design system: 3:1.

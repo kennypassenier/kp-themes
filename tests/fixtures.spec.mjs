@@ -65,5 +65,38 @@ for (const theme of THEMES) {
             );
             expect(clipped, 'these clip their own content under forced text spacing').toEqual([]);
         });
+
+        test('links are the theme’s colour and clear AA on the page [TH31]', async ({ page }) => {
+            await page.goto(url);
+
+            // Measured in the browser, on the colour the page actually
+            // paints — not on the token. The browser's own link blue
+            // scores 1.99, 2.09 and 2.06 against the three dark themes,
+            // and a theme that leaves links alone ships those numbers.
+            const ratio = await page.evaluate(() => {
+                const parse = (css) =>
+                    css
+                        .match(/[\d.]+/g)
+                        .slice(0, 3)
+                        .map(Number);
+                const lum = ([r, g, b]) =>
+                    [r, g, b]
+                        .map((u) => u / 255)
+                        .map((u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4))
+                        .reduce((acc, u, i) => acc + [0.2126, 0.7152, 0.0722][i] * u, 0);
+                const link = document.querySelector('[data-specimen="links"] a');
+                const [a, b] = [lum(parse(getComputedStyle(link).color)), lum(parse(getComputedStyle(document.body).backgroundColor))].sort(
+                    (x, y) => y - x,
+                );
+                return (a + 0.05) / (b + 0.05);
+            });
+            expect(ratio).toBeGreaterThanOrEqual(4.5);
+        });
+
+        test('a link is not colour alone [DI4]', async ({ page }) => {
+            await page.goto(url);
+            const decoration = await page.evaluate(() => getComputedStyle(document.querySelector('[data-specimen="links"] a')).textDecorationLine);
+            expect(decoration).toContain('underline');
+        });
     });
 }

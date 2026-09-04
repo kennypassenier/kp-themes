@@ -17,7 +17,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { derive } from './colour.mjs';
+import { derive, deriveVisited } from './colour.mjs';
 
 const ORDER = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
 const OUT = new URL('../css/themes.css', import.meta.url);
@@ -63,6 +63,25 @@ function derivedStates({ tokens, dark, stepL }) {
     // spread, already gated at 4.5:1 against each other, and measured to
     // cover all eleven surfaces in all seven themes. A theme may author
     // both tokens itself; check-invariants.mjs then measures those instead.
+    // The link colours [TH31]. Browser-default blue is unreadable on the
+    // dark themes — 1.99, 2.09 and 2.06 against their backgrounds — so a
+    // theme that does not say what a link looks like is not complete.
+    // --link is the theme's primary, which the contrast gate already holds
+    // at AA against both surfaces a link sits on; the visited state is
+    // rotated off it.
+    const link = tokens.link ?? tokens.primary;
+    if (tokens.link === undefined) out.push(`    --link: ${link};`);
+    if (tokens['link-visited'] === undefined) {
+        const visited = deriveVisited(link, [tokens.background, tokens.card], CONFIG.perceptualDistanceFloor.value);
+        if (visited === null) {
+            throw new Error(
+                `no visited-link colour derivable from ${link}: nothing clears 4.5 on both surfaces while staying ` +
+                    `${CONFIG.perceptualDistanceFloor.value} from the link colour. Author --link-visited in the theme.`,
+            );
+        }
+        out.push(`    --link-visited: ${visited};`);
+    }
+
     if (tokens['focus-ring'] === undefined) out.push(`    --focus-ring: ${tokens.foreground};`);
     if (tokens['focus-ring-contrast'] === undefined) out.push(`    --focus-ring-contrast: ${tokens.background};`);
     const d = CONFIG.derivation;
