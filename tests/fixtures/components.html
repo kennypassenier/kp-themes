@@ -122,6 +122,40 @@
             </div>
         </section>
 
+        <section id="plain-structure">
+            <h2>Structuur, framework-free</h2>
+            <ul class="kp-tree" role="tree" data-kp-tree data-test="plain-tree">
+                <li role="treeitem" aria-expanded="false" data-test="tree-map">
+                    Map een
+                    <ul role="group">
+                        <li role="treeitem" data-test="tree-kind">Kind een</li>
+                    </ul>
+                </li>
+                <li role="treeitem" data-test="tree-zaak">Zaak twee</li>
+            </ul>
+
+            <ul class="kp-reorder" data-kp-reorder data-test="plain-reorder">
+                <li data-kp-item="a"><button type="button" data-kp-handle aria-label="Verplaats a" data-test="handle-a">⠿</button> A</li>
+                <li data-kp-item="b"><button type="button" data-kp-handle aria-label="Verplaats b">⠿</button> B</li>
+            </ul>
+
+            <div class="kp-split" data-kp-split data-test="plain-split">
+                <div class="kp-split__pane">Links</div>
+                <div
+                    class="kp-split__separator"
+                    role="separator"
+                    tabindex="0"
+                    aria-orientation="vertical"
+                    aria-valuemin="10"
+                    aria-valuemax="90"
+                    aria-valuenow="50"
+                    aria-label="Panelen verdelen"
+                    data-test="plain-separator"
+                ></div>
+                <div class="kp-split__pane">Rechts</div>
+            </div>
+        </section>
+
         <section id="plain-patterns">
             <h2>Patronen, framework-free</h2>
             <span class="kp-copyable">
@@ -258,6 +292,7 @@
         <script type="module" src="/js/datatable.js"></script>
         <script type="module" src="/js/forms.js"></script>
         <script type="module" src="/js/patterns.js"></script>
+        <script type="module" src="/js/structure.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state

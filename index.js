@@ -32,6 +32,7 @@ export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATA
 export { VALID_EVENT as FORM_VALID_EVENT, attachForms } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
 export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
+export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,
