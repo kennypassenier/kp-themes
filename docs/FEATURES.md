@@ -136,7 +136,7 @@ TH37 and TH38 were not rated: Kenny asked for them directly.
 | TH44 | File drop and upload | Essential | The appearance and the states; the sending stays the consumer's |
 | TH45 | Tree view | Essential | Without drag-and-drop |
 | TH46 | Drag to reorder | Essential | Must work from the keyboard too. SortableJS is framework-free, so both channels can share one engine |
-| TH47 | Visual filter builder | (open) | Kenny asked for a fuller explanation before rating; see MINI_ROUNDS.md |
+| TH47 | Visual filter builder | Later | Rated 2026-09-04 once the description named the Notion and Airtable equivalents and pointed at a live demo. It shares its whole mechanism with TH37's filtering, so it is superstructure rather than a second system — but it stays Later |
 | TH48 | Step wizard | Essential | The superstructure on TH38 |
 | TH49 | Keyboard shortcut sheet (`?`) | Essential | A command palette without discoverability is a secret |
 | TH50 | Empty states with an action | Essential | `.kp-empty` is text today. A real empty state says why there is nothing and what to do, and differs from an empty list *after* a filter |
@@ -149,6 +149,12 @@ TH37 and TH38 were not rated: Kenny asked for them directly.
 | TH57 | Colour picker | Desired | With the contrast ratio against the current theme, measured the way our own gate measures it |
 | TH58 | Guided tour / onboarding | Don't do | Kenny, 2026-09-04. A lot of machinery for something seen once |
 | TH59 | Rich text editor | Don't do | Kenny, 2026-09-04. tiptap and slate are frameworks, not components; taking one on means maintaining an editor. Markdown input and the styling of its output stay in scope |
+
+**Built on 2026-09-04**, all of round two, in both channels: TH37-TH41,
+TH43-TH46 and TH48-TH57. TH42 (virtual list), TH58 (guided tour) and TH59
+(rich text editor) are Kenny's "don't do" and stay undone; TH47 is Later.
+418 browser tests drive them in Chromium and Firefox, and every one is on
+the showcase and on the eleven bare per-theme pages.
 
 **Deliberately outside the scope**, recorded so the question does not come
 back: charts (the `--chart-*` tokens are ours, a charting library is not),
