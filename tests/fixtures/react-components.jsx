@@ -13,6 +13,8 @@ import Field from '../../components/field.jsx';
 import Table from '../../components/table.jsx';
 import NavBar from '../../components/nav-bar.jsx';
 import { Dialog, Tabs } from '../../components/overlays.jsx';
+import DecipherText from '../../fx/decipher-text.jsx';
+import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
 
 function Cases() {
@@ -47,6 +49,14 @@ function Cases() {
             </Card>
             <Field label="E-mail" help="We sturen niets door." error="Vul een geldig adres in." data-test="field" />
             <Table columns={['Naam', 'Aantal']} rows={[['Een', 1]]} />
+            {/* The effects are cyberpunk-only and plain everywhere else;
+                under reduced motion they are plain there too [DI7]. */}
+            <span data-test="decipher">
+                <DecipherText text="ONTCIJFEREN" />
+            </span>
+            <span data-test="scramble">
+                <ScrambleNumber value="1284" />
+            </span>
             <button type="button" className="kp-button" data-test="dialog-open" onClick={() => setOpen(true)}>
                 Dialoog openen
             </button>
