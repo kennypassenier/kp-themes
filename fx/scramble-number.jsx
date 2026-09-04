@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from './use-reduced-motion.js';
 import { useTheme } from '../hooks/use-theme.js';
 
 const DIGITS = '0123456789ABCDEF';
@@ -10,11 +11,12 @@ const DIGITS = '0123456789ABCDEF';
  */
 export default function ScrambleNumber({ value }) {
     const { theme } = useTheme();
+    const reduced = useReducedMotion();
     const active = theme === 'cyberpunk';
     const [display, setDisplay] = useState(value);
 
     useEffect(() => {
-        if (!active || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (!active || reduced) {
             setDisplay(value);
             return;
         }
@@ -30,7 +32,7 @@ export default function ScrambleNumber({ value }) {
             if (settled >= value.length) clearInterval(timer);
         }, 40);
         return () => clearInterval(timer);
-    }, [value, active]);
+    }, [value, active, reduced]);
 
     return (
         <span aria-label={value} role="text">

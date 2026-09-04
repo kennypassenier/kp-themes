@@ -33,12 +33,14 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:compliance && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
         "test": "node --test gates/",
-        "check:invariants": "node gates/check-invariants.mjs"
+        "check:invariants": "node gates/check-invariants.mjs",
+        "check:motion": "node gates/check-motion.mjs",
+        "check:compliance": "node gates/compliance.mjs --check"
     },
     "peerDependencies": {
         "motion": ">=12",

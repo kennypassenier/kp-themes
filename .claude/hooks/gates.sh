@@ -32,11 +32,16 @@ node gates/check-invariants.mjs
 echo "→ contrast (WCAG AA over every declared pair)"
 node gates/check-contrast.mjs
 
+echo "→ motion: flash threshold and reduced-motion guards (DI5, DI7)"
+node gates/check-motion.mjs
+
+echo "→ the compliance table still says what the gates measure"
+node gates/compliance.mjs --check
+
 echo "→ tests"
 node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:
-#   L3  flash threshold (DI5) — still uncomputed, see MINI_ROUNDS
 #   L5  the browser checks — but in CI, not here (decision H1)
 
 gate_tree_after=$(gate_tree_fingerprint)

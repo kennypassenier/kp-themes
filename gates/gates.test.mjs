@@ -10,8 +10,10 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
+import { flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 
 test('AR8-D1: theme discovery finds a name containing a hyphen', () => {
     const css = "[data-theme='high-contrast'] {\n    --background: hsl(0, 0%, 100%);\n}";
@@ -59,4 +61,48 @@ test('TH22: the parity check notices a token removed from one theme', () => {
         ['light', new Set(['background'])],
     ]);
     assert.deepEqual(findAsymmetry(byTheme), [{ token: 'primary', have: ['formal'], missing: ['light'] }]);
+});
+
+// DI5 is the one invariant here whose violation harms a person, so its
+// arithmetic is pinned rather than trusted. The numbers below are the
+// shipped fx-flicker before and after L3 retimed it.
+
+test('DI5: a run that opposes direction faster than three times a second fails', () => {
+    // The old fx-flicker: six opposing swings over 1100ms = 5.5/s.
+    const stops = [
+        { stop: 0, opacity: 1 },
+        { stop: 3, opacity: 0.4 },
+        { stop: 6, opacity: 1 },
+        { stop: 20, opacity: 0.3 },
+        { stop: 24, opacity: 1 },
+        { stop: 70, opacity: 0.5 },
+        { stop: 74, opacity: 1 },
+    ];
+    assert.ok(flashesPerSecond(stops, 1100) > 3, 'the pre-L3 flicker must not pass');
+});
+
+test('DI5: a swing under ten percent is not a flash', () => {
+    const stops = [
+        { stop: 0, opacity: 1 },
+        { stop: 50, opacity: 0.94 },
+        { stop: 100, opacity: 1 },
+    ];
+    assert.equal(flashesPerSecond(stops, 100), 0);
+});
+
+test('DI5: the shipped flicker stays under the threshold', () => {
+    const css = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
+    const stops = parseOpacityKeyframes(css).get('fx-flicker');
+    assert.ok(stops, 'fx-flicker keyframes must be readable');
+    assert.ok(flashesPerSecond(stops, 2200) <= 3);
+});
+
+test('DI7: a transition inside a no-preference guard is not reported', () => {
+    const css = '@media (prefers-reduced-motion: no-preference) {\n  .a { transition: opacity 1s; }\n}\n';
+    assert.deepEqual(unguardedMotion(css), []);
+});
+
+test('DI7: a transition after a guard block has closed is reported', () => {
+    const css = '@media (prefers-reduced-motion: no-preference) {\n  .a { transition: opacity 1s; }\n}\n.b {\n  transition: color 1s;\n}\n';
+    assert.equal(unguardedMotion(css).length, 1);
 });

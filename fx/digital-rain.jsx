@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from './use-reduced-motion.js';
 import { useTheme } from '../hooks/use-theme.js';
 
 const GLYPHS = '01ｱｲｳｶｷｸｻｼｽﾀﾁﾂﾅﾆﾇﾊﾋﾌ';
@@ -12,13 +13,14 @@ const GLYPHS = '01ｱｲｳｶｷｸｻｼｽﾀﾁﾂﾅﾆﾇﾊﾋﾌ';
  */
 export default function DigitalRain({ className = '' }) {
     const { theme } = useTheme();
+    const reduced = useReducedMotion();
     /** @type {import('react').RefObject<HTMLCanvasElement | null>} */
     const ref = useRef(null);
     const active = theme === 'cyberpunk';
 
     useEffect(() => {
         const canvas = ref.current;
-        if (!active || !canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!active || !canvas || reduced) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
@@ -56,7 +58,7 @@ export default function DigitalRain({ className = '' }) {
         };
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, [active]);
+    }, [active, reduced]);
 
     if (!active) return null;
 

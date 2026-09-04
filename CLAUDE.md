@@ -37,7 +37,7 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 | Field               | Value                                                                                                          |
 | ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Current phase       | 5 — Realization plan, approved 2026-09-04; enforcement live                                                    |
+| Current phase       | 6 — Realization, L3 built (gate held, AFK)                                                                     |
 | Last completed gate | Phase 5, 2026-09-04 (11 milestones, hooks installed and drilled)                                               |
 | Next gate           | L0 exit — the generator reproduces themes.css byte for byte                                                    |
 | AFK mode            | **on** since 2026-09-04 — milestone gates accumulate into one combined report; deviations queue as mini-rounds |

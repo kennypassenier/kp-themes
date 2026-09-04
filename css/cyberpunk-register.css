@@ -60,7 +60,12 @@
     width: 0;
     background: var(--primary);
     box-shadow: 0 0 12px var(--primary);
-    transition: width var(--fx-duration, 200ms) var(--fx-ease, ease);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='cyberpunk'] [data-slot='card']::after {
+        transition: width var(--fx-duration, 200ms) var(--fx-ease, ease);
+    }
 }
 
 [data-theme='cyberpunk'] [data-slot='card']:hover::after {
@@ -86,7 +91,12 @@
     background-size: 280% 100%;
     background-position: 105% 0;
     background-repeat: no-repeat;
-    transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='cyberpunk'] [data-slot='button'] {
+        transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
+    }
 }
 
 [data-theme='cyberpunk'] [data-slot='button']:hover {
@@ -182,7 +192,7 @@
 @media (prefers-reduced-motion: no-preference) {
     /* CP-B3: neon tube flicker - runs once when the class mounts. */
     [data-theme='cyberpunk'] .fx-flicker {
-        animation: fx-flicker 1.1s linear 1 both;
+        animation: fx-flicker 2.2s linear 1 both;
     }
 
     /* CP-B2: pulsing glow lives on a pseudo-element and animates ONLY
@@ -241,27 +251,32 @@
     }
 }
 
+/* Measured 2026-09-04 by gates/check-motion.mjs: the previous timing made
+   5.5 opposing luminance changes per second, where WCAG 2.2 SC 2.3.1
+   (Level A) allows three. Two deep dips over a longer run come in at 1.8,
+   and the third dip is now shallower than the 10% that counts as a flash.
+   A failing tube reads better slow. */
 @keyframes fx-flicker {
     0%,
     100% {
         opacity: 1;
     }
-    8% {
+    10% {
         opacity: 0.35;
     }
-    12% {
+    16% {
         opacity: 1;
     }
-    20% {
+    55% {
         opacity: 0.6;
     }
-    24% {
+    60% {
         opacity: 1;
     }
-    54% {
-        opacity: 0.85;
+    78% {
+        opacity: 0.93;
     }
-    58% {
+    82% {
         opacity: 1;
     }
 }

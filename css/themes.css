@@ -737,7 +737,15 @@ body::after {
 body {
     background-color: var(--background);
     color: var(--foreground);
-    transition:
-        background-color 400ms ease,
-        color 400ms ease;
+}
+
+/* The cross-fade when a visitor switches theme. Guarded, because DI7 asks
+   for it and because a 400ms colour sweep across the whole page is exactly
+   the kind of motion someone turns that setting on to avoid. */
+@media (prefers-reduced-motion: no-preference) {
+    body {
+        transition:
+            background-color 400ms ease,
+            color 400ms ease;
+    }
 }

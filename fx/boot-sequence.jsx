@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from './use-reduced-motion.js';
 import { useTheme } from '../hooks/use-theme.js';
 
 const DEFAULT_LINES = ['> INIT', '> LOADING THEME ... CYBERPUNK', '> AUTH LAYER ... OK', '> RENDER ... OK'];
@@ -12,6 +13,7 @@ const DEFAULT_LINES = ['> INIT', '> LOADING THEME ... CYBERPUNK', '> AUTH LAYER 
  */
 export default function BootSequence({ lines: LINES = DEFAULT_LINES }) {
     const { theme } = useTheme();
+    const reduced = useReducedMotion();
     const [visible, setVisible] = useState(false);
     const [lines, setLines] = useState(0);
 
@@ -23,7 +25,7 @@ export default function BootSequence({ lines: LINES = DEFAULT_LINES }) {
         } catch {
             return;
         }
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (reduced) return;
 
         setVisible(true);
         const perLine = 140;
@@ -33,7 +35,7 @@ export default function BootSequence({ lines: LINES = DEFAULT_LINES }) {
             clearInterval(timer);
             clearTimeout(done);
         };
-    }, [theme, LINES.length]);
+    }, [theme, LINES.length, reduced]);
 
     return (
         <AnimatePresence>

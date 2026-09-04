@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from './use-reduced-motion.js';
 import { useTheme } from '../hooks/use-theme.js';
 
 const GLYPHS = '01<>[]{}/\\|=+*#$%&?ｱｶｻﾀﾅﾊﾏﾔﾗ';
-
-const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
  * CP-A3: heading text deciphers itself - random glyphs settle into the
@@ -14,11 +13,12 @@ const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('
  */
 export default function DecipherText({ text, delay = 0 }) {
     const { theme } = useTheme();
+    const reduced = useReducedMotion();
     const active = theme === 'cyberpunk';
     const [display, setDisplay] = useState(text);
 
     useEffect(() => {
-        if (!active || reducedMotion()) {
+        if (!active || reduced) {
             setDisplay(text);
             return;
         }
@@ -47,7 +47,7 @@ export default function DecipherText({ text, delay = 0 }) {
 
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, [text, active, delay]);
+    }, [text, active, delay, reduced]);
 
     return (
         <span aria-label={text} role="text">
