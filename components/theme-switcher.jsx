@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { THEME_LABELS, THEMES, useTheme } from '../hooks/use-theme.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Dependency-free port of kp-soft's switcher: the shadcn DropdownMenu and
 // lucide icons are replaced by a plain button + listbox and two inline
@@ -50,22 +51,20 @@ function CheckIcon({ className = '' }) {
 /**
  * @typedef {object} ThemeSwitcherProps
  * @property {import('../hooks/use-theme.js').UseThemeOptions} [themeOptions]  Passed straight to useTheme (preferred / fallback / onChange).
- * @property {string} [label]         Accessible name of the trigger. Default: 'Thema kiezen'.
- * @property {string} [failedMessage] Shown when onChange refused the change. Default: 'Niet bewaard op de server — je keuze is teruggezet.'
- * @property {string} [storageMessage] Shown when the browser refused to store the choice. Default names blocked storage.
+ * @property {string} [label]         Accessible name of the trigger. Default: the dictionary's `themePicker`.
+ * @property {string} [failedMessage] Shown when onChange refused the change. Default: the dictionary's `themeSaveRefused`.
+ * @property {string} [storageMessage] Shown when the browser refused to store the choice. Default: the dictionary's `themeSaveFailed`.
+ * @property {Partial<import('../js/strings.js').Strings>} [strings] override any of the words this component speaks
  * @property {string} [className]     Extra classes on the wrapper.
  * @property {Partial<Record<import('../hooks/use-theme.js').Theme, string>>} [labels]  Per-theme labels overriding the Dutch defaults (an English consumer passes its own).
  */
 
 /** @param {ThemeSwitcherProps} props */
-export default function ThemeSwitcher({
-    labels,
-    themeOptions,
-    label = 'Thema kiezen',
-    failedMessage = 'Niet bewaard op de server — je keuze is teruggezet.',
-    storageMessage = 'Deze keuze wordt niet onthouden — opslag is geblokkeerd in deze browser.',
-    className = '',
-}) {
+export default function ThemeSwitcher({ labels, themeOptions, label, failedMessage, storageMessage, strings, className = '' }) {
+    const s = useStrings(strings);
+    const name = label ?? s.themePicker;
+    const refused = failedMessage ?? s.themeSaveRefused;
+    const blocked = storageMessage ?? s.themeSaveFailed;
     const { theme, updateTheme, saveFailed, storageFailed } = useTheme(themeOptions);
     const [open, setOpen] = useState(false);
     /** @type {import('react').RefObject<HTMLDivElement | null>} */
@@ -94,7 +93,7 @@ export default function ThemeSwitcher({
             <button
                 type="button"
                 className="hover:bg-accent hover:text-accent-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
-                aria-label={label}
+                aria-label={name}
                 aria-haspopup="listbox"
                 aria-expanded={open}
                 onClick={() => setOpen((o) => !o)}
@@ -104,17 +103,17 @@ export default function ThemeSwitcher({
             {open && (
                 <ul
                     role="listbox"
-                    aria-label={label}
+                    aria-label={name}
                     className="bg-popover text-popover-foreground border-border absolute right-0 z-50 mt-1 w-44 rounded-md border p-1 shadow-md"
                 >
                     {saveFailed && (
                         <li className="text-destructive px-2 py-1.5 text-xs" data-kp-theme-status="">
-                            {failedMessage}
+                            {refused}
                         </li>
                     )}
                     {storageFailed && (
                         <li className="text-destructive px-2 py-1.5 text-xs" data-kp-theme-status="">
-                            {storageMessage}
+                            {blocked}
                         </li>
                     )}
                     {THEMES.map((t) => (

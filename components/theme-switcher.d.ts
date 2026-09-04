@@ -4,17 +4,21 @@ export type ThemeSwitcherProps = {
      */
     themeOptions?: import('../hooks/use-theme.js').UseThemeOptions;
     /**
-     * Accessible name of the trigger. Default: 'Thema kiezen'.
+     * Accessible name of the trigger. Default: the dictionary's `themePicker`.
      */
     label?: string;
     /**
-     * Shown when onChange refused the change. Default: 'Niet bewaard op de server — je keuze is teruggezet.'
+     * Shown when onChange refused the change. Default: the dictionary's `themeSaveRefused`.
      */
     failedMessage?: string;
     /**
-     * Shown when the browser refused to store the choice. Default names blocked storage.
+     * Shown when the browser refused to store the choice. Default: the dictionary's `themeSaveFailed`.
      */
     storageMessage?: string;
+    /**
+     * override any of the words this component speaks
+     */
+    strings?: Partial<import('../js/strings.js').Strings>;
     /**
      * Extra classes on the wrapper.
      */
@@ -27,11 +31,12 @@ export type ThemeSwitcherProps = {
 /**
  * @typedef {object} ThemeSwitcherProps
  * @property {import('../hooks/use-theme.js').UseThemeOptions} [themeOptions]  Passed straight to useTheme (preferred / fallback / onChange).
- * @property {string} [label]         Accessible name of the trigger. Default: 'Thema kiezen'.
- * @property {string} [failedMessage] Shown when onChange refused the change. Default: 'Niet bewaard op de server — je keuze is teruggezet.'
- * @property {string} [storageMessage] Shown when the browser refused to store the choice. Default names blocked storage.
+ * @property {string} [label]         Accessible name of the trigger. Default: the dictionary's `themePicker`.
+ * @property {string} [failedMessage] Shown when onChange refused the change. Default: the dictionary's `themeSaveRefused`.
+ * @property {string} [storageMessage] Shown when the browser refused to store the choice. Default: the dictionary's `themeSaveFailed`.
+ * @property {Partial<import('../js/strings.js').Strings>} [strings] override any of the words this component speaks
  * @property {string} [className]     Extra classes on the wrapper.
  * @property {Partial<Record<import('../hooks/use-theme.js').Theme, string>>} [labels]  Per-theme labels overriding the Dutch defaults (an English consumer passes its own).
  */
 /** @param {ThemeSwitcherProps} props */
-export default function ThemeSwitcher({ labels, themeOptions, label, failedMessage, storageMessage, className, }: ThemeSwitcherProps): import("react").JSX.Element;
+export default function ThemeSwitcher({ labels, themeOptions, label, failedMessage, storageMessage, strings, className }: ThemeSwitcherProps): import("react").JSX.Element;

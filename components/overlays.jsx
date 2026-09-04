@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { TOAST_MS } from '../js/overlays.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // The eleven overlays, React channel [L8, TH35].
 //
@@ -184,14 +185,24 @@ export function Tabs({ tabs, className = '' }) {
     );
 }
 
-/** @param {{ items: {href?: string, label: string}[] }} props */
-export function Breadcrumb({ items }) {
+/**
+ * The same `linkComponent` escape as NavBar: a breadcrumb inside a router
+ * application is a route, not a page load.
+ *
+ * @param {{ items: {href?: string, label: string}[], linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props
+ */
+export function Breadcrumb({ items, linkComponent: Link = 'a', strings }) {
+    const s = useStrings(strings);
     return (
-        <nav className="kp-breadcrumb" aria-label="Kruimelpad">
+        <nav className="kp-breadcrumb" aria-label={s.breadcrumb}>
             <ol>
                 {items.map((item, i) => (
                     <li key={item.label}>
-                        {item.href && i < items.length - 1 ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+                        {item.href && i < items.length - 1 ? (
+                            <Link href={item.href}>{item.label}</Link>
+                        ) : (
+                            <span aria-current="page">{item.label}</span>
+                        )}
                     </li>
                 ))}
             </ol>
@@ -199,16 +210,17 @@ export function Breadcrumb({ items }) {
     );
 }
 
-/** @param {{ pages: number, current: number, href?: (page: number) => string }} props */
-export function Pagination({ pages, current, href = (p) => `#page-${p}` }) {
+/** @param {{ pages: number, current: number, href?: (page: number) => string, linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Pagination({ pages, current, href = (p) => `#page-${p}`, linkComponent: Link = 'a', strings }) {
+    const s = useStrings(strings);
     return (
-        <nav className="kp-pagination" aria-label="Paginering">
+        <nav className="kp-pagination" aria-label={s.pagination}>
             <ul>
                 {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
                     <li key={p}>
-                        <a href={href(p)} aria-current={p === current ? 'page' : undefined}>
+                        <Link href={href(p)} aria-current={p === current ? 'page' : undefined}>
                             {p}
-                        </a>
+                        </Link>
                     </li>
                 ))}
             </ul>
@@ -223,9 +235,11 @@ export function Progress({ value, max = 100, label }) {
     return <progress className="kp-progress" value={value} max={max} aria-label={label} />;
 }
 
-/** @param {{ label?: string }} props */
-export function Spinner({ label = 'Bezig' }) {
-    return <span className="kp-spinner" role="status" aria-label={label} />;
+/** @param {{ label?: string, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Spinner({ label, strings }) {
+    const s = useStrings(strings);
+    const text = label ?? s.busy;
+    return <span className="kp-spinner" role="status" aria-label={text} />;
 }
 
 /** @param {{ width?: string, count?: number }} props */

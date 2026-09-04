@@ -24,6 +24,7 @@
 // aloud correctly, and give the exact numbers back.
 
 import { contrast, formatHsl, hslToRgb, meets, tokenColour } from './contrast.js';
+import { getStrings } from './strings.js';
 
 const PICKER = '[data-kp-colorpicker]';
 
@@ -74,14 +75,15 @@ export function attachColorPickers(root = document) {
                     // Said rather than left blank: a picker that silently
                     // stops measuring looks exactly like one that says the
                     // colour is fine.
-                    report.textContent = `Geen contrast te meten: ${against} bestaat niet in dit thema.`;
+                    report.textContent = getStrings().contrastMissing(against);
                     delete picker.dataset.kpContrastOk;
                 } else {
                     const ratio = contrast(hslToRgb(colour), ground);
                     const ok = meets(ratio, kind);
                     // The number AND the verdict: a bare 4.31 means nothing
                     // to anyone who does not know the thresholds by heart.
-                    report.textContent = `${ratio.toFixed(2)}:1 tegen ${against} — ${ok ? 'haalbaar' : 'te weinig'}`;
+                    const s = getStrings();
+                    report.textContent = s.contrastReport(ratio.toFixed(2), against, ok ? s.contrastPasses : s.contrastFails);
                     if (ok) picker.dataset.kpContrastOk = '';
                     else delete picker.dataset.kpContrastOk;
                 }

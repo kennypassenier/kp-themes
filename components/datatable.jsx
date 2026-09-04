@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // DataTable, React [TH37].
 //
@@ -48,6 +49,7 @@ function compare(a, b, kind) {
  *   caption?: string,
  *   empty?: string,
  *   onSelect?: (keys: string[]) => void,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
@@ -59,10 +61,12 @@ export default function DataTable({
     selectable = false,
     cards = true,
     caption,
-    empty = 'Niets gevonden.',
+    empty,
     onSelect,
+    strings,
     className = '',
 }) {
+    const s = useStrings(strings);
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState(/** @type {{ key: string, direction: 'ascending' | 'descending' } | null} */ (null));
     const [page, setPage] = useState(0);
@@ -102,8 +106,8 @@ export default function DataTable({
                     className="kp-datatable__search"
                     type="search"
                     data-kp-datatable-search
-                    placeholder="Zoeken…"
-                    aria-label="Zoeken in de tabel"
+                    placeholder={s.tableSearch}
+                    aria-label={s.tableSearchLabel}
                     value={query}
                     onChange={(event) => {
                         setQuery(event.target.value);
@@ -122,7 +126,7 @@ export default function DataTable({
                                     <input
                                         type="checkbox"
                                         data-kp-select-all
-                                        aria-label="Alle zichtbare rijen selecteren"
+                                        aria-label={s.tableSelectAll}
                                         checked={allChecked}
                                         // The honest third state: a header box
                                         // reading "checked" while three of ten
@@ -172,7 +176,7 @@ export default function DataTable({
                                             <input
                                                 type="checkbox"
                                                 data-kp-select-row
-                                                aria-label={`Rij ${key} selecteren`}
+                                                aria-label={s.tableSelectRow(key)}
                                                 checked={chosen.includes(key)}
                                                 onChange={(event) =>
                                                     choose(event.target.checked ? [...chosen, key] : chosen.filter((k) => k !== key))
@@ -198,23 +202,23 @@ export default function DataTable({
 
             {sorted.length === 0 && (
                 <div className="kp-empty" data-kp-datatable-empty>
-                    {empty}
+                    {empty ?? s.tableEmpty}
                 </div>
             )}
 
             <div className="kp-datatable__bar">
                 <p className="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite">
-                    {sorted.length === rows.length ? `${rows.length} rijen` : `${sorted.length} van ${rows.length} rijen`}
+                    {sorted.length === rows.length ? s.tableRows(rows.length) : s.tableRowsFiltered(sorted.length, rows.length)}
                 </p>
                 <div className="kp-datatable__pager" data-kp-datatable-pager>
                     <button type="button" className="kp-button kp-button--ghost" disabled={at === 0} onClick={() => setPage(at - 1)}>
-                        Vorige
+                        {s.previous}
                     </button>
                     <span className="kp-datatable__page">
                         {at + 1} / {pages}
                     </span>
                     <button type="button" className="kp-button kp-button--ghost" disabled={at >= pages - 1} onClick={() => setPage(at + 1)}>
-                        Volgende
+                        {s.next}
                     </button>
                 </div>
             </div>

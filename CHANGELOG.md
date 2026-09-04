@@ -1,5 +1,103 @@
 # Changelog
 
+## 2.0.0 — 2026-09-05
+
+**The words on screen changed from Dutch to English.** That is the whole
+breaking change, and `STRINGS_NL` is the one-line undo. See MIGRATION.md.
+
+Correction KT5. Every user-visible string in the package was written into
+the component that renders it, in Dutch, with no way for a consumer to
+pass a different one. The fault is not the language — a hardcoded English
+string is the same defect — it is that there was no door. JobTracker had
+adopted only the components that carry no text at all, which is what the
+defect looks like from outside.
+
+### One dictionary
+
+`js/strings.js` holds all 72 keys with English defaults, frozen. Keys that
+vary take arguments — `tableRowsFiltered(shown, total)`, `removeNamed(name)`,
+`wizardStep(at, of)` — so a consumer can reorder for their own grammar
+instead of concatenating ours.
+
+`STRINGS_NL` exports the Dutch that used to be the default, for kyu,
+almanac and kp-soft.
+
+### Three ways in, nearest wins
+
+A `strings` prop on any component, a `StringsProvider` from
+`hooks/use-strings.jsx` for a subtree, or `setStrings()` globally for the
+framework-free channel. Every override is partial. A consumer who does
+nothing gets English.
+
+### The screen-reader half
+
+The announcements are the part of this that matters most, because they
+fail silently and only for the people who cannot see that they failed. A
+copied value announced `` `${value} gekopieerd` ``; the DataTable
+announced its filtered row count in Dutch into an `aria-live` region.
+Both now come from the dictionary, and the gate does not know they are
+special: they are strings.
+
+### `js/contrast.js` is public
+
+The WCAG primitives moved out of `gates/colour.mjs` so a consumer measures
+a ratio with the same code our gate measures it with, rather than a second
+opinion. `gates/colour.mjs` re-exports from it, unchanged for anyone
+importing it there.
+
+### Every field type, not only a text box [TH61]
+
+`FormField` took a `type` prop and rendered an `<input>` whatever it was
+told, so a real form grew a hand-written half beside it — without the
+label, the error and the `aria-describedby` wiring that are the point of
+the component. It now renders `select`, `textarea`, `checkbox` and
+`radio` as what they say, and passes `options` through for the two that
+need a list.
+
+A radio group is a group: a `<fieldset role="radiogroup">` with the
+question as its legend. That has three consequences the suite pins.
+The summary counts it once rather than once per button. It is named by
+its legend rather than by one of its answers — "How do we reach you?",
+not "Email". And the group carries `aria-invalid`, because putting it on
+one radio says the wrong thing about the others.
+
+The framework-free channel already validated anything the browser
+validates, since it works on `form.elements`. What it did not know was
+that a radio group is one question; it does now, so both channels answer
+the same.
+
+`Form` itself was collecting only `HTMLInputElement`, so a required
+select nobody chose from was thrown away before the summary looked at it.
+
+### A consumer's own link component [TH62]
+
+`NavBar`, `Breadcrumb` and `Pagination` take `linkComponent`, defaulting
+to `'a'`. A plain anchor is correct HTML and reloads the page, which is
+right for a server-rendered site and wrong inside React Router or Next,
+where every click would throw the state away.
+
+The skip link is deliberately not routed: it is a same-page anchor, and
+sending it through a router turns the one link a keyboard user needs into
+a navigation.
+
+Kenny asked for this on `NavBar`. `Breadcrumb` and `Pagination` had the
+same hardcoded `<a>`, and a measure written for the place a fault showed
+rather than for the property it has meets you again somewhere else.
+
+### The gate
+
+`npm run check:strings` reads our source and refuses a user-visible
+literal that does not come from the dictionary — the same shape as the
+layer gate. It matches sinks rather than shapes: where a literal _goes_
+(`textContent`, `placeholder`, `setAttribute('aria-label', …)`, JSX
+attributes and text nodes, and a bare literal inside a JSX expression),
+not what it looks like.
+
+Drilled red in all four of those shapes before it was trusted. It passed
+the fourth on the first attempt — the sr-only case, which is the one KT5
+exists about — and was fixed. The drills are frozen in
+`gates/gates.test.mjs` so the exemptions cannot widen back over them.
+
 ## 1.2.0 — 2026-09-04
 
 Twenty-two components, in both channels. Kenny asked for a DataTable and

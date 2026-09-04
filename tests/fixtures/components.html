@@ -300,6 +300,59 @@
             </form>
         </section>
 
+        <section id="plain-rich-form">
+            <h2>Formulier met alle veldsoorten, framework-free</h2>
+            <form class="kp-form" data-kp-form data-test="plain-rich-form">
+                <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="rland">Land</label>
+                    <select class="kp-field__input" id="rland" name="land" required data-test="plain-rich-land">
+                        <option value="">Kies&#8230;</option>
+                        <option value="be">Belgi&#235;</option>
+                        <option value="nl">Nederland</option>
+                    </select>
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="rtoel">Toelichting</label>
+                    <textarea
+                        class="kp-field__input kp-field__input--multiline"
+                        id="rtoel"
+                        name="toelichting"
+                        required
+                        data-test="plain-rich-toelichting"
+                    ></textarea>
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </div>
+                <div class="kp-field kp-field--check">
+                    <input class="kp-field__check" id="rakk" name="akkoord" type="checkbox" required data-test="plain-rich-akkoord" />
+                    <label class="kp-field__label" for="rakk">Ik ga akkoord</label>
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </div>
+                <fieldset class="kp-field kp-fieldset" role="radiogroup" data-kp-radiogroup="kanaal" data-test="plain-rich-kanaal">
+                    <legend class="kp-field__label">Hoe bereiken we je?</legend>
+                    <div class="kp-field__option">
+                        <input
+                            class="kp-field__check"
+                            id="rkan0"
+                            name="kanaal"
+                            type="radio"
+                            value="mail"
+                            required
+                            data-test="plain-rich-kanaal-mail"
+                        />
+                        <label for="rkan0">E-mail</label>
+                    </div>
+                    <div class="kp-field__option">
+                        <input class="kp-field__check" id="rkan1" name="kanaal" type="radio" value="tel" required />
+                        <label for="rkan1">Telefoon</label>
+                    </div>
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </fieldset>
+                <button type="submit" class="kp-button kp-button--primary" data-kp-submit data-test="plain-rich-submit">Opslaan</button>
+            </form>
+        </section>
+
         <section id="plain-datatable">
             <h2>DataTable, framework-free</h2>
             <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3" data-test="plain-datatable">

@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Combobox and tag input, React [TH39, TH41].
 //
@@ -26,10 +27,12 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
  *   values?: string[],
  *   placeholder?: string,
  *   onChange?: (value: string, values: string[]) => void,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export default function Combobox({ options, label, tags = false, value, values, placeholder, onChange, className = '' }) {
+export default function Combobox({ options, label, tags = false, value, values, placeholder, onChange, strings, className = '' }) {
+    const s = useStrings(strings);
     const id = useId();
     const listId = `${id}-list`;
     const [query, setQuery] = useState(value ?? '');
@@ -122,7 +125,7 @@ export default function Combobox({ options, label, tags = false, value, values, 
         }
     };
 
-    const results = visible.length === 0 ? 'Geen resultaten' : visible.length === 1 ? '1 resultaat' : `${visible.length} resultaten`;
+    const results = visible.length === 0 ? s.noResults : visible.length === 1 ? s.oneResult : s.manyResults(visible.length);
 
     return (
         <div
@@ -143,7 +146,17 @@ export default function Combobox({ options, label, tags = false, value, values, 
                     {chosen.map((v) => (
                         <li className="kp-tag" data-value={v} key={v}>
                             <span>{options.find((o) => o.value === v)?.label ?? v}</span>
-                            <button type="button" className="kp-tag__remove" aria-label={`${v} verwijderen`} onClick={() => drop(v)}>
+                            {/* The LABEL, not the value: the button says what a
+                                person reads on the tag. The contract suite caught
+                                this channel naming the value while the other named
+                                the label — the same label/value confusion that bit
+                                the two channels when this component was written. */}
+                            <button
+                                type="button"
+                                className="kp-tag__remove"
+                                aria-label={s.removeNamed(options.find((o) => o.value === v)?.label ?? v)}
+                                onClick={() => drop(v)}
+                            >
                                 ×
                             </button>
                         </li>

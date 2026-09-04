@@ -437,3 +437,151 @@ runs, which is the only way to reproduce the failure locally.
 step; JobTracker and kp-soft are the only two today. And at the first of
 the later channels — Avalonia or Ratatui — where the question of what
 "the package ships types" means comes back with no TypeScript in sight.
+
+## KT5 · A package that spoke one language and gave nobody a way in
+
+Approved 2026-09-05, fields 1-3 and 6-9 "Correct"; field 4 answered in
+Kenny's own words, and field 5 pointed at that answer.
+
+**1 · What went wrong.** Every user-visible string in the package was
+written into the component that renders it, in Dutch. Not a translation
+problem — a hardcoded English one would be the same defect wearing a
+different word. The fault is **a user-visible string with no way in from
+outside**: nothing in the public surface let a consumer pass a different
+one.
+
+That definition is not ours. The JobTracker session sharpened it when the
+first draft of this form called the fault "Dutch strings", and they were
+right: they had already been through the same correction themselves
+(their C2 through C6), and the version that names the language fixes the
+symptom while leaving the hole open.
+
+Counted on the day, before the fix: 72 distinct strings across 21 source
+files. The half that matters most is the half nobody sees — the
+screen-reader-only announcements. `components/patterns.jsx` announced a
+copied value as `` `${value} gekopieerd` ``; `js/datatable.js` announced
+its filtered row count in Dutch into an `aria-live` region. Those fail
+silently, and only for the people who cannot see that they failed.
+
+The consequence was measurable in what JobTracker had actually adopted:
+the components that carry no text. A ThemeSwitcher whose menu says
+"Thema wisselen" on an English page is not a component you can use, so
+they did not use it.
+
+**2 · Which gate let it through.** None of them, and that is the finding.
+Fourteen gates run on every commit and not one of them reads a string.
+The layer gate refuses a colour written outside the token layer; there
+was no equivalent asking where a sentence comes from. The browser suite
+asserts on the rendered text, which made it worse rather than better:
+432 tests asserted Dutch text, so the tests and the code agreed with each
+other and the gate stayed green. Agreement between a test and the code it
+tests is not evidence when both were written by the same hand in the same
+hour.
+
+**3 · Where the same fault sits elsewhere.** Everywhere text is produced.
+The sweep found it in all four channels: the framework-free modules, the
+React components, the fx layer, and the theme picker that Phase 0 had
+already declined for other reasons. It is not present in `css/` — a
+stylesheet has no words — nor in the Home Assistant themes.
+
+**4 · The measure.** Kenny's answer, verbatim, is the specification:
+
+> De standaardtaal is overal Engels. Maar als het gaat over tekst
+> toevoegen aan een knop ofzo, dan moeten wij daar niet over beslissen.
+> Zowel React als html/javascript als alle andere soorten componenten die
+> we maken moeten de optie hebben om tekst en dergelijke te kunnen
+> veranderen. We willen geen hardcoded "magic strings" in ons project.
+> Wij bieden de basis, de consumenten vullen de inhoud in.
+
+Built as three things.
+
+(a) `js/strings.js` — one dictionary, 72 keys, English defaults, frozen.
+Keys that vary take arguments rather than being assembled by the caller
+(`tableRowsFiltered(shown, total)`, not a template the consumer has to
+rebuild), because a consumer who has to concatenate is a consumer who
+cannot reorder for their own grammar.
+
+(b) Three layers to reach it, nearest wins: a `strings` prop, then a
+`StringsProvider` (`hooks/use-strings.jsx`), then `setStrings()` globally
+for the framework-free channel. A consumer who mounts nothing gets
+English, so this costs an existing page nothing.
+
+(c) `STRINGS_NL`, exported and frozen: the Dutch that used to be
+hardcoded, now one import. It is the migration path for kyu, almanac and
+kp-soft, and it is deliberately not the default.
+
+The option this form does not contain is worth recording. An earlier
+draft offered "Dutch by design" — keep the defaults Dutch and document
+it. JobTracker refused to treat that as a legitimate choice, on the
+ground that it answers the language question and leaves the hole. The
+option was withdrawn rather than presented, and this note is here so that
+the withdrawal is visible rather than silent.
+
+**5 · What the remedy costs.** Kenny's answer to field 5 was "zie vorige
+antwoord" — the cost is accepted as part of the measure above. Stated
+plainly: the default language on screen changes from Dutch to English for
+every consumer who renders a component with text in it. That is visible
+and it is breaking, which is why it is a major version rather than a
+minor one, and `STRINGS_NL` is the one-line undo for anyone who wants the
+old words back.
+
+Inside the repository it cost 21 files rewritten to read from the
+dictionary, 432 browser tests rewritten to assert from `DEFAULT_STRINGS`
+rather than from literals, and one new gate.
+
+**6 · Who enforces it.** Code. `gates/check-strings.mjs` reads the source
+and refuses a literal user-visible string that does not come from the
+dictionary — the same shape as the layer gate, and it runs in
+`npm run gates`, so in the commit hook and in CI.
+
+It matches sinks rather than shapes. The first version guessed from what
+a string looked like and produced 110 findings of which six were real,
+which is a gate nobody keeps. This one asks where the literal *goes*:
+`textContent`, `placeholder`, `title`, `setAttribute('aria-label', …)`,
+JSX attributes and text nodes, and — the case that matters — a bare
+literal inside a JSX expression, which is how an sr-only announcement is
+written.
+
+**7 · How we measure that it works, and when.** Drilled at the moment of
+building, per standing rule 7e, in four shapes, because a gate that
+catches three of four is a gate that will be trusted for the fourth:
+
+| Shape | Where | Result |
+| ----- | ----- | ------ |
+| `textContent =` | `js/datatable.js` | red |
+| `setAttribute('aria-label', …)` | `js/combobox.js` | red |
+| JSX attribute | `components/datatable.jsx` | red |
+| literal in a JSX expression (sr-only) | `components/patterns.jsx` | red |
+
+The fourth one is the reason the drill was worth doing. The gate passed
+it on the first attempt — `` `${value} copied` `` reduced to the single
+lowercase word "copied", which the gate read as an attribute value rather
+than a phrase. That is precisely the string KT5 exists about, so the gate
+would have shipped green while missing its own case. Fixed by letting the
+template hole stand in as a word; all four drills recorded in
+`gates/gates.test.mjs` so the exemptions cannot quietly widen back over
+them.
+
+That measures our side. The consumer side is queued as **KT5-M1**: a
+consumer builds a screen from these components and supplies their own
+words without touching this repository. JobTracker's three input screens
+with `Form` and `FormField` is the case, run in their session.
+
+**8 · The fallback if the measurement fails.** If a consumer cannot get
+their own words in without patching us, the dictionary is the wrong
+shape, and the next step is not more keys: the components that carry text
+take a render prop for the text-bearing part, so the consumer supplies
+the node rather than the string. That is a larger change and a worse API,
+which is why it is the fallback and not the measure.
+
+If the gate turns out to be noise — findings that are not real, often
+enough that someone starts adding exemptions to get a commit through —
+it narrows to the accessibility sinks alone (`aria-label`, `aria-*` text,
+`role="status"` content), because those are the ones that fail silently.
+
+**9 · When we review the measure.** At the first consumer that ships in a
+language which is neither English nor Dutch, where plural rules and word
+order stop being something a dictionary of complete sentences can
+express. And at the first of the later channels — Avalonia or Ratatui —
+where "the package ships its strings" has to mean something with no
+JavaScript in sight.

@@ -31,6 +31,7 @@
 // to be announced. That is where nearly every implementation stops short,
 // so both are asserted by the suite rather than left to care.
 
+import { getStrings } from './strings.js';
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
 const STATUS = '[data-kp-datatable-status]';
@@ -123,16 +124,17 @@ export function attachDataTables(root = document) {
             if (status !== null) {
                 const total = all.length;
                 const count = shown.length;
-                status.textContent = count === total ? `${total} rijen` : `${count} van ${total} rijen`;
+                const s = getStrings();
+                status.textContent = count === total ? s.tableRows(total) : s.tableRowsFiltered(count, total);
             }
             if (pager !== null) {
                 pager.textContent = '';
-                pager.append(pagerButton('Vorige', page > 0, () => (page -= 1)));
+                pager.append(pagerButton(getStrings().previous, page > 0, () => (page -= 1)));
                 const label = document.createElement('span');
                 label.className = 'kp-datatable__page';
                 label.textContent = `${page + 1} / ${pages}`;
                 pager.append(label);
-                pager.append(pagerButton('Volgende', page < pages - 1, () => (page += 1)));
+                pager.append(pagerButton(getStrings().next, page < pages - 1, () => (page += 1)));
             }
             const empty = /** @type {HTMLElement | null} */ (wrap.querySelector('[data-kp-datatable-empty]'));
             if (empty !== null) empty.hidden = shown.length > 0;

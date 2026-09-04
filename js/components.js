@@ -17,6 +17,7 @@
 // rather than left to delete something. It is not thrown: one bad button
 // on a dashboard should not take the page down with it.
 
+import { getStrings } from './strings.js';
 const VIOLATION_EVENT = 'kp-contract-violation';
 
 /** @typedef {{ rule: string, element: Element, message: string }} Violation */
@@ -111,7 +112,7 @@ export function attachConfirmations(root = document, { windowMs = CONFIRM_WINDOW
         button.dataset.kpConfirmAttached = '1';
 
         const original = button.textContent ?? '';
-        const phrase = button.dataset.kpConfirm || 'Bevestigen';
+        const phrase = button.dataset.kpConfirm || getStrings().confirm;
         let armed = false;
         let timer = 0;
 

@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import { REORDER_EVENT, SPLIT_EVENT } from '../js/structure.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Tree, reorder and split pane, React [TH45, TH46, TH55].
 //
@@ -136,9 +137,10 @@ export function Tree({ nodes, label, onSelect }) {
 /**
  * A list that reorders from the keyboard [TH46].
  *
- * @param {{ items: { id: string, label: string }[], onChange?: (order: string[]) => void }} props
+ * @param {{ items: { id: string, label: string }[], onChange?: (order: string[]) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function Reorder({ items, onChange }) {
+export function Reorder({ items, onChange, strings }) {
+    const s = useStrings(strings);
     const [order, setOrder] = useState(items.map((i) => i.id));
     const byId = new Map(items.map((i) => [i.id, i]));
     const list = useRef(/** @type {HTMLUListElement | null} */ (null));
@@ -165,7 +167,7 @@ export function Reorder({ items, onChange }) {
                     <button
                         type="button"
                         data-kp-handle
-                        aria-label={`Verplaats ${byId.get(id)?.label ?? id}`}
+                        aria-label={s.reorderHandle(byId.get(id)?.label ?? id)}
                         onKeyDown={(event) => {
                             if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
                             event.preventDefault();
@@ -196,9 +198,11 @@ export function Reorder({ items, onChange }) {
 /**
  * Two panes and a separator that moves with the arrow keys [TH55].
  *
- * @param {{ start: import('react').ReactNode, end: import('react').ReactNode, label?: string, min?: number, max?: number, initial?: number }} props
+ * @param {{ start: import('react').ReactNode, end: import('react').ReactNode, label?: string, min?: number, max?: number, initial?: number, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function SplitPane({ start, end, label = 'Panelen verdelen', min = 10, max = 90, initial = 50 }) {
+export function SplitPane({ start, end, label, min = 10, max = 90, initial = 50, strings }) {
+    const s = useStrings(strings);
+    const name = label ?? s.splitLabel;
     const [value, setValue] = useState(initial);
     const id = useId();
 
@@ -228,7 +232,7 @@ export function SplitPane({ start, end, label = 'Panelen verdelen', min = 10, ma
                 role="separator"
                 tabIndex={0}
                 aria-orientation="vertical"
-                aria-label={label}
+                aria-label={name}
                 aria-valuemin={min}
                 aria-valuemax={max}
                 // The position lives here, not only in the style: a

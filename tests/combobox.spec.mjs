@@ -9,6 +9,7 @@
 // the showcase is for; this is the half a test can actually judge.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -74,7 +75,7 @@ for (const channel of CHANNELS) {
             await expect(box.locator('.kp-combobox__option:visible')).toHaveCount(1);
             // A sighted user watches the list shrink; this is how everyone
             // else finds out.
-            await expect(box.locator('[data-kp-combobox-status]')).toHaveText('1 resultaat');
+            await expect(box.locator('[data-kp-combobox-status]')).toHaveText(S.oneResult);
         });
 
         test('Escape closes the list without choosing [TH39]', async ({ page }) => {
@@ -110,8 +111,8 @@ for (const channel of CHANNELS) {
             const remove = page.locator(`${channel.tags} .kp-tag__remove`).first();
             // A row of identical × buttons is useless without a name.
             const label = await remove.getAttribute('aria-label');
-            expect(label).toMatch(/verwijderen$/);
-            expect(label?.length).toBeGreaterThan('verwijderen'.length);
+            // The name is the option's, wrapped by whatever the dictionary says.
+            expect(label).toBe(S.removeNamed('Urgent'));
         });
 
         test('Backspace in an empty field removes the last tag [TH41]', async ({ page }) => {

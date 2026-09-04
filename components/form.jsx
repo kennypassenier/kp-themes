@@ -1,4 +1,5 @@
 import { createContext, useContext, useId, useRef, useState } from 'react';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Form, React [TH38].
 //
@@ -18,7 +19,9 @@ import { createContext, useContext, useId, useRef, useState } from 'react';
 // no `aria-invalid`, no blur validation, no busy state. Hence the
 // context: the form owns the validation, the fields render what it found.
 
-/** @typedef {{ errors: Record<string, string>, validate: (el: HTMLInputElement) => void }} FormState */
+/** @typedef {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} Control */
+
+/** @typedef {{ errors: Record<string, string>, validate: (el: Control) => void }} FormState */
 
 // The default is null and the type has to say so, or createContext infers
 // `Context<null>` from the argument and refuses every real value.
@@ -27,6 +30,13 @@ const FormContext = createContext(/** @type {FormState | null} */ (null));
 /**
  * One field: label, optional help, error, and the wiring between them.
  *
+ * `type` is the control, not only the input type. Anything the browser
+ * knows (`text`, `email`, `number`, …) renders an `<input>`; `select`,
+ * `textarea`, `checkbox` and `radio` render what they say. Before this
+ * the component rendered an `<input>` whatever it was told, so half of
+ * every real form had to be written by hand beside it — losing the
+ * label, the error and the describedby wiring that are the whole point.
+ *
  * @param {{
  *   label: string,
  *   name: string,
@@ -34,10 +44,14 @@ const FormContext = createContext(/** @type {FormState | null} */ (null));
  *   error?: string,
  *   required?: boolean,
  *   type?: string,
+ *   options?: { value: string, label: string, disabled?: boolean }[],
+ *   children?: import('react').ReactNode,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * } & Record<string, unknown>} props
  */
-export function FormField({ label, name, help, error, required = false, type = 'text', className = '', ...rest }) {
+export function FormField({ label, name, help, error, required = false, type = 'text', options, children, strings, className = '', ...rest }) {
+    const s = useStrings(strings);
     const id = useId();
     const form = useContext(FormContext);
     const helpId = `${id}-help`;
@@ -49,30 +63,16 @@ export function FormField({ label, name, help, error, required = false, type = '
     // Overwriting describedby is how help disappears the first time
     // someone gets something wrong.
     const described = [help && helpId, message && errorId].filter(Boolean).join(' ') || undefined;
+    // Only once someone has left the field. Reporting while they type the
+    // third character of an email address is technically true and
+    // practically hostile.
+    /** @param {import('react').FocusEvent<Control>} event */
+    const onBlur = (event) => form?.validate(event.currentTarget);
 
-    return (
-        <div className={`kp-field ${message ? 'kp-field--invalid' : ''} ${className}`.trim()}>
-            <label className="kp-field__label" htmlFor={id}>
-                {label}
-                {/* The word, not only the asterisk: a star is read aloud as
-                    "star" and means nothing to anyone who never learned the
-                    convention. */}
-                {required && <span className="kp-field__required">verplicht</span>}
-            </label>
-            <input
-                id={id}
-                name={name}
-                type={type}
-                required={required}
-                className="kp-field__input"
-                aria-describedby={described}
-                aria-invalid={message ? 'true' : undefined}
-                // Only once someone has left the field. Reporting while
-                // they type the third character of an email address is
-                // technically true and practically hostile.
-                onBlur={(event) => form?.validate(event.currentTarget)}
-                {...rest}
-            />
+    /** The word, not only the asterisk: a star is read aloud as "star". */
+    const marker = required ? <span className="kp-field__required">{s.formRequired}</span> : null;
+    const notes = (
+        <>
             {help && (
                 <span className="kp-field__help" id={helpId}>
                     {help}
@@ -83,12 +83,108 @@ export function FormField({ label, name, help, error, required = false, type = '
                     {message}
                 </span>
             )}
+        </>
+    );
+    const wrapper = `kp-field ${message ? 'kp-field--invalid' : ''} ${className}`.trim();
+
+    // A radio group is a group, so the label is a legend and the state
+    // belongs to the group rather than to one of its buttons: aria-invalid
+    // on a single radio says the wrong thing about the other three.
+    if (type === 'radio') {
+        return (
+            <fieldset
+                className={`${wrapper} kp-fieldset`}
+                role="radiogroup"
+                aria-describedby={described}
+                aria-invalid={message ? 'true' : undefined}
+                data-kp-radiogroup={name}
+            >
+                <legend className="kp-field__label">
+                    {label}
+                    {marker}
+                </legend>
+                {(options ?? []).map((option, index) => (
+                    <div className="kp-field__option" key={option.value}>
+                        <input
+                            id={`${id}-${index}`}
+                            name={name}
+                            type="radio"
+                            value={option.value}
+                            required={required}
+                            disabled={option.disabled}
+                            className="kp-field__check"
+                            onBlur={onBlur}
+                            {...rest}
+                        />
+                        <label htmlFor={`${id}-${index}`}>{option.label}</label>
+                    </div>
+                ))}
+                {notes}
+            </fieldset>
+        );
+    }
+
+    // The box comes before its label, because that is the order it is
+    // read in and the order it is clicked in.
+    if (type === 'checkbox') {
+        return (
+            <div className={`${wrapper} kp-field--check`}>
+                <input
+                    id={id}
+                    name={name}
+                    type="checkbox"
+                    required={required}
+                    className="kp-field__check"
+                    aria-describedby={described}
+                    aria-invalid={message ? 'true' : undefined}
+                    onBlur={onBlur}
+                    {...rest}
+                />
+                <label className="kp-field__label" htmlFor={id}>
+                    {label}
+                    {marker}
+                </label>
+                {notes}
+            </div>
+        );
+    }
+
+    const shared = {
+        id,
+        name,
+        required,
+        className: 'kp-field__input',
+        'aria-describedby': described,
+        'aria-invalid': message ? /** @type {const} */ ('true') : undefined,
+        onBlur,
+    };
+
+    return (
+        <div className={wrapper}>
+            <label className="kp-field__label" htmlFor={id}>
+                {label}
+                {marker}
+            </label>
+            {type === 'select' ? (
+                <select {...shared} {...rest}>
+                    {/* The options a consumer passes, or whatever they put
+                        inside — an optgroup is theirs to write. */}
+                    {children ??
+                        (options ?? []).map((option) => (
+                            <option key={option.value} value={option.value} disabled={option.disabled}>
+                                {option.label}
+                            </option>
+                        ))}
+                </select>
+            ) : type === 'textarea' ? (
+                <textarea {...shared} className="kp-field__input kp-field__input--multiline" {...rest} />
+            ) : (
+                <input type={type} {...shared} {...rest} />
+            )}
+            {notes}
         </div>
     );
 }
-
-/** What the browser's own message becomes when the field says nothing better. */
-const FALLBACK = 'Dit veld is niet correct ingevuld.';
 
 /**
  * A form that gathers its errors and takes focus to them.
@@ -98,21 +194,23 @@ const FALLBACK = 'Dit veld is niet correct ingevuld.';
  *   onValid?: (data: FormData) => void,
  *   submitLabel?: string,
  *   busyLabel?: string,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = 'Bezig…', className = '' }) {
+export function Form({ children, onValid, submitLabel, busyLabel, strings, className = '' }) {
+    const s = useStrings(strings);
     const [errors, setErrors] = useState(/** @type {Record<string, string>} */ ({}));
     const [summaryList, setSummaryList] = useState(/** @type {{ id: string, name: string }[]} */ ([]));
     const [busy, setBusy] = useState(false);
     const summary = useRef(/** @type {HTMLDivElement | null} */ (null));
 
-    /** @param {HTMLInputElement} field */
+    /** @param {Control} field */
     const validate = (field) => {
         setErrors((was) => {
             const next = { ...was };
             if (field.checkValidity()) delete next[field.name];
-            else next[field.name] = field.validationMessage || FALLBACK;
+            else next[field.name] = field.validationMessage || s.formInvalid;
             return next;
         });
     };
@@ -121,17 +219,41 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
     const onSubmit = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
-        const fields = /** @type {HTMLInputElement[]} */ ([...form.elements].filter((el) => el instanceof HTMLInputElement && el.type !== 'submit'));
-        const bad = fields.filter((field) => !field.checkValidity());
+        // Every control the browser validates, not only the inputs: a
+        // required select that nobody chose from is exactly the field a
+        // summary has to name, and the first version of this filter threw
+        // it away before looking.
+        const fields = /** @type {Control[]} */ (
+            [...form.elements].filter(
+                (el) =>
+                    (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) && el.type !== 'submit',
+            )
+        );
+        // One line per group, not per radio button: four radios in one
+        // group are one thing somebody forgot to answer.
+        /** @type {Set<string>} */
+        const groups = new Set();
+        const bad = fields.filter((field) => {
+            if (field.checkValidity()) return false;
+            if (field.type !== 'radio') return true;
+            if (groups.has(field.name)) return false;
+            groups.add(field.name);
+            return true;
+        });
 
         /** @type {Record<string, string>} */
         const found = {};
-        for (const field of bad) found[field.name] = field.validationMessage || FALLBACK;
+        for (const field of bad) found[field.name] = field.validationMessage || s.formInvalid;
         setErrors(found);
         setSummaryList(
             bad.map((field) => ({
                 id: field.id,
-                name: form.querySelector(`label[for="${CSS.escape(field.id)}"]`)?.textContent?.trim() ?? field.name,
+                // A radio's own label is the name of one option; the
+                // legend is the name of the question.
+                name:
+                    (field.type === 'radio' ? field.closest('fieldset')?.querySelector('legend')?.textContent?.trim() : undefined) ??
+                    form.querySelector(`label[for="${CSS.escape(field.id)}"]`)?.textContent?.trim() ??
+                    field.name,
             })),
         );
 
@@ -155,9 +277,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
                 {summaryList.length > 0 && (
                     <div className="kp-form__summary" data-kp-form-summary tabIndex={-1} ref={summary}>
                         <p className="kp-form__summary-title">
-                            {summaryList.length === 1
-                                ? 'Er is 1 veld niet correct ingevuld.'
-                                : `Er zijn ${summaryList.length} velden niet correct ingevuld.`}
+                            {summaryList.length === 1 ? s.formSummaryOne : s.formSummaryMany(summaryList.length)}
                         </p>
                         <ul>
                             {summaryList.map((error) => (
@@ -178,7 +298,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
                 )}
                 {children}
                 <button type="submit" className="kp-button kp-button--primary" data-kp-submit disabled={busy} aria-busy={busy ? 'true' : undefined}>
-                    {busy ? busyLabel : submitLabel}
+                    {busy ? (busyLabel ?? s.busy) : (submitLabel ?? s.save)}
                 </button>
             </form>
         </FormContext.Provider>

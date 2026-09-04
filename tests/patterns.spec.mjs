@@ -5,6 +5,7 @@
 // nobody notices until data is gone.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -24,7 +25,7 @@ test('the copy button copies the value and confirms in words [TH53]', async ({ p
     expect(await page.evaluate(() => window.__copied)).toBe('a3f9-2b71');
     // The label itself changes: a colour flash is invisible to a screen
     // reader and to anyone who looked away for a second.
-    await expect(button).toHaveText('Gekopieerd');
+    await expect(button).toHaveText(S.copied);
     await expect(button).toHaveAttribute('data-kp-copied', '');
 });
 
@@ -40,7 +41,7 @@ test('a refused clipboard is said out loud, not swallowed [TH53]', async ({ page
     // Silence here is how a copy button becomes the control people click
     // twice and then stop trusting.
     await expect(button).toHaveAttribute('data-kp-copy-failed', '');
-    await expect(page.locator('.kp-toast')).toContainText('geblokkeerd');
+    await expect(page.locator('.kp-toast')).toContainText(S.copyBlockedAnnouncement);
 });
 
 test('an optimistic delete hides the row and offers an undo [TH51]', async ({ page }) => {
@@ -51,7 +52,7 @@ test('an optimistic delete hides the row and offers an undo [TH51]', async ({ pa
     // Gone immediately: waiting for a server first is what makes an
     // interface feel slow, and the undo is what makes going first safe.
     await expect(row).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Ongedaan maken' })).toBeVisible();
+    await expect(page.getByRole('button', { name: S.undo })).toBeVisible();
 });
 
 test('undo brings the row back and never commits [TH51]', async ({ page }) => {
@@ -63,7 +64,7 @@ test('undo brings the row back and never commits [TH51]', async ({ page }) => {
         });
     });
     await page.locator('[data-test="plain-undo"]').click();
-    await page.getByRole('button', { name: 'Ongedaan maken' }).click();
+    await page.getByRole('button', { name: S.undo }).click();
     await expect(page.locator('[data-test="plain-undo-row"]')).toBeVisible();
 
     // The fixture's window is 800 ms; well past it, nothing may have

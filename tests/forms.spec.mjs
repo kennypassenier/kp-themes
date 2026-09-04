@@ -5,6 +5,7 @@
 // errors, and moving focus to them.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 // Driven in both channels [AR7]: the framework-free half attaches to a
@@ -38,7 +39,7 @@ for (const channel of CHANNELS) {
 
             const summary = form.locator('[data-kp-form-summary]');
             await expect(summary).toBeVisible();
-            await expect(summary).toContainText('2 velden');
+            await expect(summary).toContainText(S.formSummaryMany(2));
             // Rendered is not enough: a message above the fold is invisible to
             // someone whose focus is at the bottom of a long form, which is
             // exactly where the submit button is.
@@ -117,3 +118,99 @@ for (const channel of CHANNELS) {
         });
     });
 }
+
+// Every field type, both channels [TH38, TH61].
+//
+// FormField rendered an `<input>` whatever it was told, so a real form
+// grew a hand-written half beside it — without the label, the error and
+// the describedby wiring that are the point of the component. The
+// framework-free half already worked on anything the browser validates;
+// what it did not know was that a radio group is one question.
+const RICH = [
+    {
+        name: 'framework-free',
+        form: '[data-test="plain-rich-form"]',
+        submit: '[data-test="plain-rich-submit"]',
+        land: '[data-test="plain-rich-land"]',
+        toelichting: '[data-test="plain-rich-toelichting"]',
+        akkoord: '[data-test="plain-rich-akkoord"]',
+        group: '[data-kp-radiogroup="kanaal"]',
+        radio: '[data-test="plain-rich-kanaal-mail"]',
+    },
+    {
+        name: 'React',
+        form: '[data-test="react-rich-form"] form',
+        submit: '[data-test="react-rich-form"] button[type="submit"]',
+        land: '[data-test="react-rich-form"] select[name="land"]',
+        toelichting: '[data-test="react-rich-form"] textarea[name="toelichting"]',
+        akkoord: '[data-test="react-rich-form"] input[name="akkoord"]',
+        group: '[role="radiogroup"]',
+        radio: '[data-test="react-rich-form"] input[name="kanaal"]',
+    },
+];
+
+for (const channel of RICH) {
+    test.describe(`form field types — ${channel.name}`, () => {
+        test('a select, a textarea, a checkbox and a radio group all render and all validate [TH61]', async ({ page }) => {
+            await page.goto(URL);
+            await expect(page.locator(channel.land)).toHaveCount(1);
+            await expect(page.locator(channel.toelichting)).toHaveCount(1);
+            await expect(page.locator(channel.akkoord)).toHaveCount(1);
+            await page.locator(channel.submit).click();
+            // Drill: with the React FormField's select branch removed, this
+            // goes red on the React channel with 0 selects found.
+            await expect(page.locator(channel.land)).toHaveAttribute('aria-invalid', 'true');
+            await expect(page.locator(channel.toelichting)).toHaveAttribute('aria-invalid', 'true');
+            await expect(page.locator(channel.akkoord)).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        test('the summary counts a radio group once, not once per button [TH61]', async ({ page }) => {
+            await page.goto(URL);
+            const form = page.locator(channel.form);
+            await page.locator(channel.submit).click();
+            const summary = form.locator('[data-kp-form-summary]');
+            // Four questions, five controls: two radios are one question.
+            // Drill: with the deduplication removed this reads five.
+            await expect(summary).toContainText(S.formSummaryMany(4));
+            await expect(summary.locator('a')).toHaveCount(4);
+        });
+
+        test('the summary names the radio group by its legend, not by an option [TH61]', async ({ page }) => {
+            await page.goto(URL);
+            const form = page.locator(channel.form);
+            await page.locator(channel.submit).click();
+            const links = form.locator('[data-kp-form-summary] a');
+            // "Hoe bereiken we je?" is the question; "E-mail" is one answer
+            // to it, and naming the answer tells nobody what is missing.
+            await expect(links.last()).toContainText('Hoe bereiken we je?');
+        });
+
+        test('the group carries the invalid state, not one of its buttons [TH61]', async ({ page }) => {
+            await page.goto(URL);
+            const form = page.locator(channel.form);
+            await page.locator(channel.submit).click();
+            // aria-invalid on a single radio says the wrong thing about the
+            // other one. Drill: with stateHolder() returning the field
+            // itself, the framework-free channel fails here.
+            await expect(form.locator(channel.group)).toHaveAttribute('aria-invalid', 'true');
+            await expect(page.locator(channel.radio).first()).not.toHaveAttribute('aria-invalid', 'true');
+        });
+    });
+}
+
+// TH62: the consumer's own link component.
+test('NavBar renders its links through the component a consumer hands in [TH62]', async ({ page }) => {
+    await page.goto(URL);
+    const nav = page.locator('[data-test="react-router-nav"]');
+    // Drill: with `linkComponent: Link = 'a'` ignored and a literal <a>
+    // rendered again, this goes red — no element carries data-routed.
+    await expect(nav.locator('a[data-routed]')).toHaveCount(1);
+    await expect(nav.locator('a[data-routed]')).toHaveText('Gerouteerd');
+    // The class and the current marker still land on it: handing over the
+    // rendering may not hand over the styling.
+    await expect(nav.locator('a[data-routed]')).toHaveClass(/kp-nav__link/);
+    // The skip link is deliberately NOT routed: it is a same-page anchor,
+    // and sending it through a router turns the one link a keyboard user
+    // needs into a navigation.
+    await expect(nav.locator('a.kp-skip-link[data-routed]')).toHaveCount(0);
+});

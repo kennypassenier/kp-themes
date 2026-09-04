@@ -30,6 +30,10 @@ export { DatePicker, Upload, Wizard } from './components/flow.jsx';
 export { COLOR_EVENT, attachColorPickers } from './js/colorpicker.js';
 export { COLUMNS, LAYOUT_EVENT, attachGrids, layoutOf } from './js/gridlayout.js';
 export { ColorPicker, GridLayout } from './components/canvas.jsx';
+export { StringsProvider, useStrings } from './hooks/use-strings.jsx';
+export { DEFAULT_STRINGS, STRINGS_NL, getStrings, resolveStrings, setStrings } from './js/strings.js';
+export type Strings = import('./js/strings.js').Strings;
+/** @typedef {import('./js/strings.js').Strings} Strings */
 export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';
 export { DEFAULT_THEME, STORAGE_KEY, THEME_LABELS, THEME_RECORDS, THEMES, applyTheme, initializeTheme, isTheme, useAppearance, useTheme, } from './hooks/use-theme.js';
 export type Theme = import('./hooks/use-theme.js').Theme;

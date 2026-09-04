@@ -15,12 +15,13 @@ export declare function EmptyState({ title, body, action, filtered }: {
 /**
  * A value with a copy button that confirms in words [TH53].
  *
- * @param {{ value: string, label?: string, copiedText?: string }} props
+ * @param {{ value: string, label?: string, copiedText?: string, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export declare function Copyable({ value, label, copiedText }: {
+export declare function Copyable({ value, label, copiedText, strings }: {
     value: string;
     label?: string;
     copiedText?: string;
+    strings?: Partial<import('../js/strings.js').Strings>;
 }): import("react").JSX.Element;
 /**
  * A health indicator [TH52]. The dot is never the only carrier.

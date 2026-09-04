@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import { contrast, formatHsl, hslToRgb, meets, tokenColour } from '../js/contrast.js';
 import { COLUMNS } from '../js/gridlayout.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Colour picker and movable grid, React [TH56, TH57].
 //
@@ -12,9 +13,10 @@ import { COLUMNS } from '../js/gridlayout.js';
 /**
  * A colour picker that measures itself against the theme [TH57].
  *
- * @param {{ against?: string, kind?: 'text' | 'large' | 'non-text', initial?: {h: number, s: number, l: number}, onChange?: (value: string) => void }} props
+ * @param {{ against?: string, kind?: 'text' | 'large' | 'non-text', initial?: {h: number, s: number, l: number}, onChange?: (value: string) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function ColorPicker({ against = '--background', kind = 'text', initial = { h: 220, s: 90, l: 56 }, onChange }) {
+export function ColorPicker({ against = '--background', kind = 'text', initial = { h: 220, s: 90, l: 56 }, onChange, strings }) {
+    const words = useStrings(strings);
     const id = useId();
     const [colour, setColour] = useState(initial);
     const [ground, setGround] = useState(/** @type {[number, number, number] | null} */ (null));
@@ -39,11 +41,13 @@ export function ColorPicker({ against = '--background', kind = 'text', initial =
         onChange?.(formatHsl(next));
     };
 
+    // The three channel names are the consumer's too: a picker whose
+    // sliders say "Tint" on an English page is the same defect in small.
     /** @type {{ channel: 'h' | 's' | 'l', label: string, max: number }[]} */
     const channels = [
-        { channel: 'h', label: 'Tint', max: 360 },
-        { channel: 's', label: 'Verzadiging', max: 100 },
-        { channel: 'l', label: 'Helderheid', max: 100 },
+        { channel: 'h', label: words.colourHue, max: 360 },
+        { channel: 's', label: words.colourSaturation, max: 100 },
+        { channel: 'l', label: words.colourLightness, max: 100 },
     ];
 
     return (
@@ -72,10 +76,10 @@ export function ColorPicker({ against = '--background', kind = 'text', initial =
             </output>
             <p className="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite">
                 {ratio === null
-                    ? `Geen contrast te meten: ${against} bestaat niet in dit thema.`
+                    ? words.contrastMissing(against)
                     : // The number AND the verdict: a bare 4.31 means
                       // nothing to anyone who does not know the thresholds.
-                      `${ratio.toFixed(2)}:1 tegen ${against} — ${ok ? 'haalbaar' : 'te weinig'}`}
+                      words.contrastReport(ratio.toFixed(2), against, ok ? words.contrastPasses : words.contrastFails)}
             </p>
         </div>
     );
@@ -86,9 +90,10 @@ export function ColorPicker({ against = '--background', kind = 'text', initial =
 /**
  * A dashboard the reader arranges [TH56].
  *
- * @param {{ tiles: Tile[], columns?: number, onLayout?: (layout: Tile[]) => void, render?: (tile: Tile) => import('react').ReactNode }} props
+ * @param {{ tiles: Tile[], columns?: number, onLayout?: (layout: Tile[]) => void, render?: (tile: Tile) => import('react').ReactNode, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function GridLayout({ tiles, columns = COLUMNS, onLayout, render }) {
+export function GridLayout({ tiles, columns = COLUMNS, onLayout, render, strings }) {
+    const words = useStrings(strings);
     const [layout, setLayout] = useState(tiles);
 
     /** @param {string} id @param {Partial<Tile>} next */
@@ -126,7 +131,7 @@ export function GridLayout({ tiles, columns = COLUMNS, onLayout, render }) {
                     // Said in words, because a tile that announces itself
                     // only by moving is one nobody without sight can
                     // arrange.
-                    aria-label={`${tile.label}, kolom ${tile.x + 1}, rij ${tile.y + 1}, ${tile.w} bij ${tile.h}`}
+                    aria-label={words.tileLabel(tile.label, tile.x + 1, tile.y + 1, tile.w, tile.h)}
                     style={{ gridColumn: `${tile.x + 1} / span ${tile.w}`, gridRow: `${tile.y + 1} / span ${tile.h}` }}
                     onKeyDown={(event) => {
                         const step = event.shiftKey;

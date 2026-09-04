@@ -29,13 +29,14 @@
 // format is, because parsing a localised string on the server is how off-
 // by-one-day bugs are born.
 
+import { getStrings } from './strings.js';
 const PICKER = '[data-kp-datepicker]';
 
 /** Fired when a date is chosen or typed. A contract value [TH26]: the detail carries the ISO date. */
 export const DATE_EVENT = 'kp-date-change';
 
-const DAYS = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'];
-const MONTHS = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+// Weekday and month names come from the dictionary, because a calendar
+// is the one component where the text IS the content [KT5].
 
 /** @param {Date} date */
 export function toISO(date) {
@@ -106,7 +107,7 @@ export function attachDatePickers(root = document) {
             const back = document.createElement('button');
             back.type = 'button';
             back.className = 'kp-button kp-button--ghost';
-            back.setAttribute('aria-label', 'Vorige maand');
+            back.setAttribute('aria-label', getStrings().previousMonth);
             back.textContent = '‹';
             back.addEventListener('click', () => {
                 cursor = new Date(year, month - 1, 1);
@@ -115,11 +116,11 @@ export function attachDatePickers(root = document) {
             const title = document.createElement('span');
             title.className = 'kp-datepicker__title';
             title.id = `${input.id || 'kp-date'}-title`;
-            title.textContent = `${MONTHS[month]} ${year}`;
+            title.textContent = `${getStrings().months[month]} ${year}`;
             const next = document.createElement('button');
             next.type = 'button';
             next.className = 'kp-button kp-button--ghost';
-            next.setAttribute('aria-label', 'Volgende maand');
+            next.setAttribute('aria-label', getStrings().nextMonth);
             next.textContent = '›';
             next.addEventListener('click', () => {
                 cursor = new Date(year, month + 1, 1);
@@ -131,7 +132,7 @@ export function attachDatePickers(root = document) {
             grid.className = 'kp-datepicker__grid';
             grid.setAttribute('role', 'grid');
             grid.setAttribute('aria-labelledby', title.id);
-            for (const day of DAYS) {
+            for (const day of getStrings().weekdays) {
                 const cell = document.createElement('span');
                 cell.className = 'kp-datepicker__weekday';
                 cell.setAttribute('role', 'columnheader');
@@ -153,7 +154,8 @@ export function attachDatePickers(root = document) {
                 button.setAttribute('role', 'gridcell');
                 // The full date as the name: "4" alone tells a screen
                 // reader nothing about which month it is in.
-                button.setAttribute('aria-label', `${day} ${MONTHS[month]} ${year}`);
+                const s = getStrings();
+                button.setAttribute('aria-label', s.dayLabel(day, s.months[month] ?? '', year));
                 button.textContent = String(day);
                 const isChosen = chosen !== null && toISO(chosen) === toISO(date);
                 button.setAttribute('aria-selected', String(isChosen));

@@ -15,25 +15,27 @@ export declare function Tree({ nodes, label, onSelect }: {
 /**
  * A list that reorders from the keyboard [TH46].
  *
- * @param {{ items: { id: string, label: string }[], onChange?: (order: string[]) => void }} props
+ * @param {{ items: { id: string, label: string }[], onChange?: (order: string[]) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export declare function Reorder({ items, onChange }: {
+export declare function Reorder({ items, onChange, strings }: {
     items: {
         id: string;
         label: string;
     }[];
     onChange?: (order: string[]) => void;
+    strings?: Partial<import('../js/strings.js').Strings>;
 }): import("react").JSX.Element;
 /**
  * Two panes and a separator that moves with the arrow keys [TH55].
  *
- * @param {{ start: import('react').ReactNode, end: import('react').ReactNode, label?: string, min?: number, max?: number, initial?: number }} props
+ * @param {{ start: import('react').ReactNode, end: import('react').ReactNode, label?: string, min?: number, max?: number, initial?: number, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export declare function SplitPane({ start, end, label, min, max, initial }: {
+export declare function SplitPane({ start, end, label, min, max, initial, strings }: {
     start: import('react').ReactNode;
     end: import('react').ReactNode;
     label?: string;
     min?: number;
     max?: number;
     initial?: number;
+    strings?: Partial<import('../js/strings.js').Strings>;
 }): import("react").JSX.Element;

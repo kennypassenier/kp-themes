@@ -31,6 +31,7 @@
 // arriving later as a nicety.
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
+import { getStrings } from './strings.js';
 
 const PALETTE = '[data-kp-palette]';
 const SHEET = '[data-kp-shortcuts]';
@@ -42,7 +43,10 @@ const STATUS = '[role="status"]';
 export const RUN_EVENT = 'kp-palette-run';
 
 /** @param {number} n */
-const RESULTS_TEXT = (n) => (n === 0 ? 'Geen opdrachten' : n === 1 ? '1 opdracht' : `${n} opdrachten`);
+const RESULTS_TEXT = (n) => {
+    const s = getStrings();
+    return n === 0 ? s.noCommands : n === 1 ? s.oneCommand : s.manyCommands(n);
+};
 
 /**
  * Is this keystroke the palette's? ⌘K on a Mac, Ctrl+K everywhere else.

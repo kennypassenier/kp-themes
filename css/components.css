@@ -424,6 +424,77 @@
     border-color: var(--destructive);
 }
 
+/* A field is not always a text box. Before this the component rendered an
+ * input whatever it was told, so every real form grew a hand-written half
+ * beside it — without the label, the error and the describedby wiring
+ * that are the point of the component. */
+
+.kp-field__input--multiline {
+    min-height: 5.5rem;
+    /* Vertical only: a textarea dragged wider than its column breaks the
+     * layout it sits in, and nobody needs it. */
+    resize: vertical;
+}
+
+/* The box comes before its label, because that is the order it is read in
+ * and the order it is clicked in. */
+.kp-field--check {
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.kp-field--check .kp-field__label {
+    font-weight: 400;
+}
+
+.kp-field--check .kp-field__help,
+.kp-field--check .kp-field__error {
+    /* Under both, not beside the label: an error squeezed into the gap
+     * next to a checkbox wraps to one word per line at 320 px [DI11]. */
+    flex-basis: 100%;
+}
+
+/* A radio group is a group: fieldset and legend, so the question is read
+ * before the answers rather than once per answer. */
+.kp-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-inline-size: 0;
+}
+
+.kp-fieldset > legend {
+    padding: 0;
+}
+
+.kp-field__option {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.kp-field__check {
+    /* 1.15rem rather than the browser default 13 px: the box is the
+     * target, and a target under 24 px fails WCAG 2.5.8 for anyone whose
+     * hands are not steady. The label is clickable too, which is what
+     * actually makes the target big enough. */
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    accent-color: var(--primary);
+    flex: none;
+}
+
+/* The error text carries the message [DI4]; this only makes the control
+ * itself findable when the summary sends someone to it. A checkbox has no
+ * border to colour, so it is an outline. */
+.kp-field--invalid .kp-field__check {
+    outline: var(--focus-ring-width, 2px) solid var(--destructive);
+    outline-offset: 2px;
+}
+
 /* --- Table [TH3] ----------------------------------------------------- */
 
 .kp-table-wrap {

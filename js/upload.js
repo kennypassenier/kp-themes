@@ -24,6 +24,7 @@
 // `data-error` to a reason. Progress is written as a percentage on
 // `--kp-progress`, so the bar needs no second element.
 
+import { getStrings } from './strings.js';
 const UPLOAD = '[data-kp-upload]';
 
 /** Fired for each accepted file. A contract value [TH26]: the detail carries the File and its row. */
@@ -82,14 +83,14 @@ export function attachUploads(root = document) {
             bar.setAttribute('aria-valuemin', '0');
             bar.setAttribute('aria-valuemax', '100');
             bar.setAttribute('aria-valuenow', '0');
-            bar.setAttribute('aria-label', `Voortgang van ${file.name}`);
+            bar.setAttribute('aria-label', getStrings().uploadProgress(file.name));
 
             const remove = document.createElement('button');
             remove.type = 'button';
             remove.className = 'kp-button kp-button--ghost';
             // Named, not a bare ×: a column of identical buttons is
             // useless to anyone who cannot see which row they are in.
-            remove.setAttribute('aria-label', `${file.name} verwijderen`);
+            remove.setAttribute('aria-label', getStrings().removeNamed(file.name));
             remove.textContent = '×';
             remove.addEventListener('click', () => item.remove());
 
@@ -111,7 +112,7 @@ export function attachUploads(root = document) {
                     // says which one is wrong is the whole point of a list.
                     const item = row(file);
                     item.dataset.state = 'error';
-                    item.dataset.error = `Groter dan ${readableSize(maxBytes)}`;
+                    item.dataset.error = getStrings().uploadTooLarge(readableSize(maxBytes));
                     /** @type {HTMLElement | null} */ (item.querySelector('.kp-upload__message'))?.replaceChildren(item.dataset.error);
                     list.append(item);
                     upload.dispatchEvent(new CustomEvent(REJECT_EVENT, { bubbles: true, detail: { file, reason: 'too-large', item } }));

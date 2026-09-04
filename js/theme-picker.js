@@ -26,6 +26,7 @@
 // colours instead of a copy kept in step by hand [AR11].
 
 import { applyTheme, currentTheme, initializeTheme, onThemeChange, storeTheme, THEMES } from './theme-core.js';
+import { getStrings } from './strings.js';
 
 const PICKER = '[data-kp-theme-picker]';
 const OPTION = '[data-kp-theme]';
@@ -37,12 +38,12 @@ const STATUS = '[data-kp-theme-status]';
  * is a new page load, and a preference that quietly fails to save looks
  * exactly like a broken picker.
  */
-const SAVE_FAILED_TEXT = 'Deze keuze wordt niet onthouden — opslag is geblokkeerd in deze browser.';
+const saveFailedText = () => getStrings().themeSaveFailed;
 
 /** @param {ParentNode} root @param {boolean} failed */
 function showSaveState(root, failed) {
     for (const el of root.querySelectorAll(STATUS)) {
-        el.textContent = failed ? SAVE_FAILED_TEXT : '';
+        el.textContent = failed ? saveFailedText() : '';
         /** @type {HTMLElement} */ (el).hidden = !failed;
     }
 }
@@ -143,7 +144,7 @@ export { THEMES };
  * @param {{ id?: string, label?: string }} [options]
  * @returns {string}
  */
-export function themeMenuMarkup({ id = 'kp-theme-menu', label = 'Thema kiezen' } = {}) {
+export function themeMenuMarkup({ id = 'kp-theme-menu', label = getStrings().themePicker } = {}) {
     // Calling this means markup is about to be inserted, and the attach
     // that ran on import has already been and gone. Without this line the
     // natural usage — import the helper, set innerHTML — produces a menu

@@ -9,6 +9,51 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 1.x to 2.0.0
+
+One breaking change, and it is visible rather than structural: **the
+default language on screen is English.** No export was removed, no
+signature changed, and nothing needs a code change unless you want the
+Dutch words back.
+
+### If you want the Dutch back
+
+```js
+import { STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings';
+
+setStrings(STRINGS_NL);
+```
+
+Once, at startup, before anything renders. In React you can also wrap the
+tree:
+
+```jsx
+import { StringsProvider } from '@kp-soft/themes/hooks/strings';
+
+<StringsProvider value={STRINGS_NL}>
+    <App />
+</StringsProvider>;
+```
+
+### If you want your own words
+
+That is the point of the change. Pass a partial object at any of three
+levels — a `strings` prop on one component, a provider for a subtree, or
+`setStrings()` globally. What you do not name keeps its default. The full
+key list with the English defaults beside it is `js/strings.js`; the
+README section "The words on screen are yours" has the shapes.
+
+### If you vendor the stylesheets only
+
+Nothing changed for you. The strings live in the JavaScript; `css/themes.css`
+and `css/components.css` carry no words.
+
+### The thing worth checking
+
+Your own screen-reader announcements. If you built anything on top of our
+components that reads their `aria-live` regions or repeats their labels,
+those regions now say something else.
+
 ## Coming from 1.0.0 to 1.1.0
 
 Nothing below applies to you: 1.1.0 breaks nothing. Two things change and

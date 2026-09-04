@@ -7,6 +7,7 @@
 // the edge of the drawn grid.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 // Both channels [AR7]. They share `parseDate` — two implementations of
@@ -65,11 +66,11 @@ for (const channel of CHANNELS) {
             await page.locator(channel.input).fill('01-09-2026');
             await page.locator(channel.open).click();
             const panel = page.locator(channel.panel);
-            await expect(panel.locator('.kp-datepicker__title')).toHaveText('september 2026');
+            await expect(panel.locator('.kp-datepicker__title')).toHaveText(`${S.months[8]} 2026`);
             // Stopping at the edge of the drawn grid is the difference between a
             // calendar and a picture of one.
             await panel.locator('[data-kp-day="2026-09-01"]').press('ArrowLeft');
-            await expect(panel.locator('.kp-datepicker__title')).toHaveText('augustus 2026');
+            await expect(panel.locator('.kp-datepicker__title')).toHaveText(`${S.months[7]} 2026`);
             await expect(panel.locator('[data-kp-day="2026-08-31"]')).toBeFocused();
         });
 
@@ -80,7 +81,7 @@ for (const channel of CHANNELS) {
             await page.locator(channel.open).click();
             const panel = page.locator(channel.panel);
             await panel.locator('[data-kp-day="2026-09-04"]').press('PageDown');
-            await expect(panel.locator('.kp-datepicker__title')).toHaveText('oktober 2026');
+            await expect(panel.locator('.kp-datepicker__title')).toHaveText(`${S.months[9]} 2026`);
             await panel.locator('[data-kp-day="2026-10-04"]').press('Enter');
             await expect(input).toHaveValue('04-10-2026');
             await expect(input).toHaveAttribute('data-kp-date-value', '2026-10-04');
@@ -92,7 +93,7 @@ for (const channel of CHANNELS) {
             await page.locator(channel.input).fill('04-09-2026');
             await page.locator(channel.open).click();
             // "4" alone tells a screen reader nothing about which month it is in.
-            await expect(page.locator(`${channel.panel} [data-kp-day="2026-09-04"]`)).toHaveAttribute('aria-label', '4 september 2026');
+            await expect(page.locator(`${channel.panel} [data-kp-day="2026-09-04"]`)).toHaveAttribute('aria-label', S.dayLabel(4, S.months[8], 2026));
         });
 
         test('Escape closes the grid and returns focus [TH43]', async ({ page }) => {

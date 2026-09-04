@@ -149,6 +149,9 @@ TH37 and TH38 were not rated: Kenny asked for them directly.
 | TH57 | Colour picker | Desired | With the contrast ratio against the current theme, measured the way our own gate measures it |
 | TH58 | Guided tour / onboarding | Don't do | Kenny, 2026-09-04. A lot of machinery for something seen once |
 | TH59 | Rich text editor | Don't do | Kenny, 2026-09-04. tiptap and slate are frameworks, not components; taking one on means maintaining an editor. Markdown input and the styling of its output stay in scope |
+| TH60 | One string dictionary, English by default, replaceable from outside | Essential | Correction KT5, 2026-09-05. Test bar: `gates/check-strings.mjs` goes red for each of the four shapes a literal can take, and a consumer replaces a string through a prop, a provider or `setStrings()` without touching this repository |
+| TH61 | FormField renders every control, not only an input | Essential | Kenny, 2026-09-05. Test bar: a select, a textarea, a checkbox and a radio group render and validate in both channels, and a radio group counts as one question in the summary and carries the invalid state as a group |
+| TH62 | A consumer's own link component in NavBar, Breadcrumb and Pagination | Essential | Kenny, 2026-09-05. Test bar: a link component handed in is what renders, keeps the class and the aria-current, and the skip link stays a plain anchor |
 
 **Built on 2026-09-04**, all of round two, in both channels: TH37-TH41,
 TH43-TH46 and TH48-TH57. TH42 (virtual list), TH58 (guided tour) and TH59
