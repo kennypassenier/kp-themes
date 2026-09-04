@@ -22,7 +22,8 @@
         "./js/picker": "./js/theme-picker.js",
         "./js/registry": "./js/theme-registry.js",
         "./js/no-flash": "./js/no-flash.js",
-        "./css/components": "./css/components.css"
+        "./css/components": "./css/components.css",
+        "./js/components": "./js/components.js"
     },
     "files": [
         "index.js",

@@ -165,6 +165,41 @@ body {
                 <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
                 <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
             </section>
+            <section class="sc-specimen" id="light-buttons" data-specimen="buttons">
+                <h3>Button, every variant and state</h3>
+                <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
+                <div class="sc-row"><button type="button" class="kp-button ">default</button><button type="button" class="kp-button kp-button--primary">primary</button><button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Zeker?">destructive</button><button type="button" class="kp-button kp-button--ghost">ghost</button><button type="button" class="kp-button " disabled>uit</button><button type="button" class="kp-button kp-button--primary" disabled>uit</button><button type="button" class="kp-button kp-button--destructive" disabled>uit</button><button type="button" class="kp-button kp-button--ghost" disabled>uit</button></div>
+            </section>
+            <section class="sc-specimen" id="light-badges" data-specimen="badges">
+                <h3>Badge</h3>
+                <p class="sc-note">Seven statuses, each of which says what it is — the colour is the second channel, never the only one [TH2, DI4].</p>
+                <div class="sc-row"><span class="kp-badge" data-kp-semantic data-status="draft" style="background: var(--status-draft); color: var(--status-draft-foreground);">draft</span><span class="kp-badge" data-kp-semantic data-status="sent" style="background: var(--status-sent); color: var(--status-sent-foreground);">sent</span><span class="kp-badge" data-kp-semantic data-status="screening" style="background: var(--status-screening); color: var(--status-screening-foreground);">screening</span><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span><span class="kp-badge" data-kp-semantic data-status="rejected" style="background: var(--status-rejected); color: var(--status-rejected-foreground);">rejected</span><span class="kp-badge" data-kp-semantic data-status="withdrawn" style="background: var(--status-withdrawn); color: var(--status-withdrawn-foreground);">withdrawn</span></div>
+            </section>
+            <section class="sc-specimen" id="light-alerts" data-specimen="alerts">
+                <h3>Alert</h3>
+                <p class="sc-note">Four flavours, each naming itself. An alert is a message, so it has no hover or active state [TH4].</p>
+                <div class="kp-alert kp-alert--success" role="status" data-kp-semantic><span><span class="kp-alert__label">success: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">warning: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">info: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--destructive" role="status" data-kp-semantic><span><span class="kp-alert__label">destructive: </span>Een bericht in deze smaak.</span></div>
+            </section>
+            <section class="sc-specimen" id="light-field" data-specimen="field">
+                <h3>Form field</h3>
+                <p class="sc-note">Label, help text, and an error that is words rather than a red border [TH5, DI4].</p>
+                <div class="kp-field"><label class="kp-field__label" for="light-f1">E-mail</label><input class="kp-field__input" id="light-f1" type="email" placeholder="naam@voorbeeld.be" aria-describedby="light-h1" /><span class="kp-field__help" id="light-h1">We sturen niets door.</span></div><div class="kp-field kp-field--invalid"><label class="kp-field__label" for="light-f2">E-mail</label><input class="kp-field__input" id="light-f2" type="email" value="geen-adres" aria-invalid="true" aria-describedby="light-e2" /><span class="kp-field__error" id="light-e2">Vul een geldig adres in.</span></div>
+            </section>
+            <section class="sc-specimen" id="light-card" data-specimen="card">
+                <h3>Card</h3>
+                <p class="sc-note">A raised surface is never darker than the one below it [DI6].</p>
+                <div class="kp-card" data-slot="card"><h3 class="kp-card__title">Sollicitatie</h3><p class="kp-card__body">Twee regels tekst op de kaartkleur, met de bijhorende inkt.</p></div>
+            </section>
+            <section class="sc-specimen" id="light-table" data-specimen="table">
+                <h3>Table</h3>
+                <p class="sc-note">Wide tables scroll inside their own box; the page does not scroll sideways [TH3, DI11].</p>
+                <div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col">Bedrijf</th><th scope="col">Status</th><th scope="col">Bedrag</th></tr></thead><tbody><tr><td>Voorbeeld NV</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr><tr><td>Tweede BV</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">aanbod</span></td><td class="kp-numeric">998,00</td></tr></tbody></table></div>
+            </section>
+            <section class="sc-specimen" id="light-nav" data-specimen="nav">
+                <h3>Navigation bar</h3>
+                <p class="sc-note">The current page is marked by weight and aria-current, not by colour alone [TH7, DI4].</p>
+                <nav class="kp-nav" aria-label="Voorbeeldnavigatie"><span class="kp-nav__brand">kp</span><ul class="kp-nav__links"><li><a class="kp-nav__link" href="#surfaces" aria-current="page">Overzicht</a></li><li><a class="kp-nav__link" href="#status">Statussen</a></li></ul></nav>
+            </section>
             <section class="sc-specimen" id="light-links" data-specimen="links">
                 <h3>Links and selection</h3>
                 <p class="sc-note">The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme’s own [TH31].</p>
@@ -196,5 +231,6 @@ body {
                 <p class="sc-text">De zeven thema's delen dezelfde tokens en dezelfde regels; wat verschilt is de kleur, het contrast en de textuur. <a href="#surfaces">Een link</a> is leesbaar in elk thema — ook in terminal, waar het blauw van de browser tegen het fosforgroen vloekte.</p>
             </section>
         </main>
+        <script type="module" src="../../js/components.js"></script>
     </body>
 </html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Components — both channels</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>Contracten, twee kanalen</h1>
+
+        <section id="plain">
+            <h2>Framework-free</h2>
+            <nav class="kp-nav">
+                <span class="kp-nav__brand">kp</span>
+                <ul class="kp-nav__links">
+                    <li><a class="kp-nav__link" href="#a" aria-current="page">Een</a></li>
+                </ul>
+            </nav>
+            <button type="button" class="kp-button" data-test="plain">Gewoon</button>
+            <button type="button" class="kp-button kp-button--primary" data-test="primary">Primair</button>
+            <!-- Destructive with neither undo nor confirmation: the case
+                 this suite exists to catch. -->
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-test="destructive-bare">Verwijderen</button>
+            <button
+                type="button"
+                class="kp-button kp-button--destructive"
+                data-kp-destructive
+                data-kp-confirm="Zeker?"
+                data-test="destructive-confirm"
+                onclick="window.__acted && window.__acted('plain')"
+            >
+                Verwijderen
+            </button>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-undo data-test="destructive-undo">
+                Verwijderen
+            </button>
+            <span
+                class="kp-badge"
+                data-kp-semantic
+                data-status="offer"
+                data-test="badge-labelled"
+                style="background: var(--status-offer); color: var(--status-offer-foreground)"
+                >Aanbod</span
+            >
+            <span
+                class="kp-badge"
+                data-kp-semantic
+                data-status="rejected"
+                data-test="badge-bare"
+                style="background: var(--status-rejected); color: var(--status-rejected-foreground)"
+            ></span>
+            <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic data-test="alert">
+                <span><span class="kp-alert__label">Let op: </span>Let op deze zaak.</span>
+            </div>
+            <div class="kp-card" data-slot="card" data-test="card">
+                <h3 class="kp-card__title">Kaart</h3>
+                <div class="kp-card__body">Inhoud</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>React</h2>
+            <div id="react-components"></div>
+        </section>
+
+        <script type="module" src="/js/components.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
+    </body>
+</html>

@@ -101,6 +101,10 @@ ${blocks}
                 }
             }
             await import('../js/theme-picker.js');
+            // The contracts are enforced on this page too: a specimen that
+            // broke one should be visibly refused here, not only in the
+            // tests [DI4, DI10].
+            await import('../js/components.js');
         </script>
     </body>
 </html>
@@ -131,6 +135,7 @@ ${STYLE}        </style>
             <h2>${theme.label}</h2>
             ${specimenBlocks(theme.name)}
         </main>
+        <script type="module" src="../../js/components.js"></script>
     </body>
 </html>
 `;

@@ -94,6 +94,85 @@ export const SPECIMENS = [
         html: () => `<div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>`,
     },
     {
+        id: 'buttons',
+        title: 'Button, every variant and state',
+        note: 'Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].',
+        html: () =>
+            `<div class="sc-row">` +
+            ['', '--primary', '--destructive', '--ghost']
+                .map(
+                    (v) =>
+                        `<button type="button" class="kp-button ${v ? 'kp-button' + v : ''}"${v === '--destructive' ? ' data-kp-destructive data-kp-confirm="Zeker?"' : ''}>${v ? v.slice(2) : 'default'}</button>`,
+                )
+                .join('') +
+            ['', '--primary', '--destructive', '--ghost']
+                .map((v) => `<button type="button" class="kp-button ${v ? 'kp-button' + v : ''}" disabled>uit</button>`)
+                .join('') +
+            `</div>`,
+    },
+    {
+        id: 'badges',
+        title: 'Badge',
+        note: 'Seven statuses, each of which says what it is — the colour is the second channel, never the only one [TH2, DI4].',
+        html: () =>
+            `<div class="sc-row">${STATUSES.map(
+                (s) =>
+                    `<span class="kp-badge" data-kp-semantic data-status="${s}" style="background: var(--status-${s}); color: var(--status-${s}-foreground);">${s}</span>`,
+            ).join('')}</div>`,
+    },
+    {
+        id: 'alerts',
+        title: 'Alert',
+        note: 'Four flavours, each naming itself. An alert is a message, so it has no hover or active state [TH4].',
+        html: () =>
+            ['success', 'warning', 'info', 'destructive']
+                .map(
+                    (f) =>
+                        `<div class="kp-alert kp-alert--${f}" role="status" data-kp-semantic><span><span class="kp-alert__label">${f}: </span>Een bericht in deze smaak.</span></div>`,
+                )
+                .join(''),
+    },
+    {
+        id: 'field',
+        title: 'Form field',
+        note: 'Label, help text, and an error that is words rather than a red border [TH5, DI4].',
+        html: (theme) =>
+            `<div class="kp-field"><label class="kp-field__label" for="${theme}-f1">E-mail</label>` +
+            `<input class="kp-field__input" id="${theme}-f1" type="email" placeholder="naam@voorbeeld.be" aria-describedby="${theme}-h1" />` +
+            `<span class="kp-field__help" id="${theme}-h1">We sturen niets door.</span></div>` +
+            `<div class="kp-field kp-field--invalid"><label class="kp-field__label" for="${theme}-f2">E-mail</label>` +
+            `<input class="kp-field__input" id="${theme}-f2" type="email" value="geen-adres" aria-invalid="true" aria-describedby="${theme}-e2" />` +
+            `<span class="kp-field__error" id="${theme}-e2">Vul een geldig adres in.</span></div>`,
+    },
+    {
+        id: 'card',
+        title: 'Card',
+        note: 'A raised surface is never darker than the one below it [DI6].',
+        html: () =>
+            `<div class="kp-card" data-slot="card"><h3 class="kp-card__title">Sollicitatie</h3>` +
+            `<p class="kp-card__body">Twee regels tekst op de kaartkleur, met de bijhorende inkt.</p></div>`,
+    },
+    {
+        id: 'table',
+        title: 'Table',
+        note: 'Wide tables scroll inside their own box; the page does not scroll sideways [TH3, DI11].',
+        html: () =>
+            `<div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col">Bedrijf</th><th scope="col">Status</th>` +
+            `<th scope="col">Bedrag</th></tr></thead><tbody>` +
+            `<tr><td>Voorbeeld NV</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr>` +
+            `<tr><td>Tweede BV</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">aanbod</span></td><td class="kp-numeric">998,00</td></tr>` +
+            `</tbody></table></div>`,
+    },
+    {
+        id: 'nav',
+        title: 'Navigation bar',
+        note: 'The current page is marked by weight and aria-current, not by colour alone [TH7, DI4].',
+        html: () =>
+            `<nav class="kp-nav" aria-label="Voorbeeldnavigatie"><span class="kp-nav__brand">kp</span>` +
+            `<ul class="kp-nav__links"><li><a class="kp-nav__link" href="#surfaces" aria-current="page">Overzicht</a></li>` +
+            `<li><a class="kp-nav__link" href="#status">Statussen</a></li></ul></nav>`,
+    },
+    {
         id: 'links',
         title: 'Links and selection',
         note: 'The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme\u2019s own [TH31].',

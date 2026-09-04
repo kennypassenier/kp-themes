@@ -91,6 +91,8 @@ and both were made to fail on purpose before being restored.
 | the focus ring pair (DI2) | a pastel with two near-identical grey rings | **red**, eight named violations; green again after restoring |
 | links clear AA on the page (TH31) | the link colour set back to the browser's own blue | **red** in exactly dark, cyberpunk and terminal — the three FEATURES.md names; green again after restoring |
 | the colour scheme reaches the browser (DI6) | found red, not made red: nothing applied `--color-scheme` at all | the fix made it green; the token gate had read pass throughout |
+| the destructive contract (DI10) | a destructive button shipped with neither undo nor confirmation | **red** in both channels — reported, and the button disarmed rather than left able to delete |
+| the badge contract (DI4) | a status badge with a colour and no words | **red** in both channels |
 
 A third came for free: the first version of the suite parsed the theme
 registry out of its own source text and produced an empty array, so the
@@ -134,4 +136,5 @@ may depend on a path to a sibling project).
 | L4        | built 2026-09-04, gate held for the AFK report |
 | L5        | built 2026-09-04, gate held for the AFK report |
 | L6        | built 2026-09-04, gate held for the AFK report |
-| L7-L10    | not started                             |
+| L7        | built 2026-09-04, gate held for the AFK report |
+| L8-L10    | not started                             |
