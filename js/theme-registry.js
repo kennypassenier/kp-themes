@@ -14,6 +14,7 @@ export const THEMES = Object.freeze([
     { name: 'pastel', label: 'Pastel', dark: false },
     { name: 'terminal', label: 'Terminal', dark: true },
     { name: 'topo', label: 'Topografisch', dark: false },
+    { name: 'high-contrast', label: 'Hoog contrast', dark: false },
 ]);
 
 /** The theme a visitor gets before choosing, and the answer to any unknown value. */

@@ -645,6 +645,95 @@
     --destructive-active: hsl(5, 100%, 25%);
     --destructive-disabled: hsl(9, 52%, 51%);
 }
+
+[data-theme='high-contrast'] {
+    /* Black on white, one signal yellow, nothing in between. */
+    --background: hsl(0, 0%, 100%);
+    --foreground: hsl(0, 0%, 0%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(0, 0%, 0%);
+    --popover: hsl(0, 0%, 100%);
+    --popover-foreground: hsl(0, 0%, 0%);
+    --primary: hsl(220, 100%, 30%);
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(0, 0%, 100%);
+    --secondary-foreground: hsl(0, 0%, 0%);
+    --muted: hsl(0, 0%, 94%);
+    --muted-foreground: hsl(0, 0%, 20%);
+    --accent: hsl(48, 100%, 50%);
+    --accent-foreground: hsl(0, 0%, 0%);
+    --destructive: hsl(0, 100%, 32%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --success: hsl(140, 100%, 20%);
+    --success-foreground: hsl(0, 0%, 100%);
+    --warning: hsl(30, 100%, 28%);
+    --warning-foreground: hsl(0, 0%, 100%);
+    --info: hsl(220, 100%, 30%);
+    --info-foreground: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 45%);
+    --border-strong: hsl(0, 0%, 0%);
+    --input: hsl(0, 0%, 0%);
+    --ring: hsl(220, 100%, 40%);
+    --selected: hsl(220, 100%, 35%);
+    --chart-1: hsl(220, 100%, 32%);
+    --chart-2: hsl(0, 100%, 32%);
+    --chart-3: hsl(140, 100%, 20%);
+    --chart-4: hsl(30, 100%, 28%);
+    --chart-5: hsl(285, 100%, 32%);
+    --sidebar-background: hsl(0, 0%, 100%);
+    --sidebar-foreground: hsl(0, 0%, 0%);
+    --sidebar-primary: hsl(220, 100%, 30%);
+    --sidebar-primary-foreground: hsl(0, 0%, 100%);
+    --sidebar-accent: hsl(0, 0%, 92%);
+    --sidebar-accent-foreground: hsl(0, 0%, 0%);
+    --sidebar-border: hsl(0, 0%, 45%);
+    --sidebar-ring: hsl(220, 100%, 40%);
+
+    /* Status badges: deep plates with white ink, not pale tints. */
+    --status-draft: hsl(0, 0%, 25%);
+    --status-draft-foreground: hsl(0, 0%, 100%);
+    --status-sent: hsl(220, 100%, 32%);
+    --status-sent-foreground: hsl(0, 0%, 100%);
+    --status-screening: hsl(30, 100%, 26%);
+    --status-screening-foreground: hsl(0, 0%, 100%);
+    --status-interview: hsl(285, 100%, 32%);
+    --status-interview-foreground: hsl(0, 0%, 100%);
+    --status-offer: hsl(100, 100%, 45%);
+    --status-offer-foreground: hsl(0, 0%, 0%);
+    --status-rejected: hsl(0, 100%, 30%);
+    --status-rejected-foreground: hsl(0, 0%, 100%);
+    --status-withdrawn: hsl(0, 0%, 40%);
+    --status-withdrawn-foreground: hsl(0, 0%, 100%);
+    --color-scheme: light;
+    --theme-font-body: 'Atkinson Hyperlegible', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0.25rem;
+    --fx-signal: hsl(45, 100%, 28%);
+    --fx-signal-foreground: hsl(0, 0%, 100%);
+    --fx-notch: 0px;
+    --fx-duration: 120ms;
+    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --theme-font-display: 'Atkinson Hyperlegible', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(48, 100%, 50%);
+    --fx-scanline: hsl(48, 100%, 50%);
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(220, 100%, 30%);
+    --link-visited: hsl(275, 63%, 30%);
+    --focus-ring: hsl(0, 0%, 0%);
+    --focus-ring-contrast: hsl(0, 0%, 100%);
+    --primary-hover: hsl(223, 100%, 28%);
+    --primary-active: hsl(238, 100%, 22%);
+    --primary-disabled: hsl(220, 74%, 41%);
+    --secondary-hover: hsl(44, 0%, 96%);
+    --secondary-active: hsl(44, 0%, 84%);
+    --secondary-disabled: hsl(60, 100%, 100%);
+    --accent-hover: hsl(48, 100%, 48%);
+    --accent-active: hsl(46, 100%, 42%);
+    --accent-disabled: hsl(53, 100%, 64%);
+    --destructive-hover: hsl(0, 100%, 30%);
+    --destructive-active: hsl(4, 78%, 25%);
+    --destructive-disabled: hsl(4, 68%, 45%);
+}
 /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
    The shared machinery is one full-viewport texture layer per theme -

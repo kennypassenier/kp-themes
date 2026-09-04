@@ -36,8 +36,13 @@ test('AR8: discovery of fewer themes than expected is an error, not a pass', () 
     assert.throws(() => discoverThemesFromCss(css, { expect: 7 }), /expected 7 themes, found 1/);
 });
 
-test('the seven declared themes are the seven the stylesheet contains', () => {
-    assert.equal(EXPECTED_THEMES.length, 7);
+test('the declared themes are exactly the themes the stylesheet contains', () => {
+    // This used to assert the number seven, which made adding an eighth
+    // theme look like a regression. The name always promised the
+    // property; now it checks it. A theme in order.json but not in the
+    // stylesheet, or the reverse, is what this is for.
+    const css = readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8');
+    assert.deepEqual([...discoverThemesFromCss(css)].sort(), [...EXPECTED_THEMES].sort());
 });
 
 test('TH22: no token is asymmetric beyond the recorded exceptions', () => {
