@@ -176,6 +176,19 @@ additions are the status tokens and the de-Inertia'd hook API. The
 - A license. The repository is public (SCOPE S8); the licence itself is
   decided in this project's Phase 3.
 
+## Working on this package: activate the hooks once
+
+The quality gates block bad commits, but the wiring is local git config
+that a clone cannot carry. Run this once per clone, or nothing enforces
+anything:
+
+```
+git config core.hooksPath .githooks
+```
+
+After that a commit runs the gates and refuses a message without feature
+IDs. Both were proved by making them fail; see `docs/REALIZATION_PLAN.md`.
+
 ## Installing from the git tag (npm 12)
 
 npm 12 refuses git dependencies unless the consumer opts in. Put this

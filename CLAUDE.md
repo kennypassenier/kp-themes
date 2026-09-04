@@ -35,12 +35,12 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                                               |
-| ------------------- | ----------------------------------------------------------------------------------- |
-| Current phase       | 4 — Architecture, frozen 2026-09-04                                                 |
-| Last completed gate | Phase 4 freeze, 2026-09-04 (AR0-AR16, after a critic pass)                          |
-| Next gate           | Phase 5 realization plan — installs CI and the commit hooks before any feature code |
-| AFK mode            | off                                                                                 |
+| Field               | Value                                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| Current phase       | 5 — Realization plan, approved 2026-09-04; enforcement live      |
+| Last completed gate | Phase 5, 2026-09-04 (11 milestones, hooks installed and drilled) |
+| Next gate           | L0 exit — the generator reproduces themes.css byte for byte      |
+| AFK mode            | off                                                              |
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
@@ -72,6 +72,7 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | HANDOFF.md                       | start prompt for a procedure session (Dutch)              |
 | docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                   |
 | docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                  |
+| docs/REALIZATION_PLAN.md         | the eleven milestones, the enforcement, the gate log      |
 | docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)     |
 | docs/ARCHITECTURE_DECISIONS.md   | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
 | docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                  |

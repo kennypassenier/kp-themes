@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Standing rule 4: every commit message carries the IDs it implements.
+# Infrastructure commits use [meta].
+set -euo pipefail
+if ! grep -qE '\[(meta|[A-Za-z]{1,4}[0-9])[^]]*\]' "$1"; then
+  {
+    echo "COMMIT BLOCKED — message lacks feature/milestone IDs (standing rule 4)."
+    echo "Example: feat(L3): semantic colour tokens in all seven themes [TH9, DI4]"
+    echo "Pure infrastructure commits use [meta]."
+  } >&2
+  exit 1
+fi

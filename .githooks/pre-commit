@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Git-native blocking layer (Phase 5). Holds from any session, tool or
+# terminal — the Claude Code hook is a second layer, not the only one.
+# Activate once per clone:  git config core.hooksPath .githooks
+set -euo pipefail
+root=$(git rev-parse --show-toplevel)
+exec "$root/.claude/hooks/gates.sh"
