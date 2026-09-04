@@ -1,5 +1,10 @@
 # Inventory — kp-themes (Phase 1)
 
+> Paths inside Kenny's private repositories were replaced with
+> descriptions on 2026-09-04: this repository is public and those are not.
+> The project names stay — this package is called `@kp-soft/themes`, so
+> kp-soft's name is in every import a consumer writes.
+
 Brownfield inventory of everything the repository at
 `/home/kenny/Projects/kp-themes` actually contains, at commit `5c378b9`
 (package version 0.1.1, git tags `v0.1.0` and `v0.1.1`). Written from the
@@ -427,7 +432,7 @@ consumers doing.
 
 `hooks/use-theme.js:39` plus the private `asTheme` at :45, which narrows
 a string to a theme or `null`. `isTheme` is exported and is used
-externally: `JobTracker/dashboard/packages/web/src/lib/theme.js` validates
+externally: JobTracker's own theme module validates
 two server-supplied theme names with it.
 
 ### C4 · localStorage read/write
@@ -457,7 +462,7 @@ in one bundle would not share it.
 and toggles the `dark` class using `DARK_THEMES`, then notifies the store
 if the value changed. Touches `document` unguarded, so it throws on a
 server. Exported and used externally by
-`JobTracker/dashboard/packages/web/src/main.jsx:21`.
+JobTracker's entry point.
 
 This function is the DOM contract the two vanilla consumers reimplemented
 (`kyu/static/theme.js`, `almanac/static/theme.js`).
@@ -524,7 +529,7 @@ roving focus, no `aria-activedescendant`, and focus is not moved into the
 list on open or returned to the trigger on close.
 
 Exercised by: JobTracker's Playwright suite
-(`JobTracker/dashboard/packages/web/e2e/theme.spec.js`) asserts the
+(JobTracker's end-to-end theme spec) asserts the
 trigger is visible and wider than 20 px, that the English `labels`
 override is used, that clicking an option sets `data-theme` on `<html>`
 and `localStorage.theme`, and that the choice survives a reload.
@@ -1127,7 +1132,7 @@ the end of this section.
 
 1. **Consumer list.** `CLAUDE.md` and `README.md:9-10` name JobTracker
    and kp-soft as the consumers. Verified: kp-soft does **not** depend on
-   this package — `~/Projects/kp-soft/package.json` has no
+   this package — kp-soft's own manifest has no
    `@kp-soft/themes` entry, and it still carries its own
    `resources/js/components/fx/*.tsx`, its own `scripts/check-contrast.mjs`
    and its own CI step running it. The actual consumers are JobTracker

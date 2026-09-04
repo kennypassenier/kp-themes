@@ -1,6 +1,7 @@
 {
     "name": "@kp-soft/themes",
     "version": "0.1.1",
+    "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
     "type": "module",

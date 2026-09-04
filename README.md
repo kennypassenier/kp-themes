@@ -1,13 +1,25 @@
 # @kp-soft/themes
 
-The kp-soft house themes as a shared package: seven `data-theme` palettes
+The house themes as a shared package: seven `data-theme` palettes
 (formal, light, dark, cyberpunk, pastel, terminal, topo) as plain CSS
-custom properties, the per-theme texture "registers", the cyberpunk HUD
-register with its motion, a React 19 theme hook + switcher, and the
-cyberpunk-only fx components. One contrast gate guards every colour pair.
+custom properties, the element-level rules that make a theme complete
+(links, code, selection, form fields, print), eighteen components, a
+theme picker, and the cyberpunk register with its effects.
 
-Consumers: [JobTracker](../JobTracker) (from its L0 milestone) and
-kp-soft itself (its queue item #21).
+**Everything exists in two channels.** React, for a consumer with a build
+step; and framework-free — CSS classes plus a `<script type="module">`
+that attaches behaviour to markup your own server wrote. They render the
+same class names and share the same state, so a page can mix them.
+
+Nine gates run in under a second and refuse a commit that breaks them:
+contrast, the design invariants, the flash threshold, reduced-motion
+guards, token parity, layer discipline, and whether the generated files
+still match their sources. A behaviour suite runs in Chromium and Firefox.
+
+Consumers: JobTracker (React), and kyu and almanac (framework-free, no npm
+step — they copy the stylesheet).
+
+See it: <https://kennypassenier.github.io/kp-themes/>
 
 ## Install
 
@@ -75,6 +87,23 @@ from an inline script or the top of your entry file.
 Tokens can also be scoped to a subtree (`<section data-theme="pastel">`)
 — the bridge re-declares the Tailwind aliases on every `[data-theme]`
 element so they resolve per subtree.
+
+## Every entry point
+
+| Import                                | What it is                                            |
+| ------------------------------------- | ----------------------------------------------------- |
+| `@kp-soft/themes`                     | React: components, hooks, the switcher                |
+| `@kp-soft/themes/fx`                  | React: the cyberpunk effects                          |
+| `@kp-soft/themes/css`                 | the palette — the one file a vendoring consumer needs |
+| `@kp-soft/themes/css/components`      | the component classes                                 |
+| `@kp-soft/themes/css/register`        | the cyberpunk HUD chrome, opt-in                      |
+| `@kp-soft/themes/css/tailwind-bridge` | for Tailwind v4 consumers                             |
+| `@kp-soft/themes/js/core`             | the theme state, framework-free                       |
+| `@kp-soft/themes/js/picker`           | the framework-free picker                             |
+| `@kp-soft/themes/js/components`       | the DI4 and DI10 contracts                            |
+| `@kp-soft/themes/js/overlays`         | dialogs, tabs, toasts                                 |
+| `@kp-soft/themes/js/registry`         | the generated theme list                              |
+| `@kp-soft/themes/js/no-flash`         | the first-paint snippet                               |
 
 ## Consume the JavaScript
 
@@ -212,6 +241,17 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 `.fx-glitch` + `data-text`, `.fx-media`, `.fx-cellpop`, `.glow-primary`,
 `.glow-accent`, `.glow-card`, `.gradient-text`) work on any markup.
 
+## Documentation
+
+| Document                                                         | For                                                        |
+| ---------------------------------------------------------------- | ---------------------------------------------------------- |
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md)                         | building a page with this                                  |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)               | when it looks wrong, or a gate says no                     |
+| [docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md) | the system as built                                        |
+| [docs/TEST_PLAN.md](docs/TEST_PLAN.md)                           | what is tested, and what is not by decision                |
+| [docs/DESIGN_INVARIANTS.md](docs/DESIGN_INVARIANTS.md)           | the rules every theme must keep, with the compliance table |
+| [MIGRATION.md](MIGRATION.md)                                     | the five breaks in v1                                      |
+
 ## Provenance
 
 Extracted from kp-soft at commit `2983abb`
@@ -233,8 +273,10 @@ additions are the status tokens and the de-Inertia'd hook API. The
   `page-glitch`.
 - The Tailwind `@apply` lines, `@plugin 'tailwindcss-animate'`, the
   `@source` for Laravel pagination, and the `.animate-float` utility.
-- A license. The repository is public (SCOPE S8); the licence itself is
-  decided in this project's Phase 3.
+- A build step. No bundler, no compilation, no polyfills — the package
+  ships the files a browser reads.
+- Runtime dependencies. React and `motion` are peers, and `motion` is
+  optional; only `BootSequence` needs it.
 
 ## css/themes.css is generated
 
