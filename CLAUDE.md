@@ -33,14 +33,36 @@ fact about the code or about another project — not to background or
 reasoning. Discipline-enforced, not code-enforced. Full record:
 [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction KT3 (2026-09-04)
+
+A browser test that asserts the package applies something is drilled
+before it is trusted: remove the rule in the package that carries it,
+confirm the test goes red, restore it, and record in one line of comment
+what was removed. Discipline-enforced. The mechanical half is code —
+`gates/check-layers.mjs` refuses a bare-element selector in
+`showcase/showcase.css`, because that stylesheet is inlined into every
+fixture page and would otherwise supply the very thing under test. Full
+record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Procedure status
 
-| Field               | Value                                           |
-| ------------------- | ----------------------------------------------- |
-| Current phase       | 7 — closed; PROC-H1 is the only open queue item |
-| Last completed gate | Phase 7, 2026-09-04                             |
-| Next gate           | Phase 8 — documentation                         |
-| AFK mode            | off — Kenny is answering again                  |
+| Field               | Value                                      |
+| ------------------- | ------------------------------------------ |
+| Current phase       | 9 — closed; v1.0.0 is tagged and published |
+| Last completed gate | Phase 9, 2026-09-04                        |
+| Next gate           | Phase 10 — retrospective                   |
+| Open queue items    | PROC-H1 (belongs to dev-procedure), KT3-M1 |
+| AFK mode            | off — Kenny is answering again             |
+
+Phase 9 closed on 2026-09-04: `v1.0.0` is tagged on the merge commit on
+`main` and published at
+<https://github.com/kennypassenier/kp-themes/releases/tag/v1.0.0>, with
+`SHA256SUMS`, `MIGRATION.md` and the two stylesheets attached. The field
+test that precedes that gate found three defects no gate could see — the
+whole framework-free channel unpublished, TH12 never built, and
+`themeMenuMarkup()` in the module that attaches on import. CI then found a
+fourth, recorded as KT3. Phase 8 closed on 2026-09-04 with the four
+documents in `docs/`. Phase 7 closed the same day.
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
@@ -50,7 +72,8 @@ themes fail today. Phase 6 built all eleven milestones on 2026-09-04 in AFK
 mode: L0's gate was signed off, and the gates for L1 to L10 accumulate into
 one combined report. Phases 0 and 1 ran on 2026-09-03; `docs/SCOPE.md` holds the
 approved scope and `docs/INVENTORY.md` the 99 inventoried units. Correction
-KT1 and its follow-up sit in `docs/MINI_ROUNDS.md`.
+KT1, KT2 and KT3 and their follow-ups sit in `docs/CORRECTIONS.md`, with
+the open measurements in `docs/MINI_ROUNDS.md`.
 
 The gate ran in this Claude Code CLI session: the visualize elicitation
 widget was available here, contrary to what `HANDOFF.md` assumed.
