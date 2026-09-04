@@ -40,6 +40,11 @@ for (const channel of CHANNELS) {
 
             // The whole point of the pattern: DOM focus stays in the
             // input, and the current option is named by attribute.
+            //
+            // Drilled per KT3: the `aria-activedescendant` line was removed
+            // from js/listbox.js and the framework-free case went red. The
+            // React case stayed green, correctly — it sets the attribute
+            // itself, and the two channels are two implementations.
             await expect(input).toBeFocused();
             const described = await input.getAttribute('aria-activedescendant');
             expect(described).toBeTruthy();
