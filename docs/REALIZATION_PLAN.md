@@ -129,4 +129,5 @@ may depend on a path to a sibling project).
 | L2        | built 2026-09-04, gate held for the AFK report |
 | L3        | built 2026-09-04, gate held for the AFK report; L3-EXIT queued |
 | L4        | built 2026-09-04, gate held for the AFK report |
-| L5-L10    | not started                             |
+| L5        | built 2026-09-04, gate held for the AFK report |
+| L6-L10    | not started                             |

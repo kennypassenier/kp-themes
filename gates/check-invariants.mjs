@@ -35,6 +35,11 @@ export function themes() {
 /** DI6: a theme says whether it is light or dark, and the layers rise. */
 export function checkColourScheme(theme) {
     const problems = [];
+    // This checks the token, and only the token. Whether the browser ever
+    // receives a color-scheme property is a question about the stylesheet,
+    // and it went unasked until a fixture was opened in a real browser on
+    // 2026-09-04: every theme declared the token, this gate read pass, and
+    // nothing applied it. tests/fixtures.spec.mjs asks the other half.
     const scheme = theme.tokens['color-scheme'];
     if (scheme === undefined) {
         problems.push(

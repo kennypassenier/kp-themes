@@ -2,3 +2,10 @@
 docs/
 node_modules/
 package-lock.json
+
+# Generated artefacts. Their shape is the generator's business, and a
+# formatter rewriting them would put `npm run gates` permanently at odds
+# with itself: the check compares the file to what the generator writes.
+showcase/index.html
+showcase/themes/
+tests/fixtures/.build/

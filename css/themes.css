@@ -783,3 +783,17 @@ body {
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--focus-ring);
 }
+
+/* DI6, actually reaching the browser.
+ *
+ * Every theme declares --color-scheme, the token gate has checked that
+ * since L3, and the compliance table has read pass ever since. But a
+ * custom property named color-scheme is not the color-scheme property:
+ * nothing applied it, so the browser went on drawing light scrollbars,
+ * light form internals and a light autofill highlight over the three dark
+ * themes. Found on 2026-09-04 by the first test to open a fixture in a
+ * real browser — which is the whole argument for AR14's bare pages.
+ */
+:root {
+    color-scheme: var(--color-scheme);
+}

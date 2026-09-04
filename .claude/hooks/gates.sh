@@ -35,6 +35,9 @@ node gates/check-contrast.mjs
 echo "→ motion: flash threshold and reduced-motion guards (DI5, DI7)"
 node gates/check-motion.mjs
 
+echo "→ the showcase and its fixtures match their source"
+node gates/generate-showcase.mjs --check
+
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 
