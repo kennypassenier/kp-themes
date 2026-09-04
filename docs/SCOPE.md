@@ -225,8 +225,10 @@ marker already exists in both consumers — the header of both
 `~/Projects/kyu/static/themes.css` and
 `~/Projects/almanac/static/themes.css` names the source, the version
 (v0.1.1), the commit and the date. Almanac already runs a commit-time
-check comparing its copy against the upstream file; kyu does not, and that
-gap is known.
+check comparing its copy against the upstream file. **Corrected 2026-09-04:**
+kyu has one too now — its own commit gate compares the vendored stylesheet
+against this repository's. Both consumers guard their copy; neither gap
+remains.
 
 ↳ *provenance marker = a note at the top of a copied file saying where it
 came from, which version it is, and when it was copied.*
@@ -345,4 +347,6 @@ when the contrast guarantee moved to the source.
   `--font-sans` to monospace). Without the Bunny Fonts link they fall back
   silently, and cyberpunk in particular reads as half-applied. A vendoring
   consumer cannot discover this from `themes.css` alone.
-- kyu has no staleness check on its vendored copy; Almanac does (S7).
+- ~~kyu has no staleness check on its vendored copy; Almanac does.~~
+  **Closed 2026-09-04:** kyu shipped one; both consumers now compare their
+  vendored copy against this repository's file at commit time.

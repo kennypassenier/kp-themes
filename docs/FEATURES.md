@@ -102,7 +102,7 @@ dark themes where there are three.
 
 | ID | Feature | Why not now |
 | --- | --- | --- |
-| TH17 | Staleness check for the vendoring consumers | no consumer is behind today; Almanac already has its own |
+| TH17 | Staleness check for the vendoring consumers | no consumer is behind today, and **both** already have their own — corrected 2026-09-04, kyu shipped one after this was rated |
 | TH25 | The picker optionally sets Bootstrap's own dark switch | our components are scheduled to remove the need |
 | TH30 | Check whether a consumer conforms to the themes | needs a numbered component set to compare against, so after v1 |
 

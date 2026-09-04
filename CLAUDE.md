@@ -35,12 +35,12 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                         |
-| ------------------- | ------------------------------------------------------------- |
-| Current phase       | 3 — Tech choice, decided 2026-09-04                           |
-| Last completed gate | Phase 3 decision, 2026-09-04 (T1-T9), plus the npm mini-round |
-| Next gate           | Phase 4 architecture, after the architecture-critic pass      |
-| AFK mode            | off                                                           |
+| Field               | Value                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| Current phase       | 4 — Architecture, frozen 2026-09-04                                                 |
+| Last completed gate | Phase 4 freeze, 2026-09-04 (AR0-AR16, after a critic pass)                          |
+| Next gate           | Phase 5 realization plan — installs CI and the commit hooks before any feature code |
+| AFK mode            | off                                                                                 |
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
