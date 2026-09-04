@@ -88,6 +88,8 @@
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(220, 30%, 13%);
+    --focus-ring-contrast: hsl(40, 25%, 97%);
     --primary-hover: hsl(218, 51%, 21%);
     --primary-active: hsl(219, 81%, 12%);
     --primary-disabled: hsl(218, 34%, 34%);
@@ -171,6 +173,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(224, 25%, 12%);
+    --focus-ring-contrast: hsl(0, 0%, 100%);
     --primary-hover: hsl(246, 67%, 41%);
     --primary-active: hsl(254, 100%, 28%);
     --primary-disabled: hsl(238, 64%, 56%);
@@ -254,6 +258,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(220, 20%, 93%);
+    --focus-ring-contrast: hsl(226, 22%, 8%);
     --primary-hover: hsl(255, 100%, 78%);
     --primary-active: hsl(259, 100%, 83%);
     --primary-disabled: hsl(256, 57%, 63%);
@@ -341,6 +347,8 @@
     --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(190, 60%, 92%);
+    --focus-ring-contrast: hsl(258, 40%, 6%);
     --primary-hover: hsl(315, 100%, 66%);
     --primary-active: hsl(310, 100%, 70%);
     --primary-disabled: hsl(314, 79%, 56%);
@@ -424,6 +432,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(285, 25%, 20%);
+    --focus-ring-contrast: hsl(285, 45%, 97%);
     --primary-hover: hsl(329, 61%, 38%);
     --primary-active: hsl(325, 100%, 25%);
     --primary-disabled: hsl(332, 51%, 54%);
@@ -507,6 +517,8 @@
     --theme-font-display: 'Share Tech Mono', ui-monospace, monospace;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(120, 85%, 68%);
+    --focus-ring-contrast: hsl(120, 10%, 5%);
     --primary-hover: hsl(119, 95%, 55%);
     --primary-active: hsl(118, 100%, 63%);
     --primary-disabled: hsl(120, 100%, 43%);
@@ -590,6 +602,8 @@
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
+    --focus-ring: hsl(160, 28%, 14%);
+    --focus-ring-contrast: hsl(42, 32%, 95%);
     --primary-hover: hsl(159, 50%, 21%);
     --primary-active: hsl(161, 100%, 11%);
     --primary-disabled: hsl(156, 29%, 34%);
@@ -748,4 +762,24 @@ body {
             background-color 400ms ease,
             color 400ms ease;
     }
+}
+
+/* The two-channel focus ring [DI2].
+ *
+ * Two rings, adjacent: the box-shadow is the inner ring (--focus-ring,
+ * the theme's foreground), the outline the outer one
+ * (--focus-ring-contrast, its background), and the outline's offset is
+ * exactly the width of the inner ring so the two touch. Whatever the element sits on, one of the two
+ * colours contrasts with it, and they contrast with each other — which is
+ * what a single ring cannot promise. Before this, the focus indicator was
+ * whatever the browser drew, and on a primary button in three themes that
+ * was a ring of the same luminance as the button.
+ *
+ * :focus-visible rather than :focus, so a mouse click does not leave a
+ * ring behind while the keyboard still gets one.
+ */
+:focus-visible {
+    outline: 2px solid var(--focus-ring-contrast);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--focus-ring);
 }

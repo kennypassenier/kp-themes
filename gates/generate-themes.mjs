@@ -53,6 +53,18 @@ const INTERACTIVE = ['primary', 'secondary', 'accent', 'destructive'];
  */
 function derivedStates({ tokens, dark, stepL }) {
     const out = [];
+    // The two-channel focus ring [DI2]. A single ring has to contrast with
+    // whatever it lands on, and no one colour does: measured 2026-09-04,
+    // the ring sat at 1.00 — identical luminance — on primary buttons in
+    // three themes. Two adjacent rings solve it, provided the pair itself
+    // contrasts and at least one of the two reaches 3:1 on every surface.
+    //
+    // The pair is the theme's own foreground and background: its widest
+    // spread, already gated at 4.5:1 against each other, and measured to
+    // cover all eleven surfaces in all seven themes. A theme may author
+    // both tokens itself; check-invariants.mjs then measures those instead.
+    if (tokens['focus-ring'] === undefined) out.push(`    --focus-ring: ${tokens.foreground};`);
+    if (tokens['focus-ring-contrast'] === undefined) out.push(`    --focus-ring-contrast: ${tokens.background};`);
     const d = CONFIG.derivation;
     for (const surface of INTERACTIVE) {
         const base = tokens[surface];

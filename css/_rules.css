@@ -144,3 +144,23 @@ body {
             color 400ms ease;
     }
 }
+
+/* The two-channel focus ring [DI2].
+ *
+ * Two rings, adjacent: the box-shadow is the inner ring (--focus-ring,
+ * the theme's foreground), the outline the outer one
+ * (--focus-ring-contrast, its background), and the outline's offset is
+ * exactly the width of the inner ring so the two touch. Whatever the element sits on, one of the two
+ * colours contrasts with it, and they contrast with each other — which is
+ * what a single ring cannot promise. Before this, the focus indicator was
+ * whatever the browser drew, and on a primary button in three themes that
+ * was a ring of the same luminance as the button.
+ *
+ * :focus-visible rather than :focus, so a mouse click does not leave a
+ * ring behind while the keyboard still gets one.
+ */
+:focus-visible {
+    outline: 2px solid var(--focus-ring-contrast);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--focus-ring);
+}

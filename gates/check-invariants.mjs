@@ -1,5 +1,5 @@
 // The design invariants that can be checked against the token source
-// [L3, DI1, DI4, DI6]. Contrast of text pairs stays in check-contrast.mjs,
+// [L3, DI1, DI2, DI4, DI6]. Contrast of text pairs stays in check-contrast.mjs,
 // which reads the generated artefact because that is what a consumer takes.
 //
 // Every check declares how many things it expected to inspect and fails
@@ -111,6 +111,48 @@ export function checkColourVision(theme) {
     return problems;
 }
 
+/**
+ * DI2: the focus ring is two channels, and it is checked on everything it
+ * can land on.
+ *
+ * A focus indicator that fails is not a cosmetic problem — it is a
+ * keyboard user losing their place on the page. Two conditions, both
+ * measured: the two rings contrast with each other, so the pair reads as
+ * a ring whatever it sits on; and on every surface a component can have,
+ * at least one of the two clears the 3:1 floor of SC 1.4.11.
+ *
+ * The second condition is what a single ring failed: measured 2026-09-04,
+ * --ring against --primary was 1.00 in three themes. Identical luminance.
+ */
+const FOCUS_SURFACES = ['background', 'card', 'popover', 'primary', 'secondary', 'accent', 'destructive', 'muted', 'success', 'warning', 'info'];
+
+export function checkFocusRing(theme) {
+    const problems = [];
+    // Generated tokens are not in the authored source, so the values the
+    // generator would derive are reproduced here rather than read back
+    // from the stylesheet: this gate measures the source, and DI2's
+    // default pair is the theme's own foreground and background.
+    const inner = theme.tokens['focus-ring'] ?? theme.tokens.foreground;
+    const outer = theme.tokens['focus-ring-contrast'] ?? theme.tokens.background;
+
+    const pair = contrast(hsl(inner), hsl(outer));
+    if (pair < BOUNDARY_FLOOR) {
+        problems.push(`the two focus rings are ${pair.toFixed(2)} apart, under ${BOUNDARY_FLOOR.toFixed(1)} — the pair does not read as a ring`);
+    }
+
+    for (const surface of FOCUS_SURFACES) {
+        const value = theme.tokens[surface];
+        if (value === undefined) continue;
+        const best = Math.max(contrast(hsl(inner), hsl(value)), contrast(hsl(outer), hsl(value)));
+        if (best < BOUNDARY_FLOOR) {
+            problems.push(
+                `neither focus ring reaches ${BOUNDARY_FLOOR.toFixed(1)} on --${surface} (best ${best.toFixed(2)}), so focus is invisible there`,
+            );
+        }
+    }
+    return problems;
+}
+
 const INTERACTIVE = ['primary', 'secondary', 'accent', 'destructive'];
 
 /**
@@ -148,8 +190,14 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     let checks = 0;
 
     for (const theme of all) {
-        const problems = [...checkColourScheme(theme), ...checkBoundaries(theme), ...checkColourVision(theme), ...checkStates(theme)];
-        checks += 4;
+        const problems = [
+            ...checkColourScheme(theme),
+            ...checkBoundaries(theme),
+            ...checkColourVision(theme),
+            ...checkStates(theme),
+            ...checkFocusRing(theme),
+        ];
+        checks += 5;
         if (problems.length > 0) {
             failed += problems.length;
             console.error(`\n${theme.name}:`);
@@ -157,7 +205,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         }
     }
 
-    const expected = all.length * 4;
+    const expected = all.length * 5;
     if (checks !== expected) {
         console.error(`\ngate broke: expected ${expected} checks over ${all.length} themes, ran ${checks}`);
         process.exit(1);
@@ -167,5 +215,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(`\n${failed} invariant violation(s) across ${all.length} themes.`);
         process.exit(1);
     }
-    console.log(`All ${all.length} themes satisfy DI1, DI3, DI4 and DI6 (${expected} checks).`);
+    console.log(`All ${all.length} themes satisfy DI1, DI2, DI3, DI4 and DI6 (${expected} checks).`);
 }

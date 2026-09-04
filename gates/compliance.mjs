@@ -15,7 +15,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { themes, checkBoundaries, checkColourScheme, checkColourVision, checkStates } from './check-invariants.mjs';
+import { themes, checkBoundaries, checkColourScheme, checkColourVision, checkFocusRing, checkStates } from './check-invariants.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
 
 const DOC = new URL('../docs/DESIGN_INVARIANTS.md', import.meta.url);
@@ -24,7 +24,6 @@ const END = '<!-- compliance:end -->';
 
 /** Invariants asserted in prose because no gate reads them yet. */
 const NOT_GATED = {
-    DI2: 'the two-channel focus ring is a CSS rule, not a token — L4 builds it and the gate that reads it',
     DI9: 'layer discipline is a review question about the generated stylesheet, not yet a check',
 };
 
@@ -61,6 +60,7 @@ export function table() {
     /** @type {[string, (t: any) => string][]} */
     const rows = [
         ['DI1 boundaries at 3:1', (t) => verdict(checkBoundaries(t).length === 0)],
+        ['DI2 two-channel focus ring', (t) => verdict(checkFocusRing(t).length === 0)],
         ['DI3 states carry their text', (t) => verdict(checkStates(t).length === 0)],
         ['DI4 opposed status plates distinguishable', (t) => verdict(checkColourVision(t).length === 0)],
         ['DI5 flash threshold', (t) => (scope.has(t.name) ? verdict(motion.flash) : 'n/a')],

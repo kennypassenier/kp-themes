@@ -127,3 +127,22 @@ test('two pickers on one page stay in step', async ({ page }) => {
     await CHANNELS.react.choose(page, 'topo');
     expect(await CHANNELS['framework-free'].selection(page)).toBe('topo');
 });
+
+test('the focus ring is two visible channels [DI2]', async ({ page }) => {
+    await page.goto(PAGE);
+    await ready(page);
+
+    // The token gate proves the two colours contrast on every surface it
+    // can land on. This proves the rule reaches the element at all: before
+    // it existed, focus was whatever the browser drew.
+    const option = page.locator('#plain [data-kp-theme="cyberpunk"]');
+    await option.focus();
+    const ring = await option.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { width: s.outlineWidth, style: s.outlineStyle, offset: s.outlineOffset, shadow: s.boxShadow };
+    });
+    expect(ring.style).toBe('solid');
+    expect(parseFloat(ring.width)).toBeGreaterThanOrEqual(2);
+    expect(parseFloat(ring.offset)).toBeGreaterThanOrEqual(2);
+    expect(ring.shadow).not.toBe('none');
+});
