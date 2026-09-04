@@ -268,6 +268,110 @@ export const SPECIMENS = [
             `<footer class="kp-footer">kp-themes \u00b7 zeven thema\u2019s, \u00e9\u00e9n set tokens</footer>`,
     },
     {
+        id: 'combobox',
+        title: 'Combobox and tag input',
+        note: 'Arrow down: the highlight moves and aria-activedescendant follows it. Type to filter — the count is announced [TH39, TH41].',
+        html: (theme) =>
+            `<div class="kp-combobox" data-kp-combobox>` +
+            `<label class="kp-field__label" for="${theme}-fruit">Fruit</label>` +
+            `<input class="kp-combobox__input" id="${theme}-fruit" type="text" role="combobox" autocomplete="off" ` +
+            `aria-expanded="false" aria-controls="${theme}-fruit-list" placeholder="Kies of typ\u2026" />` +
+            `<ul class="kp-combobox__list" id="${theme}-fruit-list" role="listbox" hidden>` +
+            ['Appel', 'Banaan', 'Citroen', 'Druif']
+                .map((f) => `<li class="kp-combobox__option" role="option" data-kp-option data-value="${f.toLowerCase()}">${f}</li>`)
+                .join('') +
+            `</ul><p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>` +
+            `<div class="kp-combobox" data-kp-combobox data-kp-tags>` +
+            `<label class="kp-field__label" for="${theme}-labels">Labels</label>` +
+            `<ul class="kp-tag-list" data-kp-tag-list></ul>` +
+            `<input class="kp-combobox__input" id="${theme}-labels" type="text" role="combobox" autocomplete="off" ` +
+            `aria-expanded="false" aria-controls="${theme}-labels-list" />` +
+            `<ul class="kp-combobox__list" id="${theme}-labels-list" role="listbox" hidden>` +
+            ['Urgent', 'Bug', 'Idee']
+                .map((f) => `<li class="kp-combobox__option" role="option" data-kp-option data-value="${f.toLowerCase()}">${f}</li>`)
+                .join('') +
+            `</ul><p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>`,
+    },
+    {
+        id: 'datatable',
+        title: 'DataTable',
+        note: 'Sort a column, filter, page. At 320 px each row becomes a card carrying its column names [TH37].',
+        html: (theme) =>
+            `<div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3">` +
+            `<div class="kp-datatable__bar"><input class="kp-datatable__search" type="search" data-kp-datatable-search ` +
+            `aria-label="Zoeken in de tabel" placeholder="Zoeken\u2026" /></div>` +
+            `<div class="kp-table-wrap"><table class="kp-table"><thead><tr>` +
+            `<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Alle zichtbare rijen selecteren" /></th>` +
+            `<th scope="col" data-kp-sort="text">Klant</th><th scope="col" data-kp-sort="number">Bedrag</th>` +
+            `<th scope="col" data-kp-sort="date">Datum</th></tr></thead><tbody>` +
+            [
+                ['Acme', '100', '2026-03-01'],
+                ['Bakker', '20', '2026-01-12'],
+                ['Cerise', '1.284,50', '2026-09-04'],
+                ['Delta', '7', '2025-11-30'],
+            ]
+                .map(
+                    ([klant, bedrag, datum], i) =>
+                        `<tr data-kp-row-key="${theme}-${i}">` +
+                        `<td data-label=""><input type="checkbox" data-kp-select-row aria-label="Rij ${klant} selecteren" /></td>` +
+                        `<td data-label="Klant">${klant}</td><td data-label="Bedrag" class="kp-numeric">${bedrag}</td>` +
+                        `<td data-label="Datum" class="kp-timestamp">${datum}</td></tr>`,
+                )
+                .join('') +
+            `</tbody></table></div>` +
+            `<div class="kp-empty" data-kp-datatable-empty hidden>Niets gevonden.</div>` +
+            `<div class="kp-datatable__bar"><p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>` +
+            `<div class="kp-datatable__pager" data-kp-datatable-pager></div></div></div>`,
+    },
+    {
+        id: 'dates',
+        title: 'Date picker',
+        note: 'Type a date and the calendar never has to open. Or open it: arrows by day, PageUp/Down by month [TH43].',
+        html: (theme) =>
+            `<div class="kp-datepicker" data-kp-datepicker>` +
+            `<div class="kp-field"><label class="kp-field__label" for="${theme}-van">Van</label>` +
+            `<input class="kp-field__input" id="${theme}-van" type="text" inputmode="numeric" placeholder="dd-mm-jjjj" data-kp-date-input /></div>` +
+            `<button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Kalender openen">Kalender</button>` +
+            `<div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>`,
+    },
+    {
+        id: 'structure',
+        title: 'Tree, reorder and split',
+        note: 'All three are keyboard-first: arrows walk the tree, move an item, and resize the panes [TH45, TH46, TH55].',
+        html: () =>
+            `<ul class="kp-tree" role="tree" data-kp-tree>` +
+            `<li role="treeitem" aria-expanded="false">Map een<ul role="group"><li role="treeitem">Kind een</li></ul></li>` +
+            `<li role="treeitem">Zaak twee</li></ul>` +
+            `<ul class="kp-reorder" data-kp-reorder>` +
+            `<li data-kp-item="a"><button type="button" data-kp-handle aria-label="Verplaats A">\u283f</button> A</li>` +
+            `<li data-kp-item="b"><button type="button" data-kp-handle aria-label="Verplaats B">\u283f</button> B</li></ul>` +
+            `<div class="kp-split" data-kp-split><div class="kp-split__pane">Links</div>` +
+            `<div class="kp-split__separator" role="separator" tabindex="0" aria-orientation="vertical" aria-valuemin="10" ` +
+            `aria-valuemax="90" aria-valuenow="50" aria-label="Panelen verdelen"></div>` +
+            `<div class="kp-split__pane">Rechts</div></div>`,
+    },
+    {
+        id: 'patterns',
+        title: 'Status, diff and copy',
+        note: 'A health dot is never the only carrier; the diff sign has its own column so it survives without colour [TH52, TH53, TH54].',
+        html: (theme) =>
+            `<span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> In orde</span> ` +
+            `<span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Let op</span> ` +
+            `<span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Onbereikbaar</span>` +
+            `<ol class="kp-timeline">` +
+            `<li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>` +
+            `<span><time class="kp-timeline__when">2026-09-04 14:07</time>Versie 1.1.0 uitgebracht</span></li>` +
+            `<li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>` +
+            `<span><time class="kp-timeline__when">2026-09-04 12:27</time>Versie 1.0.0 uitgebracht</span></li></ol>` +
+            `<span class="kp-copyable"><span class="kp-copyable__value" id="${theme}-token">a3f9-2b71</span>` +
+            `<button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="${theme}-token">Kopi\u00ebren</button></span>` +
+            `<pre class="kp-diff">` +
+            `<span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">1</span><span class="kp-diff__sign"> </span><span>--background: 0 0% 100%;</span></span>` +
+            `<span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">2</span><span class="kp-diff__sign">-</span><span>--primary: 220 90% 56%;</span></span>` +
+            `<span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">2</span><span class="kp-diff__sign">+</span><span>--primary: 220 90% 48%;</span></span>` +
+            `</pre>`,
+    },
+    {
         id: 'text',
         title: 'Body text',
         note: 'Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].',

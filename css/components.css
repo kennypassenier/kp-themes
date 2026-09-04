@@ -808,6 +808,10 @@
 }
 
 .kp-combobox__input {
+    /* Border-box, or `width: 100%` plus padding and a border overflows the
+     * wrapper. Found by putting this on the showcase: at 320 px it pushed
+     * the page 10 px sideways and DI11 went red on all eleven themes. */
+    box-sizing: border-box;
     width: 100%;
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--border);
@@ -1029,6 +1033,7 @@
 }
 
 .kp-datatable__search {
+    box-sizing: border-box;
     flex: 1 1 12rem;
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--border);

@@ -28,7 +28,9 @@ for (const channel of CHANNELS) {
 
         test('a dialog opens, Escape closes it, and focus goes back to the opener', async ({ page }) => {
             const opener = page.locator(`${channel.root} [data-test="dialog-open"]`);
-            const dialog = page.locator(`${channel.root} dialog`);
+            // .kp-dialog, not any dialog: round two put a command palette
+            // and a shortcut sheet on this fixture, and both are dialogs.
+            const dialog = page.locator(`${channel.root} dialog.kp-dialog`);
 
             await opener.focus();
             await opener.click();
@@ -47,7 +49,9 @@ for (const channel of CHANNELS) {
         });
 
         test('the close button closes it too', async ({ page }) => {
-            const dialog = page.locator(`${channel.root} dialog`);
+            // .kp-dialog, not any dialog: round two put a command palette
+            // and a shortcut sheet on this fixture, and both are dialogs.
+            const dialog = page.locator(`${channel.root} dialog.kp-dialog`);
             await page.locator(`${channel.root} [data-test="dialog-open"]`).click();
             await expect(dialog).toBeVisible();
             await page.locator(`${channel.root} [data-test="dialog-close"]`).click();
