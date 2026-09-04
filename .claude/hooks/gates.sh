@@ -26,6 +26,9 @@ npx prettier --check .
 echo "→ token parity across the seven themes (TH22)"
 node gates/check-tokens.mjs
 
+echo "→ design invariants over the token source (DI1, DI3, DI4, DI6)"
+node gates/check-invariants.mjs
+
 echo "→ contrast (WCAG AA over every declared pair)"
 node gates/check-contrast.mjs
 
@@ -33,7 +36,7 @@ echo "→ tests"
 node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:
-#   L3  colour-vision distance (DI4), flash threshold (DI5), layer order (DI6)
+#   L3  flash threshold (DI5) — still uncomputed, see MINI_ROUNDS
 #   L5  the browser checks — but in CI, not here (decision H1)
 
 gate_tree_after=$(gate_tree_fingerprint)

@@ -439,24 +439,56 @@ every year.
 
 ---
 
-# 5 · Compliance today
+# 5 · Compliance
 
-Measured 2026-09-04, before any of the above is implemented.
+Measured by the gates, not by hand. `npm run gates` reproduces every row.
 
 | Invariant | formal | light | dark | cyberpunk | pastel | terminal | topo |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| DI1 boundaries at 3:1 | fail | fail | fail | fail | fail | fail | fail |
+| DI1 boundaries at 3:1 | pass | pass | pass | pass | pass | pass | pass |
 | DI2 focus visible everywhere | fail | fail | fail | fail | fail | fail | fail |
-| DI3 state tokens exist | fail | fail | fail | fail | fail | fail | fail |
-| DI4 status colours distinguishable | fail | fail | fail | pass | fail | pass | fail |
+| DI3 state tokens exist | pass | pass | pass | pass | pass | pass | pass |
+| DI4 opposed status plates distinguishable | pass | pass | pass | pass | pass | pass | pass |
 | DI5 flash threshold | n/a | n/a | n/a | unknown | n/a | unknown | n/a |
-| DI6 declares colour-scheme | fail | fail | fail | fail | fail | fail | fail |
-| DI6 layer ordering | pass | pass | fail | fail | pass | fail | pass |
+| DI6 declares colour-scheme | pass | pass | pass | pass | pass | pass | pass |
+| DI6 layer ordering | pass | pass | pass | pass | pass | pass | pass |
 | DI7 reduced motion | partial | partial | partial | partial | partial | partial | partial |
 | DI9 theme stays in its layer | pass | pass | pass | pass | pass | pass | pass |
 
-Existing contrast gate (text pairs, DI1's first half): passing, 21 pairs
-× 7 themes.
+Text pairs (DI1's first half): 24 pairs x 7 themes, all passing.
+Token parity (TH22): all seven themes declare the same 63 names.
 
-Not in the table because they need components that do not exist yet:
-DI8, DI10, DI11.
+**What is left, and where it belongs.** DI2's two-channel focus ring is a
+CSS rule and a component behaviour rather than a token, so it lands with
+the element-level work; the tokens it needs (`--foreground`,
+`--background`) already exist and already sit far enough apart. DI5's
+flash numbers are computed from the register's keyframes, not from the
+palette. DI7's two gaps are one unguarded transition in the authored rules
+and a missing change listener in the effect components.
+
+That means L3's exit criterion — "the table reads pass everywhere" — is
+not something L3 can reach alone, which is a fault in the plan rather than
+in the work. Recorded at the L3 gate.
+
+## What changed on 2026-09-04, and what it cost
+
+Every theme gained `--border-strong`, `--input` raised to the 3:1 floor,
+`--selected` speaking in the theme's own action colour, `--color-scheme`,
+`--theme-font-body`, the three semantic plates with their inks, a third
+signal colour, a corner notch and a motion pair. `--font-sans` left:
+terminal was the only theme that had it, it existed for the Tailwind
+bridge, and TH11's `--theme-font-body` is the published answer.
+
+The status plates moved. Offer and rejected mean opposite things, and in
+five of seven themes they were the same colour for the commonest colour
+deficiency — 1.0 in formal, 0.5 in light. Red and green collapse together
+there, so the separation had to come from lightness, the channel that
+survives. All seven now clear 13.
+
+DI4's token check is narrower than the draft implied, and deliberately.
+Requiring all twenty-one pairs of seven pale plates to stay apart under a
+deficiency is not achievable by any palette of seven light tints — the
+best any theme managed was single digits. That is not a defect: it is the
+reason DI4 says colour is never the *only* carrier. The tokens guarantee
+the pair where confusion is harmful; the label is the component's job.
+Queued as DI4-SCOPE for Kenny.

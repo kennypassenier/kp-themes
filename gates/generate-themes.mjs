@@ -16,18 +16,72 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
+import { derive } from './colour.mjs';
 
 const ORDER = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
 const OUT = new URL('../css/themes.css', import.meta.url);
 
+const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 'utf8'));
+
 /**
- * One theme block, byte-identical to how it was authored.
- * @param {{selector: string, entries: Array<{raw?: string, token?: string, value?: string}>}} theme
+ * Surfaces that are genuinely interactive, and therefore need states.
+ *
+ * Buttons and the selected surface — not the alert plates. `--success`,
+ * `--warning` and `--info` are the background of a message, and a message
+ * does not respond to a cursor; deriving states for them produced values
+ * whose own ink no longer read, which is the gate catching a modelling
+ * mistake rather than a colour one.
+ */
+const INTERACTIVE = ['primary', 'secondary', 'accent', 'destructive'];
+
+/**
+ * State values are derived, not authored [DI3, AR2].
+ *
+ * Carbon's grammar: hover is half a step, selected one, pressed two. The
+ * step is a lightness move in OKLCh so it looks the same size in every
+ * theme (AR4) — a numeric HSL step does not, which is what makes the
+ * worst-case shortcut of AR12 sound.
+ *
+ * A theme may record its own step size in its token file. Cyberpunk and
+ * terminal do: neon has almost nowhere lighter to go before magenta turns
+ * pink, and a phosphor brightens rather than darkens. Both say so in their
+ * anatomy documents, and both forfeit AR12's shortcut in exchange.
+ *
+ * @param {{tokens: Record<string,string>, dark: boolean, stepL: number}} ctx
+ */
+function derivedStates({ tokens, dark, stepL }) {
+    const out = [];
+    const d = CONFIG.derivation;
+    for (const surface of INTERACTIVE) {
+        const base = tokens[surface];
+        if (base === undefined) continue;
+        for (const [state, steps] of [
+            ['hover', d.hover],
+            ['active', d.active],
+            ['disabled', d.disabled],
+        ]) {
+            const value =
+                state === 'disabled' ? derive(base, 1.5, { towardsLight: !dark, stepL }) : derive(base, steps, { towardsLight: dark, stepL });
+            out.push(`    --${surface}-${state}: ${value};`);
+        }
+    }
+    return out;
+}
+
+/**
+ * One theme block: the authored entries verbatim, then the derived states.
+ * @param {{selector: string, entries: Array<{raw?: string, token?: string, value?: string}>, derivation?: {stepL: number}}} theme
  * @returns {string}
  */
 function block(theme) {
     const body = theme.entries.map((e) => (e.raw !== undefined ? e.raw : `    --${e.token}: ${e.value};`));
-    return [`${theme.selector} {`, ...body, '}'].join('\n');
+    const tokens = Object.fromEntries(theme.entries.filter((e) => e.token !== undefined).map((e) => [e.token, e.value]));
+    const states = derivedStates({
+        tokens,
+        dark: tokens['color-scheme'] === 'dark',
+        stepL: theme.derivation?.stepL ?? CONFIG.derivation.stepL,
+    });
+    return [`${theme.selector} {`, ...body, '', '    /* Derived interaction states — see gates/generate-themes.mjs. */', ...states, '}'].join('\n');
 }
 
 function build() {
