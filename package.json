@@ -50,7 +50,8 @@
         "check:compliance": "node gates/compliance.mjs --check",
         "test:browser": "playwright test",
         "generate:showcase": "node gates/generate-showcase.mjs",
-        "check:showcase": "node gates/generate-showcase.mjs --check"
+        "check:showcase": "node gates/generate-showcase.mjs --check",
+        "checksums": "node gates/checksums.mjs --write"
     },
     "peerDependencies": {
         "motion": ">=12",

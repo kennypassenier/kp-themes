@@ -2,3 +2,4 @@ node_modules/
 tests/fixtures/.build/
 test-results/
 playwright-report/
+SHA256SUMS

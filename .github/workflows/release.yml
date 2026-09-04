@@ -1,0 +1,40 @@
+name: Release
+
+# TH18: SHA256SUMS beside every release tag. kyu and almanac vendor
+# css/themes.css into a Rust binary's static directory rather than
+# installing it, so they have no npm to verify anything for them.
+#
+# The checksums are generated here rather than committed: they would
+# change on every stylesheet edit, and a file that is wrong between
+# commits is worse than no file.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci
+      # The tag must pass the same gates as a commit. A release built from
+      # a tree that does not pass is a release of something else.
+      - name: Gates
+        run: ./.claude/hooks/gates.sh
+      - name: Checksums
+        run: npm run checksums
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file MIGRATION.md \
+            SHA256SUMS css/themes.css css/components.css

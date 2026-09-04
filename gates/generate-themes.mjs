@@ -119,7 +119,15 @@ function block(theme) {
 
 function build() {
     const dir = new URL('../themes/', import.meta.url);
-    const header = readFileSync(new URL('../css/_header.css', import.meta.url), 'utf8');
+    // AR10: the version goes inside the marker comment that has been this
+    // file's recognition point for as long as it has existed. No banner
+    // above it, no timestamp, no hash — a timestamp would also break AR3,
+    // which says nothing here may vary between runs.
+    const version = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+    const header = readFileSync(new URL('../css/_header.css', import.meta.url), 'utf8').replace(
+        '/* @kp-soft/themes — css/themes.css',
+        `/* @kp-soft/themes v${version} — css/themes.css`,
+    );
     const rules = readFileSync(new URL('../css/_rules.css', import.meta.url), 'utf8');
     const blocks = ORDER.map((name) => block(JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'))));
     // _rules.css already begins with the blank line that separated the last

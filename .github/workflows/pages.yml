@@ -1,0 +1,51 @@
+name: Showcase
+
+# MR5-PAGES: the showcase is published, and only the showcase. A Pages
+# site served from the repository root would publish docs/ as well — the
+# scope documents, the correction log, the mini-round queue — which is
+# not what "publish the showcase" meant.
+#
+# So the site is assembled here: the showcase and exactly the three
+# directories it loads from, nothing else.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp -r showcase _site/showcase
+          cp -r css _site/css
+          cp -r js _site/js
+          # The showcase lives one directory down; the root redirects to
+          # it so the Pages URL lands somewhere useful.
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./showcase/">\n' > _site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
