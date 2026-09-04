@@ -35,12 +35,12 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                    |
-| ------------------- | ---------------------------------------- |
-| Current phase       | 6 — closed; three queue items still open |
-| Last completed gate | mini-round L3-EXIT, 2026-09-04           |
-| Next gate           | Phase 7 — hardening                      |
-| AFK mode            | off — Kenny is answering again           |
+| Field               | Value                                           |
+| ------------------- | ----------------------------------------------- |
+| Current phase       | 7 — closed; PROC-H1 is the only open queue item |
+| Last completed gate | Phase 7, 2026-09-04                             |
+| Next gate           | Phase 8 — documentation                         |
+| AFK mode            | off — Kenny is answering again                  |
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at

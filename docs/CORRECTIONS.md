@@ -79,6 +79,27 @@ presenting it as fact.
 being able to remove rules is the only thing that keeps the stack
 readable.
 
+### KT1's fallback, activated 2026-09-04
+
+Field 8's fallback triggered at the Phase 7 gate, on Kenny's decision. The
+measure had already failed once after being agreed: on 2026-09-03, after
+KT1 was approved, Claude asserted that cyberpunk had no display face at
+all in the plain-CSS consumers. Kenny looked at the live kyu dashboard and
+saw Chakra Petch; both consumers set it themselves from their own
+`theme-bridge.css`. The claim was checkable and was not checked.
+
+The count KT1 asked for was finally taken at the Phase 7 gate form — nine
+claims about code, nine carrying a file:line or a measured number, so they
+matched. Kenny's answer was that one matching count does not undo a
+measure that had already been broken, and that the fallback applies from
+here.
+
+**So, from 2026-09-04, in this project:** every claim in a form carries
+its source, or it becomes its own item in that form. Not only the
+checkable ones and not only the ones a decision rests on — every claim.
+An assertion with no source is not softened with a hedge; it is either
+sourced or it is asked.
+
 ## KT2 · A gate that checked one half of a two-halved property
 
 Approved 2026-09-04, all nine fields "Correct". The measurement of field 7

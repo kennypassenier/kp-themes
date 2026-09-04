@@ -51,12 +51,38 @@ target awaiting a checklist.
 
 ## Not covered, by decision
 
-_This section is filled in from the Phase 7 gate. An accepted gap is a
-choice with a reason, written down; a silent hole is neither._
+Decided at the Phase 7 gate, 2026-09-04. An accepted gap is a choice with
+a reason, written down; a silent hole is neither.
 
 - **`BootSequence` has no test.** It is the one effect that needs the
-  optional `motion` peer, which this package does not install — testing it
-  means adding a dependency for a component that renders nothing outside
-  cyberpunk. The other three effects are tested, including the promise
-  that matters most: outside cyberpunk, and for anyone who asked for less
-  motion, the text is simply the text.
+  optional `motion` peer, which this package does not install
+  (`fx/boot-sequence.jsx:5`, `package.json` peerDependenciesMeta) —
+  testing it means adding a dependency for a component that renders
+  nothing outside cyberpunk and carries no text anyone must read. If it
+  breaks, a cyberpunk visitor misses a once-per-session opening animation
+  and nothing else. The other three effects are tested, including the
+  promise that matters most: outside cyberpunk, and for anyone who asked
+  for less motion, the text is simply the text.
+
+- **Nothing compares how the page looks.** Every check here is a number —
+  contrast, distance, flashes per second, whether an element exists — and
+  there are no screenshot comparisons. A theme can therefore look wrong
+  while all 138 tests pass. The cost is real and was paid once already: at
+  L3-EXIT, 42 colours were converted to tokens and the proof that nothing
+  changed on screen had to be computed by hand, because no test could see
+  it.
+
+  Accepted rather than closed because screenshot baselines are brittle
+  across machines — fonts rasterise differently on Kenny's screen and on
+  the Linux runner — so the honest version runs in CI only, and a gate
+  that cries wolf is worse than no gate. Kenny watches the showcase; the
+  numbers watch the colour.
+
+- **`/security-review` was not run, because there is nothing for it to
+  review.** Measured 2026-09-04 across `js/`, `components/`, `fx/`,
+  `hooks/` and `index.js`: no `fetch`, no `XMLHttpRequest`, no
+  `WebSocket`, no `process.env`, and no occurrence of password, token,
+  secret or api-key. What the package touches is `document` (21 times),
+  `localStorage` (5) and three window functions. The procedure makes the
+  review mandatory for anything touching secrets, network or auth; this
+  package touches none of the three.
