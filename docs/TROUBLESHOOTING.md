@@ -86,21 +86,22 @@ before that fix — the components used to read the setting once at mount.
 
 ## When a gate says no
 
-Every gate names the theme, the token and the number. Fix the token, not
+Every gate names the theme, the token and the number. The messages below
+are quoted from the code, so you can search for them. Fix the token, not
 the gate. If you are convinced the gate is wrong, that is a mini-round,
 not a config edit.
 
 | It says | It means | Where to look |
 | --- | --- | --- |
-| `x on y is 3.42, under 4.5` | text on a surface is not readable | the two tokens it names, in that theme's `tokens.json` |
-| `--input on --card is 2.10, under 3.0` | a control's boundary disappears into its surface | DI1: raise the boundary, not the surface |
-| `--x-active is only 4.9 from --x` | pressing the control changes nothing anyone can see | the base colour is near the edge of the space; the derivation gives up chroma first, so this means even that was not enough |
-| `--z is measured by nothing` | a new token belongs to no pair list | add it to a pair list, or to `EXEMPT` with the reason |
-| `fx-y makes 5.5 opposing changes per second` | it is over the flash threshold, and that harms people | retime the keyframes or lengthen the duration |
-| `transition sits outside a guard` | it moves for someone who asked for stillness | wrap it in `@media (prefers-reduced-motion: no-preference)` |
+| `foreground on background = 3.42 (need >= 4.5)` | text on a surface is not readable | the two tokens it names, in that theme's `tokens.json` |
+| `--input on --card is 2.10, under the 3.0 floor of SC 1.4.11` | a control's boundary disappears into its surface | DI1: raise the boundary, not the surface |
+| `--primary-active is only 4.9 from --primary (need >= 10)` | pressing the control changes nothing anyone can see | the base colour is near the edge of the space; the derivation gives up chroma first, so this means even that was not enough |
+| `--z is measured by nothing` | a new token belongs to no pair list | add it to a pair list, or to `EXEMPT` with the reason — the message says so too |
+| `fx-flicker makes 5.5 opposing luminance changes per second over 1100ms` | it is over the flash threshold, and that harms people | retime the keyframes or lengthen the duration |
+| `transition sits outside a prefers-reduced-motion guard (DI7)` | it moves for someone who asked for stillness | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `hsl(…) is a colour written outside the token layer` | a colour is spelled out where a token should be | `var(--token)`, or `hsl(from var(--token) h s l / alpha)` if it needs transparency |
 | `css/themes.css does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
-| `the compliance table no longer matches` | the table and the gates disagree | `node gates/compliance.mjs` |
+| `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `node gates/compliance.mjs` |
 | `theme discovery broke: expected 7, found 6` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
 
 ## Working on the package itself
