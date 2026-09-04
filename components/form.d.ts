@@ -45,18 +45,33 @@ export declare function FormField({ label, name, help, error, required, type, op
 /**
  * A form that gathers its errors and takes focus to them.
  *
+ * The busy state is the consumer's to end [KT6]. Three ways, nearest
+ * wins: a controlled `busy` prop; a promise returned from `onValid`,
+ * awaited and cleared when it settles — fulfilled OR rejected, because a
+ * login that renders "wrong password" resolves rather than throws; or the
+ * `done()` handed to `onValid` as its second argument. Nothing returned
+ * and nothing called keeps the button busy, on purpose: a consumer who
+ * navigates away on submit must not get back a button that double-sends.
+ *
+ * The first version set busy and never cleared it. JobTracker rebuilt
+ * their login on it and their suite failed at the second submit — the
+ * one after a typo — with "element is not enabled". A person would have
+ * been locked out of their own dashboard by a wrong password.
+ *
  * @param {{
  *   children: import('react').ReactNode,
- *   onValid?: (data: FormData) => void,
+ *   onValid?: (data: FormData, done: () => void) => void | Promise<unknown>,
+ *   busy?: boolean,
  *   submitLabel?: string,
  *   busyLabel?: string,
  *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export declare function Form({ children, onValid, submitLabel, busyLabel, strings, className }: {
+export declare function Form({ children, onValid, busy: busyProp, submitLabel, busyLabel, strings, className }: {
     children: import('react').ReactNode;
-    onValid?: (data: FormData) => void;
+    onValid?: (data: FormData, done: () => void) => void | Promise<unknown>;
+    busy?: boolean;
     submitLabel?: string;
     busyLabel?: string;
     strings?: Partial<import('../js/strings.js').Strings>;

@@ -585,3 +585,151 @@ order stop being something a dictionary of complete sentences can
 express. And at the first of the later channels — Avalonia or Ratatui —
 where "the package ships its strings" has to mean something with no
 JavaScript in sight.
+
+## KT6 · A component that sets a state and gives nobody a way out of it
+
+Approved 2026-09-05, fields 1-3 and 5-9 "Correct"; field 4 answered in
+Kenny's own words: "Doe wat de gangbare gang van zaken is voor component
+libraries in het algemeen in 2026". His remarks on the same form widened
+the correction from one fault into a sweep, recorded under field 4.
+
+**1 · What went wrong.** `Form` puts the submit button into a busy state
+on a valid submit and nothing ever puts it back. No prop, no callback, no
+handle. A submit that fails locks the person out of their own screen.
+
+Measured in our code: `components/form.jsx:270` sets `busy`, `:300` binds
+`disabled` and the label to it. Both channels, not only React:
+`js/forms.js:233-236` does the same to a server-written form, and the
+idle text is restored only when `detach()` runs.
+
+The evidence is JobTracker's. They rebuilt their login screen on `Form`
+and ran their existing suite:
+
+```
+✘ auth.spec.js:60 — "a wrong password shows the hint; the right one opens the app"
+  at line 68, clicking submit: retrying click action — element is not enabled
+```
+
+Wrong password → 401 → the hint appears → right password → click. The
+click never lands. Their 401 *resolves* rather than rejects — the screen
+renders the error instead of throwing — which is the detail that decides
+what the fix has to do (field 4). One more thing they saw that we could
+not: their Dossier page remounts the subtree on a *successful* save, so
+the latch resets by accident there and only the failure path stays stuck.
+A suite that walks only the happy path never sees this.
+
+**2 · Which gate let it through.** A test that did half its job.
+`tests/forms.spec.mjs:107`, "the submit button says it is working",
+asserts `aria-busy="true"` and `toBeDisabled()` and stops. It pins the
+latch closing and never asks whether it opens. The same shape as KT2: a
+gate that checked one half of a two-halved property.
+
+A second gate said nothing because it does not exist: the submit contract
+of `Form` — `onValid`, the `kp-form-valid` event — is documented nowhere.
+Zero hits in README and `docs/`. What is not described, a documentation
+review cannot contradict.
+
+And a third instance of the same half-a-property shape arrived from
+JobTracker the same evening, while this form was open: the skip link in
+`NavBar` moves the scroll position and not the focus, because nothing
+puts `tabindex="-1"` on the target and nothing in this package says a
+consumer must. `css/components.css:155-169` shows the link on focus and
+that is all it does. No test asserts that Enter lands focus on the target.
+KT2, the busy latch, the skip link: the visible half is tested, the half
+that decides whether it works is not. Two is a coincidence; three is a
+diagnosis.
+
+**3 · Where the same fault sits elsewhere.** The fault is not "the submit
+button stays disabled". It is **a component sets a state on the
+consumer's behalf and gives them no way out of it** — JobTracker's own
+C2→C6 lesson: name the property, not the place. Measured today, each
+verified by hand:
+
+| Where | What is one-way | Compare |
+| --- | --- | --- |
+| `js/patterns.js:95`, `:114` | Optimistic delete hides the row; the commit event carries no detail, so a failed server delete leaves a vanished row and an expired undo | `js/datatable.js:244` restores its hidden rows on cleanup |
+| `js/components.js:88-91` | Contract enforcement sets `disabled` on a destructive button and nothing re-evaluates | `components/button.jsx:65` derives it per render and heals |
+| `components/button.jsx:65`, `:72` | The opposite direction: `{...rest}` is spread after `disabled`, so a consumer's `disabled={false}` re-enables a contract-broken button | — |
+| `components/flow.jsx:277`, `:286` | React Upload rows are born `waiting` with `aria-valuenow={0}` and no prop or ref ever moves them | `js/upload.js:175` exports `setProgress` |
+| `components/patterns.jsx:59` | Copyable's `failed` has no timer back to idle, unlike `copied` | `js/patterns.js:59-61` keeps the label and toasts |
+
+**4 · The measure.** Kenny's answer: the 2026 norm for component
+libraries. His remarks on the same form set the frame the norm is applied
+in, and they are the specification:
+
+> Dit project is waar ik me op baseer als ik andere projecten heb en
+> styling nodig heb. […] Het enige dat we doen, is thema's aanmaken en
+> omzetten naar componenten […]. Wij bieden enkel functionaliteit en
+> styling. […] alle componenten […] zo dynamisch en generisch mogelijk
+> […] zodat consumenten zelf hun invulling kunnen geven. Dus geen keuzes
+> over talen […]. Dit is gewoon een bron van inspiratie, geen contracten
+> […]. Het enige "contract" is dat we altijd een versie omhoog gaan […].
+> Wij doen wat testen […] voor bv contrast […] en of React componenten
+> hetzelfde renderen als html/javascript componenten. Maar we testen
+> niks voor andere projecten. […] als er componenten zijn zoals die
+> navbar, dan moeten alle features van die navbar instelbaar zijn. […]
+> Zoals volwassen component libraries dus. Dit geldt voor alle
+> instellingen van alle componenten. Er mogen defaults zijn natuurlijk.
+
+Applied to the fault of field 1, the norm is what react-hook-form,
+TanStack Form and Conform all do: the form awaits what the submit handler
+returns and derives its pending state from that promise, settled either
+way — fulfilled or rejected — and a consumer who wants to own the state
+outright passes it in. So: `onValid` may return a promise, busy clears
+when it settles; `onValid` also receives `done()`; a controlled `busy`
+prop wins over both; nothing returned and nothing called keeps today's
+behaviour, because a consumer who navigates away on submit must not get
+back a button that double-sends. The framework-free channel gets the same
+through the event detail.
+
+Applied to the whole package, the norm is the sweep this correction
+became: every component audited against the controlled/uncontrolled
+pattern, element substitution, content through props, behaviour flags
+with defaults, callbacks on every state change, passthrough to the root,
+and no magic number a consumer cannot change. The findings and what was
+done with them are recorded in `docs/GENERIC_SWEEP.md` and in the
+CHANGELOG of the version that carries them.
+
+**5 · What the remedy costs.** A version, and Kenny confirmed 2.1.0 for
+the latch alone; whether the sweep needs a major depends on what it
+removes, and that is decided in the sweep's own form. One consumer shape
+changes behaviour: whoever returns a promise from `onValid` by accident
+today gets a button that re-enables. That is the point of the fix and it
+goes at the top of the CHANGELOG rather than into a footnote. Third
+release in two days: a consumer who has to update three times starts
+skipping versions. Accepted, with eyes open, because JobTracker has a
+broken login screen the moment they use `Form`.
+
+**6 · Who enforces it.** Code for the tests, discipline for the rule, and
+each named as such. Per repaired place, a test in both channels that sets
+the state and then opens it. A gate that finds this mechanically cannot
+be written without knowing what "a state" is — `disabled` from a prop is
+fine, `disabled` from internal state is suspect, and no regex sees the
+difference. A gate people add exemptions to in order to commit guards
+nothing. So the rule goes into `CLAUDE.md` as a project rule, with the
+test bar as its mechanical half.
+
+**7 · How we measure that it works, and when.** Our side, at the moment
+of building: per repaired place a test that sets the state, opens it, and
+then makes a *second* attempt that lands. Each drilled red first with the
+repair removed, per the KT3 rule. For the form, the test pins the shape
+JobTracker actually has — a handler that resolves after a failure — not
+the easier rejecting one.
+
+The real measurement is theirs and is already defined: KT5-M1 again.
+JobTracker rebuilds their login on `Form` and `auth.spec.js:60` passes.
+Not our test, their test, on their screen. At their adoption of the
+version carrying this repair.
+
+**8 · The fallback if the measurement fails.** Then `Form` should not own
+the busy state at all: a controlled `busy` prop only, and we render what
+the consumer says. A worse default — no protection against a double
+submit for whoever passes nothing — which is why it is the fallback and
+not the measure. If the rule of field 4 turns out to be noise, it narrows
+to states that can outlive a *failure*, because that is where it hurts.
+
+**9 · When we review the measure.** At the next component that has to
+set a state which can outlive a failure. And at the first of the later
+channels, Avalonia or Ratatui, where "the consumer returns a promise"
+does not exist and it has to show whether the rule was about ownership of
+state or about JavaScript.

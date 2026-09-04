@@ -116,6 +116,31 @@ for (const channel of CHANNELS) {
             await expect(submit).toHaveAttribute('aria-busy', 'true');
             await expect(submit).toBeDisabled();
         });
+
+        // KT6. The test above pinned the latch closing and never asked
+        // whether it opens. JobTracker rebuilt their login on this form
+        // and their suite failed at the second submit — the one after a
+        // typo — with "element is not enabled".
+        test('the busy state ends when the consumer says so, and a second submit lands [KT6]', async ({ page }) => {
+            await page.goto(URL);
+            await page.locator(channel.naam).fill('Kenny');
+            await page.locator(channel.mail).fill('kenny@example.test');
+            const submit = page.locator(channel.submit);
+            const idle = await submit.textContent();
+            await submit.click();
+            await expect(submit).toBeDisabled();
+            // The fixture's handler settles after 50 ms the way a rendered
+            // "wrong password" does: resolved, not rejected. Drill: with
+            // `done` never wired (React: the then(done, done) removed;
+            // framework-free: the DONE_EVENT listener removed) this waits
+            // out the timeout on the next line.
+            await expect(submit).toBeEnabled();
+            await expect(submit).not.toHaveAttribute('aria-busy', 'true');
+            await expect(submit).toHaveText(idle ?? '');
+            // The half that matters: the person tries again and it works.
+            await submit.click();
+            await expect(submit).toBeDisabled();
+        });
     });
 }
 

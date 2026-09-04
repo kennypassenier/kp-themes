@@ -39,8 +39,21 @@ const SUMMARY = '[data-kp-form-summary]';
 const FIELD_ERROR = '[data-kp-field-error]';
 const SUBMIT = '[data-kp-submit]';
 
-/** Fired when a form passes validation. A contract value [TH26]: the detail carries the FormData. */
+/**
+ * Fired when a form passes validation. A contract value [TH26]: the
+ * detail carries the FormData and, since KT6, a `done()` that ends the
+ * busy state. A consumer may call it, or return nothing and dispatch
+ * `DONE_EVENT` on the form themselves — same effect.
+ */
 export const VALID_EVENT = 'kp-form-valid';
+
+/**
+ * Ends the busy state the submit button took on `VALID_EVENT` [KT6].
+ * Dispatched on the form by `detail.done()`, or by the consumer directly.
+ * Nothing dispatches it on its own: a consumer who navigates away on
+ * submit must not get back a button that double-sends.
+ */
+export const DONE_EVENT = 'kp-form-done';
 
 /** What the browser's own message becomes when the field says nothing better. */
 const fallback = () => getStrings().formInvalid;
@@ -177,7 +190,8 @@ export function attachForms(root = document) {
                 });
             if (bad.length === 0) {
                 if (summary !== null) summary.hidden = true;
-                form.dispatchEvent(new CustomEvent(VALID_EVENT, { bubbles: true, detail: { data: new FormData(form) } }));
+                const done = () => form.dispatchEvent(new CustomEvent(DONE_EVENT, { bubbles: true }));
+                form.dispatchEvent(new CustomEvent(VALID_EVENT, { bubbles: true, detail: { data: new FormData(form), done } }));
                 return;
             }
             event.preventDefault();
@@ -236,10 +250,20 @@ export function attachForms(root = document) {
             button.setAttribute('aria-busy', 'true');
             button.textContent = busyText;
         };
+        // The way back [KT6]. The first version restored the label only
+        // on detach, so a failed save left the button dead for the life
+        // of the page.
+        const onDone = () => {
+            button.disabled = false;
+            button.removeAttribute('aria-busy');
+            button.textContent = idleText;
+        };
         form?.addEventListener(VALID_EVENT, onValid);
+        form?.addEventListener(DONE_EVENT, onDone);
         cleanups.push(() => {
             form?.removeEventListener(VALID_EVENT, onValid);
-            button.textContent = idleText;
+            form?.removeEventListener(DONE_EVENT, onDone);
+            onDone();
             delete button.dataset.kpSubmitAttached;
         });
     }

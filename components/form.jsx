@@ -1,4 +1,4 @@
-import { createContext, useContext, useId, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
 
 // Form, React [TH38].
@@ -189,21 +189,45 @@ export function FormField({ label, name, help, error, required = false, type = '
 /**
  * A form that gathers its errors and takes focus to them.
  *
+ * The busy state is the consumer's to end [KT6]. Three ways, nearest
+ * wins: a controlled `busy` prop; a promise returned from `onValid`,
+ * awaited and cleared when it settles — fulfilled OR rejected, because a
+ * login that renders "wrong password" resolves rather than throws; or the
+ * `done()` handed to `onValid` as its second argument. Nothing returned
+ * and nothing called keeps the button busy, on purpose: a consumer who
+ * navigates away on submit must not get back a button that double-sends.
+ *
+ * The first version set busy and never cleared it. JobTracker rebuilt
+ * their login on it and their suite failed at the second submit — the
+ * one after a typo — with "element is not enabled". A person would have
+ * been locked out of their own dashboard by a wrong password.
+ *
  * @param {{
  *   children: import('react').ReactNode,
- *   onValid?: (data: FormData) => void,
+ *   onValid?: (data: FormData, done: () => void) => void | Promise<unknown>,
+ *   busy?: boolean,
  *   submitLabel?: string,
  *   busyLabel?: string,
  *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export function Form({ children, onValid, submitLabel, busyLabel, strings, className = '' }) {
+export function Form({ children, onValid, busy: busyProp, submitLabel, busyLabel, strings, className = '' }) {
     const s = useStrings(strings);
     const [errors, setErrors] = useState(/** @type {Record<string, string>} */ ({}));
     const [summaryList, setSummaryList] = useState(/** @type {{ id: string, name: string }[]} */ ([]));
-    const [busy, setBusy] = useState(false);
+    const [busyState, setBusy] = useState(false);
+    const busy = busyProp ?? busyState;
     const summary = useRef(/** @type {HTMLDivElement | null} */ (null));
+    // A promise that settles after the form is gone must not set state
+    // on a component that no longer exists.
+    const mounted = useRef(true);
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+        };
+    }, []);
 
     /** @param {Control} field */
     const validate = (field) => {
@@ -268,7 +292,16 @@ export function Form({ children, onValid, submitLabel, busyLabel, strings, class
         // Says it is working without waiting to be told: a slow save that
         // looks like a click that missed gets clicked again.
         setBusy(true);
-        onValid?.(new FormData(form));
+        const done = () => {
+            if (mounted.current) setBusy(false);
+        };
+        const result = onValid?.(new FormData(form), done);
+        // Settled either way. A submit whose failure is an outcome the
+        // screen renders resolves normally, and that is the common shape,
+        // not the exception.
+        if (result !== undefined && result !== null && typeof (/** @type {{ then?: unknown }} */ (result).then) === 'function') {
+            Promise.resolve(result).then(done, done);
+        }
     };
 
     return (
