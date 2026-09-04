@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="nl" data-theme="sepia">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Sepia</title>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <style>
+/* The showcase's own furniture — inlined into both generated
+               pages so a fixture is one file plus the package's stylesheets.
+               Everything here reads tokens; nothing here is a colour. */
+body {
+    margin: 0;
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+    line-height: 1.5;
+}
+
+/* Each block resolves its OWN theme's typeface.
+ *
+ * Without this line the font came from `body`, which resolves against the
+ * document's theme — so a terminal block showed terminal's colours in a
+ * sans-serif face while the document was formal, and every block turned
+ * monospace the moment someone picked terminal. Terminal's anatomy
+ * document is explicit that losing the mono face makes it "green-tinted,
+ * not a terminal", so the page was showing something that is not the
+ * theme it claims to be. Found by Kenny on the published page. */
+.sc-theme {
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+}
+
+/* The header wears the document's theme, which is what makes the picker
+ * in it visibly do something — every block below keeps its own. */
+.sc-header {
+    padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sc-header > p {
+    max-width: 60ch;
+}
+
+.sc-header h1 {
+    margin: 0;
+}
+
+.sc-header__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.sc-theme {
+    padding: 1.5rem clamp(1rem, 4vw, 3rem) 2.5rem;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sc-theme > h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 0.5rem;
+}
+
+.sc-theme > h2 small {
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: var(--muted-foreground);
+}
+
+.sc-specimen {
+    margin: 0 0 1.75rem;
+}
+
+.sc-specimen h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+}
+
+.sc-note {
+    margin: 0 0 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    max-width: 60ch;
+}
+
+/* auto-fit, not a fixed column count: this is what keeps the
+               page off a horizontal scrollbar at 320 px [DI11]. */
+.sc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.5rem;
+}
+
+.sc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.sc-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    /* min-height, never height: a reading aid that raises line
+                   height must be able to make this taller instead of
+                   clipping the label [DI11]. */
+    min-height: 2.5rem;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    font-size: 0.8125rem;
+}
+
+.sc-states {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sc-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+}
+
+.sc-button {
+    min-height: 2.25rem;
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+    font: inherit;
+    cursor: pointer;
+}
+
+.sc-on-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.sc-on-destructive {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+    border-color: var(--destructive);
+}
+
+.sc-text {
+    max-width: 60ch;
+}
+
+.sc-picker {
+    margin-bottom: 0.5rem;
+}
+        </style>
+    </head>
+    <body>
+        <main class="sc-theme">
+            <h2>Sepia</h2>
+            <section class="sc-specimen" id="sepia-surfaces" data-specimen="surfaces">
+                <h3>Surfaces and their ink</h3>
+                <p class="sc-note">Every pair here is in the contrast gate. If one looks wrong, the gate is wrong too.</p>
+                <div class="sc-grid"><div class="sc-chip" style="background: var(--background); color: var(--foreground);"><code>--background</code><span>Aa</span></div><div class="sc-chip" style="background: var(--card); color: var(--card-foreground);"><code>--card</code><span>Aa</span></div><div class="sc-chip" style="background: var(--popover); color: var(--popover-foreground);"><code>--popover</code><span>Aa</span></div><div class="sc-chip" style="background: var(--primary); color: var(--primary-foreground);"><code>--primary</code><span>Aa</span></div><div class="sc-chip" style="background: var(--secondary); color: var(--secondary-foreground);"><code>--secondary</code><span>Aa</span></div><div class="sc-chip" style="background: var(--muted); color: var(--muted-foreground);"><code>--muted</code><span>Aa</span></div><div class="sc-chip" style="background: var(--accent); color: var(--accent-foreground);"><code>--accent</code><span>Aa</span></div><div class="sc-chip" style="background: var(--destructive); color: var(--destructive-foreground);"><code>--destructive</code><span>Aa</span></div><div class="sc-chip" style="background: var(--success); color: var(--success-foreground);"><code>--success</code><span>Aa</span></div><div class="sc-chip" style="background: var(--warning); color: var(--warning-foreground);"><code>--warning</code><span>Aa</span></div><div class="sc-chip" style="background: var(--info); color: var(--info-foreground);"><code>--info</code><span>Aa</span></div></div>
+            </section>
+            <section class="sc-specimen" id="sepia-states" data-specimen="states">
+                <h3>Interaction states</h3>
+                <p class="sc-note">Hover, active and disabled are derived, not authored — half a step, two steps, and a step and a half the other way.</p>
+                <div class="sc-grid"><div class="sc-states"><code>--primary</code><span class="sc-chip" style="background: var(--primary); color: var(--primary-foreground);">base</span><span class="sc-chip" style="background: var(--primary-hover); color: var(--primary-foreground);">-hover</span><span class="sc-chip" style="background: var(--primary-active); color: var(--primary-foreground);">-active</span><span class="sc-chip" style="background: var(--primary-disabled); color: var(--primary-foreground);">-disabled</span></div><div class="sc-states"><code>--secondary</code><span class="sc-chip" style="background: var(--secondary); color: var(--secondary-foreground);">base</span><span class="sc-chip" style="background: var(--secondary-hover); color: var(--secondary-foreground);">-hover</span><span class="sc-chip" style="background: var(--secondary-active); color: var(--secondary-foreground);">-active</span><span class="sc-chip" style="background: var(--secondary-disabled); color: var(--secondary-foreground);">-disabled</span></div><div class="sc-states"><code>--accent</code><span class="sc-chip" style="background: var(--accent); color: var(--accent-foreground);">base</span><span class="sc-chip" style="background: var(--accent-hover); color: var(--accent-foreground);">-hover</span><span class="sc-chip" style="background: var(--accent-active); color: var(--accent-foreground);">-active</span><span class="sc-chip" style="background: var(--accent-disabled); color: var(--accent-foreground);">-disabled</span></div><div class="sc-states"><code>--destructive</code><span class="sc-chip" style="background: var(--destructive); color: var(--destructive-foreground);">base</span><span class="sc-chip" style="background: var(--destructive-hover); color: var(--destructive-foreground);">-hover</span><span class="sc-chip" style="background: var(--destructive-active); color: var(--destructive-foreground);">-active</span><span class="sc-chip" style="background: var(--destructive-disabled); color: var(--destructive-foreground);">-disabled</span></div></div>
+            </section>
+            <section class="sc-specimen" id="sepia-status" data-specimen="status">
+                <h3>Status badges</h3>
+                <p class="sc-note">Colour is never the only carrier: each badge says what it is [DI4].</p>
+                <div class="sc-row"><span class="sc-badge" style="background: var(--status-draft); color: var(--status-draft-foreground);">draft</span><span class="sc-badge" style="background: var(--status-sent); color: var(--status-sent-foreground);">sent</span><span class="sc-badge" style="background: var(--status-screening); color: var(--status-screening-foreground);">screening</span><span class="sc-badge" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span><span class="sc-badge" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span><span class="sc-badge" style="background: var(--status-rejected); color: var(--status-rejected-foreground);">rejected</span><span class="sc-badge" style="background: var(--status-withdrawn); color: var(--status-withdrawn-foreground);">withdrawn</span></div>
+            </section>
+            <section class="sc-specimen" id="sepia-focus" data-specimen="focus">
+                <h3>Focus ring</h3>
+                <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
+                <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
+            </section>
+            <section class="sc-specimen" id="sepia-picker" data-specimen="picker">
+                <h3>Theme picker, framework-free</h3>
+                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
+                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
+            </section>
+            <section class="sc-specimen" id="sepia-buttons" data-specimen="buttons">
+                <h3>Button, every variant and state</h3>
+                <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
+                <div class="sc-row"><button type="button" class="kp-button ">default</button><button type="button" class="kp-button kp-button--primary">primary</button><button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Zeker?">destructive</button><button type="button" class="kp-button kp-button--ghost">ghost</button><button type="button" class="kp-button " disabled>uit</button><button type="button" class="kp-button kp-button--primary" disabled>uit</button><button type="button" class="kp-button kp-button--destructive" disabled>uit</button><button type="button" class="kp-button kp-button--ghost" disabled>uit</button></div>
+            </section>
+            <section class="sc-specimen" id="sepia-badges" data-specimen="badges">
+                <h3>Badge</h3>
+                <p class="sc-note">Seven statuses, each of which says what it is — the colour is the second channel, never the only one [TH2, DI4].</p>
+                <div class="sc-row"><span class="kp-badge" data-kp-semantic data-status="draft" style="background: var(--status-draft); color: var(--status-draft-foreground);">draft</span><span class="kp-badge" data-kp-semantic data-status="sent" style="background: var(--status-sent); color: var(--status-sent-foreground);">sent</span><span class="kp-badge" data-kp-semantic data-status="screening" style="background: var(--status-screening); color: var(--status-screening-foreground);">screening</span><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span><span class="kp-badge" data-kp-semantic data-status="rejected" style="background: var(--status-rejected); color: var(--status-rejected-foreground);">rejected</span><span class="kp-badge" data-kp-semantic data-status="withdrawn" style="background: var(--status-withdrawn); color: var(--status-withdrawn-foreground);">withdrawn</span></div>
+            </section>
+            <section class="sc-specimen" id="sepia-alerts" data-specimen="alerts">
+                <h3>Alert</h3>
+                <p class="sc-note">Four flavours, each naming itself. An alert is a message, so it has no hover or active state [TH4].</p>
+                <div class="kp-alert kp-alert--success" role="status" data-kp-semantic><span><span class="kp-alert__label">success: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">warning: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">info: </span>Een bericht in deze smaak.</span></div><div class="kp-alert kp-alert--destructive" role="status" data-kp-semantic><span><span class="kp-alert__label">destructive: </span>Een bericht in deze smaak.</span></div>
+            </section>
+            <section class="sc-specimen" id="sepia-field" data-specimen="field">
+                <h3>Form field</h3>
+                <p class="sc-note">Label, help text, and an error that is words rather than a red border [TH5, DI4].</p>
+                <div class="kp-field"><label class="kp-field__label" for="sepia-f1">E-mail</label><input class="kp-field__input" id="sepia-f1" type="email" placeholder="naam@voorbeeld.be" aria-describedby="sepia-h1" /><span class="kp-field__help" id="sepia-h1">We sturen niets door.</span></div><div class="kp-field kp-field--invalid"><label class="kp-field__label" for="sepia-f2">E-mail</label><input class="kp-field__input" id="sepia-f2" type="email" value="geen-adres" aria-invalid="true" aria-describedby="sepia-e2" /><span class="kp-field__error" id="sepia-e2">Vul een geldig adres in.</span></div>
+            </section>
+            <section class="sc-specimen" id="sepia-card" data-specimen="card">
+                <h3>Card</h3>
+                <p class="sc-note">A raised surface is never darker than the one below it [DI6].</p>
+                <div class="kp-card" data-slot="card"><h3 class="kp-card__title">Sollicitatie</h3><p class="kp-card__body">Twee regels tekst op de kaartkleur, met de bijhorende inkt.</p></div>
+            </section>
+            <section class="sc-specimen" id="sepia-table" data-specimen="table">
+                <h3>Table</h3>
+                <p class="sc-note">Wide tables scroll inside their own box; the page does not scroll sideways [TH3, DI11].</p>
+                <div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col">Bedrijf</th><th scope="col">Status</th><th scope="col">Bedrag</th></tr></thead><tbody><tr><td>Voorbeeld NV</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr><tr><td>Tweede BV</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">aanbod</span></td><td class="kp-numeric">998,00</td></tr></tbody></table></div>
+            </section>
+            <section class="sc-specimen" id="sepia-nav" data-specimen="nav">
+                <h3>Navigation bar</h3>
+                <p class="sc-note">The current page is marked by weight and aria-current, not by colour alone [TH7, DI4].</p>
+                <nav class="kp-nav" aria-label="Voorbeeldnavigatie"><span class="kp-nav__brand">kp</span><ul class="kp-nav__links"><li><a class="kp-nav__link" href="#surfaces" aria-current="page">Overzicht</a></li><li><a class="kp-nav__link" href="#status">Statussen</a></li></ul></nav>
+            </section>
+            <section class="sc-specimen" id="sepia-overlays" data-specimen="overlays">
+                <h3>Overlays</h3>
+                <p class="sc-note">Dialog, menu, tabs and accordion get their keyboard behaviour from the platform: focus trap, Escape, focus return [TH35].</p>
+                <div class="sc-row"><button type="button" class="kp-button" data-kp-dialog="sepia-dialog">Dialoog</button><button type="button" class="kp-button" popovertarget="sepia-menu" style="anchor-name: --sepia-menu">Menu</button></div><dialog class="kp-dialog" id="sepia-dialog"><h2 class="kp-dialog__title">Bevestigen</h2><p>Escape sluit deze dialoog en zet de focus terug op de knop.</p><div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Sluiten</button></div></dialog><div popover="auto" id="sepia-menu" class="kp-popover" style="position-anchor: --sepia-menu"><ul class="kp-menu"><li><button type="button" class="kp-menu__item">Bewerken</button></li><li><button type="button" class="kp-menu__item">Archiveren</button></li></ul></div><div class="kp-tabs"><div class="kp-tabs__list" role="tablist"><button type="button" class="kp-tab" role="tab" id="sepia-t0" aria-controls="sepia-p0" aria-selected="true">Overzicht</button><button type="button" class="kp-tab" role="tab" id="sepia-t1" aria-controls="sepia-p1" aria-selected="false">Details</button></div><div class="kp-tabs__panel" role="tabpanel" id="sepia-p0" aria-labelledby="sepia-t0">Het eerste paneel.</div><div class="kp-tabs__panel" role="tabpanel" id="sepia-p1" aria-labelledby="sepia-t1" hidden>Het tweede paneel.</div></div><div class="kp-accordion"><details class="kp-accordion__item"><summary class="kp-accordion__summary">Een vraag</summary><div class="kp-accordion__body">Een antwoord.</div></details></div><div class="kp-toast" style="position: static; margin-top: 0.5rem;">Een toast, hier stilgezet om hem te kunnen bekijken.</div>
+            </section>
+            <section class="sc-specimen" id="sepia-wayfinding" data-specimen="wayfinding">
+                <h3>Breadcrumb, pagination, progress, spinner, skeleton</h3>
+                <p class="sc-note">The current page is never marked by colour alone; the spinner and the skeleton stop moving under reduced motion [TH35, DI4, DI7].</p>
+                <nav class="kp-breadcrumb" aria-label="Kruimelpad"><ol><li><a href="#surfaces">Start</a></li><li><a href="#status">Sollicitaties</a></li><li><span aria-current="page">Detail</span></li></ol></nav><nav class="kp-pagination" aria-label="Paginering"><ul><li><a href="#surfaces">1</a></li><li><a href="#surfaces" aria-current="page">2</a></li><li><a href="#surfaces">3</a></li></ul></nav><progress class="kp-progress" value="40" max="100" aria-label="Voortgang"></progress><div class="sc-row"><span class="kp-spinner" role="status" aria-label="Bezig"></span><span aria-hidden="true"><span class="kp-skeleton" style="width: 12rem"></span></span></div>
+            </section>
+            <section class="sc-specimen" id="sepia-links" data-specimen="links">
+                <h3>Links and selection</h3>
+                <p class="sc-note">The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme’s own [TH31].</p>
+                <p class="sc-text">Een <a href="#surfaces">gewone link</a>, een <a href="#already-visited-anchor">bezochte link</a> en gewone tekst naast elkaar. Selecteer deze zin om de selectiekleur te zien.</p>
+            </section>
+            <section class="sc-specimen" id="sepia-typography" data-specimen="typography">
+                <h3>Ordinary text elements</h3>
+                <p class="sc-note">code, kbd, mark, blockquote, hr and list markers — the elements a page gets for free and a theme usually forgets [TH32].</p>
+                <p class="sc-text">Inline <code>--background</code>, een toets <kbd>Ctrl</kbd>, en <mark>gemarkeerde tekst</mark>.</p><pre><code>npm run gates</code></pre><blockquote>Een thema moet compleet zijn.</blockquote><ul><li>Eerste punt</li><li>Tweede punt</li></ul><hr />
+            </section>
+            <section class="sc-specimen" id="sepia-data" data-specimen="data">
+                <h3>Showing data</h3>
+                <p class="sc-note">A long URL wraps instead of widening the page; digits line up between rows [TH33].</p>
+                <p class="sc-url kp-url">https://voorbeeld.example/een/heel/lang/pad/dat-anders-de-pagina-breder-maakt?met=query&amp;en=meer</p><p class="kp-id">a3f9-2b71-0c4d-8e15</p><p class="kp-masked">•••• •••• •••• 4417</p><p class="kp-numeric">1.284,50 &middot; 998,00 &middot; 12,75</p><p class="kp-timestamp">2026-09-04 14:07</p><p class="kp-truncate">Deze zin wordt afgekapt met een ellips zodra de kolom smaller is dan de tekst zelf, in plaats van de rij hoger te maken.</p><div class="kp-empty">Nog geen sollicitaties.</div>
+            </section>
+            <section class="sc-specimen" id="sepia-browser" data-specimen="browser">
+                <h3>The browser’s own hooks</h3>
+                <p class="sc-note">Checkbox, placeholder, invalid and disabled — surfaces a stylesheet cannot repaint, only point at [TH34].</p>
+                <div class="sc-row"><label><input type="checkbox" checked /> aangevinkt</label><input type="text" placeholder="placeholder" /><input type="email" value="geen-adres" required /><button type="button" class="sc-button" disabled>uitgeschakeld</button></div>
+            </section>
+            <section class="sc-specimen" id="sepia-shell" data-specimen="shell">
+                <h3>The page shell</h3>
+                <p class="sc-note">Tab here to see the skip link appear. Print this page to see the print rules [TH36].</p>
+                <a class="kp-skip-link" href="#surfaces">Naar de inhoud</a><div class="kp-error"><h1>404</h1><p>Deze pagina bestaat niet.</p></div><footer class="kp-footer">kp-themes · zeven thema’s, één set tokens</footer>
+            </section>
+            <section class="sc-specimen" id="sepia-text" data-specimen="text">
+                <h3>Body text</h3>
+                <p class="sc-note">Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].</p>
+                <p class="sc-text">De zeven thema's delen dezelfde tokens en dezelfde regels; wat verschilt is de kleur, het contrast en de textuur. <a href="#surfaces">Een link</a> is leesbaar in elk thema — ook in terminal, waar het blauw van de browser tegen het fosforgroen vloekte.</p>
+            </section>
+        </main>
+        <script type="module" src="../../js/components.js"></script>
+        <script type="module" src="../../js/overlays.js"></script>
+    </body>
+</html>

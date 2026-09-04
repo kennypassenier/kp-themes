@@ -43,7 +43,7 @@ to believe in a theme that no longer exists.
 An unknown stored value is corrected to `formal` as soon as the picker
 module loads.
 
-## The seven themes
+## The eleven themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -54,6 +54,10 @@ module loads.
 | `pastel` | Pastel | no |
 | `terminal` | Terminal | yes |
 | `topo` | Topografisch | no |
+| `high-contrast` | Hoog contrast | no |
+| `sepia` | Sepia | no |
+| `blueprint` | Blauwdruk | yes |
+| `solstice` | Zonnewende | yes |
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:

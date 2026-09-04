@@ -1,7 +1,8 @@
 # @kp-soft/themes
 
-The house themes as a shared package: seven `data-theme` palettes
-(formal, light, dark, cyberpunk, pastel, terminal, topo) as plain CSS
+The house themes as a shared package: eleven `data-theme` palettes
+(formal, light, dark, cyberpunk, pastel, terminal, topo, high-contrast,
+sepia, blueprint, solstice) as plain CSS
 custom properties, the element-level rules that make a theme complete
 (links, code, selection, form fields, print), eighteen components, a
 theme picker, and the cyberpunk register with its effects.

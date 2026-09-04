@@ -15,6 +15,9 @@ export const THEMES = Object.freeze([
     { name: 'terminal', label: 'Terminal', dark: true },
     { name: 'topo', label: 'Topografisch', dark: false },
     { name: 'high-contrast', label: 'Hoog contrast', dark: false },
+    { name: 'sepia', label: 'Sepia', dark: false },
+    { name: 'blueprint', label: 'Blauwdruk', dark: true },
+    { name: 'solstice', label: 'Zonnewende', dark: true },
 ]);
 
 /** The theme a visitor gets before choosing, and the answer to any unknown value. */

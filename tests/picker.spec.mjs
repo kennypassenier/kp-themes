@@ -14,6 +14,7 @@
 // themes where there are three.
 
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { THEMES as REGISTRY } from '../js/theme-registry.js';
 
 const PAGE = '/tests/fixtures/picker.html';
@@ -23,6 +24,11 @@ const PAGE = '/tests/fixtures/picker.html';
 // array — which made the loop below iterate over nothing and pass. A test
 // that cannot fail is worse than no test, so it is imported.
 const DARK = REGISTRY.filter((t) => t.dark).map((t) => t.name);
+
+/** Which themes the stylesheet itself calls dark. The registry must agree. */
+const DARK_IN_CSS = [
+    ...readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8').matchAll(/\[data-theme='([a-z0-9-]+)'\]\s*\{[^}]*--color-scheme:\s*dark/g),
+].map((m) => m[1]);
 
 /**
  * The two mounts, reduced to what a behaviour test needs: pick a theme,
@@ -98,7 +104,13 @@ for (const [name, channel] of Object.entries(CHANNELS)) {
                 const isDark = await page.evaluate(() => document.documentElement.classList.contains('dark'));
                 expect(isDark, `${theme.name} should${theme.dark ? '' : ' not'} carry the dark class`).toBe(theme.dark);
             }
-            expect(DARK).toHaveLength(3);
+            // Not a count. Counting was how this test broke when an
+            // eighth theme arrived, and a number in a test is the same
+            // hand-written list the test exists to forbid. The property
+            // is that the registry and the stylesheet agree about which
+            // themes are dark — kyu's error was believing in one the
+            // stylesheet did not have.
+            expect([...DARK].sort()).toEqual([...DARK_IN_CSS].sort());
         });
 
         test('falls back to formal on an unknown stored value', async ({ page }) => {
