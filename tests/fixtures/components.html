@@ -122,6 +122,25 @@
             </div>
         </section>
 
+        <section id="plain-form">
+            <h2>Formulier, framework-free</h2>
+            <form class="kp-form" data-kp-form data-test="plain-form">
+                <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="naam">Naam <span class="kp-field__required">verplicht</span></label>
+                    <input class="kp-field__input" id="naam" name="naam" required aria-describedby="naam-help" data-test="plain-form-naam" />
+                    <span class="kp-field__help" id="naam-help">Zoals het op je pas staat.</span>
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="mail">E-mail <span class="kp-field__required">verplicht</span></label>
+                    <input class="kp-field__input" id="mail" name="mail" type="email" required data-test="plain-form-mail" />
+                    <span class="kp-field__error" data-kp-field-error hidden></span>
+                </div>
+                <button type="submit" class="kp-button kp-button--primary" data-kp-submit data-test="plain-form-submit">Opslaan</button>
+            </form>
+        </section>
+
         <section id="plain-datatable">
             <h2>DataTable, framework-free</h2>
             <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3" data-test="plain-datatable">
@@ -216,6 +235,13 @@
         <script type="module" src="/js/combobox.js"></script>
         <script type="module" src="/js/palette.js"></script>
         <script type="module" src="/js/datatable.js"></script>
+        <script type="module" src="/js/forms.js"></script>
+        <script type="module">
+            // The fixture stands in for a consumer that saves over fetch:
+            // without this the valid submit navigates and the busy state
+            // it sets is gone before anything can look at it.
+            document.querySelector('[data-test="plain-form"]').addEventListener('submit', (event) => event.preventDefault());
+        </script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>
 </html>

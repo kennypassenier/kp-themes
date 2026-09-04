@@ -29,6 +29,7 @@ export { CommandPalette, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export { default as DataTable } from './components/datatable.jsx';
 export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { VALID_EVENT as FORM_VALID_EVENT, attachForms } from './js/forms.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,
