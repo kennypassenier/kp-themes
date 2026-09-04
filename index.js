@@ -25,6 +25,8 @@ export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
 export { default as Combobox } from './components/combobox.jsx';
 export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
 export { OPTION_SELECTOR, createListbox, subsequence } from './js/listbox.js';
+export { CommandPalette, ShortcutSheet } from './components/palette.jsx';
+export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

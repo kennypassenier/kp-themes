@@ -916,3 +916,99 @@
     background: var(--destructive);
     color: var(--destructive-foreground);
 }
+
+/* --- Command palette and shortcut sheet [TH40, TH49] ----------------- */
+
+/* A dialog centred near the top rather than the middle: a palette that
+ * grows downwards should not push its own input off-centre while you
+ * type. */
+.kp-palette {
+    width: min(36rem, 92vw);
+    margin: 10vh auto auto;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.kp-palette__input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 1rem;
+}
+
+.kp-palette__list {
+    max-height: 50vh;
+    margin: 0;
+    padding: 0.25rem;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.kp-palette__option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    cursor: pointer;
+}
+
+.kp-palette__option.is-active {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.kp-palette__option[hidden] {
+    display: none;
+}
+
+/* The key hint sits at the end and never competes with the label. */
+.kp-palette__keys {
+    margin-inline-start: auto;
+    font-size: 0.75rem;
+}
+
+.kp-palette__status {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+}
+
+.kp-shortcuts {
+    width: min(28rem, 92vw);
+    padding: 1.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.kp-shortcuts__list {
+    margin: 0.75rem 0;
+}
+
+.kp-shortcuts__row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+}
+
+.kp-shortcuts__row dt {
+    flex: 0 0 6rem;
+}
+
+.kp-shortcuts__row dd {
+    margin: 0;
+    color: var(--muted-foreground);
+}

@@ -27,7 +27,8 @@
         "./js/components": "./js/components.js",
         "./js/overlays": "./js/overlays.js",
         "./js/listbox": "./js/listbox.js",
-        "./js/combobox": "./js/combobox.js"
+        "./js/combobox": "./js/combobox.js",
+        "./js/palette": "./js/palette.js"
     },
     "types": "./index.d.ts",
     "files": [

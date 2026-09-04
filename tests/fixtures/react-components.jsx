@@ -14,6 +14,7 @@ import Table from '../../components/table.jsx';
 import NavBar from '../../components/nav-bar.jsx';
 import { Dialog, Tabs } from '../../components/overlays.jsx';
 import Combobox from '../../components/combobox.jsx';
+import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
 import DecipherText from '../../fx/decipher-text.jsx';
 import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
@@ -88,6 +89,16 @@ function Cases() {
                         { value: 'citroen', label: 'Citroen' },
                     ]}
                 />
+            </div>
+            <div data-test="react-palette">
+                <CommandPalette
+                    commands={[
+                        { value: 'nieuw', label: 'Nieuw item' },
+                        { value: 'thema', label: 'Thema wisselen' },
+                        { value: 'afmelden', label: 'Afmelden' },
+                    ]}
+                />
+                <ShortcutSheet shortcuts={[{ keys: 'Ctrl K', description: 'Opdrachten openen' }]} />
             </div>
             <div data-test="react-tags">
                 <Combobox

@@ -78,11 +78,6 @@
             </div>
         </section>
 
-        <section>
-            <h2>React</h2>
-            <div id="react-components"></div>
-        </section>
-
         <section id="plain-combobox">
             <h2>Combobox, framework-free</h2>
             <div class="kp-combobox" data-kp-combobox data-test="plain-combobox">
@@ -127,9 +122,46 @@
             </div>
         </section>
 
+        <section id="plain-palette">
+            <h2>Palette, framework-free</h2>
+            <dialog class="kp-palette" data-kp-palette id="commands" aria-label="Opdrachten" data-test="plain-palette">
+                <input
+                    class="kp-palette__input"
+                    type="text"
+                    role="combobox"
+                    aria-label="Opdrachten"
+                    aria-expanded="true"
+                    aria-controls="commands-list"
+                    autocomplete="off"
+                    data-test="plain-palette-input"
+                />
+                <ul class="kp-palette__list" id="commands-list" role="listbox" aria-label="Opdrachten">
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="nieuw">Nieuw item</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="thema">Thema wisselen</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="afmelden">Afmelden</li>
+                </ul>
+                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+            </dialog>
+            <dialog class="kp-shortcuts" data-kp-shortcuts aria-label="Sneltoetsen" data-test="plain-shortcuts">
+                <h2 class="kp-dialog__title">Sneltoetsen</h2>
+                <dl class="kp-shortcuts__list">
+                    <div class="kp-shortcuts__row">
+                        <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                        <dd>Opdrachten openen</dd>
+                    </div>
+                </dl>
+            </dialog>
+        </section>
+
+        <section>
+            <h2>React</h2>
+            <div id="react-components"></div>
+        </section>
+
         <script type="module" src="/js/components.js"></script>
         <script type="module" src="/js/overlays.js"></script>
         <script type="module" src="/js/combobox.js"></script>
+        <script type="module" src="/js/palette.js"></script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>
 </html>
