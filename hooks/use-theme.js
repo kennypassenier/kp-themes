@@ -28,13 +28,30 @@ export { applyTheme, initializeTheme, isTheme, DEFAULT_THEME, STORAGE_KEY };
 /** The generated theme record: name, label, dark. Source: themes/*\/tokens.json. */
 export { THEME_RECORDS };
 
-/** @typedef {string} Theme */
+/**
+ * A theme name [KT4].
+ *
+ * `string` until 1.1.0, which meant this type promised something it did
+ * not deliver: `applyTheme('formeel')` type-checked and fell back to
+ * `formal` at runtime. It is the generated union of the eleven names now,
+ * and it is generated because two consumers were found on 2026-09-04
+ * carrying a hand-kept copy of which themes exist, both wrong.
+ *
+ * @typedef {import('../js/theme-registry.js').ThemeName} Theme
+ */
 
 /** @type {Theme[]} */
 export const THEMES = THEME_RECORDS.map((t) => t.name);
 
-/** @type {Record<Theme, string>} */
-export const THEME_LABELS = Object.fromEntries(THEME_RECORDS.map((t) => [t.name, t.label]));
+/**
+ * Complete by construction — it is built from the same generated records
+ * the union comes from — but `Object.fromEntries` cannot say so, so the
+ * assertion is written down here rather than by weakening the type a
+ * consumer reads.
+ *
+ * @type {Record<Theme, string>}
+ */
+export const THEME_LABELS = /** @type {Record<Theme, string>} */ (Object.fromEntries(THEME_RECORDS.map((t) => [t.name, t.label])));
 
 /** @param {string|null|undefined} value */
 const asTheme = (value) => (isTheme(value) ? value : null);

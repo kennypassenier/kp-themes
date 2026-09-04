@@ -1,0 +1,18 @@
+{
+    "//": "Declaration output [KT4]. Separate from jsconfig.json because that one checks OUR code with OUR resolution; this one emits what a consumer reads. The output lands NEXT TO each source rather than in a types/ directory, so every path in the exports map resolves its own .d.ts with no conditional exports and no second place to keep in step. Written by `npm run generate:types`; `--check` is part of the gates.",
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "checkJs": false,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "skipLibCheck": true,
+        "rootDir": ".",
+        "types": ["node", "react"]
+    },
+    "include": ["index.js", "hooks", "components", "fx", "js"]
+}

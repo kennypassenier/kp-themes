@@ -44,15 +44,39 @@ what was removed. Discipline-enforced. The mechanical half is code —
 fixture page and would otherwise supply the very thing under test. Full
 record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from Kenny's answer of 2026-09-04
+
+kp-themes is a **source**, not a service, and it makes one promise: a
+released version of a theme never changes. Any change to a theme raises
+the version — no in-place correction, not even of a value that is plainly
+wrong. Recorded as S20 in [docs/SCOPE.md](docs/SCOPE.md).
+
+It follows that this project builds **no tooling for consumers**: no sync
+command, no adapter, no per-consumer fixture. Both this project and the
+projects using it are run by an LLM working from the latest version; a
+consumer arranges its own integration and asks for what it needs. A
+request inside the scope — a component, a type, a token — is the supported
+way to get one. Scope stays: define themes, build components on them.
+
 ## Procedure status
 
-| Field               | Value                                      |
-| ------------------- | ------------------------------------------ |
-| Current phase       | 9 — closed; v1.0.0 is tagged and published |
-| Last completed gate | Phase 9, 2026-09-04                        |
-| Next gate           | Phase 10 — retrospective                   |
-| Open queue items    | PROC-H1 (belongs to dev-procedure), KT3-M1 |
-| AFK mode            | off — Kenny is answering again             |
+| Field               | Value                                    |
+| ------------------- | ---------------------------------------- |
+| Current phase       | 9 — releasing 1.1.0 after correction KT4 |
+| Last completed gate | Phase 10, 2026-09-04 — retrospective     |
+| Next gate           | the 1.1.0 release                        |
+| Open queue items    | KT3-M1, KT4-M1                           |
+| AFK mode            | off — Kenny is answering again           |
+
+Correction KT4 reopened the project the day it closed: JobTracker adopted
+1.0.0 and found the package ships no type declarations, while README,
+USER_GUIDE and the ecosystem entry all promised a `Theme` type that was an
+alias for `string`. 1.1.0 answers it — declarations beside every entry
+point, `Theme` as the generated union of the eleven names, a gate that
+packs the tarball and checks them, and `tabs[index]?.focus()`. Phase 10 ran
+first and is committed in `~/Projects/dev-procedure` (`bd56a36`,
+`851bf07`): three standing rules, a Phase 6 note, the ecosystem entry, and
+the PROC-H1 repair with its drills.
 
 Phase 9 closed on 2026-09-04: `v1.0.0` is tagged on the merge commit on
 `main` and published at

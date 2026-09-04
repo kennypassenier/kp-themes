@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -27,8 +27,10 @@
         "./js/components": "./js/components.js",
         "./js/overlays": "./js/overlays.js"
     },
+    "types": "./index.d.ts",
     "files": [
         "index.js",
+        "index.d.ts",
         "hooks",
         "components",
         "fx",
@@ -45,7 +47,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -61,7 +63,9 @@
         "check:layers": "node gates/check-layers.mjs",
         "generate:ha": "node gates/generate-ha-themes.mjs",
         "check:ha": "node gates/generate-ha-themes.mjs --check",
-        "check:package": "node gates/check-package.mjs"
+        "check:package": "node gates/check-package.mjs",
+        "generate:types": "node gates/check-types.mjs --write",
+        "check:types:consumer": "node gates/check-types.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",

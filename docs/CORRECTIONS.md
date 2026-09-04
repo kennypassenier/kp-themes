@@ -312,3 +312,128 @@ Then again at the first project that vendors this package and builds
 fixtures of its own — that is when it shows whether the rule carries
 beyond this project, and so whether it moves up into the shared
 procedure or stays here.
+
+## KT4 · A package that promised a type and shipped none
+
+Approved 2026-09-04, all nine fields "Correct"; field 4 answered "1.1.0
+with the Theme union".
+
+**1 · What went wrong.** The package shipped no type declarations at all.
+Checked on the day: `package.json` had no `types`, no `typings`, and there
+was not one `.d.ts` in the repository. A consumer resolving with NodeNext
+therefore got seven errors, of which the two `TS7016`s are the root:
+`js/theme-core.js` handed nothing to whoever imported it, and the
+callbacks around it became `any`. JobTracker reported all seven with file
+and line; their own code was clean, and 195 tests plus their production
+build passed against 1.0.0. Only the typecheck stopped them.
+
+Underneath that sat something worse than the messages. What the package
+did promise was a `Theme` type — it is named in README, USER_GUIDE and the
+ecosystem entry. `hooks/use-theme.js:31` read `/** @typedef {string} Theme
+*/`. An alias for `string`, not a list of the eleven names, so
+`applyTheme('formeel')` type-checked and fell back to `formal` at runtime.
+JobTracker used that type for their config values and believed it
+protected them.
+
+**2 · Which gate let it through.** Three.
+
+The type gate checks our code with our settings. `npm run check:types`
+runs `tsc -p jsconfig.json` with `moduleResolution: "bundler"` and
+`noUncheckedIndexedAccess: false`; JobTracker runs NodeNext with that flag
+on. Our gate says nothing about what a consumer sees and cannot.
+
+The completeness gate approved it. `gates/check-package.mjs` asks whether
+every path `exports` promises exists and ships — all of them did. It has
+no opinion about whether what ships is usable, which is the distance
+between rule 7f and this fault.
+
+And the field test did not catch it, though it exists for exactly this: it
+installed the package and drove it through a browser. No typecheck. A
+consumer with JSDoc and `checkJs` was not a scenario anyone imagined,
+while JobTracker was the only consumer with a build step.
+
+**3 · Where else the same fault sits.** The fault is *a gate that judges
+the product under the project's conditions rather than the user's*.
+
+Measured: our type gate differs from a strict consumer on two settings —
+`moduleResolution` and `noUncheckedIndexedAccess`. The second exposed a
+real hole in our own code: `js/overlays.js:80` called `tabs[index].focus()`
+with no guard, which in a browser is a thrown `TypeError` on an
+out-of-range index, not merely a type complaint.
+
+The browser suite has the same shape and was hit the day before: it runs
+against the repository. The field test is the only thing that runs against
+the package, and it is manual and once per release.
+
+Not measured: whether almanac and kyu are affected. They vendor the
+stylesheet and run no typecheck over us, so the expectation is no — stated
+as an expectation because it was not checked.
+
+**4 · The measure.** Four parts, and 1.1.0 rather than 1.0.1 because of
+the fourth.
+
+(a) The package ships declarations: a `.d.ts` beside every entry point,
+generated from the JSDoc sources by `npm run generate:types`, held in step
+by a `--check` gate — the same contract as `css/themes.css` and `ha/*.yaml`.
+
+(b) A gate that packs the tarball and asserts every published entry point
+carries a declaration inside it. It found one immediately: `index.d.ts` was
+not published, because `files` named `index.js` as a file rather than a
+directory, so the main entry point would have arrived without types a
+second time.
+
+(c) `tabs[index]?.focus()`.
+
+(d) `Theme` is the generated union of the eleven names. Only the outputs
+narrowed; `storeTheme` and `initializeTheme` still accept a plain string,
+because narrowing an input breaks a consumer that reads a theme out of
+config or a database — which is what both consumers with a build step do.
+kp-soft said explicitly on the day that a narrower type would only add
+safety for them.
+
+**5 · What the remedy costs.** (a) costs 23 files in the repository and a
+gate that complains when they age; the same bargain as the stylesheets.
+(d) costs consumers a narrowing call where they read a theme from
+elsewhere, which is what they should be doing and what both already do.
+
+And it cost this project its FEATURE COMPLETE status the day after it
+earned it.
+
+**6 · Who enforces it.** Code, all of it: both checks run in
+`npm run gates`, so in the commit hook and in CI. There is no
+discipline-enforced half in this correction.
+
+**7 · How we measure that it works, and when.** Not by our own gate — a
+gate can see that declarations exist, not that they are usable. The
+measurement is JobTracker's own typecheck against the new version, run in
+their session: zero errors inside `node_modules/@kp-soft/themes`, or it
+did not work. Queued as KT4-M1 until their output exists.
+
+Measured at the moment of building, per standing rule 7e: the gate was run
+against the state before the fix and reported 31 problems, exiting 1;
+restored, it passes.
+
+That drill mattered more than usual here, because the consumer half of
+this gate could not fail *twice* before it could. The first version
+pointed `paths` at the files in this repository, and TypeScript fell back
+to the `.js` beside each missing `.d.ts`. The second packed a real tarball
+into a consumer's `node_modules` and still passed, because TypeScript 7
+infers types from a dependency's JSDoc where JobTracker's compiler does
+not. A fixture pinned to our compiler cannot reproduce their failure, so
+the gate stopped claiming to: it checks what is checkable here, and the
+consumer supplies the proof.
+
+**8 · The fallback if the measurement fails.** If JobTracker's typecheck
+still reports errors in our package, generated declarations are not enough
+for a strict consumer, and the next step is not more JSDoc: the public
+entry points — `index.js`, `js/theme-core.js`, `hooks/use-theme.js` — get
+hand-written `.d.ts` files with a test comparing them to the real exports.
+
+If the packed-tarball gate turns out to be noise, it is replaced by
+pinning the fixture consumer to the TypeScript version a consumer actually
+runs, which is the only way to reproduce the failure locally.
+
+**9 · When we review the measure.** At the next consumer with a build
+step; JobTracker and kp-soft are the only two today. And at the first of
+the later channels — Avalonia or Ratatui — where the question of what
+"the package ships types" means comes back with no TypeScript in sight.

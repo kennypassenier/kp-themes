@@ -70,6 +70,13 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
+The `Theme` type is the union of exactly those eleven names since 1.1.0,
+not `string`. A name that is not one of them is a compile error rather
+than a silent fallback to `formal`. What a function *accepts* stayed
+lenient — `storeTheme` and `initializeTheme` still take a plain string —
+because narrowing an input would break a consumer that reads a theme out
+of config or a database; use `isTheme()` to narrow one of those.
+
 ## The theme picker [TH8]
 
 ### Framework-free
@@ -146,6 +153,29 @@ document.addEventListener('kp-theme-change', (e) => {
 
 A choice made in another tab arrives on the same event, so a subscriber
 never has to know which tab it came from.
+
+### Keeping another framework's theme flag in step
+
+A component library that switches on its own attribute — Bootstrap's
+`data-bs-theme`, for instance — knows nothing about this package, and it
+should stay that way. The event and the applied `color-scheme` are enough
+to follow it without keeping a second list of which themes are dark:
+
+```js
+import { onThemeChange } from '@kp-soft/themes/js/core';
+
+const follow = () => {
+    const scheme = getComputedStyle(document.documentElement).colorScheme;
+    document.documentElement.dataset.bsTheme = scheme === 'dark' ? 'dark' : 'light';
+};
+follow();
+onThemeChange(follow);
+```
+
+Written by kyu on 2026-09-04, and the point is the list that is *not*
+there. A hand-kept set of dark theme names is exactly what two consumers
+got wrong — kyu believed in four, kp-soft in three — before this package
+generated it.
 
 ## Components [TH1-TH7]
 
