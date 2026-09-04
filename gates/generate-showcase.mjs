@@ -127,6 +127,7 @@ import { themeMenuMarkup } from '../js/theme-picker.js';
             await import('../js/structure.js');
             await import('../js/patterns.js');
             await import('../js/colorpicker.js');
+            await import('../js/gridlayout.js');
         </script>
     </body>
 </html>
@@ -165,6 +166,7 @@ ${STYLE}        </style>
         <script type="module" src="../../js/structure.js"></script>
         <script type="module" src="../../js/patterns.js"></script>
         <script type="module" src="../../js/colorpicker.js"></script>
+        <script type="module" src="../../js/gridlayout.js"></script>
     </body>
 </html>
 `;

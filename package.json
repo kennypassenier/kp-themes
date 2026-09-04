@@ -37,7 +37,8 @@
         "./js/upload": "./js/upload.js",
         "./js/wizard": "./js/wizard.js",
         "./js/contrast": "./js/contrast.js",
-        "./js/colorpicker": "./js/colorpicker.js"
+        "./js/colorpicker": "./js/colorpicker.js",
+        "./js/gridlayout": "./js/gridlayout.js"
     },
     "types": "./index.d.ts",
     "files": [

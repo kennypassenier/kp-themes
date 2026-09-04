@@ -388,6 +388,25 @@ export const SPECIMENS = [
             `<p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p></div>`,
     },
     {
+        id: 'grid',
+        title: 'Movable grid layout',
+        note: 'Focus a tile and use the arrows to move it, Shift and the arrows to resize. Dragging is the easy half [TH56].',
+        html: () =>
+            `<div class="kp-grid" data-kp-grid data-kp-columns="6">` +
+            [
+                ['cpu', 'CPU', 0, 0, 2, 1],
+                ['ram', 'RAM', 2, 0, 2, 1],
+                ['schijf', 'Schijf', 4, 0, 2, 2],
+            ]
+                .map(
+                    ([id, label, x, y, w, h]) =>
+                        `<div class="kp-grid__tile" data-kp-tile="${id}" data-kp-label="${label}" data-x="${x}" data-y="${y}" ` +
+                        `data-w="${w}" data-h="${h}" tabindex="0" role="group">${label}</div>`,
+                )
+                .join('') +
+            `</div>`,
+    },
+    {
         id: 'text',
         title: 'Body text',
         note: 'Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].',

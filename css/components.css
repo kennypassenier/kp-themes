@@ -1670,3 +1670,44 @@
 .kp-colorpicker[data-kp-contrast-ok] .kp-colorpicker__contrast {
     color: var(--muted-foreground);
 }
+
+/* --- Movable grid layout [TH56] -------------------------------------- */
+
+.kp-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--kp-grid-columns, 6), 1fr);
+    grid-auto-rows: 4rem;
+    gap: 0.5rem;
+}
+
+.kp-grid__tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+    overflow: hidden;
+}
+
+/* The tile is a tab stop, because moving it is a keyboard gesture first
+ * and a drag second. */
+.kp-grid__tile:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* On a narrow screen the arrangement stops being an arrangement: one
+ * column, source order. A six-column dashboard at 320 px is six columns
+ * of nothing [DI11]. */
+@media (max-width: 40rem) {
+    .kp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kp-grid__tile {
+        grid-column: 1 / -1 !important;
+    }
+}

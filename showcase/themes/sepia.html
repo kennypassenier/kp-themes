@@ -297,6 +297,11 @@ body {
                 <p class="sc-note">The number is the point: the same WCAG ratio the contrast gate uses, against THIS theme’s background [TH57].</p>
                 <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background"><label class="kp-field__label" for="sepia-ch">Tint</label><input id="sepia-ch" type="range" data-kp-channel="h" min="0" max="360" value="220" /><label class="kp-field__label" for="sepia-cs">Verzadiging</label><input id="sepia-cs" type="range" data-kp-channel="s" min="0" max="100" value="90" /><label class="kp-field__label" for="sepia-cl">Helderheid</label><input id="sepia-cl" type="range" data-kp-channel="l" min="0" max="100" value="56" /><span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span><output class="kp-colorpicker__value" data-kp-colorpicker-value></output><p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p></div>
             </section>
+            <section class="sc-specimen" id="sepia-grid" data-specimen="grid">
+                <h3>Movable grid layout</h3>
+                <p class="sc-note">Focus a tile and use the arrows to move it, Shift and the arrows to resize. Dragging is the easy half [TH56].</p>
+                <div class="kp-grid" data-kp-grid data-kp-columns="6"><div class="kp-grid__tile" data-kp-tile="cpu" data-kp-label="CPU" data-x="0" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">CPU</div><div class="kp-grid__tile" data-kp-tile="ram" data-kp-label="RAM" data-x="2" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">RAM</div><div class="kp-grid__tile" data-kp-tile="schijf" data-kp-label="Schijf" data-x="4" data-y="0" data-w="2" data-h="2" tabindex="0" role="group">Schijf</div></div>
+            </section>
             <section class="sc-specimen" id="sepia-text" data-specimen="text">
                 <h3>Body text</h3>
                 <p class="sc-note">Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].</p>
@@ -311,5 +316,6 @@ body {
         <script type="module" src="../../js/structure.js"></script>
         <script type="module" src="../../js/patterns.js"></script>
         <script type="module" src="../../js/colorpicker.js"></script>
+        <script type="module" src="../../js/gridlayout.js"></script>
     </body>
 </html>

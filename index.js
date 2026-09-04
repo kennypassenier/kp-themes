@@ -40,6 +40,7 @@ export { Form, FormField } from './components/form.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';
 export { DatePicker, Upload, Wizard } from './components/flow.jsx';
 export { COLOR_EVENT, attachColorPickers } from './js/colorpicker.js';
+export { COLUMNS, LAYOUT_EVENT, attachGrids, layoutOf } from './js/gridlayout.js';
 export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';
 export {
     DEFAULT_THEME,
