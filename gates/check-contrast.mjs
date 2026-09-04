@@ -107,6 +107,9 @@ const EXEMPT = {
     radius: 'not a colour',
     'theme-font-body': 'not a colour',
     'theme-font-display': 'not a colour',
+    'fx-overprint':
+        'a decorative second ink, drawn at 40% alpha behind a heading that carries its own --foreground; it is not a surface and nothing reads on it',
+    'fx-scanline': 'a 1px line at 4% alpha across the texture layer; at that opacity it is a veil rather than a surface',
     'fx-notch': 'not a colour (a length)',
     'fx-duration': 'not a colour',
     'fx-ease': 'not a colour',

@@ -15,6 +15,7 @@ import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
+import { leakedColours } from './check-layers.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
 
@@ -130,4 +131,14 @@ test('KT2: the two themes that could not reach it on lightness now do', () => {
 test('KT2-3: a badge plate stays distinguishable from the surface under it', () => {
     const failures = themes().flatMap(/** @param {Theme} t */ (t) => checkSecondHalves(t).map((p) => `${t.name}: ${p}`));
     assert.deepEqual(failures, []);
+});
+
+test('DI9: a colour written outside the token layer is caught', () => {
+    // The gate has to fail on the shape it exists for, not only pass on a
+    // tidy file. This is cyberpunk's --primary, spelled out the way the
+    // scrollbar used to spell it.
+    assert.equal(leakedColours('.a { border-color: hsl(315, 95%, 64%); }').length, 1);
+    assert.deepEqual(leakedColours('.a { border-color: hsl(from var(--primary) h s l / 0.5); }'), []);
+    // A data URI carries its own little document; its fills are shapes.
+    assert.deepEqual(leakedColours(`.a { background: url("data:image/svg+xml,%3Csvg fill='%23335544'%3E%3C/svg%3E"); }`), []);
 });

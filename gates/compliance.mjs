@@ -14,6 +14,7 @@
 // Usage: node gates/compliance.mjs [--check]
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { leakedColours } from './check-layers.mjs';
 import process from 'node:process';
 import {
     themes,
@@ -33,9 +34,7 @@ const END = '<!-- compliance:end -->';
 
 /** Invariants asserted in prose because no gate reads them yet. */
 /** @type {Record<string, string>} */
-const NOT_GATED = {
-    DI9: 'layer discipline is a review question about the generated stylesheet, not yet a check',
-};
+const NOT_GATED = {};
 
 /** A theme is in DI5's scope when the register actually targets it. */
 function motionScope() {
@@ -63,6 +62,13 @@ function motionVerdicts() {
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
 
+/** DI9 is a property of the authored stylesheets, so it is measured once. */
+function layersClean() {
+    return ['../css/_rules.css', '../css/_header.css', '../css/components.css', '../css/cyberpunk-register.css', '../css/tailwind-bridge.css'].every(
+        (rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0,
+    );
+}
+
 export function table() {
     const all = themes();
     const scope = motionScope();
@@ -81,6 +87,7 @@ export function table() {
         ['DI5 flash threshold', (t) => (scope.has(t.name) ? verdict(motion.flash) : 'n/a')],
         ['DI6 declares colour-scheme and layers rise', (t) => verdict(checkColourScheme(t).length === 0)],
         ['DI7 reduced motion honoured', () => verdict(motion.guard)],
+        ['DI9 theme colour stays in the token layer', () => verdict(layersClean())],
     ];
 
     const lines = [

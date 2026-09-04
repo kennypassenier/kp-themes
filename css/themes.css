@@ -86,6 +86,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --fx-overprint: hsl(30, 40%, 88%);
+    --fx-scanline: hsl(30, 40%, 88%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
@@ -173,6 +175,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(190, 80%, 92%);
+    --fx-scanline: hsl(190, 80%, 92%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -260,6 +264,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(226, 18%, 18%);
+    --fx-scanline: hsl(226, 18%, 18%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
@@ -351,6 +357,8 @@
        their own defaults via var() fallbacks. */
     --fx-duration: 140ms;
     --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+    --fx-overprint: hsl(180, 95%, 50%);
+    --fx-scanline: hsl(190, 80%, 70%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(315, 95%, 64%);
@@ -438,6 +446,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(200, 60%, 62%);
+    --fx-scanline: hsl(150, 40%, 88%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
@@ -525,6 +535,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Share Tech Mono', ui-monospace, monospace;
+    --fx-overprint: hsl(65, 90%, 50%);
+    --fx-scanline: hsl(65, 90%, 50%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -612,6 +624,8 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(24, 55%, 86%);
+    --fx-scanline: hsl(24, 55%, 86%);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
@@ -661,10 +675,10 @@ body::after {
 /* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
 [data-theme='light'] {
     --fx-texture:
-        linear-gradient(to right, hsl(243 60% 45% / 0.55) 1px, transparent 1px),
-        linear-gradient(to bottom, hsl(243 60% 45% / 0.55) 1px, transparent 1px),
-        linear-gradient(to right, hsl(243 60% 45% / 0.9) 1px, transparent 1px),
-        linear-gradient(to bottom, hsl(243 60% 45% / 0.9) 1px, transparent 1px);
+        linear-gradient(to right, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
+        linear-gradient(to right, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px);
     --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
     --fx-texture-opacity: 0.05;
 }
@@ -686,23 +700,23 @@ body::after {
 [data-theme='pastel'] h1,
 [data-theme='pastel'] h2 {
     /* Overprint: the same title in a second ink, printed a hair off. */
-    text-shadow: 2px 2px 0 hsl(200 60% 62% / 0.4);
+    text-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.4);
 }
 
 /* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
 [data-theme='terminal'] {
-    --fx-texture: repeating-linear-gradient(to bottom, hsl(120 100% 50% / 0.06) 0 1px, transparent 1px 3px);
+    --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 3px);
     --fx-texture-opacity: 1;
 }
 
 [data-theme='terminal'] h1,
 [data-theme='terminal'] h2 {
-    text-shadow: 0 0 8px hsl(120 90% 55% / 0.45);
+    text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
 }
 
 [data-theme='terminal'] ::selection {
-    background: hsl(120, 90%, 50%);
-    color: hsl(120, 100%, 4%);
+    background: var(--primary);
+    color: var(--primary-foreground);
 }
 
 /* T9 · Topo: contour lines wandering across the kraft paper. */
@@ -721,28 +735,28 @@ body::after {
 }
 
 [data-theme='cyberpunk'] ::selection {
-    background: hsl(315, 95%, 64%);
-    color: hsl(315, 90%, 8%);
+    background: var(--primary);
+    color: var(--primary-foreground);
 }
 
 [data-theme='cyberpunk'] .glow-primary {
     text-shadow:
-        0 0 6px hsl(315 95% 64% / 0.9),
-        0 0 24px hsl(315 95% 64% / 0.5),
-        0 0 64px hsl(315 95% 64% / 0.3);
+        0 0 6px hsl(from var(--primary) h s l / 0.9),
+        0 0 24px hsl(from var(--primary) h s l / 0.5),
+        0 0 64px hsl(from var(--primary) h s l / 0.3);
 }
 
 [data-theme='cyberpunk'] .glow-accent {
     text-shadow:
-        0 0 6px hsl(180 95% 50% / 0.9),
-        0 0 24px hsl(180 95% 50% / 0.5);
+        0 0 6px hsl(from var(--accent) h s l / 0.9),
+        0 0 24px hsl(from var(--accent) h s l / 0.5);
 }
 
 [data-theme='cyberpunk'] .glow-card {
     box-shadow:
-        0 0 0 1px hsl(315 95% 64% / 0.35),
-        0 0 24px hsl(315 95% 64% / 0.15),
-        inset 0 0 32px hsl(258 40% 4% / 0.6);
+        0 0 0 1px hsl(from var(--primary) h s l / 0.35),
+        0 0 24px hsl(from var(--primary) h s l / 0.15),
+        inset 0 0 32px hsl(from var(--sidebar-background) h s l / 0.6);
 }
 
 .gradient-text {
@@ -753,7 +767,7 @@ body::after {
 }
 
 [data-theme='cyberpunk'] .gradient-text {
-    background: linear-gradient(120deg, hsl(315, 95%, 64%), hsl(180, 95%, 50%), hsl(315, 95%, 64%));
+    background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

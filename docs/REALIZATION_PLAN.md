@@ -95,6 +95,7 @@ and both were made to fail on purpose before being restored.
 | the badge contract (DI4) | a status badge with a colour and no words | **red** in both channels |
 | the contrast gate's completeness (TH15, AR8) | found red, not made red: `--chart-4` in pastel measured 2.20 against the page where 3.0 is the floor | fixed to 3.21; the gate now refuses any colour token that is in neither a pair list nor the exemption list |
 | the type check (TH19) | a string method called on a colour tuple | **red**, naming the file and line; green again after restoring |
+| the layer check (DI9) | cyberpunk's --primary written out as a literal in a component rule | **red**, naming the file and line; green again after restoring |
 
 A third came for free: the first version of the suite parsed the theme
 registry out of its own source text and produced an empty array, so the
