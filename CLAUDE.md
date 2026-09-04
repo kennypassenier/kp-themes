@@ -60,13 +60,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                      |
-| ------------------- | ------------------------------------------ |
-| Current phase       | 9 — closed; v1.2.0 is tagged and published |
-| Last completed gate | Phase 9, 2026-09-04 — 1.2.0 published      |
-| Next gate           | Phase 10 — retrospective of round two      |
-| Open queue items    | KT3-M1, KT4-M1, PROC-H2                    |
-| AFK mode            | ON — build without stopping                |
+| Field               | Value                                       |
+| ------------------- | ------------------------------------------- |
+| Current phase       | 10 — closed; round two is done and released |
+| Last completed gate | Phase 10, 2026-09-04 — round-two retro      |
+| Next gate           | none; the consumers answer next             |
+| Open queue items    | KT4-M1 (waits on JobTracker)                |
+| AFK mode            | off — nothing is running unattended         |
 
 Correction KT4 reopened the project the day it closed: JobTracker adopted
 1.0.0 and found the package ships no type declarations, while README,
