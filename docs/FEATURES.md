@@ -112,6 +112,49 @@ dark themes where there are three.
 | --- | --- | --- |
 | TH24 | Backward compatibility for JobTracker's five imports | v1 is a break; JobTracker adapts. It hears about it at the tag (TH29), with the five names and their replacements. |
 
+## Round two — components, rated 2026-09-04
+
+A second rating round after v1.1.0, opened by Kenny: "wat ik nog als
+component wil toevoegen is een datatable … ik wil ook top of the line
+forms. En eigenlijk nog zoveel meer." The candidates were drawn by going
+through the whole of <https://github.com/brillout/awesome-react-components>
+— 24 categories under UI Components, 21 under Form Components, plus
+layout, animation and frameworks — and keeping what is high-tech or
+crucial in a modern codebase.
+
+TH37 and TH38 were not rated: Kenny asked for them directly.
+
+| ID | Feature | Rating | Note |
+| --- | --- | --- | --- |
+| TH37 | DataTable — sorting, per-column and global filtering, pagination, column visibility and resizing, row selection, expandable rows, empty and loading states, and a narrow layout where a row becomes a card | asked for | Measured against TanStack Table's feature list, which is what "best in 2026" means. Deliberately WITHOUT virtualisation, spreadsheet editing or Excel export: that is a grid, a different product (see TH42). |
+| TH38 | Forms — field group with label, hint, error and description correctly tied together, an error summary that jumps to the first bad field, a required marking that is not only an asterisk, validation that reports on blur, and a submit button that says it is working | asked for | The input types are TH39, TH41, TH43, TH44 |
+| TH39 | Combobox / autocomplete | Essential | The most-used complex form element we do not have, and the hardest to do well: keyboard navigation, `aria-activedescendant`, announcing the result count, and a list that arrives from a server |
+| TH40 | Command palette (⌘K) | Essential | Reaches everything without growing the menu. Pairs with TH49 |
+| TH41 | Tag input | Essential | Shares its whole mechanism with TH39, so cheaper built together |
+| TH42 | Virtual list | Don't do | Kenny, 2026-09-04. It is what would turn the DataTable into a grid; TH37 stays a table |
+| TH43 | Date and date-range picker | Essential | Half of every dashboard filter, and the classic place where keyboard access dies |
+| TH44 | File drop and upload | Essential | The appearance and the states; the sending stays the consumer's |
+| TH45 | Tree view | Essential | Without drag-and-drop |
+| TH46 | Drag to reorder | Essential | Must work from the keyboard too. SortableJS is framework-free, so both channels can share one engine |
+| TH47 | Visual filter builder | (open) | Kenny asked for a fuller explanation before rating; see MINI_ROUNDS.md |
+| TH48 | Step wizard | Essential | The superstructure on TH38 |
+| TH49 | Keyboard shortcut sheet (`?`) | Essential | A command palette without discoverability is a secret |
+| TH50 | Empty states with an action | Essential | `.kp-empty` is text today. A real empty state says why there is nothing and what to do, and differs from an empty list *after* a filter |
+| TH51 | Optimistic row action with undo | Essential | DI10 already forces the choice between undo and confirmation; this is the pattern itself |
+| TH52 | Status page parts — health indicator, event timeline, "last updated" | Essential | The category Kenny's own projects use most: homelab, kyu, kyu-runner, the Home Assistant dashboard |
+| TH53 | Copyable value | Essential | `.kp-id` and `.kp-masked` exist; this is the action beside them |
+| TH54 | Diff / comparison view | Essential | Every retrospective ends in a diff someone has to read |
+| TH55 | Split pane | Essential | Small, and accessible with a separator that moves on the arrow keys |
+| TH56 | Movable grid layout | Desired | Big, and only useful once there is something to arrange |
+| TH57 | Colour picker | Desired | With the contrast ratio against the current theme, measured the way our own gate measures it |
+| TH58 | Guided tour / onboarding | Don't do | Kenny, 2026-09-04. A lot of machinery for something seen once |
+| TH59 | Rich text editor | Don't do | Kenny, 2026-09-04. tiptap and slate are frameworks, not components; taking one on means maintaining an editor. Markdown input and the styling of its output stay in scope |
+
+**Deliberately outside the scope**, recorded so the question does not come
+back: charts (the `--chart-*` tokens are ours, a charting library is not),
+maps, spreadsheet grids, captcha, payment fields, and icon sets. kp-themes
+defines themes and builds components on them.
+
 ## Decisions that are not ratings
 
 | ID | Decision |

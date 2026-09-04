@@ -22,6 +22,9 @@ export {
 } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
 export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
+export { default as Combobox } from './components/combobox.jsx';
+export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
+export { OPTION_SELECTOR, createListbox, subsequence } from './js/listbox.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

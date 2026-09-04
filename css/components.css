@@ -793,3 +793,126 @@
 .kp-menu [data-kp-theme][data-selected='true'] {
     font-weight: 600;
 }
+
+/* ====================================================================
+ * Round two: the components rated on 2026-09-04 [TH37-TH59].
+ * ==================================================================== */
+
+/* --- Combobox and tag input [TH39, TH41] ----------------------------- */
+
+.kp-combobox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.kp-combobox__input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+    font: inherit;
+}
+
+/* The theme's own timing, and only for someone who did not ask for less
+ * motion — the same guard every other transition in this file sits in. */
+@media (prefers-reduced-motion: no-preference) {
+    .kp-combobox__input {
+        transition:
+            border-color var(--fx-duration) var(--fx-ease),
+            box-shadow var(--fx-duration) var(--fx-ease);
+    }
+}
+
+.kp-combobox__input:focus-visible {
+    border-color: var(--border-strong);
+}
+
+/* The list floats over the page, so it needs a surface of its own and a
+ * boundary that survives against whatever is behind it. */
+.kp-combobox__list {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    z-index: 20;
+    max-height: 15rem;
+    margin: 0.25rem 0 0;
+    padding: 0.25rem;
+    overflow-y: auto;
+    list-style: none;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
+}
+
+.kp-combobox__option {
+    padding: 0.375rem 0.625rem;
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    cursor: pointer;
+}
+
+/* The highlight is the keyboard's position, not the mouse's: it is set by
+ * the arrow keys and mirrored on hover, so both agree about what Enter
+ * would take. `is-active` and aria-selected are written together. */
+.kp-combobox__option.is-active {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.kp-combobox__option[hidden] {
+    display: none;
+}
+
+.kp-combobox__status {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+}
+
+.kp-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kp-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+}
+
+.kp-tag__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 1.25rem is small, so the tap target is widened by padding on the tag
+     * rather than by growing the glyph. */
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.kp-tag__remove:hover {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+}

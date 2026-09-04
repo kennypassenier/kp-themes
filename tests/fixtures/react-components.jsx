@@ -13,6 +13,7 @@ import Field from '../../components/field.jsx';
 import Table from '../../components/table.jsx';
 import NavBar from '../../components/nav-bar.jsx';
 import { Dialog, Tabs } from '../../components/overlays.jsx';
+import Combobox from '../../components/combobox.jsx';
 import DecipherText from '../../fx/decipher-text.jsx';
 import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
@@ -78,6 +79,27 @@ function Cases() {
                     { label: 'Twee', panel: <span data-test="panel-1">Paneel twee</span> },
                 ]}
             />
+            <div data-test="react-combobox">
+                <Combobox
+                    label="Fruit"
+                    options={[
+                        { value: 'appel', label: 'Appel' },
+                        { value: 'banaan', label: 'Banaan' },
+                        { value: 'citroen', label: 'Citroen' },
+                    ]}
+                />
+            </div>
+            <div data-test="react-tags">
+                <Combobox
+                    label="Labels"
+                    tags
+                    options={[
+                        { value: 'urgent', label: 'Urgent' },
+                        { value: 'bug', label: 'Bug' },
+                        { value: 'idee', label: 'Idee' },
+                    ]}
+                />
+            </div>
         </div>
     );
 }

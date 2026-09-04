@@ -83,8 +83,53 @@
             <div id="react-components"></div>
         </section>
 
+        <section id="plain-combobox">
+            <h2>Combobox, framework-free</h2>
+            <div class="kp-combobox" data-kp-combobox data-test="plain-combobox">
+                <label class="kp-field__label" for="fruit">Fruit</label>
+                <input
+                    class="kp-combobox__input"
+                    id="fruit"
+                    type="text"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="fruit-list"
+                    autocomplete="off"
+                    data-test="plain-combobox-input"
+                />
+                <ul class="kp-combobox__list" id="fruit-list" role="listbox" hidden>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appel">Appel</li>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="banaan">Banaan</li>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="citroen">Citroen</li>
+                </ul>
+                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="kp-combobox" data-kp-combobox data-kp-tags data-test="plain-tags">
+                <label class="kp-field__label" for="labels">Labels</label>
+                <ul class="kp-tag-list" data-kp-tag-list></ul>
+                <input
+                    class="kp-combobox__input"
+                    id="labels"
+                    type="text"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="labels-list"
+                    autocomplete="off"
+                    data-test="plain-tags-input"
+                />
+                <ul class="kp-combobox__list" id="labels-list" role="listbox" hidden>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="urgent">Urgent</li>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bug">Bug</li>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="idee">Idee</li>
+                </ul>
+                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
         <script type="module" src="/js/components.js"></script>
         <script type="module" src="/js/overlays.js"></script>
+        <script type="module" src="/js/combobox.js"></script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>
 </html>

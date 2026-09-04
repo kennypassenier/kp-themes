@@ -16,6 +16,7 @@ import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
+import { subsequence } from '../js/listbox.js';
 import { contrast, hsl } from './colour.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
@@ -214,4 +215,18 @@ test('HA1: every colour a Home Assistant theme uses as ink is readable on its ca
             assert.ok(ratio >= 3, `${theme.name}: ${key} is ${ratio.toFixed(2)} on the card, under 3`);
         }
     }
+});
+
+// TH39/TH40: the subsequence match a command palette uses. Tested here
+// rather than in a browser because it is arithmetic, not behaviour.
+test('TH40: a subsequence match finds letters in order, not substrings', () => {
+    assert.equal(subsequence('Thema wisselen', 'thm'), true);
+    assert.equal(subsequence('Thema wisselen', 'wis'), true);
+    assert.equal(subsequence('Thema wisselen', 'zzz'), false);
+    // Order matters: the letters are all there, in the wrong sequence.
+    assert.equal(subsequence('Thema', 'amet'), false);
+    // An empty query matches everything, so a palette shows its full list
+    // before anyone types.
+    assert.equal(subsequence('Thema', ''), true);
+    assert.equal(subsequence('THEMA', 'thema'), true);
 });

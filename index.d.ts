@@ -10,6 +10,9 @@ export { CONFIRM_WINDOW_MS, enforceContracts, findViolations, attachConfirmation
 export { Accordion, Breadcrumb, Dialog, DropdownMenu, Pagination, Progress, Skeleton, Spinner, Tabs, Toasts, Tooltip, } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
 export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
+export { default as Combobox } from './components/combobox.jsx';
+export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
+export { OPTION_SELECTOR, createListbox, subsequence } from './js/listbox.js';
 export { DEFAULT_THEME, STORAGE_KEY, THEME_LABELS, THEME_RECORDS, THEMES, applyTheme, initializeTheme, isTheme, useAppearance, useTheme, } from './hooks/use-theme.js';
 export type Theme = import('./hooks/use-theme.js').Theme;
 export type UseThemeOptions = import('./hooks/use-theme.js').UseThemeOptions;

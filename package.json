@@ -25,7 +25,9 @@
         "./js/no-flash": "./js/no-flash.js",
         "./css/components": "./css/components.css",
         "./js/components": "./js/components.js",
-        "./js/overlays": "./js/overlays.js"
+        "./js/overlays": "./js/overlays.js",
+        "./js/listbox": "./js/listbox.js",
+        "./js/combobox": "./js/combobox.js"
     },
     "types": "./index.d.ts",
     "files": [
