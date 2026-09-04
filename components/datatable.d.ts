@@ -14,10 +14,11 @@ export type Column = {
  *   caption?: string,
  *   empty?: string,
  *   onSelect?: (keys: string[]) => void,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export default function DataTable({ columns, rows, rowKey, pageSize, selectable, cards, caption, empty, onSelect, className, }: {
+export default function DataTable({ columns, rows, rowKey, pageSize, selectable, cards, caption, empty, onSelect, strings, className, }: {
     columns: Column[];
     rows: Record<string, string>[];
     rowKey?: (row: Record<string, string>, index: number) => string;
@@ -27,5 +28,6 @@ export default function DataTable({ columns, rows, rowKey, pageSize, selectable,
     caption?: string;
     empty?: string;
     onSelect?: (keys: string[]) => void;
+    strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;
 }): import("react").JSX.Element;

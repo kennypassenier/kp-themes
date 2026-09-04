@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // The small patterns, React [TH50, TH51, TH52, TH53, TH54].
 //
@@ -30,9 +31,10 @@ export function EmptyState({ title, body, action, filtered = false }) {
 /**
  * A value with a copy button that confirms in words [TH53].
  *
- * @param {{ value: string, label?: string, copiedText?: string }} props
+ * @param {{ value: string, label?: string, copiedText?: string, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function Copyable({ value, label = 'Kopiëren', copiedText = 'Gekopieerd' }) {
+export function Copyable({ value, label, copiedText, strings }) {
+    const s = useStrings(strings);
     const [state, setState] = useState(/** @type {'idle' | 'copied' | 'failed'} */ ('idle'));
     const timer = useRef(/** @type {ReturnType<typeof setTimeout> | undefined} */ (undefined));
 
@@ -61,12 +63,12 @@ export function Copyable({ value, label = 'Kopiëren', copiedText = 'Gekopieerd'
                     timer.current = setTimeout(() => setState('idle'), 1500);
                 }}
             >
-                {state === 'copied' ? copiedText : state === 'failed' ? 'Geblokkeerd' : label}
+                {state === 'copied' ? (copiedText ?? s.copied) : state === 'failed' ? s.copyBlocked : (label ?? s.copy)}
             </button>
             {/* Announced as well as shown: the button's own text changing
                 is not something a screen reader reports on its own. */}
             <span className="kp-sr-only" role="status" aria-live="polite">
-                {state === 'copied' ? `${value} gekopieerd` : state === 'failed' ? 'Kopiëren is geblokkeerd' : ''}
+                {state === 'copied' ? s.copiedAnnouncement(value) : state === 'failed' ? s.copyBlockedAnnouncement : ''}
             </span>
         </span>
     );

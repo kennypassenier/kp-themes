@@ -33,6 +33,7 @@
 //      someone their email is invalid while they type the third character
 //      is technically true and practically hostile.
 
+import { getStrings } from './strings.js';
 const FORM = '[data-kp-form]';
 const SUMMARY = '[data-kp-form-summary]';
 const FIELD_ERROR = '[data-kp-field-error]';
@@ -42,7 +43,7 @@ const SUBMIT = '[data-kp-submit]';
 export const VALID_EVENT = 'kp-form-valid';
 
 /** What the browser's own message becomes when the field says nothing better. */
-const FALLBACK = 'Dit veld is niet correct ingevuld.';
+const fallback = () => getStrings().formInvalid;
 
 /**
  * The name a summary line uses for a field: its label, its
@@ -55,7 +56,7 @@ function nameOf(field) {
     const label = id === null ? null : field.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     const text = label?.textContent?.trim();
     if (text !== undefined && text !== '') return text;
-    return field.getAttribute('aria-label') ?? field.getAttribute('name') ?? 'Veld';
+    return field.getAttribute('aria-label') ?? field.getAttribute('name') ?? getStrings().fieldFallbackName;
 }
 
 /**
@@ -120,7 +121,7 @@ export function attachForms(root = document) {
                 clearError(field);
                 return true;
             }
-            showError(field, control.validationMessage || FALLBACK);
+            showError(field, control.validationMessage || fallback());
             return false;
         };
 
@@ -150,7 +151,8 @@ export function attachForms(root = document) {
             summary.textContent = '';
             const heading = document.createElement('p');
             heading.className = 'kp-form__summary-title';
-            heading.textContent = bad.length === 1 ? 'Er is 1 veld niet correct ingevuld.' : `Er zijn ${bad.length} velden niet correct ingevuld.`;
+            const s = getStrings();
+            heading.textContent = bad.length === 1 ? s.formSummaryOne : s.formSummaryMany(bad.length);
             const list = document.createElement('ul');
             for (const field of bad) {
                 const item = document.createElement('li');
@@ -190,7 +192,7 @@ export function attachForms(root = document) {
         if (button.dataset.kpSubmitAttached !== undefined) continue;
         button.dataset.kpSubmitAttached = '';
         const form = button.closest('form');
-        const busyText = button.dataset.kpBusy ?? 'Bezig…';
+        const busyText = button.dataset.kpBusy ?? getStrings().busy;
         const idleText = button.textContent ?? '';
         const onValid = () => {
             button.disabled = true;

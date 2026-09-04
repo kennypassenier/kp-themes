@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import { parseDate, toDutch, toISO } from '../js/datepicker.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Date picker, upload and wizard, React [TH43, TH44, TH48].
 //
@@ -7,16 +8,14 @@ import { parseDate, toDutch, toISO } from '../js/datepicker.js';
 // imported rather than repeated — two implementations of "is 31-02 a
 // date" is exactly how the two channels come to disagree.
 
-const DAYS = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'];
-const MONTHS = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-
 /**
  * A date field where typing is the primary path and the grid is an aid
  * [TH43].
  *
- * @param {{ label: string, value?: string, onChange?: (iso: string | null) => void }} props
+ * @param {{ label: string, value?: string, onChange?: (iso: string | null) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function DatePicker({ label, value = '', onChange }) {
+export function DatePicker({ label, value = '', onChange, strings }) {
+    const s = useStrings(strings);
     const id = useId();
     const [text, setText] = useState(value);
     const [open, setOpen] = useState(false);
@@ -108,7 +107,7 @@ export function DatePicker({ label, value = '', onChange }) {
                     className="kp-field__input"
                     type="text"
                     inputMode="numeric"
-                    placeholder="dd-mm-jjjj"
+                    placeholder={s.dateFormatHint}
                     data-kp-date-input
                     // ISO in the attribute, Dutch on screen: parsing a
                     // localised string on the server is how off-by-one-day
@@ -128,11 +127,11 @@ export function DatePicker({ label, value = '', onChange }) {
                 ref={button}
                 className="kp-button kp-button--ghost"
                 data-kp-date-open
-                aria-label="Kalender openen"
+                aria-label={s.calendarOpen}
                 aria-expanded={open}
                 onClick={() => setOpen((was) => !was)}
             >
-                Kalender
+                {s.calendarButton}
             </button>
             {open && (
                 <div className="kp-datepicker__panel" data-kp-date-panel>
@@ -140,25 +139,25 @@ export function DatePicker({ label, value = '', onChange }) {
                         <button
                             type="button"
                             className="kp-button kp-button--ghost"
-                            aria-label="Vorige maand"
+                            aria-label={s.previousMonth}
                             onClick={() => setCursor(new Date(year, month - 1, 1))}
                         >
                             ‹
                         </button>
                         <span className="kp-datepicker__title" id={`${id}-title`}>
-                            {MONTHS[month]} {year}
+                            {s.months[month]} {year}
                         </span>
                         <button
                             type="button"
                             className="kp-button kp-button--ghost"
-                            aria-label="Volgende maand"
+                            aria-label={s.nextMonth}
                             onClick={() => setCursor(new Date(year, month + 1, 1))}
                         >
                             ›
                         </button>
                     </div>
                     <div className="kp-datepicker__grid" role="grid" aria-labelledby={`${id}-title`}>
-                        {DAYS.map((day) => (
+                        {s.weekdays.map((day) => (
                             <span className="kp-datepicker__weekday" role="columnheader" aria-label={day} key={day}>
                                 {day}
                             </span>
@@ -179,7 +178,7 @@ export function DatePicker({ label, value = '', onChange }) {
                                     // The full date as the name: "4" alone
                                     // tells a screen reader nothing about
                                     // which month it is in.
-                                    aria-label={`${i + 1} ${MONTHS[month]} ${year}`}
+                                    aria-label={s.dayLabel(i + 1, s.months[month] ?? '', year)}
                                     aria-selected={chosen !== null && toISO(chosen) === iso}
                                     // Exactly one day in the tab order, so
                                     // Tab leaves the grid instead of walking
@@ -209,9 +208,10 @@ function readableSize(bytes) {
 /**
  * A drop zone and a file list [TH44]. The sending stays the consumer's.
  *
- * @param {{ label?: string, maxBytes?: number, onFiles?: (files: File[]) => void }} props
+ * @param {{ label?: string, maxBytes?: number, onFiles?: (files: File[]) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes = Infinity, onFiles }) {
+export function Upload({ label, maxBytes = Infinity, onFiles, strings }) {
+    const s = useStrings(strings);
     const id = useId();
     const [rows, setRows] = useState(/** @type {{ name: string, size: number, error?: string }[]} */ ([]));
     const [dragging, setDragging] = useState(false);
@@ -227,7 +227,7 @@ export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes
             ...list.map((file) => ({
                 name: file.name,
                 size: file.size,
-                error: file.size > maxBytes ? `Groter dan ${readableSize(maxBytes)}` : undefined,
+                error: file.size > maxBytes ? s.uploadTooLarge(readableSize(maxBytes)) : undefined,
             })),
         ]);
         onFiles?.(list.filter((file) => file.size <= maxBytes));
@@ -266,7 +266,7 @@ export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes
                     if (event.dataTransfer.files.length > 0) take(event.dataTransfer.files);
                 }}
             >
-                {label}
+                {label ?? s.uploadZone}
             </label>
             <ul className="kp-upload__list" data-kp-upload-list>
                 {rows.map((row, i) => (
@@ -284,7 +284,7 @@ export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes
                             aria-valuemin={0}
                             aria-valuemax={100}
                             aria-valuenow={0}
-                            aria-label={`Voortgang van ${row.name}`}
+                            aria-label={s.uploadProgress(row.name)}
                         />
                         <span className="kp-upload__message" role="status" aria-live="polite">
                             {row.error}
@@ -292,7 +292,7 @@ export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes
                         <button
                             type="button"
                             className="kp-button kp-button--ghost"
-                            aria-label={`${row.name} verwijderen`}
+                            aria-label={s.removeNamed(row.name)}
                             onClick={() => setRows((was) => was.filter((_, at) => at !== i))}
                         >
                             ×
@@ -307,9 +307,10 @@ export function Upload({ label = 'Sleep bestanden hierheen of kies ze', maxBytes
 /**
  * A multi-step form [TH48].
  *
- * @param {{ steps: { label: string, content: import('react').ReactNode }[], onFinish?: () => void }} props
+ * @param {{ steps: { label: string, content: import('react').ReactNode }[], onFinish?: () => void, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function Wizard({ steps, onFinish }) {
+export function Wizard({ steps, onFinish, strings }) {
+    const s = useStrings(strings);
     const [at, setAt] = useState(0);
     const panel = useRef(/** @type {HTMLElement | null} */ (null));
 
@@ -335,14 +336,14 @@ export function Wizard({ steps, onFinish }) {
                 ))}
             </ol>
             <p data-kp-wizard-status role="status" aria-live="polite">
-                Stap {at + 1} van {steps.length}
+                {s.wizardStep(at + 1, steps.length)}
             </p>
             <section data-kp-step tabIndex={-1} ref={panel}>
                 {steps[at]?.content}
             </section>
             <div className="kp-wizard__actions">
                 <button type="button" className="kp-button" data-kp-wizard-back disabled={at === 0} onClick={() => go(at - 1)}>
-                    Terug
+                    {s.back}
                 </button>
                 <button
                     type="button"
@@ -353,7 +354,7 @@ export function Wizard({ steps, onFinish }) {
                         else go(at + 1);
                     }}
                 >
-                    {at === steps.length - 1 ? 'Afronden' : 'Volgende'}
+                    {at === steps.length - 1 ? s.finish : s.next}
                 </button>
             </div>
         </div>

@@ -15,6 +15,7 @@
 // components, and nothing here needs to know about them.
 
 import { toast } from './overlays.js';
+import { getStrings } from './strings.js';
 
 const COPY = '[data-kp-copy]';
 const UNDO = '[data-kp-undo-action]';
@@ -43,7 +44,7 @@ export function attachPatterns(root = document) {
         if (button.dataset.kpCopyAttached !== undefined) continue;
         button.dataset.kpCopyAttached = '';
         const idle = button.textContent ?? '';
-        const done = button.dataset.kpCopiedText ?? 'Gekopieerd';
+        const done = button.dataset.kpCopiedText ?? getStrings().copied;
 
         const onClick = async () => {
             const target = button.dataset.kpCopy ?? '';
@@ -56,7 +57,7 @@ export function attachPatterns(root = document) {
                 // Saying nothing here is how a copy button becomes the
                 // control people click twice and then distrust.
                 button.dataset.kpCopyFailed = '';
-                toast('Kopiëren is geblokkeerd in deze browser.');
+                toast(getStrings().copyBlockedAnnouncement);
                 return;
             }
             delete button.dataset.kpCopyFailed;
@@ -94,11 +95,11 @@ export function attachPatterns(root = document) {
             target.hidden = true;
             let undone = false;
 
-            const message = toast(button.dataset.kpUndoText ?? 'Verwijderd.', { ms });
+            const message = toast(button.dataset.kpUndoText ?? getStrings().deleted, { ms });
             const undo = document.createElement('button');
             undo.type = 'button';
             undo.className = 'kp-button kp-button--ghost';
-            undo.textContent = 'Ongedaan maken';
+            undo.textContent = getStrings().undo;
             undo.addEventListener('click', () => {
                 undone = true;
                 target.hidden = false;

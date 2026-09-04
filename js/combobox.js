@@ -26,6 +26,7 @@
 // happened. It is the single most-skipped part of every combobox.
 
 import { createListbox, OPTION_SELECTOR } from './listbox.js';
+import { getStrings } from './strings.js';
 
 const COMBOBOX = '[data-kp-combobox]';
 const INPUT = 'input[role="combobox"]';
@@ -33,8 +34,11 @@ const LIST = '[role="listbox"]';
 const STATUS = '[data-kp-combobox-status]';
 const TAGS = '[data-kp-tag-list]';
 
-/** Announced when the list changes. Dutch is the consumer's business, so this is overridable. */
-const RESULTS_TEXT = /** @param {number} n */ (n) => (n === 0 ? 'Geen resultaten' : n === 1 ? '1 resultaat' : `${n} resultaten`);
+/** Announced when the list changes; the words come from the dictionary [KT5]. */
+const RESULTS_TEXT = /** @param {number} n */ (n) => {
+    const s = getStrings();
+    return n === 0 ? s.noResults : n === 1 ? s.oneResult : s.manyResults(n);
+};
 
 /**
  * The event a consumer listens for. A contract value [TH26]: the detail
@@ -143,7 +147,7 @@ export function attachComboboxes(root = document) {
             // A bare × is "times" to a screen reader; the name says what
             // it removes, because a row of ten identical buttons is
             // useless without it.
-            remove.setAttribute('aria-label', `${label} verwijderen`);
+            remove.setAttribute('aria-label', getStrings().removeNamed(label));
             remove.textContent = '×';
             tag.append(text, remove);
             return tag;

@@ -5,6 +5,7 @@
 // simply cannot arrange.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -52,10 +53,10 @@ for (const channel of CHANNELS) {
             const tile = page.locator(channel.tile);
             // A tile that only announces itself by moving is one nobody without
             // sight can arrange.
-            await expect(tile).toHaveAttribute('aria-label', 'CPU, kolom 1, rij 1, 2 bij 1');
+            await expect(tile).toHaveAttribute('aria-label', S.tileLabel('CPU', 1, 1, 2, 1));
             await tile.focus();
             await tile.press('ArrowRight');
-            await expect(tile).toHaveAttribute('aria-label', 'CPU, kolom 2, rij 1, 2 bij 1');
+            await expect(tile).toHaveAttribute('aria-label', S.tileLabel('CPU', 2, 1, 2, 1));
         });
 
         test('the whole layout is handed to the consumer [TH56]', async ({ page }) => {

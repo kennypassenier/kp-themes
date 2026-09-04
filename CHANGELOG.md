@@ -1,5 +1,64 @@
 # Changelog
 
+## 2.0.0 — unreleased
+
+**The words on screen changed from Dutch to English.** That is the whole
+breaking change, and `STRINGS_NL` is the one-line undo. See MIGRATION.md.
+
+Correction KT5. Every user-visible string in the package was written into
+the component that renders it, in Dutch, with no way for a consumer to
+pass a different one. The fault is not the language — a hardcoded English
+string is the same defect — it is that there was no door. JobTracker had
+adopted only the components that carry no text at all, which is what the
+defect looks like from outside.
+
+### One dictionary
+
+`js/strings.js` holds all 72 keys with English defaults, frozen. Keys that
+vary take arguments — `tableRowsFiltered(shown, total)`, `removeNamed(name)`,
+`wizardStep(at, of)` — so a consumer can reorder for their own grammar
+instead of concatenating ours.
+
+`STRINGS_NL` exports the Dutch that used to be the default, for kyu,
+almanac and kp-soft.
+
+### Three ways in, nearest wins
+
+A `strings` prop on any component, a `StringsProvider` from
+`hooks/use-strings.jsx` for a subtree, or `setStrings()` globally for the
+framework-free channel. Every override is partial. A consumer who does
+nothing gets English.
+
+### The screen-reader half
+
+The announcements are the part of this that matters most, because they
+fail silently and only for the people who cannot see that they failed. A
+copied value announced `` `${value} gekopieerd` ``; the DataTable
+announced its filtered row count in Dutch into an `aria-live` region.
+Both now come from the dictionary, and the gate does not know they are
+special: they are strings.
+
+### `js/contrast.js` is public
+
+The WCAG primitives moved out of `gates/colour.mjs` so a consumer measures
+a ratio with the same code our gate measures it with, rather than a second
+opinion. `gates/colour.mjs` re-exports from it, unchanged for anyone
+importing it there.
+
+### The gate
+
+`npm run check:strings` reads our source and refuses a user-visible
+literal that does not come from the dictionary — the same shape as the
+layer gate. It matches sinks rather than shapes: where a literal _goes_
+(`textContent`, `placeholder`, `setAttribute('aria-label', …)`, JSX
+attributes and text nodes, and a bare literal inside a JSX expression),
+not what it looks like.
+
+Drilled red in all four of those shapes before it was trusted. It passed
+the fourth on the first attempt — the sr-only case, which is the one KT5
+exists about — and was fixed. The drills are frozen in
+`gates/gates.test.mjs` so the exemptions cannot widen back over them.
+
 ## 1.2.0 — 2026-09-04
 
 Twenty-two components, in both channels. Kenny asked for a DataTable and

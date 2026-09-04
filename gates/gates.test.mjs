@@ -16,6 +16,7 @@ import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
+import { loosePhrases } from './check-strings.mjs';
 import { subsequence } from '../js/listbox.js';
 import { parseDate, toDutch, toISO } from '../js/datepicker.js';
 import { contrast, hsl } from './colour.mjs';
@@ -260,4 +261,37 @@ test('TH43: an impossible date is refused, not rounded', () => {
     assert.equal(parseDate('04-13-2026'), null);
     assert.equal(parseDate('vandaag'), null);
     assert.equal(parseDate(''), null);
+});
+
+// KT5: the string gate. Every one of these was drilled against the real
+// source first — the assertions below are the drills frozen, so that a
+// later widening of the exemptions cannot quietly reopen the hole.
+test('KT5: a literal that reaches a person is caught in both channels', () => {
+    // textContent, the framework-free half.
+    assert.equal(loosePhrases("status.textContent = 'Some rows';", { jsx: false }).length, 1);
+    // setAttribute, the half that carries the screen-reader text.
+    assert.equal(loosePhrases("el.setAttribute('aria-label', 'Remove this tag');", { jsx: false }).length, 1);
+    // A JSX attribute.
+    assert.equal(loosePhrases('<button aria-label="Select all" />').length, 1);
+    // An expression rather than a node or an attribute: the sr-only
+    // announcement, which is the shape KT5 was written about.
+    assert.equal(loosePhrases('<span>{copied ? `${value} copied` : null}</span>').length, 1);
+    // A text node.
+    assert.equal(loosePhrases('<p>\n    No results found\n</p>').length, 1);
+});
+
+test('KT5: a value read from the dictionary is not a finding', () => {
+    assert.deepEqual(loosePhrases('status.textContent = s.tableRows(total);', { jsx: false }), []);
+    assert.deepEqual(loosePhrases('<button aria-label={words.tableSelectAll} />'), []);
+    assert.deepEqual(loosePhrases('<span>{copied ? s.copiedAnnouncement(value) : null}</span>'), []);
+});
+
+test('KT5: API values and CSS are not text', () => {
+    // Renaming these translates nothing and breaks the keyboard.
+    assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
+    assert.deepEqual(loosePhrases("el.style.display = 'contents';"), []);
+    // A canvas font shorthand is CSS with a space in it, not a phrase.
+    assert.deepEqual(loosePhrases('ctx.font = `${size}px monospace`;'), []);
+    // A hole followed by a unit is a measurement, not something to read.
+    assert.deepEqual(loosePhrases('<span>{`${bytes} kB`}</span>').length, 0);
 });

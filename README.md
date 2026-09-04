@@ -392,8 +392,76 @@ package as a source in its CSS entry, next to the imports:
 Without it the switcher renders at 0×0 px with no error (found live in
 JobTracker's L0 demo, 2026-09-02; correction C3 there).
 
-## Labels in another language
+## The words on screen are yours
 
-`ThemeSwitcher` renders the Dutch labels from `THEME_RECORDS` by default; pass
+Every user-visible string in this package comes from one dictionary,
+`js/strings.js`. The defaults are English. Nothing is hardcoded into a
+component, which means you can replace any of it without patching us —
+including the screen-reader-only announcements, which are the half that
+fails silently.
+
+```js
+import { DEFAULT_STRINGS, STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings.js';
+```
+
+`DEFAULT_STRINGS` is the English set, frozen. `STRINGS_NL` is the Dutch
+that this package used to render by default, kept as one import for the
+projects that want those words back.
+
+### Three ways in, nearest wins
+
+**A prop**, for one component:
+
+```jsx
+<DataTable rows={rows} columns={columns} strings={{ tableSearch: 'Filter…', tableEmpty: 'Nothing here yet' }} />
+```
+
+**A provider**, for a subtree — the usual choice, because passing the same
+object into every component is the chore people do twice and then stop
+doing:
+
+```jsx
+import { StringsProvider } from '@kp-soft/themes/hooks/use-strings.jsx';
+
+<StringsProvider value={STRINGS_NL}>
+    <App />
+</StringsProvider>;
+```
+
+**`setStrings()`**, globally — the framework-free channel's way in, and it
+also seeds the React default:
+
+```js
+setStrings({ ...STRINGS_NL, tableSearch: 'Zoeken in de tabel' });
+```
+
+Every override is partial: what you do not name keeps its default.
+
+### Keys that vary take arguments
+
+A count, a name or a date is passed in rather than concatenated by the
+caller, so you can reorder for your own grammar:
+
+```js
+setStrings({
+    tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
+    removeNamed: (name) => `Remove ${name}`,
+    wizardStep: (at, of) => `Step ${at} of ${of}`,
+});
+```
+
+`js/strings.js` is the full list — 72 keys, each with its English default
+beside it.
+
+### Theme names
+
+`ThemeSwitcher` renders the labels from `THEME_RECORDS`, which are Kenny's
+names for his themes rather than interface chrome. Pass
 `labels={{ formal: 'Formal', light: 'Light', dark: 'Dark', cyberpunk: 'Cyberpunk', pastel: 'Pastel', terminal: 'Terminal', topo: 'Topographic' }}`
-to override any of them (v0.1.1).
+to override any of them.
+
+### The gate behind this
+
+`npm run check:strings` reads our own source and refuses a user-visible
+literal that does not come from the dictionary. It is why the promise
+above is a property of the package rather than an intention.

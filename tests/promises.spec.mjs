@@ -7,6 +7,7 @@
 // test naming them, and these three came back empty.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 test('printing drops the theme and the decoration [TH36]', async ({ page }) => {
     await page.goto('/showcase/themes/cyberpunk.html');
@@ -47,7 +48,7 @@ test('a refused save is shown, not swallowed [AR6]', async ({ page }) => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'terminal');
     const status = page.locator('[data-kp-theme-status]');
     await expect(status).toBeVisible();
-    await expect(status).toContainText('niet onthouden');
+    await expect(status).toContainText(S.themeSaveFailed);
 });
 
 test('a choice made in another tab is followed [AR5]', async ({ page }) => {

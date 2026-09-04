@@ -7,6 +7,7 @@
 // two, everyone else is told nothing at all.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -48,9 +49,9 @@ for (const channel of CHANNELS) {
             await page.goto(URL);
             const table = page.locator(channel.table);
             const status = table.locator('[data-kp-datatable-status]');
-            await expect(status).toHaveText('4 rijen');
+            await expect(status).toHaveText(S.tableRows(4));
             await table.locator('[data-kp-datatable-search]').fill('Acme');
-            await expect(status).toHaveText('1 van 4 rijen');
+            await expect(status).toHaveText(S.tableRowsFiltered(1, 4));
         });
 
         test('an empty result says so instead of showing nothing [TH37, TH50]', async ({ page }) => {
@@ -66,7 +67,7 @@ for (const channel of CHANNELS) {
             const table = page.locator(channel.table);
             await expect(table.locator('tbody tr:visible')).toHaveCount(3);
             await expect(table.locator('.kp-datatable__page')).toHaveText('1 / 2');
-            await table.getByRole('button', { name: 'Volgende' }).click();
+            await table.getByRole('button', { name: S.next }).click();
             await expect(table.locator('tbody tr:visible')).toHaveCount(1);
             await expect(table.locator('.kp-datatable__page')).toHaveText('2 / 2');
         });

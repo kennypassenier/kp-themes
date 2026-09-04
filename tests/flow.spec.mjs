@@ -1,6 +1,7 @@
 // Upload and wizard [TH44, TH48].
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -58,7 +59,7 @@ for (const channel of CHANNELS) {
             // A list that says WHICH file is wrong is the whole point of a list;
             // one message about "some files" sends people hunting.
             await expect(row).toHaveAttribute('data-state', 'error');
-            await expect(row.locator('.kp-upload__message')).toContainText('Groter dan');
+            await expect(row.locator('.kp-upload__message')).toContainText(S.uploadTooLarge('1 kB'));
         });
 
         test('every file row names what its remove button removes [TH44]', async ({ page }) => {
@@ -68,7 +69,7 @@ for (const channel of CHANNELS) {
                 mimeType: 'text/plain',
                 buffer: Buffer.from('hallo'),
             });
-            await expect(page.getByRole('button', { name: 'notitie.txt verwijderen' })).toBeVisible();
+            await expect(page.getByRole('button', { name: S.removeNamed('notitie.txt') })).toBeVisible();
         });
 
         test('the same file can be chosen twice [TH44]', async ({ page }) => {
@@ -84,7 +85,7 @@ for (const channel of CHANNELS) {
 
         test('the wizard says which step you are on [TH48]', async ({ page }) => {
             await page.goto(URL);
-            await expect(page.locator(channel.status)).toHaveText('Stap 1 van 2');
+            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(1, 2));
             // The attribute that exists for exactly this and is almost never used.
             await expect(page.locator(channel.label0)).toHaveAttribute('aria-current', 'step');
             await expect(page.locator(channel.label1)).not.toHaveAttribute('aria-current', 'step');
@@ -94,7 +95,7 @@ for (const channel of CHANNELS) {
             test.skip(!channel.validates, 'the React fixture mounts a wizard without a required field');
             await page.goto(URL);
             await page.locator(channel.next).click();
-            await expect(page.locator(channel.status)).toHaveText('Stap 1 van 2');
+            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(1, 2));
             await expect(page.locator(channel.naam)).toBeFocused();
         });
 
@@ -102,12 +103,12 @@ for (const channel of CHANNELS) {
             await page.goto(URL);
             if (channel.naam !== null) await page.locator(channel.naam).fill('Kenny');
             await page.locator(channel.next).click();
-            await expect(page.locator(channel.status)).toHaveText('Stap 2 van 2');
+            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(2, 2));
             await expect(page.locator(channel.label0)).toHaveAttribute('data-state', 'done');
             // Focus follows, or a keyboard user presses Next and stays where they
             // were with no idea anything moved.
             await expect(page.locator(channel.step1)).toBeFocused();
-            await expect(page.locator(channel.next)).toHaveText('Afronden');
+            await expect(page.locator(channel.next)).toHaveText(S.finish);
         });
     });
 }

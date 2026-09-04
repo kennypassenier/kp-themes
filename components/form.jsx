@@ -1,4 +1,5 @@
 import { createContext, useContext, useId, useRef, useState } from 'react';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Form, React [TH38].
 //
@@ -34,10 +35,12 @@ const FormContext = createContext(/** @type {FormState | null} */ (null));
  *   error?: string,
  *   required?: boolean,
  *   type?: string,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * } & Record<string, unknown>} props
  */
-export function FormField({ label, name, help, error, required = false, type = 'text', className = '', ...rest }) {
+export function FormField({ label, name, help, error, required = false, type = 'text', strings, className = '', ...rest }) {
+    const s = useStrings(strings);
     const id = useId();
     const form = useContext(FormContext);
     const helpId = `${id}-help`;
@@ -57,7 +60,7 @@ export function FormField({ label, name, help, error, required = false, type = '
                 {/* The word, not only the asterisk: a star is read aloud as
                     "star" and means nothing to anyone who never learned the
                     convention. */}
-                {required && <span className="kp-field__required">verplicht</span>}
+                {required && <span className="kp-field__required">{s.formRequired}</span>}
             </label>
             <input
                 id={id}
@@ -87,9 +90,6 @@ export function FormField({ label, name, help, error, required = false, type = '
     );
 }
 
-/** What the browser's own message becomes when the field says nothing better. */
-const FALLBACK = 'Dit veld is niet correct ingevuld.';
-
 /**
  * A form that gathers its errors and takes focus to them.
  *
@@ -98,10 +98,12 @@ const FALLBACK = 'Dit veld is niet correct ingevuld.';
  *   onValid?: (data: FormData) => void,
  *   submitLabel?: string,
  *   busyLabel?: string,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = 'Bezig…', className = '' }) {
+export function Form({ children, onValid, submitLabel, busyLabel, strings, className = '' }) {
+    const s = useStrings(strings);
     const [errors, setErrors] = useState(/** @type {Record<string, string>} */ ({}));
     const [summaryList, setSummaryList] = useState(/** @type {{ id: string, name: string }[]} */ ([]));
     const [busy, setBusy] = useState(false);
@@ -112,7 +114,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
         setErrors((was) => {
             const next = { ...was };
             if (field.checkValidity()) delete next[field.name];
-            else next[field.name] = field.validationMessage || FALLBACK;
+            else next[field.name] = field.validationMessage || s.formInvalid;
             return next;
         });
     };
@@ -126,7 +128,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
 
         /** @type {Record<string, string>} */
         const found = {};
-        for (const field of bad) found[field.name] = field.validationMessage || FALLBACK;
+        for (const field of bad) found[field.name] = field.validationMessage || s.formInvalid;
         setErrors(found);
         setSummaryList(
             bad.map((field) => ({
@@ -155,9 +157,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
                 {summaryList.length > 0 && (
                     <div className="kp-form__summary" data-kp-form-summary tabIndex={-1} ref={summary}>
                         <p className="kp-form__summary-title">
-                            {summaryList.length === 1
-                                ? 'Er is 1 veld niet correct ingevuld.'
-                                : `Er zijn ${summaryList.length} velden niet correct ingevuld.`}
+                            {summaryList.length === 1 ? s.formSummaryOne : s.formSummaryMany(summaryList.length)}
                         </p>
                         <ul>
                             {summaryList.map((error) => (
@@ -178,7 +178,7 @@ export function Form({ children, onValid, submitLabel = 'Opslaan', busyLabel = '
                 )}
                 {children}
                 <button type="submit" className="kp-button kp-button--primary" data-kp-submit disabled={busy} aria-busy={busy ? 'true' : undefined}>
-                    {busy ? busyLabel : submitLabel}
+                    {busy ? (busyLabel ?? s.busy) : (submitLabel ?? s.save)}
                 </button>
             </form>
         </FormContext.Provider>

@@ -23,6 +23,7 @@
 // `aria-current="step"` marks where you are, which is the attribute that
 // exists for exactly this and is almost never used.
 
+import { getStrings } from './strings.js';
 const WIZARD = '[data-kp-wizard]';
 
 /** Fired when the step changes. A contract value [TH26]. */
@@ -60,9 +61,9 @@ export function attachWizards(root = document) {
                 else label.removeAttribute('aria-current');
             });
             if (back !== null) back.disabled = at === 0;
-            if (next !== null)
-                next.textContent = at === steps.length - 1 ? (next.dataset.kpFinish ?? 'Afronden') : (next.dataset.kpNext ?? 'Volgende');
-            if (status !== null) status.textContent = `Stap ${at + 1} van ${steps.length}`;
+            const s = getStrings();
+            if (next !== null) next.textContent = at === steps.length - 1 ? (next.dataset.kpFinish ?? s.finish) : (next.dataset.kpNext ?? s.next);
+            if (status !== null) status.textContent = s.wizardStep(at + 1, steps.length);
             // Focus moves into the new step, or a keyboard user presses
             // Next and stays where they were with no idea anything moved.
             steps[at]?.setAttribute('tabindex', '-1');

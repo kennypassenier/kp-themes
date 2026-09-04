@@ -6,6 +6,7 @@
 // read it is how the unreadable colours got in.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -37,8 +38,9 @@ for (const channel of CHANNELS) {
             const report = page.locator(channel.report);
             // A bare 4.31 means nothing to anyone who does not know the thresholds
             // by heart, so the words are part of the contract.
-            await expect(report).toContainText(':1 tegen --background');
-            await expect(report).toContainText(/haalbaar|te weinig/);
+            await expect(report).toContainText(`:1 ${S.contrastReport('', '--background', '').split(':1 ')[1].split(' —')[0]}`);
+            expect([S.contrastPasses, S.contrastFails].some((v) => (report ? true : false))).toBe(true);
+            await expect(report).toContainText(new RegExp(`${S.contrastPasses}|${S.contrastFails}`));
         });
 
         test('moving a slider changes the measurement [TH57]', async ({ page }) => {
@@ -52,8 +54,8 @@ for (const channel of CHANNELS) {
             expect(dark).not.toBe(light);
             // On formal's near-white background, a very dark colour reads and a
             // very light one does not. That is the whole point of the number.
-            expect(dark).toContain('haalbaar');
-            expect(light).toContain('te weinig');
+            expect(dark).toContain(S.contrastPasses);
+            expect(light).toContain(S.contrastFails);
         });
 
         test('the value is emitted as an authored hsl() string [TH57]', async ({ page }) => {
@@ -73,7 +75,7 @@ for (const channel of CHANNELS) {
             });
             // A picker that quietly stops measuring looks exactly like one saying
             // the colour is fine.
-            await expect(page.locator(channel.report)).toContainText('bestaat niet in dit thema');
+            await expect(page.locator(channel.report)).toContainText(S.contrastMissing('--niet-bestaand'));
         });
     });
 }

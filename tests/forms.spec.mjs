@@ -5,6 +5,7 @@
 // errors, and moving focus to them.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 // Driven in both channels [AR7]: the framework-free half attaches to a
@@ -38,7 +39,7 @@ for (const channel of CHANNELS) {
 
             const summary = form.locator('[data-kp-form-summary]');
             await expect(summary).toBeVisible();
-            await expect(summary).toContainText('2 velden');
+            await expect(summary).toContainText(S.formSummaryMany(2));
             // Rendered is not enough: a message above the fold is invisible to
             // someone whose focus is at the bottom of a long form, which is
             // exactly where the submit button is.

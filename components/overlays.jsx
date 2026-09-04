@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { TOAST_MS } from '../js/overlays.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // The eleven overlays, React channel [L8, TH35].
 //
@@ -184,10 +185,11 @@ export function Tabs({ tabs, className = '' }) {
     );
 }
 
-/** @param {{ items: {href?: string, label: string}[] }} props */
-export function Breadcrumb({ items }) {
+/** @param {{ items: {href?: string, label: string}[], strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Breadcrumb({ items, strings }) {
+    const s = useStrings(strings);
     return (
-        <nav className="kp-breadcrumb" aria-label="Kruimelpad">
+        <nav className="kp-breadcrumb" aria-label={s.breadcrumb}>
             <ol>
                 {items.map((item, i) => (
                     <li key={item.label}>
@@ -199,10 +201,11 @@ export function Breadcrumb({ items }) {
     );
 }
 
-/** @param {{ pages: number, current: number, href?: (page: number) => string }} props */
-export function Pagination({ pages, current, href = (p) => `#page-${p}` }) {
+/** @param {{ pages: number, current: number, href?: (page: number) => string, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Pagination({ pages, current, href = (p) => `#page-${p}`, strings }) {
+    const s = useStrings(strings);
     return (
-        <nav className="kp-pagination" aria-label="Paginering">
+        <nav className="kp-pagination" aria-label={s.pagination}>
             <ul>
                 {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
                     <li key={p}>
@@ -223,9 +226,11 @@ export function Progress({ value, max = 100, label }) {
     return <progress className="kp-progress" value={value} max={max} aria-label={label} />;
 }
 
-/** @param {{ label?: string }} props */
-export function Spinner({ label = 'Bezig' }) {
-    return <span className="kp-spinner" role="status" aria-label={label} />;
+/** @param {{ label?: string, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Spinner({ label, strings }) {
+    const s = useStrings(strings);
+    const text = label ?? s.busy;
+    return <span className="kp-spinner" role="status" aria-label={text} />;
 }
 
 /** @param {{ width?: string, count?: number }} props */

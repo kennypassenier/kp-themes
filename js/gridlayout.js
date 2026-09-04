@@ -21,6 +21,7 @@
 // into a grid area. Reading a layout back out of a style string is how a
 // dashboard loses someone's arrangement.
 
+import { getStrings } from './strings.js';
 const GRID = '[data-kp-grid]';
 const TILE = '[data-kp-tile]';
 
@@ -72,8 +73,9 @@ export function attachGrids(root = document) {
             tile.style.gridRow = `${y + 1} / span ${h}`;
             // Said in words, because a tile that only announces itself by
             // moving is a tile nobody without sight can arrange.
-            const name = tile.dataset.kpLabel ?? tile.dataset.kpTile ?? 'Tegel';
-            tile.setAttribute('aria-label', `${name}, kolom ${x + 1}, rij ${y + 1}, ${w} bij ${h}`);
+            const s = getStrings();
+            const name = tile.dataset.kpLabel ?? tile.dataset.kpTile ?? s.tileFallbackName;
+            tile.setAttribute('aria-label', s.tileLabel(name, x + 1, y + 1, w, h));
         };
 
         const announce = () => grid.dispatchEvent(new CustomEvent(LAYOUT_EVENT, { bubbles: true, detail: { layout: layoutOf(grid) } }));

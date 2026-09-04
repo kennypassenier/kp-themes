@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
+import { useStrings } from '../hooks/use-strings.jsx';
 
 // Command palette and shortcut sheet, React [TH40, TH49].
 //
@@ -15,9 +16,12 @@ import { subsequence } from '../js/listbox.js';
 /** @typedef {{ value: string, label: string, keys?: string }} Command */
 
 /**
- * @param {{ commands: Command[], onRun?: (value: string) => void, placeholder?: string, label?: string }} props
+ * @param {{ commands: Command[], onRun?: (value: string) => void, placeholder?: string, label?: string, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdracht…', label = 'Opdrachten' }) {
+export function CommandPalette({ commands, onRun, placeholder, label, strings }) {
+    const s = useStrings(strings);
+    const text = placeholder ?? s.commandPlaceholder;
+    const name = label ?? s.commandsLabel;
     const id = useId();
     const listId = `${id}-list`;
     const dialog = useRef(/** @type {HTMLDialogElement | null} */ (null));
@@ -63,7 +67,7 @@ export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdrach
             className="kp-palette"
             data-kp-palette
             ref={dialog}
-            aria-label={label}
+            aria-label={name}
             // Cleared on close rather than on open: the contract suite
             // opened the dialog directly and found this channel keeping
             // the old query, while the framework-free one had already
@@ -81,8 +85,8 @@ export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdrach
                 type="text"
                 role="combobox"
                 autoComplete="off"
-                placeholder={placeholder}
-                aria-label={label}
+                placeholder={text}
+                aria-label={name}
                 aria-expanded="true"
                 aria-controls={listId}
                 aria-activedescendant={visible[active] ? `${listId}-option-${active}` : undefined}
@@ -108,7 +112,7 @@ export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdrach
                     }
                 }}
             />
-            <ul className="kp-palette__list" id={listId} role="listbox" aria-label={label}>
+            <ul className="kp-palette__list" id={listId} role="listbox" aria-label={name}>
                 {visible.map((command, i) => (
                     <li
                         className={`kp-palette__option ${i === active ? 'is-active' : ''}`.trim()}
@@ -127,7 +131,7 @@ export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdrach
                 ))}
             </ul>
             <p className="kp-palette__status" role="status" aria-live="polite">
-                {visible.length === 0 ? 'Geen opdrachten' : visible.length === 1 ? '1 opdracht' : `${visible.length} opdrachten`}
+                {visible.length === 0 ? s.noCommands : visible.length === 1 ? s.oneCommand : s.manyCommands(visible.length)}
             </p>
         </dialog>
     );
@@ -136,9 +140,11 @@ export function CommandPalette({ commands, onRun, placeholder = 'Typ een opdrach
 /**
  * The shortcut sheet [TH49]. `?` opens it, unless someone is typing one.
  *
- * @param {{ shortcuts: { keys: string, description: string }[], label?: string }} props
+ * @param {{ shortcuts: { keys: string, description: string }[], label?: string, strings?: Partial<import('../js/strings.js').Strings> }} props
  */
-export function ShortcutSheet({ shortcuts, label = 'Sneltoetsen' }) {
+export function ShortcutSheet({ shortcuts, label, strings }) {
+    const s = useStrings(strings);
+    const name = label ?? s.shortcutsLabel;
     const dialog = useRef(/** @type {HTMLDialogElement | null} */ (null));
 
     useEffect(() => {
@@ -165,7 +171,7 @@ export function ShortcutSheet({ shortcuts, label = 'Sneltoetsen' }) {
     }, []);
 
     return (
-        <dialog className="kp-shortcuts" data-kp-shortcuts ref={dialog} aria-label={label}>
+        <dialog className="kp-shortcuts" data-kp-shortcuts ref={dialog} aria-label={name}>
             <h2 className="kp-dialog__title">{label}</h2>
             <dl className="kp-shortcuts__list">
                 {shortcuts.map((shortcut) => (
@@ -179,7 +185,7 @@ export function ShortcutSheet({ shortcuts, label = 'Sneltoetsen' }) {
             </dl>
             <div className="kp-dialog__actions">
                 <button type="button" className="kp-button" onClick={() => dialog.current?.close()}>
-                    Sluiten
+                    {s.close}
                 </button>
             </div>
         </dialog>

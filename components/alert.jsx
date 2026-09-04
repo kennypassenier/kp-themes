@@ -1,3 +1,4 @@
+import { useStrings } from '../hooks/use-strings.jsx';
 // Alert [TH4, DI4].
 //
 // Four flavours, each of which names itself in text. An alert is a
@@ -5,14 +6,16 @@
 // hover or active state: deriving them produced colours whose own ink no
 // longer read, and the gate caught the modelling mistake.
 
-const LABELS = { success: 'Gelukt', warning: 'Let op', info: 'Ter info', destructive: 'Fout' };
+/** @param {import('../js/strings.js').Strings} s */
+const labels = (s) => ({ success: s.alertSuccess, warning: s.alertWarning, info: s.alertInfo, destructive: s.alertError });
 
 /**
- * @param {{ flavour?: 'success'|'warning'|'info'|'destructive', label?: string, className?: string, children?: import('react').ReactNode }} props
+ * @param {{ flavour?: 'success'|'warning'|'info'|'destructive', label?: string, strings?: Partial<import('../js/strings.js').Strings>, className?: string, children?: import('react').ReactNode }} props
  */
-export default function Alert({ flavour, label, className = '', children, ...rest }) {
+export default function Alert({ flavour, label, strings, className = '', children, ...rest }) {
+    const s = useStrings(strings);
     const classes = ['kp-alert', flavour ? `kp-alert--${flavour}` : '', className].filter(Boolean).join(' ');
-    const text = label ?? (flavour ? LABELS[flavour] : undefined);
+    const text = label ?? (flavour ? labels(s)[flavour] : undefined);
 
     return (
         <div className={classes} role={flavour === 'destructive' ? 'alert' : 'status'} data-kp-semantic={flavour ? '' : undefined} {...rest}>

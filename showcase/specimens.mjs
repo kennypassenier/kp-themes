@@ -189,7 +189,7 @@ export const SPECIMENS = [
             `</div>` +
             `<dialog class="kp-dialog" id="${theme}-dialog"><h2 class="kp-dialog__title">Bevestigen</h2>` +
             `<p>Escape sluit deze dialoog en zet de focus terug op de knop.</p>` +
-            `<div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Sluiten</button></div></dialog>` +
+            `<div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Close</button></div></dialog>` +
             `<div popover="auto" id="${theme}-menu" class="kp-popover" style="position-anchor: --${theme}-menu">` +
             `<ul class="kp-menu"><li><button type="button" class="kp-menu__item">Bewerken</button></li>` +
             `<li><button type="button" class="kp-menu__item">Archiveren</button></li></ul></div>` +
@@ -299,7 +299,7 @@ export const SPECIMENS = [
         html: (theme) =>
             `<div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3">` +
             `<div class="kp-datatable__bar"><input class="kp-datatable__search" type="search" data-kp-datatable-search ` +
-            `aria-label="Zoeken in de tabel" placeholder="Zoeken\u2026" /></div>` +
+            `aria-label="Search the table" placeholder="Search\u2026" /></div>` +
             `<div class="kp-table-wrap"><table class="kp-table"><thead><tr>` +
             `<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Alle zichtbare rijen selecteren" /></th>` +
             `<th scope="col" data-kp-sort="text">Klant</th><th scope="col" data-kp-sort="number">Bedrag</th>` +

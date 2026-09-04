@@ -12,16 +12,18 @@ export type FormState = {
  *   error?: string,
  *   required?: boolean,
  *   type?: string,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * } & Record<string, unknown>} props
  */
-export declare function FormField({ label, name, help, error, required, type, className, ...rest }: {
+export declare function FormField({ label, name, help, error, required, type, strings, className, ...rest }: {
     label: string;
     name: string;
     help?: string;
     error?: string;
     required?: boolean;
     type?: string;
+    strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;
 } & Record<string, unknown>): import("react").JSX.Element;
 /**
@@ -32,13 +34,15 @@ export declare function FormField({ label, name, help, error, required, type, cl
  *   onValid?: (data: FormData) => void,
  *   submitLabel?: string,
  *   busyLabel?: string,
+ *   strings?: Partial<import('../js/strings.js').Strings>,
  *   className?: string,
  * }} props
  */
-export declare function Form({ children, onValid, submitLabel, busyLabel, className }: {
+export declare function Form({ children, onValid, submitLabel, busyLabel, strings, className }: {
     children: import('react').ReactNode;
     onValid?: (data: FormData) => void;
     submitLabel?: string;
     busyLabel?: string;
+    strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;
 }): import("react").JSX.Element;
