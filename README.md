@@ -176,6 +176,13 @@ additions are the status tokens and the de-Inertia'd hook API. The
 - A license. The repository is public (SCOPE S8); the licence itself is
   decided in this project's Phase 3.
 
+## css/themes.css is generated
+
+Do not edit it. The colour blocks come from `themes/<name>/tokens.json`
+and everything after them from `css/_rules.css`; `npm run generate`
+assembles the two. A gate refuses a commit where the file and its source
+disagree, in either direction.
+
 ## Working on this package: activate the hooks once
 
 The quality gates block bad commits, but the wiring is local git config

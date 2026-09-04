@@ -26,13 +26,17 @@
         "fx",
         "css",
         "scripts",
+        "gates",
+        "themes",
         "docs",
         "README.md"
     ],
     "scripts": {
         "check:contrast": "node scripts/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:contrast && prettier --check ."
+        "gates": "npm run check:generated && npm run check:contrast && prettier --check .",
+        "generate": "node gates/generate-themes.mjs",
+        "check:generated": "node gates/generate-themes.mjs --check"
     },
     "peerDependencies": {
         "motion": ">=12",

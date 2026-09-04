@@ -17,6 +17,9 @@ gate_tree_fingerprint() {
 }
 gate_tree_before=$(gate_tree_fingerprint)
 
+echo "→ generated files match their source"
+node gates/generate-themes.mjs --check
+
 echo "→ prettier"
 npx prettier --check .
 

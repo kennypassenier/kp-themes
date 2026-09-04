@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Theme registers (T5-T8): each theme borrows from a coherent world.
+   The shared machinery is one full-viewport texture layer per theme -
+   the "glass" the interface sits behind. It renders above the content
+   at imperceptible opacity, so it may never exceed ~6% perceived; the
+   contrast checker cannot see it, restraint here is the guardrail.
+   Themes without --fx-texture render nothing (opacity 0).
+   ═══════════════════════════════════════════════════════════════════ */
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    pointer-events: none;
+    background-image: var(--fx-texture, none);
+    background-size: var(--fx-texture-size, auto);
+    opacity: var(--fx-texture-opacity, 0);
+}
+
+/* T5 · Formal = "Gravure": laid paper grain under editorial serif. */
+[data-theme='formal'] {
+    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E");
+    --fx-texture-size: 240px 240px;
+    --fx-texture-opacity: 0.035;
+}
+
+/* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
+[data-theme='light'] {
+    --fx-texture:
+        linear-gradient(to right, hsl(243 60% 45% / 0.55) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(243 60% 45% / 0.55) 1px, transparent 1px),
+        linear-gradient(to right, hsl(243 60% 45% / 0.9) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(243 60% 45% / 0.9) 1px, transparent 1px);
+    --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+    --fx-texture-opacity: 0.05;
+}
+
+/* T7 · Dark = "Observatorium": a faint starfield behind the glass. */
+[data-theme='dark'] {
+    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='white'%3E%3Ccircle cx='24' cy='41' r='1'/%3E%3Ccircle cx='134' cy='17' r='0.6'/%3E%3Ccircle cx='201' cy='83' r='1.2'/%3E%3Ccircle cx='68' cy='129' r='0.7'/%3E%3Ccircle cx='249' cy='150' r='0.9'/%3E%3Ccircle cx='163' cy='196' r='0.6'/%3E%3Ccircle cx='41' cy='222' r='1.1'/%3E%3Ccircle cx='108' cy='257' r='0.7'/%3E%3Ccircle cx='226' cy='243' r='0.6'/%3E%3Ccircle cx='176' cy='115' r='0.5'/%3E%3Ccircle cx='95' cy='72' r='0.5'/%3E%3Ccircle cx='262' cy='38' r='0.7'/%3E%3C/g%3E%3C/svg%3E");
+    --fx-texture-size: 280px 280px;
+    --fx-texture-opacity: 0.5;
+}
+
+/* T8 · Pastel = "Riso": risograph grain and a misregistered second ink. */
+[data-theme='pastel'] {
+    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+    --fx-texture-size: 200px 200px;
+    --fx-texture-opacity: 0.05;
+}
+
+[data-theme='pastel'] h1,
+[data-theme='pastel'] h2 {
+    /* Overprint: the same title in a second ink, printed a hair off. */
+    text-shadow: 2px 2px 0 hsl(200 60% 62% / 0.4);
+}
+
+/* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
+[data-theme='terminal'] {
+    --fx-texture: repeating-linear-gradient(to bottom, hsl(120 100% 50% / 0.06) 0 1px, transparent 1px 3px);
+    --fx-texture-opacity: 1;
+}
+
+[data-theme='terminal'] h1,
+[data-theme='terminal'] h2 {
+    text-shadow: 0 0 8px hsl(120 90% 55% / 0.45);
+}
+
+[data-theme='terminal'] ::selection {
+    background: hsl(120, 90%, 50%);
+    color: hsl(120, 100%, 4%);
+}
+
+/* T9 · Topo: contour lines wandering across the kraft paper. */
+[data-theme='topo'] {
+    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%23335544' stroke-width='1'%3E%3Cpath d='M-20 60 Q 60 20 140 65 T 300 55 T 400 80'/%3E%3Cpath d='M-20 95 Q 70 55 150 100 T 305 90 T 400 115'/%3E%3Cpath d='M-20 130 Q 80 95 160 135 T 310 125 T 400 150'/%3E%3Cpath d='M-20 230 Q 50 195 130 235 T 290 225 T 400 250'/%3E%3Cpath d='M-20 265 Q 60 235 140 270 T 295 260 T 400 285'/%3E%3Cpath d='M-20 330 Q 70 300 150 335 T 305 325 T 400 350'/%3E%3C/g%3E%3C/svg%3E");
+    --fx-texture-size: 360px 360px;
+    --fx-texture-opacity: 0.06;
+}
+
+/* ── Theme flourishes ─────────────────────────────────────────────── */
+
+[data-theme='formal'] h1,
+[data-theme='formal'] h2 {
+    font-family: var(--theme-font-display);
+    letter-spacing: -0.01em;
+}
+
+[data-theme='cyberpunk'] ::selection {
+    background: hsl(315, 95%, 64%);
+    color: hsl(315, 90%, 8%);
+}
+
+[data-theme='cyberpunk'] .glow-primary {
+    text-shadow:
+        0 0 6px hsl(315 95% 64% / 0.9),
+        0 0 24px hsl(315 95% 64% / 0.5),
+        0 0 64px hsl(315 95% 64% / 0.3);
+}
+
+[data-theme='cyberpunk'] .glow-accent {
+    text-shadow:
+        0 0 6px hsl(180 95% 50% / 0.9),
+        0 0 24px hsl(180 95% 50% / 0.5);
+}
+
+[data-theme='cyberpunk'] .glow-card {
+    box-shadow:
+        0 0 0 1px hsl(315 95% 64% / 0.35),
+        0 0 24px hsl(315 95% 64% / 0.15),
+        inset 0 0 32px hsl(258 40% 4% / 0.6);
+}
+
+.gradient-text {
+    background: linear-gradient(120deg, var(--primary), var(--ring) 60%, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+[data-theme='cyberpunk'] .gradient-text {
+    background: linear-gradient(120deg, hsl(315, 95%, 64%), hsl(180, 95%, 50%), hsl(315, 95%, 64%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Plain-CSS equivalent of kp-soft's `@apply bg-background text-foreground`
+   on body (the Tailwind @apply lines themselves are not part of this
+   package). */
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition:
+        background-color 400ms ease,
+        color 400ms ease;
+}

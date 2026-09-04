@@ -95,7 +95,8 @@ may depend on a path to a sibling project).
 
 ## Status
 
-| Milestone | Status      |
-| --------- | ----------- |
-| L0        | next        |
-| L1-L10    | not started |
+| Milestone | Status                                  |
+| --------- | --------------------------------------- |
+| L0        | built 2026-09-04, awaiting its gate     |
+| L1        | next                                    |
+| L2-L10    | not started                             |
