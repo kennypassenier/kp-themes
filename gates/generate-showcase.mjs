@@ -105,6 +105,7 @@ ${blocks}
             // broke one should be visibly refused here, not only in the
             // tests [DI4, DI10].
             await import('../js/components.js');
+            await import('../js/overlays.js');
         </script>
     </body>
 </html>
@@ -136,6 +137,7 @@ ${STYLE}        </style>
             ${specimenBlocks(theme.name)}
         </main>
         <script type="module" src="../../js/components.js"></script>
+        <script type="module" src="../../js/overlays.js"></script>
     </body>
 </html>
 `;

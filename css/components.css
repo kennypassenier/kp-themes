@@ -474,3 +474,236 @@
     font-weight: 600;
     text-decoration-thickness: 2px;
 }
+
+/* ====================================================================
+ * The eleven overlays and their neighbours [L8, TH35].
+ *
+ * The hard part of these is keyboard behaviour, and the browser now does
+ * most of it: <dialog> traps focus, closes on Escape and returns focus
+ * where it came from; popover="auto" light-dismisses and closes on
+ * Escape; <details> is a keyboard-operable disclosure. AR15's baseline is
+ * modern Chrome and Firefox only, which is what makes that affordable.
+ * We write the looks, and only the behaviour the platform does not give.
+ * ==================================================================== */
+
+/* --- Dialog ---------------------------------------------------------- */
+
+.kp-dialog {
+    max-width: min(32rem, calc(100vw - 2rem));
+    padding: 1.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--popover);
+    color: var(--popover-foreground);
+}
+
+.kp-dialog::backdrop {
+    /* Not a token: a backdrop is a dimming of whatever is behind it, and
+     * a theme colour here would tint the page rather than dim it. */
+    background: rgb(0 0 0 / 0.5);
+}
+
+.kp-dialog__title {
+    margin: 0 0 0.5rem;
+}
+
+.kp-dialog__actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* --- Dropdown and tooltip, on the popover layer ----------------------- */
+
+.kp-popover {
+    position: absolute;
+    margin: 0;
+    padding: 0.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--popover);
+    color: var(--popover-foreground);
+    /* Anchor positioning: the popover sits under its trigger without
+     * either of them knowing where the other ended up. */
+    position-area: block-end span-inline-end;
+    margin-block-start: 0.25rem;
+}
+
+.kp-menu {
+    display: flex;
+    flex-direction: column;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kp-menu__item {
+    padding: 0.375rem 0.625rem;
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    background: none;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+
+.kp-menu__item:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.kp-tooltip {
+    max-width: 18rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+}
+
+/* --- Toast ----------------------------------------------------------- */
+
+.kp-toasts {
+    position: fixed;
+    inset-block-end: 1rem;
+    inset-inline-end: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 50;
+}
+
+.kp-toast {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--popover);
+    color: var(--popover-foreground);
+}
+
+/* --- Accordion ------------------------------------------------------- */
+
+.kp-accordion__item {
+    border-bottom: 1px solid var(--border);
+}
+
+.kp-accordion__summary {
+    padding: 0.625rem 0;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.kp-accordion__body {
+    padding-bottom: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+/* --- Tabs ------------------------------------------------------------ */
+
+.kp-tabs__list {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.kp-tab {
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--muted-foreground);
+    font: inherit;
+    cursor: pointer;
+}
+
+/* The selected tab is marked by weight and a rule as well as by colour,
+ * and aria-selected is what a screen reader hears [DI4]. */
+.kp-tab[aria-selected='true'] {
+    color: var(--foreground);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+.kp-tabs__panel {
+    padding-block: 0.75rem;
+}
+
+/* --- Breadcrumb and pagination --------------------------------------- */
+
+.kp-breadcrumb ol,
+.kp-pagination ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kp-breadcrumb li + li::before {
+    content: '/';
+    margin-inline-end: 0.5rem;
+    color: var(--muted-foreground);
+}
+
+.kp-pagination a[aria-current='page'] {
+    font-weight: 700;
+    text-decoration-thickness: 2px;
+}
+
+/* --- Progress, spinner, skeleton ------------------------------------- */
+
+.kp-progress {
+    inline-size: 100%;
+    max-inline-size: 20rem;
+    block-size: 0.5rem;
+    accent-color: var(--primary);
+}
+
+.kp-spinner {
+    display: inline-block;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    border: 2px solid var(--border-strong);
+    border-block-start-color: var(--primary);
+    border-radius: 50%;
+}
+
+.kp-skeleton {
+    display: block;
+    block-size: 1rem;
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    background: var(--muted);
+}
+
+/* Both of these move, so both are guarded: DI7 is not a preference to
+ * honour where convenient. A spinner that keeps spinning for someone who
+ * asked for stillness is the exact complaint the setting exists for.
+ * Neither animation opposes its own direction, so neither approaches the
+ * three-flashes threshold of DI5 — check-motion.mjs measures that. */
+@media (prefers-reduced-motion: no-preference) {
+    .kp-spinner {
+        animation: kp-spin 900ms linear infinite;
+    }
+
+    .kp-skeleton {
+        animation: kp-pulse 1600ms ease-in-out infinite;
+    }
+}
+
+@keyframes kp-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes kp-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}

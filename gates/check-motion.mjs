@@ -18,7 +18,10 @@ import process from 'node:process';
 const MAX_FLASHES_PER_SECOND = 3;
 const LUMINANCE_STEP = 0.1;
 
-const CSS = ['../css/cyberpunk-register.css', '../css/_rules.css'];
+// components.css joined this list the moment it grew an animation. A
+// motion gate that reads two of three stylesheets reports green over the
+// one it does not read.
+const CSS = ['../css/cyberpunk-register.css', '../css/_rules.css', '../css/components.css'];
 
 /**
  * Animations the flash threshold does not reach, each with the reason.
@@ -31,6 +34,7 @@ const OUT_OF_SCOPE = {
     'fx-glitch-b': 'as fx-glitch-a',
     'fx-rgb-split': 'drop-shadow offsets on a single text element; the colours do not change, only their position',
     'fx-cellflash': 'text colour and shadow on one cell, one iteration of 200ms',
+    'kp-spin': 'a rotation: no luminance change at all',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

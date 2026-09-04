@@ -8,6 +8,20 @@ export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
 export { CONFIRM_WINDOW_MS, enforceContracts, findViolations, attachConfirmations } from './js/components.js';
 export {
+    Accordion,
+    Breadcrumb,
+    Dialog,
+    DropdownMenu,
+    Pagination,
+    Progress,
+    Skeleton,
+    Spinner,
+    Tabs,
+    Toasts,
+    Tooltip,
+} from './components/overlays.jsx';
+export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
+export {
     DEFAULT_THEME,
     STORAGE_KEY,
     THEME_LABELS,

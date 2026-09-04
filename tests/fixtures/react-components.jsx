@@ -12,8 +12,11 @@ import Card from '../../components/card.jsx';
 import Field from '../../components/field.jsx';
 import Table from '../../components/table.jsx';
 import NavBar from '../../components/nav-bar.jsx';
+import { Dialog, Tabs } from '../../components/overlays.jsx';
+import { useState } from 'react';
 
 function Cases() {
+    const [open, setOpen] = useState(false);
     return (
         <div>
             <NavBar brand="kp" links={[{ href: '#a', label: 'Een', current: true }]} />
@@ -44,6 +47,27 @@ function Cases() {
             </Card>
             <Field label="E-mail" help="We sturen niets door." error="Vul een geldig adres in." data-test="field" />
             <Table columns={['Naam', 'Aantal']} rows={[['Een', 1]]} />
+            <button type="button" className="kp-button" data-test="dialog-open" onClick={() => setOpen(true)}>
+                Dialoog openen
+            </button>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                title="Bevestigen"
+                actions={
+                    <button type="button" className="kp-button" data-test="dialog-close" onClick={() => setOpen(false)}>
+                        Sluiten
+                    </button>
+                }
+            >
+                <span data-test="dialog-body">Een dialoog die het toetsenbord zelf afhandelt.</span>
+            </Dialog>
+            <Tabs
+                tabs={[
+                    { label: 'Een', panel: <span data-test="panel-0">Paneel een</span> },
+                    { label: 'Twee', panel: <span data-test="panel-1">Paneel twee</span> },
+                ]}
+            />
         </div>
     );
 }

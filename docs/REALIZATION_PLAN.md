@@ -137,4 +137,5 @@ may depend on a path to a sibling project).
 | L5        | built 2026-09-04, gate held for the AFK report |
 | L6        | built 2026-09-04, gate held for the AFK report |
 | L7        | built 2026-09-04, gate held for the AFK report |
-| L8-L10    | not started                             |
+| L8        | built 2026-09-04, gate held for the AFK report |
+| L9-L10    | not started                             |

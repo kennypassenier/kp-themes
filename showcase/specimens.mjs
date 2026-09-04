@@ -173,6 +173,43 @@ export const SPECIMENS = [
             `<li><a class="kp-nav__link" href="#status">Statussen</a></li></ul></nav>`,
     },
     {
+        id: 'overlays',
+        title: 'Overlays',
+        note: 'Dialog, menu, tabs and accordion get their keyboard behaviour from the platform: focus trap, Escape, focus return [TH35].',
+        html: (theme) =>
+            `<div class="sc-row">` +
+            `<button type="button" class="kp-button" data-kp-dialog="${theme}-dialog">Dialoog</button>` +
+            `<button type="button" class="kp-button" popovertarget="${theme}-menu" style="anchor-name: --${theme}-menu">Menu</button>` +
+            `</div>` +
+            `<dialog class="kp-dialog" id="${theme}-dialog"><h2 class="kp-dialog__title">Bevestigen</h2>` +
+            `<p>Escape sluit deze dialoog en zet de focus terug op de knop.</p>` +
+            `<div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Sluiten</button></div></dialog>` +
+            `<div popover="auto" id="${theme}-menu" class="kp-popover" style="position-anchor: --${theme}-menu">` +
+            `<ul class="kp-menu"><li><button type="button" class="kp-menu__item">Bewerken</button></li>` +
+            `<li><button type="button" class="kp-menu__item">Archiveren</button></li></ul></div>` +
+            `<div class="kp-tabs"><div class="kp-tabs__list" role="tablist">` +
+            `<button type="button" class="kp-tab" role="tab" id="${theme}-t0" aria-controls="${theme}-p0" aria-selected="true">Overzicht</button>` +
+            `<button type="button" class="kp-tab" role="tab" id="${theme}-t1" aria-controls="${theme}-p1" aria-selected="false">Details</button></div>` +
+            `<div class="kp-tabs__panel" role="tabpanel" id="${theme}-p0" aria-labelledby="${theme}-t0">Het eerste paneel.</div>` +
+            `<div class="kp-tabs__panel" role="tabpanel" id="${theme}-p1" aria-labelledby="${theme}-t1" hidden>Het tweede paneel.</div></div>` +
+            `<div class="kp-accordion"><details class="kp-accordion__item"><summary class="kp-accordion__summary">Een vraag</summary>` +
+            `<div class="kp-accordion__body">Een antwoord.</div></details></div>` +
+            `<div class="kp-toast" style="position: static; margin-top: 0.5rem;">Een toast, hier stilgezet om hem te kunnen bekijken.</div>`,
+    },
+    {
+        id: 'wayfinding',
+        title: 'Breadcrumb, pagination, progress, spinner, skeleton',
+        note: 'The current page is never marked by colour alone; the spinner and the skeleton stop moving under reduced motion [TH35, DI4, DI7].',
+        html: () =>
+            `<nav class="kp-breadcrumb" aria-label="Kruimelpad"><ol><li><a href="#surfaces">Start</a></li>` +
+            `<li><a href="#status">Sollicitaties</a></li><li><span aria-current="page">Detail</span></li></ol></nav>` +
+            `<nav class="kp-pagination" aria-label="Paginering"><ul><li><a href="#surfaces">1</a></li>` +
+            `<li><a href="#surfaces" aria-current="page">2</a></li><li><a href="#surfaces">3</a></li></ul></nav>` +
+            `<progress class="kp-progress" value="40" max="100" aria-label="Voortgang"></progress>` +
+            `<div class="sc-row"><span class="kp-spinner" role="status" aria-label="Bezig"></span>` +
+            `<span aria-hidden="true"><span class="kp-skeleton" style="width: 12rem"></span></span></div>`,
+    },
+    {
         id: 'links',
         title: 'Links and selection',
         note: 'The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme\u2019s own [TH31].',

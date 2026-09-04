@@ -57,6 +57,25 @@
                 <h3 class="kp-card__title">Kaart</h3>
                 <div class="kp-card__body">Inhoud</div>
             </div>
+            <button type="button" class="kp-button" data-kp-dialog="plain-dialog" data-test="dialog-open">Dialoog openen</button>
+            <dialog class="kp-dialog" id="plain-dialog" data-test="dialog">
+                <h2 class="kp-dialog__title">Bevestigen</h2>
+                <p>Een dialoog die het toetsenbord zelf afhandelt.</p>
+                <div class="kp-dialog__actions">
+                    <button type="button" class="kp-button" data-kp-dialog-close data-test="dialog-close">Sluiten</button>
+                </div>
+            </dialog>
+
+            <div class="kp-tabs">
+                <div class="kp-tabs__list" role="tablist" data-test="tablist">
+                    <button type="button" class="kp-tab" role="tab" id="p-t0" aria-controls="p-p0" aria-selected="true" data-test="tab-0">Een</button>
+                    <button type="button" class="kp-tab" role="tab" id="p-t1" aria-controls="p-p1" aria-selected="false" data-test="tab-1">
+                        Twee
+                    </button>
+                </div>
+                <div class="kp-tabs__panel" role="tabpanel" id="p-p0" aria-labelledby="p-t0" data-test="panel-0">Paneel een</div>
+                <div class="kp-tabs__panel" role="tabpanel" id="p-p1" aria-labelledby="p-t1" data-test="panel-1" hidden>Paneel twee</div>
+            </div>
         </section>
 
         <section>
@@ -65,6 +84,7 @@
         </section>
 
         <script type="module" src="/js/components.js"></script>
+        <script type="module" src="/js/overlays.js"></script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>
 </html>
