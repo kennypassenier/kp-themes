@@ -122,6 +122,27 @@
             </div>
         </section>
 
+        <section id="plain-patterns">
+            <h2>Patronen, framework-free</h2>
+            <span class="kp-copyable">
+                <span class="kp-copyable__value" id="token-value">a3f9-2b71</span>
+                <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="token-value" data-test="plain-copy">
+                    Kopiëren
+                </button>
+            </span>
+
+            <ul id="plain-undo-list">
+                <li data-kp-undo-target data-test="plain-undo-row">
+                    Rij een
+                    <button type="button" class="kp-button kp-button--ghost" data-kp-undo-action data-kp-undo-ms="800" data-test="plain-undo">
+                        Verwijderen
+                    </button>
+                </li>
+            </ul>
+
+            <span class="kp-health" data-state="ok" data-test="plain-health"><span class="kp-health__dot" aria-hidden="true"></span> In orde</span>
+        </section>
+
         <section id="plain-form">
             <h2>Formulier, framework-free</h2>
             <form class="kp-form" data-kp-form data-test="plain-form">
@@ -236,6 +257,7 @@
         <script type="module" src="/js/palette.js"></script>
         <script type="module" src="/js/datatable.js"></script>
         <script type="module" src="/js/forms.js"></script>
+        <script type="module" src="/js/patterns.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state

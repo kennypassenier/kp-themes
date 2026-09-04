@@ -30,7 +30,8 @@
         "./js/combobox": "./js/combobox.js",
         "./js/palette": "./js/palette.js",
         "./js/datatable": "./js/datatable.js",
-        "./js/forms": "./js/forms.js"
+        "./js/forms": "./js/forms.js",
+        "./js/patterns": "./js/patterns.js"
     },
     "types": "./index.d.ts",
     "files": [

@@ -1173,3 +1173,159 @@
     content: '\002A\00a0';
     color: var(--destructive);
 }
+
+/* --- The small patterns [TH50, TH51, TH52, TH53, TH54] --------------- */
+
+/* An empty state that knows which emptiness it is. "Nog geen items" and
+ * "niets gevonden" are different messages, and offering "maak er een" to
+ * someone who just typed a filter is noise. */
+.kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.kp-empty__body {
+    margin: 0 0 0.75rem;
+}
+
+/* Copyable value [TH53] */
+.kp-copyable {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.kp-copyable__value {
+    font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+/* Confirmed in words on the button, not by colour: a green flash is
+ * invisible to a screen reader and to anyone who looked away. */
+.kp-copyable__button[data-kp-copied] {
+    border-color: var(--success);
+    color: var(--success-foreground);
+    background: var(--success);
+}
+
+/* Status parts [TH52] */
+.kp-health {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+/* The dot is the second carrier, never the only one: the word beside it
+ * is what makes this readable to someone who cannot tell the colours
+ * apart [DI4]. */
+.kp-health__dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--muted);
+}
+
+.kp-health[data-state='ok'] .kp-health__dot {
+    background: var(--success);
+}
+
+.kp-health[data-state='warn'] .kp-health__dot {
+    background: var(--warning);
+}
+
+.kp-health[data-state='down'] .kp-health__dot {
+    background: var(--destructive);
+}
+
+.kp-timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kp-timeline__item {
+    display: grid;
+    grid-template-columns: 0.75rem 1fr;
+    gap: 0.75rem;
+    padding-block: 0.5rem;
+}
+
+/* The rule down the left is drawn on the marker, so a one-item timeline
+ * does not get a line hanging under it. */
+.kp-timeline__item:not(:last-child) .kp-timeline__marker {
+    background-image: linear-gradient(var(--border), var(--border));
+    background-repeat: no-repeat;
+    background-position: 50% 0.75rem;
+    background-size: 1px 100%;
+}
+
+.kp-timeline__marker {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-block-start: 0.25rem;
+    border: 2px solid var(--primary);
+    border-radius: 999px;
+}
+
+.kp-timeline__when {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Diff view [TH54] */
+.kp-diff {
+    margin: 0;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.8125rem;
+}
+
+.kp-diff__line {
+    display: grid;
+    grid-template-columns: 3rem 1ch 1fr;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+    white-space: pre-wrap;
+}
+
+/* The sign in its own column is the carrier that survives when the colour
+ * does not — printed, in high contrast, or for a reader who cannot tell
+ * green from red [DI4]. */
+.kp-diff__sign {
+    color: var(--muted-foreground);
+}
+
+.kp-diff__number {
+    color: var(--muted-foreground);
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+.kp-diff__line[data-kind='added'] {
+    background: hsl(from var(--success) h s l / 0.14);
+}
+
+.kp-diff__line[data-kind='removed'] {
+    background: hsl(from var(--destructive) h s l / 0.12);
+}
+
+/* Visually hidden, still announced. Used where a change is obvious on
+ * screen and silent otherwise — a button whose own label changed, for
+ * instance, which a screen reader does not report on its own. */
+.kp-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip-path: inset(50%);
+}
