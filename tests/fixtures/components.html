@@ -122,6 +122,59 @@
             </div>
         </section>
 
+        <section id="plain-datatable">
+            <h2>DataTable, framework-free</h2>
+            <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3" data-test="plain-datatable">
+                <div class="kp-datatable__bar">
+                    <input
+                        class="kp-datatable__search"
+                        type="search"
+                        data-kp-datatable-search
+                        aria-label="Zoeken in de tabel"
+                        data-test="plain-datatable-search"
+                    />
+                </div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <thead>
+                            <tr>
+                                <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Alle zichtbare rijen selecteren" /></th>
+                                <th scope="col" data-kp-sort="text">Naam</th>
+                                <th scope="col" data-kp-sort="number">Bedrag</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-kp-row-key="r0">
+                                <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Rij r0 selecteren" /></td>
+                                <td data-label="Naam">Acme</td>
+                                <td data-label="Bedrag">100</td>
+                            </tr>
+                            <tr data-kp-row-key="r1">
+                                <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Rij r1 selecteren" /></td>
+                                <td data-label="Naam">Bakker</td>
+                                <td data-label="Bedrag">20</td>
+                            </tr>
+                            <tr data-kp-row-key="r2">
+                                <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Rij r2 selecteren" /></td>
+                                <td data-label="Naam">Cerise</td>
+                                <td data-label="Bedrag">1.284,50</td>
+                            </tr>
+                            <tr data-kp-row-key="r3">
+                                <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Rij r3 selecteren" /></td>
+                                <td data-label="Naam">Delta</td>
+                                <td data-label="Bedrag">7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kp-empty" data-kp-datatable-empty hidden>Niets gevonden.</div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+        </section>
+
         <section id="plain-palette">
             <h2>Palette, framework-free</h2>
             <dialog class="kp-palette" data-kp-palette id="commands" aria-label="Opdrachten" data-test="plain-palette">
@@ -162,6 +215,7 @@
         <script type="module" src="/js/overlays.js"></script>
         <script type="module" src="/js/combobox.js"></script>
         <script type="module" src="/js/palette.js"></script>
+        <script type="module" src="/js/datatable.js"></script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>
 </html>

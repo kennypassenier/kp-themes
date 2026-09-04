@@ -15,6 +15,7 @@ import NavBar from '../../components/nav-bar.jsx';
 import { Dialog, Tabs } from '../../components/overlays.jsx';
 import Combobox from '../../components/combobox.jsx';
 import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
+import DataTable from '../../components/datatable.jsx';
 import DecipherText from '../../fx/decipher-text.jsx';
 import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
@@ -88,6 +89,23 @@ function Cases() {
                         { value: 'banaan', label: 'Banaan' },
                         { value: 'citroen', label: 'Citroen' },
                     ]}
+                />
+            </div>
+            <div data-test="react-datatable">
+                <DataTable
+                    columns={[
+                        { key: 'naam', label: 'Naam' },
+                        { key: 'bedrag', label: 'Bedrag', kind: 'number' },
+                    ]}
+                    rows={[
+                        { naam: 'Acme', bedrag: '100' },
+                        { naam: 'Bakker', bedrag: '20' },
+                        { naam: 'Cerise', bedrag: '1.284,50' },
+                        { naam: 'Delta', bedrag: '7' },
+                    ]}
+                    rowKey={(_, i) => `r${i}`}
+                    pageSize={3}
+                    selectable
                 />
             </div>
             <div data-test="react-palette">
