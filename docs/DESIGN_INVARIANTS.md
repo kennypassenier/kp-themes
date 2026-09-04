@@ -215,6 +215,45 @@ badge may not render a semantic colour with no text or icon.
 (decorative, order-free) or a *code* (each hue means one thing)? A code
 signs you up for this gate.
 
+**Scope decided 2026-09-04 (mini-round DI4-SCOPE).** The gate measures one
+pair under a colour deficiency: `offer` against `rejected`. Kenny ratified
+that scope rather than widening it, and the reasoning is worth keeping,
+because "we check one of twenty-one pairs" reads like laziness until the
+numbers are next to it.
+
+Measured across all 21 badge pairs under deuteranopia, on the scale where
+12 is this project's floor for "two different colours":
+
+| theme | worst pair | pairs under 12 | offer ↔ rejected |
+| --- | --- | --- | --- |
+| formal | 0.5 sent/interview | 16/21 | 13.3 |
+| light | 1.6 draft/offer | 15/21 | 14.0 |
+| dark | 1.7 draft/withdrawn | 13/21 | 13.0 |
+| cyberpunk | 3.4 draft/withdrawn | 2/21 | 31.4 |
+| pastel | 0.9 sent/interview | 16/21 | 13.7 |
+| terminal | 2.3 sent/interview | 14/21 | 49.4 |
+| topo | 1.0 draft/offer | 16/21 | 13.1 |
+
+Cyberpunk's 2/21 is the tell: seven colours *can* stay apart under
+deuteranopia, but only if they are saturated. Six of these themes use pale
+tints on purpose, and pale tints converge. Widening the gate to all 21
+pairs would not tighten a check — it would delete six palettes Kenny chose.
+
+The narrower widening was costed too. "Nothing may be mistaken for a
+rejection" fails in dark (draft/rejected 8.9) and terminal (2.5 to 10.5),
+and solving it moves both themes' rejected badge to black: it is the only
+colour that clears every pair while keeping AA text contrast. That trades
+a colour-deficiency problem for a legibility one.
+
+What makes the narrow scope defensible is not the arithmetic but the
+contract underneath it: since L7, a badge carrying a semantic colour and
+no words is refused in code, in both channels. Colour is demonstrably the
+second carrier, not the only one. The gate covers the one pair where
+confusing two badges changes what a person believes happened — an offer
+read as a rejection — and the label covers the rest.
+
+
+
 ## DI5 · Nothing flashes more than three times per second
 
 **Must be true.** No animation in this package crosses the flash

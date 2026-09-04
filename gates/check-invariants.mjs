@@ -106,8 +106,15 @@ export function checkBoundaries(theme) {
  *
  * What the tokens must still guarantee is the pair where confusing the
  * two is harmful. An offer and a rejection are opposite outcomes; reading
- * one as the other is the failure DI4 exists to prevent. Queued as
- * DI4-SCOPE in MINI_ROUNDS for Kenny to ratify or widen.
+ * one as the other is the failure DI4 exists to prevent.
+ *
+ * Ratified 2026-09-04 (mini-round DI4-SCOPE) rather than widened, with
+ * the measurements in DESIGN_INVARIANTS.md. The short version: 13 to 16
+ * of the 21 pairs fall under the floor in five themes and only 2 do in
+ * cyberpunk, because cyberpunk is saturated and the others are pale on
+ * purpose. Widening to all 21 would delete six palettes rather than
+ * tighten a check. Since L7 a semantic badge without words is refused in
+ * code, so the label is the carrier and the colour is the second channel.
  */
 const OPPOSED = [['offer', 'rejected']];
 
