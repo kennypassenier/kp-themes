@@ -17,7 +17,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { derive, deriveVisited } from './colour.mjs';
+import { derive, deriveVisible, deriveVisited } from './colour.mjs';
 
 const ORDER = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
 const OUT = new URL('../css/themes.css', import.meta.url);
@@ -93,8 +93,23 @@ function derivedStates({ tokens, dark, stepL }) {
             ['active', d.active],
             ['disabled', d.disabled],
         ]) {
-            const value =
-                state === 'disabled' ? derive(base, 1.5, { towardsLight: !dark, stepL }) : derive(base, steps, { towardsLight: dark, stepL });
+            let value;
+            if (state === 'disabled') {
+                value = derive(base, 1.5, { towardsLight: !dark, stepL });
+            } else if (state === 'active') {
+                // The pressed state is the one a person is told by [KT2].
+                value = deriveVisible(
+                    base,
+                    steps,
+                    { towardsLight: dark, stepL },
+                    {
+                        floor: CONFIG.stateVisibilityFloor.value,
+                        ink: tokens[`${surface}-foreground`],
+                    },
+                );
+            } else {
+                value = derive(base, steps, { towardsLight: dark, stepL });
+            }
             out.push(`    --${surface}-${state}: ${value};`);
         }
     }

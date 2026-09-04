@@ -201,3 +201,72 @@ export function deriveVisited(link, surfaces, distanceFloor) {
     }
     return null;
 }
+
+/**
+ * The pressed state, far enough away to be seen [KT2].
+ *
+ * `derive` moves lightness only, which is right for five of the seven
+ * themes and useless for the two whose colours already sit near the top
+ * of the space: measured 2026-09-04, cyberpunk's accent reached 2.6 from
+ * its base and could only get to 3.3 even at the full default step, where
+ * ten is roughly "you can see that it changed". Neon and phosphor have
+ * nowhere lighter to go.
+ *
+ * So when lightness alone falls short, chroma gives way. A neon sign that
+ * is pressed loses some of its saturation; that reads as pressed rather
+ * than as a different colour, and it keeps the hue — which is what those
+ * two themes are made of. The ink is re-checked at every step, because a
+ * state whose own text stops reading is not an improvement.
+ *
+ * A theme that already clears the floor on lightness alone comes back
+ * byte-identical, so the five that were right stay untouched.
+ *
+ * @param {string} value the base colour
+ * @param {number} steps
+ * @param {{towardsLight: boolean, stepL: number}} opts
+ * @param {{floor: number, ink: string}} bar  how far it must move, and the text that must survive
+ * @returns {string} an hsl() value
+ */
+export function deriveVisible(value, steps, opts, { floor, ink }) {
+    const base = hsl(value);
+    const inkRgb = hsl(ink);
+    // Every candidate is tested as it will be written, rounded to whole
+    // hsl() numbers. Testing the unrounded colour and emitting the rounded
+    // one is how a value lands four thousandths under its own floor.
+    /** @param {string} text */
+    const reached = (text) => distance(base, hsl(text)) >= floor;
+    /** @param {string} text */
+    const reads = (text) => contrast(hsl(text), inkRgb) >= 4.5;
+
+    const plain = derive(value, steps, opts);
+    if (reached(plain)) return plain;
+
+    const start = rgbToOklch(hsl(plain));
+    let best = plain;
+
+    // First chroma: a pressed neon sign loses saturation, which reads as
+    // pressed rather than as a different colour, and it keeps the hue —
+    // which is what cyberpunk and terminal are made of.
+    for (let pull = 0.01; pull <= start.C; pull += 0.01) {
+        const candidate = formatHsl(rgbToHsl(oklchToRgb({ ...start, C: Math.max(0, start.C - pull) })));
+        if (!reads(candidate)) break;
+        best = candidate;
+        if (reached(candidate)) return candidate;
+    }
+
+    // Then lightness, further than the theme's own step would go. This is
+    // the case of a near-black secondary: it has almost no chroma to give
+    // up, so the only room left is up or down.
+    const direction = opts.towardsLight ? 1 : -1;
+    for (let extra = 0.01; extra <= 0.4; extra += 0.01) {
+        const L = Math.min(1, Math.max(0, start.L + direction * extra));
+        const candidate = formatHsl(rgbToHsl(oklchToRgb({ ...start, L })));
+        if (!reads(candidate)) break;
+        best = candidate;
+        if (reached(candidate)) return candidate;
+    }
+
+    // Nothing reached the floor. Returning the closest attempt rather than
+    // throwing: the gate reports it, which is the honest place for it.
+    return best;
+}

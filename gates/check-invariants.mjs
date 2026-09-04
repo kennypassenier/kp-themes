@@ -10,7 +10,7 @@
 
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
-import { hsl, contrast, distance, luminance, simulateDeuteranopia, derive } from './colour.mjs';
+import { hsl, contrast, distance, luminance, simulateDeuteranopia, derive, deriveVisible } from './colour.mjs';
 
 /** @typedef {{name: string, tokens: Record<string,string>, derivation?: {stepL: number}}} Theme */
 
@@ -24,6 +24,9 @@ const DISTANCE_FLOOR = config.perceptualDistanceFloor.value;
 
 /** Surfaces a boundary can be drawn against. */
 const SURFACES = ['background', 'card', 'popover'];
+
+/** The application-pipeline statuses, the same seven the contrast gate names. */
+const STATUS_NAMES = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'];
 
 export function themes() {
     const order = JSON.parse(readFileSync(new URL('order.json', dir), 'utf8'));
@@ -193,11 +196,16 @@ export function checkStateVisibility(theme) {
     const problems = [];
     const dark = theme.tokens['color-scheme'] === 'dark';
     const stepL = theme.derivation?.stepL ?? config.derivation.stepL;
-    const floor = config.stateVisibilityFloor?.value ?? 10;
+    const floor = config.stateVisibilityFloor.value;
     for (const surface of INTERACTIVE) {
         const base = theme.tokens[surface];
-        if (base === undefined) continue;
-        const active = derive(base, config.derivation.active, { towardsLight: dark, stepL });
+        const ink = theme.tokens[`${surface}-foreground`];
+        if (base === undefined || ink === undefined) continue;
+        // The same derivation the generator uses, so this measures what
+        // ships rather than what an older version of the maths produced.
+        // It therefore fails exactly when the colour space cannot deliver
+        // a visible pressed state, which is the case worth knowing about.
+        const active = deriveVisible(base, config.derivation.active, { towardsLight: dark, stepL }, { floor, ink });
         const seen = distance(hsl(base), hsl(active));
         if (seen < floor) {
             problems.push(
@@ -205,6 +213,57 @@ export function checkStateVisibility(theme) {
             );
         }
     }
+    return problems;
+}
+
+/**
+ * The other two places the same fault sat [KT2-3].
+ *
+ * The fault is not "the states were too small". It is: a gate checks one
+ * half of a two-halved property and reports green. Stated that way it was
+ * found twice more.
+ *
+ * A · A badge's text is gated against its plate; the plate was never
+ * measured against the surface it lies on. Measured in perceptual
+ * distance rather than contrast ratio — the first attempt used the ratio
+ * and read 1.04 to 1.40, which sounds like an invisible badge and is not:
+ * a contrast ratio only compares luminance, and these plates differ in
+ * hue. Measured properly they sit 5.6 to 12.6 from their card.
+ *
+ * The floor is deliberately low. The label carries the meaning (DI4), so
+ * the plate only has to read as a plate; this is a floor against a future
+ * palette change flattening a badge into its card, not a claim that five
+ * is comfortable.
+ *
+ * B · The visited link is held apart from the link by the generator, and
+ * by nothing else. A theme that authors either by hand would slip past.
+ *
+ * @param {Theme} theme
+ */
+export function checkSecondHalves(theme) {
+    const problems = [];
+
+    const plateFloor = config.badgePlateFloor.value;
+    for (const status of STATUS_NAMES) {
+        const plate = theme.tokens[`status-${status}`];
+        if (plate === undefined) continue;
+        for (const surface of ['background', 'card']) {
+            const d = distance(hsl(plate), hsl(theme.tokens[surface]));
+            if (d < plateFloor) {
+                problems.push(`the ${status} badge is ${d.toFixed(1)} from --${surface} (floor ${plateFloor}); it stops reading as a badge`);
+            }
+        }
+    }
+
+    const link = theme.tokens.link ?? theme.tokens.primary;
+    const visited = theme.tokens['link-visited'];
+    if (visited !== undefined) {
+        const d = distance(hsl(link), hsl(visited));
+        if (d < DISTANCE_FLOOR) {
+            problems.push(`a visited link is ${d.toFixed(1)} from an unvisited one (floor ${DISTANCE_FLOOR}); the state says nothing`);
+        }
+    }
+
     return problems;
 }
 
@@ -252,8 +311,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             ...checkColourVision(theme),
             ...checkStates(theme),
             ...checkFocusRing(theme),
+            ...checkStateVisibility(theme),
+            ...checkSecondHalves(theme),
         ];
-        checks += 5;
+        checks += 7;
         if (problems.length > 0) {
             failed += problems.length;
             console.error(`\n${theme.name}:`);
@@ -261,7 +322,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         }
     }
 
-    const expected = all.length * 5;
+    const expected = all.length * 7;
     if (checks !== expected) {
         console.error(`\ngate broke: expected ${expected} checks over ${all.length} themes, ran ${checks}`);
         process.exit(1);
@@ -271,5 +332,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(`\n${failed} invariant violation(s) across ${all.length} themes.`);
         process.exit(1);
     }
-    console.log(`All ${all.length} themes satisfy DI1, DI2, DI3, DI4 and DI6 (${expected} checks).`);
+    console.log(`All ${all.length} themes satisfy DI1, DI2, DI3, DI4, DI6 and KT2 (${expected} checks).`);
 }

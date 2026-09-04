@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs';
 import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
-import { checkStateVisibility, themes } from './check-invariants.mjs';
+import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
 
@@ -110,31 +110,24 @@ test('DI7: a transition after a guard block has closed is reported', () => {
     assert.equal(unguardedMotion(css).length, 1);
 });
 
-// KT2, standing rule 8: the fault becomes a failing test before the fix.
-// This asserts the fault as it stands today, so the day the derivation is
-// repaired this test fails and has to be rewritten into its opposite —
-// which is the point. It is not a test of desired behaviour.
+// KT2, after the fix. These two tests were written to assert the fault
+// while it stood, exactly so that repairing it would break them and force
+// this rewrite. That is what happened; what follows asserts the repair.
 
-test('KT2: the pressed state is invisible in the two opt-out themes', () => {
-    const opted = themes().filter(/** @param {Theme} t */ (t) => ['cyberpunk', 'terminal'].includes(t.name));
-    assert.equal(opted.length, 2, 'cyberpunk and terminal are the themes that took the smaller step');
-    for (const theme of opted) {
-        assert.ok(
-            checkStateVisibility(theme).length > 0,
-            `${theme.name} is expected to fail state visibility until KT2's fix lands; if it passes, rewrite this test`,
-        );
-    }
+test('KT2: every theme has a pressed state you can see', () => {
+    const failures = themes().flatMap(/** @param {Theme} t */ (t) => checkStateVisibility(t).map((p) => `${t.name}: ${p}`));
+    assert.deepEqual(failures, []);
 });
 
-test('KT2: the five other themes clear the floor, give or take a hair', () => {
-    // light's --destructive-active lands at 9.996 — under a floor of 10 by
-    // four thousandths. Recorded rather than rounded away: it is the reason
-    // the correction form asks whether the floor is 10 or 9.5.
-    const others = themes().filter(/** @param {Theme} t */ (t) => !['cyberpunk', 'terminal'].includes(t.name));
-    const failures = others.flatMap(/** @param {Theme} t */ (t) => checkStateVisibility(t).map((p) => `${t.name}: ${p}`));
-    assert.deepEqual(
-        failures.map(/** @param {string} f */ (f) => f.split(':')[0]),
-        ['light'],
-        'only light is expected to graze the floor',
-    );
+test('KT2: the two themes that could not reach it on lightness now do', () => {
+    // The whole point of letting the pressed state give up chroma. Before
+    // the fix these two produced nine violations between them.
+    const opted = themes().filter(/** @param {Theme} t */ (t) => ['cyberpunk', 'terminal'].includes(t.name));
+    assert.equal(opted.length, 2);
+    for (const theme of opted) assert.deepEqual(checkStateVisibility(theme), []);
+});
+
+test('KT2-3: a badge plate stays distinguishable from the surface under it', () => {
+    const failures = themes().flatMap(/** @param {Theme} t */ (t) => checkSecondHalves(t).map((p) => `${t.name}: ${p}`));
+    assert.deepEqual(failures, []);
 });

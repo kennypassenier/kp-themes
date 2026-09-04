@@ -15,7 +15,16 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { themes, checkBoundaries, checkColourScheme, checkColourVision, checkFocusRing, checkStates } from './check-invariants.mjs';
+import {
+    themes,
+    checkBoundaries,
+    checkColourScheme,
+    checkColourVision,
+    checkFocusRing,
+    checkSecondHalves,
+    checkStates,
+    checkStateVisibility,
+} from './check-invariants.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
 
 const DOC = new URL('../docs/DESIGN_INVARIANTS.md', import.meta.url);
@@ -66,6 +75,8 @@ export function table() {
         ['DI1 boundaries at 3:1', (t) => verdict(checkBoundaries(t).length === 0)],
         ['DI2 two-channel focus ring', (t) => verdict(checkFocusRing(t).length === 0)],
         ['DI3 states carry their text', (t) => verdict(checkStates(t).length === 0)],
+        ['DI3 states are visible as states [KT2]', (t) => verdict(checkStateVisibility(t).length === 0)],
+        ['DI4 badge plates read against their surface [KT2]', (t) => verdict(checkSecondHalves(t).length === 0)],
         ['DI4 opposed status plates distinguishable', (t) => verdict(checkColourVision(t).length === 0)],
         ['DI5 flash threshold', (t) => (scope.has(t.name) ? verdict(motion.flash) : 'n/a')],
         ['DI6 declares colour-scheme and layers rise', (t) => verdict(checkColourScheme(t).length === 0)],

@@ -19,5 +19,9 @@
     "stateVisibilityFloor": {
         "value": 10,
         "why": "KT2: how far a pressed state must sit from its base colour before someone can see that they pressed it. House number on the same OKLab scale as perceptualDistanceFloor, not a standard \u2014 WCAG says nothing about state changes. Five themes reach 10.0 to 12.1 today; cyberpunk and terminal reach 2.6 to 8.4."
+    },
+    "badgePlateFloor": {
+        "value": 5,
+        "why": "KT2-3: how far a status badge's plate must sit from the surface under it before it stops reading as a badge. Deliberately low \u2014 the label carries the meaning (DI4), so the plate only has to read as a plate. Measured 2026-09-04: the worst plate sits 5.6 from its card (terminal, withdrawn). This is a floor against a future palette flattening a badge into its card, not a claim that 5 is comfortable."
     }
 }

@@ -189,7 +189,7 @@
     --accent-active: hsl(190, 27%, 77%);
     --accent-disabled: hsl(180, 100%, 96%);
     --destructive-hover: hsl(357, 87%, 36%);
-    --destructive-active: hsl(0, 100%, 28%);
+    --destructive-active: hsl(3, 88%, 29%);
     --destructive-disabled: hsl(3, 67%, 54%);
 }
 
@@ -358,16 +358,16 @@
     --focus-ring: hsl(190, 60%, 92%);
     --focus-ring-contrast: hsl(258, 40%, 6%);
     --primary-hover: hsl(315, 100%, 66%);
-    --primary-active: hsl(310, 100%, 70%);
+    --primary-active: hsl(312, 66%, 71%);
     --primary-disabled: hsl(314, 79%, 56%);
     --secondary-hover: hsl(258, 27%, 16%);
-    --secondary-active: hsl(257, 21%, 21%);
+    --secondary-active: hsl(257, 19%, 24%);
     --secondary-disabled: hsl(259, 44%, 9%);
     --accent-hover: hsl(180, 100%, 56%);
-    --accent-active: hsl(180, 100%, 64%);
+    --accent-active: hsl(179, 59%, 83%);
     --accent-disabled: hsl(180, 100%, 45%);
     --destructive-hover: hsl(350, 100%, 66%);
-    --destructive-active: hsl(350, 100%, 70%);
+    --destructive-active: hsl(353, 55%, 69%);
     --destructive-disabled: hsl(348, 79%, 56%);
 }
 
@@ -532,16 +532,16 @@
     --focus-ring: hsl(120, 85%, 68%);
     --focus-ring-contrast: hsl(120, 10%, 5%);
     --primary-hover: hsl(119, 95%, 55%);
-    --primary-active: hsl(118, 100%, 63%);
+    --primary-active: hsl(116, 85%, 73%);
     --primary-disabled: hsl(120, 100%, 43%);
     --secondary-hover: hsl(120, 7%, 13%);
-    --secondary-active: hsl(120, 5%, 19%);
+    --secondary-active: hsl(120, 5%, 21%);
     --secondary-disabled: hsl(120, 14%, 6%);
     --accent-hover: hsl(65, 95%, 56%);
-    --accent-active: hsl(62, 100%, 64%);
+    --accent-active: hsl(64, 93%, 81%);
     --accent-disabled: hsl(65, 100%, 44%);
     --destructive-hover: hsl(0, 97%, 65%);
-    --destructive-active: hsl(2, 100%, 69%);
+    --destructive-active: hsl(4, 62%, 68%);
     --destructive-disabled: hsl(358, 74%, 53%);
 }
 
