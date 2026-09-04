@@ -22,6 +22,8 @@ export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patte
 export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
+export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
+export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
 export { DEFAULT_THEME, STORAGE_KEY, THEME_LABELS, THEME_RECORDS, THEMES, applyTheme, initializeTheme, isTheme, useAppearance, useTheme, } from './hooks/use-theme.js';
 export type Theme = import('./hooks/use-theme.js').Theme;
 export type UseThemeOptions = import('./hooks/use-theme.js').UseThemeOptions;

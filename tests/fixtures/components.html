@@ -122,6 +122,34 @@
             </div>
         </section>
 
+        <section id="plain-flow">
+            <h2>Upload en wizard, framework-free</h2>
+            <div class="kp-upload" data-kp-upload data-kp-max-bytes="1024" data-test="plain-upload">
+                <input type="file" multiple class="kp-sr-only" id="files" data-kp-upload-input data-test="plain-upload-input" />
+                <label class="kp-upload__zone" for="files" data-kp-upload-zone>Sleep bestanden hierheen of kies ze</label>
+                <ul class="kp-upload__list" data-kp-upload-list></ul>
+            </div>
+
+            <div class="kp-wizard" data-kp-wizard data-test="plain-wizard">
+                <ol class="kp-wizard__steps">
+                    <li data-kp-step-label data-test="step-label-0">Gegevens</li>
+                    <li data-kp-step-label data-test="step-label-1">Controle</li>
+                </ol>
+                <p data-kp-wizard-status role="status" aria-live="polite" data-test="wizard-status"></p>
+                <section data-kp-step data-test="wizard-step-0">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="wnaam">Naam</label>
+                        <input class="kp-field__input" id="wnaam" required data-test="wizard-naam" />
+                    </div>
+                </section>
+                <section data-kp-step data-test="wizard-step-1" hidden>Klaar om te versturen.</section>
+                <div class="kp-wizard__actions">
+                    <button type="button" class="kp-button" data-kp-wizard-back data-test="wizard-back">Terug</button>
+                    <button type="button" class="kp-button kp-button--primary" data-kp-wizard-next data-test="wizard-next">Volgende</button>
+                </div>
+            </div>
+        </section>
+
         <section id="plain-date">
             <h2>Datumkiezer, framework-free</h2>
             <div class="kp-datepicker" data-kp-datepicker data-test="plain-date">
@@ -316,6 +344,8 @@
         <script type="module" src="/js/patterns.js"></script>
         <script type="module" src="/js/structure.js"></script>
         <script type="module" src="/js/datepicker.js"></script>
+        <script type="module" src="/js/upload.js"></script>
+        <script type="module" src="/js/wizard.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state

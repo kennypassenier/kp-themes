@@ -33,7 +33,9 @@
         "./js/forms": "./js/forms.js",
         "./js/patterns": "./js/patterns.js",
         "./js/structure": "./js/structure.js",
-        "./js/datepicker": "./js/datepicker.js"
+        "./js/datepicker": "./js/datepicker.js",
+        "./js/upload": "./js/upload.js",
+        "./js/wizard": "./js/wizard.js"
     },
     "types": "./index.d.ts",
     "files": [
