@@ -13,7 +13,7 @@ test('the showcase renders every theme, with nothing failing on load', async ({ 
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 
     await page.goto('/showcase/index.html');
-    await page.waitForSelector('[data-kp-theme-picker] button');
+    await page.waitForSelector('.kp-icon-button');
 
     // One block per theme, each wearing its own theme.
     await expect(page.locator('.sc-theme')).toHaveCount(THEMES.length);
@@ -21,20 +21,44 @@ test('the showcase renders every theme, with nothing failing on load', async ({ 
         await expect(page.locator(`#theme-${theme.name}`)).toHaveAttribute('data-theme', theme.name);
     }
 
-    // Every picker on the page was filled from the generated registry.
-    const options = await page.locator('#theme-formal [data-kp-theme-picker] button').count();
-    expect(options).toBe(THEMES.length);
+    // One picker, in the header, with an option per theme. It is not
+    // inside the blocks: a picker there reads as broken, because the
+    // block keeps its own theme on purpose [S1].
+    expect(await page.locator('.sc-theme [data-kp-theme-picker]').count()).toBe(0);
+    expect(await page.locator('.sc-header [data-kp-theme] ').count()).toBe(THEMES.length);
 
     expect(errors, 'the showcase logged errors while loading').toEqual([]);
 });
 
 test('picking a theme on the showcase changes the document, not the blocks', async ({ page }) => {
     await page.goto('/showcase/index.html');
-    await page.waitForSelector('[data-kp-theme-picker] button');
+    await page.waitForSelector('.kp-icon-button');
 
-    await page.click('#theme-formal [data-kp-theme-picker] [data-kp-theme="terminal"]');
+    await page.click('.kp-icon-button');
+    await expect(page.locator('#showcase-theme-menu')).toBeVisible();
+    await page.click('#showcase-theme-menu [data-kp-theme="terminal"]');
+
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'terminal');
-    // Each block keeps wearing its own theme: that is what makes the page
-    // a comparison rather than seven copies of the current theme.
+    // The menu closes itself: leaving it open after a choice makes it
+    // look as though the click missed.
+    await expect(page.locator('#showcase-theme-menu')).toBeHidden();
+    // Each block keeps wearing its own theme, and its own typeface: that
+    // is what makes the page a comparison rather than seven copies.
     await expect(page.locator('#theme-pastel')).toHaveAttribute('data-theme', 'pastel');
+    const fonts = await page.evaluate(() => ({
+        formal: getComputedStyle(document.querySelector('#theme-formal')).fontFamily.split(',')[0],
+        terminal: getComputedStyle(document.querySelector('#theme-terminal')).fontFamily.split(',')[0],
+    }));
+    expect(fonts.formal).not.toBe(fonts.terminal);
+});
+
+test('the header wears the chosen theme, so the picker visibly does something', async ({ page }) => {
+    await page.goto('/showcase/index.html');
+    await page.waitForSelector('.kp-icon-button');
+
+    const headerBg = () => page.evaluate(() => getComputedStyle(document.querySelector('.sc-header')).backgroundColor);
+    const before = await headerBg();
+    await page.click('.kp-icon-button');
+    await page.click('#showcase-theme-menu [data-kp-theme="dark"]');
+    expect(await headerBg()).not.toBe(before);
 });

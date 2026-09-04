@@ -21,22 +21,25 @@ import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'nod
 import process from 'node:process';
 import { SPECIMENS } from '../showcase/specimens.mjs';
 import { THEMES } from '../js/theme-registry.js';
+import { themeMenuMarkup } from '../js/theme-picker.js';
 
 const OUT = new URL('../showcase/', import.meta.url);
 const FIXTURES = new URL('themes/', OUT);
 
 const STYLE = readFileSync(new URL('showcase.css', OUT), 'utf8');
 
-/** @param {string} theme */
-function specimenBlocks(theme) {
-    return SPECIMENS.map(
-        (s) =>
-            `<section class="sc-specimen" id="${theme}-${s.id}" data-specimen="${s.id}">\n` +
-            `                <h3>${s.title}</h3>\n` +
-            `                <p class="sc-note">${s.note}</p>\n` +
-            `                ${s.html(theme)}\n` +
-            `            </section>`,
-    ).join('\n            ');
+/** @param {string} theme @param {{all?: boolean}} [options] */
+function specimenBlocks(theme, { all = true } = {}) {
+    return SPECIMENS.filter((s) => all || !s.fixturesOnly)
+        .map(
+            (s) =>
+                `<section class="sc-specimen" id="${theme}-${s.id}" data-specimen="${s.id}">\n` +
+                `                <h3>${s.title}</h3>\n` +
+                `                <p class="sc-note">${s.note}</p>\n` +
+                `                ${s.html(theme)}\n` +
+                `            </section>`,
+        )
+        .join('\n            ');
 }
 
 const NO_FLASH = `<script>
@@ -54,7 +57,7 @@ function showcase() {
         (t) =>
             `        <article class="sc-theme" data-theme="${t.name}" id="theme-${t.name}">\n` +
             `            <h2>${t.label}<small>${t.dark ? 'donker' : 'licht'}</small></h2>\n` +
-            `            ${specimenBlocks(t.name)}\n` +
+            `            ${specimenBlocks(t.name, { all: false })}\n` +
             `        </article>`,
     ).join('\n');
 
@@ -72,7 +75,14 @@ ${STYLE}        </style>
     </head>
     <body>
         <header class="sc-header">
-            <h1>kp-themes</h1>
+            <div class="sc-header__top">
+                <h1>kp-themes</h1>
+                <!-- One picker, here rather than inside the blocks: the
+                     blocks keep their own themes on purpose, so a picker
+                     among them looks broken. This one changes the page
+                     chrome, which is visible [S1]. -->
+                ${themeMenuMarkup({ id: 'showcase-theme-menu' })}
+            </div>
             <p>
                 Elk blok hieronder draagt zijn eigen thema. Wat je ziet is de gegenereerde stylesheet, niet een screenshot — deze pagina wordt
                 geschreven door <code>gates/generate-showcase.mjs</code> en loopt rood in de gates zodra ze afwijkt van de code.
@@ -86,11 +96,14 @@ ${STYLE}        </style>
 ${blocks}
         <script type="module">
             import { THEMES } from '../js/theme-registry.js';
+import { themeMenuMarkup } from '../js/theme-picker.js';
 
             // Every picker on this page renders the same seven options.
             // The blocks each wear their own theme, so a picker inside one
             // shows that block's colours while switching the document.
-            for (const host of document.querySelectorAll('[data-kp-theme-picker]')) {
+            // The header menu arrives with its options already written;
+            // only the bare per-theme pickers need filling.
+            for (const host of document.querySelectorAll('[data-kp-theme-picker]:empty')) {
                 for (const t of THEMES) {
                     const b = document.createElement('button');
                     b.type = 'button';

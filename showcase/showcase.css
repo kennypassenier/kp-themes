@@ -20,13 +20,28 @@ body {
     font-family: var(--theme-font-body, system-ui, sans-serif);
 }
 
+/* The header wears the document's theme, which is what makes the picker
+ * in it visibly do something — every block below keeps its own. */
 .sc-header {
     padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sc-header > p {
     max-width: 60ch;
 }
 
 .sc-header h1 {
-    margin: 0 0 0.5rem;
+    margin: 0;
+}
+
+.sc-header__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .sc-theme {

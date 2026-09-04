@@ -21,6 +21,7 @@ export {
     Tooltip,
 } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
+export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

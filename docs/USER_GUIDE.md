@@ -91,6 +91,22 @@ The swatch wears the theme it previews (`data-theme` works on any element,
 not only on `<html>`), so it shows that theme's live colours instead of a
 copy that drifts.
 
+### As an icon with a dropdown
+
+The same behaviour in the shape the consuming projects preferred: a
+square icon button that opens a menu. `themeMenuMarkup()` writes it, so a
+server can print it into a template:
+
+```js
+import { themeMenuMarkup } from '@kp-soft/themes/js/picker';
+html = themeMenuMarkup({ id: 'theme-menu', label: 'Thema kiezen' });
+```
+
+The dropdown is a popover: Escape and clicking elsewhere close it without
+any code of ours, and it closes itself after a choice. The check mark
+beside the current theme is the second carrier, so the menu does not rely
+on weight alone.
+
 ### React
 
 ```jsx

@@ -21,6 +21,7 @@
  * @property {string} title  shown above the specimen
  * @property {string} note   one line saying what a reader should look at
  * @property {(theme: string) => string} html
+ * @property {boolean} [fixturesOnly]  shown on the bare per-theme pages, not on the seven-block showcase
  */
 
 const STATUSES = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'];
@@ -91,6 +92,11 @@ export const SPECIMENS = [
         id: 'picker',
         title: 'Theme picker, framework-free',
         note: 'The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.',
+        // Bare fixtures only. On the seven-block showcase a picker inside
+        // a block reads as broken: the click works, but the block keeps
+        // its own theme on purpose, so nothing visible happens where the
+        // eye is looking. One picker in the header instead [S1].
+        fixturesOnly: true,
         html: () => `<div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>`,
     },
     {

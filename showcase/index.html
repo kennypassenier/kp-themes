@@ -37,13 +37,28 @@ body {
     font-family: var(--theme-font-body, system-ui, sans-serif);
 }
 
+/* The header wears the document's theme, which is what makes the picker
+ * in it visibly do something — every block below keeps its own. */
 .sc-header {
     padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sc-header > p {
     max-width: 60ch;
 }
 
 .sc-header h1 {
-    margin: 0 0 0.5rem;
+    margin: 0;
+}
+
+.sc-header__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .sc-theme {
@@ -160,7 +175,14 @@ body {
     </head>
     <body>
         <header class="sc-header">
-            <h1>kp-themes</h1>
+            <div class="sc-header__top">
+                <h1>kp-themes</h1>
+                <!-- One picker, here rather than inside the blocks: the
+                     blocks keep their own themes on purpose, so a picker
+                     among them looks broken. This one changes the page
+                     chrome, which is visible [S1]. -->
+                <span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="showcase-theme-menu" aria-label="Thema kiezen" style="anchor-name: --showcase-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="showcase-theme-menu" class="kp-popover" style="position-anchor: --showcase-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Thema kiezen"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formeel</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Licht</button></li><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Donker</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="topo"><span class="kp-swatch" data-theme="topo"></span>Topografisch</button></li></ul></div></span>
+            </div>
             <p>
                 Elk blok hieronder draagt zijn eigen thema. Wat je ziet is de gegenereerde stylesheet, niet een screenshot — deze pagina wordt
                 geschreven door <code>gates/generate-showcase.mjs</code> en loopt rood in de gates zodra ze afwijkt van de code.
@@ -192,11 +214,6 @@ body {
                 <h3>Focus ring</h3>
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
-            </section>
-            <section class="sc-specimen" id="formal-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
             </section>
             <section class="sc-specimen" id="formal-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
@@ -296,11 +313,6 @@ body {
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
             </section>
-            <section class="sc-specimen" id="light-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
-            </section>
             <section class="sc-specimen" id="light-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
                 <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
@@ -398,11 +410,6 @@ body {
                 <h3>Focus ring</h3>
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
-            </section>
-            <section class="sc-specimen" id="dark-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
             </section>
             <section class="sc-specimen" id="dark-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
@@ -502,11 +509,6 @@ body {
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
             </section>
-            <section class="sc-specimen" id="cyberpunk-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
-            </section>
             <section class="sc-specimen" id="cyberpunk-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
                 <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
@@ -604,11 +606,6 @@ body {
                 <h3>Focus ring</h3>
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
-            </section>
-            <section class="sc-specimen" id="pastel-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
             </section>
             <section class="sc-specimen" id="pastel-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
@@ -708,11 +705,6 @@ body {
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
             </section>
-            <section class="sc-specimen" id="terminal-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
-            </section>
             <section class="sc-specimen" id="terminal-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
                 <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
@@ -811,11 +803,6 @@ body {
                 <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
                 <div class="sc-row"><button type="button" class="sc-button">Op de pagina</button><button type="button" class="sc-button sc-on-primary">Op primary</button><button type="button" class="sc-button sc-on-destructive">Op destructive</button></div>
             </section>
-            <section class="sc-specimen" id="topo-picker" data-specimen="picker">
-                <h3>Theme picker, framework-free</h3>
-                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
-                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
-            </section>
             <section class="sc-specimen" id="topo-buttons" data-specimen="buttons">
                 <h3>Button, every variant and state</h3>
                 <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
@@ -894,11 +881,14 @@ body {
         </article>
         <script type="module">
             import { THEMES } from '../js/theme-registry.js';
+import { themeMenuMarkup } from '../js/theme-picker.js';
 
             // Every picker on this page renders the same seven options.
             // The blocks each wear their own theme, so a picker inside one
             // shows that block's colours while switching the document.
-            for (const host of document.querySelectorAll('[data-kp-theme-picker]')) {
+            // The header menu arrives with its options already written;
+            // only the bare per-theme pickers need filling.
+            for (const host of document.querySelectorAll('[data-kp-theme-picker]:empty')) {
                 for (const t of THEMES) {
                     const b = document.createElement('button');
                     b.type = 'button';
