@@ -65,6 +65,7 @@
  * @property {string} tableEmpty
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
+ * @property {(at: number, of: number) => string} tablePage
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -152,6 +153,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableEmpty: 'Nothing found.',
     tableRows: (n) => `${n} rows`,
     tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
+    /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
+    tablePage: (at, of) => `${at} / ${of}`,
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',
@@ -248,6 +251,7 @@ export const STRINGS_NL = Object.freeze({
     tableEmpty: 'Niets gevonden.',
     tableRows: (n) => `${n} rijen`,
     tableRowsFiltered: (shown, total) => `${shown} van ${total} rijen`,
+    tablePage: (at, of) => `${at} / ${of}`,
     formRequired: 'verplicht',
     formInvalid: 'Dit veld is niet correct ingevuld.',
     formSummaryOne: 'Er is 1 veld niet correct ingevuld.',

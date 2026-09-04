@@ -5,6 +5,10 @@
  * `DONE_EVENT` on the form themselves — same effect.
  */
 export declare const VALID_EVENT = "kp-form-valid";
+/** Fired when a submit failed validation: `{ fields, names }`. */
+export declare const INVALID_EVENT = "kp-form-invalid";
+/** Fired on a field when its validity was checked: `{ valid, message }`. */
+export declare const FIELD_EVENT = "kp-field-validity";
 /**
  * Ends the busy state the submit button took on `VALID_EVENT` [KT6].
  * Dispatched on the form by `detail.done()`, or by the consumer directly.
@@ -13,9 +17,75 @@ export declare const VALID_EVENT = "kp-form-valid";
  */
 export declare const DONE_EVENT = "kp-form-done";
 /**
+ * The name a summary line uses for a field: its label, its
+ * `aria-label`, or as a last resort its name attribute.
+ *
+ * @param {HTMLElement} field
+ */
+export declare function nameOf(field: HTMLElement): string;
+/**
+ * Show a message on a field — the browser's, or one the server found.
+ *
+ * @param {HTMLElement} field
+ * @param {string} message
+ * @param {{ wrapper?: string, invalidClass?: string }} [options]
+ */
+export declare function showError(field: HTMLElement, message: string, { wrapper, invalidClass }?: {
+    wrapper?: string;
+    invalidClass?: string;
+}): void;
+/**
+ * Clear what showError put there.
+ *
+ * @param {HTMLElement} field
+ * @param {{ wrapper?: string, invalidClass?: string }} [options]
+ */
+export declare function clearError(field: HTMLElement, { wrapper, invalidClass }?: {
+    wrapper?: string;
+    invalidClass?: string;
+}): void;
+export type FormHandle = {
+    element: HTMLFormElement;
+    /**
+     * check every field, show what is wrong, and return whether the form is valid
+     */
+    validate: () => boolean;
+    /**
+     * the fields currently marked invalid
+     */
+    invalid: () => HTMLElement[];
+    /**
+     * show messages by field name — what a server sends back
+     */
+    errors: (errors: Record<string, string>) => void;
+    /**
+     * clear every message
+     */
+    clear: () => void;
+    /**
+     * end the busy state
+     */
+    done: () => void;
+};
+/** The handle for an attached form, for code that did not call attach. @param {Element} element */
+export declare function form(element: Element): FormHandle | null;
+/**
  * Attach every form under `root`.
  *
  * @param {ParentNode} root
- * @returns {() => void} detach
+ * @param {{ validateOn?: 'blur' | 'input' | 'submit', revalidateOn?: 'input' | 'blur' | 'none', focusSummary?: boolean, focusFirstInvalid?: boolean, wrapper?: string, invalidClass?: string, summaryHeading?: string, summaryHeadingClass?: string }} [options]
+ *   Defaults, each also settable per form as `data-kp-validate-on`, `data-kp-revalidate-on`, `data-kp-focus-summary`.
+ * @returns {(() => void) & { handles: FormHandle[] }} detach
  */
-export declare function attachForms(root?: ParentNode): () => void;
+export declare function attachForms(root?: ParentNode, { validateOn, revalidateOn, focusSummary, focusFirstInvalid, wrapper, invalidClass, summaryHeading, summaryHeadingClass, }?: {
+    validateOn?: 'blur' | 'input' | 'submit';
+    revalidateOn?: 'input' | 'blur' | 'none';
+    focusSummary?: boolean;
+    focusFirstInvalid?: boolean;
+    wrapper?: string;
+    invalidClass?: string;
+    summaryHeading?: string;
+    summaryHeadingClass?: string;
+}): (() => void) & {
+    handles: FormHandle[];
+};

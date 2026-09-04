@@ -9,11 +9,11 @@
 //   <form class="kp-form" data-kp-form novalidate>
 //     <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
 //     <div class="kp-field">
-//       <label class="kp-field__label" for="naam">Naam <span class="kp-field__required">verplicht</span></label>
-//       <input class="kp-field__input" id="naam" name="naam" required />
+//       <label class="kp-field__label" for="name">Name <span class="kp-field__required">required</span></label>
+//       <input class="kp-field__input" id="name" name="name" required />
 //       <span class="kp-field__error" data-kp-field-error hidden></span>
 //     </div>
-//     <button class="kp-button kp-button--primary" data-kp-submit>Opslaan</button>
+//     <button class="kp-button kp-button--primary" data-kp-submit>Save</button>
 //   </form>
 //
 // `novalidate` on purpose: the browser's own bubbles disappear on the next
@@ -32,6 +32,14 @@
 //   3. Validation reports on blur, never on every keystroke. Telling
 //      someone their email is invalid while they type the third character
 //      is technically true and practically hostile.
+//
+// Since 3.0.0 [KT6]: showError and clearError are exported, because the
+// errors a server finds are the ones every real form has to show and the
+// first version kept them in a closure; attach returns a handle that
+// validates, reads and shows errors on demand; every rule above is a
+// default rather than a law — `validateOn`, `focusSummary`, the wrapper
+// selector — and fields added after attach validate too, because the
+// listener is on the form, not on the fields.
 
 import { getStrings } from './strings.js';
 const FORM = '[data-kp-form]';
@@ -46,6 +54,10 @@ const SUBMIT = '[data-kp-submit]';
  * `DONE_EVENT` on the form themselves — same effect.
  */
 export const VALID_EVENT = 'kp-form-valid';
+/** Fired when a submit failed validation: `{ fields, names }`. */
+export const INVALID_EVENT = 'kp-form-invalid';
+/** Fired on a field when its validity was checked: `{ valid, message }`. */
+export const FIELD_EVENT = 'kp-field-validity';
 
 /**
  * Ends the busy state the submit button took on `VALID_EVENT` [KT6].
@@ -58,13 +70,16 @@ export const DONE_EVENT = 'kp-form-done';
 /** What the browser's own message becomes when the field says nothing better. */
 const fallback = () => getStrings().formInvalid;
 
+/** Deterministic ids for error holders: no Math.random, so server and client agree. */
+let counter = 0;
+
 /**
  * The name a summary line uses for a field: its label, its
  * `aria-label`, or as a last resort its name attribute.
  *
  * @param {HTMLElement} field
  */
-function nameOf(field) {
+export function nameOf(field) {
     // A radio's own label names one option; the legend names the
     // question, which is what somebody left unanswered.
     if (field.getAttribute('type') === 'radio') {
@@ -94,23 +109,106 @@ function stateHolder(field) {
 }
 
 /**
+ * Show a message on a field — the browser's, or one the server found.
+ *
+ * @param {HTMLElement} field
+ * @param {string} message
+ * @param {{ wrapper?: string, invalidClass?: string }} [options]
+ */
+export function showError(field, message, { wrapper = '.kp-field', invalidClass = 'kp-field--invalid' } = {}) {
+    const box = field.closest(wrapper);
+    const holder = /** @type {HTMLElement | null} */ (box?.querySelector(FIELD_ERROR) ?? null);
+    const marked = stateHolder(field);
+    marked.setAttribute('aria-invalid', 'true');
+    box?.classList.add(invalidClass);
+    if (holder === null) return;
+    if (holder.id === '') holder.id = `${field.getAttribute('id') ?? `kp-field-${++counter}`}-error`;
+    holder.textContent = message;
+    holder.hidden = false;
+    // Appended rather than replaced: a field with help text keeps
+    // it, and overwriting describedby is how help disappears the
+    // first time someone gets something wrong.
+    const described = (marked.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+    if (!described.includes(holder.id)) marked.setAttribute('aria-describedby', [...described, holder.id].join(' '));
+}
+
+/**
+ * Clear what showError put there.
+ *
+ * @param {HTMLElement} field
+ * @param {{ wrapper?: string, invalidClass?: string }} [options]
+ */
+export function clearError(field, { wrapper = '.kp-field', invalidClass = 'kp-field--invalid' } = {}) {
+    const box = field.closest(wrapper);
+    const holder = /** @type {HTMLElement | null} */ (box?.querySelector(FIELD_ERROR) ?? null);
+    const marked = stateHolder(field);
+    marked.removeAttribute('aria-invalid');
+    box?.classList.remove(invalidClass);
+    if (holder === null) return;
+    holder.hidden = true;
+    holder.textContent = '';
+    const described = (marked.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((id) => id !== holder.id);
+    if (described.length > 0) marked.setAttribute('aria-describedby', described.join(' '));
+    else marked.removeAttribute('aria-describedby');
+}
+
+/**
+ * @typedef {object} FormHandle
+ * @property {HTMLFormElement} element
+ * @property {() => boolean} validate check every field, show what is wrong, and return whether the form is valid
+ * @property {() => HTMLElement[]} invalid the fields currently marked invalid
+ * @property {(errors: Record<string, string>) => void} errors show messages by field name — what a server sends back
+ * @property {() => void} clear clear every message
+ * @property {() => void} done end the busy state
+ */
+
+/** @type {WeakMap<Element, FormHandle>} */
+const handles = new WeakMap();
+
+/** The handle for an attached form, for code that did not call attach. @param {Element} element */
+export function form(element) {
+    return handles.get(element) ?? null;
+}
+
+/**
  * Attach every form under `root`.
  *
  * @param {ParentNode} root
- * @returns {() => void} detach
+ * @param {{ validateOn?: 'blur' | 'input' | 'submit', revalidateOn?: 'input' | 'blur' | 'none', focusSummary?: boolean, focusFirstInvalid?: boolean, wrapper?: string, invalidClass?: string, summaryHeading?: string, summaryHeadingClass?: string }} [options]
+ *   Defaults, each also settable per form as `data-kp-validate-on`, `data-kp-revalidate-on`, `data-kp-focus-summary`.
+ * @returns {(() => void) & { handles: FormHandle[] }} detach
  */
-export function attachForms(root = document) {
+export function attachForms(
+    root = document,
+    {
+        validateOn = 'blur',
+        revalidateOn = 'input',
+        focusSummary = true,
+        focusFirstInvalid = true,
+        wrapper = '.kp-field',
+        invalidClass = 'kp-field--invalid',
+        summaryHeading = 'p',
+        summaryHeadingClass = 'kp-form__summary-title',
+    } = {},
+) {
     /** @type {(() => void)[]} */
     const cleanups = [];
+    /** @type {FormHandle[]} */
+    const created = [];
+    const marks = { wrapper, invalidClass };
 
     for (const element of root.querySelectorAll(FORM)) {
         const form = element;
         if (!(form instanceof HTMLFormElement) || form.dataset.kpFormAttached !== undefined) continue;
         form.dataset.kpFormAttached = '';
         // The browser's bubbles are replaced, not suppressed: checkValidity()
-        // below still uses the same constraints.
+        // below still uses the same constraints. Restored on detach.
+        const hadNoValidate = form.noValidate;
         form.noValidate = true;
 
+        const when = /** @type {'blur' | 'input' | 'submit'} */ (form.dataset.kpValidateOn ?? validateOn);
+        const again = /** @type {'input' | 'blur' | 'none'} */ (form.dataset.kpRevalidateOn ?? revalidateOn);
+        const focusOnError = form.dataset.kpFocusSummary === undefined ? focusSummary : form.dataset.kpFocusSummary !== 'false';
         const summary = /** @type {HTMLElement | null} */ (form.querySelector(SUMMARY));
 
         /** @returns {HTMLElement[]} */
@@ -119,89 +217,65 @@ export function attachForms(root = document) {
                 [...form.elements].filter((el) => el instanceof HTMLElement && 'checkValidity' in el && el.getAttribute('type') !== 'submit')
             );
 
-        /** @param {HTMLElement} field @param {string} message */
-        const showError = (field, message) => {
-            const holder = /** @type {HTMLElement | null} */ (field.closest('.kp-field')?.querySelector(FIELD_ERROR) ?? null);
-            const marked = stateHolder(field);
-            marked.setAttribute('aria-invalid', 'true');
-            field.closest('.kp-field')?.classList.add('kp-field--invalid');
-            if (holder === null) return;
-            if (holder.id === '') holder.id = `${field.getAttribute('id') ?? Math.random().toString(36).slice(2)}-error`;
-            holder.textContent = message;
-            holder.hidden = false;
-            // Appended rather than replaced: a field with help text keeps
-            // it, and overwriting describedby is how help disappears the
-            // first time someone gets something wrong.
-            const described = (marked.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
-            if (!described.includes(holder.id)) marked.setAttribute('aria-describedby', [...described, holder.id].join(' '));
-        };
-
-        /** @param {HTMLElement} field */
-        const clearError = (field) => {
-            const holder = /** @type {HTMLElement | null} */ (field.closest('.kp-field')?.querySelector(FIELD_ERROR) ?? null);
-            const marked = stateHolder(field);
-            marked.removeAttribute('aria-invalid');
-            field.closest('.kp-field')?.classList.remove('kp-field--invalid');
-            if (holder === null) return;
-            holder.hidden = true;
-            holder.textContent = '';
-            const described = (marked.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((id) => id !== holder.id);
-            if (described.length > 0) marked.setAttribute('aria-describedby', described.join(' '));
-            else marked.removeAttribute('aria-describedby');
-        };
-
         /** @param {HTMLElement} field @returns {boolean} */
         const validate = (field) => {
             const control = /** @type {HTMLInputElement} */ (field);
-            if (control.checkValidity()) {
-                clearError(field);
-                return true;
-            }
-            showError(field, control.validationMessage || fallback());
-            return false;
+            const valid = control.checkValidity();
+            if (valid) clearError(field, marks);
+            else showError(field, control.validationMessage || fallback(), marks);
+            field.dispatchEvent(
+                new CustomEvent(FIELD_EVENT, { bubbles: true, detail: { valid, message: valid ? '' : control.validationMessage || fallback() } }),
+            );
+            return valid;
         };
 
         /** @param {Event} event */
-        const onBlur = (event) => {
+        const fieldOf = (event) => {
             const field = /** @type {HTMLElement} */ (event.target);
-            if (!(field instanceof HTMLElement) || !('checkValidity' in field)) return;
+            return field instanceof HTMLElement && 'checkValidity' in field && field.getAttribute('type') !== 'submit' ? field : null;
+        };
+        // Delegated, so a field added after attach validates too.
+        /** @param {Event} event */
+        const onFocusOut = (event) => {
+            const field = fieldOf(event);
+            if (field === null) return;
             // Only once someone has left the field. Reporting while they
             // type the third character of an email address is technically
             // true and practically hostile.
-            validate(field);
+            if (when === 'blur' || (again === 'blur' && stateHolder(field).getAttribute('aria-invalid') === 'true')) validate(field);
+        };
+        /** @param {Event} event */
+        const onInput = (event) => {
+            const field = fieldOf(event);
+            if (field === null) return;
+            // "Punish late, reward early": once a field is marked, fixing
+            // it clears the mark as you type.
+            if (when === 'input' || (again === 'input' && stateHolder(field).getAttribute('aria-invalid') === 'true')) validate(field);
         };
 
-        /** @param {SubmitEvent} event */
-        const onSubmit = (event) => {
+        const dedupe = (/** @type {HTMLElement[]} */ list) => {
             // One line per group, not per radio button: four radios in one
-            // group are one thing somebody forgot to answer. Validated
-            // first and deduplicated after, so every field is still
-            // marked.
+            // group are one thing somebody forgot to answer.
             /** @type {Set<string>} */
             const groups = new Set();
-            const bad = fields()
-                .filter((field) => !validate(field))
-                .filter((field) => {
-                    if (field.getAttribute('type') !== 'radio') return true;
-                    const name = field.getAttribute('name') ?? '';
-                    if (groups.has(name)) return false;
-                    groups.add(name);
-                    return true;
-                });
-            if (bad.length === 0) {
-                if (summary !== null) summary.hidden = true;
-                const done = () => form.dispatchEvent(new CustomEvent(DONE_EVENT, { bubbles: true }));
-                form.dispatchEvent(new CustomEvent(VALID_EVENT, { bubbles: true, detail: { data: new FormData(form), done } }));
-                return;
-            }
-            event.preventDefault();
+            return list.filter((field) => {
+                if (field.getAttribute('type') !== 'radio') return true;
+                const name = field.getAttribute('name') ?? '';
+                if (groups.has(name)) return false;
+                groups.add(name);
+                return true;
+            });
+        };
+
+        /** @param {HTMLElement[]} bad */
+        const showSummary = (bad) => {
             if (summary === null) {
-                bad[0]?.focus();
+                if (focusFirstInvalid) bad[0]?.focus();
                 return;
             }
             summary.textContent = '';
-            const heading = document.createElement('p');
-            heading.className = 'kp-form__summary-title';
+            const heading = document.createElement(summaryHeading);
+            heading.className = summaryHeadingClass;
             const s = getStrings();
             heading.textContent = bad.length === 1 ? s.formSummaryOne : s.formSummaryMany(bad.length);
             const list = document.createElement('ul');
@@ -222,15 +296,67 @@ export function attachForms(root = document) {
             // Focused, not merely rendered: a message above the fold is
             // invisible to someone whose focus is at the bottom of a long
             // form, which is exactly where the submit button is.
-            summary.focus();
+            if (focusOnError) summary.focus();
         };
 
-        for (const field of fields()) field.addEventListener('blur', onBlur);
+        const validateAll = () => {
+            const bad = dedupe(fields().filter((field) => !validate(field)));
+            if (bad.length === 0) {
+                if (summary !== null) summary.hidden = true;
+                return true;
+            }
+            showSummary(bad);
+            form.dispatchEvent(new CustomEvent(INVALID_EVENT, { bubbles: true, detail: { fields: bad, names: bad.map(nameOf) } }));
+            return false;
+        };
+
+        const done = () => form.dispatchEvent(new CustomEvent(DONE_EVENT, { bubbles: true }));
+
+        /** @param {SubmitEvent} event */
+        const onSubmit = (event) => {
+            if (validateAll()) {
+                form.dispatchEvent(new CustomEvent(VALID_EVENT, { bubbles: true, detail: { data: new FormData(form), done } }));
+                return;
+            }
+            event.preventDefault();
+        };
+
+        form.addEventListener('focusout', onFocusOut);
+        form.addEventListener('input', onInput);
         form.addEventListener('submit', onSubmit);
 
+        /** @type {FormHandle} */
+        const handle = {
+            element: form,
+            validate: validateAll,
+            invalid: () => fields().filter((f) => stateHolder(f).getAttribute('aria-invalid') === 'true'),
+            errors: (errors) => {
+                /** @type {HTMLElement[]} */
+                const bad = [];
+                for (const [name, message] of Object.entries(errors)) {
+                    const field = fields().find((f) => f.getAttribute('name') === name);
+                    if (field === undefined) continue;
+                    showError(field, message, marks);
+                    bad.push(field);
+                }
+                if (bad.length > 0) showSummary(dedupe(bad));
+            },
+            clear: () => {
+                for (const field of fields()) clearError(field, marks);
+                if (summary !== null) summary.hidden = true;
+            },
+            done,
+        };
+        handles.set(form, handle);
+        created.push(handle);
+
         cleanups.push(() => {
-            for (const field of fields()) field.removeEventListener('blur', onBlur);
+            form.removeEventListener('focusout', onFocusOut);
+            form.removeEventListener('input', onInput);
             form.removeEventListener('submit', onSubmit);
+            handle.clear();
+            form.noValidate = hadNoValidate;
+            handles.delete(form);
             delete form.dataset.kpFormAttached;
         });
     }
@@ -242,7 +368,7 @@ export function attachForms(root = document) {
         const button = /** @type {HTMLButtonElement} */ (element);
         if (button.dataset.kpSubmitAttached !== undefined) continue;
         button.dataset.kpSubmitAttached = '';
-        const form = button.closest('form');
+        const owner = button.closest('form');
         const busyText = button.dataset.kpBusy ?? getStrings().busy;
         const idleText = button.textContent ?? '';
         const onValid = () => {
@@ -258,17 +384,18 @@ export function attachForms(root = document) {
             button.removeAttribute('aria-busy');
             button.textContent = idleText;
         };
-        form?.addEventListener(VALID_EVENT, onValid);
-        form?.addEventListener(DONE_EVENT, onDone);
+        owner?.addEventListener(VALID_EVENT, onValid);
+        owner?.addEventListener(DONE_EVENT, onDone);
         cleanups.push(() => {
-            form?.removeEventListener(VALID_EVENT, onValid);
-            form?.removeEventListener(DONE_EVENT, onDone);
+            owner?.removeEventListener(VALID_EVENT, onValid);
+            owner?.removeEventListener(DONE_EVENT, onDone);
             onDone();
             delete button.dataset.kpSubmitAttached;
         });
     }
 
-    return () => {
+    const detach = () => {
         for (const c of cleanups) c();
     };
+    return Object.assign(detach, { handles: created });
 }

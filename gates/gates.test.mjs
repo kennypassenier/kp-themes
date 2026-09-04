@@ -19,6 +19,7 @@ import { leakedColours, documentRules } from './check-layers.mjs';
 import { loosePhrases } from './check-strings.mjs';
 import { subsequence } from '../js/listbox.js';
 import { parseDate, toDutch, toISO } from '../js/datepicker.js';
+import { datePattern, parseDate as parseLocaleDate, parseNumber, weekStartsOn } from '../js/locale.js';
 import { contrast, hsl } from './colour.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
@@ -294,4 +295,39 @@ test('KT5: API values and CSS are not text', () => {
     assert.deepEqual(loosePhrases('ctx.font = `${size}px monospace`;'), []);
     // A hole followed by a unit is a measurement, not something to read.
     assert.deepEqual(loosePhrases('<span>{`${bytes} kB`}</span>').length, 0);
+});
+
+// D5: the locale is the browser's unless the consumer says otherwise.
+// These pin what Intl gives, because the whole point of reading it is
+// that a Dutch page and an American page get different answers from the
+// same code — and that "31-02-2026" is refused in both.
+test("D5: a date is read in the locale's own order", () => {
+    assert.equal(toISO(/** @type {Date} */ (parseLocaleDate('04-09-2026', 'nl-NL'))), '2026-09-04');
+    assert.equal(toISO(/** @type {Date} */ (parseLocaleDate('09/04/2026', 'en-US'))), '2026-09-04');
+    assert.equal(toISO(/** @type {Date} */ (parseLocaleDate('2026-09-04', 'en-US'))), '2026-09-04');
+    // Impossible in every locale.
+    assert.equal(parseLocaleDate('31-02-2026', 'nl-NL'), null);
+    assert.equal(parseLocaleDate('02/31/2026', 'en-US'), null);
+});
+
+test("D5: a number is read with the locale's decimal", () => {
+    assert.equal(parseNumber('1.284,50', 'nl-NL'), 1284.5);
+    assert.equal(parseNumber('1,284.50', 'en-US'), 1284.5);
+    assert.equal(parseNumber('1 284,50', 'fr-FR'), 1284.5);
+});
+
+test('D5: the week starts where the locale says, and the consumer can overrule it', () => {
+    // Monday for the Netherlands, Sunday for the United States — where
+    // the runtime knows; Monday where it does not.
+    const nl = weekStartsOn('nl-NL');
+    const us = weekStartsOn('en-US');
+    assert.ok(nl === 1);
+    assert.ok(us === 0 || us === 1);
+    assert.equal(weekStartsOn('en-US', 6), 6);
+});
+
+test('D5: the date hint follows the locale, so it cannot lie about the format', () => {
+    assert.equal(datePattern('nl-NL').parts.join(','), 'day,month,year');
+    assert.equal(datePattern('en-US').parts.join(','), 'month,day,year');
+    assert.match(datePattern('en-US').hint, /^mm.dd.yyyy$/);
 });
