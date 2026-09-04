@@ -16,6 +16,19 @@ body {
     line-height: 1.5;
 }
 
+/* Each block resolves its OWN theme's typeface.
+ *
+ * Without this line the font came from `body`, which resolves against the
+ * document's theme — so a terminal block showed terminal's colours in a
+ * sans-serif face while the document was formal, and every block turned
+ * monospace the moment someone picked terminal. Terminal's anatomy
+ * document is explicit that losing the mono face makes it "green-tinted,
+ * not a terminal", so the page was showing something that is not the
+ * theme it claims to be. Found by Kenny on the published page. */
+.sc-theme {
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+}
+
 .sc-header {
     padding: 1.5rem clamp(1rem, 4vw, 3rem);
     max-width: 60ch;
