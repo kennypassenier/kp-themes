@@ -108,4 +108,5 @@ may depend on a path to a sibling project).
 | --------- | --------------------------------------- |
 | L0        | **closed** 2026-09-04, all six report items signed off |
 | L1        | built 2026-09-04, gate held for the AFK report |
-| L2-L10    | not started                             |
+| L2        | built 2026-09-04, gate held for the AFK report |
+| L3-L10    | not started                             |
