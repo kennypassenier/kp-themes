@@ -44,6 +44,16 @@ what was removed. Discipline-enforced. The mechanical half is code —
 fixture page and would otherwise supply the very thing under test. Full
 record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction KT5 (2026-09-05)
+
+No user-visible string is written into the code that renders it. Every
+one comes from `js/strings.js`, English by default, and a consumer
+replaces any of it through a `strings` prop, a `StringsProvider` or
+`setStrings()` — the screen-reader-only announcements included, because
+those fail silently and only for the people who cannot see that they
+failed. Code-enforced: `gates/check-strings.mjs` runs in `npm run gates`.
+Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Project rule from Kenny's answer of 2026-09-04
 
 kp-themes is a **source**, not a service, and it makes one promise: a
@@ -60,13 +70,27 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                       |
-| ------------------- | ------------------------------------------- |
-| Current phase       | 10 — closed; round two is done and released |
-| Last completed gate | Phase 10, 2026-09-04 — round-two retro      |
-| Next gate           | none; the consumers answer next             |
-| Open queue items    | KT4-M1 (waits on JobTracker)                |
-| AFK mode            | off — nothing is running unattended         |
+| Field               | Value                                            |
+| ------------------- | ------------------------------------------------ |
+| Current phase       | 10 — closed; 2.0.0 released after correction KT5 |
+| Last completed gate | KT5, 2026-09-05 — the release form               |
+| Next gate           | none; the consumers answer next                  |
+| Open queue items    | KT4-M1, KT5-M1 (both wait on JobTracker)         |
+| AFK mode            | off — nothing is running unattended              |
+
+Correction KT5 reopened the project a second time on 2026-09-05, and the
+answer is 2.0.0. Every user-visible string was written into the component
+that renders it, in Dutch, with no way for a consumer to pass a different
+one — the fault is not the language but the missing door, and JobTracker
+had adopted only the components that carry no text at all. `js/strings.js`
+now holds all 72 with English defaults, reachable through a `strings`
+prop, a `StringsProvider` or `setStrings()`; `STRINGS_NL` keeps the old
+words as one import. `gates/check-strings.mjs` refuses a literal outside
+the dictionary and was drilled red in all four shapes — it passed the
+screen-reader case on the first attempt, which is the case KT5 exists
+about. Kenny's answer also closed two gaps that are not about language:
+`FormField` renders select, textarea, checkbox and radio (TH61), and
+`NavBar`, `Breadcrumb` and `Pagination` take a `linkComponent` (TH62).
 
 Correction KT4 reopened the project the day it closed: JobTracker adopted
 1.0.0 and found the package ships no type declarations, while README,

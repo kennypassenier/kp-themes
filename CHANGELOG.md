@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 — unreleased
+## 2.0.0 — 2026-09-05
 
 **The words on screen changed from Dutch to English.** That is the whole
 breaking change, and `STRINGS_NL` is the one-line undo. See MIGRATION.md.
