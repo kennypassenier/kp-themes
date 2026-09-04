@@ -35,18 +35,20 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                                                                          |
-| ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Current phase       | 6 — Realization, L3 built (gate held, AFK)                                                                     |
-| Last completed gate | Phase 5, 2026-09-04 (11 milestones, hooks installed and drilled)                                               |
-| Next gate           | L0 exit — the generator reproduces themes.css byte for byte                                                    |
-| AFK mode            | **on** since 2026-09-04 — milestone gates accumulate into one combined report; deviations queue as mini-rounds |
+| Field               | Value                                           |
+| ------------------- | ----------------------------------------------- |
+| Current phase       | 6 — Realization, L0-L10 built (gates held, AFK) |
+| Last completed gate | L0, 2026-09-04                                  |
+| Next gate           | the combined AFK report over L1-L10             |
+| AFK mode            | on (Kenny, 2026-09-04)                          |
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
 the freeze, and `docs/DESIGN_INVARIANTS.md` holds the eleven rules that must
 hold in every theme together with a compliance table showing what the seven
-themes fail today. Phases 0 and 1 ran on 2026-09-03; `docs/SCOPE.md` holds the
+themes fail today. Phase 6 built all eleven milestones on 2026-09-04 in AFK
+mode: L0's gate was signed off, and the gates for L1 to L10 accumulate into
+one combined report. Phases 0 and 1 ran on 2026-09-03; `docs/SCOPE.md` holds the
 approved scope and `docs/INVENTORY.md` the 99 inventoried units. Correction
 KT1 and its follow-up sit in `docs/MINI_ROUNDS.md`.
 
@@ -59,10 +61,11 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
   register, the contrast check, the Tailwind binding.
 - **Not approved (S17):** the picker, React and vanilla alike. It is
   reviewed on the showcase page in all seven themes.
-- **Known token gaps (S6b):** no `--success`, `--warning` or `--info`, and
-  no hover / active / disabled states.
-- **Restructure due in Phase 2 (S18):** `themes/<name>/` per theme, with
-  shared `components/v1/{react,vanilla}/`, plus `showcase/` and `gates/`.
+- **Known token gaps (S6b):** closed at L3. All seven themes now declare
+  `--success`, `--warning`, `--info`, the derived hover / active / disabled
+  states, `--border-strong`, `--focus-ring`, `--link` and `--link-visited`.
+- **Restructure (S18):** done as the milestones needed it — `themes/<name>/`
+  at L0, `gates/` at L1, `js/` and `components/` at L4-L8, `showcase/` at L5.
 
 ## Project documents
 
