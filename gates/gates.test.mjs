@@ -17,6 +17,7 @@ import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } 
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { subsequence } from '../js/listbox.js';
+import { parseDate, toDutch, toISO } from '../js/datepicker.js';
 import { contrast, hsl } from './colour.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
@@ -229,4 +230,34 @@ test('TH40: a subsequence match finds letters in order, not substrings', () => {
     // before anyone types.
     assert.equal(subsequence('Thema', ''), true);
     assert.equal(subsequence('THEMA', 'thema'), true);
+});
+
+// TH43: date parsing. Arithmetic, so it belongs here rather than in a
+// browser — and it is the half of a date field that decides whether
+// somebody's "31-02-2026" becomes an error or silently becomes 3 March.
+test('TH43: a date field reads what people actually type', () => {
+    /** Parse and format, refusing null loudly — the checker is right that
+     * parseDate can return one, and a test that casts the answer away
+     * would stop noticing when it starts doing so.
+     * @param {string} text */
+    const iso = (text) => {
+        const date = parseDate(text);
+        assert.notEqual(date, null, `${text} should parse`);
+        return toISO(/** @type {Date} */ (date));
+    };
+    assert.equal(iso('4-9-2026'), '2026-09-04');
+    assert.equal(iso('04-09-2026'), '2026-09-04');
+    assert.equal(iso('2026-09-04'), '2026-09-04');
+    assert.equal(iso('04/09/2026'), '2026-09-04');
+    assert.equal(toDutch(/** @type {Date} */ (parseDate('2026-09-04'))), '04-09-2026');
+});
+
+test('TH43: an impossible date is refused, not rounded', () => {
+    // Without the round-trip check this parses as 3 March: a silent wrong
+    // answer, which is worse than an error.
+    assert.equal(parseDate('31-02-2026'), null);
+    assert.equal(parseDate('32-01-2026'), null);
+    assert.equal(parseDate('04-13-2026'), null);
+    assert.equal(parseDate('vandaag'), null);
+    assert.equal(parseDate(''), null);
 });

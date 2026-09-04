@@ -32,7 +32,8 @@
         "./js/datatable": "./js/datatable.js",
         "./js/forms": "./js/forms.js",
         "./js/patterns": "./js/patterns.js",
-        "./js/structure": "./js/structure.js"
+        "./js/structure": "./js/structure.js",
+        "./js/datepicker": "./js/datepicker.js"
     },
     "types": "./index.d.ts",
     "files": [

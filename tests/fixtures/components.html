@@ -122,6 +122,28 @@
             </div>
         </section>
 
+        <section id="plain-date">
+            <h2>Datumkiezer, framework-free</h2>
+            <div class="kp-datepicker" data-kp-datepicker data-test="plain-date">
+                <div class="kp-field">
+                    <label class="kp-field__label" for="van">Van</label>
+                    <input
+                        class="kp-field__input"
+                        id="van"
+                        type="text"
+                        inputmode="numeric"
+                        placeholder="dd-mm-jjjj"
+                        data-kp-date-input
+                        data-test="plain-date-input"
+                    />
+                </div>
+                <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Kalender openen" data-test="plain-date-open">
+                    Kalender
+                </button>
+                <div class="kp-datepicker__panel" data-kp-date-panel data-test="plain-date-panel" hidden></div>
+            </div>
+        </section>
+
         <section id="plain-structure">
             <h2>Structuur, framework-free</h2>
             <ul class="kp-tree" role="tree" data-kp-tree data-test="plain-tree">
@@ -293,6 +315,7 @@
         <script type="module" src="/js/forms.js"></script>
         <script type="module" src="/js/patterns.js"></script>
         <script type="module" src="/js/structure.js"></script>
+        <script type="module" src="/js/datepicker.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state
