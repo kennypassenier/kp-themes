@@ -240,8 +240,8 @@ publishes is recognisable and verifiable: a version number, a provenance
 line, and a checksum with every release.
 
 *Added by the mini-round of 2026-09-04*, when Kenny dropped JobTracker's
-build step as a supported path and decided this package publishes to npm
-at all. A large share of the scope's complexity came from that single
+build step as a supported path and decided this package publishes nothing
+to npm at all. A large share of the scope's complexity came from that single
 route — a setting consumers had to add, a rule Tailwind needed, a bot
 following versions nobody had ever seen work. All of it falls away, and
 what remains matches what was already happening: two of the three
