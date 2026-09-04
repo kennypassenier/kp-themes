@@ -99,6 +99,10 @@ for (const channel of CHANNELS) {
             // The alternative every table reaches for is a horizontal
             // scrollbar, and SC 1.4.10 is about not making a reader drag a
             // page sideways. So the row stacks instead.
+            //
+            // Drilled per KT3: the `.kp-datatable[data-kp-cards] .kp-table
+            // td { display: flex }` rule was deleted from css/components.css
+            // and both channels went red here; restored, both pass.
             const cell = table.locator('tbody tr:visible td').nth(1);
             await expect(cell).toHaveCSS('display', 'flex');
 
