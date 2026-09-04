@@ -22,6 +22,27 @@ export {
 } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
 export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
+export { default as Combobox } from './components/combobox.jsx';
+export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
+export { OPTION_SELECTOR, createListbox, subsequence } from './js/listbox.js';
+export { CommandPalette, ShortcutSheet } from './components/palette.jsx';
+export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
+export { default as DataTable } from './components/datatable.jsx';
+export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { VALID_EVENT as FORM_VALID_EVENT, attachForms } from './js/forms.js';
+export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
+export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
+export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
+export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
+export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
+export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
+export { Form, FormField } from './components/form.jsx';
+export { Reorder, SplitPane, Tree } from './components/structure.jsx';
+export { DatePicker, Upload, Wizard } from './components/flow.jsx';
+export { COLOR_EVENT, attachColorPickers } from './js/colorpicker.js';
+export { COLUMNS, LAYOUT_EVENT, attachGrids, layoutOf } from './js/gridlayout.js';
+export { ColorPicker, GridLayout } from './components/canvas.jsx';
+export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

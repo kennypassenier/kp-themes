@@ -119,6 +119,15 @@ import { themeMenuMarkup } from '../js/theme-picker.js';
             // tests [DI4, DI10].
             await import('../js/components.js');
             await import('../js/overlays.js');
+            // Round two's components, on the page a consumer without npm
+            // actually looks at.
+            await import('../js/combobox.js');
+            await import('../js/datatable.js');
+            await import('../js/datepicker.js');
+            await import('../js/structure.js');
+            await import('../js/patterns.js');
+            await import('../js/colorpicker.js');
+            await import('../js/gridlayout.js');
         </script>
     </body>
 </html>
@@ -151,6 +160,13 @@ ${STYLE}        </style>
         </main>
         <script type="module" src="../../js/components.js"></script>
         <script type="module" src="../../js/overlays.js"></script>
+        <script type="module" src="../../js/combobox.js"></script>
+        <script type="module" src="../../js/datatable.js"></script>
+        <script type="module" src="../../js/datepicker.js"></script>
+        <script type="module" src="../../js/structure.js"></script>
+        <script type="module" src="../../js/patterns.js"></script>
+        <script type="module" src="../../js/colorpicker.js"></script>
+        <script type="module" src="../../js/gridlayout.js"></script>
     </body>
 </html>
 `;

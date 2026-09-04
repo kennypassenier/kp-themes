@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -25,7 +25,20 @@
         "./js/no-flash": "./js/no-flash.js",
         "./css/components": "./css/components.css",
         "./js/components": "./js/components.js",
-        "./js/overlays": "./js/overlays.js"
+        "./js/overlays": "./js/overlays.js",
+        "./js/listbox": "./js/listbox.js",
+        "./js/combobox": "./js/combobox.js",
+        "./js/palette": "./js/palette.js",
+        "./js/datatable": "./js/datatable.js",
+        "./js/forms": "./js/forms.js",
+        "./js/patterns": "./js/patterns.js",
+        "./js/structure": "./js/structure.js",
+        "./js/datepicker": "./js/datepicker.js",
+        "./js/upload": "./js/upload.js",
+        "./js/wizard": "./js/wizard.js",
+        "./js/contrast": "./js/contrast.js",
+        "./js/colorpicker": "./js/colorpicker.js",
+        "./js/gridlayout": "./js/gridlayout.js"
     },
     "types": "./index.d.ts",
     "files": [

@@ -1,5 +1,85 @@
 # Changelog
 
+## 1.2.0 — 2026-09-04
+
+Twenty-two components, in both channels. Kenny asked for a DataTable and
+"top of the line forms", then went through
+<https://github.com/brillout/awesome-react-components> with me and rated
+the rest.
+
+### The two that were asked for
+
+**DataTable** — sorting, global filtering, pagination, row selection, an
+empty state, and a narrow layout where each row becomes a card carrying
+its column names. Measured against TanStack Table's feature list, which
+is what "best in 2026" means. Deliberately without virtualisation,
+in-cell editing or export: that is a grid, a different product, and the
+decision is recorded rather than forgotten.
+
+The features were the easy part. `aria-sort` lands on the sorted column
+and nowhere else, the row count after a filter is announced, a number
+column sorts as numbers, and the header checkbox goes indeterminate on a
+partial selection — because a box reading "checked" while one of three
+rows is selected is a lie.
+
+**Forms** — the browser already validates; what it does not do is put the
+message where a screen reader will read it, gather the errors, or move
+focus to them. The summary takes focus rather than merely appearing,
+`aria-describedby` is appended to rather than replaced, and validation
+reports on blur. Telling someone their email is invalid while they type
+the third character is technically true and practically hostile.
+
+### The rest of the round
+
+Combobox and tag input on a shared listbox engine, with virtual focus.
+Command palette and shortcut sheet, together, because a palette without
+discoverability is a secret. Tree, drag-to-reorder and split pane — all
+keyboard-first, no drag library. Date picker, file upload, step wizard.
+Empty states that know the difference between "nothing yet" and "nothing
+matched", optimistic actions with undo, status parts, a copyable value
+and a diff view.
+
+A movable grid layout where every gesture has a keyboard equivalent and
+the keyboard one is what the tests drive.
+
+And a colour picker that reports the WCAG contrast ratio of the chosen
+colour against the current theme's background, using the same function
+the contrast gate uses. That is the one thing a colour picker inside a
+theme system can do that a general-purpose one cannot — and a picker that
+shows a colour without saying whether anyone can read it is how the
+unreadable colours got in.
+
+### What the suites found
+
+Every one of these was found by a test or by the showcase, not by review:
+
+- The two channels disagreed about what a choice is: Enter took `banaan`
+  in one and `Banaan` in the other, because the framework-free half
+  conflated an option's label with its value.
+- Two command palettes on one page both answered Ctrl+K and stacked two
+  modal dialogs.
+- The React palette kept the old query when opened any way other than the
+  shortcut, while the other channel had already cleared it.
+- The React form gathered a summary and left the FIELDS unmarked — no
+  `aria-invalid`, no per-field message, no blur validation. Four
+  assertions failed at once.
+- Reorder moved focus with a document-wide query and landed in the other
+  channel's list.
+- And the showcase found, within a minute, that the combobox input
+  overflowed its wrapper by 10 px: at 320 px that pushed the page
+  sideways and DI11 went red on all eleven themes. Every browser test had
+  been green; the fixture pages were not narrow enough to notice.
+
+### Also
+
+`js/contrast.js` is new and public: the colour primitives moved out of
+`gates/`, which is the package's own tooling, so a consumer gets the same
+contrast measurement rather than a second opinion.
+
+418 browser tests in Chromium and Firefox, 25 unit tests, 59 export paths.
+
+---
+
 ## 1.1.0 — 2026-09-04
 
 Types, and the promise that a version does not move under you.
