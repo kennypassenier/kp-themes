@@ -194,9 +194,13 @@ npm run gates                     # contrast + prettier --check
 ```
 
 The script discovers every `[data-theme='…']` block that declares
-`--background` and checks 21 pairs per theme (13 surface/text pairs,
-`accent` at 3:1, and the seven status badges at 4.5:1). Run `npm run
-gates` before every commit.
+`--background` and checks each theme's colour pairs: text on its surface
+at 4.5:1, non-text things like chart series and the focus ring at 3:1,
+and the pairs that must stay far apart rather than readable — a visited
+link against an unvisited one, a pressed state against its base. It
+prints the counts itself; they are not repeated here, because a number
+typed into prose goes stale and a gate's own output does not. Run `npm
+run gates` before every commit.
 
 ## Cyberpunk register: shadcn markup hooks
 

@@ -7,6 +7,7 @@
 //        (default: css/themes.css in this package)
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
+import { distance, hsl } from './colour.mjs';
 
 const target = process.argv[2] ? new URL(process.argv[2], `file://${process.cwd()}/`) : new URL('../css/themes.css', import.meta.url);
 const css = readFileSync(target, 'utf8');
@@ -116,6 +117,31 @@ const EXEMPT = {
 };
 
 /** @param {string} name @returns {string} */
+/**
+ * Pairs that must be far APART rather than readable, measured on the
+ * generated stylesheet [Phase 7, G1].
+ *
+ * These live here rather than in check-invariants.mjs for a reason found
+ * in the Phase 7 audit: that gate reads the token source, and these
+ * tokens are derived, so the check it held for the visited link guarded
+ * `theme.tokens['link-visited'] !== undefined` — which no theme declares.
+ * The branch never ran. It sat green next to the real checks, which is
+ * worse than not having it.
+ *
+ * Read from the artefact, they measure what a consumer actually receives,
+ * however it got there — derived, authored, or hand-edited afterwards.
+ *
+ * @type {[string, string, number][]}
+ */
+const DISTANCE_PAIRS = [
+    ['link', 'link-visited', 12], // TH31: a visited link says something only if it looks different
+    ['primary', 'primary-active', 10], // KT2: a pressed state you can see
+    ['secondary', 'secondary-active', 10],
+    ['accent', 'accent-active', 10],
+    ['destructive', 'destructive-active', 10],
+];
+
+/** @param {string} name @returns {string} */
 function themeBlock(name) {
     const re = new RegExp(`\\[data-theme='${name}'\\]\\s*\\{([^}]+)\\}`);
     const m = css.match(re);
@@ -171,6 +197,23 @@ export function unaccountedTokens(block) {
 let failures = 0;
 for (const theme of THEMES) {
     const block = themeBlock(theme);
+    for (const [a, b, floor] of DISTANCE_PAIRS) {
+        let d;
+        try {
+            d = distance(
+                hsl(`hsl(${tokenHsl(block, a).h}, ${tokenHsl(block, a).s * 100}%, ${tokenHsl(block, a).l * 100}%)`),
+                hsl(`hsl(${tokenHsl(block, b).h}, ${tokenHsl(block, b).s * 100}%, ${tokenHsl(block, b).l * 100}%)`),
+            );
+        } catch (e) {
+            failures++;
+            console.error(`FAIL ${theme}: ${e instanceof Error ? e.message : String(e)}`);
+            continue;
+        }
+        if (d < floor) {
+            failures++;
+            console.error(`FAIL ${theme}: --${b} is only ${d.toFixed(1)} from --${a} (need >= ${floor}); the difference is not visible`);
+        }
+    }
     for (const token of unaccountedTokens(block)) {
         failures++;
         console.error(`FAIL ${theme}: --${token} is measured by nothing. Add it to a pair list, or to EXEMPT with the reason.`);
@@ -206,6 +249,7 @@ if (failures > 0) {
 }
 console.log(
     `All ${THEMES.length} themes pass on ${PAIRS.length + LARGE_PAIRS.length + NON_TEXT_PAIRS.length} pairs ` +
-        `(${PAIRS.length} at 4.5, ${LARGE_PAIRS.length + NON_TEXT_PAIRS.length} at 3.0, incl. ${STATUS_NAMES.length} status badges); ` +
+        `(${PAIRS.length} at 4.5, ${LARGE_PAIRS.length + NON_TEXT_PAIRS.length} at 3.0, incl. ${STATUS_NAMES.length} status badges), ` +
+        `${DISTANCE_PAIRS.length} pairs held apart in the shipped stylesheet; ` +
         `${Object.keys(EXEMPT).length} tokens are exempt with a stated reason.`,
 );

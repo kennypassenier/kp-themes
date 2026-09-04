@@ -15,6 +15,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { leakedColours } from './check-layers.mjs';
+import { execFileSync } from 'node:child_process';
 import process from 'node:process';
 import {
     themes,
@@ -97,7 +98,17 @@ export function table() {
         ...Object.keys(NOT_GATED).map((id) => `| ${id} | ${all.map(() => 'not gated').join(' | ')} |`),
     ];
 
+    // The two lines under the table used to be typed by hand and had gone
+    // stale — "24 pairs" when the gate measured 39, "63 names" when it
+    // declared 65 — sitting directly under a generated table, which lends
+    // them an authority they had not earned. They are the gates' own
+    // output now [Phase 7, G2].
+    /** @param {string} script */
+    const said = (script) => execFileSync(process.execPath, [new URL(script, import.meta.url).pathname], { encoding: 'utf8' }).trim();
+
     const notes = [
+        `- ${said('check-contrast.mjs')}`,
+        `- ${said('check-tokens.mjs')}`,
         ...Object.entries(NOT_GATED).map(([id, why]) => `- **${id} is not gated:** ${why}.`),
         '- **Gated in the browser, not here:** DI11 (reflow at 320 px, forced text spacing) and the other half of DI6 ' +
             '(whether the browser actually receives a `color-scheme`) are measured by `tests/fixtures.spec.mjs` against the ' +

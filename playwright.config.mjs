@@ -24,7 +24,12 @@ export default defineConfig({
         baseURL: `http://127.0.0.1:${PORT}`,
         trace: 'retain-on-failure',
     },
-    projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+    // AR15's baseline is modern Chrome AND Firefox. Testing only one of
+    // them makes "green" evidence about that one — standing rule 35.
+    projects: [
+        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    ],
     webServer: {
         command: `node tests/fixtures/server.mjs`,
         url: `http://127.0.0.1:${PORT}/tests/fixtures/picker.html`,

@@ -262,14 +262,11 @@ export function checkSecondHalves(theme) {
         }
     }
 
-    const link = theme.tokens.link ?? theme.tokens.primary;
-    const visited = theme.tokens['link-visited'];
-    if (visited !== undefined) {
-        const d = distance(hsl(link), hsl(visited));
-        if (d < DISTANCE_FLOOR) {
-            problems.push(`a visited link is ${d.toFixed(1)} from an unvisited one (floor ${DISTANCE_FLOOR}); the state says nothing`);
-        }
-    }
+    // The visited link used to be checked here and never was: it is a
+    // derived token, so `theme.tokens['link-visited']` is always
+    // undefined and the branch never ran. Found in the Phase 7 audit and
+    // moved to check-contrast.mjs, which reads the generated stylesheet
+    // and therefore measures what ships.
 
     return problems;
 }

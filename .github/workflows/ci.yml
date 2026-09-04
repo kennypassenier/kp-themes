@@ -31,6 +31,8 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Behaviour suite, both channels
+      # AR15's baseline is Chrome and Firefox; installing only one makes
+      # a green run evidence about one of them (standing rule 35).
+      - run: npx playwright install --with-deps chromium firefox
+      - name: Behaviour suite, both channels, both browsers
         run: npm run test:browser
