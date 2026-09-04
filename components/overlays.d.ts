@@ -69,19 +69,26 @@ export declare function Tabs({ tabs, className }: {
     }[];
     className?: string;
 }): import("react").JSX.Element;
-/** @param {{ items: {href?: string, label: string}[], strings?: Partial<import('../js/strings.js').Strings> }} props */
-export declare function Breadcrumb({ items, strings }: {
+/**
+ * The same `linkComponent` escape as NavBar: a breadcrumb inside a router
+ * application is a route, not a page load.
+ *
+ * @param {{ items: {href?: string, label: string}[], linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props
+ */
+export declare function Breadcrumb({ items, linkComponent: Link, strings }: {
     items: {
         href?: string;
         label: string;
     }[];
+    linkComponent?: import('react').ElementType;
     strings?: Partial<import('../js/strings.js').Strings>;
 }): import("react").JSX.Element;
-/** @param {{ pages: number, current: number, href?: (page: number) => string, strings?: Partial<import('../js/strings.js').Strings> }} props */
-export declare function Pagination({ pages, current, href, strings }: {
+/** @param {{ pages: number, current: number, href?: (page: number) => string, linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export declare function Pagination({ pages, current, href, linkComponent: Link, strings }: {
     pages: number;
     current: number;
     href?: (page: number) => string;
+    linkComponent?: import('react').ElementType;
     strings?: Partial<import('../js/strings.js').Strings>;
 }): import("react").JSX.Element;
 /** @param {{ value?: number, max?: number, label: string }} props */

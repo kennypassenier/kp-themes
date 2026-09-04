@@ -185,15 +185,24 @@ export function Tabs({ tabs, className = '' }) {
     );
 }
 
-/** @param {{ items: {href?: string, label: string}[], strings?: Partial<import('../js/strings.js').Strings> }} props */
-export function Breadcrumb({ items, strings }) {
+/**
+ * The same `linkComponent` escape as NavBar: a breadcrumb inside a router
+ * application is a route, not a page load.
+ *
+ * @param {{ items: {href?: string, label: string}[], linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props
+ */
+export function Breadcrumb({ items, linkComponent: Link = 'a', strings }) {
     const s = useStrings(strings);
     return (
         <nav className="kp-breadcrumb" aria-label={s.breadcrumb}>
             <ol>
                 {items.map((item, i) => (
                     <li key={item.label}>
-                        {item.href && i < items.length - 1 ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+                        {item.href && i < items.length - 1 ? (
+                            <Link href={item.href}>{item.label}</Link>
+                        ) : (
+                            <span aria-current="page">{item.label}</span>
+                        )}
                     </li>
                 ))}
             </ol>
@@ -201,17 +210,17 @@ export function Breadcrumb({ items, strings }) {
     );
 }
 
-/** @param {{ pages: number, current: number, href?: (page: number) => string, strings?: Partial<import('../js/strings.js').Strings> }} props */
-export function Pagination({ pages, current, href = (p) => `#page-${p}`, strings }) {
+/** @param {{ pages: number, current: number, href?: (page: number) => string, linkComponent?: import('react').ElementType, strings?: Partial<import('../js/strings.js').Strings> }} props */
+export function Pagination({ pages, current, href = (p) => `#page-${p}`, linkComponent: Link = 'a', strings }) {
     const s = useStrings(strings);
     return (
         <nav className="kp-pagination" aria-label={s.pagination}>
             <ul>
                 {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
                     <li key={p}>
-                        <a href={href(p)} aria-current={p === current ? 'page' : undefined}>
+                        <Link href={href(p)} aria-current={p === current ? 'page' : undefined}>
                             {p}
-                        </a>
+                        </Link>
                     </li>
                 ))}
             </ul>

@@ -151,6 +151,25 @@ export const SPECIMENS = [
             `<span class="kp-field__error" id="${theme}-e2">Enter a valid address.</span></div>`,
     },
     {
+        id: 'field-types',
+        title: 'Form field types',
+        note: 'A field is not always a text box: select, textarea, checkbox and a radio group, each with the same label, help and error wiring [TH61].',
+        html: (theme) =>
+            `<div class="kp-field"><label class="kp-field__label" for="${theme}-t1">Country</label>` +
+            `<select class="kp-field__input" id="${theme}-t1"><option>Pick\u2026</option><option>Belgium</option><option>The Netherlands</option></select></div>` +
+            `<div class="kp-field"><label class="kp-field__label" for="${theme}-t2">Notes</label>` +
+            `<textarea class="kp-field__input kp-field__input--multiline" id="${theme}-t2"></textarea></div>` +
+            `<div class="kp-field kp-field--check"><input class="kp-field__check" id="${theme}-t3" type="checkbox" checked />` +
+            `<label class="kp-field__label" for="${theme}-t3">Keep me posted</label></div>` +
+            `<fieldset class="kp-field kp-fieldset kp-field--invalid" role="radiogroup" aria-invalid="true" aria-describedby="${theme}-t4e">` +
+            `<legend class="kp-field__label">How do we reach you?</legend>` +
+            `<div class="kp-field__option"><input class="kp-field__check" id="${theme}-t4a" name="${theme}-t4" type="radio" />` +
+            `<label for="${theme}-t4a">Email</label></div>` +
+            `<div class="kp-field__option"><input class="kp-field__check" id="${theme}-t4b" name="${theme}-t4" type="radio" />` +
+            `<label for="${theme}-t4b">Telephone</label></div>` +
+            `<span class="kp-field__error" id="${theme}-t4e">Pick one.</span></fieldset>`,
+    },
+    {
         id: 'card',
         title: 'Card',
         note: 'A raised surface is never darker than the one below it [DI6].',

@@ -153,7 +153,11 @@ import { BootSequence, DecipherText, DigitalRain, ScrambleNumber } from '@kp-sof
 - `THEME_RECORDS` — `[{ name, label, dark }]`, generated from the token
   sources, so it cannot disagree with the stylesheet about which themes
   are dark. `THEMES` is the name list, `THEME_LABELS` the name→label map.
-  Labels are Dutch (the apps' UI language).
+  The labels are the theme names — Kenny's names for his themes, not
+  interface chrome, so they stay as they are on an English page the way a
+  product name does. Everything else the components say comes from
+  `js/strings.js` and is English by default; see "The words on screen are
+  yours".
 - `applyTheme(name)` — sets `data-theme` and toggles `.dark`; every
   `useTheme()` instance on the page sees the change (a tiny external store,
   no provider needed).
@@ -225,6 +229,52 @@ module loads.
 
 Everything is plain JavaScript with JSDoc types (`jsconfig.json` has
 `checkJs`); editors pick up the types from your own `@types/react`.
+
+## Forms
+
+`FormField` renders the control its `type` says, not always an `<input>`:
+
+```jsx
+<FormField label="Country" name="country" type="select" required options={countries} />
+<FormField label="Notes" name="notes" type="textarea" />
+<FormField label="Keep me posted" name="news" type="checkbox" />
+<FormField label="How do we reach you?" name="channel" type="radio" options={channels} />
+```
+
+`options` is `{ value, label, disabled? }[]`; a `select` also accepts
+children, so an `<optgroup>` is yours to write. Anything else — `text`,
+`email`, `number`, `date` — is the input type, as before.
+
+A radio group renders as a `<fieldset role="radiogroup">` with the
+question as its legend, and it behaves as one question: the error summary
+counts it once, names it by the legend rather than by one of its answers,
+and the group carries `aria-invalid` (putting it on one radio says the
+wrong thing about the others).
+
+The framework-free channel needs no component — `attachForms()` works on
+whatever markup you wrote, and validates everything the browser validates.
+Match the classes in the snippet above for a radio group and it gets the
+same treatment.
+
+## Links inside a router
+
+`NavBar`, `Breadcrumb` and `Pagination` render `<a href>` by default,
+which reloads the page. Inside React Router or Next that throws the state
+away, so hand in your own:
+
+```jsx
+import { Link } from 'react-router';
+
+<NavBar brand="kp" links={links} linkComponent={Link} />;
+```
+
+The component receives `href`, `className`, `aria-current` and the
+children. A router whose prop is called something else takes a two-line
+wrapper rather than a fork of the component.
+
+The skip link stays a plain anchor on purpose: it points at an element on
+this page, and routing it turns the one link a keyboard user needs into a
+navigation.
 
 ## Status tokens
 

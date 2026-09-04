@@ -112,6 +112,47 @@ function Cases() {
                     <FormField label="E-mail" name="mail" type="email" required />
                 </Form>
             </div>
+            <div data-test="react-rich-form">
+                <Form>
+                    <FormField
+                        label="Land"
+                        name="land"
+                        type="select"
+                        required
+                        options={[
+                            { value: '', label: 'Kies\u2026' },
+                            { value: 'be', label: 'Belgi\u00eb' },
+                            { value: 'nl', label: 'Nederland' },
+                        ]}
+                    />
+                    <FormField label="Toelichting" name="toelichting" type="textarea" required />
+                    <FormField label="Ik ga akkoord" name="akkoord" type="checkbox" required />
+                    <FormField
+                        label="Hoe bereiken we je?"
+                        name="kanaal"
+                        type="radio"
+                        required
+                        options={[
+                            { value: 'mail', label: 'E-mail' },
+                            { value: 'tel', label: 'Telefoon' },
+                        ]}
+                    />
+                </Form>
+            </div>
+            <div data-test="react-router-nav">
+                {/* A consumer's own link component: what a router hands in.
+                    It records that it was called, which is the only thing
+                    the contract promises. */}
+                <NavBar
+                    brand="kp"
+                    links={[{ href: '#routed', label: 'Gerouteerd' }]}
+                    linkComponent={({ href, children, ...rest }) => (
+                        <a href={href} data-routed="" {...rest}>
+                            {children}
+                        </a>
+                    )}
+                />
+            </div>
             <div data-test="react-structure">
                 <Tree
                     label="Mappen"

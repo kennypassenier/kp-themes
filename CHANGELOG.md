@@ -45,6 +45,45 @@ a ratio with the same code our gate measures it with, rather than a second
 opinion. `gates/colour.mjs` re-exports from it, unchanged for anyone
 importing it there.
 
+### Every field type, not only a text box [TH61]
+
+`FormField` took a `type` prop and rendered an `<input>` whatever it was
+told, so a real form grew a hand-written half beside it — without the
+label, the error and the `aria-describedby` wiring that are the point of
+the component. It now renders `select`, `textarea`, `checkbox` and
+`radio` as what they say, and passes `options` through for the two that
+need a list.
+
+A radio group is a group: a `<fieldset role="radiogroup">` with the
+question as its legend. That has three consequences the suite pins.
+The summary counts it once rather than once per button. It is named by
+its legend rather than by one of its answers — "How do we reach you?",
+not "Email". And the group carries `aria-invalid`, because putting it on
+one radio says the wrong thing about the others.
+
+The framework-free channel already validated anything the browser
+validates, since it works on `form.elements`. What it did not know was
+that a radio group is one question; it does now, so both channels answer
+the same.
+
+`Form` itself was collecting only `HTMLInputElement`, so a required
+select nobody chose from was thrown away before the summary looked at it.
+
+### A consumer's own link component [TH62]
+
+`NavBar`, `Breadcrumb` and `Pagination` take `linkComponent`, defaulting
+to `'a'`. A plain anchor is correct HTML and reloads the page, which is
+right for a server-rendered site and wrong inside React Router or Next,
+where every click would throw the state away.
+
+The skip link is deliberately not routed: it is a same-page anchor, and
+sending it through a router turns the one link a keyboard user needs into
+a navigation.
+
+Kenny asked for this on `NavBar`. `Breadcrumb` and `Pagination` had the
+same hardcoded `<a>`, and a measure written for the place a fault showed
+rather than for the property it has meets you again somewhere else.
+
 ### The gate
 
 `npm run check:strings` reads our source and refuses a user-visible
