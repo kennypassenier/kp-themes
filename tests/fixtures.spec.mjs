@@ -106,13 +106,28 @@ for (const theme of THEMES) {
             // the browser's default serif back. Both faces are read now,
             // and the fallback is a sane stack rather than whatever the
             // browser picked in 1996.
-            const faces = await page.evaluate(() => ({
-                body: getComputedStyle(document.body).fontFamily,
-                heading: getComputedStyle(document.querySelector('h2')).fontFamily,
-            }));
-            expect(faces.body).not.toMatch(/Times|serif$/i);
-            expect(faces.heading).not.toMatch(/Times/i);
-            expect(faces.body.length).toBeGreaterThan(0);
+            const faces = await page.evaluate(() => {
+                const root = getComputedStyle(document.documentElement);
+                const first = (stack) =>
+                    stack
+                        .split(',')[0]
+                        .trim()
+                        .replace(/^["']|["']$/g, '');
+                return {
+                    body: first(getComputedStyle(document.body).fontFamily),
+                    bodyToken: first(root.getPropertyValue('--theme-font-body')),
+                    heading: first(getComputedStyle(document.querySelector('h2')).fontFamily),
+                    headingToken: first(root.getPropertyValue('--theme-font-display') || root.getPropertyValue('--theme-font-body')),
+                };
+            });
+            // Asserting the face the theme names, not the absence of a
+            // serif: the first version of this test forbade /serif$/,
+            // which matches the tail of "sans-serif" and so failed every
+            // theme but terminal.
+            expect(faces.bodyToken.length).toBeGreaterThan(0);
+            expect(faces.body).toBe(faces.bodyToken);
+            expect(faces.heading).toBe(faces.headingToken);
+            expect(faces.body).not.toMatch(/^Times/i);
         });
     });
 }
