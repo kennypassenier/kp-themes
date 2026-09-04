@@ -36,6 +36,9 @@ export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
 export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
 export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
+export { Form, FormField } from './components/form.jsx';
+export { Reorder, SplitPane, Tree } from './components/structure.jsx';
+export { DatePicker, Upload, Wizard } from './components/flow.jsx';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

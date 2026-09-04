@@ -16,6 +16,9 @@ import { Dialog, Tabs } from '../../components/overlays.jsx';
 import Combobox from '../../components/combobox.jsx';
 import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
 import DataTable from '../../components/datatable.jsx';
+import { Form, FormField } from '../../components/form.jsx';
+import { Reorder, SplitPane, Tree } from '../../components/structure.jsx';
+import { DatePicker, Upload, Wizard } from '../../components/flow.jsx';
 import DecipherText from '../../fx/decipher-text.jsx';
 import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
@@ -88,6 +91,42 @@ function Cases() {
                         { value: 'appel', label: 'Appel' },
                         { value: 'banaan', label: 'Banaan' },
                         { value: 'citroen', label: 'Citroen' },
+                    ]}
+                />
+            </div>
+            <div data-test="react-form">
+                <Form>
+                    <FormField label="Naam" name="naam" required help="Zoals het op je pas staat." />
+                    <FormField label="E-mail" name="mail" type="email" required />
+                </Form>
+            </div>
+            <div data-test="react-structure">
+                <Tree
+                    label="Mappen"
+                    nodes={[
+                        { id: 'map', label: 'Map een', children: [{ id: 'kind', label: 'Kind een' }] },
+                        { id: 'zaak', label: 'Zaak twee' },
+                    ]}
+                />
+                <Reorder
+                    items={[
+                        { id: 'a', label: 'A' },
+                        { id: 'b', label: 'B' },
+                    ]}
+                />
+                <SplitPane start="Links" end="Rechts" />
+            </div>
+            <div data-test="react-date">
+                <DatePicker label="Van" />
+            </div>
+            <div data-test="react-upload">
+                <Upload maxBytes={1024} />
+            </div>
+            <div data-test="react-wizard">
+                <Wizard
+                    steps={[
+                        { label: 'Gegevens', content: <span>Stap een</span> },
+                        { label: 'Controle', content: <span>Stap twee</span> },
                     ]}
                 />
             </div>
