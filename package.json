@@ -41,7 +41,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:types && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:types && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -54,7 +54,9 @@
         "check:showcase": "node gates/generate-showcase.mjs --check",
         "checksums": "node gates/checksums.mjs --write",
         "check:types": "tsc --noEmit -p jsconfig.json",
-        "check:layers": "node gates/check-layers.mjs"
+        "check:layers": "node gates/check-layers.mjs",
+        "generate:ha": "node gates/generate-ha-themes.mjs",
+        "check:ha": "node gates/generate-ha-themes.mjs --check"
     },
     "peerDependencies": {
         "motion": ">=12",

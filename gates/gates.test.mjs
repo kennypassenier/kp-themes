@@ -16,6 +16,7 @@ import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours } from './check-layers.mjs';
+import { contrast, hsl } from './colour.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
 
@@ -160,4 +161,23 @@ test('a computed animation duration is read, not skipped', () => {
 
     const literal = animations('.x { animation: fx-flicker 2.2s steps(3) infinite; }');
     assert.equal(literal[0].durationMs, 2200);
+});
+
+test('HA1: every colour a Home Assistant theme uses as ink is readable on its card', () => {
+    // The mapping is not one-to-one and cannot be. Home Assistant uses
+    // warning/success/info as ink; ours are plate-and-ink pairs, and
+    // which half is the ink depends on the theme — pale plate with dark
+    // ink in six, saturated plate with white ink in high-contrast.
+    // Taking the foreground blindly put white on a white card there, at
+    // 1.0, which is what this test exists to keep from coming back.
+    for (const theme of themes()) {
+        const yaml = readFileSync(new URL(`../ha/kp-${theme.name}.yaml`, import.meta.url), 'utf8');
+        const card = hsl(theme.tokens.card);
+        for (const key of ['accent-color', 'error-color', 'warning-color', 'success-color', 'info-color']) {
+            const value = yaml.match(new RegExp(`${key}: "([^"]+)"`))?.[1];
+            assert.ok(value, `${theme.name}: ${key} missing from the generated theme`);
+            const ratio = contrast(hsl(value), card);
+            assert.ok(ratio >= 3, `${theme.name}: ${key} is ${ratio.toFixed(2)} on the card, under 3`);
+        }
+    }
 });

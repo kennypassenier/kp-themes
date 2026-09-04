@@ -242,6 +242,25 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 `.fx-glitch` + `data-text`, `.fx-media`, `.fx-cellpop`, `.glow-primary`,
 `.glow-accent`, `.glow-card`, `.gradient-text`) work on any markup.
 
+## Home Assistant
+
+`ha/kp-*.yaml` is the same eleven themes as Home Assistant themes,
+generated from the same token sources. Copy them into Home Assistant's
+`themes/` directory and reload; they appear under their Dutch names beside
+whatever you already have. The `kp-` prefix is there so a file called
+`dark.yaml` cannot land on top of one of yours.
+
+Where [card-mod](https://github.com/thomasloven/lovelace-card-mod) is
+installed they also carry the theme's own timing, so a dashboard in
+terminal snaps and one in sepia drifts. Without card-mod the two extra
+keys are ignored and the colours still work.
+
+Three of Home Assistant's variables are ink rather than plate —
+`warning-color`, `success-color`, `info-color` — and which half of our
+pair that is depends on the theme, so the generator picks whichever is
+readable on that theme's card. A test asserts all four ink colours clear
+3:1 in all eleven.
+
 ## Documentation
 
 | Document                                                         | For                                                        |
