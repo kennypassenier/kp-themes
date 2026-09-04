@@ -149,12 +149,3 @@ export function toast(text, { ms = TOAST_MS } = {}) {
     setTimeout(() => el.remove(), ms);
     return el;
 }
-
-if (typeof document !== 'undefined') {
-    const start = () => {
-        attachDialogs();
-        attachTabs();
-    };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
-    else start();
-}

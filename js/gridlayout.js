@@ -145,8 +145,3 @@ export function attachGrids(root = document) {
         for (const c of cleanups) c();
     };
 }
-
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => attachGrids());
-    else attachGrids();
-}

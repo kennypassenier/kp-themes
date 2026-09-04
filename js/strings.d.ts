@@ -70,6 +70,10 @@ export type Strings = {
     themePicker: string;
     themeSaveFailed: string;
     themeSaveRefused: string;
+    contractDestructive: string;
+    contractSemantic: string;
+    themeGroupLight: string;
+    themeGroupDark: string;
 };
 /**
  * @typedef {object} Strings
@@ -144,6 +148,10 @@ export type Strings = {
  * @property {string} themePicker
  * @property {string} themeSaveFailed
  * @property {string} themeSaveRefused
+ * @property {string} contractDestructive
+ * @property {string} contractSemantic
+ * @property {string} themeGroupLight
+ * @property {string} themeGroupDark
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

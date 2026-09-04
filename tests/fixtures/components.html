@@ -442,19 +442,7 @@
             <div id="react-components"></div>
         </section>
 
-        <script type="module" src="/js/components.js"></script>
-        <script type="module" src="/js/overlays.js"></script>
-        <script type="module" src="/js/combobox.js"></script>
-        <script type="module" src="/js/palette.js"></script>
-        <script type="module" src="/js/datatable.js"></script>
-        <script type="module" src="/js/forms.js"></script>
-        <script type="module" src="/js/patterns.js"></script>
-        <script type="module" src="/js/structure.js"></script>
-        <script type="module" src="/js/datepicker.js"></script>
-        <script type="module" src="/js/upload.js"></script>
-        <script type="module" src="/js/wizard.js"></script>
-        <script type="module" src="/js/colorpicker.js"></script>
-        <script type="module" src="/js/gridlayout.js"></script>
+        <script type="module" src="/js/auto.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state
@@ -464,7 +452,7 @@
             // …and one whose save "fails" the way JobTracker's does: the
             // outcome is rendered, the request settles, and the consumer
             // says so through done().
-            plain.addEventListener('kp-form-valid', (event) => setTimeout(() => event.detail.done(), 50));
+            plain.addEventListener('kp-form-valid', (event) => setTimeout(() => event.detail.done(), 400));
         </script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>

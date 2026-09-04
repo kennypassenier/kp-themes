@@ -15,9 +15,14 @@ test('printing drops the theme and the decoration [TH36]', async ({ page }) => {
 
     // Paper has no theme: white ground, black ink, and the texture layer
     // gone rather than costing toner for something that carries nothing.
+    //
+    // ::after, where the texture actually is. Until 3.0.0 this test read
+    // ::before, which the print rule also hid and which carried nothing —
+    // so the test was green while the texture printed [KT6]. Drill: with
+    // the print rule back on body::before, this goes red.
     const printed = await page.evaluate(() => {
         const root = getComputedStyle(document.documentElement);
-        const texture = getComputedStyle(document.body, '::before');
+        const texture = getComputedStyle(document.body, '::after');
         return {
             background: root.getPropertyValue('--background').trim(),
             foreground: root.getPropertyValue('--foreground').trim(),

@@ -6,7 +6,16 @@ export { default as Alert } from './components/alert.jsx';
 export { default as Field } from './components/field.jsx';
 export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
-export { CONFIRM_WINDOW_MS, enforceContracts, findViolations, attachConfirmations } from './js/components.js';
+export {
+    ARM_EVENT as CONFIRM_ARM_EVENT,
+    CONFIRM_WINDOW_MS,
+    DISARM_EVENT as CONFIRM_DISARM_EVENT,
+    EXEMPT as CONTRACT_EXEMPT,
+    VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT,
+    attachConfirmations,
+    enforceContracts,
+    findViolations,
+} from './js/components.js';
 export {
     Accordion,
     Breadcrumb,
@@ -21,7 +30,10 @@ export {
     Tooltip,
 } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
-export { attachThemePickers, themeMenuMarkup } from './js/theme-picker.js';
+export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
+export { CheckIcon, PaletteIcon } from './components/theme-switcher.jsx';
+export { attachAll } from './js/auto.js';
+export { NO_FLASH_SNIPPET, THEME_ATTRIBUTE, applyStoredTheme, noFlashSnippet } from './js/no-flash.js';
 export { default as Combobox } from './components/combobox.jsx';
 export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
 export { OPTION_SELECTOR, createListbox, subsequence } from './js/listbox.js';

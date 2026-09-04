@@ -178,8 +178,3 @@ export function setProgress(item, percent) {
     item.style.setProperty('--kp-progress', `${value}%`);
     /** @type {HTMLElement | null} */ (item.querySelector('[role="progressbar"]'))?.setAttribute('aria-valuenow', String(value));
 }
-
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => attachUploads());
-    else attachUploads();
-}

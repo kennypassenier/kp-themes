@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>Theme picker — both channels</title>
@@ -37,21 +37,14 @@
         </section>
 
         <script type="module">
-            import { THEMES } from '/js/theme-registry.js';
+            // Grouped light and dark, from the module, so this page cannot
+            // disagree with the tokens about which is which [TH63].
+            const { attachThemePickers, themeOptionsMarkup } = await import('/js/theme-picker.js');
+            document.getElementById('plain').innerHTML = themeOptionsMarkup();
 
-            const host = document.getElementById('plain');
-            for (const t of THEMES) {
-                const b = document.createElement('button');
-                b.type = 'button';
-                b.dataset.kpTheme = t.name;
-                b.innerHTML = `<span class="kp-swatch" data-theme="${t.name}"></span>`;
-                b.append(t.label);
-                host.append(b);
-            }
-
-            // Imported after the options exist, because attaching on import
-            // is this channel's whole contract.
-            await import('/js/theme-picker.js');
+            // Pure since 3.0.0 [KT6]: the module attaches nothing on import.
+            // The consumer calls attach once the options exist.
+            attachThemePickers();
         </script>
         <script type="module" src="/tests/fixtures/.build/react-mount.js"></script>
     </body>

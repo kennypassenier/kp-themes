@@ -109,6 +109,10 @@
  * @property {string} themePicker
  * @property {string} themeSaveFailed
  * @property {string} themeSaveRefused
+ * @property {string} contractDestructive
+ * @property {string} contractSemantic
+ * @property {string} themeGroupLight
+ * @property {string} themeGroupDark
  */
 
 /**
@@ -196,6 +200,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     themePicker: 'Choose a theme',
     themeSaveFailed: 'This choice will not be remembered — storage is blocked in this browser.',
     themeSaveRefused: 'Not saved on the server — your choice has been put back.',
+    /** The two contract violations enforceContracts reports [DI10, DI4]. */
+    contractDestructive:
+        'A destructive action must offer an undo (data-kp-undo) or a confirmation (data-kp-confirm="phrase"). SC 3.3.4 accepts either; it accepts neither of them missing.',
+    contractSemantic: 'A control carrying a semantic colour must also say what it means: colour is never the only carrier.',
+    /** The two sections of a grouped theme picker [TH63]. */
+    themeGroupLight: 'Light',
+    themeGroupDark: 'Dark',
 });
 
 /**
@@ -281,6 +292,11 @@ export const STRINGS_NL = Object.freeze({
     themePicker: 'Thema kiezen',
     themeSaveFailed: 'Deze keuze wordt niet onthouden — opslag is geblokkeerd in deze browser.',
     themeSaveRefused: 'Niet bewaard op de server — je keuze is teruggezet.',
+    contractDestructive:
+        'Een destructieve actie moet een undo (data-kp-undo) of een bevestiging (data-kp-confirm="zin") bieden. SC 3.3.4 aanvaardt beide; het aanvaardt niet dat beide ontbreken.',
+    contractSemantic: 'Een element met een semantische kleur moet ook in woorden zeggen wat het betekent: kleur is nooit de enige drager.',
+    themeGroupLight: 'Licht',
+    themeGroupDark: 'Donker',
 });
 
 /** @type {Strings} */

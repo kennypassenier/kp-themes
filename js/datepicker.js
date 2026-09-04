@@ -294,8 +294,3 @@ export function attachDatePickers(root = document) {
         for (const c of cleanups) c();
     };
 }
-
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => attachDatePickers());
-    else attachDatePickers();
-}
