@@ -18,9 +18,13 @@
 /* The showcase's own furniture — inlined into both generated
                pages so a fixture is one file plus the package's stylesheets.
                Everything here reads tokens; nothing here is a colour. */
+/* No font-family here on purpose. It used to carry one, which meant the
+ * per-theme fixture pages set their own body face — so the TH12 test
+ * measured this file rather than the package, and went on passing with
+ * the package's own rule deleted. The face comes from css/_rules.css now,
+ * which is the thing a consumer installs. */
 body {
     margin: 0;
-    font-family: var(--theme-font-body, system-ui, sans-serif);
     line-height: 1.5;
 }
 

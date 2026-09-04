@@ -144,6 +144,15 @@ export { THEMES };
  * @returns {string}
  */
 export function themeMenuMarkup({ id = 'kp-theme-menu', label = 'Thema kiezen' } = {}) {
+    // Calling this means markup is about to be inserted, and the attach
+    // that ran on import has already been and gone. Without this line the
+    // natural usage — import the helper, set innerHTML — produces a menu
+    // that opens and does nothing, which is what the first field test
+    // found. Attaching is idempotent, so scheduling one more costs
+    // nothing and removes a trap that only documentation was guarding.
+    // Guarded on `document` as well: the showcase generator calls this in
+    // Node, where there is nothing to attach to.
+    if (typeof document !== 'undefined' && typeof queueMicrotask === 'function') queueMicrotask(() => attachThemePickers());
     const options = THEMES.map(
         (t) =>
             `<li><button type="button" data-kp-theme="${t.name}">` + `<span class="kp-swatch" data-theme="${t.name}"></span>${t.label}</button></li>`,

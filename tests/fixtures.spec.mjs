@@ -98,5 +98,36 @@ for (const theme of THEMES) {
             const decoration = await page.evaluate(() => getComputedStyle(document.querySelector('[data-specimen="links"] a')).textDecorationLine);
             expect(decoration).toContain('underline');
         });
+
+        test('the theme applies its own typefaces [TH12]', async ({ page }) => {
+            await page.goto(url);
+            // Declared since the extraction, applied by exactly one rule
+            // until the first field test served a vendored copy and got
+            // the browser's default serif back. Both faces are read now,
+            // and the fallback is a sane stack rather than whatever the
+            // browser picked in 1996.
+            const faces = await page.evaluate(() => {
+                const root = getComputedStyle(document.documentElement);
+                const first = (stack) =>
+                    stack
+                        .split(',')[0]
+                        .trim()
+                        .replace(/^["']|["']$/g, '');
+                return {
+                    body: first(getComputedStyle(document.body).fontFamily),
+                    bodyToken: first(root.getPropertyValue('--theme-font-body')),
+                    heading: first(getComputedStyle(document.querySelector('h2')).fontFamily),
+                    headingToken: first(root.getPropertyValue('--theme-font-display') || root.getPropertyValue('--theme-font-body')),
+                };
+            });
+            // Asserting the face the theme names, not the absence of a
+            // serif: the first version of this test forbade /serif$/,
+            // which matches the tail of "sans-serif" and so failed every
+            // theme but terminal.
+            expect(faces.bodyToken.length).toBeGreaterThan(0);
+            expect(faces.body).toBe(faces.bodyToken);
+            expect(faces.heading).toBe(faces.headingToken);
+            expect(faces.body).not.toMatch(/^Times/i);
+        });
     });
 }

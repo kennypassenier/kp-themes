@@ -3,3 +3,4 @@ tests/fixtures/.build/
 test-results/
 playwright-report/
 SHA256SUMS
+*.tgz
