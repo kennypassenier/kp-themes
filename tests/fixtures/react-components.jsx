@@ -19,6 +19,7 @@ import DataTable from '../../components/datatable.jsx';
 import { Form, FormField } from '../../components/form.jsx';
 import { Reorder, SplitPane, Tree } from '../../components/structure.jsx';
 import { DatePicker, Upload, Wizard } from '../../components/flow.jsx';
+import { ColorPicker, GridLayout } from '../../components/canvas.jsx';
 import DecipherText from '../../fx/decipher-text.jsx';
 import ScrambleNumber from '../../fx/scramble-number.jsx';
 import { useState } from 'react';
@@ -91,6 +92,17 @@ function Cases() {
                         { value: 'appel', label: 'Appel' },
                         { value: 'banaan', label: 'Banaan' },
                         { value: 'citroen', label: 'Citroen' },
+                    ]}
+                />
+            </div>
+            <div data-test="react-color">
+                <ColorPicker />
+            </div>
+            <div data-test="react-grid">
+                <GridLayout
+                    tiles={[
+                        { id: 'cpu', label: 'CPU', x: 0, y: 0, w: 2, h: 1 },
+                        { id: 'ram', label: 'RAM', x: 2, y: 0, w: 2, h: 1 },
                     ]}
                 />
             </div>
