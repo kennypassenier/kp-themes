@@ -231,6 +231,22 @@ gap is known.
 ↳ *provenance marker = a note at the top of a copied file saying where it
 came from, which version it is, and when it was copied.*
 
+**S19 · The package does not prescribe how it is consumed.** kp-themes
+ships files — colours, CSS, components, a machine-readable token file —
+and each project arranges for itself how it takes them in: a copy, a git
+reference, or something else. That arrangement is made in that project's
+own conversation, not here. kp-themes guarantees only that what it
+publishes is recognisable and verifiable: a version number, a provenance
+line, and a checksum with every release.
+
+*Added by the mini-round of 2026-09-04*, when Kenny dropped JobTracker's
+build step as a supported path and decided this package publishes to npm
+at all. A large share of the scope's complexity came from that single
+route — a setting consumers had to add, a rule Tailwind needed, a bot
+following versions nobody had ever seen work. All of it falls away, and
+what remains matches what was already happening: two of the three
+consumers copied the file anyway.
+
 ## Ratification and structure
 
 **S17 · The inherited base is approved; the picker is not.** Approved for
@@ -280,10 +296,14 @@ The public names a consumer uses to address this package keep working.
   correction C1: a private git dependency cannot be fetched from CI or an
   image build. Consequence accepted: this code and these colours are
   public.
-- **Consumers need `allow-git=all`** in their `.npmrc`; `root` covers only
-  the root package, and JobTracker's dashboard sits one level deeper.
-- **Tailwind consumers must declare this package as a `@source`**, or
-  Tailwind discards the theme classes as unused.
+- ~~Consumers need `allow-git=all` in their `.npmrc`.~~ **Dropped by the
+  mini-round of 2026-09-04**: nothing is fetched over npm any more, so the
+  setting has nothing to permit.
+- ~~Tailwind consumers must declare this package as a `@source`.~~
+  **Dropped by the same mini-round**: that rule existed because Tailwind
+  does not scan `node_modules`. A copy living inside the consumer's own
+  project is scanned, so the problem disappears with the mechanism. The
+  Tailwind binding file itself stays and is still useful.
 - **All artefact text is English** — code, comments, commits, docs.
 - **The framework-free layer works without a bundler**, loadable with a
   plain `<script>` tag.
@@ -300,12 +320,16 @@ the dark set, and kyu had the wrong count. Verified during the gate in
 `hooks/use-theme.js`: `THEME_META` marks exactly three themes dark — dark,
 cyberpunk, terminal.
 
-**S10 · A version bump triggers a contrast check that reaches every
-current consumer** — JobTracker through npm and CI, and the vendoring
-consumers Almanac and kyu through a mechanism that works against a copied
-CSS file rather than an installed package. Under S3 that mechanism is a
-staleness check for the vendoring consumers, and the release-time
-guarantee for everyone.
+**S10 · Every release is demonstrably checked before it gets a version
+number, and carries a checksum with which any project can verify that its
+copy belongs to that release.** How a project performs that verification
+is that project's own business.
+
+*Amended by the mini-round of 2026-09-04.* The original criterion promised
+something about other people's projects — "JobTracker through npm and CI"
+— which was never verifiable from here. The new one promises only what
+this package can deliver and prove, which is the same separation S3 made
+when the contrast guarantee moved to the source.
 
 ## Open questions carried into Phase 1 and 2
 

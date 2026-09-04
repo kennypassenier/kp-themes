@@ -116,7 +116,7 @@ dark themes where there are three.
 
 | ID | Decision |
 | --- | --- |
-| M1 | Distribution stays a git tag plus a checksum. At the first tag, check whether Dependabot actually opens a bump PR in JobTracker — never yet observed. |
+| M1 | Distribution stays a git tag plus a checksum. **Amended 2026-09-04:** the Dependabot measurement is closed unmeasured — there is no longer a dependency for it to follow (S19). |
 | M2 | No ecosystem integration, deliberately. kyu as a release channel was the one real candidate; both vendoring consumers sit on the same machine as this repository and Almanac already solves it locally. Revisit when a consumer moves to another machine. |
 | M3 | Git is the backup; GitHub is the copy; there is no runtime state. **No restore drill**, by Kenny's decision — the risk accepted is that a fresh clone has never been proven to build. |
 | M4 | The `localStorage` key stays `theme` as a pinned contract value, with an optional prefix so apps on one domain need not share a choice. |

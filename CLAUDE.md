@@ -35,12 +35,12 @@ reasoning. Discipline-enforced, not code-enforced. Full record:
 
 ## Procedure status
 
-| Field               | Value                                                             |
-| ------------------- | ----------------------------------------------------------------- |
-| Current phase       | 2 — Features, frozen 2026-09-04                                   |
-| Last completed gate | Phase 2 freeze, 2026-09-04 (35 features, 12 invariants, 4 rounds) |
-| Next gate           | Phase 3 tech choice                                               |
-| AFK mode            | off                                                               |
+| Field               | Value                                                         |
+| ------------------- | ------------------------------------------------------------- |
+| Current phase       | 3 — Tech choice, decided 2026-09-04                           |
+| Last completed gate | Phase 3 decision, 2026-09-04 (T1-T9), plus the npm mini-round |
+| Next gate           | Phase 4 architecture, after the architecture-critic pass      |
+| AFK mode            | off                                                           |
 
 Phase 2 closed on 2026-09-04: `docs/FEATURES.md` holds the frozen list —
 29 essential, 2 desired, 3 later, 1 declined — with the test bars agreed at
@@ -66,17 +66,18 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 
 ## Project documents
 
-| Doc                              | Purpose                                                  |
-| -------------------------------- | -------------------------------------------------------- |
-| README.md                        | how to consume the package, tokens, provenance           |
-| HANDOFF.md                       | start prompt for a procedure session (Dutch)             |
-| docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                  |
-| docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                 |
-| docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)    |
-| docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                 |
-| docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups         |
-| docs/CORRECTIONS.md              | live-found faults and their approved measures            |
-| docs/MINI_ROUNDS.md              | open measurements and mini-rounds                        |
-| docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                 |
-| docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)   |
-| docs/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02) |
+| Doc                              | Purpose                                                   |
+| -------------------------------- | --------------------------------------------------------- |
+| README.md                        | how to consume the package, tokens, provenance            |
+| HANDOFF.md                       | start prompt for a procedure session (Dutch)              |
+| docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                   |
+| docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                  |
+| docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)     |
+| docs/ARCHITECTURE_DECISIONS.md   | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
+| docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                  |
+| docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups          |
+| docs/CORRECTIONS.md              | live-found faults and their approved measures             |
+| docs/MINI_ROUNDS.md              | open measurements and mini-rounds                         |
+| docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                  |
+| docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
+| docs/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |
