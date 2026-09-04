@@ -98,5 +98,21 @@ for (const theme of THEMES) {
             const decoration = await page.evaluate(() => getComputedStyle(document.querySelector('[data-specimen="links"] a')).textDecorationLine);
             expect(decoration).toContain('underline');
         });
+
+        test('the theme applies its own typefaces [TH12]', async ({ page }) => {
+            await page.goto(url);
+            // Declared since the extraction, applied by exactly one rule
+            // until the first field test served a vendored copy and got
+            // the browser's default serif back. Both faces are read now,
+            // and the fallback is a sane stack rather than whatever the
+            // browser picked in 1996.
+            const faces = await page.evaluate(() => ({
+                body: getComputedStyle(document.body).fontFamily,
+                heading: getComputedStyle(document.querySelector('h2')).fontFamily,
+            }));
+            expect(faces.body).not.toMatch(/Times|serif$/i);
+            expect(faces.heading).not.toMatch(/Times/i);
+            expect(faces.body.length).toBeGreaterThan(0);
+        });
     });
 }

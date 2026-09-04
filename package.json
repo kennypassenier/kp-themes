@@ -32,16 +32,19 @@
         "hooks",
         "components",
         "fx",
+        "js",
         "css",
-        "gates",
         "themes",
+        "gates",
+        "ha",
         "docs",
-        "README.md"
+        "README.md",
+        "MIGRATION.md"
     ],
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:types && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -56,7 +59,8 @@
         "check:types": "tsc --noEmit -p jsconfig.json",
         "check:layers": "node gates/check-layers.mjs",
         "generate:ha": "node gates/generate-ha-themes.mjs",
-        "check:ha": "node gates/generate-ha-themes.mjs --check"
+        "check:ha": "node gates/generate-ha-themes.mjs --check",
+        "check:package": "node gates/check-package.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",

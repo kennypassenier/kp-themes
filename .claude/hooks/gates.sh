@@ -44,6 +44,9 @@ node gates/generate-showcase.mjs --check
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 
+echo "→ everything the package exports is actually published"
+node gates/check-package.mjs
+
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 

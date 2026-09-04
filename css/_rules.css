@@ -79,11 +79,32 @@ body::after {
     --fx-texture-opacity: 0.06;
 }
 
+/* The typefaces the theme declares [TH12].
+ *
+ * Every theme has declared --theme-font-body and --theme-font-display
+ * since the extraction, and until now exactly one rule read either of
+ * them: formal's headings. A consumer who vendors this stylesheet and
+ * writes plain HTML therefore got the browser's default serif — found on
+ * 2026-09-04 by the first field test, where a page served the way kyu and
+ * almanac serve theirs came back in Times New Roman.
+ *
+ * The fallbacks matter as much as the tokens: a vendoring consumer may
+ * not load the webfonts, and a theme should degrade to a sane stack
+ * rather than to whatever the browser picked in 1996. */
+body {
+    font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--theme-font-display, var(--theme-font-body, ui-sans-serif, system-ui, sans-serif));
+}
+
 /* ── Theme flourishes ─────────────────────────────────────────────── */
 
 [data-theme='formal'] h1,
 [data-theme='formal'] h2 {
-    font-family: var(--theme-font-display);
     letter-spacing: -0.01em;
 }
 
