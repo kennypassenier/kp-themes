@@ -35,7 +35,9 @@
         "./js/structure": "./js/structure.js",
         "./js/datepicker": "./js/datepicker.js",
         "./js/upload": "./js/upload.js",
-        "./js/wizard": "./js/wizard.js"
+        "./js/wizard": "./js/wizard.js",
+        "./js/contrast": "./js/contrast.js",
+        "./js/colorpicker": "./js/colorpicker.js"
     },
     "types": "./index.d.ts",
     "files": [

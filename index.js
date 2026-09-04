@@ -39,6 +39,8 @@ export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
 export { Form, FormField } from './components/form.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';
 export { DatePicker, Upload, Wizard } from './components/flow.jsx';
+export { COLOR_EVENT, attachColorPickers } from './js/colorpicker.js';
+export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';
 export {
     DEFAULT_THEME,
     STORAGE_KEY,

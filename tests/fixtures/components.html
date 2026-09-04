@@ -122,6 +122,27 @@
             </div>
         </section>
 
+        <section id="plain-color">
+            <h2>Kleurkiezer, framework-free</h2>
+            <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background" data-test="plain-color">
+                <label class="kp-field__label" for="ch">Tint</label>
+                <input id="ch" type="range" data-kp-channel="h" min="0" max="360" value="220" data-test="plain-color-h" />
+                <label class="kp-field__label" for="cs">Verzadiging</label>
+                <input id="cs" type="range" data-kp-channel="s" min="0" max="100" value="90" />
+                <label class="kp-field__label" for="cl">Helderheid</label>
+                <input id="cl" type="range" data-kp-channel="l" min="0" max="100" value="56" data-test="plain-color-l" />
+                <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                <output class="kp-colorpicker__value" data-kp-colorpicker-value data-test="plain-color-value"></output>
+                <p
+                    class="kp-colorpicker__contrast"
+                    data-kp-colorpicker-contrast
+                    role="status"
+                    aria-live="polite"
+                    data-test="plain-color-contrast"
+                ></p>
+            </div>
+        </section>
+
         <section id="plain-flow">
             <h2>Upload en wizard, framework-free</h2>
             <div class="kp-upload" data-kp-upload data-kp-max-bytes="1024" data-test="plain-upload">
@@ -346,6 +367,7 @@
         <script type="module" src="/js/datepicker.js"></script>
         <script type="module" src="/js/upload.js"></script>
         <script type="module" src="/js/wizard.js"></script>
+        <script type="module" src="/js/colorpicker.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state

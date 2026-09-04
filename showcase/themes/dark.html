@@ -292,6 +292,11 @@ body {
                 <p class="sc-note">A health dot is never the only carrier; the diff sign has its own column so it survives without colour [TH52, TH53, TH54].</p>
                 <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> In orde</span> <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Let op</span> <span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Onbereikbaar</span><ol class="kp-timeline"><li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span><span><time class="kp-timeline__when">2026-09-04 14:07</time>Versie 1.1.0 uitgebracht</span></li><li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span><span><time class="kp-timeline__when">2026-09-04 12:27</time>Versie 1.0.0 uitgebracht</span></li></ol><span class="kp-copyable"><span class="kp-copyable__value" id="dark-token">a3f9-2b71</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="dark-token">Kopiëren</button></span><pre class="kp-diff"><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">1</span><span class="kp-diff__sign"> </span><span>--background: 0 0% 100%;</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">2</span><span class="kp-diff__sign">-</span><span>--primary: 220 90% 56%;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">2</span><span class="kp-diff__sign">+</span><span>--primary: 220 90% 48%;</span></span></pre>
             </section>
+            <section class="sc-specimen" id="dark-colour" data-specimen="colour">
+                <h3>Colour picker</h3>
+                <p class="sc-note">The number is the point: the same WCAG ratio the contrast gate uses, against THIS theme’s background [TH57].</p>
+                <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background"><label class="kp-field__label" for="dark-ch">Tint</label><input id="dark-ch" type="range" data-kp-channel="h" min="0" max="360" value="220" /><label class="kp-field__label" for="dark-cs">Verzadiging</label><input id="dark-cs" type="range" data-kp-channel="s" min="0" max="100" value="90" /><label class="kp-field__label" for="dark-cl">Helderheid</label><input id="dark-cl" type="range" data-kp-channel="l" min="0" max="100" value="56" /><span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span><output class="kp-colorpicker__value" data-kp-colorpicker-value></output><p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p></div>
+            </section>
             <section class="sc-specimen" id="dark-text" data-specimen="text">
                 <h3>Body text</h3>
                 <p class="sc-note">Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].</p>
@@ -305,5 +310,6 @@ body {
         <script type="module" src="../../js/datepicker.js"></script>
         <script type="module" src="../../js/structure.js"></script>
         <script type="module" src="../../js/patterns.js"></script>
+        <script type="module" src="../../js/colorpicker.js"></script>
     </body>
 </html>

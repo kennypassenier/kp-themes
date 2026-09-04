@@ -372,6 +372,22 @@ export const SPECIMENS = [
             `</pre>`,
     },
     {
+        id: 'colour',
+        title: 'Colour picker',
+        note: 'The number is the point: the same WCAG ratio the contrast gate uses, against THIS theme\u2019s background [TH57].',
+        html: (theme) =>
+            `<div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">` +
+            `<label class="kp-field__label" for="${theme}-ch">Tint</label>` +
+            `<input id="${theme}-ch" type="range" data-kp-channel="h" min="0" max="360" value="220" />` +
+            `<label class="kp-field__label" for="${theme}-cs">Verzadiging</label>` +
+            `<input id="${theme}-cs" type="range" data-kp-channel="s" min="0" max="100" value="90" />` +
+            `<label class="kp-field__label" for="${theme}-cl">Helderheid</label>` +
+            `<input id="${theme}-cl" type="range" data-kp-channel="l" min="0" max="100" value="56" />` +
+            `<span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>` +
+            `<output class="kp-colorpicker__value" data-kp-colorpicker-value></output>` +
+            `<p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p></div>`,
+    },
+    {
         id: 'text',
         title: 'Body text',
         note: 'Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].',

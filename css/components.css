@@ -1631,3 +1631,42 @@
     outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
     outline-offset: 4px;
 }
+
+/* --- Colour picker [TH57] -------------------------------------------- */
+
+.kp-colorpicker {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    max-width: 22rem;
+}
+
+.kp-colorpicker__swatch {
+    grid-column: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    /* A boundary, because a pale swatch on a pale card is otherwise an
+     * invisible square [DI4]. */
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kp-colorpicker__value {
+    grid-column: 2;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.8125rem;
+}
+
+.kp-colorpicker__contrast {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--destructive);
+    font-size: 0.8125rem;
+}
+
+/* The verdict is in the text; the colour is the second carrier, never the
+ * only one [DI4]. */
+.kp-colorpicker[data-kp-contrast-ok] .kp-colorpicker__contrast {
+    color: var(--muted-foreground);
+}
