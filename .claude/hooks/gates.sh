@@ -26,7 +26,7 @@ npx prettier --check .
 echo "→ token parity across the seven themes (TH22)"
 node gates/check-tokens.mjs
 
-echo "→ design invariants over the token source (DI1, DI3, DI4, DI6)"
+echo "→ design invariants over the token source (DI1, DI2, DI3, DI4, DI6)"
 node gates/check-invariants.mjs
 
 echo "→ contrast (WCAG AA over every declared pair)"
