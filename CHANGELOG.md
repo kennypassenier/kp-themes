@@ -1,5 +1,77 @@
 # Changelog
 
+## 1.1.0 — 2026-09-04
+
+Types, and the promise that a version does not move under you.
+
+**Everything here came from a consumer, on the day 1.0.0 shipped.**
+JobTracker adopted it and could not: the package carried no type
+declarations at all — no `types`, no `typings`, not one `.d.ts` — while
+the README, the user guide and the ecosystem entry all promised a `Theme`
+type. Their own code was clean; all seven errors were in ours.
+
+### The package ships types
+
+A `.d.ts` beside every entry point, generated from the JSDoc sources and
+held in step by a gate, the same contract as the stylesheets and the Home
+Assistant themes. `index.d.ts` is published too, which it would not have
+been: `files` named `index.js` as a file rather than a directory, so the
+main entry point would have arrived without types a second time. The gate
+found that before the release did.
+
+### `Theme` is the eleven names, not `string`
+
+It was `@typedef {string} Theme`, which meant the type promised something
+it did not deliver: `applyTheme('formeel')` type-checked and then fell
+back to `formal` at runtime. It is the generated union now.
+
+Only the OUTPUTS narrowed. What a function accepts stayed lenient —
+`storeTheme` and `initializeTheme` still take a plain string — because
+narrowing an input breaks a consumer that reads a theme out of config or a
+database, which is what JobTracker and kp-soft both do. Narrowing a return
+value cannot break anyone. Use `isTheme()` to narrow a string you hold.
+
+That change is why this is 1.1.0 rather than 1.0.1.
+
+### One real defect, found by a stricter compiler
+
+`tabs[index].focus()` in the tab-list keyboard handler had no guard. Under
+`noUncheckedIndexedAccess` it is a type error; in a browser it is a thrown
+`TypeError` that stops the key handler on an out-of-range index.
+
+### A gate that checks what a consumer gets
+
+`npm run check:types` type-checks OUR sources with OUR resolution — bundler,
+`noUncheckedIndexedAccess` off — and could never have seen this. The new
+gate packs the tarball and asserts that every published entry point carries
+a declaration inside it.
+
+It does not pretend to be a consumer's type checker. Two attempts to build
+that could not fail — the first fell back to the `.js` beside the missing
+`.d.ts`, the second because TypeScript 7 infers types from a dependency's
+JSDoc where JobTracker's compiler does not — and a check that cannot fail
+is the one thing this project has a rule against.
+
+### Documentation that matched the decisions
+
+The README still documented an npm setting and a Tailwind `@source` as
+requirements after both were struck, and still pinned `#v0.1.1`. It now
+says what this package is: a source, with one promise.
+
+**A released version of a theme never changes.** The token values of `dark`
+at v1.0.0 are its values at v1.0.0 forever; any change raises the version,
+including a correction of a value that is plainly wrong. Pin one and stop
+thinking about it. Every release carries a version number, a provenance
+line and `SHA256SUMS`, and that is the whole of what a consumer can rely on
+mechanically.
+
+Also: how to keep another framework's theme flag in step using the theme
+event, without a second list of which themes are dark — two consumers were
+found keeping one, and both had it wrong. And why a theme switch can look
+stuck in a browser that renders no frames.
+
+---
+
 ## 1.0.0 — 2026-09-04
 
 The first release of kp-themes as its own thing. v0.1.1 was the

@@ -77,7 +77,12 @@ export function attachTabs(root = document) {
                 const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
                 if (panel) panel.hidden = !selected;
             });
-            tabs[index].focus();
+            // Guarded because a caller computes this index. Found by
+            // JobTracker's stricter typecheck (KT4): with
+            // noUncheckedIndexedAccess an out-of-range index is a type
+            // error here, and in a browser it is a thrown TypeError that
+            // stops the key handler.
+            tabs[index]?.focus();
         };
 
         /** @param {KeyboardEvent} e */

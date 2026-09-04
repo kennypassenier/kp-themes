@@ -17,23 +17,55 @@ contrast, the design invariants, the flash threshold, reduced-motion
 guards, token parity, layer discipline, and whether the generated files
 still match their sources. A behaviour suite runs in Chromium and Firefox.
 
-Consumers: JobTracker (React), and kyu and almanac (framework-free, no npm
-step — they copy the stylesheet).
+Consumers: JobTracker and kp-soft (React, git dependency), kyu and almanac
+(framework-free — they copy the stylesheet).
 
 See it: <https://kennypassenier.github.io/kp-themes/>
 
+## What this is, and what it promises
+
+kp-themes is a **source**, not a service. It defines themes and builds
+components on them. That is the whole scope.
+
+**The one promise: a released version of a theme never changes** [S20]. The
+token values of `dark` at v1.0.0 are its values at v1.0.0 forever. Any
+change to a theme raises the version — a colour, a typeface, a motion
+token, no exceptions, not even for a value that is plainly wrong. That
+correction is a new version. Pin one and you can stop thinking about it.
+
+What comes with every release, and it is the whole of what you can rely on
+mechanically: a version number (the first line of each stylesheet), a
+provenance line, and `SHA256SUMS` over the ten files a consumer copies.
+
+**How you take it in is your business** [S19]. A copy, a git dependency,
+something else — that decision belongs in your project, and there is no
+sync command, adapter or per-consumer fixture here to make it for you. What
+you can do is ask: a component, a type, a token that is missing is a
+request this project takes, and 1.1.0 exists because JobTracker asked for
+declarations.
+
+What is NOT promised: the internals of the generated `css/themes.css` (read
+tokens, never the rules), the showcase, and the gates — those are this
+project's own tools.
+
 ## Install
 
-Private git dependency, pinned to a tag (no registry):
+As a git dependency, pinned to a tag:
 
 ```json
 "dependencies": {
-    "@kp-soft/themes": "github:kennypassenier/kp-themes#v0.1.1"
+    "@kp-soft/themes": "github:kennypassenier/kp-themes#v1.1.0"
 }
 ```
 
+Or copy the files you need and verify them against the release's
+`SHA256SUMS`. Both are in use.
+
 Peer dependencies: `react >= 19`; `motion >= 12` only if you use
 `BootSequence` from `@kp-soft/themes/fx`. Node 26 for the scripts.
+
+Types ship with the package: `.d.ts` beside every entry point since 1.1.0,
+and `Theme` is the union of the eleven names rather than `string`.
 
 ## Consume the CSS
 
@@ -320,26 +352,35 @@ IDs. Both were proved by making them fail; see `docs/REALIZATION_PLAN.md`.
 
 ## Installing from the git tag (npm 12)
 
+Only if you take the git-dependency route. A consumer that copies the
+files needs none of this.
+
 npm 12 refuses git dependencies unless the consumer opts in. Put this
 in the consumer's `.npmrc` (the setting accepts only `all`, `none`,
-`root`; `none` refuses). Use `all`, not `root`: `root` covers only the
-root package, so it does not reach a package declared inside a
-workspace — which is how JobTracker, the one npm consumer, declares it.
+`root`; `none` refuses):
 
 ```
 allow-git=all
 ```
+
+`root` is enough when the dependency is declared in the root package —
+kp-soft measured that on 2026-09-04. Use `all` when it is declared inside
+a workspace, which is how JobTracker declares it and why this said `all`
+without qualification until then.
 
 The package ships `.jsx` and `.js` sources for a bundler (Vite, esbuild);
 plain Node cannot import the `.jsx` files.
 
 ## Tailwind consumers: add the package as a source
 
-Tailwind v4 generates only the utility classes it finds in the sources it
-scans, and it does not scan `node_modules`. The `ThemeSwitcher` and the fx
-components carry utility classes (`size-9`, `inline-flex`, …), so a Tailwind
-consumer must declare the package as a source in its CSS entry, next to the
-imports:
+Only on the git-dependency route, for the same reason as above: Tailwind v4
+generates only the utility classes it finds in the sources it scans, and it
+does not scan `node_modules`. A copy living inside your own project is
+scanned, so this problem disappears with the mechanism.
+
+The `ThemeSwitcher` and the fx components carry utility classes (`size-9`,
+`inline-flex`, …), so a Tailwind consumer on that route must declare the
+package as a source in its CSS entry, next to the imports:
 
 ```css
 @import 'tailwindcss';

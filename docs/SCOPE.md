@@ -233,6 +233,28 @@ remains.
 ↳ *provenance marker = a note at the top of a copied file saying where it
 came from, which version it is, and when it was copied.*
 
+**S20 · A released version of a theme never changes** (Kenny,
+2026-09-04). This is the one promise kp-themes makes, and it is the
+reason a consumer can pin a version and stop thinking about it: the token
+values of `dark` at v1.0.0 are the token values of `dark` at v1.0.0
+forever. Any change to a theme — a colour, a font, a motion token — raises
+the version. Nothing is corrected in place, not even a value that is
+plainly wrong; that correction is a new version.
+
+What follows from it, and what deliberately does not:
+
+- kp-themes publishes a version number, a provenance line and a checksum
+  with every release. That is the whole of what a consumer can rely on
+  mechanically.
+- kp-themes does NOT build tooling for consumers — no sync command, no
+  adapter, no per-consumer fixture. Both this project and the projects
+  that use it are run by an LLM working from the latest version; a
+  consumer works out its own integration, and asking for something inside
+  our scope (a component, a type, a token) is the supported way to get it.
+- The scope stays what it was: define themes, and build components on
+  them. A request that is not one of those two is out of scope here, and
+  belongs in the project that wants it.
+
 **S19 · The package does not prescribe how it is consumed.** kp-themes
 ships files — colours, CSS, components, a machine-readable token file —
 and each project arranges for itself how it takes them in: a copy, a git

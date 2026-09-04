@@ -1,0 +1,20 @@
+{
+    "//": "A consumer's eyes [KT4]. NodeNext resolution and noUncheckedIndexedAccess, the two settings that differ from the package's own jsconfig.json and that hid the missing declarations. It resolves the package through node_modules from a packed tarball, NOT through a paths mapping into the source tree: that first version passed with every declaration deleted, because TypeScript fell back to the .js beside them.",
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "types": ["node", "react"]
+    },
+    "include": ["consumer.js"]
+}

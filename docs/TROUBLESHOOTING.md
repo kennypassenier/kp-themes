@@ -72,6 +72,22 @@ popover needs a matching `position-anchor`; both are set by the React
 they are set and it still happens, the browser is older than the baseline
 — `tests/baseline.spec.mjs` names the four features this package needs.
 
+### The tokens change but the page does not
+
+Not a defect in the package, and the reason is worth knowing before you go
+looking for one. Reported by kp-soft on 2026-09-04 while driving a theme
+switch from a browser pane that was not compositing frames: the custom
+properties were already correct, and `getComputedStyle(document.body)`
+kept returning the *previous* theme's background indefinitely.
+
+The body carries a cross-fade between themes, and a transition does not
+advance in a page that renders no frames. Nothing is stuck; the animation
+simply never runs. Setting `transition: none` on the body produced the
+right colour immediately.
+
+So: when a measurement says the tokens moved and the paint did not, check
+whether the thing doing the measuring is actually rendering.
+
 ### Colours look right but the scrollbars are light on a dark theme
 
 `color-scheme` is not reaching the browser. `css/themes.css` carries

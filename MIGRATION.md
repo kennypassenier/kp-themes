@@ -9,6 +9,24 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 1.0.0 to 1.1.0
+
+Nothing below applies to you: 1.1.0 breaks nothing. Two things change and
+both only add.
+
+**Types ship now.** A `.d.ts` beside every entry point. If you wrote your
+own declarations for this package, delete them — kp-soft did exactly that
+on 2026-09-04 and recorded it as temporary for this reason.
+
+**`Theme` is the union of the eleven names**, where it was `string`. It can
+only turn code red that was already wrong: `applyTheme('formeel')` used to
+type-check and fall back to `formal`. What a function accepts is unchanged
+— `storeTheme` and `initializeTheme` still take a plain string — so a theme
+read out of config or a database still passes. Narrow it with `isTheme()`
+where you want the guarantee.
+
+---
+
 ## 1 · `THEME_META` is gone → `THEME_RECORDS`
 
 It carried each theme's label, dark flag, background, foreground and
