@@ -15,6 +15,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { leakedColours } from './check-layers.mjs';
+import { SHORTEST_THEME_DURATION_MS } from './check-motion.mjs';
 import { execFileSync } from 'node:child_process';
 import process from 'node:process';
 import {
@@ -52,7 +53,11 @@ function motionVerdicts() {
         const frames = parseOpacityKeyframes(source);
         for (const a of animations(source)) {
             const stops = frames.get(a.name);
-            if (stops) flash.push(flashesPerSecond(stops, a.durationMs) <= 3);
+            if (!stops) continue;
+            // A calc() duration is bounded by the shortest any theme
+            // declares; the motion gate does the same arithmetic and is
+            // where the number lives.
+            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS) <= 3);
         }
         guard.push(unguardedMotion(source).length === 0);
     }

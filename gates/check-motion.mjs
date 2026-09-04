@@ -18,6 +18,15 @@ import process from 'node:process';
 const MAX_FLASHES_PER_SECOND = 3;
 const LUMINANCE_STEP = 0.1;
 
+/**
+ * The shortest --fx-duration any theme declares. An animation whose
+ * duration is a calc() over that token is bounded by this, so the gate
+ * measures the worst case rather than giving up.
+ */
+export const SHORTEST_THEME_DURATION_MS = Math.min(
+    ...[...readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8').matchAll(/--fx-duration:\s*([\d.]+)ms/g)].map((m) => Number(m[1])),
+);
+
 // components.css joined this list the moment it grew an animation. A
 // motion gate that reads two of three stylesheets reports green over the
 // one it does not read.
@@ -36,6 +45,10 @@ const OUT_OF_SCOPE = {
     'fx-rgb-split': 'drop-shadow offsets on a single text element; the colours do not change, only their position',
     'fx-cellflash': 'text colour and shadow on one cell, one iteration of 200ms',
     'kp-spin': 'a rotation: no luminance change at all',
+    'kp-rule-in': 'a horizontal scale on a 1px rule; no luminance change and nothing over 341x256 px',
+    'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
+    'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
+    'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */
@@ -87,13 +100,28 @@ export function flashesPerSecond(stops, durationMs) {
     return opposing / (durationMs / 1000);
 }
 
-/** Every `animation:` shorthand, with the keyframe name and its duration. */
+/**
+ * Every `animation:` shorthand, with the keyframe name and its duration.
+ *
+ * The duration may be a calc() — `calc(var(--fx-duration) * 3)` — and the
+ * first version of this matched a literal number only, so three
+ * animations with computed durations were not skipped with a reason:
+ * they were not seen at all. An unreadable duration now comes back as
+ * null, and the runner measures the worst case rather than ignoring it.
+ *
+ * @param {string} source
+ * @returns {{name: string, durationMs: number | null, duration: string}[]}
+ */
 /** @param {string} source */
 export function animations(source) {
-    return [...source.matchAll(/animation:\s*([\w-]+)\s+([\d.]+)(m?s)/g)].map((m) => ({
-        name: m[1],
-        durationMs: m[3] === 's' ? Number(m[2]) * 1000 : Number(m[2]),
-    }));
+    return [...source.matchAll(/animation:\s*([\w-]+)\s+([^;]+);/g)].map((m) => {
+        const literal = m[2].match(/^\s*([\d.]+)(m?s)/);
+        return {
+            name: m[1],
+            durationMs: literal ? (literal[2] === 's' ? Number(literal[1]) * 1000 : Number(literal[1])) : null,
+            duration: m[2].trim(),
+        };
+    });
 }
 
 /** DI7: no transition or animation outside a reduced-motion guard. */
@@ -160,6 +188,22 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
         for (const anim of animations(source)) {
             const stops = frames.get(anim.name);
+            if (stops && anim.durationMs === null) {
+                // It changes opacity and the gate cannot tell how fast.
+                // The worst case is the shortest duration any theme
+                // declares, so the flash rate is bounded by that.
+                const shortest = SHORTEST_THEME_DURATION_MS;
+                checked++;
+                const rate = flashesPerSecond(stops, shortest);
+                if (rate > MAX_FLASHES_PER_SECOND) {
+                    failed++;
+                    console.error(
+                        `${name}: ${anim.name} has a computed duration (${anim.duration}) and would make ${rate.toFixed(1)} ` +
+                            `opposing luminance changes per second at the shortest duration any theme declares (${shortest}ms).`,
+                    );
+                }
+                continue;
+            }
             if (!stops) {
                 if (OUT_OF_SCOPE[anim.name] === undefined) {
                     failed++;
@@ -173,7 +217,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 continue;
             }
             checked++;
-            const rate = flashesPerSecond(stops, anim.durationMs);
+            // Reached only when the duration is a literal: the computed
+            // case is handled above and returns before here.
+            const rate = flashesPerSecond(stops, anim.durationMs ?? SHORTEST_THEME_DURATION_MS);
             if (rate > MAX_FLASHES_PER_SECOND) {
                 failed++;
                 console.error(

@@ -139,9 +139,12 @@ body {
    the kind of motion someone turns that setting on to avoid. */
 @media (prefers-reduced-motion: no-preference) {
     body {
+        /* Twice the theme's own duration: a full-page sweep should be
+         * slower than a button, but it is still the incoming theme that
+         * decides how it arrives. Terminal snaps, sepia drifts. */
         transition:
-            background-color 400ms ease,
-            color 400ms ease;
+            background-color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease),
+            color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease);
     }
 }
 
@@ -320,5 +323,143 @@ textarea:invalid {
         content: ' (' attr(href) ')';
         font-size: 0.85em;
         word-break: break-all;
+    }
+}
+
+/* ------------------------------------------------------------------
+   One signature per theme [HA2].
+
+   Kenny's brief: motion should give a theme extra flavour, and a formal
+   theme should be more careful with it than cyberpunk. "Less is more,
+   but not always."
+
+   So each theme gets exactly one gesture of its own, and three of them
+   answer "none" on purpose — that is a character too. Everything here
+   sits inside a reduced-motion guard, and none of it opposes its own
+   direction fast enough to approach the flash threshold; check-motion.mjs
+   measures both and reads this file.
+
+   Cyberpunk is absent: it already has a whole register of its own, which
+   is its signature.
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* formal — an editorial rule that draws itself under a heading.
+       Nothing moves; a line arrives. */
+    [data-theme='formal'] h1::after,
+    [data-theme='formal'] h2::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-start: 0.35rem;
+        background: var(--border-strong);
+        animation: kp-rule-in calc(var(--fx-duration) * 3) var(--fx-ease) both;
+    }
+
+    /* light and dark — the restrained pair. Their signature is that a
+       raised surface lifts under the cursor, which --fx-lift already
+       carries; nothing is added here. */
+
+    /* pastel — the only theme that overshoots. A badge arrives with a
+       small bounce, which its easing does for free. */
+    [data-theme='pastel'] .kp-badge {
+        animation: kp-settle var(--fx-duration) var(--fx-ease) both;
+    }
+
+    /* terminal — a block cursor after a heading, blinking the way a
+       terminal's does. One opposing change per second: well under the
+       three the flash threshold allows. */
+    [data-theme='terminal'] h1::after,
+    [data-theme='terminal'] h2::after {
+        content: '\2588';
+        margin-inline-start: 0.15em;
+        color: var(--primary);
+        animation: kp-blink 1000ms steps(1, end) infinite;
+    }
+
+    /* topo — the contour layer drifts, slowly enough to read as weather
+       rather than as motion. 40 seconds for one pass. */
+    [data-theme='topo'] body::before {
+        animation: kp-drift 40s linear infinite;
+    }
+
+    /* blueprint — a ruled line that extends across a heading, drawn at
+       constant speed because a tool does not ease. */
+    [data-theme='blueprint'] h1::after,
+    [data-theme='blueprint'] h2::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-start: 0.4rem;
+        background: var(--primary);
+        animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
+    }
+
+    /* solstice — an ember: the primary colour warms and cools once when a
+       card appears. Slow, small, and never repeated. */
+    [data-theme='solstice'] [data-slot='card'] {
+        animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
+    }
+
+    /* sepia and high-contrast have no signature, deliberately. Sepia is
+       the restful theme and high-contrast is the accessible one; in both,
+       a gesture would be working against the reason the theme exists. */
+}
+
+@keyframes kp-rule-in {
+    from {
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    to {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+}
+
+@keyframes kp-settle {
+    from {
+        transform: scale(0.92);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes kp-blink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes kp-drift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 360px 360px;
+    }
+}
+
+@keyframes kp-ember {
+    0% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    40% {
+        box-shadow: 0 0 12px 0 var(--primary);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
     }
 }

@@ -112,6 +112,7 @@ const EXEMPT = {
         'a decorative second ink, drawn at 40% alpha behind a heading that carries its own --foreground; it is not a surface and nothing reads on it',
     'fx-scanline': 'a 1px line at 4% alpha across the texture layer; at that opacity it is a veil rather than a surface',
     'fx-notch': 'not a colour (a length)',
+    'fx-lift': 'not a colour (how far a thing moves when it moves; 0 is a real answer)',
     'fx-duration': 'not a colour',
     'fx-ease': 'not a colour',
 };

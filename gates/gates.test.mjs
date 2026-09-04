@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
-import { flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
+import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours } from './check-layers.mjs';
 
@@ -146,4 +146,18 @@ test('DI9: a colour written outside the token layer is caught', () => {
     assert.deepEqual(leakedColours('.a { border-color: hsl(from var(--primary) h s l / 0.5); }'), []);
     // A data URI carries its own little document; its fills are shapes.
     assert.deepEqual(leakedColours(`.a { background: url("data:image/svg+xml,%3Csvg fill='%23335544'%3E%3C/svg%3E"); }`), []);
+});
+
+test('a computed animation duration is read, not skipped', () => {
+    // Three animations with calc() durations shipped invisible to this
+    // gate for the length of one commit, because the parser matched a
+    // literal number only. The gate now reports a duration it cannot
+    // read, and the runner measures the worst case.
+    const [anim] = animations('.x { animation: kp-drill calc(var(--fx-duration) * 3) linear infinite; }');
+    assert.equal(anim.name, 'kp-drill');
+    assert.equal(anim.durationMs, null);
+    assert.match(anim.duration, /calc/);
+
+    const literal = animations('.x { animation: fx-flicker 2.2s steps(3) infinite; }');
+    assert.equal(literal[0].durationMs, 2200);
 });

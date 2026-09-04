@@ -88,6 +88,7 @@
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --fx-overprint: hsl(30, 40%, 88%);
     --fx-scanline: hsl(30, 40%, 88%);
+    --fx-lift: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
@@ -172,11 +173,12 @@
     --fx-signal: hsl(190, 80%, 40%);
     --fx-signal-foreground: hsl(190, 95%, 0%);
     --fx-notch: 0px;
-    --fx-duration: 180ms;
+    --fx-duration: 150ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(190, 80%, 92%);
     --fx-scanline: hsl(190, 80%, 92%);
+    --fx-lift: 2px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -261,11 +263,12 @@
     --fx-signal: hsl(190, 70%, 30%);
     --fx-signal-foreground: hsl(190, 85%, 100%);
     --fx-notch: 0px;
-    --fx-duration: 180ms;
+    --fx-duration: 150ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(226, 18%, 18%);
     --fx-scanline: hsl(226, 18%, 18%);
+    --fx-lift: 2px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
@@ -359,6 +362,7 @@
     --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
     --fx-overprint: hsl(180, 95%, 50%);
     --fx-scanline: hsl(190, 80%, 70%);
+    --fx-lift: 1px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(315, 95%, 64%);
@@ -443,11 +447,12 @@
     --fx-signal: hsl(150, 45%, 41%);
     --fx-signal-foreground: hsl(150, 60%, 0%);
     --fx-notch: 0px;
-    --fx-duration: 180ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-duration: 220ms;
+    --fx-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(200, 60%, 62%);
     --fx-scanline: hsl(150, 40%, 88%);
+    --fx-lift: 3px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
@@ -532,11 +537,12 @@
     --fx-signal: hsl(65, 90%, 22%);
     --fx-signal-foreground: hsl(65, 100%, 100%);
     --fx-notch: 2px;
-    --fx-duration: 180ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-duration: 90ms;
+    --fx-ease: steps(2, end);
     --theme-font-display: 'Share Tech Mono', ui-monospace, monospace;
     --fx-overprint: hsl(65, 90%, 50%);
     --fx-scanline: hsl(65, 90%, 50%);
+    --fx-lift: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -621,11 +627,12 @@
     --fx-signal: hsl(200, 45%, 49%);
     --fx-signal-foreground: hsl(200, 60%, 0%);
     --fx-notch: 0px;
-    --fx-duration: 180ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-duration: 200ms;
+    --fx-ease: cubic-bezier(0.33, 0, 0.15, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(24, 55%, 86%);
     --fx-scanline: hsl(24, 55%, 86%);
+    --fx-lift: 2px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
@@ -711,10 +718,11 @@
     --fx-signal-foreground: hsl(0, 0%, 100%);
     --fx-notch: 0px;
     --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear;
     --theme-font-display: 'Atkinson Hyperlegible', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(48, 100%, 50%);
     --fx-scanline: hsl(48, 100%, 50%);
+    --fx-lift: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(220, 100%, 30%);
@@ -799,11 +807,12 @@
     --fx-signal: hsl(24, 60%, 40%);
     --fx-signal-foreground: hsl(38, 55%, 97%);
     --fx-notch: 0px;
-    --fx-duration: 220ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-duration: 240ms;
+    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Instrument Serif', ui-serif, Georgia, serif;
     --fx-overprint: hsl(24, 40%, 70%);
     --fx-scanline: hsl(30, 40%, 80%);
+    --fx-lift: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 55%, 32%);
@@ -889,10 +898,11 @@
     --fx-signal-foreground: hsl(215, 70%, 10%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear;
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --fx-overprint: hsl(190, 60%, 40%);
     --fx-scanline: hsl(190, 70%, 70%);
+    --fx-lift: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(190, 80%, 62%);
@@ -978,10 +988,11 @@
     --fx-signal-foreground: hsl(24, 60%, 10%);
     --fx-notch: 0px;
     --fx-duration: 240ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Instrument Serif', ui-serif, Georgia, serif;
     --fx-overprint: hsl(28, 60%, 40%);
     --fx-scanline: hsl(28, 70%, 60%);
+    --fx-lift: 1px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(28, 85%, 58%);
@@ -1142,9 +1153,12 @@ body {
    the kind of motion someone turns that setting on to avoid. */
 @media (prefers-reduced-motion: no-preference) {
     body {
+        /* Twice the theme's own duration: a full-page sweep should be
+         * slower than a button, but it is still the incoming theme that
+         * decides how it arrives. Terminal snaps, sepia drifts. */
         transition:
-            background-color 400ms ease,
-            color 400ms ease;
+            background-color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease),
+            color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease);
     }
 }
 
@@ -1323,5 +1337,143 @@ textarea:invalid {
         content: ' (' attr(href) ')';
         font-size: 0.85em;
         word-break: break-all;
+    }
+}
+
+/* ------------------------------------------------------------------
+   One signature per theme [HA2].
+
+   Kenny's brief: motion should give a theme extra flavour, and a formal
+   theme should be more careful with it than cyberpunk. "Less is more,
+   but not always."
+
+   So each theme gets exactly one gesture of its own, and three of them
+   answer "none" on purpose — that is a character too. Everything here
+   sits inside a reduced-motion guard, and none of it opposes its own
+   direction fast enough to approach the flash threshold; check-motion.mjs
+   measures both and reads this file.
+
+   Cyberpunk is absent: it already has a whole register of its own, which
+   is its signature.
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* formal — an editorial rule that draws itself under a heading.
+       Nothing moves; a line arrives. */
+    [data-theme='formal'] h1::after,
+    [data-theme='formal'] h2::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-start: 0.35rem;
+        background: var(--border-strong);
+        animation: kp-rule-in calc(var(--fx-duration) * 3) var(--fx-ease) both;
+    }
+
+    /* light and dark — the restrained pair. Their signature is that a
+       raised surface lifts under the cursor, which --fx-lift already
+       carries; nothing is added here. */
+
+    /* pastel — the only theme that overshoots. A badge arrives with a
+       small bounce, which its easing does for free. */
+    [data-theme='pastel'] .kp-badge {
+        animation: kp-settle var(--fx-duration) var(--fx-ease) both;
+    }
+
+    /* terminal — a block cursor after a heading, blinking the way a
+       terminal's does. One opposing change per second: well under the
+       three the flash threshold allows. */
+    [data-theme='terminal'] h1::after,
+    [data-theme='terminal'] h2::after {
+        content: '\2588';
+        margin-inline-start: 0.15em;
+        color: var(--primary);
+        animation: kp-blink 1000ms steps(1, end) infinite;
+    }
+
+    /* topo — the contour layer drifts, slowly enough to read as weather
+       rather than as motion. 40 seconds for one pass. */
+    [data-theme='topo'] body::before {
+        animation: kp-drift 40s linear infinite;
+    }
+
+    /* blueprint — a ruled line that extends across a heading, drawn at
+       constant speed because a tool does not ease. */
+    [data-theme='blueprint'] h1::after,
+    [data-theme='blueprint'] h2::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-start: 0.4rem;
+        background: var(--primary);
+        animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
+    }
+
+    /* solstice — an ember: the primary colour warms and cools once when a
+       card appears. Slow, small, and never repeated. */
+    [data-theme='solstice'] [data-slot='card'] {
+        animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
+    }
+
+    /* sepia and high-contrast have no signature, deliberately. Sepia is
+       the restful theme and high-contrast is the accessible one; in both,
+       a gesture would be working against the reason the theme exists. */
+}
+
+@keyframes kp-rule-in {
+    from {
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    to {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+}
+
+@keyframes kp-settle {
+    from {
+        transform: scale(0.92);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes kp-blink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes kp-drift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 360px 360px;
+    }
+}
+
+@keyframes kp-ember {
+    0% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    40% {
+        box-shadow: 0 0 12px 0 var(--primary);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
     }
 }

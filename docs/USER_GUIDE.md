@@ -258,6 +258,28 @@ screen reader through `aria-label`, whatever the glyphs are doing.
 `BootSequence` needs the optional `motion` peer; the other three need
 nothing.
 
+## How a theme moves
+
+A theme's handwriting is three tokens, and every transition in the package
+reads them rather than carrying its own number:
+
+| Token | What it decides |
+| --- | --- |
+| `--fx-duration` | how long anything takes — 90 ms in terminal, 240 ms in sepia and solstice |
+| `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
+| `--fx-lift` | how far a control rises under the cursor. Formal, sepia and high-contrast answer `0px`, which is a character rather than an omission |
+
+Each theme also has at most one gesture of its own: a rule that draws
+itself under a heading in formal, a blinking block cursor in terminal, a
+badge that settles in pastel, a drifting contour layer in topo, a ruled
+line in blueprint, an ember around a new card in solstice, and the whole
+register in cyberpunk. Sepia and high-contrast have none on purpose — in
+the restful theme and the accessible one, a gesture works against the
+reason the theme exists.
+
+All of it sits inside `prefers-reduced-motion: no-preference`, and the
+flash threshold is measured rather than assumed.
+
 ## Adding a theme
 
 1. `themes/<name>/tokens.json` — copy an existing one and change the
