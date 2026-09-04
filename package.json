@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "0.1.1",
+    "version": "1.0.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -39,7 +39,8 @@
         "ha",
         "docs",
         "README.md",
-        "MIGRATION.md"
+        "MIGRATION.md",
+        "CHANGELOG.md"
     ],
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
