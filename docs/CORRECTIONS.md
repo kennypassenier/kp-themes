@@ -180,3 +180,135 @@ shape does. Not needed.
 
 **9 · When we review the measure.** At this project's retrospective
 (Phase 10), against how often the floors actually stopped something.
+
+## KT3 · A browser test that could not fail, and a green report that was not measured
+
+Approved 2026-09-04, all nine fields "Correct".
+
+**1 · What went wrong.** One test, two faults, and the second is the
+serious one. The assertion `expect(faces.body).not.toMatch(/Times|serif$/i)`
+in `tests/fixtures.spec.mjs` could not pass: `sans-serif` ends in `serif`,
+so it failed in ten of the eleven themes and succeeded only in terminal,
+whose stack ends in `monospace`. Evidence: CI runs 33870661665 and
+33870268016, both `20 failed, 182 passed`, on the measured value
+`"Instrument Sans", ui-sans-serif, system-ui, sans-serif`.
+
+Underneath that, it could not have failed either. `showcase/showcase.css:9`
+set a `body { font-family }` of its own, and that stylesheet is inlined
+into every per-theme fixture page. The test measured the showcase's
+furniture, not the package. Evidence: with the package's own rule deleted
+from `css/_rules.css:95` — the file a consumer installs — the test ran
+`11 passed`.
+
+**2 · Which gate let it through.** Two, and the second is Claude.
+
+The drill rule did not reach here. In this project every gate is driven
+red before it is trusted, and that happened for all eleven: `npm test`
+runs checks explicitly named "a violation is caught". For the *browser
+tests* no such requirement existed, and this is the first one to need it.
+
+And the report claimed green without measuring. Claude presented "182
+browser tests in two browsers" as evidence at the release gate. Those 182
+were the passing part of a run with 20 red tests, and the suite had not
+been run at that commit — `npm run gates` deliberately excludes it (H1:
+the fast gates block a commit, the browser tests block a merge). Local
+green said nothing about the browser suite, and it was presented as one
+number anyway. That is KT1's fault in a new place: a checkable claim,
+not checked.
+
+**3 · Where else the same fault sits.** The fault is *a check whose
+subject is supplied by the check's own scaffolding*, which makes green a
+statement about the scaffolding.
+
+Measured on 2026-09-04: rules in `showcase/showcase.css` that target a
+bare element rather than a `.sc-` class — exactly one, the `body` of line
+9, which is this one. The other two fixture pages,
+`tests/fixtures/picker.html` and `components.html`, contain zero `<style>`
+blocks.
+
+The precedent weighs more. In Phase 7 a check was found waiting on
+`theme.tokens['link-visited']`, a token no theme declares; it could not
+fail either. Twice the same shape in one project, both found by happening
+to look. Not measured: whether each of the 202 browser tests guards
+something the package supplies — which is why field 4 proposes a
+mechanical measure rather than a promise to look harder.
+
+**4 · The measure.** Three parts, and the difference between them is
+marked on purpose.
+
+(a) Done. The showcase furniture no longer sets a body typeface; it comes
+from `css/_rules.css`. The test now asserts that the applied face is the
+face the theme names, and was driven red with that rule removed.
+`.sc-theme` keeps its `font-family`: that one is load-bearing, so each
+block shows its own theme's face.
+
+(b) The layer gate guards the scaffolding too. `gates/check-layers.mjs`
+already refuses colour outside the token layer (DI9) across five
+stylesheets; `showcase/showcase.css` was not among them. It is now, with
+one added rule: the scaffolding may not carry a bare-element selector. An
+exception is possible with its reason attached, the same shape as the
+three non-theme colours already listed there. `body` is listed, for
+`margin` and `line-height` only — furniture the package leaves to the
+consumer.
+
+(c) A browser test asserting "the package applies X" records its drill:
+one line saying what was removed and that it went red. For that kind of
+test, not for all 202.
+
+**5 · What the remedy costs.** (b) costs almost nothing: one more file in
+a list that already exists. The real risk is a false alarm — one day the
+showcase legitimately wants to style a bare `table` or `pre`. Hence the
+exception list with reasons, rather than a ban people route around by
+switching the gate off.
+
+(c) costs attention, and that is the expensive part. A drill means
+remove, run, restore, run again: four steps nobody sees when they go
+well. The failure mode is the comment arriving without the drill having
+happened, which is worse than no rule, because it suggests evidence where
+there is none.
+
+Against that: this fault cost a red CI just before a tag, and the
+previous one of the same shape was only found because someone happened to
+be in that file.
+
+**6 · Who enforces it.** (b) is code-enforced: the layer gate runs in
+`npm run gates`, so in the commit hook and in CI. (c) is
+discipline-enforced, written as such rather than dressed up as a
+guarantee — no hook can read whether a drill actually happened, only that
+a sentence is there. What helps is that the rule lives in this project's
+`CLAUDE.md`, which a next session reads on opening; that is where KT1's
+rule lives, and it has held since.
+
+**7 · How we measured that it works, and when.** For (b), at the moment
+of building it: the pre-fix `body { font-family }` was put back into
+`showcase.css` and the new gate run. It reported
+`showcase/showcase.css:9: \`body\` styles a bare element (margin,
+font-family, line-height)` and exited 1; restored, it exits 0. Four unit
+drills were added to `gates/gates.test.mjs` alongside it, including one
+for a fault found while building the gate itself — the first parser read
+the prose in a comment as five selectors, because the sentence mentioned
+`body` and contained commas.
+
+For (c), at the next browser test that asserts something about the
+package: it gets its drill and its line of comment, and Claude reports in
+that same turn what was removed and what went red. Until that has
+happened, KT3 stays open in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** If (b) had not gone red,
+the bare-selector rule would have been the wrong instrument, and the
+showcase CSS would stop being inlined into the fixture pages: eleven
+pages loading only the package stylesheets measure the package by
+definition. It went red, so this did not trigger.
+
+If (c) fails — that is, if another browser test is found that cannot fail
+— the discipline rule lapses and a canary job enters CI: strip the
+element rules from `css/_rules.css` and require the browser suite to go
+red. Green against a gutted package means the suite guards nothing. That
+job costs two minutes per run, which is why it is not proposed yet.
+
+**9 · When we review the measure.** At this project's retrospective
+(Phase 10), against whether the rule caught anything or only added noise.
+Then again at the first project that vendors this package and builds
+fixtures of its own — that is when it shows whether the rule carries
+beyond this project, and so whether it moves up into the shared
+procedure or stays here.
