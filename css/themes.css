@@ -101,16 +101,16 @@
     --link-visited: hsl(271, 49%, 12%);
     --focus-ring: hsl(220, 30%, 13%);
     --focus-ring-contrast: hsl(40, 25%, 97%);
-    --primary-hover: hsl(218, 51%, 21%);
+    --primary-hover: hsl(218, 58%, 18%);
     --primary-active: hsl(219, 81%, 12%);
     --primary-disabled: hsl(218, 34%, 34%);
-    --secondary-hover: hsl(40, 13%, 86%);
+    --secondary-hover: hsl(40, 10%, 82%);
     --secondary-active: hsl(40, 7%, 75%);
     --secondary-disabled: hsl(58, 100%, 99%);
-    --accent-hover: hsl(30, 30%, 84%);
+    --accent-hover: hsl(30, 24%, 80%);
     --accent-active: hsl(30, 17%, 73%);
     --accent-disabled: hsl(51, 100%, 97%);
-    --destructive-hover: hsl(359, 68%, 36%);
+    --destructive-hover: hsl(356, 80%, 31%);
     --destructive-active: hsl(358, 100%, 24%);
     --destructive-disabled: hsl(2, 51%, 51%);
 }
@@ -197,16 +197,16 @@
     --link-visited: hsl(290, 77%, 30%);
     --focus-ring: hsl(224, 25%, 12%);
     --focus-ring-contrast: hsl(0, 0%, 100%);
-    --primary-hover: hsl(246, 67%, 41%);
+    --primary-hover: hsl(249, 78%, 36%);
     --primary-active: hsl(254, 100%, 28%);
     --primary-disabled: hsl(238, 64%, 56%);
-    --secondary-hover: hsl(220, 9%, 90%);
+    --secondary-hover: hsl(220, 6%, 86%);
     --secondary-active: hsl(220, 4%, 79%);
     --secondary-disabled: hsl(180, 100%, 100%);
-    --accent-hover: hsl(190, 53%, 88%);
+    --accent-hover: hsl(190, 40%, 84%);
     --accent-active: hsl(190, 27%, 77%);
     --accent-disabled: hsl(180, 100%, 96%);
-    --destructive-hover: hsl(357, 87%, 36%);
+    --destructive-hover: hsl(358, 100%, 32%);
     --destructive-active: hsl(3, 88%, 29%);
     --destructive-disabled: hsl(3, 67%, 54%);
 }
@@ -293,16 +293,16 @@
     --link-visited: hsl(333, 63%, 66%);
     --focus-ring: hsl(220, 20%, 93%);
     --focus-ring-contrast: hsl(226, 22%, 8%);
-    --primary-hover: hsl(255, 100%, 78%);
+    --primary-hover: hsl(256, 100%, 80%);
     --primary-active: hsl(259, 100%, 83%);
     --primary-disabled: hsl(256, 57%, 63%);
-    --secondary-hover: hsl(226, 14%, 19%);
+    --secondary-hover: hsl(226, 12%, 22%);
     --secondary-active: hsl(226, 10%, 28%);
     --secondary-disabled: hsl(226, 30%, 8%);
-    --accent-hover: hsl(226, 16%, 21%);
+    --accent-hover: hsl(226, 14%, 24%);
     --accent-active: hsl(226, 12%, 30%);
     --accent-disabled: hsl(227, 31%, 10%);
-    --destructive-hover: hsl(0, 81%, 72%);
+    --destructive-hover: hsl(0, 94%, 76%);
     --destructive-active: hsl(1, 100%, 80%);
     --destructive-disabled: hsl(359, 50%, 56%);
 }
@@ -393,16 +393,16 @@
     --link-visited: hsl(360, 100%, 66%);
     --focus-ring: hsl(190, 60%, 92%);
     --focus-ring-contrast: hsl(258, 40%, 6%);
-    --primary-hover: hsl(315, 100%, 66%);
+    --primary-hover: hsl(313, 100%, 67%);
     --primary-active: hsl(312, 66%, 71%);
     --primary-disabled: hsl(314, 79%, 56%);
-    --secondary-hover: hsl(258, 27%, 16%);
+    --secondary-hover: hsl(257, 25%, 17%);
     --secondary-active: hsl(257, 19%, 24%);
     --secondary-disabled: hsl(259, 44%, 9%);
-    --accent-hover: hsl(180, 100%, 56%);
+    --accent-hover: hsl(180, 100%, 60%);
     --accent-active: hsl(179, 59%, 83%);
     --accent-disabled: hsl(180, 100%, 45%);
-    --destructive-hover: hsl(350, 100%, 66%);
+    --destructive-hover: hsl(350, 100%, 67%);
     --destructive-active: hsl(353, 55%, 69%);
     --destructive-disabled: hsl(348, 79%, 56%);
 }
@@ -489,16 +489,16 @@
     --link-visited: hsl(26, 100%, 32%);
     --focus-ring: hsl(285, 25%, 20%);
     --focus-ring-contrast: hsl(285, 45%, 97%);
-    --primary-hover: hsl(329, 61%, 38%);
+    --primary-hover: hsl(328, 69%, 34%);
     --primary-active: hsl(325, 100%, 25%);
     --primary-disabled: hsl(332, 51%, 54%);
-    --secondary-hover: hsl(200, 30%, 88%);
+    --secondary-hover: hsl(200, 23%, 84%);
     --secondary-active: hsl(200, 15%, 77%);
     --secondary-disabled: hsl(180, 100%, 98%);
-    --accent-hover: hsl(150, 30%, 84%);
+    --accent-hover: hsl(150, 24%, 80%);
     --accent-active: hsl(150, 17%, 73%);
     --accent-disabled: hsl(162, 100%, 97%);
-    --destructive-hover: hsl(353, 74%, 39%);
+    --destructive-hover: hsl(349, 93%, 33%);
     --destructive-active: hsl(353, 100%, 28%);
     --destructive-disabled: hsl(358, 66%, 57%);
 }
@@ -585,16 +585,16 @@
     --link-visited: hsl(176, 100%, 49%);
     --focus-ring: hsl(120, 85%, 68%);
     --focus-ring-contrast: hsl(120, 10%, 5%);
-    --primary-hover: hsl(119, 95%, 55%);
+    --primary-hover: hsl(119, 100%, 59%);
     --primary-active: hsl(116, 85%, 73%);
     --primary-disabled: hsl(120, 100%, 43%);
-    --secondary-hover: hsl(120, 7%, 13%);
+    --secondary-hover: hsl(120, 6%, 15%);
     --secondary-active: hsl(120, 5%, 21%);
     --secondary-disabled: hsl(120, 14%, 6%);
-    --accent-hover: hsl(65, 95%, 56%);
+    --accent-hover: hsl(65, 100%, 60%);
     --accent-active: hsl(64, 93%, 81%);
     --accent-disabled: hsl(65, 100%, 44%);
-    --destructive-hover: hsl(0, 97%, 65%);
+    --destructive-hover: hsl(1, 100%, 66%);
     --destructive-active: hsl(4, 62%, 68%);
     --destructive-disabled: hsl(358, 74%, 53%);
 }
@@ -681,16 +681,16 @@
     --link-visited: hsl(189, 100%, 12%);
     --focus-ring: hsl(160, 28%, 14%);
     --focus-ring-contrast: hsl(42, 32%, 95%);
-    --primary-hover: hsl(159, 50%, 21%);
+    --primary-hover: hsl(160, 62%, 17%);
     --primary-active: hsl(161, 100%, 11%);
     --primary-disabled: hsl(156, 29%, 34%);
-    --secondary-hover: hsl(42, 18%, 83%);
+    --secondary-hover: hsl(42, 15%, 79%);
     --secondary-active: hsl(42, 11%, 72%);
     --secondary-disabled: hsl(59, 100%, 98%);
-    --accent-hover: hsl(24, 43%, 82%);
+    --accent-hover: hsl(24, 35%, 78%);
     --accent-active: hsl(24, 25%, 71%);
     --accent-disabled: hsl(37, 100%, 95%);
-    --destructive-hover: hsl(8, 68%, 36%);
+    --destructive-hover: hsl(8, 76%, 32%);
     --destructive-active: hsl(5, 100%, 25%);
     --destructive-disabled: hsl(9, 52%, 51%);
 }
@@ -777,16 +777,16 @@
     --link-visited: hsl(275, 63%, 30%);
     --focus-ring: hsl(0, 0%, 0%);
     --focus-ring-contrast: hsl(0, 0%, 100%);
-    --primary-hover: hsl(223, 100%, 28%);
+    --primary-hover: hsl(226, 100%, 26%);
     --primary-active: hsl(238, 100%, 22%);
     --primary-disabled: hsl(220, 74%, 41%);
-    --secondary-hover: hsl(44, 0%, 96%);
+    --secondary-hover: hsl(44, 0%, 92%);
     --secondary-active: hsl(44, 0%, 84%);
     --secondary-disabled: hsl(60, 100%, 100%);
-    --accent-hover: hsl(48, 100%, 48%);
+    --accent-hover: hsl(47, 100%, 46%);
     --accent-active: hsl(46, 100%, 42%);
     --accent-disabled: hsl(53, 100%, 64%);
-    --destructive-hover: hsl(0, 100%, 30%);
+    --destructive-hover: hsl(0, 100%, 28%);
     --destructive-active: hsl(4, 78%, 25%);
     --destructive-disabled: hsl(4, 68%, 45%);
 }
@@ -873,16 +873,16 @@
     --link-visited: hsl(49, 100%, 13%);
     --focus-ring: hsl(28, 45%, 16%);
     --focus-ring-contrast: hsl(38, 42%, 94%);
-    --primary-hover: hsl(24, 62%, 28%);
+    --primary-hover: hsl(25, 71%, 25%);
     --primary-active: hsl(26, 100%, 18%);
     --primary-disabled: hsl(23, 42%, 43%);
-    --secondary-hover: hsl(36, 23%, 84%);
+    --secondary-hover: hsl(36, 18%, 80%);
     --secondary-active: hsl(36, 13%, 73%);
     --secondary-disabled: hsl(55, 100%, 98%);
-    --accent-hover: hsl(30, 43%, 82%);
+    --accent-hover: hsl(30, 35%, 78%);
     --accent-active: hsl(30, 26%, 71%);
     --accent-disabled: hsl(46, 100%, 95%);
-    --destructive-hover: hsl(6, 66%, 34%);
+    --destructive-hover: hsl(5, 73%, 31%);
     --destructive-active: hsl(1, 99%, 23%);
     --destructive-disabled: hsl(7, 48%, 49%);
 }
@@ -969,16 +969,16 @@
     --link-visited: hsl(229, 72%, 76%);
     --focus-ring: hsl(190, 55%, 92%);
     --focus-ring-contrast: hsl(215, 65%, 12%);
-    --primary-hover: hsl(190, 89%, 66%);
+    --primary-hover: hsl(190, 100%, 70%);
     --primary-active: hsl(182, 100%, 74%);
     --primary-disabled: hsl(189, 67%, 48%);
-    --secondary-hover: hsl(215, 40%, 27%);
+    --secondary-hover: hsl(215, 37%, 30%);
     --secondary-active: hsl(215, 31%, 37%);
     --secondary-disabled: hsl(215, 70%, 15%);
-    --accent-hover: hsl(35, 94%, 64%);
+    --accent-hover: hsl(35, 100%, 67%);
     --accent-active: hsl(40, 91%, 74%);
     --accent-disabled: hsl(37, 77%, 46%);
-    --destructive-hover: hsl(2, 79%, 66%);
+    --destructive-hover: hsl(3, 90%, 70%);
     --destructive-active: hsl(3, 100%, 75%);
     --destructive-disabled: hsl(1, 52%, 51%);
 }
@@ -1065,16 +1065,16 @@
     --link-visited: hsl(70, 44%, 49%);
     --focus-ring: hsl(35, 30%, 90%);
     --focus-ring-contrast: hsl(20, 14%, 10%);
-    --primary-hover: hsl(28, 94%, 62%);
+    --primary-hover: hsl(28, 100%, 65%);
     --primary-active: hsl(30, 83%, 72%);
     --primary-disabled: hsl(31, 89%, 43%);
-    --secondary-hover: hsl(20, 13%, 25%);
+    --secondary-hover: hsl(20, 11%, 28%);
     --secondary-active: hsl(20, 10%, 35%);
     --secondary-disabled: hsl(20, 22%, 13%);
-    --accent-hover: hsl(12, 71%, 56%);
+    --accent-hover: hsl(12, 79%, 60%);
     --accent-active: hsl(12, 100%, 68%);
     --accent-disabled: hsl(13, 79%, 40%);
-    --destructive-hover: hsl(0, 73%, 64%);
+    --destructive-hover: hsl(1, 83%, 68%);
     --destructive-active: hsl(1, 100%, 74%);
     --destructive-disabled: hsl(358, 53%, 48%);
 }
@@ -1162,16 +1162,16 @@
     --link-visited: hsl(100, 0%, 0%);
     --focus-ring: hsl(0, 0%, 7%);
     --focus-ring-contrast: hsl(50, 100%, 97%);
-    --primary-hover: hsl(44, 0%, 4%);
+    --primary-hover: hsl(44, 0%, 2%);
     --primary-active: hsl(44, 0%, 0%);
     --primary-disabled: hsl(44, 0%, 15%);
-    --secondary-hover: hsl(49, 91%, 54%);
+    --secondary-hover: hsl(50, 100%, 46%);
     --secondary-active: hsl(49, 100%, 42%);
     --secondary-disabled: hsl(56, 100%, 68%);
-    --accent-hover: hsl(255, 62%, 76%);
+    --accent-hover: hsl(255, 53%, 72%);
     --accent-active: hsl(256, 41%, 65%);
     --accent-disabled: hsl(259, 100%, 88%);
-    --destructive-hover: hsl(0, 100%, 35%);
+    --destructive-hover: hsl(0, 100%, 33%);
     --destructive-active: hsl(4, 78%, 31%);
     --destructive-disabled: hsl(4, 72%, 53%);
 }
@@ -1258,16 +1258,16 @@
     --link-visited: hsl(125, 38%, 62%);
     --focus-ring: hsl(42, 60%, 88%);
     --focus-ring-contrast: hsl(200, 25%, 8%);
-    --primary-hover: hsl(43, 70%, 56%);
+    --primary-hover: hsl(42, 77%, 60%);
     --primary-active: hsl(42, 96%, 68%);
     --primary-disabled: hsl(46, 100%, 36%);
-    --secondary-hover: hsl(200, 16%, 21%);
+    --secondary-hover: hsl(200, 14%, 24%);
     --secondary-active: hsl(200, 11%, 30%);
     --secondary-disabled: hsl(200, 32%, 9%);
-    --accent-hover: hsl(164, 51%, 36%);
+    --accent-hover: hsl(164, 45%, 40%);
     --accent-active: hsl(163, 37%, 48%);
     --accent-disabled: hsl(167, 100%, 20%);
-    --destructive-hover: hsl(356, 89%, 62%);
+    --destructive-hover: hsl(357, 100%, 67%);
     --destructive-active: hsl(358, 88%, 71%);
     --destructive-disabled: hsl(350, 83%, 43%);
 }
@@ -1354,16 +1354,16 @@
     --link-visited: hsl(83, 46%, 73%);
     --focus-ring: hsl(38, 40%, 90%);
     --focus-ring-contrast: hsl(24, 30%, 9%);
-    --primary-hover: hsl(38, 55%, 62%);
+    --primary-hover: hsl(38, 61%, 66%);
     --primary-active: hsl(38, 80%, 73%);
     --primary-disabled: hsl(38, 44%, 47%);
-    --secondary-hover: hsl(155, 26%, 23%);
+    --secondary-hover: hsl(154, 23%, 26%);
     --secondary-active: hsl(154, 19%, 33%);
     --secondary-disabled: hsl(158, 57%, 11%);
-    --accent-hover: hsl(1, 57%, 34%);
+    --accent-hover: hsl(2, 52%, 37%);
     --accent-active: hsl(3, 45%, 44%);
     --accent-disabled: hsl(358, 100%, 19%);
-    --destructive-hover: hsl(0, 73%, 64%);
+    --destructive-hover: hsl(1, 83%, 68%);
     --destructive-active: hsl(1, 100%, 74%);
     --destructive-disabled: hsl(358, 53%, 48%);
 }
@@ -1450,16 +1450,16 @@
     --link-visited: hsl(315, 68%, 57%);
     --focus-ring: hsl(0, 0%, 98%);
     --focus-ring-contrast: hsl(0, 0%, 4%);
-    --primary-hover: hsl(356, 100%, 61%);
+    --primary-hover: hsl(357, 100%, 64%);
     --primary-active: hsl(1, 74%, 68%);
     --primary-disabled: hsl(352, 100%, 43%);
-    --secondary-hover: hsl(44, 0%, 19%);
+    --secondary-hover: hsl(44, 0%, 22%);
     --secondary-active: hsl(44, 0%, 28%);
     --secondary-disabled: hsl(44, 0%, 8%);
-    --accent-hover: hsl(44, 0%, 90%);
+    --accent-hover: hsl(44, 0%, 94%);
     --accent-active: hsl(60, 100%, 100%);
     --accent-disabled: hsl(44, 0%, 75%);
-    --destructive-hover: hsl(356, 100%, 61%);
+    --destructive-hover: hsl(357, 100%, 64%);
     --destructive-active: hsl(1, 74%, 68%);
     --destructive-disabled: hsl(352, 100%, 43%);
 }
@@ -1546,16 +1546,16 @@
     --link-visited: hsl(89, 48%, 58%);
     --focus-ring: hsl(40, 12%, 90%);
     --focus-ring-contrast: hsl(0, 0%, 4%);
-    --primary-hover: hsl(35, 100%, 60%);
+    --primary-hover: hsl(37, 100%, 63%);
     --primary-active: hsl(39, 87%, 72%);
     --primary-disabled: hsl(37, 100%, 42%);
-    --secondary-hover: hsl(44, 0%, 18%);
+    --secondary-hover: hsl(44, 0%, 21%);
     --secondary-active: hsl(44, 0%, 27%);
     --secondary-disabled: hsl(44, 0%, 7%);
-    --accent-hover: hsl(48, 100%, 67%);
+    --accent-hover: hsl(50, 100%, 69%);
     --accent-active: hsl(59, 93%, 81%);
     --accent-disabled: hsl(46, 76%, 51%);
-    --destructive-hover: hsl(0, 100%, 70%);
+    --destructive-hover: hsl(1, 100%, 72%);
     --destructive-active: hsl(3, 71%, 74%);
     --destructive-disabled: hsl(358, 71%, 55%);
 }
@@ -1642,16 +1642,16 @@
     --link-visited: hsl(267, 48%, 14%);
     --focus-ring: hsl(36, 10%, 10%);
     --focus-ring-contrast: hsl(42, 52%, 92%);
-    --primary-hover: hsl(215, 58%, 22%);
+    --primary-hover: hsl(215, 66%, 19%);
     --primary-active: hsl(215, 93%, 13%);
     --primary-disabled: hsl(215, 38%, 35%);
-    --secondary-hover: hsl(42, 19%, 82%);
+    --secondary-hover: hsl(42, 16%, 78%);
     --secondary-active: hsl(42, 12%, 71%);
     --secondary-disabled: hsl(51, 100%, 97%);
-    --accent-hover: hsl(0, 62%, 42%);
+    --accent-hover: hsl(359, 71%, 38%);
     --accent-active: hsl(355, 100%, 28%);
     --accent-disabled: hsl(3, 65%, 57%);
-    --destructive-hover: hsl(360, 63%, 38%);
+    --destructive-hover: hsl(358, 72%, 34%);
     --destructive-active: hsl(356, 100%, 25%);
     --destructive-disabled: hsl(3, 54%, 53%);
 }
@@ -1738,16 +1738,16 @@
     --link-visited: hsl(269, 31%, 40%);
     --focus-ring: hsl(194, 14%, 40%);
     --focus-ring-contrast: hsl(44, 87%, 94%);
-    --primary-hover: hsl(204, 82%, 33%);
+    --primary-hover: hsl(203, 100%, 29%);
     --primary-active: hsl(205, 100%, 25%);
     --primary-disabled: hsl(206, 52%, 50%);
-    --secondary-hover: hsl(46, 32%, 84%);
+    --secondary-hover: hsl(46, 25%, 80%);
     --secondary-active: hsl(46, 18%, 73%);
     --secondary-disabled: hsl(60, 100%, 96%);
-    --accent-hover: hsl(175, 74%, 31%);
+    --accent-hover: hsl(176, 100%, 25%);
     --accent-active: hsl(176, 100%, 22%);
     --accent-disabled: hsl(174, 42%, 48%);
-    --destructive-hover: hsl(359, 81%, 37%);
+    --destructive-hover: hsl(357, 100%, 32%);
     --destructive-active: hsl(3, 88%, 29%);
     --destructive-disabled: hsl(3, 66%, 54%);
 }
@@ -1834,16 +1834,16 @@
     --link-visited: hsl(264, 64%, 77%);
     --focus-ring: hsl(186, 8%, 64%);
     --focus-ring-contrast: hsl(192, 100%, 11%);
-    --primary-hover: hsl(205, 80%, 64%);
+    --primary-hover: hsl(205, 90%, 68%);
     --primary-active: hsl(202, 100%, 73%);
     --primary-disabled: hsl(204, 60%, 48%);
-    --secondary-hover: hsl(192, 50%, 21%);
+    --secondary-hover: hsl(193, 43%, 25%);
     --secondary-active: hsl(193, 34%, 31%);
     --secondary-disabled: hsl(193, 100%, 10%);
-    --accent-hover: hsl(175, 51%, 44%);
+    --accent-hover: hsl(175, 46%, 49%);
     --accent-active: hsl(174, 51%, 57%);
     --accent-disabled: hsl(176, 100%, 26%);
-    --destructive-hover: hsl(1, 97%, 70%);
+    --destructive-hover: hsl(2, 100%, 72%);
     --destructive-active: hsl(4, 77%, 75%);
     --destructive-disabled: hsl(359, 61%, 54%);
 }
@@ -1930,16 +1930,16 @@
     --link-visited: hsl(100, 0%, 3%);
     --focus-ring: hsl(0, 0%, 9%);
     --focus-ring-contrast: hsl(0, 0%, 98%);
-    --primary-hover: hsl(44, 0%, 11%);
+    --primary-hover: hsl(44, 0%, 9%);
     --primary-active: hsl(44, 0%, 3%);
     --primary-disabled: hsl(44, 0%, 23%);
-    --secondary-hover: hsl(44, 0%, 88%);
+    --secondary-hover: hsl(44, 0%, 84%);
     --secondary-active: hsl(44, 0%, 77%);
     --secondary-disabled: hsl(60, 100%, 100%);
-    --accent-hover: hsl(44, 0%, 81%);
+    --accent-hover: hsl(44, 0%, 77%);
     --accent-active: hsl(44, 0%, 70%);
     --accent-disabled: hsl(44, 0%, 97%);
-    --destructive-hover: hsl(44, 0%, 22%);
+    --destructive-hover: hsl(44, 0%, 19%);
     --destructive-active: hsl(44, 0%, 13%);
     --destructive-disabled: hsl(44, 0%, 35%);
 }
@@ -2026,16 +2026,16 @@
     --link-visited: hsl(278, 100%, 19%);
     --focus-ring: hsl(0, 0%, 10%);
     --focus-ring-contrast: hsl(0, 0%, 75%);
-    --primary-hover: hsl(241, 100%, 23%);
+    --primary-hover: hsl(243, 100%, 21%);
     --primary-active: hsl(236, 71%, 16%);
     --primary-disabled: hsl(225, 94%, 32%);
-    --secondary-hover: hsl(44, 0%, 83%);
+    --secondary-hover: hsl(44, 0%, 79%);
     --secondary-active: hsl(44, 0%, 72%);
     --secondary-disabled: hsl(44, 0%, 99%);
-    --accent-hover: hsl(180, 100%, 18%);
+    --accent-hover: hsl(180, 100%, 17%);
     --accent-active: hsl(180, 100%, 14%);
     --accent-disabled: hsl(180, 48%, 34%);
-    --destructive-hover: hsl(0, 100%, 23%);
+    --destructive-hover: hsl(0, 100%, 21%);
     --destructive-active: hsl(2, 90%, 17%);
     --destructive-disabled: hsl(5, 67%, 37%);
 }
@@ -2122,16 +2122,16 @@
     --link-visited: hsl(317, 60%, 48%);
     --focus-ring: hsl(0, 0%, 7%);
     --focus-ring-contrast: hsl(0, 0%, 100%);
-    --primary-hover: hsl(358, 100%, 42%);
+    --primary-hover: hsl(0, 100%, 40%);
     --primary-active: hsl(4, 78%, 38%);
     --primary-disabled: hsl(1, 100%, 61%);
-    --secondary-hover: hsl(44, 0%, 90%);
+    --secondary-hover: hsl(44, 0%, 86%);
     --secondary-active: hsl(44, 0%, 79%);
     --secondary-disabled: hsl(60, 100%, 100%);
-    --accent-hover: hsl(44, 0%, 4%);
+    --accent-hover: hsl(44, 0%, 2%);
     --accent-active: hsl(44, 0%, 0%);
     --accent-disabled: hsl(44, 0%, 15%);
-    --destructive-hover: hsl(358, 100%, 37%);
+    --destructive-hover: hsl(0, 100%, 35%);
     --destructive-active: hsl(4, 78%, 33%);
     --destructive-disabled: hsl(1, 79%, 56%);
 }
@@ -2218,16 +2218,16 @@
     --link-visited: hsl(123, 38%, 61%);
     --focus-ring: hsl(42, 55%, 89%);
     --focus-ring-contrast: hsl(228, 60%, 26%);
-    --primary-hover: hsl(43, 72%, 55%);
+    --primary-hover: hsl(42, 79%, 59%);
     --primary-active: hsl(42, 97%, 67%);
     --primary-disabled: hsl(45, 100%, 36%);
-    --secondary-hover: hsl(227, 47%, 37%);
+    --secondary-hover: hsl(227, 44%, 41%);
     --secondary-active: hsl(226, 39%, 47%);
     --secondary-disabled: hsl(231, 63%, 25%);
-    --accent-hover: hsl(5, 83%, 59%);
+    --accent-hover: hsl(6, 93%, 63%);
     --accent-active: hsl(7, 100%, 68%);
     --accent-disabled: hsl(3, 79%, 43%);
-    --destructive-hover: hsl(5, 100%, 73%);
+    --destructive-hover: hsl(6, 100%, 75%);
     --destructive-active: hsl(7, 72%, 78%);
     --destructive-disabled: hsl(4, 63%, 59%);
 }
@@ -2314,16 +2314,16 @@
     --link-visited: hsl(53, 22%, 5%);
     --focus-ring: hsl(24, 12%, 15%);
     --focus-ring-contrast: hsl(38, 28%, 78%);
-    --primary-hover: hsl(24, 14%, 14%);
+    --primary-hover: hsl(24, 17%, 11%);
     --primary-active: hsl(24, 30%, 6%);
     --primary-disabled: hsl(24, 8%, 26%);
-    --secondary-hover: hsl(38, 19%, 66%);
+    --secondary-hover: hsl(38, 17%, 63%);
     --secondary-active: hsl(38, 14%, 55%);
     --secondary-disabled: hsl(38, 36%, 81%);
-    --accent-hover: hsl(18, 85%, 40%);
+    --accent-hover: hsl(20, 100%, 35%);
     --accent-active: hsl(14, 100%, 31%);
     --accent-disabled: hsl(16, 78%, 57%);
-    --destructive-hover: hsl(10, 95%, 24%);
+    --destructive-hover: hsl(6, 100%, 21%);
     --destructive-active: hsl(0, 100%, 18%);
     --destructive-disabled: hsl(10, 58%, 39%);
 }
@@ -2805,9 +2805,15 @@ blockquote {
     color: var(--muted-foreground);
 }
 
+/* A rule between blocks. The browser draws <hr> in its own grey — colour
+ * AND border, 128,128,128 in Chromium and Firefox alike — which the
+ * foreign-colour test found on every fixture: the one element on the page
+ * that wore no theme at all [KT8]. Both are the theme's now. */
 hr {
+    color: inherit;
     border: 0;
-    border-top: 1px solid var(--border);
+    border-block-start: 1px solid var(--border);
+    margin-block: 1rem;
 }
 
 ::marker {

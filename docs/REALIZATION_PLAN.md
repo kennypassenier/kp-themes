@@ -220,6 +220,7 @@ load is exactly what a file check reports as success.
 | Phase 7            | 2026-09-04 | four gaps: two accepted with their reasons, KT1's fallback activated, `/security-review` measured as not applicable | `docs/TEST_PLAN.md`, `docs/CORRECTIONS.md` |
 | Toon-mij-dit round | 2026-09-04 | L2, L5, L6, L7 signed off after Kenny saw them; L7 signed off knowing the state-visibility fault runs separately | this document, `docs/CORRECTIONS.md` |
 | Round three Phase 0 | 2026-09-05 | 21 candidates rated: 8 Essential themes, 5 Desired, 4 Later, 5 dropped; S21 | `docs/THEME_CANDIDATES.md`, `docs/SCOPE.md`, `docs/FEATURES.md` |
+| Release go 1 + KT8 | 2026-09-05 | release held twice on Kenny's look at Pages; KT8 nine fields "Klopt", H1 hover = one step; the native select themed; the foreign-colour detector added at Kenny's request | `docs/CORRECTIONS.md` (KT8), `docs/MINI_ROUNDS.md` |
 | KT7 measurement | 2026-09-05 | full chain green in CI on `bc1e369` (run 33941401074); injected literal red on `check:strings` (branch `kt7-drill`, run 33940706648) — KT7 closed | `docs/MINI_ROUNDS.md`, `docs/CORRECTIONS.md` |
 | Round three AFK report | 2026-09-05 | R0–R6 all "Akkoord", KT7 all nine fields "Klopt", release: merge now, tag after Kenny's look at Pages | this document, `docs/CORRECTIONS.md` |
 | Round three R0–R5 (AFK) | 2026-09-05 | built on branch `round-three-scope`, commits `8ac3819` → `7ca453d`; the combined report and the release go are the next form | this document, `docs/CORRECTIONS.md` (KT7) |
