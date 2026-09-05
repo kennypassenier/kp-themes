@@ -202,6 +202,7 @@ built first.
 | TH85 | `--fx-shadow-offset` knob — a hard offset shadow on card, button and input | Essential | 0px in every existing theme; the first theme knob added since L3, so a minor version. Test bar: the knob paints in brutalism and nothing changes in the eleven (pixel comparison on the fixture) |
 | TH86 | Pattern fills for status plates and chart colours | Desired | `--chart-pattern-1..5` and outline/dash badge variants, as tokens per DI9. Test bar: the seven badges of `mono` are pairwise distinguishable with hue removed |
 | TH87 | Retro register stylesheet — raised/sunken bevel on button, input and card, title bar behind h1 | Desired | decoration around a gated `--border-strong`, never instead of it. Test bar: DI1 still passes on every control with the register loaded |
+| TH88 | The showcase compares two themes side by side | Essential | Kenny, 2026-09-05, at the Phase 5 gate: the page had become "unwieldy" for its purpose, comparing themes. Every element is still rendered; the page splits vertically into a left and a right half, each with its own picker at the top choosing that half's theme, and the two halves scroll together. The picker changes this needs are showcase-only — an exception, not a package feature. Test bar: both halves render every specimen, the left picker changes only the left half and the right picker only the right, and scrolling one side scrolls the other by the same amount |
 
 ## Decisions that are not ratings
 

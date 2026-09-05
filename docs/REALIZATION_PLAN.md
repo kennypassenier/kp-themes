@@ -40,6 +40,76 @@ L9's exit criterion is also the restore drill Kenny consciously declined
 at M3. It arrives free here, because proving a fresh clone builds _is_
 that drill.
 
+## Round three — the theme milestones (approved 2026-09-05)
+
+Round three adds thirteen themes (S21, TH64–TH75) and the three pieces of
+enabling work they need (TH85–TH87). Nothing existing changes in place
+(S20), so every milestone ends in a new minor version, and the order is
+set by two things: the enabling work goes before the theme that needs it,
+and the first theme walks the whole path alone so the path is proven
+before eleven more follow it.
+
+**Decided at the gate, 2026-09-05.** Kenny kept the six milestones as
+the order of work and struck the six release points: everything ships in
+**one release, 3.1.0, after R5** ("Alles komt in 3.1.0"); until then
+3.0.0 stays the latest. The version column below is therefore the
+milestone's place in that one release, not a tag. The showcase loads
+each theme's faces from Google Fonts — the package itself still loads
+nothing (S19). The round runs in **AFK mode from R0**: the milestone
+gates accumulate into one combined report; the release go stays a
+separate form. Enforcement stays as installed in round one. Kenny added
+one feature in the remarks — TH88, the showcase's split comparison view —
+which goes into R0 with the other showcase work.
+
+Standing rule 7h, before the AFK stretch: the discipline-only measures
+this work touches are KT1 (every checkable claim in a form is checked in
+the same turn, with file:line) and KT3 (a browser test that asserts the
+package applies something is drilled red first, and the drill is
+recorded in a comment). Neither is suspended. KT1 applies to the combined
+report, which is written at the end with the checks in that turn. KT3 is
+applied per new browser test, and the report lists every drill by test
+name, so a missing one is visible rather than assumed — the failure mode
+KT3-M1 measured was that nobody looked; the list is what makes looking
+cheap.
+
+Measured on 2026-09-05, what a new theme touches today: `themes/<name>/`
+(tokens.json, anatomy.md), `themes/order.json`, the texture and signature
+in `css/_rules.css`; everything else follows from `order.json` — the
+registry and the stylesheet (`gates/generate-themes.mjs`), the fixture and
+showcase pages (`gates/generate-showcase.mjs`), the Home Assistant YAML
+(`gates/generate-ha-themes.mjs`), and the browser suites that iterate
+`THEMES` (`tests/fixtures.spec.mjs`, `tests/showcase.spec.mjs`,
+`tests/picker.spec.mjs`). One test still hardcodes eleven
+(`tests/sweep.spec.mjs:86`) and is corrected at R0. Nothing in the package
+or the showcase loads a webfont: the faces are names, and the showcase on
+GitHub Pages renders every theme in the fallback stack.
+
+| ID | Milestone | Features | Exit criterion | Ships in |
+| --- | --- | --- | --- | --- |
+| R0 | The knob, and one theme walks the whole path | TH85, TH64 (brutalism), the eleven-count fix, showcase webfonts, TH88 (split comparison view) | `--fx-shadow-offset` is 0px in eleven themes and paints in the twelfth, proven by a pixel comparison of the fixtures before and after; brutalism passes every gate, has an anatomy, appears on the showcase and in the picker's light group, has a Home Assistant YAML, and the suites are green for twelve themes in both browsers; the showcase loads each theme's faces so Kenny judges the real letter; the showcase renders left and right with a picker per side and the two sides scroll together | 3.1.0, after R5 |
+| R1 | The dark essentials | TH65 (deco), TH66 (academia), TH70 (phantom) | Same bar per theme; DI6's layer order is deliberate in all three, and phantom's red is a plate with white ink, never text (4.12 measured) | 3.1.0, after R5 |
+| R2 | Ticker, nishiki and the shade pair | TH68, TH69, TH67 | Same bar; ticker has no motion token above 0 and no flourish that changes luminance; nishiki's `--border-strong` is the 2px key-block line; shade ships as two names on one scheme, the light foreground at base01 | 3.1.0, after R5 |
+| R3 | Enabling work for the desired pair, then the pair | TH86, TH87, TH72 (mono), TH71 (retro) | The seven status plates of mono are pairwise distinguishable with hue removed (the gate's deuteranopia simulation, plus a greyscale pass); the retro register loaded on the fixture leaves DI1 green on every control; both registers have been red once | 3.1.0, after R5 |
+| R4 | The three remaining desired themes | TH73 (grotesk), TH74 (tazhib), TH75 (nostromo) | Same bar; tazhib's vermilion and nostromo's orange are plates, never text | 3.1.0, after R5 |
+| R5 | **Assembly** | S21, TH63 at 24, README/USER_GUIDE/MIGRATION | A fresh clone builds and generates byte-identical output; the picker shows 24 themes in two groups and is operable by keyboard end to end; the showcase and Pages show all 24; every anatomy is linked from README; the tally in FEATURES reads what shipped; `SHA256SUMS` on the release | 3.1.0, after R5 |
+
+After R5 the set stands at 24: thirteen light (formal, light, pastel,
+topo, high-contrast, sepia, brutalism, shade-light, nishiki, mono, retro,
+grotesk, nostromo) and eleven dark (dark, cyberpunk, terminal, blueprint,
+solstice, deco, academia, shade-dark, ticker, phantom, tazhib).
+
+Enforcement is already live from round one (hooks, CI, branch
+protection) and is not reinstalled; the gates that govern a theme
+(`check-tokens`, `check-invariants`, `check-contrast`, `check-motion`,
+`check-layers`, `check-compliance`, `check-ha`) run on every commit and
+have each been red once (L1). What is new this round gets the same drill
+at the milestone that adds it: TH85 at R0, TH86 and TH87 at R3.
+
+D3 (removing `STRINGS_NL`) stays outside the round by Kenny's
+instruction. One note for when it returns: removing an export is a
+breaking change under semver, so its version is 4.0.0, not 3.1.0 — the
+label the earlier form carried. The queue entry says so.
+
 ## Enforcement — installed 2026-09-04, before any feature code
 
 Phase 5 refuses to advance to L0 until this is in place. It is, and each
@@ -138,6 +208,8 @@ load is exactly what a file check reports as success.
 | L0                 | 2026-09-04 | six report items, all signed off                           | this document                                      |
 | Phase 7            | 2026-09-04 | four gaps: two accepted with their reasons, KT1's fallback activated, `/security-review` measured as not applicable | `docs/TEST_PLAN.md`, `docs/CORRECTIONS.md` |
 | Toon-mij-dit round | 2026-09-04 | L2, L5, L6, L7 signed off after Kenny saw them; L7 signed off knowing the state-visibility fault runs separately | this document, `docs/CORRECTIONS.md` |
+| Round three Phase 0 | 2026-09-05 | 21 candidates rated: 8 Essential themes, 5 Desired, 4 Later, 5 dropped; S21 | `docs/THEME_CANDIDATES.md`, `docs/SCOPE.md`, `docs/FEATURES.md` |
+| Round three Phase 5 | 2026-09-05 | six milestones kept as order of work, one release 3.1.0 after R5, Google Fonts in the showcase only, AFK from R0, enforcement unchanged, TH88 added | this document |
 | AFK report L1-L10  | 2026-09-04 | L1, L3, L4, L8, L9, L10 signed off; L2, L5, L6, L7 answered "toon mij dit"; both queued deviations go to their own mini-rounds; Pages switched on | this document, `docs/MINI_ROUNDS.md`               |
 
 ## Status

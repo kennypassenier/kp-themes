@@ -85,11 +85,11 @@ way to get one. Scope stays: define themes, build components on them.
 
 | Field               | Value                                                                                            |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
-| Current phase       | Round three (themes): Phase 0 closed 2026-09-05; Phase 5 plan next                               |
-| Last completed gate | Theme-candidates form, 2026-09-05 (TH64–TH87)                                                    |
-| Next gate           | Phase 5 realization plan for round three                                                         |
+| Current phase       | Round three (themes): Phase 6, building R0–R5 in AFK mode                                        |
+| Last completed gate | Round-three Phase 5 plan, 2026-09-05 (one release 3.1.0 after R5)                                |
+| Next gate           | Combined AFK report after R5, then the release go for 3.1.0                                      |
 | Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, after this round); P1–P4 from kp-soft (next round) |
-| AFK mode            | off — nothing is running unattended                                                              |
+| AFK mode            | ON from R0 (Kenny, 2026-09-05); milestone gates accumulate into one report                       |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
