@@ -175,7 +175,10 @@ test('the picker is operable by keyboard end to end with every theme in it [R5]'
         const p = popover.getBoundingClientRect();
         for (const option of document.querySelectorAll('#react-mount [data-kp-theme]')) {
             const r = option.getBoundingClientRect();
-            if (r.left < p.left - 1 || r.right > p.right + 1) out.push(`${option.dataset.kpTheme} is outside the popover`);
+            if (r.left < p.left - 1 || r.right > p.right + 1)
+                out.push(
+                    `${option.dataset.kpTheme} is outside the popover (${Math.round(r.left)}–${Math.round(r.right)} vs ${Math.round(p.left)}–${Math.round(p.right)}, client ${popover.clientWidth})`,
+                );
             if (r.bottom < 0 || r.top > window.innerHeight) continue;
             const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)?.closest('[data-kp-theme]');
             if (hit && hit !== option) out.push(`${option.dataset.kpTheme} is covered by ${hit.dataset.kpTheme}`);
