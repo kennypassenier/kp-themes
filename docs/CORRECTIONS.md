@@ -804,5 +804,11 @@ two lists can no longer differ silently.
 
 **9 · Review.** At round three's retrospective.
 
-**Quarantined until Kenny answers:** `gates.sh` and `ci.yml` are not
-changed during the AFK stretch. The gate repair and its tests are in.
+**Measured, 2026-09-05.** Kenny approved all nine fields in the combined
+AFK report; the measure went in as `7fe7869`. At the first CI runs after
+it: the full chain green on `bc1e369` (run 33941401074), and a
+deliberately injected literal — `js/kt7-drill.js:7` on a throwaway branch
+`kt7-drill`, commit `177358e`, made through the GitHub API because the
+repaired hook refuses to commit it locally — turned the gates job red on
+`check:strings` (run 33940706648). The branch was deleted. The loop in
+`docs/MINI_ROUNDS.md` is closed.
