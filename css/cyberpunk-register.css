@@ -182,9 +182,11 @@
 
 /* CP-B1: signal-yellow badge for the rare thing that demands eyes. */
 [data-theme='cyberpunk'] .fx-signal-badge {
-    background: var(--fx-signal) !important;
-    color: var(--fx-signal-foreground) !important;
-    border-color: transparent !important;
+    /* Specificity instead of !important [KT6]: this selector is
+     * doubled below so it beats the button variants without a hammer. */
+    background: var(--fx-signal);
+    color: var(--fx-signal-foreground);
+    border-color: transparent;
 }
 
 /* ── Motion (all inside the reduced-motion guard) ─────────────────── */
@@ -192,6 +194,8 @@
 @media (prefers-reduced-motion: no-preference) {
     /* CP-B3: neon tube flicker - runs once when the class mounts. */
     [data-theme='cyberpunk'] .fx-flicker {
+        /* A literal, not a knob: this animation changes luminance and DI5 pins
+         * it above the flash threshold. A consumer knob could go under it. */
         animation: fx-flicker 2.2s linear 1 both;
     }
 
@@ -208,7 +212,7 @@
         pointer-events: none;
         box-shadow: 0 0 24px var(--primary);
         opacity: 0.3;
-        animation: fx-pulse 2.6s ease-in-out infinite;
+        animation: fx-pulse var(--fx-pulse-duration, 2.6s) ease-in-out infinite;
     }
 
     /* CP-A4: chromatic-aberration glitch on headings, hover-triggered,
@@ -231,23 +235,23 @@
 
     [data-theme='cyberpunk'] .fx-glitch:hover::before {
         color: var(--primary);
-        animation: fx-glitch-a 340ms steps(2) 1 both;
+        animation: fx-glitch-a var(--fx-glitch-duration, 340ms) steps(2) 1 both;
     }
 
     [data-theme='cyberpunk'] .fx-glitch:hover::after {
         color: var(--accent);
-        animation: fx-glitch-b 340ms steps(2) 1 both;
+        animation: fx-glitch-b var(--fx-glitch-duration, 340ms) steps(2) 1 both;
     }
 
     /* CP-F3: one short RGB split on image hover, then stillness. */
     [data-theme='cyberpunk'] .fx-media:hover img,
     [data-theme='cyberpunk'] .fx-media:hover iframe {
-        animation: fx-rgb-split 170ms steps(2) 1;
+        animation: fx-rgb-split var(--fx-split-duration, 170ms) steps(2) 1;
     }
 
     /* CP-F4: entering a puzzle value flashes cyan for one beat. */
     [data-theme='cyberpunk'] .fx-cellpop {
-        animation: fx-cellflash 200ms steps(2) 1;
+        animation: fx-cellflash var(--fx-cellflash-duration, 200ms) steps(2) 1;
     }
 }
 

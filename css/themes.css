@@ -1415,6 +1415,8 @@ textarea:invalid {
         content: '\2588';
         margin-inline-start: 0.15em;
         color: var(--primary);
+        /* A literal, not a knob: the cursor blink changes luminance and DI5
+         * pins it above the flash threshold [KT6]. */
         animation: kp-blink 1000ms steps(1, end) infinite;
     }
 

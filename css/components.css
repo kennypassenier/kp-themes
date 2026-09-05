@@ -117,14 +117,14 @@
 
 [data-kp-theme-picker] [data-kp-theme][data-selected='true']::after,
 [data-kp-theme-picker] [data-kp-theme].is-selected::after {
-    content: '✓';
+    content: var(--kp-glyph-check, '✓');
     font-size: 0.875em;
 }
 
 [data-kp-theme-status] {
     margin: 0.5rem 0 0;
     color: var(--destructive);
-    font-size: 0.875rem;
+    font-size: var(--kp-text-sm, 0.875rem);
 }
 
 /* --- Showing data [TH33] --------------------------------------------
@@ -196,7 +196,7 @@
     position: absolute;
     inset-inline-start: 0.5rem;
     inset-block-start: -100%;
-    z-index: 100;
+    z-index: var(--kp-z-skip, 100);
     padding: 0.5rem 0.875rem;
     border-radius: var(--radius, 0.5rem);
     background: var(--primary);
@@ -212,13 +212,13 @@
     padding: 1.5rem clamp(1rem, 4vw, 3rem);
     border-top: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: 0.875rem;
+    font-size: var(--kp-text-sm, 0.875rem);
 }
 
 /* An error page is a message, not a wall: the destructive colour names
  * the failure, the body text explains it on the ordinary surface. */
 .kp-error {
-    max-width: 60ch;
+    max-width: var(--kp-error-max-width, 60ch);
     margin: 3rem auto;
     padding: 0 1rem;
 }
@@ -249,7 +249,7 @@
     gap: 0.5rem;
     /* min-height, not height: forced text spacing must make this taller
      * rather than clip the label [DI11]. */
-    min-height: 2.25rem;
+    min-height: var(--kp-control-height, 2.25rem);
     padding: 0.375rem 0.875rem;
     border: 1px solid transparent;
     border-radius: var(--radius, 0.5rem);
@@ -264,9 +264,9 @@
 @media (prefers-reduced-motion: no-preference) {
     .kp-button {
         transition:
-            background-color var(--fx-duration, 120ms) var(--fx-ease, ease),
-            border-color var(--fx-duration, 120ms) var(--fx-ease, ease),
-            translate var(--fx-duration, 120ms) var(--fx-ease, ease);
+            background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+            border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+            translate var(--fx-duration, 150ms) var(--fx-ease, ease);
     }
 
     /* --fx-lift is how far a control rises under the cursor. Three themes
@@ -353,8 +353,8 @@
     align-items: center;
     gap: 0.3em;
     padding: 0.125rem 0.5rem;
-    border-radius: 999px;
-    font-size: 0.8125rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    font-size: var(--kp-text-sm, 0.8125rem);
     line-height: 1.4;
     background: var(--muted);
     color: var(--muted-foreground);
@@ -372,7 +372,7 @@
 
 .kp-card__title {
     margin: 0 0 0.25rem;
-    font-size: 1rem;
+    font-size: var(--kp-text-md, 1rem);
 }
 
 .kp-card__body {
@@ -469,16 +469,16 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    max-width: 28rem;
+    max-width: var(--kp-field-max-width, 28rem);
 }
 
 .kp-field__label {
-    font-size: 0.875rem;
+    font-size: var(--kp-text-sm, 0.875rem);
     font-weight: 600;
 }
 
 .kp-field__input {
-    min-height: 2.25rem;
+    min-height: var(--kp-control-height, 2.25rem);
     padding: 0.375rem 0.625rem;
     border: 1px solid var(--input);
     border-radius: var(--radius, 0.5rem);
@@ -488,14 +488,14 @@
 }
 
 .kp-field__help {
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     color: var(--muted-foreground);
 }
 
 /* The error is text, and it names what is wrong. A red border alone is
  * colour as the only carrier [DI4], and says nothing to a screen reader. */
 .kp-field__error {
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     color: var(--destructive);
 }
 
@@ -552,7 +552,7 @@
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-    font-size: 0.875rem;
+    font-size: var(--kp-text-sm, 0.875rem);
 }
 
 .kp-field__check {
@@ -597,7 +597,7 @@
 
 .kp-table thead th {
     border-bottom: 1px solid var(--border-strong);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     color: var(--muted-foreground);
 }
 
@@ -659,7 +659,7 @@ a.kp-nav__brand {
 /* --- Dialog ---------------------------------------------------------- */
 
 .kp-dialog {
-    max-width: min(32rem, calc(100vw - 2rem));
+    max-width: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2rem)));
     padding: 1.25rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius, 0.5rem);
@@ -728,7 +728,7 @@ a.kp-nav__brand {
 .kp-menu {
     display: flex;
     flex-direction: column;
-    min-width: 10rem;
+    min-width: var(--kp-menu-min-width, 10rem);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -736,7 +736,7 @@ a.kp-nav__brand {
 
 .kp-menu__item {
     padding: 0.375rem 0.625rem;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     background: none;
     border: 0;
     font: inherit;
@@ -751,9 +751,9 @@ a.kp-nav__brand {
 }
 
 .kp-tooltip {
-    max-width: 18rem;
+    max-width: var(--kp-tooltip-max-width, 18rem);
     padding: 0.25rem 0.5rem;
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 /* --- Toast ----------------------------------------------------------- */
@@ -861,7 +861,7 @@ a.kp-nav__brand {
 }
 
 .kp-breadcrumb li + li::before {
-    content: '/';
+    content: var(--kp-glyph-breadcrumb, '/');
     margin-inline-end: 0.5rem;
     color: var(--muted-foreground);
 }
@@ -906,7 +906,7 @@ a.kp-nav__brand {
 
 .kp-progress {
     inline-size: 100%;
-    max-inline-size: 20rem;
+    max-inline-size: var(--kp-progress-max-width, 20rem);
     block-size: 0.5rem;
     accent-color: var(--primary);
 }
@@ -923,7 +923,7 @@ a.kp-nav__brand {
 .kp-skeleton {
     display: block;
     block-size: var(--kp-skeleton-height, 1rem);
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     background: var(--muted);
 }
 
@@ -934,10 +934,12 @@ a.kp-nav__brand {
  * three-flashes threshold of DI5 — check-motion.mjs measures that. */
 @media (prefers-reduced-motion: no-preference) {
     .kp-spinner {
-        animation: kp-spin 900ms linear infinite;
+        animation: kp-spin var(--kp-spinner-duration, 900ms) linear infinite;
     }
 
     .kp-skeleton {
+        /* A literal, not a knob: the pulse changes luminance and DI5 pins it
+     * above the flash threshold [KT6]. */
         animation: kp-pulse 1600ms ease-in-out infinite;
     }
 }
@@ -1066,7 +1068,7 @@ a.kp-nav__brand {
     inline-size: 100%;
     padding: 0.375rem 0.625rem;
     border: 0;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     background: none;
     color: inherit;
     font: inherit;
@@ -1124,8 +1126,8 @@ a.kp-nav__brand {
 @media (prefers-reduced-motion: no-preference) {
     .kp-combobox__input {
         transition:
-            border-color var(--fx-duration) var(--fx-ease),
-            box-shadow var(--fx-duration) var(--fx-ease);
+            border-color var(--fx-duration, 150ms) var(--fx-ease),
+            box-shadow var(--fx-duration, 150ms) var(--fx-ease);
     }
 }
 
@@ -1139,8 +1141,8 @@ a.kp-nav__brand {
     position: absolute;
     inset-inline: 0;
     top: 100%;
-    z-index: 20;
-    max-height: 15rem;
+    z-index: var(--kp-z-popover, 20);
+    max-height: var(--kp-combobox-list-max-height, 15rem);
     margin: 0.25rem 0 0;
     padding: 0.25rem;
     overflow-y: auto;
@@ -1153,7 +1155,7 @@ a.kp-nav__brand {
 
 .kp-combobox__option {
     padding: 0.375rem 0.625rem;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     cursor: pointer;
 }
 
@@ -1172,7 +1174,7 @@ a.kp-nav__brand {
 .kp-combobox__status {
     margin: 0;
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-tag-list {
@@ -1190,10 +1192,10 @@ a.kp-nav__brand {
     gap: 0.25rem;
     padding: 0.125rem 0.25rem 0.125rem 0.5rem;
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--kp-radius-pill, 999px);
     background: var(--muted);
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-tag__remove {
@@ -1206,7 +1208,7 @@ a.kp-nav__brand {
     height: 1.25rem;
     padding: 0;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--kp-radius-pill, 999px);
     background: none;
     color: inherit;
     font: inherit;
@@ -1265,7 +1267,7 @@ a.kp-nav__brand {
  * grows downwards should not push its own input off-centre while you
  * type. */
 .kp-palette {
-    width: min(36rem, 92vw);
+    width: var(--kp-palette-width, min(36rem, 92vw));
     margin: 10vh auto auto;
     padding: 0;
     overflow: hidden;
@@ -1283,11 +1285,11 @@ a.kp-nav__brand {
     background: none;
     color: inherit;
     font: inherit;
-    font-size: 1rem;
+    font-size: var(--kp-text-md, 1rem);
 }
 
 .kp-palette__list {
-    max-height: 50vh;
+    max-height: var(--kp-palette-list-max-height, 50vh);
     margin: 0;
     padding: 0.25rem;
     overflow-y: auto;
@@ -1299,7 +1301,7 @@ a.kp-nav__brand {
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     cursor: pointer;
 }
 
@@ -1315,7 +1317,7 @@ a.kp-nav__brand {
 /* The key hint sits at the end and never competes with the label. */
 .kp-palette__keys {
     margin-inline-start: auto;
-    font-size: 0.75rem;
+    font-size: var(--kp-text-xs, 0.75rem);
 }
 
 .kp-palette__status {
@@ -1323,11 +1325,11 @@ a.kp-nav__brand {
     padding: 0.5rem 1rem;
     border-top: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-shortcuts {
-    width: min(28rem, 92vw);
+    width: var(--kp-shortcuts-width, min(28rem, 92vw));
     padding: 1.25rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius, 0.5rem);
@@ -1421,25 +1423,25 @@ a.kp-nav__brand {
 }
 
 .kp-table th[data-kp-sort]::after {
-    content: '↕';
+    content: var(--kp-glyph-sortable, '↕');
     margin-inline-start: 0.375rem;
     opacity: 0.35;
 }
 
 .kp-table th[aria-sort='ascending']::after {
-    content: '↑';
+    content: var(--kp-glyph-ascending, '↑');
     opacity: 1;
 }
 
 .kp-table th[aria-sort='descending']::after {
-    content: '↓';
+    content: var(--kp-glyph-descending, '↓');
     opacity: 1;
 }
 
 .kp-datatable__status {
     margin: 0;
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-datatable__pager {
@@ -1450,7 +1452,7 @@ a.kp-nav__brand {
 
 .kp-datatable__page {
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     font-variant-numeric: tabular-nums;
 }
 
@@ -1462,6 +1464,9 @@ a.kp-nav__brand {
  * attribute the consumer writes, because a cell without its column name
  * is a value with no question attached. */
 @media (max-width: 40rem) {
+    /* --kp-breakpoint-narrow is a contract value [TH26]: a media query
+     * cannot read a custom property, so this number is repeated in
+     * docs/USER_GUIDE.md rather than exposed as a knob. */
     .kp-datatable[data-kp-cards] .kp-table thead {
         position: absolute;
         width: 1px;
@@ -1552,12 +1557,12 @@ a.kp-nav__brand {
 .kp-field__required {
     margin-inline-start: 0.25rem;
     color: var(--muted-foreground);
-    font-size: 0.75rem;
+    font-size: var(--kp-text-xs, 0.75rem);
     font-weight: 400;
 }
 
 .kp-field__required::before {
-    content: '\002A\00a0';
+    content: var(--kp-glyph-required, '\002A\00a0');
     color: var(--destructive);
 }
 
@@ -1610,7 +1615,7 @@ a.kp-nav__brand {
     width: 0.625rem;
     height: 0.625rem;
     border: 1px solid var(--border-strong);
-    border-radius: 999px;
+    border-radius: var(--kp-radius-pill, 999px);
     background: var(--muted);
 }
 
@@ -1653,13 +1658,13 @@ a.kp-nav__brand {
     height: 0.75rem;
     margin-block-start: 0.25rem;
     border: 2px solid var(--primary);
-    border-radius: 999px;
+    border-radius: var(--kp-radius-pill, 999px);
 }
 
 .kp-timeline__when {
     display: block;
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     font-variant-numeric: tabular-nums;
 }
 
@@ -1670,7 +1675,7 @@ a.kp-nav__brand {
     border: 1px solid var(--border);
     border-radius: var(--radius, 0.5rem);
     font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-diff__line {
@@ -1732,7 +1737,7 @@ a.kp-nav__brand {
 
 .kp-tree [role='treeitem'] {
     padding: 0.25rem 0.375rem;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     cursor: pointer;
     /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
@@ -1746,14 +1751,14 @@ a.kp-nav__brand {
 /* The twisty is a second carrier beside aria-expanded, and it points the
  * way the branch will go rather than the way it is. */
 .kp-tree [role='treeitem'][aria-expanded]::before {
-    content: '▸';
+    content: var(--kp-glyph-closed, '▸');
     display: inline-block;
     width: 1em;
     color: var(--muted-foreground);
 }
 
 .kp-tree [role='treeitem'][aria-expanded='true']::before {
-    content: '▾';
+    content: var(--kp-glyph-open, '▾');
 }
 
 .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'],
@@ -1783,7 +1788,7 @@ a.kp-nav__brand {
 .kp-reorder [data-kp-handle] {
     padding: 0.125rem 0.375rem;
     border: 1px solid var(--border);
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     background: none;
     color: var(--muted-foreground);
     font: inherit;
@@ -1834,7 +1839,7 @@ a.kp-nav__brand {
     position: absolute;
     top: 100%;
     inset-inline-start: 0;
-    z-index: 20;
+    z-index: var(--kp-z-popover, 20);
     margin-block-start: 0.25rem;
     padding: 0.75rem;
     border: 1px solid var(--border-strong);
@@ -1866,13 +1871,13 @@ a.kp-nav__brand {
 .kp-datepicker__weekday {
     padding-block: 0.25rem;
     color: var(--muted-foreground);
-    font-size: 0.75rem;
+    font-size: var(--kp-text-xs, 0.75rem);
 }
 
 .kp-datepicker__day {
     padding: 0.25rem 0;
     border: 1px solid transparent;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     background: none;
     color: inherit;
     font: inherit;
@@ -1929,7 +1934,7 @@ a.kp-nav__brand {
 
 .kp-upload__size {
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
     font-variant-numeric: tabular-nums;
 }
 
@@ -1938,14 +1943,14 @@ a.kp-nav__brand {
 .kp-upload__bar {
     grid-column: 1 / -1;
     height: 0.25rem;
-    border-radius: 999px;
+    border-radius: var(--kp-radius-pill, 999px);
     background: linear-gradient(to right, var(--primary) var(--kp-progress, 0%), var(--muted) var(--kp-progress, 0%));
 }
 
 .kp-upload__message {
     grid-column: 1 / -1;
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-upload__file[data-state='error'] {
@@ -1982,8 +1987,8 @@ a.kp-nav__brand {
     width: 1.5rem;
     height: 1.5rem;
     border: 1px solid var(--border-strong);
-    border-radius: 999px;
-    font-size: 0.8125rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    font-size: var(--kp-text-sm, 0.8125rem);
     font-variant-numeric: tabular-nums;
 }
 
@@ -2001,7 +2006,7 @@ a.kp-nav__brand {
 }
 
 .kp-wizard__steps li[data-state='done']::before {
-    content: '✓';
+    content: var(--kp-glyph-check, '✓');
     border-color: var(--success);
     color: var(--success);
 }
@@ -2030,7 +2035,7 @@ a.kp-nav__brand {
     grid-template-columns: auto 1fr;
     align-items: center;
     gap: 0.5rem 0.75rem;
-    max-width: 22rem;
+    max-width: var(--kp-colorpicker-max-width, 22rem);
 }
 
 .kp-colorpicker__swatch {
@@ -2046,14 +2051,14 @@ a.kp-nav__brand {
 .kp-colorpicker__value {
     grid-column: 2;
     font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 .kp-colorpicker__contrast {
     grid-column: 1 / -1;
     margin: 0;
     color: var(--destructive);
-    font-size: 0.8125rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 /* The verdict is in the text; the colour is the second carrier, never the
@@ -2099,6 +2104,6 @@ a.kp-nav__brand {
     }
 
     .kp-grid__tile {
-        grid-column: 1 / -1 !important;
+        grid-column: 1 / -1;
     }
 }
