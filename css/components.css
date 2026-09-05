@@ -748,10 +748,22 @@ a.kp-nav__brand {
 .kp-menu {
     display: flex;
     flex-direction: column;
+    /* nowrap, explicitly: the flat picker's rule above sets wrap, and a
+     * wrapping column with a maximum height starts a second column the
+     * moment the list is taller than the popover — the dark group moved
+     * beside the light one and the light one hung outside the box. Only
+     * CI's taller fonts made the list tall enough to see it [R5]. */
+    flex-wrap: nowrap;
     min-width: var(--kp-menu-min-width, 10rem);
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+/* And the items keep their size rather than shrinking to fit the height;
+ * the popover scrolls instead. */
+.kp-menu > * {
+    flex-shrink: 0;
 }
 
 .kp-menu__item {

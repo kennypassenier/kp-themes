@@ -163,6 +163,26 @@ test('the picker is operable by keyboard end to end with every theme in it [R5]'
     expect(boxes.option[0]).toBeGreaterThanOrEqual(boxes.popover[0] - 1);
     expect(boxes.option[1]).toBeLessThanOrEqual(boxes.popover[1] + 1);
     expect(boxes.popover[1]).toBeLessThanOrEqual(boxes.viewport + 1);
+    // And every option lies inside the popover's width, with nothing on
+    // top of it. The first CI run of 3.1.0 clicked "pastel" and hit
+    // "terminal": a wrapping flex column in a height-limited popover had
+    // started a second column, and the light group hung outside the box.
+    // Drill [KT3]: remove `flex-wrap: nowrap` from .kp-menu and this
+    // names every light option as outside the popover.
+    const misplaced = await page.evaluate(() => {
+        const out = [];
+        const popover = document.querySelector('#react-mount .kp-popover');
+        const p = popover.getBoundingClientRect();
+        for (const option of document.querySelectorAll('#react-mount [data-kp-theme]')) {
+            const r = option.getBoundingClientRect();
+            if (r.left < p.left - 1 || r.right > p.right + 1) out.push(`${option.dataset.kpTheme} is outside the popover`);
+            if (r.bottom < 0 || r.top > window.innerHeight) continue;
+            const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)?.closest('[data-kp-theme]');
+            if (hit && hit !== option) out.push(`${option.dataset.kpTheme} is covered by ${hit.dataset.kpTheme}`);
+        }
+        return out;
+    });
+    expect(misplaced).toEqual([]);
     await page.keyboard.press('Enter');
     await expect(page.locator('html')).toHaveAttribute('data-theme', last);
 });
