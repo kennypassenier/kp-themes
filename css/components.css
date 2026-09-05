@@ -731,6 +731,12 @@ a.kp-nav__brand {
     padding: 0.25rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius, 0.5rem);
+    /* Twenty-four themes make the picker's menu taller than most
+     * viewports leave under a header: the popover scrolls inside itself
+     * rather than running off the bottom [R5]. A knob, like every other
+     * measure in this file. */
+    max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+    overflow: auto;
     background: var(--popover);
     color: var(--popover-foreground);
     /* Anchor positioning: the popover sits under its trigger without

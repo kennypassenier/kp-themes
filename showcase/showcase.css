@@ -94,12 +94,10 @@ body {
     font-size: 1.25rem;
 }
 
-/* Twelve themes today, twenty-four after this round: the menu is taller
- * than the room under a sticky bar, so it scrolls inside itself rather
- * than running off the bottom of the viewport. */
+/* The menu scrolls inside itself under the sticky bar; the package's
+ * .kp-popover carries that rule since R5, this only tightens it. */
 .sc-side .kp-popover {
-    max-block-size: min(70vh, 40rem);
-    overflow: auto;
+    --kp-popover-max-height: min(70vh, 40rem);
 }
 
 /* Side by side needs width; below it the right half steps aside rather

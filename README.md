@@ -1,11 +1,13 @@
 # @kp-soft/themes
 
-The house themes as a shared package: eleven `data-theme` palettes
-(formal, light, dark, cyberpunk, pastel, terminal, topo, high-contrast,
-sepia, blueprint, solstice) as plain CSS
-custom properties, the element-level rules that make a theme complete
-(links, code, selection, form fields, print), eighteen components, a
-theme picker, and the cyberpunk register with its effects.
+The house themes as a shared package: twenty-four `data-theme` palettes
+— thirteen light (formal, light, pastel, topo, high-contrast, sepia,
+brutalism, nishiki, shade-light, mono, retro, grotesk, nostromo) and
+eleven dark (dark, cyberpunk, terminal, blueprint, solstice, deco,
+academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
+properties, the element-level rules that make a theme complete (links,
+code, selection, form fields, print), eighteen components, a theme
+picker, and two opt-in registers: cyberpunk's effects and retro's bevels.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -65,15 +67,16 @@ Peer dependencies: `react >= 19`; `motion >= 12` only if you use
 `BootSequence` from `@kp-soft/themes/fx`. Node 26 for the scripts.
 
 Types ship with the package: `.d.ts` beside every entry point since 1.1.0,
-and `Theme` is the union of the eleven names rather than `string`.
+and `Theme` is the union of the twenty-four names rather than `string`.
 
 ## Consume the CSS
 
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the seven themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the twenty-four themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
+@import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -93,9 +96,18 @@ shadcn.
 
 ### Fonts
 
-The themes reference Instrument Sans (sans), Fraunces (formal display),
-Share Tech Mono (terminal) and Chakra Petch (cyberpunk display). kp-soft
-loads them from Bunny Fonts; put this in your `<head>`:
+Every theme names its faces in `--theme-font-body` and
+`--theme-font-display`, and the package loads none of them — a consumer
+does, for the themes it offers. All of them are on Google Fonts (and most
+on Bunny Fonts): Instrument Sans and Instrument Serif, Fraunces, Share
+Tech Mono, Chakra Petch, Atkinson Hyperlegible, Space Grotesk, Archivo
+Black, Josefin Sans, Poiret One, Lora, Cormorant Garamond, Barlow and
+Barlow Condensed, IBM Plex Sans and IBM Plex Mono, Zen Kaku Gothic New,
+Shippori Mincho, Source Sans 3, Source Serif 4, Inter Tight, Geist Mono,
+Pixelify Sans, Inter, Archivo, Vazirmatn, Markazi Text, Titillium Web,
+Michroma. The showcase and the fixtures read the token values and load
+exactly the faces of the themes on the page, which is the pattern to
+copy. kp-soft loads its four from Bunny Fonts; put this in your `<head>`:
 
 ```html
 <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -130,6 +142,7 @@ element so they resolve per subtree.
 | `@kp-soft/themes/css`                 | the palette — the one file a vendoring consumer needs |
 | `@kp-soft/themes/css/components`      | the component classes                                 |
 | `@kp-soft/themes/css/register`        | the cyberpunk HUD chrome, opt-in                      |
+| `@kp-soft/themes/css/retro-register`  | retro's raised and sunken bevels, opt-in              |
 | `@kp-soft/themes/css/tailwind-bridge` | for Tailwind v4 consumers                             |
 | `@kp-soft/themes/js/core`             | the theme state, framework-free                       |
 | `@kp-soft/themes/js/picker`           | the framework-free picker                             |
@@ -405,7 +418,7 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 
 ## Home Assistant
 
-`ha/kp-*.yaml` is the same eleven themes as Home Assistant themes,
+`ha/kp-*.yaml` is the same twenty-four themes as Home Assistant themes,
 generated from the same token sources. Copy them into Home Assistant's
 `themes/` directory and reload; they appear under their Dutch names beside
 whatever you already have. The `kp-` prefix is there so a file called
@@ -420,7 +433,7 @@ Three of Home Assistant's variables are ink rather than plate —
 `warning-color`, `success-color`, `info-color` — and which half of our
 pair that is depends on the theme, so the generator picks whichever is
 readable on that theme's card. A test asserts all four ink colours clear
-3:1 in all eleven.
+3:1 in all twenty-four.
 
 ## Documentation
 
@@ -584,10 +597,12 @@ beside it.
 
 ### Theme names
 
-The eleven labels are English in the token source since 3.0.0 — "Formal",
+The labels are English in the token source since 3.0.0 — "Formal",
 "Light", "Dark", "High contrast", "Blueprint", "Solstice", "Topographic",
-and the four that were already names. The interface names (`formal`,
-`topo`) did not change. Override any label in either channel:
+and the rest are names; the thirteen themes of 3.1.0 arrived with English
+labels ("Art Deco", "Shade (light)", "Shade (dark)"). The interface names
+(`formal`, `topo`, `shade-light`) did not change. Override any label in
+either channel:
 
 ```jsx
 <ThemeSwitcher labels={{ formal: 'Formeel', dark: 'Donker' }} />

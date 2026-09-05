@@ -1,5 +1,41 @@
 # Changelog
 
+## 3.1.0 — 2026-09-05
+
+**Thirteen more themes.** Round three researched eleven candidates and
+ten further ideas against the existing set, dropped everything that sat
+on a theme already here (vaporwave on cyberpunk, botanical on topo,
+steampunk on solstice, cosmic on dark), and built the rest —
+`docs/THEME_CANDIDATES.md` is the research, `themes/*/anatomy.md` the
+result. Nothing existing changed (S20).
+
+### Added
+
+- **Themes:** brutalism, deco, academia, phantom, ticker, nishiki,
+  shade-light and shade-dark (one scheme, two halves), mono, retro,
+  grotesk, tazhib, nostromo. Thirteen light, eleven dark in total.
+- **`--fx-shadow-offset`** — a hard offset shadow on buttons, cards and
+  inputs; brutalism's signature, `0px` everywhere else (TH85).
+- **`--chart-pattern-1` … `-5`** — an image over each chart colour so a
+  series is told apart without hue; mono's five fills, `none` elsewhere
+  (TH86).
+- **`css/retro-register.css`** — raised and sunken bevels inside a gated
+  boundary, scoped to retro (TH87). Exported as
+  `@kp-soft/themes/css/retro-register`.
+- **The showcase compares two themes side by side** — a picker per half,
+  one scroll, every specimen twice — and loads each theme's faces from
+  Google Fonts (the package still loads none) (TH88).
+- **`--kp-popover-max-height`** — the popover scrolls inside itself.
+
+### Fixed
+
+- The strings gate flagged three shapes of code that only looked like
+  text (a CSS selector, a capitalised object key, the code between two
+  one-character literals); repaired test-first (KT7).
+- Fields and inputs shrink inside a grid or flex track instead of
+  pushing a 320px viewport sideways, found by the reflow test on a wide
+  face.
+
 ## 3.0.0 — 2026-09-05
 
 **The release in which every feature of every component became

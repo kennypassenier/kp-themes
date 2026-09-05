@@ -44,7 +44,7 @@ An unknown stored value is corrected to the default theme as soon as the
 picker is attached; `initializeTheme(fallback)` names another, and
 `applyTheme(name, { strict: true })` throws instead of substituting.
 
-## The eleven themes
+## The twenty-four themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -59,6 +59,22 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `sepia` | Sepia | no |
 | `blueprint` | Blueprint | yes |
 | `solstice` | Solstice | yes |
+| `brutalism` | Brutalism | no |
+| `deco` | Art Deco | yes |
+| `academia` | Dark Academia | yes |
+| `phantom` | Phantom | yes |
+| `ticker` | Ticker | yes |
+| `nishiki` | Nishiki | no |
+| `shade-light` | Shade (light) | no |
+| `shade-dark` | Shade (dark) | yes |
+| `mono` | Mono | no |
+| `retro` | Retro | no |
+| `grotesk` | Grotesk | no |
+| `tazhib` | Tazhib | yes |
+| `nostromo` | Nostromo | no |
+
+Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
+on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -71,7 +87,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those eleven names since 1.1.0,
+The `Theme` type is the union of exactly those twenty-four names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -312,14 +328,20 @@ the flash threshold, so they are literals rather than knobs:
 | `--fx-duration` | how long anything takes — 90 ms in terminal, 240 ms in sepia and solstice |
 | `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
 | `--fx-lift` | how far a control rises under the cursor. Formal, sepia and high-contrast answer `0px`, which is a character rather than an omission |
+| `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
+| `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 
 Each theme also has at most one gesture of its own: a rule that draws
 itself under a heading in formal, a blinking block cursor in terminal, a
 badge that settles in pastel, a drifting contour layer in topo, a ruled
-line in blueprint, an ember around a new card in solstice, and the whole
-register in cyberpunk. Sepia and high-contrast have none on purpose — in
-the restful theme and the accessible one, a gesture works against the
-reason the theme exists.
+line in blueprint, an ember around a new card in solstice, the whole
+register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
+brutalism, a double gold rule in deco, a slower gold rule in academia, a
+badge that slides in in phantom, a hanko seal after a heading in nishiki,
+and the bevel register in retro. Sepia, high-contrast, ticker, mono and
+both halves of shade have none on purpose — in the restful theme, the
+accessible one, the data-dense one and the medium-contrast pair, a
+gesture works against the reason the theme exists.
 
 All of it sits inside `prefers-reduced-motion: no-preference`, and the
 flash threshold is measured rather than assumed.

@@ -27,6 +27,10 @@ referenced below.
 
 Plus six decisions that are not ratings, and twelve design invariants.
 
+Round three (2026-09-05, TH64–TH88): seven Essential decisions covering
+eight themes, five Desired, four Later, five Don't do, plus three pieces of
+enabling work and the showcase comparison view — all shipped in 3.1.0.
+
 ## Test bars, agreed at the freeze
 
 Defined now rather than discovered in Phase 7. These apply to every

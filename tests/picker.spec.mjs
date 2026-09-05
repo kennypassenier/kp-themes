@@ -123,6 +123,50 @@ for (const [name, channel] of Object.entries(CHANNELS)) {
     });
 }
 
+test('the picker is operable by keyboard end to end with every theme in it [R5]', async ({ page }) => {
+    // Twenty-four options in a menu: the last one must be reachable and
+    // visible — scrolled into view inside the popover, not clipped under
+    // its edge. The React menu is a roving tabindex: Tab enters the list
+    // once, the arrows move between options, Enter chooses.
+    // Drill [KT3]: with `overflow: clip` on .kp-popover the container
+    // cannot scroll, focus lands on an option outside the popover's box,
+    // and the box assertion fails.
+    await page.goto('/tests/fixtures/picker.html');
+    // Shorter than the list: at 420px the popover's 80vh is 336px and the
+    // twenty-four options need 465px, so the menu has to scroll.
+    await page.setViewportSize({ width: 1024, height: 420 });
+    const trigger = page.locator('#react-mount .kp-icon-button');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    const menu = page.locator('#react-mount [data-kp-theme-picker]');
+    await expect(menu).toBeVisible();
+    const last = await menu.locator('[data-kp-theme]').last().getAttribute('data-kp-theme');
+    // Firefox puts a scrollable container in the tab order before its
+    // contents; one Tab reaches the list there and the option here.
+    let focused = null;
+    for (let i = 0; i < 3 && focused === null; i++) {
+        await page.keyboard.press('Tab');
+        focused = await page.evaluate(() => document.activeElement?.getAttribute('data-kp-theme') ?? null);
+    }
+    for (let i = 0; i < REGISTRY.length + 2 && focused !== last; i++) {
+        await page.keyboard.press('ArrowDown');
+        focused = await page.evaluate(() => document.activeElement?.getAttribute('data-kp-theme') ?? null);
+    }
+    expect(focused).toBe(last);
+    const boxes = await page.evaluate((name) => {
+        const option = document.querySelector(`#react-mount [data-kp-theme="${name}"]`);
+        const popover = option.closest('.kp-popover');
+        const o = option.getBoundingClientRect();
+        const p = popover.getBoundingClientRect();
+        return { option: [o.top, o.bottom], popover: [p.top, p.bottom], viewport: window.innerHeight };
+    }, last);
+    expect(boxes.option[0]).toBeGreaterThanOrEqual(boxes.popover[0] - 1);
+    expect(boxes.option[1]).toBeLessThanOrEqual(boxes.popover[1] + 1);
+    expect(boxes.popover[1]).toBeLessThanOrEqual(boxes.viewport + 1);
+    await page.keyboard.press('Enter');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', last);
+});
+
 test('two pickers on one page stay in step', async ({ page }) => {
     await page.goto(PAGE);
     await page.evaluate(() => localStorage.clear());
