@@ -22,22 +22,50 @@
 // Sliders rather than a canvas gradient on purpose: a canvas needs a
 // pointer, and three labelled ranges are operable from the keyboard, read
 // aloud correctly, and give the exact numbers back.
+//
+// Since 3.0.0 [KT6]: the colour is settable through the handle — the
+// first version measured only on 'input', so a saved colour could not be
+// restored; the event carries the ratio and the verdict, which are the
+// picker's whole point; nothing fires at attach; the theme listener is
+// optional; and detach restores what it wrote.
 
-import { contrast, formatHsl, hslToRgb, meets, tokenColour } from './contrast.js';
+import { contrast, formatHsl, hslToRgb, meets, parseHsl, tokenColour } from './contrast.js';
 import { getStrings } from './strings.js';
 
 const PICKER = '[data-kp-colorpicker]';
 
-/** Fired when the colour changes. A contract value [TH26]. */
+/** @typedef {{ h: number, s: number, l: number }} Hsl */
+/** @typedef {{ value: string, h: number, s: number, l: number, ratio: number | null, ok: boolean | null, against: string }} ColourDetail */
+
+/** Fired when the colour changes. A contract value [TH26]. Detail: ColourDetail. */
 export const COLOR_EVENT = 'kp-color-change';
 
 /**
- * @param {ParentNode} root
- * @returns {() => void} detach
+ * @typedef {object} ColorPickerHandle
+ * @property {HTMLElement} element
+ * @property {() => ColourDetail} get
+ * @property {(colour: Hsl | string) => void} set an object, or an hsl() string
+ * @property {() => void} measure re-run the contrast measurement (after a theme or target change)
  */
-export function attachColorPickers(root = document) {
+
+/** @type {WeakMap<Element, ColorPickerHandle>} */
+const handles = new WeakMap();
+
+/** The handle for an attached picker. @param {Element} element */
+export function colorPicker(element) {
+    return handles.get(element) ?? null;
+}
+
+/**
+ * @param {ParentNode} root
+ * @param {{ followTheme?: boolean }} [options] re-measure on theme change (default true; per picker `data-kp-follow-theme="false"`)
+ * @returns {(() => void) & { handles: ColorPickerHandle[] }} detach
+ */
+export function attachColorPickers(root = document, { followTheme = true } = {}) {
     /** @type {(() => void)[]} */
     const cleanups = [];
+    /** @type {ColorPickerHandle[]} */
+    const created = [];
 
     for (const element of root.querySelectorAll(PICKER)) {
         const picker = /** @type {HTMLElement} */ (element);
@@ -47,6 +75,7 @@ export function attachColorPickers(root = document) {
         const swatch = /** @type {HTMLElement | null} */ (picker.querySelector('[data-kp-swatch]'));
         const value = /** @type {HTMLElement | null} */ (picker.querySelector('[data-kp-colorpicker-value]'));
         const report = /** @type {HTMLElement | null} */ (picker.querySelector('[data-kp-colorpicker-contrast]'));
+        const follow = picker.dataset.kpFollowTheme === undefined ? followTheme : picker.dataset.kpFollowTheme !== 'false';
         // Read on every update rather than captured at attach: a consumer
         // may point the measurement at another token — the card instead of
         // the page — without detaching and reattaching the picker.
@@ -55,13 +84,14 @@ export function attachColorPickers(root = document) {
 
         /** @param {string} channel */
         const slider = (channel) => /** @type {HTMLInputElement | null} */ (picker.querySelector(`[data-kp-channel="${channel}"]`));
+        const before = { swatch: swatch?.style.background ?? '', value: value?.textContent ?? '', report: report?.textContent ?? '' };
 
-        const update = () => {
-            const colour = {
-                h: Number(slider('h')?.value ?? 0),
-                s: Number(slider('s')?.value ?? 0),
-                l: Number(slider('l')?.value ?? 0),
-            };
+        /** @returns {Hsl} */
+        const read = () => ({ h: Number(slider('h')?.value ?? 0), s: Number(slider('s')?.value ?? 0), l: Number(slider('l')?.value ?? 0) });
+
+        /** @param {boolean} announce @returns {ColourDetail} */
+        const update = (announce) => {
+            const colour = read();
             const text = formatHsl(colour);
             picker.style.setProperty('--kp-color', text);
             if (swatch !== null) swatch.style.background = text;
@@ -70,49 +100,77 @@ export function attachColorPickers(root = document) {
             const against = target();
             const kind = level();
             const ground = tokenColour(against);
-            if (report !== null) {
-                if (ground === null) {
-                    // Said rather than left blank: a picker that silently
-                    // stops measuring looks exactly like one that says the
-                    // colour is fine.
-                    report.textContent = getStrings().contrastMissing(against);
-                    delete picker.dataset.kpContrastOk;
-                } else {
-                    const ratio = contrast(hslToRgb(colour), ground);
-                    const ok = meets(ratio, kind);
-                    // The number AND the verdict: a bare 4.31 means nothing
-                    // to anyone who does not know the thresholds by heart.
-                    const s = getStrings();
-                    report.textContent = s.contrastReport(ratio.toFixed(2), against, ok ? s.contrastPasses : s.contrastFails);
-                    if (ok) picker.dataset.kpContrastOk = '';
-                    else delete picker.dataset.kpContrastOk;
-                }
+            /** @type {number | null} */
+            let ratio = null;
+            /** @type {boolean | null} */
+            let ok = null;
+            const s = getStrings();
+            if (ground === null) {
+                // Said rather than left blank: a picker that silently
+                // stops measuring looks exactly like one that says the
+                // colour is fine.
+                if (report !== null) report.textContent = s.contrastMissing(against);
+                delete picker.dataset.kpContrastOk;
+            } else {
+                ratio = contrast(hslToRgb(colour), ground);
+                ok = meets(ratio, kind);
+                // The number AND the verdict: a bare 4.31 means nothing to
+                // anyone who does not know the thresholds by heart.
+                if (report !== null) report.textContent = s.contrastReport(ratio.toFixed(2), against, ok ? s.contrastPasses : s.contrastFails);
+                if (ok) picker.dataset.kpContrastOk = '';
+                else delete picker.dataset.kpContrastOk;
             }
-            picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail: { value: text, ...colour } }));
+            /** @type {ColourDetail} */
+            const detail = { value: text, ...colour, ratio, ok, against };
+            if (announce) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
+            return detail;
         };
 
-        const onInput = () => update();
+        const onInput = () => update(true);
         for (const channel of ['h', 's', 'l']) slider(channel)?.addEventListener('input', onInput);
         // Remeasured when the document changes theme: the same colour is
         // readable on formal and invisible on terminal, which is the whole
         // reason this number is here.
-        const onTheme = () => update();
-        document.addEventListener('kp-theme-change', onTheme);
-        update();
+        const onTheme = () => update(false);
+        if (follow) document.addEventListener('kp-theme-change', onTheme);
+        // Silently: nothing changed yet, so nothing is announced.
+        update(false);
+
+        /** @type {ColorPickerHandle} */
+        const handle = {
+            element: picker,
+            get: () => update(false),
+            set: (colour) => {
+                const hsl = typeof colour === 'string' ? parseHsl(colour) : colour;
+                if (hsl === null) return;
+                const h = slider('h');
+                const s = slider('s');
+                const l = slider('l');
+                if (h) h.value = String(hsl.h);
+                if (s) s.value = String(hsl.s);
+                if (l) l.value = String(hsl.l);
+                update(true);
+            },
+            measure: () => void update(false),
+        };
+        handles.set(picker, handle);
+        created.push(handle);
 
         cleanups.push(() => {
             for (const channel of ['h', 's', 'l']) slider(channel)?.removeEventListener('input', onInput);
             document.removeEventListener('kp-theme-change', onTheme);
+            picker.style.removeProperty('--kp-color');
+            if (swatch !== null) swatch.style.background = before.swatch;
+            if (value !== null) value.textContent = before.value;
+            if (report !== null) report.textContent = before.report;
+            delete picker.dataset.kpContrastOk;
+            handles.delete(picker);
             delete picker.dataset.kpColorpickerAttached;
         });
     }
 
-    return () => {
+    const detach = () => {
         for (const c of cleanups) c();
     };
-}
-
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => attachColorPickers());
-    else attachColorPickers();
+    return Object.assign(detach, { handles: created });
 }

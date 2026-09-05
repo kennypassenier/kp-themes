@@ -26,6 +26,7 @@ export type Strings = {
     tableEmpty: string;
     tableRows: (n: number) => string;
     tableRowsFiltered: (shown: number, total: number) => string;
+    tablePage: (at: number, of: number) => string;
     formRequired: string;
     formInvalid: string;
     formSummaryOne: string;
@@ -36,11 +37,15 @@ export type Strings = {
     dateFormatHint: string;
     previousMonth: string;
     nextMonth: string;
+    monthTitle: (month: string, year: number) => string;
     weekdays: string[];
     months: string[];
     dayLabel: (day: number, month: string, year: number) => string;
     uploadZone: string;
     uploadTooLarge: (size: string) => string;
+    uploadTooMany: (max: number) => string;
+    uploadTotalTooLarge: (max: string) => string;
+    uploadWrongType: (accept: string) => string;
     uploadProgress: (name: string) => string;
     wizardStep: (at: number, of: number) => string;
     copy: string;
@@ -52,6 +57,7 @@ export type Strings = {
     deleted: string;
     splitLabel: string;
     reorderHandle: (name: string) => string;
+    reorderMoved: (name: string, at: number, of: number) => string;
     tileFallbackName: string;
     tileLabel: (name: string, column: number, row: number, w: number, h: number) => string;
     contrastMissing: (token: string) => string;
@@ -70,6 +76,10 @@ export type Strings = {
     themePicker: string;
     themeSaveFailed: string;
     themeSaveRefused: string;
+    contractDestructive: string;
+    contractSemantic: string;
+    themeGroupLight: string;
+    themeGroupDark: string;
 };
 /**
  * @typedef {object} Strings
@@ -100,6 +110,7 @@ export type Strings = {
  * @property {string} tableEmpty
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
+ * @property {(at: number, of: number) => string} tablePage
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -110,11 +121,15 @@ export type Strings = {
  * @property {string} dateFormatHint
  * @property {string} previousMonth
  * @property {string} nextMonth
+ * @property {(month: string, year: number) => string} monthTitle
  * @property {string[]} weekdays
  * @property {string[]} months
  * @property {(day: number, month: string, year: number) => string} dayLabel
  * @property {string} uploadZone
  * @property {(size: string) => string} uploadTooLarge
+ * @property {(max: number) => string} uploadTooMany
+ * @property {(max: string) => string} uploadTotalTooLarge
+ * @property {(accept: string) => string} uploadWrongType
  * @property {(name: string) => string} uploadProgress
  * @property {(at: number, of: number) => string} wizardStep
  * @property {string} copy
@@ -126,6 +141,7 @@ export type Strings = {
  * @property {string} deleted
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
+ * @property {(name: string, at: number, of: number) => string} reorderMoved
  * @property {string} tileFallbackName
  * @property {(name: string, column: number, row: number, w: number, h: number) => string} tileLabel
  * @property {(token: string) => string} contrastMissing
@@ -144,6 +160,10 @@ export type Strings = {
  * @property {string} themePicker
  * @property {string} themeSaveFailed
  * @property {string} themeSaveRefused
+ * @property {string} contractDestructive
+ * @property {string} contractSemantic
+ * @property {string} themeGroupLight
+ * @property {string} themeGroupDark
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

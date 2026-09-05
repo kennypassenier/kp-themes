@@ -462,6 +462,21 @@ including the useful part: drive it from attributes rather than per-button
 code, so a new button gets the behaviour by declaring it instead of by
 someone remembering.
 
+**Amendment, 2026-09-05 (KT6, decision D7).** The rule stands; the
+enforcement changed owner. Until 3.0.0 `enforceContracts()` disabled a
+consumer's button, forgot what the button had been, offered no detach and
+never looked again — markup that arrived a moment too late stayed dead
+for the life of the page. Kenny's answer to the sweep's form was "keep
+disabling, make it recoverable": enforcement now records what it changed,
+returns a detach that puts it back, re-evaluates when called again,
+exempts `data-kp-contract-ignore`, takes `{ disable: false }` for a
+warn-only run, and speaks through the dictionary. The React `Button`
+spreads its props before `disabled`, so `disabled={false}` can no longer
+re-enable a contract-broken button by accident, and its `onUndo` — the
+documented alternative to `confirm` — is invoked at last: the button acts
+on the click and offers an undo for `undoMs`. Tested in
+`tests/sweep.spec.mjs` (framework-free) and `tests/components.spec.mjs`.
+
 ## DI11 · Components survive user-forced text spacing and reflow
 
 **Must be true.** No content is lost or clipped when a user forces larger

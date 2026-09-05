@@ -9,6 +9,95 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 2.x to 3.0.0
+
+Four things can need a change; most consumers hit one.
+
+### 1 · Framework-free: nothing attaches on import
+
+If you loaded modules with script tags, replace them with one:
+
+```html
+<script type="module" src="/vendor/kp-themes/js/auto.js"></script>
+```
+
+If you imported a module and relied on it attaching, call the function:
+
+```js
+import { attachThemePickers } from '@kp-soft/themes/js/picker';
+attachThemePickers();
+```
+
+`themeMenuMarkup()` no longer schedules an attach either; attach after the
+markup is in the DOM.
+
+### 2 · The theme labels are English
+
+"Formeel" is "Formal" on screen. To keep the Dutch:
+
+```jsx
+<ThemeSwitcher
+    labels={{
+        formal: 'Formeel',
+        light: 'Licht',
+        dark: 'Donker',
+        'high-contrast': 'Hoog contrast',
+        blueprint: 'Blauwdruk',
+        solstice: 'Zonnewende',
+        topo: 'Topografisch',
+    }}
+/>
+```
+
+```js
+themeMenuMarkup({ labels: { formal: 'Formeel' /* … */ } });
+```
+
+### 3 · The locale is the page's
+
+The date picker wrote `dd-mm-yyyy` and read day-first; now it reads the
+nearest `lang` attribute, then the browser. A page with `<html lang="nl">`
+sees no change. A page with no `lang` on a browser set to English gets
+`mm/dd/yyyy`. Say what you mean:
+
+```html
+<html lang="nl">
+    <div data-kp-datepicker data-kp-locale="nl-NL"></div>
+</html>
+```
+
+```jsx
+<DatePicker locale="nl-NL" weekStartsOn={1} />
+<DataTable locale="nl-NL" … />
+```
+
+`toDutch()` still exists, deprecated; it is `formatLocalDate(date, 'nl-NL')`.
+
+### 4 · `BootSequence` moved
+
+```js
+import { BootSequence } from '@kp-soft/themes/fx/boot-sequence';
+```
+
+The `fx` barrel no longer pulls in `motion`.
+
+### Nothing to do
+
+Every other change is additive: a prop with the old behaviour as its
+default, a handle on a detach you were not reading, a custom property with
+the old value as its fallback. If you vendor the stylesheets only, nothing
+changed on screen.
+
+### Worth checking
+
+- `ThemeSwitcher` now wears `kp-theme-menu` / `kp-icon-button` /
+  `kp-popover` / `kp-menu` rather than Tailwind class names; a consumer
+  that styled the old names restyles the new ones.
+- `Button` with `onUndo` now acts on the click and offers an undo; it was
+  a no-op before.
+- `GridLayout` tiles keep the `aria-label` you gave them; the geometry is
+  in the description.
+
 ## Coming from 1.x to 2.0.0
 
 One breaking change, and it is visible rather than structural: **the

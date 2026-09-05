@@ -1,5 +1,8 @@
-import { useMemo, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { compare as compareCells } from '../js/datatable.js';
+import { resolveLocale } from '../js/locale.js';
 import { useStrings } from '../hooks/use-strings.jsx';
+import { useControllable } from '../hooks/use-controllable.js';
 
 // DataTable, React [TH37].
 //
@@ -10,114 +13,200 @@ import { useStrings } from '../hooks/use-strings.jsx';
 //
 // Deliberately without virtualisation, in-cell editing or export (TH42):
 // that is a grid, a different product.
+//
+// Since 3.0.0 [KT6]: query, sort, page and selection are controllable —
+// a table in the URL, a selection cleared after a bulk action, a server
+// that sorts and pages (`totalRows` tells the table it is not looking at
+// everything); the comparator collates in the page's locale rather than
+// in Dutch; a header sorts from the keyboard; cells render nodes; and
+// the search box, the pager and the card layout can each be off.
+
+/** @typedef {{ key: string, label: import('react').ReactNode, kind?: 'text' | 'number' | 'date', sortable?: boolean, align?: 'start' | 'center' | 'end', width?: string, className?: string, render?: (value: unknown, row: Record<string, unknown>, index: number) => import('react').ReactNode, compare?: (a: unknown, b: unknown) => number }} Column */
+/** @typedef {{ key: string, direction: 'ascending' | 'descending' } | null} Sort */
 
 /**
- * @typedef {{ key: string, label: string, kind?: 'text' | 'number' | 'date' }} Column
+ * @typedef {object} DataTableProps
+ * @property {Column[]} columns
+ * @property {Record<string, unknown>[]} rows
+ * @property {(row: Record<string, unknown>, index: number) => string} [rowKey]
+ * @property {number} [pageSize]       Default 10.
+ * @property {number[]} [pageSizes]    Offer a rows-per-page selector.
+ * @property {(size: number) => void} [onPageSizeChange]
+ * @property {boolean} [paginated]     Default true.
+ * @property {boolean} [searchable]    Default true.
+ * @property {boolean} [selectable]
+ * @property {boolean} [cards]         The narrow layout. Default true.
+ * @property {import('react').ReactNode} [caption]
+ * @property {import('react').ReactNode} [empty]
+ * @property {string} [query]          Controlled.
+ * @property {string} [defaultQuery]
+ * @property {(query: string) => void} [onQueryChange]
+ * @property {number} [debounceMs]     Default 0.
+ * @property {Sort} [sort]             Controlled.
+ * @property {Sort} [defaultSort]
+ * @property {(sort: Sort) => void} [onSortChange]
+ * @property {'two' | 'three'} [sortCycle]  Default two; three adds an unsorted state.
+ * @property {number} [page]           Controlled, 0-based.
+ * @property {number} [defaultPage]
+ * @property {(page: number) => void} [onPageChange]
+ * @property {number} [totalRows]      Server mode: the rows given are one page of this many; the table neither filters nor sorts nor slices them.
+ * @property {string[]} [selected]     Controlled.
+ * @property {string[]} [defaultSelected]
+ * @property {(keys: string[]) => void} [onSelect]
+ * @property {string} [locale]         Default: the nearest lang, else the browser's.
+ * @property {(row: Record<string, unknown>, query: string) => boolean} [filter]
+ * @property {(row: Record<string, unknown>, index: number) => void} [onRowClick]
+ * @property {(row: Record<string, unknown>, index: number) => string | undefined} [rowClassName]
+ * @property {boolean} [loading]
+ * @property {Partial<import('../js/strings.js').Strings>} [strings]
+ * @property {string} [className]
+ * @property {import('react').CSSProperties} [style]
+ * @property {{ bar?: string, search?: string, table?: string, status?: string, pager?: string }} [classNames]
  */
 
 /**
- * A number column sorted as text puts 100 before 20 — the most common
- * data-table bug there is, and the reason a column declares its kind
- * rather than the code guessing from the first row.
- *
- * @param {string} a @param {string} b @param {string} kind
+ * @param {DataTableProps} props
+ * @param {import('react').ForwardedRef<HTMLDivElement>} ref
  */
-function compare(a, b, kind) {
-    if (kind === 'number') {
-        const left = Number.parseFloat(a.replace(/\./g, '').replace(',', '.'));
-        const right = Number.parseFloat(b.replace(/\./g, '').replace(',', '.'));
-        if (Number.isNaN(left) || Number.isNaN(right)) return a.localeCompare(b, 'nl');
-        return left - right;
-    }
-    if (kind === 'date') {
-        const left = Date.parse(a);
-        const right = Date.parse(b);
-        if (Number.isNaN(left) || Number.isNaN(right)) return a.localeCompare(b, 'nl');
-        return left - right;
-    }
-    return a.localeCompare(b, 'nl', { numeric: true, sensitivity: 'base' });
-}
-
-/**
- * @param {{
- *   columns: Column[],
- *   rows: Record<string, string>[],
- *   rowKey?: (row: Record<string, string>, index: number) => string,
- *   pageSize?: number,
- *   selectable?: boolean,
- *   cards?: boolean,
- *   caption?: string,
- *   empty?: string,
- *   onSelect?: (keys: string[]) => void,
- *   strings?: Partial<import('../js/strings.js').Strings>,
- *   className?: string,
- * }} props
- */
-export default function DataTable({
-    columns,
-    rows,
-    rowKey = (_, index) => String(index),
-    pageSize = 10,
-    selectable = false,
-    cards = true,
-    caption,
-    empty,
-    onSelect,
-    strings,
-    className = '',
-}) {
+function DataTableInner(
+    {
+        columns,
+        rows,
+        rowKey = (_, index) => String(index),
+        pageSize: pageSizeProp = 10,
+        pageSizes,
+        onPageSizeChange,
+        paginated = true,
+        searchable = true,
+        selectable = false,
+        cards = true,
+        caption,
+        empty,
+        query: queryProp,
+        defaultQuery = '',
+        onQueryChange,
+        debounceMs = 0,
+        sort: sortProp,
+        defaultSort = null,
+        onSortChange,
+        sortCycle = 'two',
+        page: pageProp,
+        defaultPage = 0,
+        onPageChange,
+        totalRows,
+        selected,
+        defaultSelected = [],
+        onSelect,
+        locale: localeProp,
+        filter,
+        onRowClick,
+        rowClassName,
+        loading = false,
+        strings,
+        className = '',
+        style,
+        classNames = {},
+        ...rest
+    },
+    ref,
+) {
     const s = useStrings(strings);
-    const [query, setQuery] = useState('');
-    const [sort, setSort] = useState(/** @type {{ key: string, direction: 'ascending' | 'descending' } | null} */ (null));
-    const [page, setPage] = useState(0);
-    const [chosen, setChosen] = useState(/** @type {string[]} */ ([]));
+    /** @type {import('react').RefObject<HTMLDivElement | null>} */
+    const inner = useRef(null);
+    useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
+    const [locale, setLocale] = useState(() => resolveLocale(localeProp));
+    useEffect(() => {
+        setLocale(resolveLocale(localeProp, inner.current));
+    }, [localeProp]);
+    const [query, setQuery] = useControllable(queryProp, defaultQuery, onQueryChange);
+    const [typed, setTyped] = useState(query);
+    const [sort, setSort] = useControllable(sortProp, defaultSort, onSortChange);
+    const [page, setPage] = useControllable(pageProp, defaultPage, onPageChange);
+    const [chosen, setChosen] = useControllable(selected, defaultSelected, onSelect);
+    const [pageSize, setPageSize] = useState(pageSizeProp);
+    useEffect(() => setPageSize(pageSizeProp), [pageSizeProp]);
+    useEffect(() => setTyped(query), [query]);
+    const serverMode = totalRows !== undefined;
+
+    // The search box: debounced when asked, so a server behind it is not
+    // asked once per keystroke.
+    const debounce = useRef(0);
+    useEffect(() => () => clearTimeout(debounce.current), []);
+    /** @param {string} next */
+    const onSearch = (next) => {
+        setTyped(next);
+        clearTimeout(debounce.current);
+        const commit = () => {
+            setQuery(next);
+            setPage(0);
+        };
+        if (debounceMs > 0) debounce.current = window.setTimeout(commit, debounceMs);
+        else commit();
+    };
 
     const filtered = useMemo(() => {
+        if (serverMode) return rows;
         const needle = query.trim().toLowerCase();
         if (needle === '') return rows;
-        return rows.filter((row) => Object.values(row).join(' ').toLowerCase().includes(needle));
-    }, [rows, query]);
+        return rows.filter((row) => (filter ? filter(row, needle) : Object.values(row).join(' ').toLowerCase().includes(needle)));
+    }, [rows, query, filter, serverMode]);
 
     const sorted = useMemo(() => {
-        if (sort === null) return filtered;
-        const kind = columns.find((c) => c.key === sort.key)?.kind ?? 'text';
+        if (serverMode || sort === null) return filtered;
+        const column = columns.find((c) => c.key === sort.key);
+        const kind = column?.kind ?? 'text';
         const sign = sort.direction === 'ascending' ? 1 : -1;
-        return [...filtered].sort((a, b) => sign * compare(a[sort.key] ?? '', b[sort.key] ?? '', kind));
-    }, [filtered, sort, columns]);
+        return [...filtered].sort((a, b) =>
+            column?.compare
+                ? sign * column.compare(a[sort.key], b[sort.key])
+                : sign * compareCells(String(a[sort.key] ?? ''), String(b[sort.key] ?? ''), kind, locale),
+        );
+    }, [filtered, sort, columns, locale, serverMode]);
 
-    const pages = Math.max(1, Math.ceil(sorted.length / pageSize));
+    const total = serverMode ? totalRows : sorted.length;
+    const pages = paginated ? Math.max(1, Math.ceil(total / pageSize)) : 1;
     const at = Math.min(page, pages - 1);
-    const slice = sorted.slice(at * pageSize, at * pageSize + pageSize);
+    const slice = serverMode || !paginated ? sorted : sorted.slice(at * pageSize, at * pageSize + pageSize);
 
     const visibleKeys = slice.map((row, i) => rowKey(row, i));
     const allChecked = visibleKeys.length > 0 && visibleKeys.every((k) => chosen.includes(k));
     const someChecked = visibleKeys.some((k) => chosen.includes(k));
 
-    /** @param {string[]} next */
-    const choose = (next) => {
-        setChosen(next);
-        onSelect?.(next);
+    /** @param {Column} column */
+    const toggleSort = (column) => {
+        if (column.sortable === false) return;
+        const current = sort?.key === column.key ? sort.direction : null;
+        if (current === 'ascending') setSort({ key: column.key, direction: 'descending' });
+        else if (current === 'descending') setSort(sortCycle === 'three' ? null : { key: column.key, direction: 'ascending' });
+        else setSort({ key: column.key, direction: 'ascending' });
     };
 
     return (
-        <div className={`kp-datatable ${className}`.trim()} data-kp-datatable data-kp-cards={cards ? '' : undefined}>
-            <div className="kp-datatable__bar">
-                <input
-                    className="kp-datatable__search"
-                    type="search"
-                    data-kp-datatable-search
-                    placeholder={s.tableSearch}
-                    aria-label={s.tableSearchLabel}
-                    value={query}
-                    onChange={(event) => {
-                        setQuery(event.target.value);
-                        setPage(0);
-                    }}
-                />
-            </div>
+        <div
+            ref={inner}
+            className={`kp-datatable ${className}`.trim()}
+            style={style}
+            data-kp-datatable
+            data-kp-cards={cards ? '' : undefined}
+            aria-busy={loading ? 'true' : undefined}
+            {...rest}
+        >
+            {searchable && (
+                <div className={`kp-datatable__bar ${classNames.bar ?? ''}`.trim()}>
+                    <input
+                        className={`kp-datatable__search ${classNames.search ?? ''}`.trim()}
+                        type="search"
+                        data-kp-datatable-search
+                        placeholder={s.tableSearch}
+                        aria-label={s.tableSearchLabel}
+                        value={typed}
+                        onChange={(event) => onSearch(event.target.value)}
+                    />
+                </div>
+            )}
 
             <div className="kp-table-wrap">
-                <table className="kp-table">
+                <table className={`kp-table ${classNames.table ?? ''}`.trim()}>
                     {caption && <caption>{caption}</caption>}
                     <thead>
                         <tr>
@@ -135,42 +224,57 @@ export default function DataTable({
                                             if (node) node.indeterminate = someChecked && !allChecked;
                                         }}
                                         onChange={(event) => {
-                                            const next = event.target.checked
-                                                ? [...new Set([...chosen, ...visibleKeys])]
-                                                : chosen.filter((k) => !visibleKeys.includes(k));
-                                            choose(next);
+                                            setChosen(
+                                                event.target.checked
+                                                    ? [...new Set([...chosen, ...visibleKeys])]
+                                                    : chosen.filter((k) => !visibleKeys.includes(k)),
+                                            );
                                         }}
                                     />
                                 </th>
                             )}
-                            {columns.map((column) => (
-                                <th
-                                    key={column.key}
-                                    scope="col"
-                                    data-kp-sort={column.kind ?? 'text'}
-                                    // Only the sorted column carries a
-                                    // direction; a stale "ascending" on a
-                                    // column that is no longer the key is
-                                    // worse than saying nothing.
-                                    aria-sort={sort?.key === column.key ? sort.direction : 'none'}
-                                    onClick={() =>
-                                        setSort((current) =>
-                                            current?.key === column.key
-                                                ? { key: column.key, direction: current.direction === 'ascending' ? 'descending' : 'ascending' }
-                                                : { key: column.key, direction: 'ascending' },
-                                        )
-                                    }
-                                >
-                                    {column.label}
-                                </th>
-                            ))}
+                            {columns.map((column) => {
+                                const sortable = column.sortable !== false;
+                                const direction = sort?.key === column.key ? sort.direction : 'none';
+                                return (
+                                    <th
+                                        key={column.key}
+                                        scope="col"
+                                        className={column.className}
+                                        style={{ textAlign: column.align, width: column.width }}
+                                        data-kp-sort={sortable ? (column.kind ?? 'text') : undefined}
+                                        // Only the sorted column carries a
+                                        // direction; a stale "ascending" on a
+                                        // column that is no longer the key is
+                                        // worse than saying nothing.
+                                        aria-sort={sortable ? direction : undefined}
+                                    >
+                                        {sortable ? (
+                                            // A button, so the sort is reachable
+                                            // from the keyboard [KT6]: a bare th
+                                            // with onClick was mouse-only.
+                                            <button type="button" className="kp-datatable__sort" onClick={() => toggleSort(column)}>
+                                                {column.label}
+                                            </button>
+                                        ) : (
+                                            column.label
+                                        )}
+                                    </th>
+                                );
+                            })}
                         </tr>
                     </thead>
                     <tbody>
                         {slice.map((row, i) => {
                             const key = rowKey(row, i);
                             return (
-                                <tr key={key} data-kp-row-key={key}>
+                                <tr
+                                    key={key}
+                                    data-kp-row-key={key}
+                                    className={rowClassName?.(row, i)}
+                                    onClick={onRowClick ? () => onRowClick(row, i) : undefined}
+                                    data-kp-clickable={onRowClick ? '' : undefined}
+                                >
                                     {selectable && (
                                         <td data-label="">
                                             <input
@@ -178,8 +282,9 @@ export default function DataTable({
                                                 data-kp-select-row
                                                 aria-label={s.tableSelectRow(key)}
                                                 checked={chosen.includes(key)}
+                                                onClick={(event) => event.stopPropagation()}
                                                 onChange={(event) =>
-                                                    choose(event.target.checked ? [...chosen, key] : chosen.filter((k) => k !== key))
+                                                    setChosen(event.target.checked ? [...chosen, key] : chosen.filter((k) => k !== key))
                                                 }
                                             />
                                         </td>
@@ -189,8 +294,15 @@ export default function DataTable({
                                         // cell so the narrow layout can show
                                         // it: a value with no question
                                         // attached is not information.
-                                        <td key={column.key} data-label={column.label}>
-                                            {row[column.key]}
+                                        <td
+                                            key={column.key}
+                                            data-label={typeof column.label === 'string' ? column.label : column.key}
+                                            className={column.className}
+                                            style={{ textAlign: column.align }}
+                                        >
+                                            {column.render
+                                                ? column.render(row[column.key], row, i)
+                                                : /** @type {import('react').ReactNode} */ (row[column.key] ?? '')}
                                         </td>
                                     ))}
                                 </tr>
@@ -200,28 +312,50 @@ export default function DataTable({
                 </table>
             </div>
 
-            {sorted.length === 0 && (
+            {total === 0 && !loading && (
                 <div className="kp-empty" data-kp-datatable-empty>
                     {empty ?? s.tableEmpty}
                 </div>
             )}
 
-            <div className="kp-datatable__bar">
-                <p className="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite">
-                    {sorted.length === rows.length ? s.tableRows(rows.length) : s.tableRowsFiltered(sorted.length, rows.length)}
+            <div className={`kp-datatable__bar ${classNames.bar ?? ''}`.trim()}>
+                <p className={`kp-datatable__status ${classNames.status ?? ''}`.trim()} data-kp-datatable-status role="status" aria-live="polite">
+                    {loading ? s.busy : serverMode || total === rows.length ? s.tableRows(total) : s.tableRowsFiltered(total, rows.length)}
                 </p>
-                <div className="kp-datatable__pager" data-kp-datatable-pager>
-                    <button type="button" className="kp-button kp-button--ghost" disabled={at === 0} onClick={() => setPage(at - 1)}>
-                        {s.previous}
-                    </button>
-                    <span className="kp-datatable__page">
-                        {at + 1} / {pages}
-                    </span>
-                    <button type="button" className="kp-button kp-button--ghost" disabled={at >= pages - 1} onClick={() => setPage(at + 1)}>
-                        {s.next}
-                    </button>
-                </div>
+                {paginated && (
+                    <div className={`kp-datatable__pager ${classNames.pager ?? ''}`.trim()} data-kp-datatable-pager>
+                        {pageSizes && (
+                            <select
+                                className="kp-datatable__page-size"
+                                aria-label={s.tableRows(pageSize)}
+                                value={pageSize}
+                                onChange={(event) => {
+                                    const next = Number(event.target.value);
+                                    setPageSize(next);
+                                    setPage(0);
+                                    onPageSizeChange?.(next);
+                                }}
+                            >
+                                {pageSizes.map((size) => (
+                                    <option key={size} value={size}>
+                                        {size}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                        <button type="button" className="kp-button kp-button--ghost" disabled={at === 0} onClick={() => setPage(at - 1)}>
+                            {s.previous}
+                        </button>
+                        <span className="kp-datatable__page">{s.tablePage(at + 1, pages)}</span>
+                        <button type="button" className="kp-button kp-button--ghost" disabled={at >= pages - 1} onClick={() => setPage(at + 1)}>
+                            {s.next}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
 }
+
+const DataTable = forwardRef(DataTableInner);
+export default DataTable;

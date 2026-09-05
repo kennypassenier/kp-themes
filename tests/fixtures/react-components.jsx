@@ -17,6 +17,8 @@ import Combobox from '../../components/combobox.jsx';
 import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
 import DataTable from '../../components/datatable.jsx';
 import { Form, FormField } from '../../components/form.jsx';
+import { StringsProvider } from '../../hooks/use-strings.jsx';
+import { Copyable } from '../../components/patterns.jsx';
 import { Reorder, SplitPane, Tree } from '../../components/structure.jsx';
 import { DatePicker, Upload, Wizard } from '../../components/flow.jsx';
 import { ColorPicker, GridLayout } from '../../components/canvas.jsx';
@@ -107,7 +109,11 @@ function Cases() {
                 />
             </div>
             <div data-test="react-form">
-                <Form>
+                {/* The shape JobTracker actually has: a submit whose failure
+                    is an outcome the screen renders, so the promise RESOLVES
+                    after a wrong password rather than rejecting. Clearing
+                    busy only on rejection would have left them stuck. */}
+                <Form onValid={() => new Promise((resolve) => setTimeout(resolve, 400))}>
                     <FormField label="Naam" name="naam" required help="Zoals het op je pas staat." />
                     <FormField label="E-mail" name="mail" type="email" required />
                 </Form>
@@ -138,6 +144,19 @@ function Cases() {
                         ]}
                     />
                 </Form>
+            </div>
+            <div data-test="react-nested-strings">
+                {/* Layered providers [KT6]: the inner one overrides one word
+                    and must keep the outer one's other words. */}
+                <StringsProvider value={{ copy: 'Outer copy', copied: 'Outer copied' }}>
+                    <StringsProvider value={{ copy: 'Inner copy' }}>
+                        <Copyable value="abc" data-test="nested-idle" />
+                        {/* Controlled into the copied state, so the layered
+                            word shows without a clipboard — Firefox in CI has
+                            no clipboard permission to grant. */}
+                        <Copyable value="abc" state="copied" data-test="nested-copied" />
+                    </StringsProvider>
+                </StringsProvider>
             </div>
             <div data-test="react-router-nav">
                 {/* A consumer's own link component: what a router hands in.
@@ -170,7 +189,10 @@ function Cases() {
                 <SplitPane start="Links" end="Rechts" />
             </div>
             <div data-test="react-date">
-                <DatePicker label="Van" />
+                {/* Dutch dates are typed into it, and the page says so where the data is [D5]. */}
+                <div lang="nl">
+                    <DatePicker label="Van" />
+                </div>
             </div>
             <div data-test="react-upload">
                 <Upload maxBytes={1024} />
@@ -184,21 +206,24 @@ function Cases() {
                 />
             </div>
             <div data-test="react-datatable">
-                <DataTable
-                    columns={[
-                        { key: 'naam', label: 'Naam' },
-                        { key: 'bedrag', label: 'Bedrag', kind: 'number' },
-                    ]}
-                    rows={[
-                        { naam: 'Acme', bedrag: '100' },
-                        { naam: 'Bakker', bedrag: '20' },
-                        { naam: 'Cerise', bedrag: '1.284,50' },
-                        { naam: 'Delta', bedrag: '7' },
-                    ]}
-                    rowKey={(_, i) => `r${i}`}
-                    pageSize={3}
-                    selectable
-                />
+                {/* Dutch numbers in the rows; the page says so where the data is [D5]. */}
+                <div lang="nl">
+                    <DataTable
+                        columns={[
+                            { key: 'naam', label: 'Naam' },
+                            { key: 'bedrag', label: 'Bedrag', kind: 'number' },
+                        ]}
+                        rows={[
+                            { naam: 'Acme', bedrag: '100' },
+                            { naam: 'Bakker', bedrag: '20' },
+                            { naam: 'Cerise', bedrag: '1.284,50' },
+                            { naam: 'Delta', bedrag: '7' },
+                        ]}
+                        rowKey={(_, i) => `r${i}`}
+                        pageSize={3}
+                        selectable
+                    />
+                </div>
             </div>
             <div data-test="react-palette">
                 <CommandPalette

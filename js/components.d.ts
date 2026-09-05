@@ -1,10 +1,17 @@
-declare const VIOLATION_EVENT = "kp-contract-violation";
+/** Dispatched on the offending element, bubbling, with the Violation as detail. */
+export declare const VIOLATION_EVENT = "kp-contract-violation";
+/** Dispatched on a destructive button when its first click armed it. */
+export declare const ARM_EVENT = "kp-confirm-arm";
+/** Dispatched when an armed button disarms without acting: timeout, blur, or detach. */
+export declare const DISARM_EVENT = "kp-confirm-disarm";
+export type Rule = 'DI10' | 'DI4';
 export type Violation = {
-    rule: string;
+    rule: Rule;
     element: Element;
     message: string;
 };
-/** @typedef {{ rule: string, element: Element, message: string }} Violation */
+/** @typedef {'DI10' | 'DI4'} Rule */
+/** @typedef {{ rule: Rule, element: Element, message: string }} Violation */
 /**
  * The confirmation obstacle.
  *
@@ -17,30 +24,71 @@ export type Violation = {
  *
  * Configurable rather than hard-coded, because it is an operational knob:
  * a dashboard whose users delete all day wants a longer window than a
- * settings page.
+ * settings page. Per element too, as `data-kp-confirm-ms`.
  */
 export declare const CONFIRM_WINDOW_MS = 4000;
+/** Markup the consumer excludes from enforcement: `data-kp-contract-ignore`. */
+export declare const EXEMPT = "[data-kp-contract-ignore]";
 /**
  * @param {ParentNode} root
+ * @param {{ rules?: Rule[], exempt?: string }} [options]
  * @returns {Violation[]}
  */
-export declare function findViolations(root?: ParentNode): Violation[];
+export declare function findViolations(root?: ParentNode, { rules, exempt }?: {
+    rules?: Rule[];
+    exempt?: string;
+}): Violation[];
 /**
- * Report the violations and disarm what they point at. Returns them, so a
- * test can assert on the list rather than on console output.
+ * Report the violations and disarm what they point at.
+ *
+ * Idempotent: calling it again first restores everything it changed
+ * before and then looks afresh, so markup completed after the first
+ * pass comes back to life. Returns a detach that restores without
+ * re-evaluating. The list is also available on the return value, so a
+ * test asserts on it rather than on console output.
  *
  * @param {ParentNode} root
- * @returns {Violation[]}
+ * @param {{ disable?: boolean, rules?: Rule[], exempt?: string, log?: ((message: string, element: Element) => void) | null }} [options]
+ * @returns {(() => void) & { violations: Violation[] }}
  */
-export declare function enforceContracts(root?: ParentNode): Violation[];
+export declare function enforceContracts(root?: ParentNode, { disable, rules, exempt, log }?: {
+    disable?: boolean;
+    rules?: Rule[];
+    exempt?: string;
+    log?: ((message: string, element: Element) => void) | null;
+}): (() => void) & {
+    violations: Violation[];
+};
 /**
  * Arm-then-act on every destructive button that asked for a confirmation.
  *
  * @param {ParentNode} root
- * @param {{ windowMs?: number }} [options]
+ * @param {{ windowMs?: number, disarmOnBlur?: boolean }} [options]
  * @returns {() => void} detach
  */
-export declare function attachConfirmations(root?: ParentNode, { windowMs }?: {
+export declare function attachConfirmations(root?: ParentNode, { windowMs, disarmOnBlur }?: {
     windowMs?: number;
+    disarmOnBlur?: boolean;
 }): () => void;
-export { VIOLATION_EVENT };
+/**
+ * Move focus to the target of a skip link, adding `tabindex="-1"` if the
+ * target cannot take focus on its own [KT6].
+ *
+ * JobTracker found the half a skip link needs and nothing here provided:
+ * without a focusable target the browser scrolls and the next Tab goes
+ * back into the menu, so the link has done nothing for the person it
+ * exists for. Returns whether a target was found and focused.
+ *
+ * @param {string} href `#main`, or any same-page hash
+ * @param {Document | Element} [root]
+ * @returns {boolean}
+ */
+export declare function skipTo(href: string, root?: Document | Element): boolean;
+/**
+ * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
+ * the scroll position.
+ *
+ * @param {ParentNode} root
+ * @returns {() => void} detach
+ */
+export declare function attachSkipLinks(root?: ParentNode): () => void;

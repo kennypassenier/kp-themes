@@ -45,22 +45,29 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
 
-    for (const [name, target] of targets) {
-        if (typeof target !== 'string') continue;
-        checked++;
+    for (const [name, entry] of targets) {
+        // Since 3.0.0 an entry may be `{ types, default }` [KT6]: every
+        // condition is a file that has to ship, so each is checked.
+        const conditions = typeof entry === 'string' ? [entry] : Object.values(entry).filter((v) => typeof v === 'string');
+        for (const pattern of conditions) {
+            // A subpath pattern names a directory: `./components/*` ships if
+            // `components` does.
+            const target = pattern.replace(/\/\*$/, '');
+            checked++;
 
-        // On disk at all? A stale export outlives the file it names.
-        if (!existsSync(new URL(`../${target.replace(/^\.\//, '')}`, import.meta.url))) {
-            failed++;
-            console.error(`${name} points at ${target}, which does not exist.`);
-            continue;
-        }
-        if (!covered(target)) {
-            failed++;
-            console.error(
-                `${name} points at ${target}, which "files" does not include — so it is on disk and not in the tarball. ` +
-                    `Add its directory to "files" in package.json.`,
-            );
+            // On disk at all? A stale export outlives the file it names.
+            if (!existsSync(new URL(`../${target.replace(/^\.\//, '')}`, import.meta.url))) {
+                failed++;
+                console.error(`${name} points at ${target}, which does not exist.`);
+                continue;
+            }
+            if (!covered(target)) {
+                failed++;
+                console.error(
+                    `${name} points at ${target}, which "files" does not include — so it is on disk and not in the tarball. ` +
+                        `Add its directory to "files" in package.json.`,
+                );
+            }
         }
     }
 

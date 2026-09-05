@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="/css/components.css" />
     </head>
     <body>
+        <a class="kp-skip-link" href="#main" data-test="plain-skip">Skip to content</a>
+        <div id="main" data-test="main"></div>
         <h1>Contracten, twee kanalen</h1>
 
         <section id="plain">
@@ -206,7 +208,7 @@
 
         <section id="plain-date">
             <h2>Datumkiezer, framework-free</h2>
-            <div class="kp-datepicker" data-kp-datepicker data-test="plain-date">
+            <div class="kp-datepicker" data-kp-datepicker lang="nl" data-test="plain-date">
                 <div class="kp-field">
                     <label class="kp-field__label" for="van">Van</label>
                     <input
@@ -355,7 +357,7 @@
 
         <section id="plain-datatable">
             <h2>DataTable, framework-free</h2>
-            <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3" data-test="plain-datatable">
+            <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3" lang="nl" data-test="plain-datatable">
                 <div class="kp-datatable__bar">
                     <input
                         class="kp-datatable__search"
@@ -442,24 +444,17 @@
             <div id="react-components"></div>
         </section>
 
-        <script type="module" src="/js/components.js"></script>
-        <script type="module" src="/js/overlays.js"></script>
-        <script type="module" src="/js/combobox.js"></script>
-        <script type="module" src="/js/palette.js"></script>
-        <script type="module" src="/js/datatable.js"></script>
-        <script type="module" src="/js/forms.js"></script>
-        <script type="module" src="/js/patterns.js"></script>
-        <script type="module" src="/js/structure.js"></script>
-        <script type="module" src="/js/datepicker.js"></script>
-        <script type="module" src="/js/upload.js"></script>
-        <script type="module" src="/js/wizard.js"></script>
-        <script type="module" src="/js/colorpicker.js"></script>
-        <script type="module" src="/js/gridlayout.js"></script>
+        <script type="module" src="/js/auto.js"></script>
         <script type="module">
             // The fixture stands in for a consumer that saves over fetch:
             // without this the valid submit navigates and the busy state
             // it sets is gone before anything can look at it.
-            document.querySelector('[data-test="plain-form"]').addEventListener('submit', (event) => event.preventDefault());
+            const plain = document.querySelector('[data-test="plain-form"]');
+            plain.addEventListener('submit', (event) => event.preventDefault());
+            // …and one whose save "fails" the way JobTracker's does: the
+            // outcome is rendered, the request settles, and the consumer
+            // says so through done().
+            plain.addEventListener('kp-form-valid', (event) => setTimeout(() => event.detail.done(), 400));
         </script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>

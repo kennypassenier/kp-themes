@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -10,37 +10,128 @@
         "url": "git+https://github.com/kennypassenier/kp-themes.git"
     },
     "sideEffects": [
-        "*.css"
+        "*.css",
+        "./js/auto.js"
     ],
     "exports": {
-        ".": "./index.js",
-        "./fx": "./fx/index.js",
+        ".": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./fx": {
+            "types": "./fx/index.d.ts",
+            "default": "./fx/index.js"
+        },
+        "./fx/*": "./fx/*",
+        "./fx/boot-sequence": {
+            "types": "./fx/boot-sequence.d.ts",
+            "default": "./fx/boot-sequence.jsx"
+        },
+        "./fx/use-reduced-motion": {
+            "types": "./fx/use-reduced-motion.d.ts",
+            "default": "./fx/use-reduced-motion.js"
+        },
+        "./components/*": "./components/*",
+        "./hooks/strings": {
+            "types": "./hooks/use-strings.d.ts",
+            "default": "./hooks/use-strings.jsx"
+        },
+        "./hooks/theme": {
+            "types": "./hooks/use-theme.d.ts",
+            "default": "./hooks/use-theme.js"
+        },
         "./css": "./css/themes.css",
+        "./css/rules": "./css/_rules.css",
+        "./css/components": "./css/components.css",
         "./css/tailwind-bridge": "./css/tailwind-bridge.css",
         "./css/register": "./css/cyberpunk-register.css",
+        "./themes/*": "./themes/*",
         "./package.json": "./package.json",
-        "./js/core": "./js/theme-core.js",
-        "./js/picker": "./js/theme-picker.js",
-        "./js/registry": "./js/theme-registry.js",
-        "./js/no-flash": "./js/no-flash.js",
-        "./css/components": "./css/components.css",
-        "./js/components": "./js/components.js",
-        "./js/overlays": "./js/overlays.js",
-        "./js/listbox": "./js/listbox.js",
-        "./js/combobox": "./js/combobox.js",
-        "./js/palette": "./js/palette.js",
-        "./js/datatable": "./js/datatable.js",
-        "./js/forms": "./js/forms.js",
-        "./js/patterns": "./js/patterns.js",
-        "./js/structure": "./js/structure.js",
-        "./js/datepicker": "./js/datepicker.js",
-        "./js/upload": "./js/upload.js",
-        "./js/wizard": "./js/wizard.js",
-        "./js/contrast": "./js/contrast.js",
-        "./js/colorpicker": "./js/colorpicker.js",
-        "./js/gridlayout": "./js/gridlayout.js",
-        "./js/strings": "./js/strings.js",
-        "./hooks/strings": "./hooks/use-strings.jsx"
+        "./js/auto": "./js/auto.js",
+        "./js/core": {
+            "types": "./js/theme-core.d.ts",
+            "default": "./js/theme-core.js"
+        },
+        "./js/picker": {
+            "types": "./js/theme-picker.d.ts",
+            "default": "./js/theme-picker.js"
+        },
+        "./js/registry": {
+            "types": "./js/theme-registry.d.ts",
+            "default": "./js/theme-registry.js"
+        },
+        "./js/no-flash": {
+            "types": "./js/no-flash.d.ts",
+            "default": "./js/no-flash.js"
+        },
+        "./js/components": {
+            "types": "./js/components.d.ts",
+            "default": "./js/components.js"
+        },
+        "./js/overlays": {
+            "types": "./js/overlays.d.ts",
+            "default": "./js/overlays.js"
+        },
+        "./js/listbox": {
+            "types": "./js/listbox.d.ts",
+            "default": "./js/listbox.js"
+        },
+        "./js/combobox": {
+            "types": "./js/combobox.d.ts",
+            "default": "./js/combobox.js"
+        },
+        "./js/palette": {
+            "types": "./js/palette.d.ts",
+            "default": "./js/palette.js"
+        },
+        "./js/datatable": {
+            "types": "./js/datatable.d.ts",
+            "default": "./js/datatable.js"
+        },
+        "./js/forms": {
+            "types": "./js/forms.d.ts",
+            "default": "./js/forms.js"
+        },
+        "./js/patterns": {
+            "types": "./js/patterns.d.ts",
+            "default": "./js/patterns.js"
+        },
+        "./js/structure": {
+            "types": "./js/structure.d.ts",
+            "default": "./js/structure.js"
+        },
+        "./js/datepicker": {
+            "types": "./js/datepicker.d.ts",
+            "default": "./js/datepicker.js"
+        },
+        "./js/upload": {
+            "types": "./js/upload.d.ts",
+            "default": "./js/upload.js"
+        },
+        "./js/wizard": {
+            "types": "./js/wizard.d.ts",
+            "default": "./js/wizard.js"
+        },
+        "./js/contrast": {
+            "types": "./js/contrast.d.ts",
+            "default": "./js/contrast.js"
+        },
+        "./js/colorpicker": {
+            "types": "./js/colorpicker.d.ts",
+            "default": "./js/colorpicker.js"
+        },
+        "./js/gridlayout": {
+            "types": "./js/gridlayout.d.ts",
+            "default": "./js/gridlayout.js"
+        },
+        "./js/strings": {
+            "types": "./js/strings.d.ts",
+            "default": "./js/strings.js"
+        },
+        "./hooks/controllable": {
+            "types": "./hooks/use-controllable.d.ts",
+            "default": "./hooks/use-controllable.js"
+        }
     },
     "types": "./index.d.ts",
     "files": [

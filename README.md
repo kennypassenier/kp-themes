@@ -185,19 +185,41 @@ one module attaches the behaviour:
 <link rel="stylesheet" href="/vendor/kp-themes/css/components.css" />
 
 <div data-kp-theme-picker>
-    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formeel</button>
-    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Donker</button>
+    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
 </div>
 <p data-kp-theme-status hidden></p>
 
-<script type="module" src="/vendor/kp-themes/js/theme-picker.js"></script>
+<script type="module" src="/vendor/kp-themes/js/auto.js"></script>
 ```
 
-The script marks the chosen option (`aria-pressed`, `data-selected` and
-`.is-selected`), stores the choice, and says so in `[data-kp-theme-status]`
-when the browser refuses to store it. `@kp-soft/themes/js/core` exports the
-same primitives without the picker: `applyTheme`, `currentTheme`,
-`storeTheme`, `initializeTheme`, `onThemeChange`.
+**Since 3.0.0 the modules are pure**: importing `js/theme-picker.js` (or
+any other `js/*.js`) attaches nothing. `js/auto.js` is the one entry that
+does — it attaches everything on `DOMContentLoaded`, and it is what a page
+loads when it wants what 2.x did with sixteen script tags. A page that
+renders parts of itself later calls the individual functions on that
+subtree instead:
+
+```js
+import { attachThemePickers } from '@kp-soft/themes/js/picker';
+import { attachDataTables } from '@kp-soft/themes/js/datatable';
+
+const detach = attachDataTables(section);
+detach.handles[0].sort({ column: 1, direction: 'descending' });
+detach(); // puts the rows back in the order the server rendered
+```
+
+Every `attach…()` returns a detach that restores what it changed, and
+carries `handles` — the state of each attached element, readable and
+settable: a table's sort, page, query and selection; a wizard's step; a
+date picker's date; a combobox's values; a grid's layout. The script marks
+the chosen theme (`aria-pressed`, `data-selected` and `.is-selected`),
+stores the choice, and says so in `[data-kp-theme-status]` when the
+browser refuses to store it. `@kp-soft/themes/js/core` exports the same
+primitives without the picker: `applyTheme`, `currentTheme`, `storeTheme`,
+`initializeTheme`, `onThemeChange`, and `configureTheme` to set once which
+element wears the theme, which class marks a dark one, and the storage
+key.
 
 ### No flash on first paint
 
@@ -275,6 +297,63 @@ wrapper rather than a fork of the component.
 The skip link stays a plain anchor on purpose: it points at an element on
 this page, and routing it turns the one link a keyboard user needs into a
 navigation.
+
+## Everything is a knob
+
+3.0.0 is the release in which every feature of every component became
+configurable, with a default — the norm mature component libraries hold
+themselves to, applied here after an audit found the package short of it
+in some two hundred places. The record of that audit and what was done is
+[docs/GENERIC_SWEEP.md](docs/GENERIC_SWEEP.md). The shape, in five rules:
+
+**State is yours to own.** Every React component takes its state
+controlled (`value` + `onChange`) or uncontrolled (`defaultValue`), through
+one hook you can use yourself:
+
+```jsx
+import { useControllable } from '@kp-soft/themes/hooks/controllable';
+
+<Tabs tabs={tabs} value={active} onChange={setActive} activation="manual" />
+<DataTable rows={rows} columns={columns} sort={sort} onSortChange={setSort} page={page} onPageChange={setPage} totalRows={count} />
+<Wizard steps={steps} step={step} onStepChange={setStep} beforeStep={async (from, to) => await validate(from)} />
+```
+
+Framework-free, the same state is on the handle every `attach…()` returns,
+and on the `data-kp-*` attributes the markup carries.
+
+**Behaviour is a flag.** Close on Escape, close on outside click, open on
+focus, validate on blur or on change, focus the summary, keep the list
+open after a tag, loop at the ends, disarm on blur — each is a prop with
+the old behaviour as its default, and a `data-kp-*` attribute in the
+framework-free channel.
+
+**Elements are yours.** `as`, `linkComponent`, `brandComponent`,
+`renderItem`, `renderRow`, `renderDay`, `renderTrigger`, `renderSummary`,
+`headingLevel` — where a component rendered a fixed element, you can now
+render your own. Every component forwards a ref and passes `className`,
+`style` and the rest to its root; `classNames` reaches the parts.
+
+**Sizes are custom properties.** Every literal a site might want to change
+is `var(--kp-…, <default>)`: a type scale (`--kp-text-xs` to `-lg`), the
+control height, each component's width, the pill and small radii, the
+z-index layers, the spinner's duration, and the glyphs the CSS used to
+bake in (`--kp-glyph-check`, `--kp-glyph-sortable`, …). Set them on
+`:root`. The one exception is the narrow breakpoint (40rem): a media query
+cannot read a custom property, so it is a contract value rather than a
+knob. Three animation durations are literals on purpose — the cursor
+blink, the skeleton pulse and the cyberpunk flicker change luminance, and
+DI5 pins them above the flash threshold.
+
+**The locale is the page's.** Date format, week start, decimal separator
+and collation come from the nearest `lang` attribute, else the browser —
+never from this package. Pass `locale`, `weekStartsOn`, `format`, `parse`
+or `data-kp-locale` to override per instance. `js/locale.js` is the one
+place it is read.
+
+Two more things the audit named that are not knobs but repairs: the skip
+link moves focus, not only the scroll position (`skipTo()`,
+`attachSkipLinks()`), and contract enforcement is recoverable — see
+"Two contracts" in the user guide.
 
 ## Status tokens
 
@@ -505,10 +584,22 @@ beside it.
 
 ### Theme names
 
-`ThemeSwitcher` renders the labels from `THEME_RECORDS`, which are Kenny's
-names for his themes rather than interface chrome. Pass
-`labels={{ formal: 'Formal', light: 'Light', dark: 'Dark', cyberpunk: 'Cyberpunk', pastel: 'Pastel', terminal: 'Terminal', topo: 'Topographic' }}`
-to override any of them.
+The eleven labels are English in the token source since 3.0.0 — "Formal",
+"Light", "Dark", "High contrast", "Blueprint", "Solstice", "Topographic",
+and the four that were already names. The interface names (`formal`,
+`topo`) did not change. Override any label in either channel:
+
+```jsx
+<ThemeSwitcher labels={{ formal: 'Formeel', dark: 'Donker' }} />
+```
+
+```js
+themeMenuMarkup({ labels: { formal: 'Formeel', dark: 'Donker' }, grouped: true });
+```
+
+Both pickers group the themes into light and dark, with a small label per
+section from the dictionary (`themeGroupLight`, `themeGroupDark`); pass
+`grouped={false}` for one flat list.
 
 ### The gate behind this
 

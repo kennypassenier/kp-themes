@@ -44,6 +44,19 @@ what was removed. Discipline-enforced. The mechanical half is code —
 fixture page and would otherwise supply the very thing under test. Full
 record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction KT6 (2026-09-05)
+
+Every state a component sets on the consumer's behalf has a named way out
+— a prop, a callback, an event detail, a handle or an exported function —
+and every feature of every component is configurable with a default.
+"Configurable" stops at an invariant: a knob that could put an animation
+under DI5's flash threshold is not offered. Code-enforced where a test can
+pin it (a test per state that sets it and opens it, both channels);
+discipline-enforced as a rule, because no gate can tell a prop-derived
+`disabled` from an internal one. The audit that measured the package
+against this rule is `docs/GENERIC_SWEEP.md`. Full record:
+[docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Project rule from correction KT5 (2026-09-05)
 
 No user-visible string is written into the code that renders it. Every
@@ -72,11 +85,18 @@ way to get one. Scope stays: define themes, build components on them.
 
 | Field               | Value                                            |
 | ------------------- | ------------------------------------------------ |
-| Current phase       | 10 — closed; 2.0.0 released after correction KT5 |
-| Last completed gate | KT5, 2026-09-05 — the release form               |
+| Current phase       | 10 — closed; 3.0.0 released after correction KT6 |
+| Last completed gate | KT6's sweep form, 2026-09-05                     |
 | Next gate           | none; the consumers answer next                  |
-| Open queue items    | KT4-M1, KT5-M1 (both wait on JobTracker)         |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL)    |
 | AFK mode            | off — nothing is running unattended              |
+
+Correction KT6 reopened the project a third time on 2026-09-05 — a busy
+button with no way back, found by JobTracker's login — and Kenny's answer
+to its measure widened it into the generic sweep that became 3.0.0: every
+feature of every component configurable, pure modules, the page's locale,
+English labels, a `--kp-*` scale. `docs/GENERIC_SWEEP.md` is the audit and
+the record.
 
 Correction KT5 reopened the project a second time on 2026-09-05, and the
 answer is 2.0.0. Every user-visible string was written into the component

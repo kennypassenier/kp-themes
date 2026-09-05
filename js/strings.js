@@ -65,6 +65,7 @@
  * @property {string} tableEmpty
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
+ * @property {(at: number, of: number) => string} tablePage
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -75,11 +76,15 @@
  * @property {string} dateFormatHint
  * @property {string} previousMonth
  * @property {string} nextMonth
+ * @property {(month: string, year: number) => string} monthTitle
  * @property {string[]} weekdays
  * @property {string[]} months
  * @property {(day: number, month: string, year: number) => string} dayLabel
  * @property {string} uploadZone
  * @property {(size: string) => string} uploadTooLarge
+ * @property {(max: number) => string} uploadTooMany
+ * @property {(max: string) => string} uploadTotalTooLarge
+ * @property {(accept: string) => string} uploadWrongType
  * @property {(name: string) => string} uploadProgress
  * @property {(at: number, of: number) => string} wizardStep
  * @property {string} copy
@@ -91,6 +96,7 @@
  * @property {string} deleted
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
+ * @property {(name: string, at: number, of: number) => string} reorderMoved
  * @property {string} tileFallbackName
  * @property {(name: string, column: number, row: number, w: number, h: number) => string} tileLabel
  * @property {(token: string) => string} contrastMissing
@@ -109,6 +115,10 @@
  * @property {string} themePicker
  * @property {string} themeSaveFailed
  * @property {string} themeSaveRefused
+ * @property {string} contractDestructive
+ * @property {string} contractSemantic
+ * @property {string} themeGroupLight
+ * @property {string} themeGroupDark
  */
 
 /**
@@ -148,6 +158,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableEmpty: 'Nothing found.',
     tableRows: (n) => `${n} rows`,
     tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
+    /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
+    tablePage: (at, of) => `${at} / ${of}`,
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',
@@ -158,6 +170,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     dateFormatHint: 'dd-mm-yyyy',
     previousMonth: 'Previous month',
     nextMonth: 'Next month',
+    /** The calendar's heading. A function, so a locale that writes the year first can. @param {string} month @param {number} year */
+    monthTitle: (month, year) => `${month} ${year}`,
     weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     // The full date, because "4" alone tells a screen reader nothing about
@@ -165,6 +179,12 @@ export const DEFAULT_STRINGS = Object.freeze({
     dayLabel: (day, month, year) => `${day} ${month} ${year}`,
     uploadZone: 'Drop files here or choose them',
     uploadTooLarge: (size) => `Larger than ${size}`,
+    /** @param {number} max */
+    uploadTooMany: (max) => `No more than ${max} files.`,
+    /** @param {string} max */
+    uploadTotalTooLarge: (max) => `Together the files may not exceed ${max}.`,
+    /** @param {string} accept */
+    uploadWrongType: (accept) => `Only ${accept} files.`,
     uploadProgress: (name) => `Progress of ${name}`,
     wizardStep: (at, of) => `Step ${at} of ${of}`,
     copy: 'Copy',
@@ -178,6 +198,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     deleted: 'Deleted.',
     splitLabel: 'Resize the panes',
     reorderHandle: (name) => `Move ${name}`,
+    /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
+    reorderMoved: (name, at, of) => `${name} moved to position ${at} of ${of}`,
     tileFallbackName: 'Tile',
     tileLabel: (name, column, row, w, h) => `${name}, column ${column}, row ${row}, ${w} by ${h}`,
     contrastMissing: (token) => `No contrast to measure: ${token} does not exist in this theme.`,
@@ -196,6 +218,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     themePicker: 'Choose a theme',
     themeSaveFailed: 'This choice will not be remembered — storage is blocked in this browser.',
     themeSaveRefused: 'Not saved on the server — your choice has been put back.',
+    /** The two contract violations enforceContracts reports [DI10, DI4]. */
+    contractDestructive:
+        'A destructive action must offer an undo (data-kp-undo) or a confirmation (data-kp-confirm="phrase"). SC 3.3.4 accepts either; it accepts neither of them missing.',
+    contractSemantic: 'A control carrying a semantic colour must also say what it means: colour is never the only carrier.',
+    /** The two sections of a grouped theme picker [TH63]. */
+    themeGroupLight: 'Light',
+    themeGroupDark: 'Dark',
 });
 
 /**
@@ -237,6 +266,7 @@ export const STRINGS_NL = Object.freeze({
     tableEmpty: 'Niets gevonden.',
     tableRows: (n) => `${n} rijen`,
     tableRowsFiltered: (shown, total) => `${shown} van ${total} rijen`,
+    tablePage: (at, of) => `${at} / ${of}`,
     formRequired: 'verplicht',
     formInvalid: 'Dit veld is niet correct ingevuld.',
     formSummaryOne: 'Er is 1 veld niet correct ingevuld.',
@@ -247,11 +277,15 @@ export const STRINGS_NL = Object.freeze({
     dateFormatHint: 'dd-mm-jjjj',
     previousMonth: 'Vorige maand',
     nextMonth: 'Volgende maand',
+    monthTitle: (month, year) => `${month} ${year}`,
     weekdays: ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'],
     months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
     dayLabel: (day, month, year) => `${day} ${month} ${year}`,
     uploadZone: 'Sleep bestanden hierheen of kies ze',
     uploadTooLarge: (size) => `Groter dan ${size}`,
+    uploadTooMany: (max) => `Niet meer dan ${max} bestanden.`,
+    uploadTotalTooLarge: (max) => `Samen mogen de bestanden niet groter zijn dan ${max}.`,
+    uploadWrongType: (accept) => `Alleen ${accept}-bestanden.`,
     uploadProgress: (name) => `Voortgang van ${name}`,
     wizardStep: (at, of) => `Stap ${at} van ${of}`,
     copy: 'Kopiëren',
@@ -263,6 +297,7 @@ export const STRINGS_NL = Object.freeze({
     deleted: 'Verwijderd.',
     splitLabel: 'Panelen verdelen',
     reorderHandle: (name) => `Verplaats ${name}`,
+    reorderMoved: (name, at, of) => `${name} verplaatst naar positie ${at} van ${of}`,
     tileFallbackName: 'Tegel',
     tileLabel: (name, column, row, w, h) => `${name}, kolom ${column}, rij ${row}, ${w} bij ${h}`,
     contrastMissing: (token) => `Geen contrast te meten: ${token} bestaat niet in dit thema.`,
@@ -281,6 +316,11 @@ export const STRINGS_NL = Object.freeze({
     themePicker: 'Thema kiezen',
     themeSaveFailed: 'Deze keuze wordt niet onthouden — opslag is geblokkeerd in deze browser.',
     themeSaveRefused: 'Niet bewaard op de server — je keuze is teruggezet.',
+    contractDestructive:
+        'Een destructieve actie moet een undo (data-kp-undo) of een bevestiging (data-kp-confirm="zin") bieden. SC 3.3.4 aanvaardt beide; het aanvaardt niet dat beide ontbreken.',
+    contractSemantic: 'Een element met een semantische kleur moet ook in woorden zeggen wat het betekent: kleur is nooit de enige drager.',
+    themeGroupLight: 'Licht',
+    themeGroupDark: 'Donker',
 });
 
 /** @type {Strings} */

@@ -25,9 +25,11 @@ const CHANNELS = [
     {
         name: 'React',
         tree: '[data-test="react-structure"] .kp-tree',
-        folder: '#tree-map',
-        child: '#tree-kind',
-        other: '#tree-zaak',
+        // By item id, not by DOM id: since 3.0.0 the DOM ids are scoped
+        // to the instance, so two trees on a page no longer collide [KT6].
+        folder: '[data-test="react-structure"] [data-kp-item="map"]',
+        child: '[data-test="react-structure"] [data-kp-item="kind"]',
+        other: '[data-test="react-structure"] [data-kp-item="zaak"]',
         reorder: '[data-test="react-structure"] .kp-reorder',
         handle: '[data-test="react-structure"] [data-kp-item="a"] [data-kp-handle]',
         separator: '[data-test="react-structure"] .kp-split__separator',

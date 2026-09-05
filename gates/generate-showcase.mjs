@@ -62,7 +62,7 @@ function showcase() {
     ).join('\n');
 
     return `<!doctype html>
-<html lang="nl">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,39 +95,18 @@ ${STYLE}        </style>
         </header>
 ${blocks}
         <script type="module">
-            import { THEMES } from '../js/theme-registry.js';
-import { themeMenuMarkup } from '../js/theme-picker.js';
+            import { themeOptionsMarkup } from '../js/theme-picker.js';
 
-            // Every picker on this page renders the same seven options.
-            // The blocks each wear their own theme, so a picker inside one
-            // shows that block's colours while switching the document.
-            // The header menu arrives with its options already written;
-            // only the bare per-theme pickers need filling.
-            for (const host of document.querySelectorAll('[data-kp-theme-picker]:empty')) {
-                for (const t of THEMES) {
-                    const b = document.createElement('button');
-                    b.type = 'button';
-                    b.dataset.kpTheme = t.name;
-                    b.innerHTML = \`<span class="kp-swatch" data-theme="\${t.name}"></span>\`;
-                    b.append(t.label);
-                    host.append(b);
-                }
-            }
-            await import('../js/theme-picker.js');
-            // The contracts are enforced on this page too: a specimen that
-            // broke one should be visibly refused here, not only in the
-            // tests [DI4, DI10].
-            await import('../js/components.js');
-            await import('../js/overlays.js');
-            // Round two's components, on the page a consumer without npm
-            // actually looks at.
-            await import('../js/combobox.js');
-            await import('../js/datatable.js');
-            await import('../js/datepicker.js');
-            await import('../js/structure.js');
-            await import('../js/patterns.js');
-            await import('../js/colorpicker.js');
-            await import('../js/gridlayout.js');
+            // Every picker on this page renders the same options, grouped
+            // light and dark [TH63]. The blocks each wear their own theme,
+            // so a picker inside one shows that block's colours while
+            // switching the document. The header menu arrives with its
+            // options already written; only the bare pickers need filling.
+            for (const host of document.querySelectorAll('[data-kp-theme-picker]:empty')) host.innerHTML = themeOptionsMarkup();
+            // Pure modules since 3.0.0 [KT6]: nothing attaches on import.
+            // One call wires the whole page, contracts included [DI4, DI10].
+            const { attachAll } = await import('../js/auto.js');
+            attachAll();
         </script>
     </body>
 </html>
@@ -143,7 +122,7 @@ import { themeMenuMarkup } from '../js/theme-picker.js';
  */
 function fixture(theme) {
     return `<!doctype html>
-<html lang="nl" data-theme="${theme.name}">
+<html lang="en" data-theme="${theme.name}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -158,15 +137,7 @@ ${STYLE}        </style>
             <h2>${theme.label}</h2>
             ${specimenBlocks(theme.name)}
         </main>
-        <script type="module" src="../../js/components.js"></script>
-        <script type="module" src="../../js/overlays.js"></script>
-        <script type="module" src="../../js/combobox.js"></script>
-        <script type="module" src="../../js/datatable.js"></script>
-        <script type="module" src="../../js/datepicker.js"></script>
-        <script type="module" src="../../js/structure.js"></script>
-        <script type="module" src="../../js/patterns.js"></script>
-        <script type="module" src="../../js/colorpicker.js"></script>
-        <script type="module" src="../../js/gridlayout.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
     </body>
 </html>
 `;
