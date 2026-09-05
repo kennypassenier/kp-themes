@@ -89,6 +89,7 @@
     --fx-overprint: hsl(30, 40%, 88%);
     --fx-scanline: hsl(30, 40%, 88%);
     --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
@@ -179,6 +180,7 @@
     --fx-overprint: hsl(190, 80%, 92%);
     --fx-scanline: hsl(190, 80%, 92%);
     --fx-lift: 2px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -269,6 +271,7 @@
     --fx-overprint: hsl(226, 18%, 18%);
     --fx-scanline: hsl(226, 18%, 18%);
     --fx-lift: 2px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
@@ -363,6 +366,7 @@
     --fx-overprint: hsl(180, 95%, 50%);
     --fx-scanline: hsl(190, 80%, 70%);
     --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(315, 95%, 64%);
@@ -453,6 +457,7 @@
     --fx-overprint: hsl(200, 60%, 62%);
     --fx-scanline: hsl(150, 40%, 88%);
     --fx-lift: 3px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
@@ -543,6 +548,7 @@
     --fx-overprint: hsl(65, 90%, 50%);
     --fx-scanline: hsl(65, 90%, 50%);
     --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -633,6 +639,7 @@
     --fx-overprint: hsl(24, 55%, 86%);
     --fx-scanline: hsl(24, 55%, 86%);
     --fx-lift: 2px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
@@ -723,6 +730,7 @@
     --fx-overprint: hsl(48, 100%, 50%);
     --fx-scanline: hsl(48, 100%, 50%);
     --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(220, 100%, 30%);
@@ -813,6 +821,7 @@
     --fx-overprint: hsl(24, 40%, 70%);
     --fx-scanline: hsl(30, 40%, 80%);
     --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 55%, 32%);
@@ -903,6 +912,7 @@
     --fx-overprint: hsl(190, 60%, 40%);
     --fx-scanline: hsl(190, 70%, 70%);
     --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(190, 80%, 62%);
@@ -993,6 +1003,7 @@
     --fx-overprint: hsl(28, 60%, 40%);
     --fx-scanline: hsl(28, 70%, 60%);
     --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(28, 85%, 58%);
@@ -1011,6 +1022,98 @@
     --destructive-hover: hsl(0, 73%, 64%);
     --destructive-active: hsl(1, 100%, 74%);
     --destructive-disabled: hsl(358, 53%, 48%);
+}
+
+[data-theme='brutalism'] {
+    /* Neo-brutalism: off-white, black borders, a hard offset shadow, candy plates. */
+    --background: hsl(50, 100%, 97%);
+    --foreground: hsl(0, 0%, 7%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(0, 0%, 7%);
+    --popover: hsl(0, 0%, 100%);
+    --popover-foreground: hsl(0, 0%, 7%);
+    --primary: hsl(0, 0%, 7%);
+    --primary-foreground: hsl(48, 100%, 60%);
+    --secondary: hsl(48, 100%, 60%);
+    --secondary-foreground: hsl(0, 0%, 7%);
+    --muted: hsl(50, 30%, 91%);
+    --muted-foreground: hsl(0, 0%, 28%);
+    --accent: hsl(255, 75%, 80%);
+    --accent-foreground: hsl(0, 0%, 7%);
+    --destructive: hsl(0, 85%, 40%);
+    --destructive-foreground: hsl(50, 100%, 97%);
+    --success: hsl(140, 60%, 72%);
+    --success-foreground: hsl(0, 0%, 7%);
+    --warning: hsl(35, 100%, 66%);
+    --warning-foreground: hsl(0, 0%, 7%);
+    --info: hsl(205, 90%, 78%);
+    --info-foreground: hsl(0, 0%, 7%);
+    --border: hsl(0, 0%, 7%);
+    --border-strong: hsl(0, 0%, 7%);
+    --input: hsl(0, 0%, 7%);
+    --ring: hsl(0, 0%, 7%);
+    --selected: hsl(0, 0%, 7%);
+    --chart-1: hsl(45, 100%, 36%);
+    --chart-2: hsl(0, 85%, 45%);
+    --chart-3: hsl(255, 60%, 52%);
+    --chart-4: hsl(205, 90%, 36%);
+    --chart-5: hsl(140, 60%, 28%);
+    --sidebar-background: hsl(0, 0%, 7%);
+    --sidebar-foreground: hsl(50, 100%, 97%);
+    --sidebar-primary: hsl(48, 100%, 60%);
+    --sidebar-primary-foreground: hsl(0, 0%, 7%);
+    --sidebar-accent: hsl(0, 0%, 16%);
+    --sidebar-accent-foreground: hsl(50, 100%, 97%);
+    --sidebar-border: hsl(0, 0%, 30%);
+    --sidebar-ring: hsl(48, 100%, 60%);
+
+    /* Status badges (application pipeline): candy plates with black ink; rejected is the one black plate. */
+    --status-draft: hsl(0, 0%, 88%);
+    --status-draft-foreground: hsl(0, 0%, 7%);
+    --status-sent: hsl(205, 90%, 80%);
+    --status-sent-foreground: hsl(0, 0%, 7%);
+    --status-screening: hsl(48, 100%, 70%);
+    --status-screening-foreground: hsl(0, 0%, 7%);
+    --status-interview: hsl(255, 70%, 84%);
+    --status-interview-foreground: hsl(0, 0%, 7%);
+    --status-offer: hsl(140, 60%, 68%);
+    --status-offer-foreground: hsl(0, 0%, 7%);
+    --status-rejected: hsl(0, 0%, 7%);
+    --status-rejected-foreground: hsl(50, 100%, 97%);
+    --status-withdrawn: hsl(0, 0%, 72%);
+    --status-withdrawn-foreground: hsl(0, 0%, 7%);
+    --color-scheme: light;
+    --theme-font-body: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0rem;
+    --fx-signal: hsl(0, 90%, 58%);
+    --fx-signal-foreground: hsl(0, 0%, 7%);
+    --fx-notch: 0px;
+    --fx-duration: 100ms;
+    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --theme-font-display: 'Archivo Black', 'Archivo', Impact, sans-serif;
+    --fx-overprint: hsl(48, 100%, 60%);
+    --fx-scanline: hsl(0, 0%, 7%);
+    --fx-lift: 2px;
+    --fx-shadow-offset: 4px;
+    --fx-shadow-offset: 4px;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(0, 0%, 7%);
+    --link-visited: hsl(100, 0%, 0%);
+    --focus-ring: hsl(0, 0%, 7%);
+    --focus-ring-contrast: hsl(50, 100%, 97%);
+    --primary-hover: hsl(44, 0%, 4%);
+    --primary-active: hsl(44, 0%, 0%);
+    --primary-disabled: hsl(44, 0%, 15%);
+    --secondary-hover: hsl(49, 91%, 54%);
+    --secondary-active: hsl(49, 100%, 42%);
+    --secondary-disabled: hsl(56, 100%, 68%);
+    --accent-hover: hsl(255, 62%, 76%);
+    --accent-active: hsl(256, 41%, 65%);
+    --accent-disabled: hsl(259, 100%, 88%);
+    --destructive-hover: hsl(0, 100%, 35%);
+    --destructive-active: hsl(4, 78%, 31%);
+    --destructive-disabled: hsl(4, 72%, 53%);
 }
 /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
@@ -1086,6 +1189,26 @@ body::after {
 [data-theme='terminal'] ::selection {
     background: var(--primary);
     color: var(--primary-foreground);
+}
+
+/* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
+[data-theme='brutalism'] {
+    --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1px, transparent 1px);
+    --fx-texture-size: 16px 16px;
+    --fx-texture-opacity: 0.06;
+}
+
+[data-theme='brutalism'] h1,
+[data-theme='brutalism'] h2 {
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+/* Pressed: the box drops onto its own shadow. The colour still steps
+ * (DI3, derived); the movement is the theme's opt-in on top of it. */
+[data-theme='brutalism'] .kp-button:active:not(:disabled) {
+    translate: var(--fx-shadow-offset) var(--fx-shadow-offset);
+    box-shadow: none;
 }
 
 /* T9 · Topo: contour lines wandering across the kraft paper. */

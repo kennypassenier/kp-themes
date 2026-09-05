@@ -12,7 +12,7 @@
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism'} ThemeName
  */
 
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
@@ -30,6 +30,7 @@ export const THEMES = Object.freeze([
     { name: 'sepia', label: 'Sepia', dark: false },
     { name: 'blueprint', label: 'Blueprint', dark: true },
     { name: 'solstice', label: 'Solstice', dark: true },
+    { name: 'brutalism', label: 'Brutalism', dark: false },
 ]);
 
 /**

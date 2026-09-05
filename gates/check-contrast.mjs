@@ -113,6 +113,7 @@ const EXEMPT = {
     'fx-scanline': 'a 1px line at 4% alpha across the texture layer; at that opacity it is a veil rather than a surface',
     'fx-notch': 'not a colour (a length)',
     'fx-lift': 'not a colour (how far a thing moves when it moves; 0 is a real answer)',
+    'fx-shadow-offset': 'not a colour (a length: how far the hard shadow sits from its box; 0 paints nothing) [TH85]',
     'fx-duration': 'not a colour',
     'fx-ease': 'not a colour',
 };

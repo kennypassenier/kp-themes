@@ -259,6 +259,10 @@
     background: var(--secondary);
     color: var(--secondary-foreground);
     border-color: var(--border-strong);
+    /* --fx-shadow-offset is a hard, unblurred shadow the control casts
+     * down and right — brutalism's signature [TH85]. 0px everywhere else,
+     * which paints nothing: the knob is the only theme-shaped thing here. */
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -368,6 +372,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius, 0.5rem);
     padding: 1rem;
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
 }
 
 .kp-card__title {
@@ -485,6 +490,7 @@
     background: var(--background);
     color: var(--foreground);
     font: inherit;
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
 }
 
 .kp-field__help {

@@ -291,6 +291,20 @@ test('KT5: a value read from the dictionary is not a finding', () => {
 test('KT5: API values and CSS are not text', () => {
     // Renaming these translates nothing and breaks the keyboard.
     assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
+});
+
+test('KT7: the strings gate does not flag code that only looks like text', () => {
+    // Three shapes found on 2026-09-05, all in files nothing had run the
+    // gate over since they were written. A CSS selector handed to
+    // closest()/querySelector() is not text; a line of an object literal
+    // that starts with a capitalised key is not a JSX text node; and a
+    // one-character literal must not desynchronise the literal scanner
+    // so that the code BETWEEN two literals is reported as a string.
+    assert.deepEqual(loosePhrases("if (target.closest('button, a, input, select, textarea')) return;"), []);
+    assert.deepEqual(loosePhrases('const moves = {\n    ArrowRight: new Date(y, m, d + 1),\n    Home: new Date(y, m, d - offset),\n};'), []);
+    assert.deepEqual(loosePhrases("const sign = { added: signs.added ?? '+', removed: signs.removed ?? '-', same: signs.same ?? ' ' };"), []);
+    // And the real thing beside them still counts.
+    assert.equal(loosePhrases("if (x) el.setAttribute('aria-label', 'Remove this tag'); const s = { Note: 'Something to read' };").length, 2);
     assert.deepEqual(loosePhrases("el.style.display = 'contents';"), []);
     // A canvas font shorthand is CSS with a space in it, not a phrase.
     assert.deepEqual(loosePhrases('ctx.font = `${size}px monospace`;'), []);

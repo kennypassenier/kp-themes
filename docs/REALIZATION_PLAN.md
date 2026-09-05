@@ -110,6 +110,17 @@ instruction. One note for when it returns: removing an export is a
 breaking change under semver, so its version is 4.0.0, not 3.1.0 — the
 label the earlier form carried. The queue entry says so.
 
+### Round three — status
+
+| Milestone | Status |
+| --- | --- |
+| R0 | **built** 2026-09-05; awaiting the combined AFK report. Measured: the eleven fixtures pixel-identical before and after the knob (`tests/tmp-knob-baseline.spec.mjs`, run once on `7535557` and once with the knob, 11 of 11 unchanged; the spec was removed after the measurement). KT3 drills, both performed 2026-09-05: `grid-row` placement removed from the generator → the alignment test reads the twins 8198 px apart; `fontLinks()` returning '' → the fonts test finds no `link[data-sc-fonts]` (href null). Both restored and green. Live-found: KT7 (proposed). |
+| R1 | not started |
+| R2 | not started |
+| R3 | not started |
+| R4 | not started |
+| R5 | not started |
+
 ## Enforcement — installed 2026-09-04, before any feature code
 
 Phase 5 refuses to advance to L0 until this is in place. It is, and each
