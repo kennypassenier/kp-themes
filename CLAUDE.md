@@ -5,11 +5,14 @@
 points at so his apps look like one family. Web today; GUI (Avalonia) and
 TUI (Ratatui) later.
 
-**State:** v0.1.1 is an extraction from kp-soft (commit `2983abb`,
-2026-09-02): the seven themes, the registers, the cyberpunk fx, the theme
-hook/switcher, the contrast gate, plus the seven status-colour tokens for
-JobTracker. Phase 0 approved that base for use but explicitly **not** the
-picker — see S17 in [docs/SCOPE.md](docs/SCOPE.md).
+**State:** 3.0.0 is released; 3.1.0 is built on `round-three-scope` and
+waits for Kenny's go — twenty-four themes (thirteen new, chosen from
+twenty-one candidates in `docs/THEME_CANDIDATES.md`), two new knobs, a
+second register, and a showcase that compares two themes side by side.
+The package began as an extraction from kp-soft (commit `2983abb`,
+2026-09-02); Phase 0 approved that base for use but explicitly **not** the
+picker — see S17 in [docs/SCOPE.md](docs/SCOPE.md); the picker was
+approved at L4.
 
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21).
@@ -83,13 +86,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| Current phase       | Round three (themes): Phase 6, building R0–R5 in AFK mode                                        |
-| Last completed gate | Round-three Phase 5 plan, 2026-09-05 (one release 3.1.0 after R5)                                |
-| Next gate           | Combined AFK report after R5, then the release go for 3.1.0                                      |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, after this round); P1–P4 from kp-soft (next round) |
-| AFK mode            | ON from R0 (Kenny, 2026-09-05); milestone gates accumulate into one report                       |
+| Field               | Value                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round three (themes): R0–R5 built 2026-09-05, awaiting the combined AFK report                                                    |
+| Last completed gate | Round-three Phase 5 plan, 2026-09-05                                                                                              |
+| Next gate           | The combined AFK report (R0–R5 + correction KT7) and the release go for 3.1.0                                                     |
+| Open queue items    | KT6-M1 (waits on JobTracker); KT7 (form in the report); D3 (STRINGS_NL, 4.0.0, after this round); P1–P4 from kp-soft (next round) |
+| AFK mode            | done — R0–R5 built unattended; the report waits for Kenny                                                                         |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
