@@ -1,5 +1,5 @@
-import { applyTheme, initializeTheme, isTheme, DEFAULT_THEME, STORAGE_KEY, THEMES as THEME_RECORDS } from '../js/theme-core.js';
-export { applyTheme, initializeTheme, isTheme, DEFAULT_THEME, STORAGE_KEY };
+import { applyTheme, initializeTheme, isTheme, configureTheme, DEFAULT_THEME, STORAGE_KEY, THEMES as THEME_RECORDS } from '../js/theme-core.js';
+export { applyTheme, initializeTheme, isTheme, configureTheme, DEFAULT_THEME, STORAGE_KEY };
 /** The generated theme record: name, label, dark. Source: themes/*\/tokens.json. */
 export { THEME_RECORDS };
 export type Theme = import('../js/theme-registry.js').ThemeName;
@@ -35,18 +35,50 @@ export type UseThemeOptions = {
      */
     fallback?: string | null;
     /**
-     * Called after a change is applied locally. Persist server-side here. A thrown error or a rejected
-     * promise reverts the change (the "endpoint that lies" guard) and sets `saveFailed`.
+     * Called on a change. Persist server-side here. A thrown error or a rejected promise reverts the
+     * change (the "endpoint that lies" guard) and sets `saveFailed`.
      */
     onChange?: (next: Theme, previous: Theme) => void | Promise<unknown>;
+    /**
+     * The reason a save failed, when there is one.
+     */
+    onError?: (error: unknown, attempted: Theme) => void;
+    /**
+     * Write the choice to storage. Default true.
+     */
+    persist?: boolean;
+    /**
+     * Apply before `onChange` resolves. Default true; false waits for the server.
+     */
+    optimistic?: boolean;
+    /**
+     * Follow a choice made in another tab. Default true.
+     */
+    crossTab?: boolean;
+    /**
+     * The element that wears the theme. Default: the document element.
+     */
+    root?: Element;
+    /**
+     * Default 'dark'; null for none.
+     */
+    darkClass?: string | null;
+    storageKey?: string;
 };
 /**
  * @typedef {object} UseThemeOptions
  * @property {string | null} [preferred]  A theme that always wins - e.g. a signed-in member's server-saved choice.
  * @property {string | null} [fallback]   Used when neither `preferred` nor localStorage holds a valid theme - e.g. a section default. Defaults to 'formal'.
  * @property {(next: Theme, previous: Theme) => void | Promise<unknown>} [onChange]
- *   Called after a change is applied locally. Persist server-side here. A thrown error or a rejected
- *   promise reverts the change (the "endpoint that lies" guard) and sets `saveFailed`.
+ *   Called on a change. Persist server-side here. A thrown error or a rejected promise reverts the
+ *   change (the "endpoint that lies" guard) and sets `saveFailed`.
+ * @property {(error: unknown, attempted: Theme) => void} [onError]  The reason a save failed, when there is one.
+ * @property {boolean} [persist]     Write the choice to storage. Default true.
+ * @property {boolean} [optimistic]  Apply before `onChange` resolves. Default true; false waits for the server.
+ * @property {boolean} [crossTab]    Follow a choice made in another tab. Default true.
+ * @property {Element} [root]        The element that wears the theme. Default: the document element.
+ * @property {string | null} [darkClass]  Default 'dark'; null for none.
+ * @property {string} [storageKey]
  */
 /**
  * Precedence: `preferred` (server-saved) > localStorage (guest's choice) > `fallback` > 'formal'.
@@ -57,6 +89,11 @@ export declare function useTheme(options?: UseThemeOptions): {
     updateTheme: (next: Theme) => void;
     saveFailed: boolean;
     storageFailed: boolean;
+    pending: boolean;
+    where: {
+        root: Element | undefined;
+        key: string | undefined;
+    };
 };
 /** @param {UseThemeOptions} [options] */
 export declare function useAppearance(options?: UseThemeOptions): {

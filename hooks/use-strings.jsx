@@ -19,9 +19,12 @@ const StringsContext = createContext(/** @type {Partial<import('../js/strings.js
  * @param {{ value: Partial<import('../js/strings.js').Strings>, children: import('react').ReactNode }} props
  */
 export function StringsProvider({ value, children }) {
-    // Memoised on the object identity the consumer passes: a fresh object
-    // every render would re-render every component under it.
-    const merged = useMemo(() => value, [value]);
+    // Layered over the provider above it, not replacing it [KT6]: a
+    // section that overrides two words keeps the rest of the parent's
+    // dictionary. Memoised on the object identity the consumer passes: a
+    // fresh object every render would re-render every component under it.
+    const outer = useContext(StringsContext);
+    const merged = useMemo(() => ({ ...outer, ...value }), [outer, value]);
     return <StringsContext.Provider value={merged}>{children}</StringsContext.Provider>;
 }
 

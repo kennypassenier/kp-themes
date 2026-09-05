@@ -20,31 +20,74 @@
 // This module renders nothing. It takes an input, a list container, and a
 // callback, and returns a controller. What the options ARE — where they
 // come from, what they look like — belongs to the caller.
+//
+// The audit named this file the model for the framework-free channel and
+// still found five knobs it stopped short of [KT6]: the option selector,
+// hover following the highlight, scrolling into view, the id prefix and
+// the active class were constants; it dispatched no events; and destroy
+// left the ids and aria-selected it had stamped. All are options now.
 
-/** Options a caller may pass to `createListbox`. */
+/** The attribute an option carries. A contract value: consumers write it [TH26]. */
+export const OPTION_SELECTOR = '[data-kp-option]';
+/** Dispatched on the list, bubbling, when the highlight moves: `{ index, option }`. */
+export const HIGHLIGHT_EVENT = 'kp-listbox-highlight';
+/** Dispatched on the list, bubbling, when an option is chosen: `{ index, option }`. */
+export const CHOOSE_EVENT = 'kp-listbox-choose';
+
 /**
  * @typedef {object} ListboxOptions
  * @property {HTMLElement} input the text input keeping DOM focus
  * @property {HTMLElement} list the element with role="listbox"
  * @property {(index: number, option: HTMLElement) => void} [onChoose] Enter or click on an option
  * @property {() => void} [onDismiss] Escape, or focus leaving
- * @property {boolean} [loop] whether Down on the last option returns to the first
+ * @property {(index: number, option: HTMLElement | null) => void} [onHighlight]
+ * @property {boolean} [loop] whether Down on the last option returns to the first. Default true.
+ * @property {string} [optionSelector] Default OPTION_SELECTOR.
+ * @property {string} [disabledSelector] Default `[data-kp-disabled], [aria-disabled="true"]`.
+ * @property {boolean} [hoverHighlights] the mouse moves the highlight. Default true.
+ * @property {boolean | ScrollIntoViewOptions} [scrollIntoView] Default `{ block: 'nearest' }`; false for none.
+ * @property {string} [activeClass] Default `is-active`.
+ * @property {string} [idPrefix] For generated option ids. Default: the list's id, else `kp-listbox`.
+ * @property {boolean} [typeahead] letters jump to the next option starting with them. Default false.
+ * @property {number} [typeaheadMs] Default 500.
+ * @property {boolean} [dismissOnEscape] Default true.
+ * @property {boolean} [events] dispatch HIGHLIGHT_EVENT and CHOOSE_EVENT on the list. Default true.
  */
-
-/** The attribute an option carries. A contract value: consumers write it [TH26]. */
-export const OPTION_SELECTOR = '[data-kp-option]';
 
 /**
  * Wire virtual focus between an input and a list of options.
  *
  * @param {ListboxOptions} options
  */
-export function createListbox({ input, list, onChoose, onDismiss, loop = true }) {
+export function createListbox({
+    input,
+    list,
+    onChoose,
+    onDismiss,
+    onHighlight,
+    loop = true,
+    optionSelector = OPTION_SELECTOR,
+    disabledSelector = '[data-kp-disabled], [aria-disabled="true"]',
+    hoverHighlights = true,
+    scrollIntoView = { block: 'nearest' },
+    activeClass = 'is-active',
+    idPrefix,
+    typeahead = false,
+    typeaheadMs = 500,
+    dismissOnEscape = true,
+    events = true,
+}) {
     let index = -1;
+    /** What this controller stamped, so destroy can take it back. */
+    /** @type {Set<HTMLElement>} */
+    const stampedIds = new Set();
+    /** @type {Set<HTMLElement>} */
+    const stampedSelected = new Set();
+    let buffer = '';
+    let bufferTimer = 0;
 
     /** @returns {HTMLElement[]} the options as they stand right now */
-    const options = () =>
-        /** @type {HTMLElement[]} */ ([...list.querySelectorAll(OPTION_SELECTOR)].filter((el) => !el.hasAttribute('data-kp-disabled')));
+    const options = () => /** @type {HTMLElement[]} */ ([...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector)));
 
     /**
      * Give every option an id, because `aria-activedescendant` refers to
@@ -53,9 +96,12 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
      * pickers on one page is the kind of bug nobody looks for.
      */
     const identify = () => {
-        const base = list.id || 'kp-listbox';
+        const base = idPrefix ?? list.id ?? 'kp-listbox';
         options().forEach((option, i) => {
-            if (!option.id) option.id = `${base}-option-${i}`;
+            if (!option.id) {
+                option.id = `${base || 'kp-listbox'}-option-${i}`;
+                stampedIds.add(option);
+            }
         });
     };
 
@@ -65,6 +111,7 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
         if (all.length === 0) {
             index = -1;
             input.removeAttribute('aria-activedescendant');
+            onHighlight?.(-1, null);
             return;
         }
         identify();
@@ -73,16 +120,20 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
             const current = i === index;
             // Two carriers, as everywhere in this package: the attribute
             // for assistive technology and for tests, the class for CSS.
+            if (!option.hasAttribute('aria-selected')) stampedSelected.add(option);
             option.setAttribute('aria-selected', String(current));
-            option.classList.toggle('is-active', current);
+            option.classList.toggle(activeClass, current);
             if (current) {
                 input.setAttribute('aria-activedescendant', option.id);
-                // `nearest` rather than `center`: a list that jumps under
-                // the cursor on every keystroke is worse than one that
-                // scrolls the minimum.
-                option.scrollIntoView({ block: 'nearest' });
+                // `nearest` rather than `center` by default: a list that
+                // jumps under the cursor on every keystroke is worse than
+                // one that scrolls the minimum.
+                if (scrollIntoView !== false) option.scrollIntoView(scrollIntoView === true ? { block: 'nearest' } : scrollIntoView);
             }
         });
+        const option = all[index] ?? null;
+        onHighlight?.(index, option);
+        if (events) list.dispatchEvent(new CustomEvent(HIGHLIGHT_EVENT, { bubbles: true, detail: { index, option } }));
     };
 
     const clear = () => {
@@ -90,7 +141,7 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
         input.removeAttribute('aria-activedescendant');
         for (const option of options()) {
             option.setAttribute('aria-selected', 'false');
-            option.classList.remove('is-active');
+            option.classList.remove(activeClass);
         }
     };
 
@@ -113,6 +164,7 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
         const option = all[index];
         if (option === undefined) return false;
         onChoose?.(index, option);
+        if (events) list.dispatchEvent(new CustomEvent(CHOOSE_EVENT, { bubbles: true, detail: { index, option } }));
         return true;
     };
 
@@ -148,9 +200,19 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
                 if (choose()) event.preventDefault();
                 break;
             case 'Escape':
-                onDismiss?.();
+                if (dismissOnEscape) onDismiss?.();
                 break;
             default:
+                if (typeahead && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                    clearTimeout(bufferTimer);
+                    buffer += event.key.toLowerCase();
+                    bufferTimer = window.setTimeout(() => (buffer = ''), typeaheadMs);
+                    const all = options();
+                    const from = buffer.length > 1 ? 0 : index + 1;
+                    const order = [...all.slice(from), ...all.slice(0, from)];
+                    const found = order.find((o) => (o.textContent ?? '').trim().toLowerCase().startsWith(buffer));
+                    if (found) highlight(all.indexOf(found));
+                }
                 break;
         }
     };
@@ -158,8 +220,8 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
     /** @param {MouseEvent} event */
     const onClick = (event) => {
         const target = /** @type {HTMLElement} */ (event.target);
-        const option = target.closest(OPTION_SELECTOR);
-        if (!(option instanceof HTMLElement) || option.hasAttribute('data-kp-disabled')) return;
+        const option = target.closest(optionSelector);
+        if (!(option instanceof HTMLElement) || option.matches(disabledSelector)) return;
         const at = options().indexOf(option);
         if (at === -1) return;
         highlight(at);
@@ -173,8 +235,9 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
      * @param {MouseEvent} event
      */
     const onOver = (event) => {
+        if (!hoverHighlights) return;
         const target = /** @type {HTMLElement} */ (event.target);
-        const option = target.closest(OPTION_SELECTOR);
+        const option = target.closest(optionSelector);
         if (!(option instanceof HTMLElement)) return;
         const at = options().indexOf(option);
         if (at !== -1) highlight(at);
@@ -195,6 +258,8 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
             highlight(at);
         },
         clear,
+        /** Choose the highlighted option, as Enter would. */
+        choose,
         /** @returns {number} the highlighted index, or -1 */
         get index() {
             return index;
@@ -204,17 +269,24 @@ export function createListbox({ input, list, onChoose, onDismiss, loop = true })
             return options();
         },
         destroy() {
+            clearTimeout(bufferTimer);
             input.removeEventListener('keydown', onKeyDown);
             list.removeEventListener('click', onClick);
             list.removeEventListener('mouseover', onOver);
             clear();
+            // Take back what was stamped: an id the consumer did not
+            // write, an aria-selected the option did not have.
+            for (const option of stampedIds) option.removeAttribute('id');
+            for (const option of stampedSelected) option.removeAttribute('aria-selected');
+            stampedIds.clear();
+            stampedSelected.clear();
         },
     };
 }
 
 /**
  * Does `text` match `query` as a subsequence, the way a command palette
- * matches? "thm" finds "Theme wisselen".
+ * matches? "thm" finds "Theme".
  *
  * Deliberately not a fuzzy-score library: this returns whether it matches
  * and the caller keeps its own order. A ranking function that nobody can
