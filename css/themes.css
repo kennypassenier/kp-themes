@@ -2039,6 +2039,294 @@
     --destructive-active: hsl(2, 90%, 17%);
     --destructive-disabled: hsl(5, 67%, 37%);
 }
+
+[data-theme='grotesk'] {
+    /* Grotesk: the International Typographic Style — white, black, one red, and a grid. Identity by letter, not by colour. */
+    --background: hsl(0, 0%, 100%);
+    --foreground: hsl(0, 0%, 7%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(0, 0%, 7%);
+    --popover: hsl(0, 0%, 100%);
+    --popover-foreground: hsl(0, 0%, 7%);
+    --primary: hsl(355, 95%, 45%);
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(0, 0%, 94%);
+    --secondary-foreground: hsl(0, 0%, 7%);
+    --muted: hsl(0, 0%, 96%);
+    --muted-foreground: hsl(0, 0%, 40%);
+    --accent: hsl(0, 0%, 7%);
+    --accent-foreground: hsl(0, 0%, 100%);
+    --destructive: hsl(355, 95%, 40%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --success: hsl(150, 60%, 26%);
+    --success-foreground: hsl(0, 0%, 100%);
+    --warning: hsl(40, 100%, 38%);
+    --warning-foreground: hsl(0, 0%, 7%);
+    --info: hsl(220, 70%, 40%);
+    --info-foreground: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 85%);
+    --border-strong: hsl(0, 0%, 7%);
+    --input: hsl(0, 0%, 7%);
+    --ring: hsl(355, 95%, 45%);
+    --selected: hsl(355, 95%, 45%);
+    --chart-1: hsl(355, 95%, 45%);
+    --chart-2: hsl(0, 0%, 7%);
+    --chart-3: hsl(0, 0%, 45%);
+    --chart-4: hsl(220, 70%, 40%);
+    --chart-5: hsl(40, 100%, 38%);
+    --sidebar-background: hsl(0, 0%, 7%);
+    --sidebar-foreground: hsl(0, 0%, 100%);
+    --sidebar-primary: hsl(0, 0%, 100%);
+    --sidebar-primary-foreground: hsl(0, 0%, 7%);
+    --sidebar-accent: hsl(0, 0%, 16%);
+    --sidebar-accent-foreground: hsl(0, 0%, 100%);
+    --sidebar-border: hsl(0, 0%, 25%);
+    --sidebar-ring: hsl(0, 0%, 100%);
+
+    /* Status badges (application pipeline): black, red and the grid's greys as plates. */
+    --status-draft: hsl(0, 0%, 90%);
+    --status-draft-foreground: hsl(0, 0%, 7%);
+    --status-sent: hsl(220, 70%, 40%);
+    --status-sent-foreground: hsl(0, 0%, 100%);
+    --status-screening: hsl(40, 100%, 50%);
+    --status-screening-foreground: hsl(0, 0%, 7%);
+    --status-interview: hsl(0, 0%, 40%);
+    --status-interview-foreground: hsl(0, 0%, 100%);
+    --status-offer: hsl(160, 70%, 30%);
+    --status-offer-foreground: hsl(0, 0%, 100%);
+    --status-rejected: hsl(0, 100%, 30%);
+    --status-rejected-foreground: hsl(0, 0%, 100%);
+    --status-withdrawn: hsl(0, 0%, 70%);
+    --status-withdrawn-foreground: hsl(0, 0%, 7%);
+    --color-scheme: light;
+    --theme-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0rem;
+    --fx-signal: hsl(355, 95%, 45%);
+    --fx-signal-foreground: hsl(0, 0%, 100%);
+    --fx-notch: 0px;
+    --fx-duration: 120ms;
+    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --theme-font-display: 'Archivo', 'Inter', ui-sans-serif, sans-serif;
+    --fx-overprint: hsl(355, 95%, 45%);
+    --fx-scanline: hsl(0, 0%, 7%);
+    --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(355, 95%, 45%);
+    --link-visited: hsl(317, 60%, 48%);
+    --focus-ring: hsl(0, 0%, 7%);
+    --focus-ring-contrast: hsl(0, 0%, 100%);
+    --primary-hover: hsl(358, 100%, 42%);
+    --primary-active: hsl(4, 78%, 38%);
+    --primary-disabled: hsl(1, 100%, 61%);
+    --secondary-hover: hsl(44, 0%, 90%);
+    --secondary-active: hsl(44, 0%, 79%);
+    --secondary-disabled: hsl(60, 100%, 100%);
+    --accent-hover: hsl(44, 0%, 4%);
+    --accent-active: hsl(44, 0%, 0%);
+    --accent-disabled: hsl(44, 0%, 15%);
+    --destructive-hover: hsl(358, 100%, 37%);
+    --destructive-active: hsl(4, 78%, 33%);
+    --destructive-disabled: hsl(1, 79%, 56%);
+}
+
+[data-theme='tazhib'] {
+    /* Tazhib: Persian illumination — lapis ground, ivory text, gold ruling, vermilion accents, a girih star under the glass. */
+    --background: hsl(228, 60%, 26%);
+    --foreground: hsl(42, 55%, 89%);
+    --card: hsl(228, 57%, 31%);
+    --card-foreground: hsl(42, 55%, 89%);
+    --popover: hsl(228, 54%, 36%);
+    --popover-foreground: hsl(42, 55%, 89%);
+    --primary: hsl(43, 67%, 50%);
+    --primary-foreground: hsl(228, 60%, 12%);
+    --secondary: hsl(228, 50%, 34%);
+    --secondary-foreground: hsl(42, 55%, 89%);
+    --muted: hsl(228, 45%, 32%);
+    --muted-foreground: hsl(230, 30%, 74%);
+    --accent: hsl(5, 75%, 55%);
+    --accent-foreground: hsl(5, 60%, 8%);
+    --destructive: hsl(5, 90%, 70%);
+    --destructive-foreground: hsl(5, 60%, 8%);
+    --success: hsl(170, 40%, 30%);
+    --success-foreground: hsl(42, 55%, 89%);
+    --warning: hsl(40, 60%, 30%);
+    --warning-foreground: hsl(42, 55%, 89%);
+    --info: hsl(205, 60%, 32%);
+    --info-foreground: hsl(42, 55%, 89%);
+    --border: hsl(228, 45%, 36%);
+    --border-strong: hsl(43, 45%, 52%);
+    --input: hsl(43, 45%, 52%);
+    --ring: hsl(43, 67%, 50%);
+    --selected: hsl(43, 67%, 46%);
+    --chart-1: hsl(43, 67%, 50%);
+    --chart-2: hsl(5, 80%, 62%);
+    --chart-3: hsl(170, 50%, 50%);
+    --chart-4: hsl(42, 55%, 80%);
+    --chart-5: hsl(330, 50%, 65%);
+    --sidebar-background: hsl(228, 65%, 18%);
+    --sidebar-foreground: hsl(42, 55%, 89%);
+    --sidebar-primary: hsl(43, 67%, 50%);
+    --sidebar-primary-foreground: hsl(228, 60%, 12%);
+    --sidebar-accent: hsl(228, 55%, 28%);
+    --sidebar-accent-foreground: hsl(42, 55%, 89%);
+    --sidebar-border: hsl(228, 45%, 30%);
+    --sidebar-ring: hsl(43, 67%, 50%);
+
+    /* Status badges (application pipeline): deep plates with ivory ink. */
+    --status-draft: hsl(228, 30%, 40%);
+    --status-draft-foreground: hsl(42, 55%, 89%);
+    --status-sent: hsl(205, 60%, 32%);
+    --status-sent-foreground: hsl(42, 55%, 89%);
+    --status-screening: hsl(40, 60%, 30%);
+    --status-screening-foreground: hsl(42, 55%, 89%);
+    --status-interview: hsl(285, 40%, 40%);
+    --status-interview-foreground: hsl(42, 55%, 89%);
+    --status-offer: hsl(175, 70%, 24%);
+    --status-offer-foreground: hsl(42, 55%, 89%);
+    --status-rejected: hsl(0, 80%, 30%);
+    --status-rejected-foreground: hsl(42, 55%, 89%);
+    --status-withdrawn: hsl(228, 20%, 42%);
+    --status-withdrawn-foreground: hsl(42, 55%, 89%);
+    --color-scheme: dark;
+    --theme-font-body: 'Vazirmatn', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0.5rem;
+    --fx-signal: hsl(43, 67%, 50%);
+    --fx-signal-foreground: hsl(228, 60%, 12%);
+    --fx-notch: 0px;
+    --fx-duration: 220ms;
+    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --theme-font-display: 'Markazi Text', ui-serif, Georgia, serif;
+    --fx-overprint: hsl(5, 75%, 55%);
+    --fx-scanline: hsl(43, 67%, 50%);
+    --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(43, 67%, 50%);
+    --link-visited: hsl(123, 38%, 61%);
+    --focus-ring: hsl(42, 55%, 89%);
+    --focus-ring-contrast: hsl(228, 60%, 26%);
+    --primary-hover: hsl(43, 72%, 55%);
+    --primary-active: hsl(42, 97%, 67%);
+    --primary-disabled: hsl(45, 100%, 36%);
+    --secondary-hover: hsl(227, 47%, 37%);
+    --secondary-active: hsl(226, 39%, 47%);
+    --secondary-disabled: hsl(231, 63%, 25%);
+    --accent-hover: hsl(5, 83%, 59%);
+    --accent-active: hsl(7, 100%, 68%);
+    --accent-disabled: hsl(3, 79%, 43%);
+    --destructive-hover: hsl(5, 100%, 73%);
+    --destructive-active: hsl(7, 72%, 78%);
+    --destructive-disabled: hsl(4, 63%, 59%);
+}
+
+[data-theme='nostromo'] {
+    /* Nostromo: cassette futurism — the beige plastic of 1979 hardware, orange indicator LEDs, label tape, vent slots. The case, not the screen. */
+    --background: hsl(38, 28%, 78%);
+    --foreground: hsl(24, 12%, 15%);
+    --card: hsl(38, 30%, 83%);
+    --card-foreground: hsl(24, 12%, 15%);
+    --popover: hsl(38, 35%, 88%);
+    --popover-foreground: hsl(24, 12%, 15%);
+    --primary: hsl(24, 12%, 17%);
+    --primary-foreground: hsl(38, 30%, 90%);
+    --secondary: hsl(38, 22%, 70%);
+    --secondary-foreground: hsl(24, 12%, 15%);
+    --muted: hsl(38, 20%, 73%);
+    --muted-foreground: hsl(30, 10%, 30%);
+    --accent: hsl(17, 74%, 45%);
+    --accent-foreground: hsl(38, 30%, 90%);
+    --destructive: hsl(10, 80%, 28%);
+    --destructive-foreground: hsl(38, 30%, 90%);
+    --success: hsl(140, 35%, 28%);
+    --success-foreground: hsl(38, 30%, 90%);
+    --warning: hsl(38, 90%, 28%);
+    --warning-foreground: hsl(38, 30%, 90%);
+    --info: hsl(205, 45%, 32%);
+    --info-foreground: hsl(38, 30%, 90%);
+    --border: hsl(38, 18%, 62%);
+    --border-strong: hsl(30, 12%, 42%);
+    --input: hsl(30, 12%, 42%);
+    --ring: hsl(24, 12%, 17%);
+    --selected: hsl(17, 74%, 38%);
+    --chart-1: hsl(17, 74%, 38%);
+    --chart-2: hsl(24, 12%, 15%);
+    --chart-3: hsl(38, 60%, 35%);
+    --chart-4: hsl(140, 35%, 30%);
+    --chart-5: hsl(205, 45%, 35%);
+    --sidebar-background: hsl(24, 12%, 15%);
+    --sidebar-foreground: hsl(38, 30%, 88%);
+    --sidebar-primary: hsl(22, 87%, 55%);
+    --sidebar-primary-foreground: hsl(24, 12%, 15%);
+    --sidebar-accent: hsl(24, 12%, 24%);
+    --sidebar-accent-foreground: hsl(38, 30%, 88%);
+    --sidebar-border: hsl(24, 10%, 32%);
+    --sidebar-ring: hsl(22, 87%, 55%);
+
+    /* Status badges (application pipeline): moulded plates; the LED orange is a plate, never text. */
+    --status-draft: hsl(38, 22%, 68%);
+    --status-draft-foreground: hsl(24, 12%, 15%);
+    --status-sent: hsl(205, 45%, 32%);
+    --status-sent-foreground: hsl(38, 30%, 90%);
+    --status-screening: hsl(38, 90%, 28%);
+    --status-screening-foreground: hsl(38, 30%, 90%);
+    --status-interview: hsl(280, 25%, 38%);
+    --status-interview-foreground: hsl(38, 30%, 90%);
+    --status-offer: hsl(140, 40%, 30%);
+    --status-offer-foreground: hsl(38, 30%, 90%);
+    --status-rejected: hsl(0, 85%, 30%);
+    --status-rejected-foreground: hsl(38, 30%, 90%);
+    --status-withdrawn: hsl(30, 8%, 38%);
+    --status-withdrawn-foreground: hsl(38, 30%, 90%);
+    --color-scheme: light;
+    --theme-font-body: 'Titillium Web', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0.75rem;
+    --fx-signal: hsl(17, 74%, 38%);
+    --fx-signal-foreground: hsl(38, 30%, 90%);
+    --fx-notch: 0px;
+    --fx-duration: 160ms;
+    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --theme-font-display: 'Michroma', ui-sans-serif, system-ui, sans-serif;
+    --fx-overprint: hsl(17, 74%, 38%);
+    --fx-scanline: hsl(24, 12%, 15%);
+    --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(24, 12%, 17%);
+    --link-visited: hsl(53, 22%, 5%);
+    --focus-ring: hsl(24, 12%, 15%);
+    --focus-ring-contrast: hsl(38, 28%, 78%);
+    --primary-hover: hsl(24, 14%, 14%);
+    --primary-active: hsl(24, 30%, 6%);
+    --primary-disabled: hsl(24, 8%, 26%);
+    --secondary-hover: hsl(38, 19%, 66%);
+    --secondary-active: hsl(38, 14%, 55%);
+    --secondary-disabled: hsl(38, 36%, 81%);
+    --accent-hover: hsl(18, 85%, 40%);
+    --accent-active: hsl(14, 100%, 31%);
+    --accent-disabled: hsl(16, 78%, 57%);
+    --destructive-hover: hsl(10, 95%, 24%);
+    --destructive-active: hsl(0, 100%, 18%);
+    --destructive-disabled: hsl(10, 58%, 39%);
+}
 /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
    The shared machinery is one full-viewport texture layer per theme -
@@ -2219,6 +2507,71 @@ body::after {
     padding: 0.15em 0.6em;
     background: linear-gradient(90deg, var(--primary), var(--info));
     color: var(--primary-foreground);
+}
+
+/* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
+ * Columns, not squares — that is what separates it from light's
+ * millimetre grid. */
+[data-theme='grotesk'] {
+    --fx-texture: linear-gradient(to right, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px);
+    --fx-texture-size: calc(100% / 12) 100%;
+    --fx-texture-opacity: 0.05;
+}
+
+[data-theme='grotesk'] h1,
+[data-theme='grotesk'] h2 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+/* The red square before a heading: Müller-Brockmann's mark, static. */
+[data-theme='grotesk'] h1::before,
+[data-theme='grotesk'] h2::before {
+    content: '';
+    display: inline-block;
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    margin-inline-end: 0.3em;
+    background: var(--primary);
+}
+
+/* Tazhib: an eight-fold girih star, tiled, in the ruling gold [TH74]. */
+[data-theme='tazhib'] {
+    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d4a72c' stroke-width='1'%3E%3Cpath d='M32 4l6.5 21.5L60 32l-21.5 6.5L32 60l-6.5-21.5L4 32l21.5-6.5z'/%3E%3Cpath d='M12.2 12.2l19.8 8.2 19.8-8.2-8.2 19.8 8.2 19.8-19.8-8.2-19.8 8.2 8.2-19.8z'/%3E%3C/g%3E%3C/svg%3E");
+    --fx-texture-size: 64px 64px;
+    --fx-texture-opacity: 0.05;
+}
+
+/* The ruling: a gold hairline inset from the card's edge, the frame an
+ * illuminated page was drawn inside. Static. */
+[data-theme='tazhib'] .kp-card {
+    outline: 1px solid var(--primary);
+    outline-offset: -5px;
+}
+
+/* Nostromo: vent slots, the horizontal ribs of a moulded case [TH75]. */
+[data-theme='nostromo'] {
+    --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 6px);
+    --fx-texture-opacity: 0.05;
+}
+
+[data-theme='nostromo'] h1,
+[data-theme='nostromo'] h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* The LED: the current page carries an orange indicator, lit by colour
+ * AND by shape — a filled dot where the others have none (DI4). */
+[data-theme='nostromo'] nav [aria-current='page']::before {
+    content: '';
+    display: inline-block;
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    margin-inline-end: 0.4em;
+    border-radius: 50%;
+    background: var(--sidebar-primary);
+    box-shadow: 0 0 0 1px var(--border-strong);
 }
 
 /* T9 · Topo: contour lines wandering across the kraft paper. */
