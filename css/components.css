@@ -509,6 +509,50 @@
     box-sizing: border-box;
 }
 
+/* The native <select>'s open list is drawn by the browser in the
+ * platform's own highlight colour — purple on Kenny's desktop, in every
+ * theme, which is how the one control the package did not paint became
+ * the one that looked wrong [KT8]. Where the browser lets a page take the
+ * list over (Chromium 135+, `appearance: base-select`), it wears the
+ * theme: the popover surface, the ink wash on the hovered option, weight
+ * and a check on the chosen one. Elsewhere the native list stays. */
+@supports (appearance: base-select) {
+    select.kp-field__input,
+    select.kp-field__input::picker(select) {
+        appearance: base-select;
+    }
+
+    select.kp-field__input::picker(select) {
+        margin-block-start: 0.25rem;
+        padding: 0.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+        overflow: auto;
+    }
+
+    select.kp-field__input option {
+        padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    select.kp-field__input option:hover,
+    select.kp-field__input option:focus-visible {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    select.kp-field__input option:checked {
+        font-weight: 600;
+    }
+
+    select.kp-field__input option::checkmark {
+        content: var(--kp-glyph-check, '✓');
+        margin-inline-start: auto;
+    }
+}
+
 .kp-field__help {
     font-size: var(--kp-text-sm, 0.8125rem);
     color: var(--muted-foreground);
@@ -953,6 +997,26 @@ a.kp-nav__brand {
     max-inline-size: var(--kp-progress-max-width, 20rem);
     block-size: 0.5rem;
     accent-color: var(--kp-control-accent, var(--primary));
+    /* The track and the bar in the theme's colours rather than the
+     * browser's grey and its border — found by the foreign-colour test in
+     * both browsers [KT8]. accent-color stays for the browsers that read it. */
+    appearance: none;
+    border: 1px solid var(--border);
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    background: var(--muted);
+    overflow: hidden;
+}
+
+.kp-progress::-webkit-progress-bar {
+    background: var(--muted);
+}
+
+.kp-progress::-webkit-progress-value {
+    background: var(--kp-control-accent, var(--primary));
+}
+
+.kp-progress::-moz-progress-bar {
+    background: var(--kp-control-accent, var(--primary));
 }
 
 .kp-spinner {
@@ -2090,6 +2154,14 @@ a.kp-nav__brand {
     align-items: center;
     gap: 0.5rem 0.75rem;
     max-width: var(--kp-colorpicker-max-width, 22rem);
+}
+
+/* The sliders wear the ink and no ground of their own: a range has no
+ * text, but the browser gives it a colour and, in a dark colour scheme, a
+ * grey background — both of which the foreign-colour test reads [KT8]. */
+.kp-colorpicker input {
+    color: inherit;
+    background: transparent;
 }
 
 .kp-colorpicker__swatch {

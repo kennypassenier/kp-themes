@@ -38,6 +38,23 @@ result. Nothing existing changed (S20).
 - **`--kp-control-accent`** — what the browser paints checks, radio dots
   and the progress bar in; default `--primary`. Brutalism and mono set
   it, because their primary is (near) the ink.
+- **Hover is one lightness step** in every theme (was a half): Kenny's
+  finding on the 3.1.0 showcase, KT8/H1. Derived tokens only; no
+  authored value changed.
+- **The native `<select>` list wears the theme** where the browser
+  supports `appearance: base-select` (Chromium 135+): popover surface,
+  ink-wash hover, a check on the chosen option. Elsewhere it stays the
+  platform's.
+- **`<hr>` and `<progress>` wear the theme.** Both were the browser's
+  grey — the two elements on a fixture that wore no theme at all, found
+  by the foreign-colour test below.
+- **A foreign-colour test on every fixture** (`tests/fixtures.spec.mjs`,
+  "paints no colour that is not its own"): every painted background,
+  text, border and control colour is one of the theme's own values
+  within rounding, transparent, or a translucent wash of one; the colour
+  picker's swatch and the "browser" specimen's native controls are the
+  allowlist, each with its reason. Kenny asked for exactly this after the
+  third look at the showcase.
 - **The spinner's track is the head at a quarter alpha**, so the two can
   never coincide (brutalism's were both black).
 

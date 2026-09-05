@@ -476,9 +476,15 @@ blockquote {
     color: var(--muted-foreground);
 }
 
+/* A rule between blocks. The browser draws <hr> in its own grey — colour
+ * AND border, 128,128,128 in Chromium and Firefox alike — which the
+ * foreign-colour test found on every fixture: the one element on the page
+ * that wore no theme at all [KT8]. Both are the theme's now. */
 hr {
+    color: inherit;
     border: 0;
-    border-top: 1px solid var(--border);
+    border-block-start: 1px solid var(--border);
+    margin-block: 1rem;
 }
 
 ::marker {

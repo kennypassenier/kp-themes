@@ -880,3 +880,31 @@ test that let it through is wrong about what it measures, and it is
 rewritten before anything else — as the register test was in R3.
 
 **9 · Review.** At round three's retrospective, together with KT7.
+
+**Approved 2026-09-05, all nine fields "Klopt"; H1 answered "Eén stap";
+release "Nog niet" — and a fourth finding in the remarks:** the hovered
+option in the countries `<select>` was still purple in several themes.
+Measured: that list is the native `<select>`'s, drawn by the browser in
+the platform's highlight colour — purple on Kenny's desktop, in every
+theme, because it is the one control the package never painted. Kenny's
+question with it: *"Kunnen we niet testen dat zulke kleuren die buiten
+ons thema vallen gedetecteerd worden?"*
+
+**What was done.** (1) Hover is one lightness step (`gates/config.json`,
+`derivation.hover: 1`), regenerated for all 24 themes; MIGRATION and the
+CHANGELOG say so. (2) The `<select>` list wears the theme where the
+browser lets a page take it over — Chromium 135+, `appearance:
+base-select`: popover surface, the ink wash under the hovered option, a
+check on the chosen one; Firefox keeps the platform list, and a test that
+runs where the feature exists holds the hovered option's background to
+the wash (drilled: with the rule removed Chromium paints its own
+`oklab(0.18 … / 0.1)`). (3) **The detector Kenny asked for:** a test on
+every fixture that reads every painted background, text, border and
+control colour and holds each to the theme's own values within rounding,
+transparent, or a translucent wash. Its first run found, on every theme,
+four foreign colours nobody had noticed: the browser's grey `<hr>`, the
+grey range sliders of the colour picker, the grey `<progress>` track and
+border, and — legitimately — the picker's swatch and the "browser"
+specimen's native controls. The first three are the theme's now; the
+last two are the allowlist, each with its reason. Drilled: with the `hr`
+rule removed, every theme reports `color rgb(128, 128, 128) on hr`.

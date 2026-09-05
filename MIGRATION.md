@@ -27,6 +27,17 @@ existing theme's values are what they were (S20).
 - **A second register.** `@kp-soft/themes/css/retro-register` draws
   retro's bevels; opt-in like the cyberpunk one, inert in every other
   theme.
+- **Hover is a whole step, not a half.** Every derived `--*-hover` token
+  in every theme — the eleven you had included — moves one OKLCh
+  lightness step from its base instead of half of one (about 6 on the
+  perceptual scale instead of 3; the pressed state still must reach 10).
+  Kenny found the half step too faint on the showcase. Nothing to change
+  in a consumer; a hover that looked subtle looks visible.
+- **The native `<select>` wears the theme where the browser allows it.**
+  Chromium 135+ (`appearance: base-select`) draws the open list on the
+  popover surface with the ink wash under the hovered option; Firefox and
+  older browsers keep the platform list. A consumer who styled
+  `::picker(select)` itself overrides ours by cascade.
 - **Highlights no longer read `--accent`.** A hovered menu item, a
   highlighted combobox option and a hovered ghost or icon button paint
   `--kp-highlight` (the foreground at 8% alpha) with the surrounding

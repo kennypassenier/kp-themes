@@ -222,3 +222,101 @@ for (const theme of THEMES) {
         });
     });
 }
+
+// Kenny, after the third look at the showcase: "Kunnen we niet testen dat
+// zulke kleuren die buiten ons thema vallen gedetecteerd worden?" Yes.
+// Every painted colour on a fixture — backgrounds, text, borders, the
+// accent colour of a control — is one of the theme's own token values
+// (within rounding), transparent, or a translucent wash of one. The
+// probe that produced this test found, on every theme: the browser's grey
+// <hr>, the colour picker's grey range sliders, the picker's swatch (the
+// chosen colour, legitimately foreign) and the "browser" specimen's
+// native controls. The first two were fixed; the last two are the
+// allowlist, each with its reason [KT8].
+import { readFileSync } from 'node:fs';
+import { hsl } from '../gates/colour.mjs';
+
+const THEMES_CSS = readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8');
+/** @param {string} name @returns {number[][]} the theme's colours in 0–255 */
+const paletteOf = (name) => {
+    const start = THEMES_CSS.indexOf(`[data-theme='${name}']`);
+    const block = THEMES_CSS.slice(start, THEMES_CSS.indexOf('\n}\n', start));
+    const colours = [...block.matchAll(/hsl\([^)]*\)/g)].map((m) => hsl(m[0]).map((v) => Math.round(v * 255)));
+    // Pure white and black are the print stylesheet's, allowed everywhere.
+    return [...colours, [255, 255, 255], [0, 0, 0]];
+};
+const ALLOWED = [
+    { selector: '.kp-colorpicker__swatch', why: 'the swatch shows the colour a person chose' },
+    { selector: '[data-specimen="browser"] input', why: 'the specimen shows what the browser draws on its own' },
+];
+
+for (const theme of THEMES) {
+    test(`${theme.name} paints no colour that is not its own [KT8]`, async ({ page }) => {
+        await page.goto(`/showcase/themes/${theme.name}.html`);
+        const palette = paletteOf(theme.name);
+        const near = (c) => palette.some((p) => Math.abs(p[0] - c[0]) <= 3 && Math.abs(p[1] - c[1]) <= 3 && Math.abs(p[2] - c[2]) <= 3);
+        const painted = await page.evaluate(
+            (allowed) => {
+                const out = [];
+                const seen = new Set();
+                for (const el of document.querySelectorAll('body *')) {
+                    if (allowed.some((a) => el.matches(a))) continue;
+                    const box = el.getBoundingClientRect();
+                    if (box.width === 0 || box.height === 0) continue;
+                    const s = getComputedStyle(el);
+                    for (const prop of ['backgroundColor', 'color', 'borderTopColor', 'accentColor']) {
+                        const value = s[prop];
+                        if (!value || value === 'rgba(0, 0, 0, 0)' || value === 'auto') continue;
+                        if (prop === 'borderTopColor' && s.borderTopWidth === '0px') continue;
+                        const key = `${prop} ${value}`;
+                        if (seen.has(key)) continue;
+                        seen.add(key);
+                        const where = `${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''} in #${el.closest('.sc-specimen')?.id ?? 'page'}`;
+                        out.push({ prop, value, where });
+                    }
+                }
+                return out;
+            },
+            ALLOWED.map((a) => a.selector),
+        );
+        const foreign = [];
+        for (const { prop, value, where } of painted) {
+            const m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(value);
+            if (!m) {
+                // color(srgb …) is how Chromium reports hsl(from …): a wash, by construction.
+                if (!/^color\(srgb /.test(value)) foreign.push(`${prop} ${value} on ${where}`);
+                continue;
+            }
+            if (m[4] !== undefined && Number(m[4]) < 1) continue;
+            if (!near([Number(m[1]), Number(m[2]), Number(m[3])])) foreign.push(`${prop} ${value} on ${where}`);
+        }
+        // Drill: remove the `hr` rule from css/_rules.css and every theme
+        // reports "color rgb(128, 128, 128) on hr in #<theme>-typography".
+        expect(foreign).toEqual([]);
+    });
+
+    test(`${theme.name}'s select list wears the theme where the browser allows it [KT8]`, async ({ page, browserName }) => {
+        await page.goto(`/showcase/themes/${theme.name}.html`);
+        const supported = await page.evaluate(() => CSS.supports('appearance', 'base-select'));
+        test.skip(!supported, `${browserName} does not support appearance: base-select`);
+        const select = page.locator('select.kp-field__input').first();
+        await select.click();
+        const option = page.locator('select.kp-field__input option').nth(1);
+        await option.hover();
+        const painted = await page.evaluate(() => {
+            const opt = document.querySelector('select.kp-field__input option:nth-child(2)');
+            return { hover: getComputedStyle(opt).backgroundColor, ink: getComputedStyle(document.body).color };
+        });
+        // The hovered option is OUR wash — the ink at 8% — not the browser's
+        // own hover, which Chromium paints as a translucent oklab grey.
+        // Drill: remove the option:hover rule and this reads
+        // "oklab(0.18 … / 0.1)" instead of the ink at 0.08.
+        const wash = rgb(painted.hover);
+        const ink = rgb(painted.ink).rgb;
+        expect(Math.abs(wash.alpha - 0.08), `hovered option paints ${painted.hover}`).toBeLessThan(0.005);
+        expect(
+            wash.rgb.every((v, i) => Math.abs(v - ink[i]) <= 2),
+            `${painted.hover} is not a wash of ${painted.ink}`,
+        ).toBe(true);
+    });
+}
