@@ -27,6 +27,12 @@ existing theme's values are what they were (S20).
 - **A second register.** `@kp-soft/themes/css/retro-register` draws
   retro's bevels; opt-in like the cyberpunk one, inert in every other
   theme.
+- **Highlights no longer read `--accent`.** A hovered menu item, a
+  highlighted combobox option and a hovered ghost or icon button paint
+  `--kp-highlight` (the foreground at 8% alpha) with the surrounding
+  text colour, instead of `--accent` / `--accent-foreground`. Nothing in
+  a consumer changes unless it set `--accent` expecting it to drive those
+  highlights; set `--kp-highlight` then.
 - **The popover scrolls.** `.kp-popover` carries a max height
   (`--kp-popover-max-height`, default `min(80vh, 40rem)`) and
   `overflow: auto`, because a picker with twenty-four options is taller

@@ -330,6 +330,8 @@ the flash threshold, so they are literals rather than knobs:
 | `--fx-lift` | how far a control rises under the cursor. Formal, sepia and high-contrast answer `0px`, which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
+| `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
+| `--kp-control-accent` | what the browser paints a check, a radio dot and the progress bar in — `--primary` by default; brutalism and mono set it because their primary is the ink (3.1.0) |
 
 Each theme also has at most one gesture of its own: a rule that draws
 itself under a heading in formal, a blinking block cursor in terminal, a

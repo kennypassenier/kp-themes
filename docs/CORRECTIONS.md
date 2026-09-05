@@ -812,3 +812,71 @@ deliberately injected literal — `js/kt7-drill.js:7` on a throwaway branch
 repaired hook refuses to commit it locally — turned the gates job red on
 `check:strings` (run 33940706648). The branch was deleted. The loop in
 `docs/MINI_ROUNDS.md` is closed.
+
+## KT8 · What a review sees that no gate measures
+
+**Proposed 2026-09-05, after Kenny's look at the 3.1.0 showcase on Pages;
+the form is the next one.** He held the release ("Nog niet") and named
+four things: base and hover states differ too little in many themes; in
+brutalism the spinner is all black and nothing visibly turns; a checked
+radio is hard to see; and a highlighted dropdown item turns purple —
+"is bij vele andere thema's ook het geval dus een bug".
+
+**1 · What went wrong.** Three product faults and one design setting, all
+invisible to the gates. Measured: `.kp-spinner` drew its track in
+`--border-strong` and its head in `--primary` (`css/components.css`), both
+the ink in brutalism, so head and track were the same black. The checks
+and radios painted `accent-color: var(--primary)`, the ink in brutalism
+and a step from it in mono, so a checked box looked like an unchecked one.
+Seven hover/highlight rules read `--accent` / `--accent-foreground` — the
+theme picker's options, ghost and icon buttons, menu items, the combobox
+and palette highlights — which is shadcn's convention for a quiet tint,
+and in every theme whose accent is a colour (brutalism's lavender, deco's
+emerald, nishiki's beni, cyberpunk's cyan) a highlighted row turned that
+colour. The hover step: `gates/config.json` derives hover as half a
+lightness step (0.03 in OKLCh L); measured over all 24 themes,
+secondary→hover and primary→hover sit 1.4 to 3.6 apart on the same scale
+where the pressed state must reach 10.
+
+**2 · Which gate let it through.** None can: these are what a thing looks
+like, and the gates measure what a thing is. The review on Pages is the
+gate for that, and until now it had no fixed place in the round — the
+AFK report asked "Akkoord / Toon mij dit" per milestone, and Kenny
+answered Akkoord six times and looked afterwards, at the release go.
+
+**3 · Where the same fault sits elsewhere.** The `--accent` misuse: seven
+rules, all found by `grep 'background: var(--accent)'` and all changed.
+Controls that paint in `--primary`: the checks, the radios and the
+progress bar — all three now read the knob. Components with a head and a
+track: only the spinner.
+
+**4 · The measure.** (a) The three product faults are fixed in 3.1.0
+before its tag, each with a test on every fixture that goes red on the
+fault (`tests/fixtures.spec.mjs`, "review findings [KT8]"): the spinner's
+head and track differ by 1.5:1 after compositing; a control's
+`accent-color` is 3:1 on the page and 10 OKLab units from the ink; a
+highlighted row is a wash of the ink — no more chroma than the surface or
+the text — with the list's own text colour. (b) The hover step is Kenny's
+choice, put to him in the form with the measured distances. (c) The
+review gets a fixed place: **the release go is only asked after Kenny has
+looked at Pages** — the report form links the page and says so, and
+"Akkoord" on a milestone no longer stands in for having seen it.
+
+**5 · Cost.** Three per-theme tests (72 cases per browser) — about fifteen
+seconds. One more look before every release, which is what Kenny already
+does.
+
+**6 · Enforced by.** Code for (a); the form text for (c), which is
+discipline — a report form that omits the Pages link is the way this
+erodes, and there is no gate for the wording of a form.
+
+**7 · Measured, and when.** At Kenny's next look at Pages after the
+fixes are merged: the three faults are gone by his eye, and the tests
+are green on every fixture in CI. Field (b) is measured the same way once
+the hover step is chosen.
+
+**8 · Fallback.** If his next look still finds one of the three, the
+test that let it through is wrong about what it measures, and it is
+rewritten before anything else — as the register test was in R3.
+
+**9 · Review.** At round three's retrospective, together with KT7.
