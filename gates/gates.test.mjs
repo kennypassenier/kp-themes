@@ -293,6 +293,27 @@ test('KT5: API values and CSS are not text', () => {
     assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
 });
 
+test("TH86: mono's seven status plates are a lightness ladder, apart with hue removed", () => {
+    // Mono carries meaning by lightness, so every pair of plates must
+    // differ by at least 1.25:1 in luminance — the gap the eye reads as
+    // "a different grey" at badge size. Hue removed is the theme's own
+    // condition; there is none to remove. Drill: set two plates to the
+    // same value and the pair reads 1.00.
+    /** @type {{entries: Array<{token?: string, value?: string}>}} */
+    const source = JSON.parse(readFileSync(new URL('../themes/mono/tokens.json', import.meta.url), 'utf8'));
+    const plates = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'].map((name) => {
+        const entry = source.entries.find((e) => e.token === `status-${name}`);
+        assert.ok(entry, `status-${name}`);
+        return { name, rgb: hsl(entry.value ?? '') };
+    });
+    for (let i = 0; i < plates.length; i++) {
+        for (let j = i + 1; j < plates.length; j++) {
+            const ratio = contrast(plates[i].rgb, plates[j].rgb);
+            assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
+        }
+    }
+});
+
 test('KT7: the strings gate does not flag code that only looks like text', () => {
     // Three shapes found on 2026-09-05, all in files nothing had run the
     // gate over since they were written. A CSS selector handed to

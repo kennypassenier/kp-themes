@@ -12,7 +12,7 @@
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'nishiki' | 'shade-light' | 'shade-dark'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'nishiki' | 'shade-light' | 'shade-dark' | 'mono' | 'retro'} ThemeName
  */
 
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
@@ -38,6 +38,8 @@ export const THEMES = Object.freeze([
     { name: 'nishiki', label: 'Nishiki', dark: false },
     { name: 'shade-light', label: 'Shade (light)', dark: false },
     { name: 'shade-dark', label: 'Shade (dark)', dark: true },
+    { name: 'mono', label: 'Mono', dark: false },
+    { name: 'retro', label: 'Retro', dark: false },
 ]);
 
 /**

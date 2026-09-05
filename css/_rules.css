@@ -162,6 +162,24 @@ body::after {
  * contrast is the whole character, and anything drawn on top of it
  * would be the first thing anyone saw. */
 
+/* Mono: no texture. The absence is the register [TH72]. */
+
+/* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
+[data-theme='retro'] {
+    --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
+    --fx-texture-size: 4px 4px;
+    --fx-texture-opacity: 0.04;
+}
+
+/* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
+ * Static; the theme has no motion. */
+[data-theme='retro'] h1 {
+    display: inline-block;
+    padding: 0.15em 0.6em;
+    background: linear-gradient(90deg, var(--primary), var(--info));
+    color: var(--primary-foreground);
+}
+
 /* T9 · Topo: contour lines wandering across the kraft paper. */
 [data-theme='topo'] {
     --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%23335544' stroke-width='1'%3E%3Cpath d='M-20 60 Q 60 20 140 65 T 300 55 T 400 80'/%3E%3Cpath d='M-20 95 Q 70 55 150 100 T 305 90 T 400 115'/%3E%3Cpath d='M-20 130 Q 80 95 160 135 T 310 125 T 400 150'/%3E%3Cpath d='M-20 230 Q 50 195 130 235 T 290 225 T 400 250'/%3E%3Cpath d='M-20 265 Q 60 235 140 270 T 295 260 T 400 285'/%3E%3Cpath d='M-20 330 Q 70 300 150 335 T 305 325 T 400 350'/%3E%3C/g%3E%3C/svg%3E");

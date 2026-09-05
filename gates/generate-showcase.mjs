@@ -131,6 +131,8 @@ function showcase() {
         ${fontLinks([...new Set(THEMES.flatMap((t) => familiesOf(t.name)))])}
         <link rel="stylesheet" href="../css/themes.css" />
         <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
         <style>
 ${STYLE}        </style>
     </head>
@@ -226,6 +228,8 @@ function fixture(theme) {
         ${fontLinks(familiesOf(theme.name))}
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
         <style>
 ${STYLE}        </style>
     </head>

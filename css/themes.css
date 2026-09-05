@@ -90,6 +90,11 @@
     --fx-scanline: hsl(30, 40%, 88%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
@@ -181,6 +186,11 @@
     --fx-scanline: hsl(190, 80%, 92%);
     --fx-lift: 2px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -272,6 +282,11 @@
     --fx-scanline: hsl(226, 18%, 18%);
     --fx-lift: 2px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
@@ -367,6 +382,11 @@
     --fx-scanline: hsl(190, 80%, 70%);
     --fx-lift: 1px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(315, 95%, 64%);
@@ -458,6 +478,11 @@
     --fx-scanline: hsl(150, 40%, 88%);
     --fx-lift: 3px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
@@ -549,6 +574,11 @@
     --fx-scanline: hsl(65, 90%, 50%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -640,6 +670,11 @@
     --fx-scanline: hsl(24, 55%, 86%);
     --fx-lift: 2px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
@@ -731,6 +766,11 @@
     --fx-scanline: hsl(48, 100%, 50%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(220, 100%, 30%);
@@ -822,6 +862,11 @@
     --fx-scanline: hsl(30, 40%, 80%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 55%, 32%);
@@ -913,6 +958,11 @@
     --fx-scanline: hsl(190, 70%, 70%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(190, 80%, 62%);
@@ -1004,6 +1054,11 @@
     --fx-scanline: hsl(28, 70%, 60%);
     --fx-lift: 1px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(28, 85%, 58%);
@@ -1096,6 +1151,11 @@
     --fx-lift: 2px;
     --fx-shadow-offset: 4px;
     --fx-shadow-offset: 4px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(0, 0%, 7%);
@@ -1187,6 +1247,11 @@
     --fx-scanline: hsl(43, 65%, 52%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(43, 65%, 52%);
@@ -1278,6 +1343,11 @@
     --fx-scanline: hsl(38, 50%, 58%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(38, 50%, 58%);
@@ -1369,6 +1439,11 @@
     --fx-scanline: hsl(0, 0%, 98%);
     --fx-lift: 1px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 100%, 58%);
@@ -1460,6 +1535,11 @@
     --fx-scanline: hsl(36, 91%, 55%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(36, 91%, 55%);
@@ -1551,6 +1631,11 @@
     --fx-scanline: hsl(215, 51%, 25%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(215, 51%, 25%);
@@ -1642,6 +1727,11 @@
     --fx-scanline: hsl(180, 8%, 48%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 70%, 38%);
@@ -1733,6 +1823,11 @@
     --fx-scanline: hsl(194, 14%, 50%);
     --fx-lift: 0px;
     --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 72%, 60%);
@@ -1751,6 +1846,198 @@
     --destructive-hover: hsl(1, 97%, 70%);
     --destructive-active: hsl(4, 77%, 75%);
     --destructive-disabled: hsl(359, 61%, 54%);
+}
+
+[data-theme='mono'] {
+    /* Mono: greyscale, the ink is the brand. Meaning by lightness, pattern and label — never by hue. */
+    --background: hsl(0, 0%, 98%);
+    --foreground: hsl(0, 0%, 9%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(0, 0%, 9%);
+    --popover: hsl(0, 0%, 100%);
+    --popover-foreground: hsl(0, 0%, 9%);
+    --primary: hsl(0, 0%, 14%);
+    --primary-foreground: hsl(0, 0%, 98%);
+    --secondary: hsl(0, 0%, 92%);
+    --secondary-foreground: hsl(0, 0%, 9%);
+    --muted: hsl(0, 0%, 94%);
+    --muted-foreground: hsl(0, 0%, 38%);
+    --accent: hsl(0, 0%, 85%);
+    --accent-foreground: hsl(0, 0%, 9%);
+    --destructive: hsl(0, 0%, 25%);
+    --destructive-foreground: hsl(0, 0%, 98%);
+    --success: hsl(0, 0%, 30%);
+    --success-foreground: hsl(0, 0%, 98%);
+    --warning: hsl(0, 0%, 80%);
+    --warning-foreground: hsl(0, 0%, 9%);
+    --info: hsl(0, 0%, 60%);
+    --info-foreground: hsl(0, 0%, 9%);
+    --border: hsl(0, 0%, 88%);
+    --border-strong: hsl(0, 0%, 50%);
+    --input: hsl(0, 0%, 50%);
+    --ring: hsl(0, 0%, 14%);
+    --selected: hsl(0, 0%, 14%);
+    --chart-1: hsl(0, 0%, 9%);
+    --chart-2: hsl(0, 0%, 25%);
+    --chart-3: hsl(0, 0%, 38%);
+    --chart-4: hsl(0, 0%, 48%);
+    --chart-5: hsl(0, 0%, 55%);
+    --sidebar-background: hsl(0, 0%, 9%);
+    --sidebar-foreground: hsl(0, 0%, 92%);
+    --sidebar-primary: hsl(0, 0%, 100%);
+    --sidebar-primary-foreground: hsl(0, 0%, 9%);
+    --sidebar-accent: hsl(0, 0%, 18%);
+    --sidebar-accent-foreground: hsl(0, 0%, 92%);
+    --sidebar-border: hsl(0, 0%, 25%);
+    --sidebar-ring: hsl(0, 0%, 100%);
+
+    /* Status badges (application pipeline): a lightness ladder, white to black, seven steps apart by at least 1.25:1. */
+    --status-draft: hsl(0, 0%, 74%);
+    --status-draft-foreground: hsl(0, 0%, 9%);
+    --status-sent: hsl(0, 0%, 62%);
+    --status-sent-foreground: hsl(0, 0%, 9%);
+    --status-screening: hsl(0, 0%, 52%);
+    --status-screening-foreground: hsl(0, 0%, 9%);
+    --status-interview: hsl(0, 0%, 34%);
+    --status-interview-foreground: hsl(0, 0%, 98%);
+    --status-offer: hsl(0, 0%, 86%);
+    --status-offer-foreground: hsl(0, 0%, 9%);
+    --status-rejected: hsl(0, 0%, 9%);
+    --status-rejected-foreground: hsl(0, 0%, 98%);
+    --status-withdrawn: hsl(0, 0%, 22%);
+    --status-withdrawn-foreground: hsl(0, 0%, 98%);
+    --color-scheme: light;
+    --theme-font-body: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0.25rem;
+    --fx-signal: hsl(0, 0%, 30%);
+    --fx-signal-foreground: hsl(0, 0%, 98%);
+    --fx-notch: 0px;
+    --fx-duration: 150ms;
+    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --theme-font-display: 'Geist Mono', ui-monospace, monospace;
+    --fx-overprint: hsl(0, 0%, 60%);
+    --fx-scanline: hsl(0, 0%, 9%);
+    --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 8L8 0' stroke='%23000' stroke-opacity='0.35' stroke-width='1.5'/%3E%3C/svg%3E");
+    --chart-pattern-2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23000' fill-opacity='0.35'/%3E%3C/svg%3E");
+    --chart-pattern-3: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 8L8 0M0 0L8 8' stroke='%23000' stroke-opacity='0.3' stroke-width='1'/%3E%3C/svg%3E");
+    --chart-pattern-4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 4H8' stroke='%23000' stroke-opacity='0.35' stroke-width='1.5'/%3E%3C/svg%3E");
+    --chart-pattern-5: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 0V8' stroke='%23000' stroke-opacity='0.35' stroke-width='1.5'/%3E%3C/svg%3E");
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(0, 0%, 14%);
+    --link-visited: hsl(100, 0%, 3%);
+    --focus-ring: hsl(0, 0%, 9%);
+    --focus-ring-contrast: hsl(0, 0%, 98%);
+    --primary-hover: hsl(44, 0%, 11%);
+    --primary-active: hsl(44, 0%, 3%);
+    --primary-disabled: hsl(44, 0%, 23%);
+    --secondary-hover: hsl(44, 0%, 88%);
+    --secondary-active: hsl(44, 0%, 77%);
+    --secondary-disabled: hsl(60, 100%, 100%);
+    --accent-hover: hsl(44, 0%, 81%);
+    --accent-active: hsl(44, 0%, 70%);
+    --accent-disabled: hsl(44, 0%, 97%);
+    --destructive-hover: hsl(44, 0%, 22%);
+    --destructive-active: hsl(44, 0%, 13%);
+    --destructive-disabled: hsl(44, 0%, 35%);
+}
+
+[data-theme='retro'] {
+    /* Retro: the Windows 95 desktop — grey chrome, a navy title bar, bevels around a gated boundary. Nothing blinks. */
+    --background: hsl(0, 0%, 75%);
+    --foreground: hsl(0, 0%, 10%);
+    --card: hsl(0, 0%, 84%);
+    --card-foreground: hsl(0, 0%, 10%);
+    --popover: hsl(0, 0%, 90%);
+    --popover-foreground: hsl(0, 0%, 10%);
+    --primary: hsl(240, 100%, 25%);
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(0, 0%, 87%);
+    --secondary-foreground: hsl(0, 0%, 10%);
+    --muted: hsl(0, 0%, 80%);
+    --muted-foreground: hsl(0, 0%, 25%);
+    --accent: hsl(180, 100%, 20%);
+    --accent-foreground: hsl(0, 0%, 100%);
+    --destructive: hsl(0, 100%, 25%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --success: hsl(120, 100%, 20%);
+    --success-foreground: hsl(0, 0%, 100%);
+    --warning: hsl(50, 100%, 50%);
+    --warning-foreground: hsl(0, 0%, 10%);
+    --info: hsl(210, 100%, 30%);
+    --info-foreground: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 50%);
+    --border-strong: hsl(0, 0%, 38%);
+    --input: hsl(0, 0%, 38%);
+    --ring: hsl(240, 100%, 25%);
+    --selected: hsl(240, 100%, 25%);
+    --chart-1: hsl(240, 100%, 25%);
+    --chart-2: hsl(180, 100%, 20%);
+    --chart-3: hsl(0, 100%, 25%);
+    --chart-4: hsl(300, 100%, 25%);
+    --chart-5: hsl(120, 100%, 20%);
+    --sidebar-background: hsl(240, 100%, 25%);
+    --sidebar-foreground: hsl(0, 0%, 100%);
+    --sidebar-primary: hsl(0, 0%, 100%);
+    --sidebar-primary-foreground: hsl(240, 100%, 25%);
+    --sidebar-accent: hsl(240, 80%, 35%);
+    --sidebar-accent-foreground: hsl(0, 0%, 100%);
+    --sidebar-border: hsl(240, 60%, 45%);
+    --sidebar-ring: hsl(0, 0%, 100%);
+
+    /* Status badges (application pipeline): the sixteen-colour palette as plates. */
+    --status-draft: hsl(0, 0%, 95%);
+    --status-draft-foreground: hsl(0, 0%, 10%);
+    --status-sent: hsl(240, 100%, 25%);
+    --status-sent-foreground: hsl(0, 0%, 100%);
+    --status-screening: hsl(50, 100%, 50%);
+    --status-screening-foreground: hsl(0, 0%, 10%);
+    --status-interview: hsl(300, 100%, 25%);
+    --status-interview-foreground: hsl(0, 0%, 100%);
+    --status-offer: hsl(120, 100%, 26%);
+    --status-offer-foreground: hsl(0, 0%, 100%);
+    --status-rejected: hsl(0, 100%, 24%);
+    --status-rejected-foreground: hsl(0, 0%, 100%);
+    --status-withdrawn: hsl(0, 0%, 55%);
+    --status-withdrawn-foreground: hsl(0, 0%, 10%);
+    --color-scheme: light;
+    --theme-font-body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0rem;
+    --fx-signal: hsl(180, 100%, 20%);
+    --fx-signal-foreground: hsl(0, 0%, 100%);
+    --fx-notch: 0px;
+    --fx-duration: 0ms;
+    --fx-ease: linear;
+    --theme-font-display: 'Pixelify Sans', 'Silkscreen', ui-sans-serif, sans-serif;
+    --fx-overprint: hsl(240, 100%, 25%);
+    --fx-scanline: hsl(0, 0%, 10%);
+    --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(240, 100%, 25%);
+    --link-visited: hsl(278, 100%, 19%);
+    --focus-ring: hsl(0, 0%, 10%);
+    --focus-ring-contrast: hsl(0, 0%, 75%);
+    --primary-hover: hsl(241, 100%, 23%);
+    --primary-active: hsl(236, 71%, 16%);
+    --primary-disabled: hsl(225, 94%, 32%);
+    --secondary-hover: hsl(44, 0%, 83%);
+    --secondary-active: hsl(44, 0%, 72%);
+    --secondary-disabled: hsl(44, 0%, 99%);
+    --accent-hover: hsl(180, 100%, 18%);
+    --accent-active: hsl(180, 100%, 14%);
+    --accent-disabled: hsl(180, 48%, 34%);
+    --destructive-hover: hsl(0, 100%, 23%);
+    --destructive-active: hsl(2, 90%, 17%);
+    --destructive-disabled: hsl(5, 67%, 37%);
 }
 /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
@@ -1915,6 +2202,24 @@ body::after {
 /* Shade has no texture and no flourish, in both halves: the medium
  * contrast is the whole character, and anything drawn on top of it
  * would be the first thing anyone saw. */
+
+/* Mono: no texture. The absence is the register [TH72]. */
+
+/* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
+[data-theme='retro'] {
+    --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
+    --fx-texture-size: 4px 4px;
+    --fx-texture-opacity: 0.04;
+}
+
+/* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
+ * Static; the theme has no motion. */
+[data-theme='retro'] h1 {
+    display: inline-block;
+    padding: 0.15em 0.6em;
+    background: linear-gradient(90deg, var(--primary), var(--info));
+    color: var(--primary-foreground);
+}
 
 /* T9 · Topo: contour lines wandering across the kraft paper. */
 [data-theme='topo'] {

@@ -114,6 +114,11 @@ const EXEMPT = {
     'fx-notch': 'not a colour (a length)',
     'fx-lift': 'not a colour (how far a thing moves when it moves; 0 is a real answer)',
     'fx-shadow-offset': 'not a colour (a length: how far the hard shadow sits from its box; 0 paints nothing) [TH85]',
+    'chart-pattern-1': 'not a colour (an image drawn over chart-1 so a series is told apart without hue; none in every theme but mono) [TH86]',
+    'chart-pattern-2': 'not a colour (an image drawn over chart-2 so a series is told apart without hue; none in every theme but mono) [TH86]',
+    'chart-pattern-3': 'not a colour (an image drawn over chart-3 so a series is told apart without hue; none in every theme but mono) [TH86]',
+    'chart-pattern-4': 'not a colour (an image drawn over chart-4 so a series is told apart without hue; none in every theme but mono) [TH86]',
+    'chart-pattern-5': 'not a colour (an image drawn over chart-5 so a series is told apart without hue; none in every theme but mono) [TH86]',
     'fx-duration': 'not a colour',
     'fx-ease': 'not a colour',
 };
