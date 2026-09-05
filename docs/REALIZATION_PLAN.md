@@ -220,6 +220,7 @@ load is exactly what a file check reports as success.
 | Phase 7            | 2026-09-04 | four gaps: two accepted with their reasons, KT1's fallback activated, `/security-review` measured as not applicable | `docs/TEST_PLAN.md`, `docs/CORRECTIONS.md` |
 | Toon-mij-dit round | 2026-09-04 | L2, L5, L6, L7 signed off after Kenny saw them; L7 signed off knowing the state-visibility fault runs separately | this document, `docs/CORRECTIONS.md` |
 | Round three Phase 0 | 2026-09-05 | 21 candidates rated: 8 Essential themes, 5 Desired, 4 Later, 5 dropped; S21 | `docs/THEME_CANDIDATES.md`, `docs/SCOPE.md`, `docs/FEATURES.md` |
+| Round three AFK report | 2026-09-05 | R0–R6 all "Akkoord", KT7 all nine fields "Klopt", release: merge now, tag after Kenny's look at Pages | this document, `docs/CORRECTIONS.md` |
 | Round three R0–R5 (AFK) | 2026-09-05 | built on branch `round-three-scope`, commits `8ac3819` → `7ca453d`; the combined report and the release go are the next form | this document, `docs/CORRECTIONS.md` (KT7) |
 | Round three Phase 5 | 2026-09-05 | six milestones kept as order of work, one release 3.1.0 after R5, Google Fonts in the showcase only, AFK from R0, enforcement unchanged, TH88 added | this document |
 | AFK report L1-L10  | 2026-09-04 | L1, L3, L4, L8, L9, L10 signed off; L2, L5, L6, L7 answered "toon mij dit"; both queued deviations go to their own mini-rounds; Pages switched on | this document, `docs/MINI_ROUNDS.md`               |

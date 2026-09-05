@@ -50,8 +50,14 @@ node gates/check-package.mjs
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 
+echo "→ every user-visible string comes from the dictionary (KT5)"
+node gates/check-strings.mjs
+
 echo "→ types (the check jsconfig.json has always declared)"
 npx tsc --noEmit -p jsconfig.json
+
+echo "→ the shipped declarations, and a consumer type-checks against them (KT4)"
+node gates/check-types.mjs
 
 echo "→ tests"
 node --test gates/ 2>&1 | tail -3

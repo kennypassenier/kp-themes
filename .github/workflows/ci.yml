@@ -17,8 +17,11 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm ci
+      # The whole chain, not the hook's copy of it: the two lists drifted
+      # once and CI stayed green over a red strings gate (KT7). A unit
+      # test in gates/gates.test.mjs holds them side by side from here on.
       - name: Gates
-        run: ./.claude/hooks/gates.sh
+        run: npm run gates
 
   # Phase 5 decision H1: the fast gates block a commit, the browser tests
   # block a merge. Separate job so a red browser run says so by name

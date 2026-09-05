@@ -314,6 +314,29 @@ test("TH86: mono's seven status plates are a lightness ladder, apart with hue re
     }
 });
 
+test('KT7: every check script runs in the gates chain, in the hook, and CI runs the chain', () => {
+    // Two lists that promise the same thing and nothing that lays them
+    // side by side: the hook script omitted check:strings and CI ran the
+    // hook script, so a red gate shipped inside a green build. This test
+    // is the side-by-side. Drill: remove one `node gates/check-…` line
+    // from .claude/hooks/gates.sh and the hook assertion names it.
+    /** @type {{scripts: Record<string, string>}} */
+    const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+    const checks = Object.keys(pkg.scripts).filter((name) => name.startsWith('check:'));
+    assert.ok(checks.length >= 10, `expected the check scripts, found ${checks.length}`);
+    const chain = pkg.scripts.gates;
+    const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
+    const ci = readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+    for (const name of checks) {
+        assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
+        // The hook runs the same file the script does; match on the
+        // command the script names, which is what the hook copies.
+        const command = pkg.scripts[name].replace(/^node /, '');
+        assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+    }
+    assert.ok(/run:\s*npm run gates/.test(ci), 'ci.yml does not run `npm run gates`');
+});
+
 test('KT7: the strings gate does not flag code that only looks like text', () => {
     // Three shapes found on 2026-09-05, all in files nothing had run the
     // gate over since they were written. A CSS selector handed to

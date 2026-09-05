@@ -736,9 +736,15 @@ state or about JavaScript.
 
 ## KT7 · A gate that only `npm run gates` runs, and nothing runs `npm run gates`
 
-**Proposed 2026-09-05 during round three's AFK stretch; the form waits
-in the combined report.** Found at R0: the first full `npm run gates` of
-the round was red on files the round had not touched.
+**Approved 2026-09-05 in the combined AFK report, all nine fields
+"Klopt".** Found at R0: the first full `npm run gates` of the round was
+red on files the round had not touched.
+
+*Corrected while executing the measure:* the form said the hook omitted
+five steps. Read in full, `gates.sh` already ran prettier, tsc and the
+unit tests; what it omitted was `check:strings` and `check:types:consumer`
+— two, not five. The fault and the measure are unchanged; the count in
+fields 1 and 3 below was wrong and is left as written, with this note.
 
 **1 · What went wrong.** `npm run check:strings` reports eleven findings
 at 3.0.0 — `components/canvas.jsx:259`, `components/flow.jsx:143-150`,
