@@ -333,6 +333,8 @@ the flash threshold, so they are literals rather than knobs:
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
 | `--kp-control-accent` | what the browser paints a check, a radio dot and the progress bar in — `--primary` by default; brutalism and mono set it because their primary is the ink (3.1.0) |
 
+A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+). Firefox and older browsers draw that list themselves, in the platform's highlight colour — a known limitation since 3.1.0, not a bug in a theme.
+
 Each theme also has at most one gesture of its own: a rule that draws
 itself under a heading in formal, a blinking block cursor in terminal, a
 badge that settles in pastel, a drifting contour layer in topo, a ruled
