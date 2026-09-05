@@ -17,6 +17,8 @@ import Combobox from '../../components/combobox.jsx';
 import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
 import DataTable from '../../components/datatable.jsx';
 import { Form, FormField } from '../../components/form.jsx';
+import { StringsProvider } from '../../hooks/use-strings.jsx';
+import { Copyable } from '../../components/patterns.jsx';
 import { Reorder, SplitPane, Tree } from '../../components/structure.jsx';
 import { DatePicker, Upload, Wizard } from '../../components/flow.jsx';
 import { ColorPicker, GridLayout } from '../../components/canvas.jsx';
@@ -142,6 +144,15 @@ function Cases() {
                         ]}
                     />
                 </Form>
+            </div>
+            <div data-test="react-nested-strings">
+                {/* Layered providers [KT6]: the inner one overrides one word
+                    and must keep the outer one's other words. */}
+                <StringsProvider value={{ copy: 'Outer copy', copied: 'Outer copied' }}>
+                    <StringsProvider value={{ copy: 'Inner copy' }}>
+                        <Copyable value="abc" />
+                    </StringsProvider>
+                </StringsProvider>
             </div>
             <div data-test="react-router-nav">
                 {/* A consumer's own link component: what a router hands in.
