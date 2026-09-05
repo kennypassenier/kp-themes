@@ -531,7 +531,7 @@ day lookup scoped; Upload progress real; Combobox disabled options not
 selectable; `TOAST_MS` used; nested `StringsProvider` layers; Skeleton and
 Tree inline styles gone; `z-50` gone.
 
-**CSS.** 114 `--kp-*` knobs with the old value as fallback; `!important`
+**CSS.** 116 `--kp-*` knobs with the old value as fallback; `!important`
 gone; one `--fx-duration` fallback; the print rule and the topo drift on
 `body::after`; toasts above the texture; the focus ring reads its width
 token. Three durations stay literal for DI5.

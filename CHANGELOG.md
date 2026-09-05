@@ -39,7 +39,7 @@ framework-free `attach…()` returns a detach with `handles` whose state is
 readable and settable, takes its behaviours as options and `data-kp-*`
 attributes, dispatches an event with a detail on every change, and
 restores what it changed on detach. Every literal in the CSS a site might
-change is `var(--kp-…, <default>)` — 114 of them. README "Everything is a
+change is `var(--kp-…, <default>)` — 116 of them. README "Everything is a
 knob" has the five rules; the per-component list is in the sweep record.
 
 ### Repairs found by the audit
