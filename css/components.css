@@ -1106,6 +1106,10 @@ a.kp-nav__brand {
     font: inherit;
     text-align: start;
     cursor: pointer;
+    /* Border-box, or `100%` plus the padding overflows the popover by the
+     * padding — 20px wider than the menu on CI's scrollbar-bearing
+     * Chromium, where every option then lay outside the box [R5]. */
+    box-sizing: border-box;
 }
 
 .kp-menu [data-kp-theme]:hover {
