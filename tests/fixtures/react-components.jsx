@@ -191,21 +191,24 @@ function Cases() {
                 />
             </div>
             <div data-test="react-datatable">
-                <DataTable
-                    columns={[
-                        { key: 'naam', label: 'Naam' },
-                        { key: 'bedrag', label: 'Bedrag', kind: 'number' },
-                    ]}
-                    rows={[
-                        { naam: 'Acme', bedrag: '100' },
-                        { naam: 'Bakker', bedrag: '20' },
-                        { naam: 'Cerise', bedrag: '1.284,50' },
-                        { naam: 'Delta', bedrag: '7' },
-                    ]}
-                    rowKey={(_, i) => `r${i}`}
-                    pageSize={3}
-                    selectable
-                />
+                {/* Dutch numbers in the rows; the page says so where the data is [D5]. */}
+                <div lang="nl">
+                    <DataTable
+                        columns={[
+                            { key: 'naam', label: 'Naam' },
+                            { key: 'bedrag', label: 'Bedrag', kind: 'number' },
+                        ]}
+                        rows={[
+                            { naam: 'Acme', bedrag: '100' },
+                            { naam: 'Bakker', bedrag: '20' },
+                            { naam: 'Cerise', bedrag: '1.284,50' },
+                            { naam: 'Delta', bedrag: '7' },
+                        ]}
+                        rowKey={(_, i) => `r${i}`}
+                        pageSize={3}
+                        selectable
+                    />
+                </div>
             </div>
             <div data-test="react-palette">
                 <CommandPalette

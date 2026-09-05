@@ -1221,6 +1221,46 @@ a.kp-nav__brand {
 
 /* --- Command palette and shortcut sheet [TH40, TH49] ----------------- */
 
+/* Commands grouped under a small heading; the group hides when every
+ * command in it is filtered out [KT6]. */
+.kp-palette__group {
+    list-style: none;
+}
+
+.kp-palette__group > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kp-palette__group-label,
+.kp-shortcuts__group-label {
+    display: block;
+    margin: var(--kp-space-sm, 0.5rem) 0 var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-xs, 0.6875rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.kp-palette__description {
+    margin-inline-start: var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kp-combobox__clear {
+    position: absolute;
+    inset-inline-end: var(--kp-space-sm, 0.5rem);
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    border: 0;
+    background: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+
 /* A dialog centred near the top rather than the middle: a palette that
  * grows downwards should not push its own input off-centre while you
  * type. */
@@ -1316,6 +1356,38 @@ a.kp-nav__brand {
 }
 
 /* --- DataTable [TH37] ------------------------------------------------ */
+
+/* The sort control is a button inside the header, so it is reachable
+ * from the keyboard [KT6]; it wears the header's own text and nothing of
+ * a button's. */
+.kp-table th:has(> .kp-datatable__sort) {
+    padding: 0;
+}
+
+.kp-datatable__sort {
+    /* The whole cell: the button takes the header's padding, so a click
+     * anywhere in the header sorts — the first cut was an 18 px strip at
+     * the top of a 52 px cell, and a click in the middle hit nothing. */
+    display: block;
+    inline-size: 100%;
+    padding: var(--kp-table-cell-pad, 0.5rem 0.625rem);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    text-align: inherit;
+    cursor: pointer;
+}
+
+.kp-datatable__page-size {
+    margin-inline-end: var(--kp-space-sm, 0.5rem);
+    font: inherit;
+}
+
+.kp-table tr[data-kp-clickable] {
+    cursor: pointer;
+}
 
 .kp-datatable {
     display: flex;
@@ -1429,6 +1501,18 @@ a.kp-nav__brand {
 }
 
 /* --- Forms [TH38] ---------------------------------------------------- */
+
+/* A radio group laid out in a row rather than a column. */
+.kp-fieldset[data-kp-layout='inline'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--kp-space-md, 0.75rem);
+}
+
+.kp-fieldset[data-kp-layout='inline'] > legend {
+    flex-basis: 100%;
+}
 
 .kp-form {
     display: flex;
