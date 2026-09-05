@@ -484,8 +484,9 @@ Maak er iets moois van." — recorded as TH63, both channels.
 ## What was done — 3.0.0, 2026-09-05
 
 Rounds A and B together, per D1. Eight commits on `kt6-generic`, each with
-`npm run gates` green; 463 browser tests in Chromium and Firefox at the
-end, 458 of them from before plus five new ones drilled red first.
+`npm run gates` green; 467 browser tests in Chromium and Firefox at the
+end (six skipped by design), 458 of them from before plus the new ones,
+each drilled red first.
 
 **Package (D2).** Every `js/*.js` is pure; `js/auto.js` attaches
 everything and is the one file `sideEffects` names. Subpath exports for
