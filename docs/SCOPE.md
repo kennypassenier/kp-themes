@@ -372,3 +372,21 @@ when the contrast guarantee moved to the source.
 - ~~kyu has no staleness check on its vendored copy; Almanac does.~~
   **Closed 2026-09-04:** kyu shipped one; both consumers now compare their
   vendored copy against this repository's file at commit time.
+
+## Round three — more themes (2026-09-05)
+
+**S21 · Round three adds themes, and only themes.** Kenny listed eleven
+candidate styles on 2026-09-05 with one criterion — a candidate that
+overlaps too much with an existing theme is not built — and asked for
+further ideas that are distinct from everything here. The research and
+the decision per candidate are in `docs/THEME_CANDIDATES.md`; the rated
+features are TH64–TH87 in `docs/FEATURES.md`. Eight themes are Essential
+(brutalism, art deco, dark academia, the shade pair, ticker, nishiki,
+phantom), five Desired (retro web, monochrome, grotesk, tazhib,
+nostromo), four Later, five dropped with their reason.
+
+What stays out of this round, by Kenny's instruction on the same form:
+the four findings kp-soft reported against 3.0.0 (P1–P4, recorded in
+`docs/REQUESTS_FROM_CONSUMERS.md`) and D3, the removal of `STRINGS_NL`.
+Both wait for the round after this one. S20 holds: every new theme ships
+in a new minor version; nothing existing changes in place.

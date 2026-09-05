@@ -165,6 +165,44 @@ back: charts (the `--chart-*` tokens are ours, a charting library is not),
 maps, spreadsheet grids, captcha, payment fields, and icon sets. kp-themes
 defines themes and builds components on them.
 
+## Round three — themes, rated 2026-09-05
+
+Kenny's form of 2026-09-05 over eleven candidates and ten ideas; the
+research and the overlap scores are in `THEME_CANDIDATES.md`. One test
+bar for every theme: `tokens.json` passes every gate in `npm run gates`
+(all 39 contrast pairs, the invariants, the layers), an `anatomy.md`
+answers the invariant questions, the bare fixture and the showcase render
+it, and the browser suite is green for the new name in both browsers.
+Where a theme needs enabling work, that work is its own feature and is
+built first.
+
+| ID | Feature | Rating | Notes |
+| --- | --- | --- | --- |
+| TH64 | Theme `brutalism` — neo-brutalism, light | Essential | 3px black borders, hard offset shadow, candy plates; needs TH85 |
+| TH65 | Theme `deco` — art deco, dark | Essential | gold on near-black, jewel accents, geometric display face, chevron texture |
+| TH66 | Theme `academia` — dark academia, dark variant | Essential | ink/mahogany ground, oxblood + forest, candle gold, Garamond display; the parchment version is not built (sepia) |
+| TH67 | Themes `shade-light` and `shade-dark` — a medium-contrast pair | Essential | Solarized-derived, one scheme, two themes; light foreground is base01 (4.99), accents are plates |
+| TH68 | Theme `ticker` — amber on black, data-dense | Essential | IBM Plex Mono numerals, ledger rules, no motion; the theme JobTracker's tables want |
+| TH69 | Theme `nishiki` — ukiyo-e, light | Essential | washi, Prussian blue, beni red, 2px black key-block outline as `--border-strong` |
+| TH70 | Theme `phantom` — playful dark, Persona 5 | Essential | black, white, one red (plate with white ink), halftone, condensed italic display |
+| TH71 | Theme `retro` — Windows 95 chrome, light, tamed | Desired | gated boundary under the bevel, pixel face for headings only, no dotted focus; needs TH87 |
+| TH72 | Theme `mono` — greyscale, light | Desired | status plates as a lightness ladder + outline/dash; chart pattern fills; needs TH86 |
+| TH73 | Theme `grotesk` — Swiss typographic, light | Desired | white, black, one red, 12-column grid texture, red square before headings |
+| TH74 | Theme `tazhib` — Persian illumination, dark | Desired | lapis ground, ivory, gold, girih tile; vermilion is plate-only (3.20) |
+| TH75 | Theme `nostromo` — cassette futurism, medium-light | Desired | beige plastic, orange LED plates (never text), vent-slot texture |
+| TH76 | Theme neumorphism | Later | fights DI1 by definition; a tamed version is `light` with shadows |
+| TH77 | Theme glassmorphism | Later | needs a glass register (blur on card/popover only) and a non-indigo ground |
+| TH78 | Theme pea soup (Game Boy) | Later | four shades; depends on TH86's pattern fills |
+| TH79 | Theme atomic (mid-century) | Later | cream, teal, mustard, coral; next round |
+| TH80 | Theme vaporwave / synthwave | Don't do | synthwave scores 3 against cyberpunk, vaporwave 2 against pastel |
+| TH81 | Theme botanical / earth | Don't do | scores 3 against topo; sage fails DI1 as a boundary (2.23) |
+| TH82 | Theme steampunk | Don't do | scores 3 against solstice, 2–3 against sepia |
+| TH83 | Theme cosmic / space | Don't do | scores 3 against dark, which already carries the starfield |
+| TH84 | Theme reader (e-paper) | Don't do | duplicates TH72 |
+| TH85 | `--fx-shadow-offset` knob — a hard offset shadow on card, button and input | Essential | 0px in every existing theme; the first theme knob added since L3, so a minor version. Test bar: the knob paints in brutalism and nothing changes in the eleven (pixel comparison on the fixture) |
+| TH86 | Pattern fills for status plates and chart colours | Desired | `--chart-pattern-1..5` and outline/dash badge variants, as tokens per DI9. Test bar: the seven badges of `mono` are pairwise distinguishable with hue removed |
+| TH87 | Retro register stylesheet — raised/sunken bevel on button, input and card, title bar behind h1 | Desired | decoration around a gated `--border-strong`, never instead of it. Test bar: DI1 still passes on every control with the register loaded |
+
 ## Decisions that are not ratings
 
 | ID | Decision |

@@ -157,3 +157,23 @@ They are not exclusive; (1) is what T17 actually promised.
   A vendoring consumer will not discover this from `themes.css` alone —
   it deserves a line next to the vendoring instructions, not only in the
   install section.
+
+## 2026-09-05 · Four findings from kp-soft against 3.0.0 — next round
+
+Relayed by Kenny in the theme-candidates form, from the kp-soft session
+that was asked to adopt 3.0.0. Kenny's instruction: "niet ter bespreking
+van deze ronde, nu doen we enkel de thema's … houd de commentaar in het
+achterhoofd voor de volgende ronde." Recorded here so they survive the
+round; nothing below is measured yet — each is a claim from another
+session (standing rule 13b) until this project reproduces it.
+
+| id | finding, as relayed |
+| --- | --- |
+| P1 | a wrong import in the migration guide (`MIGRATION.md`) |
+| P2 | the allow-git instruction does not hold across a version jump |
+| P3 | the cyberpunk layer skips their own components |
+| P4 | a request for a size scale on the button |
+
+Picked up at the start of the round after the theme round, as its first
+inventory item; P1 and P2 are documentation faults and may be smaller
+than a round.

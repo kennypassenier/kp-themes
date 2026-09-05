@@ -83,13 +83,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                            |
-| ------------------- | ------------------------------------------------ |
-| Current phase       | 10 — closed; 3.0.0 released after correction KT6 |
-| Last completed gate | KT6's sweep form, 2026-09-05                     |
-| Next gate           | none; the consumers answer next                  |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL)    |
-| AFK mode            | off — nothing is running unattended              |
+| Field               | Value                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| Current phase       | Round three (themes): Phase 0 closed 2026-09-05; Phase 5 plan next                               |
+| Last completed gate | Theme-candidates form, 2026-09-05 (TH64–TH87)                                                    |
+| Next gate           | Phase 5 realization plan for round three                                                         |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, after this round); P1–P4 from kp-soft (next round) |
+| AFK mode            | off — nothing is running unattended                                                              |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
