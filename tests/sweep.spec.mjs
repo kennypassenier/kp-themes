@@ -5,6 +5,7 @@
 
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { THEMES as REGISTRY } from '../js/theme-registry.js';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -83,6 +84,6 @@ for (const channel of PICKERS) {
         await expect(picker.locator('[data-kp-theme-group="light"] .kp-theme-group__label')).toHaveText(S.themeGroupLight);
         await expect(picker.locator('[data-kp-theme-group="dark"] .kp-theme-group__label')).toHaveText(S.themeGroupDark);
         // Every theme is in exactly one group.
-        await expect(picker.locator('[data-kp-theme-group] [data-kp-theme]')).toHaveCount(11);
+        await expect(picker.locator('[data-kp-theme-group] [data-kp-theme]')).toHaveCount(REGISTRY.length);
     });
 }

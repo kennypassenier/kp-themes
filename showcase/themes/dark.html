@@ -4,8 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>kp-themes — Dark</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans&display=swap" data-sc-fonts />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
         <style>
 /* The showcase's own furniture — inlined into both generated
                pages so a fixture is one file plus the package's stylesheets.
@@ -61,6 +66,64 @@ body {
     padding: 1.5rem clamp(1rem, 4vw, 3rem) 2.5rem;
     background: var(--background);
     color: var(--foreground);
+}
+
+/* The comparison page [TH88]: two halves in one grid. A pane is
+ * `display: contents`, so its specimens become grid items of the shared
+ * grid and a specimen on the left sits in the same row as its twin on the
+ * right — the halves cannot drift apart while the page scrolls as one.
+ * Theme tokens still inherit from the pane's data-theme; only its box is
+ * gone, so the cells paint the ground themselves. */
+.sc-panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.sc-pane {
+    display: contents;
+}
+
+.sc-cell {
+    padding: 1rem clamp(1rem, 3vw, 2.5rem);
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+    min-width: 0;
+}
+
+.sc-side {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.sc-side__name {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+/* The menu scrolls inside itself under the sticky bar; the package's
+ * .kp-popover carries that rule since R5, this only tightens it. */
+.sc-side .kp-popover {
+    --kp-popover-max-height: min(70vh, 40rem);
+}
+
+/* Side by side needs width; below it the right half steps aside rather
+ * than stacking, because stacked halves are the page this replaced. */
+@media (max-width: 48rem) {
+    .sc-panes {
+        grid-template-columns: 1fr;
+    }
+
+    .sc-pane[data-sc-side='right'] {
+        display: none;
+    }
 }
 
 .sc-theme > h2 {

@@ -259,6 +259,10 @@
     background: var(--secondary);
     color: var(--secondary-foreground);
     border-color: var(--border-strong);
+    /* --fx-shadow-offset is a hard, unblurred shadow the control casts
+     * down and right — brutalism's signature [TH85]. 0px everywhere else,
+     * which paints nothing: the knob is the only theme-shaped thing here. */
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -368,6 +372,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius, 0.5rem);
     padding: 1rem;
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
 }
 
 .kp-card__title {
@@ -470,6 +475,7 @@
     flex-direction: column;
     gap: 0.25rem;
     max-width: var(--kp-field-max-width, 28rem);
+    min-inline-size: 0;
 }
 
 .kp-field__label {
@@ -485,6 +491,14 @@
     background: var(--background);
     color: var(--foreground);
     font: inherit;
+    box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    /* An input's intrinsic width comes from its `size` in the current
+     * face, and a wide face (nishiki's Zen Kaku Gothic New) pushed it past
+     * a 320px viewport — found by the DI11 reflow test in Firefox. The
+     * field, not the face, bounds it. */
+    inline-size: 100%;
+    min-inline-size: 0;
+    box-sizing: border-box;
 }
 
 .kp-field__help {
@@ -717,6 +731,12 @@ a.kp-nav__brand {
     padding: 0.25rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius, 0.5rem);
+    /* Twenty-four themes make the picker's menu taller than most
+     * viewports leave under a header: the popover scrolls inside itself
+     * rather than running off the bottom [R5]. A knob, like every other
+     * measure in this file. */
+    max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+    overflow: auto;
     background: var(--popover);
     color: var(--popover-foreground);
     /* Anchor positioning: the popover sits under its trigger without
@@ -728,10 +748,22 @@ a.kp-nav__brand {
 .kp-menu {
     display: flex;
     flex-direction: column;
+    /* nowrap, explicitly: the flat picker's rule above sets wrap, and a
+     * wrapping column with a maximum height starts a second column the
+     * moment the list is taller than the popover — the dark group moved
+     * beside the light one and the light one hung outside the box. Only
+     * CI's taller fonts made the list tall enough to see it [R5]. */
+    flex-wrap: nowrap;
     min-width: var(--kp-menu-min-width, 10rem);
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+/* And the items keep their size rather than shrinking to fit the height;
+ * the popover scrolls instead. */
+.kp-menu > * {
+    flex-shrink: 0;
 }
 
 .kp-menu__item {
@@ -1074,6 +1106,10 @@ a.kp-nav__brand {
     font: inherit;
     text-align: start;
     cursor: pointer;
+    /* Border-box, or `100%` plus the padding overflows the popover by the
+     * padding — 20px wider than the menu on CI's scrollbar-bearing
+     * Chromium, where every option then lay outside the box [R5]. */
+    box-sizing: border-box;
 }
 
 .kp-menu [data-kp-theme]:hover {
@@ -1413,6 +1449,9 @@ a.kp-nav__brand {
     background: var(--card);
     color: var(--card-foreground);
     font: inherit;
+    inline-size: 100%;
+    min-inline-size: 0;
+    box-sizing: border-box;
 }
 
 /* A sortable header is a control, so it says so on hover and carries its

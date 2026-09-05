@@ -47,6 +47,7 @@ const OUT_OF_SCOPE = {
     'kp-spin': 'a rotation: no luminance change at all',
     'kp-rule-in': 'a horizontal scale on a 1px rule; no luminance change and nothing over 341x256 px',
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
+    'kp-slide-in': 'a 6px translate on a badge, once; nothing changes luminance [TH70]',
     'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
 };

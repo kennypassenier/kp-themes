@@ -29,7 +29,14 @@ import { readFileSync } from 'node:fs';
 import process from 'node:process';
 
 /** The stylesheets a human writes. The generated one is not one of them. */
-const AUTHORED = ['../css/_rules.css', '../css/_header.css', '../css/components.css', '../css/cyberpunk-register.css', '../css/tailwind-bridge.css'];
+const AUTHORED = [
+    '../css/_rules.css',
+    '../css/_header.css',
+    '../css/components.css',
+    '../css/cyberpunk-register.css',
+    '../css/retro-register.css',
+    '../css/tailwind-bridge.css',
+];
 
 /**
  * Colours that are deliberately not theme colours, each with its reason.

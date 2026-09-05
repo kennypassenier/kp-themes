@@ -733,3 +733,82 @@ set a state which can outlive a failure. And at the first of the later
 channels, Avalonia or Ratatui, where "the consumer returns a promise"
 does not exist and it has to show whether the rule was about ownership of
 state or about JavaScript.
+
+## KT7 · A gate that only `npm run gates` runs, and nothing runs `npm run gates`
+
+**Approved 2026-09-05 in the combined AFK report, all nine fields
+"Klopt".** Found at R0: the first full `npm run gates` of the round was
+red on files the round had not touched.
+
+*Corrected while executing the measure:* the form said the hook omitted
+five steps. Read in full, `gates.sh` already ran prettier, tsc and the
+unit tests; what it omitted was `check:strings` and `check:types:consumer`
+— two, not five. The fault and the measure are unchanged; the count in
+fields 1 and 3 below was wrong and is left as written, with this note.
+
+**1 · What went wrong.** `npm run check:strings` reports eleven findings
+at 3.0.0 — `components/canvas.jsx:259`, `components/flow.jsx:143-150`,
+`components/patterns.jsx:225` — and has since those files were written in
+the KT6 sweep. Measured today on a worktree of `d5d25c3` (the 3.0.0
+merge): `node gates/check-strings.mjs` exits 1 with "11 string(s) a
+consumer cannot replace". CI was green on that commit, because CI's Gates
+job runs `.claude/hooks/gates.sh`, not `npm run gates`, and the script
+omits five of the chain's steps: `check:strings`, `check:types`,
+`check:types:consumer`, `npm test` and `prettier --check`. The KT5 record
+says the gate "runs in `npm run gates`" — true, and nothing ran it.
+
+All eleven were false positives of the gate's heuristics — a CSS
+selector handed to `closest()`, lines of an object literal whose key is
+capitalised, and a one-character literal desynchronising the literal
+scanner so the code between `'+'` and `'-'` was reported as a string.
+Repaired test-first the same day (`gates/gates.test.mjs`, "KT7: the
+strings gate does not flag code that only looks like text", red before
+the fix on all three shapes). That the findings were false does not make
+the fault smaller: a real one would have been just as invisible.
+
+**2 · Which gate let it through.** Phase 5's hook decision H1 — the fast
+gates block a commit, the browser tests block a merge — was applied to
+the hook and then copied into CI as the same script. Nothing compares the
+hook's list with the `gates` script's list, so the two drifted the moment
+KT5 added a step to one and not the other. The same shape as 7f (the
+manifest versus the tarball): two lists that promise the same thing and
+nothing that lays them side by side.
+
+**3 · Where else the same fault sits.** Measured: `gates.sh` runs ten
+checks; `package.json` `gates` runs fifteen. The five missing are the
+ones named above. The hook side is deliberate for three of them (tsc and
+the unit tests are slow, prettier rewrites), not for `check:strings`,
+which takes under a second. CI's side is not deliberate for any of them.
+
+**4 · The measure (proposed).** CI's Gates job runs `npm run gates` — the
+whole chain — and the hook keeps its fast subset per H1, widened by
+`check:strings` and `prettier --check`, which are fast. A unit test in
+`gates/gates.test.mjs` asserts that every `check:*` script in
+`package.json` is invoked by the `gates` script, and that
+`.github/workflows/ci.yml` calls `npm run gates`, so the next step added
+to one list fails the build until it is in the other.
+
+**5 · Cost.** The CI gates job grows by tsc, the unit tests and prettier —
+about a minute. The hook grows by two sub-second checks.
+
+**6 · Enforced by.** Code: the workflow line and the unit test. The hook
+subset stays a recorded decision (H1).
+
+**7 · Measured, and when.** At R0's first CI run after the change: the
+full chain is green, and once, a deliberately injected literal in a
+component turns it red (the drill). Recorded in the gate log.
+
+**8 · Fallback.** If the full chain is too slow for CI, the hook script
+grows instead and CI keeps calling it — but with the unit test, so the
+two lists can no longer differ silently.
+
+**9 · Review.** At round three's retrospective.
+
+**Measured, 2026-09-05.** Kenny approved all nine fields in the combined
+AFK report; the measure went in as `7fe7869`. At the first CI runs after
+it: the full chain green on `bc1e369` (run 33941401074), and a
+deliberately injected literal — `js/kt7-drill.js:7` on a throwaway branch
+`kt7-drill`, commit `177358e`, made through the GitHub API because the
+repaired hook refuses to commit it locally — turned the gates job red on
+`check:strings` (run 33940706648). The branch was deleted. The loop in
+`docs/MINI_ROUNDS.md` is closed.

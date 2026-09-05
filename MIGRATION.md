@@ -9,6 +9,35 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 3.0.0 to 3.1.0
+
+Nothing breaks. Thirteen themes, two knobs and a register arrived; every
+existing theme's values are what they were (S20).
+
+- **Thirteen new themes.** `brutalism`, `deco`, `academia`, `phantom`,
+  `ticker`, `nishiki`, `shade-light`, `shade-dark`, `mono`, `retro`,
+  `grotesk`, `tazhib`, `nostromo`. A vendored `css/themes.css` grows
+  accordingly; the `Theme` union grows with it, so a switch over theme
+  names that was exhaustive is now missing thirteen cases — TypeScript
+  will say so.
+- **Two new tokens in every theme.** `--fx-shadow-offset` (a length,
+  `0px` in the eleven you had) and `--chart-pattern-1` … `-5` (`none` in
+  the eleven you had). A consumer that copies token names by hand adds
+  them; one that reads `css/themes.css` has them.
+- **A second register.** `@kp-soft/themes/css/retro-register` draws
+  retro's bevels; opt-in like the cyberpunk one, inert in every other
+  theme.
+- **The popover scrolls.** `.kp-popover` carries a max height
+  (`--kp-popover-max-height`, default `min(80vh, 40rem)`) and
+  `overflow: auto`, because a picker with twenty-four options is taller
+  than most viewports. A consumer whose menu wanted to be taller sets the
+  knob.
+- **Fields and inputs shrink inside their track.** `.kp-field`,
+  `.kp-field__input` and `.kp-datatable__search` take `min-inline-size:
+0` and the inputs `inline-size: 100%`, after a wide face pushed a
+  fixture past a 320px viewport. A form that relied on an input's
+  intrinsic width sets one.
+
 ## Coming from 2.x to 3.0.0
 
 Four things can need a change; most consumers hit one.

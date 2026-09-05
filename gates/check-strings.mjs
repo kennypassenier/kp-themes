@@ -81,7 +81,13 @@ const NOT_TEXT_ATTR =
  * shape that made `Copyable` unusable in English, so a gate that misses
  * it misses the case it was written for. Drilled to prove it.
  */
-const JSX_LITERAL = /(['"`])((?:[^'"`\\\n]|\\.){2,})\1/g;
+// Every literal, including the one-character ones: skipping those made the
+// scanner pair the closing quote of '+' with the opening quote of '-' and
+// report the code between them as a string [KT7]. Length is filtered below.
+const JSX_LITERAL = /(['"`])((?:[^'"`\\\n]|\\.)*)\1/g;
+
+/** Calls whose string argument is a CSS selector, never text [KT7]. */
+const NOT_TEXT_CALL = /(?:closest|querySelector|querySelectorAll|matches)\(\s*$/;
 
 /** KeyboardEvent.key values and DOM event names: API constants, not text. */
 const KEYS = new Set([
@@ -183,9 +189,9 @@ export function loosePhrases(source, { jsx = true } = {}) {
     if (jsx) {
         for (const match of masked.matchAll(JSX_LITERAL)) {
             const text = match[2] ?? '';
-            if (!readsLikeText(text)) continue;
+            if (text.length < 2 || !readsLikeText(text)) continue;
             const before = masked.slice(Math.max(0, (match.index ?? 0) - 60), match.index);
-            if (NOT_TEXT_ATTR.test(before)) continue;
+            if (NOT_TEXT_ATTR.test(before) || NOT_TEXT_CALL.test(before)) continue;
             found.push({ line: lineOf(match.index ?? 0), text });
         }
     }
@@ -196,6 +202,10 @@ export function loosePhrases(source, { jsx = true } = {}) {
         for (const match of masked.matchAll(JSX_TEXT)) {
             const text = (match[1] ?? '').trim();
             if (text === '' || /^[A-Z][\w.]*\(/.test(text)) continue;
+            // `ArrowRight: new Date(...)`, `Home: y + 1,` — a line of an
+            // object literal whose key is capitalised. JSX text that reads
+            // "Note: something" keeps a word after the colon, not code [KT7].
+            if (/^[A-Za-z_$][\w$]*\s*:\s*(?:new\s|[\w$.]+\(|[\w$.]+\s*[-+*/?]|[\d-]|['"`[{]|true|false|null|undefined)/.test(text)) continue;
             found.push({ line: lineOf(match.index ?? 0), text });
         }
     // A JSX attribute matches both the sink list and the literal pass.

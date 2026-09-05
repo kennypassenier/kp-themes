@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en" data-theme="ticker">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Ticker</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&family=IBM+Plex+Mono&display=swap" data-sc-fonts />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <style>
+/* The showcase's own furniture — inlined into both generated
+               pages so a fixture is one file plus the package's stylesheets.
+               Everything here reads tokens; nothing here is a colour. */
+/* No font-family here on purpose. It used to carry one, which meant the
+ * per-theme fixture pages set their own body face — so the TH12 test
+ * measured this file rather than the package, and went on passing with
+ * the package's own rule deleted. The face comes from css/_rules.css now,
+ * which is the thing a consumer installs. */
+body {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Each block resolves its OWN theme's typeface.
+ *
+ * Without this line the font came from `body`, which resolves against the
+ * document's theme — so a terminal block showed terminal's colours in a
+ * sans-serif face while the document was formal, and every block turned
+ * monospace the moment someone picked terminal. Terminal's anatomy
+ * document is explicit that losing the mono face makes it "green-tinted,
+ * not a terminal", so the page was showing something that is not the
+ * theme it claims to be. Found by Kenny on the published page. */
+.sc-theme {
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+}
+
+/* The header wears the document's theme, which is what makes the picker
+ * in it visibly do something — every block below keeps its own. */
+.sc-header {
+    padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sc-header > p {
+    max-width: 60ch;
+}
+
+.sc-header h1 {
+    margin: 0;
+}
+
+.sc-header__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.sc-theme {
+    padding: 1.5rem clamp(1rem, 4vw, 3rem) 2.5rem;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* The comparison page [TH88]: two halves in one grid. A pane is
+ * `display: contents`, so its specimens become grid items of the shared
+ * grid and a specimen on the left sits in the same row as its twin on the
+ * right — the halves cannot drift apart while the page scrolls as one.
+ * Theme tokens still inherit from the pane's data-theme; only its box is
+ * gone, so the cells paint the ground themselves. */
+.sc-panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.sc-pane {
+    display: contents;
+}
+
+.sc-cell {
+    padding: 1rem clamp(1rem, 3vw, 2.5rem);
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+    min-width: 0;
+}
+
+.sc-side {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.sc-side__name {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+/* The menu scrolls inside itself under the sticky bar; the package's
+ * .kp-popover carries that rule since R5, this only tightens it. */
+.sc-side .kp-popover {
+    --kp-popover-max-height: min(70vh, 40rem);
+}
+
+/* Side by side needs width; below it the right half steps aside rather
+ * than stacking, because stacked halves are the page this replaced. */
+@media (max-width: 48rem) {
+    .sc-panes {
+        grid-template-columns: 1fr;
+    }
+
+    .sc-pane[data-sc-side='right'] {
+        display: none;
+    }
+}
+
+.sc-theme > h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 0.5rem;
+}
+
+.sc-theme > h2 small {
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: var(--muted-foreground);
+}
+
+.sc-specimen {
+    margin: 0 0 1.75rem;
+}
+
+.sc-specimen h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+}
+
+.sc-note {
+    margin: 0 0 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    max-width: 60ch;
+}
+
+/* auto-fit, not a fixed column count: this is what keeps the
+               page off a horizontal scrollbar at 320 px [DI11]. */
+.sc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.5rem;
+}
+
+.sc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.sc-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    /* min-height, never height: a reading aid that raises line
+                   height must be able to make this taller instead of
+                   clipping the label [DI11]. */
+    min-height: 2.5rem;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    font-size: 0.8125rem;
+}
+
+.sc-states {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sc-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+}
+
+.sc-button {
+    min-height: 2.25rem;
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+    font: inherit;
+    cursor: pointer;
+}
+
+.sc-on-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.sc-on-destructive {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+    border-color: var(--destructive);
+}
+
+.sc-text {
+    max-width: 60ch;
+}
+
+.sc-picker {
+    margin-bottom: 0.5rem;
+}
+        </style>
+    </head>
+    <body>
+        <main class="sc-theme">
+            <h2>Ticker</h2>
+            <section class="sc-specimen" id="ticker-surfaces" data-specimen="surfaces">
+                <h3>Surfaces and their ink</h3>
+                <p class="sc-note">Every pair here is in the contrast gate. If one looks wrong, the gate is wrong too.</p>
+                <div class="sc-grid"><div class="sc-chip" style="background: var(--background); color: var(--foreground);"><code>--background</code><span>Aa</span></div><div class="sc-chip" style="background: var(--card); color: var(--card-foreground);"><code>--card</code><span>Aa</span></div><div class="sc-chip" style="background: var(--popover); color: var(--popover-foreground);"><code>--popover</code><span>Aa</span></div><div class="sc-chip" style="background: var(--primary); color: var(--primary-foreground);"><code>--primary</code><span>Aa</span></div><div class="sc-chip" style="background: var(--secondary); color: var(--secondary-foreground);"><code>--secondary</code><span>Aa</span></div><div class="sc-chip" style="background: var(--muted); color: var(--muted-foreground);"><code>--muted</code><span>Aa</span></div><div class="sc-chip" style="background: var(--accent); color: var(--accent-foreground);"><code>--accent</code><span>Aa</span></div><div class="sc-chip" style="background: var(--destructive); color: var(--destructive-foreground);"><code>--destructive</code><span>Aa</span></div><div class="sc-chip" style="background: var(--success); color: var(--success-foreground);"><code>--success</code><span>Aa</span></div><div class="sc-chip" style="background: var(--warning); color: var(--warning-foreground);"><code>--warning</code><span>Aa</span></div><div class="sc-chip" style="background: var(--info); color: var(--info-foreground);"><code>--info</code><span>Aa</span></div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-states" data-specimen="states">
+                <h3>Interaction states</h3>
+                <p class="sc-note">Hover, active and disabled are derived, not authored — half a step, two steps, and a step and a half the other way.</p>
+                <div class="sc-grid"><div class="sc-states"><code>--primary</code><span class="sc-chip" style="background: var(--primary); color: var(--primary-foreground);">base</span><span class="sc-chip" style="background: var(--primary-hover); color: var(--primary-foreground);">-hover</span><span class="sc-chip" style="background: var(--primary-active); color: var(--primary-foreground);">-active</span><span class="sc-chip" style="background: var(--primary-disabled); color: var(--primary-foreground);">-disabled</span></div><div class="sc-states"><code>--secondary</code><span class="sc-chip" style="background: var(--secondary); color: var(--secondary-foreground);">base</span><span class="sc-chip" style="background: var(--secondary-hover); color: var(--secondary-foreground);">-hover</span><span class="sc-chip" style="background: var(--secondary-active); color: var(--secondary-foreground);">-active</span><span class="sc-chip" style="background: var(--secondary-disabled); color: var(--secondary-foreground);">-disabled</span></div><div class="sc-states"><code>--accent</code><span class="sc-chip" style="background: var(--accent); color: var(--accent-foreground);">base</span><span class="sc-chip" style="background: var(--accent-hover); color: var(--accent-foreground);">-hover</span><span class="sc-chip" style="background: var(--accent-active); color: var(--accent-foreground);">-active</span><span class="sc-chip" style="background: var(--accent-disabled); color: var(--accent-foreground);">-disabled</span></div><div class="sc-states"><code>--destructive</code><span class="sc-chip" style="background: var(--destructive); color: var(--destructive-foreground);">base</span><span class="sc-chip" style="background: var(--destructive-hover); color: var(--destructive-foreground);">-hover</span><span class="sc-chip" style="background: var(--destructive-active); color: var(--destructive-foreground);">-active</span><span class="sc-chip" style="background: var(--destructive-disabled); color: var(--destructive-foreground);">-disabled</span></div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-status" data-specimen="status">
+                <h3>Status badges</h3>
+                <p class="sc-note">Colour is never the only carrier: each badge says what it is [DI4].</p>
+                <div class="sc-row"><span class="sc-badge" style="background: var(--status-draft); color: var(--status-draft-foreground);">draft</span><span class="sc-badge" style="background: var(--status-sent); color: var(--status-sent-foreground);">sent</span><span class="sc-badge" style="background: var(--status-screening); color: var(--status-screening-foreground);">screening</span><span class="sc-badge" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span><span class="sc-badge" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span><span class="sc-badge" style="background: var(--status-rejected); color: var(--status-rejected-foreground);">rejected</span><span class="sc-badge" style="background: var(--status-withdrawn); color: var(--status-withdrawn-foreground);">withdrawn</span></div>
+            </section>
+            <section class="sc-specimen" id="ticker-focus" data-specimen="focus">
+                <h3>Focus ring</h3>
+                <p class="sc-note">Tab into these. The ring is two rings, and one of them contrasts with whatever it lands on [DI2].</p>
+                <div class="sc-row"><button type="button" class="sc-button">On the page</button><button type="button" class="sc-button sc-on-primary">On primary</button><button type="button" class="sc-button sc-on-destructive">On destructive</button></div>
+            </section>
+            <section class="sc-specimen" id="ticker-picker" data-specimen="picker">
+                <h3>Theme picker, framework-free</h3>
+                <p class="sc-note">The markup a server writes; one module attaches the behaviour. Changing it here changes the whole page.</p>
+                <div data-kp-theme-picker class="sc-picker"></div><p data-kp-theme-status hidden></p>
+            </section>
+            <section class="sc-specimen" id="ticker-buttons" data-specimen="buttons">
+                <h3>Button, every variant and state</h3>
+                <p class="sc-note">Hover, active and disabled are derived; a destructive button must carry an undo or a confirmation [TH1, DI10].</p>
+                <div class="sc-row"><button type="button" class="kp-button ">default</button><button type="button" class="kp-button kp-button--primary">primary</button><button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Zeker?">destructive</button><button type="button" class="kp-button kp-button--ghost">ghost</button><button type="button" class="kp-button " disabled>uit</button><button type="button" class="kp-button kp-button--primary" disabled>uit</button><button type="button" class="kp-button kp-button--destructive" disabled>uit</button><button type="button" class="kp-button kp-button--ghost" disabled>uit</button></div>
+            </section>
+            <section class="sc-specimen" id="ticker-badges" data-specimen="badges">
+                <h3>Badge</h3>
+                <p class="sc-note">Seven statuses, each of which says what it is — the colour is the second channel, never the only one [TH2, DI4].</p>
+                <div class="sc-row"><span class="kp-badge" data-kp-semantic data-status="draft" style="background: var(--status-draft); color: var(--status-draft-foreground);">draft</span><span class="kp-badge" data-kp-semantic data-status="sent" style="background: var(--status-sent); color: var(--status-sent-foreground);">sent</span><span class="kp-badge" data-kp-semantic data-status="screening" style="background: var(--status-screening); color: var(--status-screening-foreground);">screening</span><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span><span class="kp-badge" data-kp-semantic data-status="rejected" style="background: var(--status-rejected); color: var(--status-rejected-foreground);">rejected</span><span class="kp-badge" data-kp-semantic data-status="withdrawn" style="background: var(--status-withdrawn); color: var(--status-withdrawn-foreground);">withdrawn</span></div>
+            </section>
+            <section class="sc-specimen" id="ticker-alerts" data-specimen="alerts">
+                <h3>Alert</h3>
+                <p class="sc-note">Four flavours, each naming itself. An alert is a message, so it has no hover or active state [TH4].</p>
+                <div class="kp-alert kp-alert--success" role="status" data-kp-semantic><span><span class="kp-alert__label">success: </span>A message in this flavour.</span></div><div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">warning: </span>A message in this flavour.</span></div><div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">info: </span>A message in this flavour.</span></div><div class="kp-alert kp-alert--destructive" role="status" data-kp-semantic><span><span class="kp-alert__label">destructive: </span>A message in this flavour.</span></div>
+            </section>
+            <section class="sc-specimen" id="ticker-field" data-specimen="field">
+                <h3>Form field</h3>
+                <p class="sc-note">Label, help text, and an error that is words rather than a red border [TH5, DI4].</p>
+                <div class="kp-field"><label class="kp-field__label" for="ticker-f1">E-mail</label><input class="kp-field__input" id="ticker-f1" type="email" placeholder="name@example.com" aria-describedby="ticker-h1" /><span class="kp-field__help" id="ticker-h1">We do not pass anything on.</span></div><div class="kp-field kp-field--invalid"><label class="kp-field__label" for="ticker-f2">E-mail</label><input class="kp-field__input" id="ticker-f2" type="email" value="not-an-address" aria-invalid="true" aria-describedby="ticker-e2" /><span class="kp-field__error" id="ticker-e2">Enter a valid address.</span></div>
+            </section>
+            <section class="sc-specimen" id="ticker-field-types" data-specimen="field-types">
+                <h3>Form field types</h3>
+                <p class="sc-note">A field is not always a text box: select, textarea, checkbox and a radio group, each with the same label, help and error wiring [TH61].</p>
+                <div class="kp-field"><label class="kp-field__label" for="ticker-t1">Country</label><select class="kp-field__input" id="ticker-t1"><option>Pick…</option><option>Belgium</option><option>The Netherlands</option></select></div><div class="kp-field"><label class="kp-field__label" for="ticker-t2">Notes</label><textarea class="kp-field__input kp-field__input--multiline" id="ticker-t2"></textarea></div><div class="kp-field kp-field--check"><input class="kp-field__check" id="ticker-t3" type="checkbox" checked /><label class="kp-field__label" for="ticker-t3">Keep me posted</label></div><fieldset class="kp-field kp-fieldset kp-field--invalid" role="radiogroup" aria-invalid="true" aria-describedby="ticker-t4e"><legend class="kp-field__label">How do we reach you?</legend><div class="kp-field__option"><input class="kp-field__check" id="ticker-t4a" name="ticker-t4" type="radio" /><label for="ticker-t4a">Email</label></div><div class="kp-field__option"><input class="kp-field__check" id="ticker-t4b" name="ticker-t4" type="radio" /><label for="ticker-t4b">Telephone</label></div><span class="kp-field__error" id="ticker-t4e">Pick one.</span></fieldset>
+            </section>
+            <section class="sc-specimen" id="ticker-card" data-specimen="card">
+                <h3>Card</h3>
+                <p class="sc-note">A raised surface is never darker than the one below it [DI6].</p>
+                <div class="kp-card" data-slot="card"><h3 class="kp-card__title">Application</h3><p class="kp-card__body">Two lines of text on the card colour, with the ink that belongs to it.</p></div>
+            </section>
+            <section class="sc-specimen" id="ticker-table" data-specimen="table">
+                <h3>Table</h3>
+                <p class="sc-note">Wide tables scroll inside their own box; the page does not scroll sideways [TH3, DI11].</p>
+                <div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col">Company</th><th scope="col">Status</th><th scope="col">Amount</th></tr></thead><tbody><tr><td>Example Inc</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr><tr><td>Second Ltd</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span></td><td class="kp-numeric">998,00</td></tr></tbody></table></div>
+            </section>
+            <section class="sc-specimen" id="ticker-nav" data-specimen="nav">
+                <h3>Navigation bar</h3>
+                <p class="sc-note">The current page is marked by weight and aria-current, not by colour alone [TH7, DI4].</p>
+                <nav class="kp-nav" aria-label="Example navigation"><span class="kp-nav__brand">kp</span><ul class="kp-nav__links"><li><a class="kp-nav__link" href="#surfaces" aria-current="page">Overview</a></li><li><a class="kp-nav__link" href="#status">Statuses</a></li></ul></nav>
+            </section>
+            <section class="sc-specimen" id="ticker-overlays" data-specimen="overlays">
+                <h3>Overlays</h3>
+                <p class="sc-note">Dialog, menu, tabs and accordion get their keyboard behaviour from the platform: focus trap, Escape, focus return [TH35].</p>
+                <div class="sc-row"><button type="button" class="kp-button" data-kp-dialog="ticker-dialog">Dialog</button><button type="button" class="kp-button" popovertarget="ticker-menu" style="anchor-name: --ticker-menu">Menu</button></div><dialog class="kp-dialog" id="ticker-dialog"><h2 class="kp-dialog__title">Confirm</h2><p>Escape closes this dialog and puts focus back on the button.</p><div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Close</button></div></dialog><div popover="auto" id="ticker-menu" class="kp-popover" style="position-anchor: --ticker-menu"><ul class="kp-menu"><li><button type="button" class="kp-menu__item">Edit</button></li><li><button type="button" class="kp-menu__item">Archive</button></li></ul></div><div class="kp-tabs"><div class="kp-tabs__list" role="tablist"><button type="button" class="kp-tab" role="tab" id="ticker-t0" aria-controls="ticker-p0" aria-selected="true">Overview</button><button type="button" class="kp-tab" role="tab" id="ticker-t1" aria-controls="ticker-p1" aria-selected="false">Details</button></div><div class="kp-tabs__panel" role="tabpanel" id="ticker-p0" aria-labelledby="ticker-t0">The first panel.</div><div class="kp-tabs__panel" role="tabpanel" id="ticker-p1" aria-labelledby="ticker-t1" hidden>The second panel.</div></div><div class="kp-accordion"><details class="kp-accordion__item"><summary class="kp-accordion__summary">A question</summary><div class="kp-accordion__body">An answer.</div></details></div><div class="kp-toast" style="position: static; margin-top: 0.5rem;">A toast, frozen here so you can look at it.</div>
+            </section>
+            <section class="sc-specimen" id="ticker-wayfinding" data-specimen="wayfinding">
+                <h3>Breadcrumb, pagination, progress, spinner, skeleton</h3>
+                <p class="sc-note">The current page is never marked by colour alone; the spinner and the skeleton stop moving under reduced motion [TH35, DI4, DI7].</p>
+                <nav class="kp-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="#surfaces">Home</a></li><li><a href="#status">Applications</a></li><li><span aria-current="page">Detail</span></li></ol></nav><nav class="kp-pagination" aria-label="Pagination"><ul><li><a href="#surfaces">1</a></li><li><a href="#surfaces" aria-current="page">2</a></li><li><a href="#surfaces">3</a></li></ul></nav><progress class="kp-progress" value="40" max="100" aria-label="Progress"></progress><div class="sc-row"><span class="kp-spinner" role="status" aria-label="Busy"></span><span aria-hidden="true"><span class="kp-skeleton" style="width: 12rem"></span></span></div>
+            </section>
+            <section class="sc-specimen" id="ticker-links" data-specimen="links">
+                <h3>Links and selection</h3>
+                <p class="sc-note">The browser default scores 1.99 on dark, 2.09 on cyberpunk, 2.06 on terminal. These are the theme’s own [TH31].</p>
+                <p class="sc-text">An <a href="#surfaces">ordinary link</a>, a <a href="#already-visited-anchor">visited link</a> en gewone tekst naast elkaar. Selecteer deze zin om de selectiekleur te zien.</p>
+            </section>
+            <section class="sc-specimen" id="ticker-typography" data-specimen="typography">
+                <h3>Ordinary text elements</h3>
+                <p class="sc-note">code, kbd, mark, blockquote, hr and list markers — the elements a page gets for free and a theme usually forgets [TH32].</p>
+                <p class="sc-text">Inline <code>--background</code>, een toets <kbd>Ctrl</kbd>, en <mark>highlighted text</mark>.</p><pre><code>npm run gates</code></pre><blockquote>A theme has to be complete.</blockquote><ul><li>First point</li><li>Second point</li></ul><hr />
+            </section>
+            <section class="sc-specimen" id="ticker-data" data-specimen="data">
+                <h3>Showing data</h3>
+                <p class="sc-note">A long URL wraps instead of widening the page; digits line up between rows [TH33].</p>
+                <p class="sc-url kp-url">https://example.test/a/very/long/path/that-would-otherwise-widen-the-page?with=query&amp;and=more</p><p class="kp-id">a3f9-2b71-0c4d-8e15</p><p class="kp-masked">•••• •••• •••• 4417</p><p class="kp-numeric">1.284,50 &middot; 998,00 &middot; 12,75</p><p class="kp-timestamp">2026-09-04 14:07</p><p class="kp-truncate">This sentence is cut off with an ellipsis as soon as the column is narrower than the text itself, instead of making the row taller.</p><div class="kp-empty">No applications yet.</div>
+            </section>
+            <section class="sc-specimen" id="ticker-browser" data-specimen="browser">
+                <h3>The browser’s own hooks</h3>
+                <p class="sc-note">Checkbox, placeholder, invalid and disabled — surfaces a stylesheet cannot repaint, only point at [TH34].</p>
+                <div class="sc-row"><label><input type="checkbox" checked /> aangevinkt</label><input type="text" placeholder="placeholder" /><input type="email" value="not-an-address" required /><button type="button" class="sc-button" disabled>disabled</button></div>
+            </section>
+            <section class="sc-specimen" id="ticker-shell" data-specimen="shell">
+                <h3>The page shell</h3>
+                <p class="sc-note">Tab here to see the skip link appear. Print this page to see the print rules [TH36].</p>
+                <a class="kp-skip-link" href="#surfaces">Skip to content</a><div class="kp-error"><h1>404</h1><p>This page does not exist.</p></div><footer class="kp-footer">kp-themes · eleven themes, one set of tokens</footer>
+            </section>
+            <section class="sc-specimen" id="ticker-combobox" data-specimen="combobox">
+                <h3>Combobox and tag input</h3>
+                <p class="sc-note">Arrow down: the highlight moves and aria-activedescendant follows it. Type to filter — the count is announced [TH39, TH41].</p>
+                <div class="kp-combobox" data-kp-combobox><label class="kp-field__label" for="ticker-fruit">Fruit</label><input class="kp-combobox__input" id="ticker-fruit" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="ticker-fruit-list" placeholder="Pick or type…" /><ul class="kp-combobox__list" id="ticker-fruit-list" role="listbox" hidden><li class="kp-combobox__option" role="option" data-kp-option data-value="appel">Appel</li><li class="kp-combobox__option" role="option" data-kp-option data-value="banaan">Banaan</li><li class="kp-combobox__option" role="option" data-kp-option data-value="citroen">Citroen</li><li class="kp-combobox__option" role="option" data-kp-option data-value="druif">Druif</li></ul><p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div><div class="kp-combobox" data-kp-combobox data-kp-tags><label class="kp-field__label" for="ticker-labels">Labels</label><ul class="kp-tag-list" data-kp-tag-list></ul><input class="kp-combobox__input" id="ticker-labels" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="ticker-labels-list" /><ul class="kp-combobox__list" id="ticker-labels-list" role="listbox" hidden><li class="kp-combobox__option" role="option" data-kp-option data-value="urgent">Urgent</li><li class="kp-combobox__option" role="option" data-kp-option data-value="bug">Bug</li><li class="kp-combobox__option" role="option" data-kp-option data-value="idee">Idee</li></ul><p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>
+            </section>
+            <section class="sc-specimen" id="ticker-datatable" data-specimen="datatable">
+                <h3>DataTable</h3>
+                <p class="sc-note">Sort a column, filter, page. At 320 px each row becomes a card carrying its column names [TH37].</p>
+                <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3"><div class="kp-datatable__bar"><input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" placeholder="Search…" /></div><div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th><th scope="col" data-kp-sort="text">Customer</th><th scope="col" data-kp-sort="number">Amount</th><th scope="col" data-kp-sort="date">Date</th></tr></thead><tbody><tr data-kp-row-key="ticker-0"><td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select row Acme" /></td><td data-label="Customer">Acme</td><td data-label="Amount" class="kp-numeric">100</td><td data-label="Date" class="kp-timestamp">2026-03-01</td></tr><tr data-kp-row-key="ticker-1"><td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select row Bakker" /></td><td data-label="Customer">Bakker</td><td data-label="Amount" class="kp-numeric">20</td><td data-label="Date" class="kp-timestamp">2026-01-12</td></tr><tr data-kp-row-key="ticker-2"><td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select row Cerise" /></td><td data-label="Customer">Cerise</td><td data-label="Amount" class="kp-numeric">1.284,50</td><td data-label="Date" class="kp-timestamp">2026-09-04</td></tr><tr data-kp-row-key="ticker-3"><td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select row Delta" /></td><td data-label="Customer">Delta</td><td data-label="Amount" class="kp-numeric">7</td><td data-label="Date" class="kp-timestamp">2025-11-30</td></tr></tbody></table></div><div class="kp-empty" data-kp-datatable-empty hidden>Nothing found.</div><div class="kp-datatable__bar"><p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p><div class="kp-datatable__pager" data-kp-datatable-pager></div></div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-dates" data-specimen="dates">
+                <h3>Date picker</h3>
+                <p class="sc-note">Type a date and the calendar never has to open. Or open it: arrows by day, PageUp/Down by month [TH43].</p>
+                <div class="kp-datepicker" data-kp-datepicker><div class="kp-field"><label class="kp-field__label" for="ticker-van">From</label><input class="kp-field__input" id="ticker-van" type="text" inputmode="numeric" placeholder="dd-mm-yyyy" data-kp-date-input /></div><button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-structure" data-specimen="structure">
+                <h3>Tree, reorder and split</h3>
+                <p class="sc-note">All three are keyboard-first: arrows walk the tree, move an item, and resize the panes [TH45, TH46, TH55].</p>
+                <ul class="kp-tree" role="tree" data-kp-tree><li role="treeitem" aria-expanded="false">Folder one<ul role="group"><li role="treeitem">Child one</li></ul></li><li role="treeitem">Zaak twee</li></ul><ul class="kp-reorder" data-kp-reorder><li data-kp-item="a"><button type="button" data-kp-handle aria-label="Move A">⠿</button> A</li><li data-kp-item="b"><button type="button" data-kp-handle aria-label="Move B">⠿</button> B</li></ul><div class="kp-split" data-kp-split><div class="kp-split__pane">Left</div><div class="kp-split__separator" role="separator" tabindex="0" aria-orientation="vertical" aria-valuemin="10" aria-valuemax="90" aria-valuenow="50" aria-label="Split the panels"></div><div class="kp-split__pane">Right</div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-patterns" data-specimen="patterns">
+                <h3>Status, diff and copy</h3>
+                <p class="sc-note">A health dot is never the only carrier; the diff sign has its own column so it survives without colour [TH52, TH53, TH54].</p>
+                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> In orde</span> <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Let op</span> <span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Onbereikbaar</span><ol class="kp-timeline"><li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span><span><time class="kp-timeline__when">2026-09-04 14:07</time>Version 1.1.0 released</span></li><li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span><span><time class="kp-timeline__when">2026-09-04 12:27</time>Version 1.0.0 released</span></li></ol><span class="kp-copyable"><span class="kp-copyable__value" id="ticker-token">a3f9-2b71</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="ticker-token">Copy</button></span><pre class="kp-diff"><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">1</span><span class="kp-diff__sign"> </span><span>--background: 0 0% 100%;</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">2</span><span class="kp-diff__sign">-</span><span>--primary: 220 90% 56%;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">2</span><span class="kp-diff__sign">+</span><span>--primary: 220 90% 48%;</span></span></pre>
+            </section>
+            <section class="sc-specimen" id="ticker-colour" data-specimen="colour">
+                <h3>Colour picker</h3>
+                <p class="sc-note">The number is the point: the same WCAG ratio the contrast gate uses, against THIS theme’s background [TH57].</p>
+                <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background"><label class="kp-field__label" for="ticker-ch">Hue</label><input id="ticker-ch" type="range" data-kp-channel="h" min="0" max="360" value="220" /><label class="kp-field__label" for="ticker-cs">Saturation</label><input id="ticker-cs" type="range" data-kp-channel="s" min="0" max="100" value="90" /><label class="kp-field__label" for="ticker-cl">Lightness</label><input id="ticker-cl" type="range" data-kp-channel="l" min="0" max="100" value="56" /><span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span><output class="kp-colorpicker__value" data-kp-colorpicker-value></output><p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p></div>
+            </section>
+            <section class="sc-specimen" id="ticker-grid" data-specimen="grid">
+                <h3>Movable grid layout</h3>
+                <p class="sc-note">Focus a tile and use the arrows to move it, Shift and the arrows to resize. Dragging is the easy half [TH56].</p>
+                <div class="kp-grid" data-kp-grid data-kp-columns="6"><div class="kp-grid__tile" data-kp-tile="cpu" data-kp-label="CPU" data-x="0" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">CPU</div><div class="kp-grid__tile" data-kp-tile="ram" data-kp-label="RAM" data-x="2" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">RAM</div><div class="kp-grid__tile" data-kp-tile="schijf" data-kp-label="Schijf" data-x="4" data-y="0" data-w="2" data-h="2" tabindex="0" role="group">Schijf</div></div>
+            </section>
+            <section class="sc-specimen" id="ticker-text" data-specimen="text">
+                <h3>Body text</h3>
+                <p class="sc-note">Forced text spacing must not clip this, and it must not need sideways scrolling at 320 px [DI11].</p>
+                <p class="sc-text">The eleven themes share the same tokens and the same rules; what differs is the colour, the contrast and the texture. <a href="#surfaces">A link</a> is readable in every theme — including terminal, where the browser's blue clashed with the phosphor green.</p>
+            </section>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

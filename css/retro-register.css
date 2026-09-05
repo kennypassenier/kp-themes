@@ -1,0 +1,56 @@
+/* @kp-soft/themes — css/retro-register.css
+   The retro register [TH87]: the raised and sunken bevels of a 1995
+   desktop, scoped to [data-theme='retro'] and inert elsewhere. Opt-in:
+   import it after themes.css and components.css.
+
+   The bevel is decoration AROUND the boundary, never instead of it: every
+   control keeps its --border-strong edge, which check-invariants holds at
+   3:1, and the two-tone bevel sits inside that edge as inset shadows. The
+   original's mid-grey-on-light-grey bevel measured 2.17:1 and was the
+   whole reason the boundary could not be the bevel (see
+   docs/THEME_CANDIDATES.md, C7). */
+
+/* Raised: light on the top-left, dark on the bottom-right. */
+[data-theme='retro'] .kp-button,
+[data-theme='retro'] .kp-card,
+[data-theme='retro'] .kp-popover,
+[data-theme='retro'] .kp-icon-button {
+    box-shadow:
+        inset 1px 1px 0 var(--popover),
+        inset -1px -1px 0 var(--foreground),
+        inset 2px 2px 0 var(--card),
+        inset -2px -2px 0 var(--border);
+}
+
+/* Pressed: the bevel inverts and the label steps one pixel down and
+ * right, the way the original's did. No transition: --fx-duration is 0. */
+[data-theme='retro'] .kp-button:active:not(:disabled),
+[data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+    box-shadow:
+        inset 1px 1px 0 var(--foreground),
+        inset -1px -1px 0 var(--popover),
+        inset 2px 2px 0 var(--border),
+        inset -2px -2px 0 var(--card);
+    padding-block-start: calc(0.375rem + 1px);
+    padding-inline-start: calc(0.875rem + 1px);
+}
+
+/* Sunken: the fields are wells cut into the chrome, on the lightest
+ * surface so the ink reads. */
+[data-theme='retro'] .kp-field__input,
+[data-theme='retro'] .kp-datatable__search,
+[data-theme='retro'] .kp-combobox__input,
+[data-theme='retro'] .kp-palette__input {
+    background: var(--popover);
+    box-shadow:
+        inset 1px 1px 0 var(--border),
+        inset -1px -1px 0 var(--popover),
+        inset 2px 2px 0 var(--foreground),
+        inset -2px -2px 0 var(--card);
+}
+
+/* Scrollbars in the chrome's colours, where the browser lets a page say
+ * so. The boundary token doubles as the thumb. */
+[data-theme='retro'] {
+    scrollbar-color: var(--border-strong) var(--card);
+}

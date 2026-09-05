@@ -291,6 +291,64 @@ test('KT5: a value read from the dictionary is not a finding', () => {
 test('KT5: API values and CSS are not text', () => {
     // Renaming these translates nothing and breaks the keyboard.
     assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
+});
+
+test("TH86: mono's seven status plates are a lightness ladder, apart with hue removed", () => {
+    // Mono carries meaning by lightness, so every pair of plates must
+    // differ by at least 1.25:1 in luminance — the gap the eye reads as
+    // "a different grey" at badge size. Hue removed is the theme's own
+    // condition; there is none to remove. Drill: set two plates to the
+    // same value and the pair reads 1.00.
+    /** @type {{entries: Array<{token?: string, value?: string}>}} */
+    const source = JSON.parse(readFileSync(new URL('../themes/mono/tokens.json', import.meta.url), 'utf8'));
+    const plates = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'].map((name) => {
+        const entry = source.entries.find((e) => e.token === `status-${name}`);
+        assert.ok(entry, `status-${name}`);
+        return { name, rgb: hsl(entry.value ?? '') };
+    });
+    for (let i = 0; i < plates.length; i++) {
+        for (let j = i + 1; j < plates.length; j++) {
+            const ratio = contrast(plates[i].rgb, plates[j].rgb);
+            assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
+        }
+    }
+});
+
+test('KT7: every check script runs in the gates chain, in the hook, and CI runs the chain', () => {
+    // Two lists that promise the same thing and nothing that lays them
+    // side by side: the hook script omitted check:strings and CI ran the
+    // hook script, so a red gate shipped inside a green build. This test
+    // is the side-by-side. Drill: remove one `node gates/check-…` line
+    // from .claude/hooks/gates.sh and the hook assertion names it.
+    /** @type {{scripts: Record<string, string>}} */
+    const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+    const checks = Object.keys(pkg.scripts).filter((name) => name.startsWith('check:'));
+    assert.ok(checks.length >= 10, `expected the check scripts, found ${checks.length}`);
+    const chain = pkg.scripts.gates;
+    const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
+    const ci = readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+    for (const name of checks) {
+        assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
+        // The hook runs the same file the script does; match on the
+        // command the script names, which is what the hook copies.
+        const command = pkg.scripts[name].replace(/^node /, '');
+        assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+    }
+    assert.ok(/run:\s*npm run gates/.test(ci), 'ci.yml does not run `npm run gates`');
+});
+
+test('KT7: the strings gate does not flag code that only looks like text', () => {
+    // Three shapes found on 2026-09-05, all in files nothing had run the
+    // gate over since they were written. A CSS selector handed to
+    // closest()/querySelector() is not text; a line of an object literal
+    // that starts with a capitalised key is not a JSX text node; and a
+    // one-character literal must not desynchronise the literal scanner
+    // so that the code BETWEEN two literals is reported as a string.
+    assert.deepEqual(loosePhrases("if (target.closest('button, a, input, select, textarea')) return;"), []);
+    assert.deepEqual(loosePhrases('const moves = {\n    ArrowRight: new Date(y, m, d + 1),\n    Home: new Date(y, m, d - offset),\n};'), []);
+    assert.deepEqual(loosePhrases("const sign = { added: signs.added ?? '+', removed: signs.removed ?? '-', same: signs.same ?? ' ' };"), []);
+    // And the real thing beside them still counts.
+    assert.equal(loosePhrases("if (x) el.setAttribute('aria-label', 'Remove this tag'); const s = { Note: 'Something to read' };").length, 2);
     assert.deepEqual(loosePhrases("el.style.display = 'contents';"), []);
     // A canvas font shorthand is CSS with a space in it, not a phrase.
     assert.deepEqual(loosePhrases('ctx.font = `${size}px monospace`;'), []);
