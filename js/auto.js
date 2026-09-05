@@ -12,7 +12,7 @@
 // page later calls the individual attach functions on that subtree.
 
 import { applyStoredTheme } from './no-flash.js';
-import { attachConfirmations, enforceContracts } from './components.js';
+import { attachConfirmations, attachSkipLinks, enforceContracts } from './components.js';
 import { attachDialogs, attachTabs } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes } from './combobox.js';
@@ -37,6 +37,7 @@ export function attachAll(root = document) {
     const detaches = [
         enforceContracts(root),
         attachConfirmations(root),
+        attachSkipLinks(root),
         attachDialogs(root),
         attachTabs(root),
         attachThemePickers(root),

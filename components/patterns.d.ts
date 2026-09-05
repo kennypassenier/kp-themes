@@ -1,61 +1,106 @@
-/**
- * An empty state that knows which emptiness it is [TH50].
- *
- * "Nog geen items" and "niets gevonden" are different messages, and
- * offering "maak er een" to someone who just typed a filter is noise.
- *
- * @param {{ title: string, body?: string, action?: import('react').ReactNode, filtered?: boolean }} props
- */
-export declare function EmptyState({ title, body, action, filtered }: {
-    title: string;
-    body?: string;
+export type EmptyStateProps = {
+    title: import('react').ReactNode;
+    body?: import('react').ReactNode;
+    /**
+     * Shown when not filtered.
+     */
     action?: import('react').ReactNode;
+    /**
+     * Shown when filtered, e.g. "Clear filters".
+     */
+    filteredAction?: import('react').ReactNode;
     filtered?: boolean;
-}): import("react").JSX.Element;
-/**
- * A value with a copy button that confirms in words [TH53].
- *
- * @param {{ value: string, label?: string, copiedText?: string, strings?: Partial<import('../js/strings.js').Strings> }} props
- */
-export declare function Copyable({ value, label, copiedText, strings }: {
+    icon?: import('react').ReactNode;
+    /**
+     * Renders the title as a heading of this level. Default: a paragraph.
+     */
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    className?: string;
+    style?: import('react').CSSProperties;
+};
+export declare const EmptyState: import("react").ForwardRefExoticComponent<EmptyStateProps & import("react").HTMLAttributes<HTMLDivElement> & import("react").RefAttributes<HTMLDivElement>>;
+export type CopyableProps = {
     value: string;
-    label?: string;
-    copiedText?: string;
+    /**
+     * What goes to the clipboard, if not what is shown (a masked key).
+     */
+    copyValue?: string;
+    label?: import('react').ReactNode;
+    copiedText?: import('react').ReactNode;
+    failedText?: import('react').ReactNode;
+    /**
+     * Default COPIED_MS.
+     */
+    resetMs?: number;
+    /**
+     * Controlled.
+     */
+    state?: 'idle' | 'copied' | 'failed';
+    onStateChange?: (state: 'idle' | 'copied' | 'failed') => void;
+    onCopy?: (value: string) => void;
+    onError?: (error: unknown) => void;
+    renderValue?: (value: string) => import('react').ReactNode;
+    icon?: import('react').ReactNode;
     strings?: Partial<import('../js/strings.js').Strings>;
-}): import("react").JSX.Element;
-/**
- * A health indicator [TH52]. The dot is never the only carrier.
- *
- * @param {{ state: 'ok' | 'warn' | 'down' | 'unknown', label: string }} props
- */
-export declare function Health({ state, label }: {
-    state: 'ok' | 'warn' | 'down' | 'unknown';
-    label: string;
-}): import("react").JSX.Element;
-/**
- * An event timeline [TH52].
- *
- * @param {{ events: { when: string, what: string }[] }} props
- */
-export declare function Timeline({ events }: {
-    events: {
-        when: string;
-        what: string;
-    }[];
-}): import("react").JSX.Element;
-/**
- * A diff view [TH54].
- *
- * The sign has a column of its own so it survives where the colour does
- * not: printed, in high contrast, or for a reader who cannot tell green
- * from red [DI4].
- *
- * @param {{ lines: { kind: 'added' | 'removed' | 'same', text: string, number?: number }[] }} props
- */
-export declare function Diff({ lines }: {
+    className?: string;
+    style?: import('react').CSSProperties;
+    classNames?: {
+        value?: string;
+        button?: string;
+    };
+};
+export declare const Copyable: import("react").ForwardRefExoticComponent<CopyableProps & import("react").HTMLAttributes<HTMLSpanElement> & import("react").RefAttributes<HTMLSpanElement>>;
+export type HealthProps = {
+    /**
+     * The four the stylesheet knows, or your own with your own CSS.
+     */
+    state: 'ok' | 'warn' | 'down' | 'unknown' | (string & {});
+    label: import('react').ReactNode;
+    /**
+     * Replaces the dot.
+     */
+    indicator?: import('react').ReactNode;
+    as?: import('react').ElementType;
+    className?: string;
+    style?: import('react').CSSProperties;
+};
+export declare const Health: import("react").ForwardRefExoticComponent<HealthProps & import("react").HTMLAttributes<HTMLElement> & import("react").RefAttributes<HTMLElement>>;
+export type TimelineEvent = {
+    id?: string;
+    when: import('react').ReactNode;
+    dateTime?: string;
+    what: import('react').ReactNode;
+    marker?: import('react').ReactNode;
+    state?: string;
+    href?: string;
+};
+export type TimelineProps = {
+    events: TimelineEvent[];
+    renderItem?: (event: TimelineEvent) => import('react').ReactNode;
+    linkComponent?: import('react').ElementType;
+    className?: string;
+    style?: import('react').CSSProperties;
+};
+export declare const Timeline: import("react").ForwardRefExoticComponent<TimelineProps & import("react").HTMLAttributes<HTMLOListElement> & import("react").RefAttributes<HTMLOListElement>>;
+export type DiffProps = {
     lines: {
         kind: 'added' | 'removed' | 'same';
         text: string;
         number?: number;
+        oldNumber?: number;
+        newNumber?: number;
     }[];
-}): import("react").JSX.Element;
+    /**
+     * Default true.
+     */
+    lineNumbers?: boolean;
+    signs?: {
+        added?: string;
+        removed?: string;
+        same?: string;
+    };
+    renderText?: (text: string, line: DiffProps['lines'][number]) => import('react').ReactNode;
+    className?: string;
+    style?: import('react').CSSProperties;
+};
+export declare const Diff: import("react").ForwardRefExoticComponent<DiffProps & import("react").HTMLAttributes<HTMLPreElement> & import("react").RefAttributes<HTMLPreElement>>;

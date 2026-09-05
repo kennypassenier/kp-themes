@@ -80,3 +80,25 @@ for (const channel of CHANNELS) {
         });
     });
 }
+
+// KT6, the third instance of the half-a-property shape: the skip link
+// appeared on focus and the suite never asked whether Enter moved focus.
+// JobTracker measured it at seven Tab presses to reach their content
+// with the link present; the link had done nothing for the person it
+// exists for, because nothing put tabindex="-1" on the target.
+const SKIP = [
+    { name: 'framework-free', link: '[data-test="plain-skip"]' },
+    { name: 'React', link: '[data-test="react-router-nav"] a.kp-skip-link' },
+];
+for (const channel of SKIP) {
+    test(`the skip link moves focus to the content, not only the scroll — ${channel.name} [KT6]`, async ({ page }) => {
+        await page.goto('/tests/fixtures/components.html');
+        const link = page.locator(channel.link);
+        await link.focus();
+        await link.press('Enter');
+        // Drill: with skipTo() no longer called (framework-free: the
+        // attachSkipLinks listener removed; React: the onClick removed),
+        // the target is scrolled to and focus stays on the link.
+        await expect(page.locator('[data-test="main"]')).toBeFocused();
+    });
+}

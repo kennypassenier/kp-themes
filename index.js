@@ -13,8 +13,10 @@ export {
     EXEMPT as CONTRACT_EXEMPT,
     VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT,
     attachConfirmations,
+    attachSkipLinks,
     enforceContracts,
     findViolations,
+    skipTo,
 } from './js/components.js';
 export {
     Accordion,

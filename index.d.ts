@@ -6,7 +6,7 @@ export { default as Alert } from './components/alert.jsx';
 export { default as Field } from './components/field.jsx';
 export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
-export { ARM_EVENT as CONFIRM_ARM_EVENT, CONFIRM_WINDOW_MS, DISARM_EVENT as CONFIRM_DISARM_EVENT, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, enforceContracts, findViolations, } from './js/components.js';
+export { ARM_EVENT as CONFIRM_ARM_EVENT, CONFIRM_WINDOW_MS, DISARM_EVENT as CONFIRM_DISARM_EVENT, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, attachSkipLinks, enforceContracts, findViolations, skipTo, } from './js/components.js';
 export { Accordion, Breadcrumb, Dialog, DropdownMenu, Pagination, Progress, Skeleton, Spinner, Tabs, Toasts, Tooltip, } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
 export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
