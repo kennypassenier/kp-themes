@@ -475,6 +475,7 @@
     flex-direction: column;
     gap: 0.25rem;
     max-width: var(--kp-field-max-width, 28rem);
+    min-inline-size: 0;
 }
 
 .kp-field__label {
@@ -491,6 +492,13 @@
     color: var(--foreground);
     font: inherit;
     box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    /* An input's intrinsic width comes from its `size` in the current
+     * face, and a wide face (nishiki's Zen Kaku Gothic New) pushed it past
+     * a 320px viewport — found by the DI11 reflow test in Firefox. The
+     * field, not the face, bounds it. */
+    inline-size: 100%;
+    min-inline-size: 0;
+    box-sizing: border-box;
 }
 
 .kp-field__help {
@@ -1419,6 +1427,9 @@ a.kp-nav__brand {
     background: var(--card);
     color: var(--card-foreground);
     font: inherit;
+    inline-size: 100%;
+    min-inline-size: 0;
+    box-sizing: border-box;
 }
 
 /* A sortable header is a control, so it says so on hover and carries its
