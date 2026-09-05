@@ -908,3 +908,11 @@ border, and — legitimately — the picker's swatch and the "browser"
 specimen's native controls. The first three are the theme's now; the
 last two are the allowlist, each with its reason. Drilled: with the `hr`
 rule removed, every theme reports `color rgb(128, 128, 128) on hr`.
+
+**Measured, 2026-09-05, at Kenny's third look.** "Release nu." The three
+faults were gone by his eye; the countries list was still purple in his
+browser — "misschien door mijn browser afgedwongen? … voorlopig
+accepteerbaar" — which is the platform list Firefox and Chromium before
+135 draw themselves, and is recorded as a known limitation in MIGRATION
+and the USER_GUIDE. 3.1.0 was tagged on `482e575` and published. The loop
+in `docs/MINI_ROUNDS.md` is closed.
