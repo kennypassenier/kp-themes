@@ -5,8 +5,9 @@
 points at so his apps look like one family. Web today; GUI (Avalonia) and
 TUI (Ratatui) later.
 
-**State:** 3.0.0 is released; 3.1.0 is built on `round-three-scope` and
-waits for Kenny's go — twenty-four themes (thirteen new, chosen from
+**State:** 3.0.0 is released; 3.1.0 is merged on `main` (`1c732fd`,
+2026-09-05) and live on GitHub Pages, untagged until Kenny's release go —
+twenty-four themes (thirteen new, chosen from
 twenty-one candidates in `docs/THEME_CANDIDATES.md`), two new knobs, a
 second register, and a showcase that compares two themes side by side.
 The package began as an extraction from kp-soft (commit `2983abb`,
@@ -86,13 +87,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round three (themes): R0–R5 built 2026-09-05, awaiting the combined AFK report                                                    |
-| Last completed gate | Round-three Phase 5 plan, 2026-09-05                                                                                              |
-| Next gate           | The combined AFK report (R0–R5 + correction KT7) and the release go for 3.1.0                                                     |
-| Open queue items    | KT6-M1 (waits on JobTracker); KT7 (form in the report); D3 (STRINGS_NL, 4.0.0, after this round); P1–P4 from kp-soft (next round) |
-| AFK mode            | done — R0–R5 built unattended; the report waits for Kenny                                                                         |
+| Field               | Value                                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round three: merged on main (`1c732fd`, 2026-09-05); 3.1.0 built, untagged                              |
+| Last completed gate | Round-three AFK report + KT7 + merge go, 2026-09-05                                                     |
+| Next gate           | The release go for v3.1.0 after Kenny's look at Pages; then Phase 10 for round three                    |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, after this round); P1–P4 from kp-soft (next round) |
+| AFK mode            | off                                                                                                     |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
