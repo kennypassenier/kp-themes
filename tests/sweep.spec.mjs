@@ -57,15 +57,14 @@ test('enforcement can be taken back: a contract-broken button comes back enabled
 
 test('a nested StringsProvider layers over the outer one [KT6]', async ({ page }) => {
     await page.goto(URL);
-    const button = page.locator('[data-test="react-nested-strings"] button');
     // The inner provider set only `copy`; `copied` must still be the
-    // outer one's. Drill: with `...outer` removed from the merge in
-    // StringsProvider, the button reads "Inner copy" but the copied text
-    // falls back to the package default rather than "Outer copied".
-    await expect(button).toHaveText('Inner copy');
-    await page.context().grantPermissions(['clipboard-write']);
-    await button.click();
-    await expect(button).toHaveText('Outer copied');
+    // outer one's. The second Copyable is controlled into the copied
+    // state, so no clipboard is involved — Firefox in CI cannot grant one.
+    // Drill: with `...outer` removed from the merge in StringsProvider,
+    // the idle button still reads "Inner copy" but the copied one falls
+    // back to the package default rather than "Outer copied".
+    await expect(page.locator('[data-test="nested-idle"] button')).toHaveText('Inner copy');
+    await expect(page.locator('[data-test="nested-copied"] button')).toHaveText('Outer copied');
 });
 
 const PICKERS = [

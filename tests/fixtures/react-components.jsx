@@ -150,7 +150,11 @@ function Cases() {
                     and must keep the outer one's other words. */}
                 <StringsProvider value={{ copy: 'Outer copy', copied: 'Outer copied' }}>
                     <StringsProvider value={{ copy: 'Inner copy' }}>
-                        <Copyable value="abc" />
+                        <Copyable value="abc" data-test="nested-idle" />
+                        {/* Controlled into the copied state, so the layered
+                            word shows without a clipboard — Firefox in CI has
+                            no clipboard permission to grant. */}
+                        <Copyable value="abc" state="copied" data-test="nested-copied" />
                     </StringsProvider>
                 </StringsProvider>
             </div>
