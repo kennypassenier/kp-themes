@@ -481,6 +481,70 @@ onderscheid maken tussen light en dark themes? Misschien met een kleine
 scheiding tussen hun en een kleine tekst per sectie die Light/Dark zegt?
 Maak er iets moois van." — recorded as TH63, both channels.
 
-## What was done
+## What was done — 3.0.0, 2026-09-05
 
-Appended as the work lands.
+Rounds A and B together, per D1. Eight commits on `kt6-generic`, each with
+`npm run gates` green; 463 browser tests in Chromium and Firefox at the
+end, 458 of them from before plus five new ones drilled red first.
+
+**Package (D2).** Every `js/*.js` is pure; `js/auto.js` attaches
+everything and is the one file `sideEffects` names. Subpath exports for
+`./components/*`, `./fx/*`, `./hooks/theme`, `./hooks/controllable`,
+`./themes/*`, `./css/rules`, `./js/auto`, each with a `types` condition.
+The `fx` barrel no longer imports `motion`; `BootSequence` lives at
+`./fx/boot-sequence`. `no-flash.js` became `applyStoredTheme()` and
+`noFlashSnippet({ key, attribute })`.
+
+**Framework-free, all seventeen modules.** Each `attach…()` returns a
+detach with `handles`; every state readable and settable; every behaviour
+an option or a `data-kp-*` attribute; an event with a detail on every
+change; detach restores what attach changed. Per module, the headline:
+datatable (view/sort/page/query/selection, locale collation, keyboard
+sort, three-state cycle, order restored on detach); forms (`showError`/
+`clearError` exported, `errors()` for a server's findings, `validateOn`,
+delegated listeners); overlays (idempotent, manual tabs, vertical tabs,
+`selectTab`, toasts with node/action/politeness/limit); patterns (commit
+and undo details with `restore()`, copy events, cancelled timers);
+combobox (values settable, server-rendered tags read, matcher, flags,
+cap); structure (tree events + handle, reorder pointer drag + announcement
++ `setOrder`, split orientation + steps + collapse); datepicker (locale,
+min/max/disabled days, handle, `renderDay`); palette (hotkey off/nominated,
+`open(query)`, groups, `data-kp-keys` rendered); wizard (`goTo`, cancelable
+before-step, async `beforeStep`, navigable labels); gridlayout
+(`applyLayout`, pointer drag, description not label, commit event); upload
+(`accept`, `maxFiles`, `maxTotal`, validator, `setDone`/`setError`,
+cancelable remove, locale sizes); colorpicker (`set()`, ratio in the
+event); components (recoverable enforcement, `data-kp-confirm-ms`, arm/
+disarm events, `skipTo`/`attachSkipLinks`); theme-core (`configureTheme`,
+strict apply, cancelable before-event, bubbling event, storage options);
+theme-picker (`themeOptionsMarkup` grouped, `labels`, escaping, `PICK_EVENT`,
+`refresh()`); listbox (every constant an option, events, restoring destroy).
+
+**React, all seventeen files.** `forwardRef` on every component;
+`className`/`style`/rest on every root; `classNames` for parts;
+controlled/uncontrolled on every state through `hooks/use-controllable`;
+`as`/`linkComponent`/`brandComponent`/render props where an element was
+fixed; every flag the audit named. Defects closed: `onUndo` invoked;
+`disabled={false}` no longer re-enables a broken button; `ShortcutSheet`'s
+empty heading; `EmptyState`'s discarded action; Tree ids scoped; DatePicker
+day lookup scoped; Upload progress real; Combobox disabled options not
+selectable; `TOAST_MS` used; nested `StringsProvider` layers; Skeleton and
+Tree inline styles gone; `z-50` gone.
+
+**CSS.** 114 `--kp-*` knobs with the old value as fallback; `!important`
+gone; one `--fx-duration` fallback; the print rule and the topo drift on
+`body::after`; toasts above the texture; the focus ring reads its width
+token. Three durations stay literal for DI5.
+
+**Language (D4, D5).** English theme labels in the token source; `lang="en"`
+from the showcase generator; `js/locale.js` reads Intl — nearest `lang`,
+then the browser — for date order, week start, decimals and collation.
+`STRINGS_NL` untouched: D3 is unanswered and is asked again in the report.
+
+**TH63.** Both pickers group light and dark with a label per section.
+
+**What stays open.** D3 (`STRINGS_NL`). KT6-M1: JobTracker's login on
+`Form`, their `auth.spec.js:60` passing, on 3.0.0. And the second
+consequence of D7: DI10's amendment records that enforcement is
+recoverable, not that it is optional — a consumer who wants warn-only says
+so.

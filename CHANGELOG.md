@@ -1,5 +1,78 @@
 # Changelog
 
+## 3.0.0 — 2026-09-05
+
+**The release in which every feature of every component became
+configurable.** Correction KT6 opened on a busy button with no way back;
+Kenny's answer widened it into a sweep of the whole package against what
+mature component libraries do in 2026, and this is the result. The audit
+and the record of what was done are `docs/GENERIC_SWEEP.md`.
+
+### Breaking
+
+- **The framework-free modules are pure.** Importing `js/*.js` attaches
+  nothing. Load `js/auto.js` for what 2.x did, or call the `attach…()`
+  functions yourself. `package.json` now tells bundlers the truth about
+  side effects — it did not for two versions.
+- **The theme labels are English** in the token source. Override with
+  `labels` in either channel.
+- **The locale is the page's**, not Dutch: the date picker's format and
+  week start, the DataTable's collation and number parsing, the upload's
+  sizes all read the nearest `lang` attribute, else the browser. Pass
+  `locale` / `data-kp-locale` to override. `toDutch()` stays, deprecated.
+- **`@kp-soft/themes/fx` no longer exports `BootSequence`**; import it from
+  `@kp-soft/themes/fx/boot-sequence`, which is the only place the optional
+  `motion` peer is required.
+- `ThemeSwitcher` renders the package's own class names, not Tailwind's.
+- `Reorder`'s `onChange` receives `(order, { id, from, to })`;
+  `Combobox`'s `onChange` receives `(value, values, action)`; `Tree`'s
+  `onSelect` still fires on a leaf, and `onSelectedChange` beside it.
+- `GridLayout` describes a tile's geometry (`aria-describedby`) instead
+  of overwriting its `aria-label`.
+
+### Everything is a knob
+
+Every React component forwards a ref, passes `className`, `style` and the
+rest to its root, takes `classNames` for its parts, and holds every state
+controlled or uncontrolled through `hooks/use-controllable`. Every
+framework-free `attach…()` returns a detach with `handles` whose state is
+readable and settable, takes its behaviours as options and `data-kp-*`
+attributes, dispatches an event with a detail on every change, and
+restores what it changed on detach. Every literal in the CSS a site might
+change is `var(--kp-…, <default>)` — 114 of them. README "Everything is a
+knob" has the five rules; the per-component list is in the sweep record.
+
+### Repairs found by the audit
+
+`onUndo` on `Button` is invoked at last (it was declared and dead for two
+versions). Contract enforcement is recoverable (D7). The skip link moves
+focus (`skipTo`, `attachSkipLinks`). The print rule and the topo drift
+addressed the wrong pseudo-element. Toasts sat under the texture layer.
+`attachDialogs` and `attachTabs` double-bound on a second call. DataTable's
+detach left the rows sorted. `no-flash.js` mutated the document on import.
+`ShortcutSheet` rendered an empty heading. `EmptyState` discarded its
+action when filtered. Tree ids collided across instances. The React
+upload's progress bar was pinned at 0. Disabled combobox options were
+selectable. `TOAST_MS` was exported and unused. Nested `StringsProvider`s
+replaced each other. `data-kp-keys` was documented and never read.
+
+### New
+
+The theme picker groups light and dark with a label per section, in both
+channels (TH63). `js/locale.js`. `hooks/use-controllable.js`.
+`configureTheme()`. Pointer drag on Reorder and GridLayout. Min, max and
+disabled days on both date pickers. Server mode on DataTable
+(`totalRows`). Pagination with an ellipsis. Manual and vertical tabs.
+Tooltip delays and Escape. Toast variants, actions and auto-dismiss.
+Accordion single mode. `beforeStep` on both wizards. `accept`, `maxFiles`
+and a validator on both uploads. Command groups in both palettes.
+
+### Kept, on purpose
+
+Three animation durations stay literals: the cursor blink, the skeleton
+pulse and the cyberpunk flicker change luminance, and DI5 pins them above
+the flash threshold. `STRINGS_NL` is unchanged pending a decision.
+
 ## 2.0.0 — 2026-09-05
 
 **The words on screen changed from Dutch to English.** That is the whole

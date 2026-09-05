@@ -40,24 +40,25 @@ copies a name and stops. That is deliberate: the theme list lives in one
 generated place, and a snippet carrying its own copy is how a picker comes
 to believe in a theme that no longer exists.
 
-An unknown stored value is corrected to `formal` as soon as the picker
-module loads.
+An unknown stored value is corrected to the default theme as soon as the
+picker is attached; `initializeTheme(fallback)` names another, and
+`applyTheme(name, { strict: true })` throws instead of substituting.
 
 ## The eleven themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
-| `formal` | Formeel | no |
-| `light` | Licht | no |
-| `dark` | Donker | yes |
+| `formal` | Formal | no |
+| `light` | Light | no |
+| `dark` | Dark | yes |
 | `cyberpunk` | Cyberpunk | yes |
 | `pastel` | Pastel | no |
 | `terminal` | Terminal | yes |
-| `topo` | Topografisch | no |
-| `high-contrast` | Hoog contrast | no |
+| `topo` | Topographic | no |
+| `high-contrast` | High contrast | no |
 | `sepia` | Sepia | no |
-| `blueprint` | Blauwdruk | yes |
-| `solstice` | Zonnewende | yes |
+| `blueprint` | Blueprint | yes |
+| `solstice` | Solstice | yes |
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -85,8 +86,8 @@ Your server writes the markup; one module attaches the behaviour.
 
 ```html
 <div data-kp-theme-picker>
-    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formeel</button>
-    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Donker</button>
+    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
 </div>
 <p data-kp-theme-status hidden></p>
 
@@ -114,7 +115,9 @@ html = themeMenuMarkup({ id: 'theme-menu', label: 'Thema kiezen' });
 ```
 
 The dropdown is a popover: Escape and clicking elsewhere close it without
-any code of ours, and it closes itself after a choice. The check mark
+any code of ours, and it closes itself after a choice — unless you attach
+with `{ closePopover: false }`, or pass `closeOnSelect={false}` in React.
+The check mark
 beside the current theme is the second carrier, so the menu does not rely
 on weight alone.
 
@@ -192,11 +195,16 @@ Framework-free, the same markup by hand:
 <span class="kp-badge" data-kp-semantic data-status="offer">Aanbod</span>
 ```
 
-### Two contracts that are enforced, not suggested
+### Two contracts that are enforced, and can be taken back
 
 **A destructive action must offer an undo or a confirmation** [DI10]. Not
 both — WCAG's SC 3.3.4 accepts either. A button that offers neither is
-reported to the console and disabled:
+reported to the console and disabled. Since 3.0.0 [KT6, decision D7] the
+enforcement is recoverable: `enforceContracts()` records what it changed
+and returns a detach that puts it back, calling it again re-evaluates a
+page whose markup arrived later, `data-kp-contract-ignore` exempts an
+element, `{ disable: false }` reports without disabling, and the messages
+come from the dictionary. The rule is the same; the ownership moved:
 
 ```jsx
 <Button variant="destructive" confirm="Zeker?" onClick={remove}>Verwijderen</Button>
@@ -280,18 +288,24 @@ clicked.
 import { BootSequence, DecipherText, DigitalRain, ScrambleNumber } from '@kp-soft/themes/fx';
 ```
 
-Cyberpunk only; plain text in every other theme and for anyone who asked
-for less motion — and they keep listening, so turning that setting on
+Cyberpunk by default — pass `when` (a theme name, a list, a boolean, or a
+function of the theme) to run them elsewhere; plain text for anyone who
+asked for less motion — and they keep listening, so turning that setting on
 mid-session stops them without a reload. The real string always reaches a
 screen reader through `aria-label`, whatever the glyphs are doing.
 
-`BootSequence` needs the optional `motion` peer; the other three need
-nothing.
+`BootSequence` needs the optional `motion` peer, so it is not in the `fx`
+barrel: import it from `@kp-soft/themes/fx/boot-sequence`. The other three
+need nothing, and every glyph set, speed, density and colour they use is a
+prop.
 
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package
-reads them rather than carrying its own number:
+reads them rather than carrying its own number — with three exceptions the
+motion gate insists on: the terminal cursor blink, the skeleton pulse and
+the cyberpunk flicker change luminance, and DI5 pins their durations above
+the flash threshold, so they are literals rather than knobs:
 
 | Token | What it decides |
 | --- | --- |
