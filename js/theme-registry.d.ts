@@ -1,4 +1,4 @@
-export type ThemeName = 'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism';
+export type ThemeName = 'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom';
 export type ThemeRecord = {
     name: ThemeName;
     label: string;
@@ -13,7 +13,7 @@ export type ThemeRecord = {
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom'} ThemeName
  */
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
 /** @type {readonly ThemeRecord[]} */

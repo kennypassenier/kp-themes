@@ -1115,6 +1115,279 @@
     --destructive-active: hsl(4, 78%, 31%);
     --destructive-disabled: hsl(4, 72%, 53%);
 }
+
+[data-theme='deco'] {
+    /* Art Deco: gold on near-black, jewel accents, geometry drawn with a ruler. */
+    --background: hsl(200, 25%, 8%);
+    --foreground: hsl(42, 60%, 88%);
+    --card: hsl(200, 22%, 11%);
+    --card-foreground: hsl(42, 60%, 88%);
+    --popover: hsl(200, 20%, 14%);
+    --popover-foreground: hsl(42, 60%, 88%);
+    --primary: hsl(43, 65%, 52%);
+    --primary-foreground: hsl(200, 30%, 8%);
+    --secondary: hsl(200, 18%, 18%);
+    --secondary-foreground: hsl(42, 50%, 86%);
+    --muted: hsl(200, 18%, 15%);
+    --muted-foreground: hsl(42, 30%, 72%);
+    --accent: hsl(165, 60%, 32%);
+    --accent-foreground: hsl(165, 60%, 6%);
+    --destructive: hsl(355, 80%, 58%);
+    --destructive-foreground: hsl(355, 60%, 8%);
+    --success: hsl(150, 45%, 28%);
+    --success-foreground: hsl(150, 50%, 90%);
+    --warning: hsl(38, 70%, 30%);
+    --warning-foreground: hsl(40, 80%, 92%);
+    --info: hsl(210, 55%, 30%);
+    --info-foreground: hsl(205, 60%, 92%);
+    --border: hsl(200, 18%, 20%);
+    --border-strong: hsl(43, 35%, 50%);
+    --input: hsl(43, 35%, 50%);
+    --ring: hsl(43, 65%, 52%);
+    --selected: hsl(43, 65%, 48%);
+    --chart-1: hsl(43, 65%, 55%);
+    --chart-2: hsl(165, 55%, 45%);
+    --chart-3: hsl(210, 70%, 60%);
+    --chart-4: hsl(355, 75%, 60%);
+    --chart-5: hsl(40, 45%, 72%);
+    --sidebar-background: hsl(200, 28%, 6%);
+    --sidebar-foreground: hsl(42, 55%, 88%);
+    --sidebar-primary: hsl(43, 65%, 52%);
+    --sidebar-primary-foreground: hsl(200, 30%, 8%);
+    --sidebar-accent: hsl(200, 20%, 14%);
+    --sidebar-accent-foreground: hsl(42, 60%, 88%);
+    --sidebar-border: hsl(200, 18%, 18%);
+    --sidebar-ring: hsl(43, 65%, 52%);
+
+    /* Status badges (application pipeline): dark plates in the jewel family, ivory ink. */
+    --status-draft: hsl(200, 12%, 26%);
+    --status-draft-foreground: hsl(42, 40%, 90%);
+    --status-sent: hsl(210, 55%, 30%);
+    --status-sent-foreground: hsl(205, 60%, 92%);
+    --status-screening: hsl(43, 60%, 30%);
+    --status-screening-foreground: hsl(45, 80%, 92%);
+    --status-interview: hsl(280, 35%, 34%);
+    --status-interview-foreground: hsl(285, 55%, 93%);
+    --status-offer: hsl(160, 55%, 30%);
+    --status-offer-foreground: hsl(150, 50%, 92%);
+    --status-rejected: hsl(355, 70%, 26%);
+    --status-rejected-foreground: hsl(0, 60%, 93%);
+    --status-withdrawn: hsl(200, 8%, 30%);
+    --status-withdrawn-foreground: hsl(42, 30%, 88%);
+    --color-scheme: dark;
+    --theme-font-body: 'Josefin Sans', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0rem;
+    --fx-signal: hsl(355, 80%, 58%);
+    --fx-signal-foreground: hsl(355, 60%, 8%);
+    --fx-notch: 0px;
+    --fx-duration: 200ms;
+    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --theme-font-display: 'Poiret One', 'Josefin Sans', ui-sans-serif, sans-serif;
+    --fx-overprint: hsl(43, 65%, 52%);
+    --fx-scanline: hsl(43, 65%, 52%);
+    --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(43, 65%, 52%);
+    --link-visited: hsl(125, 38%, 62%);
+    --focus-ring: hsl(42, 60%, 88%);
+    --focus-ring-contrast: hsl(200, 25%, 8%);
+    --primary-hover: hsl(43, 70%, 56%);
+    --primary-active: hsl(42, 96%, 68%);
+    --primary-disabled: hsl(46, 100%, 36%);
+    --secondary-hover: hsl(200, 16%, 21%);
+    --secondary-active: hsl(200, 11%, 30%);
+    --secondary-disabled: hsl(200, 32%, 9%);
+    --accent-hover: hsl(164, 51%, 36%);
+    --accent-active: hsl(163, 37%, 48%);
+    --accent-disabled: hsl(167, 100%, 20%);
+    --destructive-hover: hsl(356, 89%, 62%);
+    --destructive-active: hsl(358, 88%, 71%);
+    --destructive-disabled: hsl(350, 83%, 43%);
+}
+
+[data-theme='academia'] {
+    /* Dark academia: ink and mahogany, oxblood and forest, candle gold; the library at night. */
+    --background: hsl(24, 30%, 9%);
+    --foreground: hsl(38, 40%, 90%);
+    --card: hsl(22, 28%, 13%);
+    --card-foreground: hsl(38, 40%, 90%);
+    --popover: hsl(22, 26%, 16%);
+    --popover-foreground: hsl(38, 40%, 90%);
+    --primary: hsl(38, 50%, 58%);
+    --primary-foreground: hsl(24, 40%, 10%);
+    --secondary: hsl(155, 30%, 20%);
+    --secondary-foreground: hsl(38, 40%, 90%);
+    --muted: hsl(24, 20%, 18%);
+    --muted-foreground: hsl(36, 30%, 72%);
+    --accent: hsl(0, 62%, 30%);
+    --accent-foreground: hsl(38, 40%, 92%);
+    --destructive: hsl(0, 65%, 60%);
+    --destructive-foreground: hsl(0, 60%, 8%);
+    --success: hsl(150, 40%, 24%);
+    --success-foreground: hsl(140, 45%, 90%);
+    --warning: hsl(38, 60%, 28%);
+    --warning-foreground: hsl(40, 80%, 92%);
+    --info: hsl(210, 40%, 28%);
+    --info-foreground: hsl(205, 55%, 92%);
+    --border: hsl(24, 25%, 20%);
+    --border-strong: hsl(32, 25%, 52%);
+    --input: hsl(32, 25%, 52%);
+    --ring: hsl(38, 50%, 58%);
+    --selected: hsl(38, 50%, 52%);
+    --chart-1: hsl(38, 50%, 58%);
+    --chart-2: hsl(0, 55%, 58%);
+    --chart-3: hsl(150, 35%, 48%);
+    --chart-4: hsl(215, 45%, 60%);
+    --chart-5: hsl(300, 30%, 60%);
+    --sidebar-background: hsl(24, 32%, 7%);
+    --sidebar-foreground: hsl(38, 40%, 90%);
+    --sidebar-primary: hsl(38, 50%, 58%);
+    --sidebar-primary-foreground: hsl(24, 40%, 10%);
+    --sidebar-accent: hsl(24, 26%, 15%);
+    --sidebar-accent-foreground: hsl(38, 40%, 90%);
+    --sidebar-border: hsl(24, 22%, 18%);
+    --sidebar-ring: hsl(38, 50%, 58%);
+
+    /* Status badges (application pipeline): deep plates with parchment ink. */
+    --status-draft: hsl(24, 15%, 28%);
+    --status-draft-foreground: hsl(36, 30%, 90%);
+    --status-sent: hsl(210, 40%, 30%);
+    --status-sent-foreground: hsl(205, 55%, 92%);
+    --status-screening: hsl(38, 55%, 30%);
+    --status-screening-foreground: hsl(40, 80%, 92%);
+    --status-interview: hsl(285, 30%, 34%);
+    --status-interview-foreground: hsl(288, 50%, 93%);
+    --status-offer: hsl(150, 50%, 28%);
+    --status-offer-foreground: hsl(140, 45%, 92%);
+    --status-rejected: hsl(0, 70%, 26%);
+    --status-rejected-foreground: hsl(0, 60%, 93%);
+    --status-withdrawn: hsl(24, 8%, 30%);
+    --status-withdrawn-foreground: hsl(30, 20%, 88%);
+    --color-scheme: dark;
+    --theme-font-body: 'Lora', ui-serif, Georgia, serif;
+    --radius: 0rem;
+    --fx-signal: hsl(38, 50%, 58%);
+    --fx-signal-foreground: hsl(24, 40%, 10%);
+    --fx-notch: 0px;
+    --fx-duration: 240ms;
+    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --theme-font-display: 'Cormorant Garamond', 'Lora', ui-serif, Georgia, serif;
+    --fx-overprint: hsl(0, 62%, 30%);
+    --fx-scanline: hsl(38, 50%, 58%);
+    --fx-lift: 0px;
+    --fx-shadow-offset: 0px;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(38, 50%, 58%);
+    --link-visited: hsl(83, 46%, 73%);
+    --focus-ring: hsl(38, 40%, 90%);
+    --focus-ring-contrast: hsl(24, 30%, 9%);
+    --primary-hover: hsl(38, 55%, 62%);
+    --primary-active: hsl(38, 80%, 73%);
+    --primary-disabled: hsl(38, 44%, 47%);
+    --secondary-hover: hsl(155, 26%, 23%);
+    --secondary-active: hsl(154, 19%, 33%);
+    --secondary-disabled: hsl(158, 57%, 11%);
+    --accent-hover: hsl(1, 57%, 34%);
+    --accent-active: hsl(3, 45%, 44%);
+    --accent-disabled: hsl(358, 100%, 19%);
+    --destructive-hover: hsl(0, 73%, 64%);
+    --destructive-active: hsl(1, 100%, 74%);
+    --destructive-disabled: hsl(358, 53%, 48%);
+}
+
+[data-theme='phantom'] {
+    /* Phantom: black, white and one violent red; cut paper and halftone, no glow. */
+    --background: hsl(0, 0%, 4%);
+    --foreground: hsl(0, 0%, 98%);
+    --card: hsl(0, 0%, 9%);
+    --card-foreground: hsl(0, 0%, 98%);
+    --popover: hsl(0, 0%, 13%);
+    --popover-foreground: hsl(0, 0%, 98%);
+    --primary: hsl(355, 100%, 58%);
+    --primary-foreground: hsl(0, 0%, 4%);
+    --secondary: hsl(0, 0%, 16%);
+    --secondary-foreground: hsl(0, 0%, 98%);
+    --muted: hsl(0, 0%, 12%);
+    --muted-foreground: hsl(0, 0%, 68%);
+    --accent: hsl(0, 0%, 86%);
+    --accent-foreground: hsl(0, 0%, 4%);
+    --destructive: hsl(355, 100%, 58%);
+    --destructive-foreground: hsl(0, 0%, 4%);
+    --success: hsl(140, 60%, 26%);
+    --success-foreground: hsl(140, 60%, 92%);
+    --warning: hsl(45, 100%, 26%);
+    --warning-foreground: hsl(45, 100%, 92%);
+    --info: hsl(210, 80%, 34%);
+    --info-foreground: hsl(210, 80%, 93%);
+    --border: hsl(0, 0%, 22%);
+    --border-strong: hsl(0, 0%, 60%);
+    --input: hsl(0, 0%, 60%);
+    --ring: hsl(355, 100%, 58%);
+    --selected: hsl(355, 100%, 58%);
+    --chart-1: hsl(355, 100%, 58%);
+    --chart-2: hsl(0, 0%, 90%);
+    --chart-3: hsl(0, 0%, 55%);
+    --chart-4: hsl(355, 80%, 45%);
+    --chart-5: hsl(45, 100%, 55%);
+    --sidebar-background: hsl(355, 100%, 45%);
+    --sidebar-foreground: hsl(0, 0%, 98%);
+    --sidebar-primary: hsl(0, 0%, 98%);
+    --sidebar-primary-foreground: hsl(0, 0%, 4%);
+    --sidebar-accent: hsl(355, 90%, 36%);
+    --sidebar-accent-foreground: hsl(0, 0%, 98%);
+    --sidebar-border: hsl(355, 80%, 30%);
+    --sidebar-ring: hsl(0, 0%, 98%);
+
+    /* Status badges (application pipeline): cut-paper plates, black ink on the bright ones, white on the dark. */
+    --status-draft: hsl(0, 0%, 22%);
+    --status-draft-foreground: hsl(0, 0%, 98%);
+    --status-sent: hsl(0, 0%, 90%);
+    --status-sent-foreground: hsl(0, 0%, 4%);
+    --status-screening: hsl(45, 100%, 55%);
+    --status-screening-foreground: hsl(0, 0%, 4%);
+    --status-interview: hsl(0, 0%, 60%);
+    --status-interview-foreground: hsl(0, 0%, 4%);
+    --status-offer: hsl(0, 0%, 98%);
+    --status-offer-foreground: hsl(0, 0%, 4%);
+    --status-rejected: hsl(355, 100%, 45%);
+    --status-rejected-foreground: hsl(0, 0%, 98%);
+    --status-withdrawn: hsl(0, 0%, 14%);
+    --status-withdrawn-foreground: hsl(0, 0%, 80%);
+    --color-scheme: dark;
+    --theme-font-body: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+    --radius: 0rem;
+    --fx-signal: hsl(45, 100%, 55%);
+    --fx-signal-foreground: hsl(0, 0%, 4%);
+    --fx-notch: 6px;
+    --fx-duration: 120ms;
+    --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+    --theme-font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
+    --fx-overprint: hsl(45, 100%, 55%);
+    --fx-scanline: hsl(0, 0%, 98%);
+    --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(355, 100%, 58%);
+    --link-visited: hsl(315, 68%, 57%);
+    --focus-ring: hsl(0, 0%, 98%);
+    --focus-ring-contrast: hsl(0, 0%, 4%);
+    --primary-hover: hsl(356, 100%, 61%);
+    --primary-active: hsl(1, 74%, 68%);
+    --primary-disabled: hsl(352, 100%, 43%);
+    --secondary-hover: hsl(44, 0%, 19%);
+    --secondary-active: hsl(44, 0%, 28%);
+    --secondary-disabled: hsl(44, 0%, 8%);
+    --accent-hover: hsl(44, 0%, 90%);
+    --accent-active: hsl(60, 100%, 100%);
+    --accent-disabled: hsl(44, 0%, 75%);
+    --destructive-hover: hsl(356, 100%, 61%);
+    --destructive-active: hsl(1, 74%, 68%);
+    --destructive-disabled: hsl(352, 100%, 43%);
+}
 /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
    The shared machinery is one full-viewport texture layer per theme -
@@ -1209,6 +1482,44 @@ body::after {
 [data-theme='brutalism'] .kp-button:active:not(:disabled) {
     translate: var(--fx-shadow-offset) var(--fx-shadow-offset);
     box-shadow: none;
+}
+
+/* Deco: a fine chevron, the geometry the style drew with rulers [TH65]. */
+[data-theme='deco'] {
+    --fx-texture:
+        repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px),
+        repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px);
+    --fx-texture-size: 24px 24px, 24px 24px;
+    --fx-texture-opacity: 0.05;
+}
+
+[data-theme='deco'] h1,
+[data-theme='deco'] h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+/* Academia: film grain over the ink, and the faint rules of a ledger [TH66]. */
+[data-theme='academia'] {
+    --fx-texture:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 32px);
+    --fx-texture-size: 240px 240px, 100% 32px;
+    --fx-texture-opacity: 0.04;
+}
+
+/* Phantom: a halftone screen, the print the menus were cut from [TH70]. */
+[data-theme='phantom'] {
+    --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1.2px, transparent 1.3px);
+    --fx-texture-size: 7px 7px;
+    --fx-texture-opacity: 0.05;
+}
+
+[data-theme='phantom'] h1,
+[data-theme='phantom'] h2 {
+    text-transform: uppercase;
+    font-style: italic;
+    letter-spacing: -0.01em;
 }
 
 /* T9 · Topo: contour lines wandering across the kraft paper. */
@@ -1563,6 +1874,36 @@ textarea:invalid {
         animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
     }
 
+    /* deco — a double gold rule that draws itself under a heading, the
+       way a Deco frontispiece is ruled. */
+    [data-theme='deco'] h1::after,
+    [data-theme='deco'] h2::after {
+        content: '';
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.4rem;
+        border-block: 1px solid var(--primary);
+        animation: kp-rule-in calc(var(--fx-duration) * 4) var(--fx-ease) both;
+    }
+
+    /* academia — the same rule in candle gold, slower: a library is not
+       in a hurry. */
+    [data-theme='academia'] h1::after,
+    [data-theme='academia'] h2::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-start: 0.35rem;
+        background: var(--primary);
+        animation: kp-rule-in calc(var(--fx-duration) * 5) var(--fx-ease) both;
+    }
+
+    /* phantom — a badge slides in from the left, once. A transform only:
+       nothing changes luminance. */
+    [data-theme='phantom'] .kp-badge {
+        animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
+    }
+
     /* solstice — an ember: the primary colour warms and cools once when a
        card appears. Slow, small, and never repeated. */
     [data-theme='solstice'] [data-slot='card'] {
@@ -1572,6 +1913,16 @@ textarea:invalid {
     /* sepia and high-contrast have no signature, deliberately. Sepia is
        the restful theme and high-contrast is the accessible one; in both,
        a gesture would be working against the reason the theme exists. */
+}
+
+@keyframes kp-slide-in {
+    from {
+        translate: -6px 0;
+    }
+
+    to {
+        translate: 0 0;
+    }
 }
 
 @keyframes kp-rule-in {

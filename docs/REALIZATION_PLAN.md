@@ -115,7 +115,7 @@ label the earlier form carried. The queue entry says so.
 | Milestone | Status |
 | --- | --- |
 | R0 | **built** 2026-09-05; awaiting the combined AFK report. Measured: the eleven fixtures pixel-identical before and after the knob (`tests/tmp-knob-baseline.spec.mjs`, run once on `7535557` and once with the knob, 11 of 11 unchanged; the spec was removed after the measurement). KT3 drills, both performed 2026-09-05: `grid-row` placement removed from the generator → the alignment test reads the twins 8198 px apart; `fontLinks()` returning '' → the fonts test finds no `link[data-sc-fonts]` (href null). Both restored and green. Live-found: KT7 (proposed). |
-| R1 | not started |
+| R1 | **built** 2026-09-05; awaiting the combined AFK report. Deco, academia and phantom pass every gate (15 themes, 105 invariant checks, 39 pairs each); the gate steered three drafts — deco's offer/rejected at 11.0 and academia's at 9.1 under deuteranopia (floor 12), phantom's white primary with no visible active state — each recorded in the anatomy. |
 | R2 | not started |
 | R3 | not started |
 | R4 | not started |
