@@ -97,9 +97,17 @@
     }
 }
 
+/* Hover and the keyboard highlight are a WASH OF THE INK over whatever
+ * surface they sit on — --kp-highlight, default the foreground at 8% —
+ * not --accent. Seven rules read --accent for this until 3.1.0, and in
+ * every theme whose accent is a colour rather than a tint (brutalism's
+ * lavender, deco's emerald, nishiki's beni) a highlighted row turned that
+ * colour. Kenny saw it on the showcase [KT8]. A wash has no hue of its
+ * own, so it is quiet in all twenty-four by construction; a theme that
+ * wants more sets the knob. */
 [data-kp-theme-picker] [data-kp-theme]:hover {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 /* The selected option is marked twice over: the border carries it for
@@ -346,8 +354,8 @@
 }
 
 .kp-button--ghost:hover:not(:disabled) {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 /* --- Badge [TH2] ----------------------------------------------------- */
@@ -576,7 +584,11 @@
      * actually makes the target big enough. */
     inline-size: 1.15rem;
     block-size: 1.15rem;
-    accent-color: var(--primary);
+    /* A knob: the browser paints the check and the radio dot in this
+     * colour, and a theme whose primary is its ink (brutalism, mono) gets
+     * a check that looks like an unchecked box. Those themes set it in
+     * css/_rules.css [KT8]. */
+    accent-color: var(--kp-control-accent, var(--primary));
     flex: none;
 }
 
@@ -778,8 +790,8 @@ a.kp-nav__brand {
 }
 
 .kp-menu__item:hover {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 .kp-tooltip {
@@ -940,14 +952,17 @@ a.kp-nav__brand {
     inline-size: 100%;
     max-inline-size: var(--kp-progress-max-width, 20rem);
     block-size: 0.5rem;
-    accent-color: var(--primary);
+    accent-color: var(--kp-control-accent, var(--primary));
 }
 
 .kp-spinner {
     display: inline-block;
     inline-size: var(--kp-spinner-size, 1.25rem);
     block-size: var(--kp-spinner-size, 1.25rem);
-    border: 2px solid var(--border-strong);
+    /* The track is the head at a quarter of its alpha, not --border-strong:
+     * in brutalism both were black and nothing visibly turned. Same hue,
+     * different weight, in every theme by construction [KT8]. */
+    border: 2px solid hsl(from var(--primary) h s l / 0.25);
     border-block-start-color: var(--primary);
     border-radius: 50%;
 }
@@ -1019,8 +1034,8 @@ a.kp-nav__brand {
 }
 
 .kp-icon-button:hover {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 .kp-icon-button svg {
@@ -1113,8 +1128,8 @@ a.kp-nav__brand {
 }
 
 .kp-menu [data-kp-theme]:hover {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 /* In a menu the mark is a check at the end, not a border: a row does not
@@ -1199,8 +1214,8 @@ a.kp-nav__brand {
  * the arrow keys and mirrored on hover, so both agree about what Enter
  * would take. `is-active` and aria-selected are written together. */
 .kp-combobox__option.is-active {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 .kp-combobox__option[hidden] {
@@ -1342,8 +1357,8 @@ a.kp-nav__brand {
 }
 
 .kp-palette__option.is-active {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    color: inherit;
 }
 
 .kp-palette__option[hidden] {

@@ -27,6 +27,20 @@ result. Nothing existing changed (S20).
   Google Fonts (the package still loads none) (TH88).
 - **`--kp-popover-max-height`** — the popover scrolls inside itself.
 
+### Changed
+
+- **Hover and the keyboard highlight are a wash of the ink**, not
+  `--accent`: `--kp-highlight`, default the foreground at 8% alpha, on
+  menu items, the theme picker's options, ghost and icon buttons, and the
+  combobox and palette highlights. Seven rules read `--accent` before, and
+  a theme whose accent is a colour rather than a tint turned every
+  highlighted row that colour. The text keeps the list's colour.
+- **`--kp-control-accent`** — what the browser paints checks, radio dots
+  and the progress bar in; default `--primary`. Brutalism and mono set
+  it, because their primary is (near) the ink.
+- **The spinner's track is the head at a quarter alpha**, so the two can
+  never coincide (brutalism's were both black).
+
 ### Fixed
 
 - The strings gate flagged three shapes of code that only looked like

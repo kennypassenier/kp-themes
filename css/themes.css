@@ -2410,6 +2410,12 @@ body::after {
     --fx-texture-opacity: 0.06;
 }
 
+/* The check and the radio dot: the ink is the primary here, so the browser
+ * would paint a checked box the colour of its own border [KT8]. */
+[data-theme='brutalism'] {
+    --kp-control-accent: var(--fx-signal);
+}
+
 [data-theme='brutalism'] h1,
 [data-theme='brutalism'] h2 {
     text-transform: uppercase;
@@ -2491,7 +2497,12 @@ body::after {
  * contrast is the whole character, and anything drawn on top of it
  * would be the first thing anyone saw. */
 
-/* Mono: no texture. The absence is the register [TH72]. */
+/* Mono: no texture. The absence is the register [TH72]. The check and the
+ * radio dot are a mid grey: the primary sits a step from the ink and a
+ * checked box would look like an unchecked one [KT8]. */
+[data-theme='mono'] {
+    --kp-control-accent: var(--muted-foreground);
+}
 
 /* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
 [data-theme='retro'] {

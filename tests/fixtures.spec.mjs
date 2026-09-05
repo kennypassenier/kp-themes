@@ -131,3 +131,94 @@ for (const theme of THEMES) {
         });
     });
 }
+
+// Three things Kenny saw on the showcase that no gate measures [KT8]:
+// a spinner whose head and track were the same black, a checked radio
+// the colour of its own border, and a highlighted row that turned the
+// theme's accent colour. Each is now measured on every fixture.
+import { contrast, distance, rgbToOklch } from '../gates/colour.mjs';
+
+/** @param {string} css */
+const rgb = (css) => {
+    const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/.exec(css);
+    if (m) return { rgb: [Number(m[1]), Number(m[2]), Number(m[3])], alpha: m[4] === undefined ? 1 : Number(m[4]) };
+    // Chromium reports a relative colour — hsl(from …) — as color(srgb r g b / a).
+    const c = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/.exec(css);
+    if (c) return { rgb: [c[1], c[2], c[3]].map((v) => Math.round(Number(v) * 255)), alpha: c[4] === undefined ? 1 : Number(c[4]) };
+    throw new Error(`not a colour: ${css}`);
+};
+/** @param {number[]} over @param {number[]} under @param {number} alpha */
+const composite = (over, under, alpha) => over.map((c, i) => Math.round(c * alpha + under[i] * (1 - alpha)));
+
+for (const theme of THEMES) {
+    test.describe(`${theme.name} review findings [KT8]`, () => {
+        const url = `/showcase/themes/${theme.name}.html`;
+
+        test('the spinner visibly turns: its head and its track differ', async ({ page }) => {
+            await page.goto(url);
+            const painted = await page.evaluate(() => {
+                const el = document.querySelector('.kp-spinner');
+                const s = getComputedStyle(el);
+                return { head: s.borderTopColor, track: s.borderLeftColor, ground: getComputedStyle(document.body).backgroundColor };
+            });
+            // Drill: with the track set back to --border-strong, brutalism's
+            // head and track are both the ink and this reads 1.00.
+            const head = rgb(painted.head);
+            const track = rgb(painted.track);
+            const ground = rgb(painted.ground).rgb;
+            const seen = contrast(composite(head.rgb, ground, head.alpha), composite(track.rgb, ground, track.alpha));
+            expect(seen, `${painted.head} head on ${painted.track} track`).toBeGreaterThanOrEqual(1.5);
+        });
+
+        test('a checked box is not the colour of its own border', async ({ page }) => {
+            await page.goto(url);
+            const painted = await page.evaluate(() => {
+                const radio = document.querySelector('.kp-field__check[type="radio"]');
+                return {
+                    accent: getComputedStyle(radio).accentColor,
+                    ink: getComputedStyle(document.body).color,
+                    ground: getComputedStyle(document.body).backgroundColor,
+                };
+            });
+            const accent = rgb(painted.accent).rgb;
+            // Visible on the page, and not the ink: the ink is what the
+            // browser draws the unchecked ring in. Drill: remove the
+            // --kp-control-accent line from brutalism's rules and this
+            // reads 0.0 from the ink.
+            expect(contrast(accent, rgb(painted.ground).rgb)).toBeGreaterThanOrEqual(3);
+            expect(distance(accent, rgb(painted.ink).rgb), `${painted.accent} against the ink ${painted.ink}`).toBeGreaterThanOrEqual(10);
+        });
+
+        test('the keyboard highlight is a wash of the ink, not a new colour', async ({ page }) => {
+            await page.goto(url);
+            // The combobox list: open it and highlight the first option.
+            await page.locator('.kp-combobox__input').first().focus();
+            await page.keyboard.press('ArrowDown');
+            const painted = await page.evaluate(() => {
+                const option = document.querySelector('.kp-combobox__option.is-active');
+                const list = option.closest('.kp-combobox__list');
+                return {
+                    row: getComputedStyle(option).backgroundColor,
+                    text: getComputedStyle(option).color,
+                    surface: getComputedStyle(list).backgroundColor,
+                    listText: getComputedStyle(list).color,
+                };
+            });
+            const row = rgb(painted.row);
+            const surface = rgb(painted.surface).rgb;
+            const seen = composite(row.rgb, surface, row.alpha);
+            // Visible against the surface…
+            expect(contrast(seen, surface), `${painted.row} on ${painted.surface}`).toBeGreaterThanOrEqual(1.1);
+            // …and no more colourful than the surface or the ink it is a wash
+            // of. Drill: put `background: var(--accent)` back and brutalism's
+            // lavender reads a chroma four times the surface's.
+            const chroma = (c) => rgbToOklch(c).C;
+            // Half a unit of slack: compositing an 8% wash rounds to whole
+            // channels, and terminal's green ink came out 0.07 over its own chroma.
+            const ceiling = Math.max(chroma(surface), chroma(rgb(painted.listText).rgb)) + 0.5;
+            expect(chroma(seen), `highlight chroma ${chroma(seen).toFixed(3)} over ceiling ${ceiling.toFixed(3)}`).toBeLessThanOrEqual(ceiling);
+            // The text keeps the list's colour: a highlight is not a plate.
+            expect(painted.text).toBe(painted.listText);
+        });
+    });
+}
