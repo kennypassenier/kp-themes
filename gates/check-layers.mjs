@@ -35,6 +35,7 @@ const AUTHORED = [
     '../css/components.css',
     '../css/cyberpunk-register.css',
     '../css/retro-register.css',
+    '../css/layout.css',
     '../css/tailwind-bridge.css',
 ];
 

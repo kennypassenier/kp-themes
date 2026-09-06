@@ -43,7 +43,11 @@ function declarations(dir) {
         for (const entry of readdirSync(at)) {
             // Ours, not our dependencies': node_modules is full of .d.ts
             // files and none of them is emitted from this repo.
-            if (entry === 'node_modules' || entry === '.git' || entry === '.types-consumer') continue;
+            // Ours, not our dependencies' and not another checkout's:
+            // standing rule 19 puts parallel worktrees under .claude, and a
+            // walk that entered them would report every declaration three
+            // times over.
+            if (entry === 'node_modules' || entry === '.git' || entry === '.types-consumer' || entry === '.claude') continue;
             const full = join(at, entry);
             if (statSync(full).isDirectory()) walk(full);
             else if (entry.endsWith('.d.ts')) found.push(relative(dir, full));

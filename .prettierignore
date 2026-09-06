@@ -15,3 +15,7 @@ tests/fixtures/.build/
 # them would put them permanently at odds with the generator, and the
 # types gate compares them byte for byte.
 *.d.ts
+
+# Parallel worktrees (standing rule 19) live here; each is a full checkout
+# and formatting them from the main one would rewrite another branch.
+.claude/worktrees/

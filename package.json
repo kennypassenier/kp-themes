@@ -132,7 +132,8 @@
             "types": "./hooks/use-controllable.d.ts",
             "default": "./hooks/use-controllable.js"
         },
-        "./css/retro-register": "./css/retro-register.css"
+        "./css/retro-register": "./css/retro-register.css",
+        "./css/layout": "./css/layout.css"
     },
     "types": "./index.d.ts",
     "files": [
