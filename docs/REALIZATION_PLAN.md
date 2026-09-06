@@ -121,6 +121,39 @@ label the earlier form carried. The queue entry says so.
 | R4 | **built** 2026-09-05; awaiting the combined AFK report. Grotesk, tazhib and nostromo pass every gate (24 themes, 168 invariant checks, 39 pairs each). All three offer/rejected pairs were searched with the gate's own metric before the tokens were patched (8.6 → 21.0, 8.6 → 14.2, 5.5 → 14.9); nostromo's primary moved from 15% to 17% for the visited link (11.7 → 12.5). Nostromo's body face is Titillium Web, not Chakra Petch, so it shares no letter with cyberpunk. |
 | R5 | **built** 2026-09-05; awaiting the combined AFK report. A fresh clone of `7ca453d` in an empty directory: `npm ci`, every generator re-run, `git status --porcelain` empty (byte-identical), `npm run gates` green, 24 fixtures. The React picker drives through all twenty-four options by keyboard at a 420px viewport (`tests/picker.spec.mjs`, both browsers; drilled red with `overflow: clip`, 489 > 421). README, USER_GUIDE, MIGRATION, CHANGELOG and the FEATURES tally describe 3.1.0; `package.json` says 3.1.0, untagged until the release go. GitHub Pages still shows 3.0.0 until the branch is merged. **CI found two more faults the local suites had not:** on CI's taller fonts the twenty-four-option list exceeded the popover's new maximum height and the wrapping flex column started a second column (dark beside light, light outside the box — a click on pastel hit terminal), fixed with `flex-wrap: nowrap` + `flex-shrink: 0` on `.kp-menu`; and menu options were content-box, so `100%` plus padding overflowed the popover by 20px on CI's scrollbar-bearing Chromium, fixed with `box-sizing: border-box`. Both are held by the keyboard test's containment assertion (`bc1e369`, CI green on both browsers). |
 
+## Round four — the layout layer and the site (approved 2026-09-06)
+
+Nine milestones. What gets built was frozen in Phase 2 (TH90–TH109); this
+is the order and the exit criterion per milestone. R6 is the **assembly
+milestone** the procedure requires: its exit criterion is that the whole
+does its own job, not that the parts exist. TH104 and TH107 are not here —
+they moved to 4.0.0 at the Phase 4 gate.
+
+Kenny approved all nine unchanged on 2026-09-06, kept the enforcement
+answer (all seven new gates block), agreed to make KT3's drill mechanical,
+and put the round in **AFK mode from R0**.
+
+| ID | Milestone | Features | Exit criterion |
+| --- | --- | --- | --- |
+| R0 | The scale and the cascade | TH94, AR17, AR18 | All 24 themes declare the same scale names and the parity gate holds them; `xs`, `sm` and `md` demonstrably keep today's values so nothing shifts; and a browser test proves a utility wins inside a component — the test that would fail today |
+| R1 | The layout layer | TH90, TH91, TH92 | Each of the sixteen classes has its own browser test pinning its measurable property, each driven red first by removing the rule; all sixteen appear on their documentation page |
+| R2 | The utility API | TH93, AR23 | The generated stylesheet and the documented list agree in both directions; the collision gate compares every name against the 170 existing ones and says the number out loud; one browser test per family measures the class inside a component |
+| R3 | The tables | TH95, TH96 | The scroll region is reachable and operable by keyboard in both channels, its test having failed on today's code first (standing rule 8); the five table behaviours measured at the widths in their bars |
+| R4 | The fallback and the manifest | TH97, TH103, AR25 | An unknown theme name warns exactly once per session along each of the four paths and the stored name survives; the diagnostics page judges a deliberately mismatched pair in a test; the manifest holds every file a consumer can copy, with its gate |
+| R5 | The example pages and their gates | TH98, TH99, TH109 | The ten pages render in both channels; the gate has been red once on each of its three faults separately; the rebuilt kit pages carry zero `style` attributes, with an exception list that gives a reason per line |
+| R6 | **Assembly: the documentation site** | TH100, TH101, TH102, T10, T12, AR21 | Someone who has never seen this package can open the site and learn to use a component without reading the source. Concretely: all ~45 pages carry their nine sections from real sources; the four documentation gates are green and each has been red once; the site publishes and the workflow uploads only what the generator wrote; all 24 themes carry their story from their anatomy document |
+| R7 | The bundle, the note and the release | TH106, TH108, M1 | A page loading only the bundle behaves identically to one loading the loose files; every class the migration note names exists, with its gate; the release carries the bundle and checksums covering every copyable file |
+| R8 | The density mode | TH105 | The same table and form are measurably shorter in compact mode in all 24 themes, and touch targets stay above 24px |
+
+**Enforcement for this round.** Unchanged in shape: the commit hook runs
+the whole chain and blocks, CI runs the same chain, `main` is protected.
+The seven new gates join all three lists, and KT7's unit test holds them
+there. KT3's drill becomes mechanical: a browser test asserting the
+package applies something carries the removed rule in its comment, and a
+gate counts those comments against the number of such tests. KT1 stays
+discipline — no gate can see whether someone looked.
+
+
 ## Enforcement — installed 2026-09-04, before any feature code
 
 Phase 5 refuses to advance to L0 until this is in place. It is, and each
@@ -233,6 +266,7 @@ load is exactly what a file check reports as success.
 | Round four Phase 2 freeze | 2026-09-06 | Two rating rounds plus the freeze: TH90-TH109, nineteen Essential and one Desired (TH105), nothing Later, nothing dropped. Kenny raised TH92, TH104 and TH106 from Desired to Essential. M1 amended — a release also carries the dist bundle and the checksum file covers every file a consumer can copy; M2-M4 confirmed unchanged. List frozen: changes go through mini-rounds only | `docs/FEATURES.md` |
 | Round four Phase 3 | 2026-09-06 | T10-T13: an own markdown renderer for the seven constructs the anatomy documents use (measured), the existing generators extended rather than a static site generator, an own token-reading tokenizer for code colour, and GitHub Pages added to T9's environments | `docs/ARCHITECTURE_DECISIONS.md` |
 | Round four Phase 4 freeze | 2026-09-06 | AR17-AR26 after an architecture-critic pass that found eight blocking objections, four demonstrated in a browser. Cascade layers (the load-order assumption was wrong); `.kp-grid` kept and the utility renamed with a collision gate; the spacing scale pinned to today's values so 3.2.0 stays additive; the theme fallback loud in four places, once per session, with AR10 amended so the stylesheet carries a readable version; TH104 moved to 4.0.0; the channel comparison narrowed to class names and roles; documentation facts from four machine sources; the site committed and deterministic; the class names contract from 3.2.0 | `docs/ARCHITECTURE_DECISIONS.md`, `docs/FEATURES.md` |
+| Round four Phase 5 | 2026-09-06 | Nine milestones approved unchanged, R6 named as the assembly milestone; the seven new gates all block; KT3's drill becomes mechanical; AFK from R0 | this document |
 
 ## Status
 
