@@ -38,6 +38,9 @@ node gates/check-motion.mjs
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
 
+echo "→ the utility API matches its source and its documented list (TH93)"
+node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
+
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
 

@@ -133,7 +133,8 @@
             "default": "./hooks/use-controllable.js"
         },
         "./css/retro-register": "./css/retro-register.css",
-        "./css/layout": "./css/layout.css"
+        "./css/layout": "./css/layout.css",
+        "./css/utilities": "./css/utilities.css"
     },
     "types": "./index.d.ts",
     "files": [
@@ -155,7 +156,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -164,6 +165,8 @@
         "check:motion": "node gates/check-motion.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
         "test:browser": "playwright test",
+        "generate:utilities": "node gates/generate-utilities.mjs",
+        "check:utilities": "node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs",
         "generate:showcase": "node gates/generate-showcase.mjs",
         "check:showcase": "node gates/generate-showcase.mjs --check",
         "checksums": "node gates/checksums.mjs --write",

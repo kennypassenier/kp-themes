@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Utility API</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/utilities.css" />
+    </head>
+    <body>
+        <!-- This fixture loads the package and adds no styling of its own
+             [KT3]. Every utility is measured ON a component, not on a bare
+             div: the whole point of the utilities layer is that it wins
+             inside a component without !important (AR17), and a bare div
+             would never test that. -->
+
+        <!-- Spacing: a card carries its own padding; the utility replaces it. -->
+        <div class="kp-card kp-p-2xl" data-test="spacing">
+            <p>padded by the utility</p>
+        </div>
+        <div class="kp-card" data-test="spacing-plain">
+            <p>padded by the card</p>
+        </div>
+
+        <!-- Gap: a row carries its own gap; the utility replaces it. -->
+        <div class="kp-row kp-gap-2xl" data-test="gap">
+            <button type="button" class="kp-button" data-test="gap-a">one</button>
+            <button type="button" class="kp-button" data-test="gap-b">two</button>
+        </div>
+
+        <!-- Display: a button is inline-flex; the utility makes it a block. -->
+        <button type="button" class="kp-button kp-d-block" data-test="display">block</button>
+        <button type="button" class="kp-button" data-test="display-plain">default</button>
+
+        <!-- Flex alignment: a row is a flex container with its own alignment. -->
+        <div class="kp-row kp-justify-between" data-test="flex">
+            <span class="kp-badge" data-test="flex-a">left</span>
+            <span class="kp-badge" data-test="flex-b">right</span>
+        </div>
+
+        <!-- Text: a badge sets its own weight and transform. -->
+        <span class="kp-badge kp-fw-bold kp-tt-upper kp-lh-loose" data-test="text">state</span>
+        <span class="kp-badge" data-test="text-plain">state</span>
+
+        <!-- Size: a button sizes to its content; the utility fills the line. -->
+        <button type="button" class="kp-button kp-w-full" data-test="size">full</button>
+        <button type="button" class="kp-button" data-test="size-plain">auto</button>
+        <p class="kp-max-w-prose" data-test="size-prose">
+            A paragraph long enough to run past its own measure if nothing capped it, which is the only way to see whether the cap is doing anything
+            at all rather than the window being narrow.
+        </p>
+    </body>
+</html>
