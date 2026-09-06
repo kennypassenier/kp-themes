@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Start — kp-themes</title>
+        <meta name="description" content="The kp-themes design system: 24 themes, two delivery channels, no runtime dependencies." />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../site/index.html" aria-current="page">Start</a></li>
+                            <li><a class="sc-nav__link" href="../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">kp-themes</h1>
+                    <p class="kp-prose">One design system, 24 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
+                </header>
+                <section class="kp-section" data-sc-section="install" id="install">
+                    <h2 class="kp-fw-semibold">Install</h2>
+                    <pre class="kp-code-block"><code>npm install @kp-soft/themes</code></pre>
+                    <pre class="kp-code-block"><code>&lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/themes.css&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/components.css&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/layout.css&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/utilities.css&quot;</span> /&gt;</code></pre>
+                </section>
+                <section class="kp-section" data-sc-section="themes" id="themes">
+                    <h2 class="kp-fw-semibold">The 24 themes</h2>
+                    <p class="kp-prose">Each theme answers the same questions differently. What follows is why each one exists, taken from its own anatomy document, with its live tokens beside it.</p>
+                    <div class="kp-autogrid kp-gap-lg">
+                    <article class="kp-card sc-story" data-sc-story="formal" data-theme="formal">
+                        <h3 class="kp-fw-semibold kp-mb-sm">formal</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Paper and ink. A warm off-white ground the colour of good stock
+(<code>hsl(40, 25%, 97%)</code> — never pure white, which reads as a screen rather
+than a page), near-black text with a blue cast, and a single navy that
+carries every interactive thing. Bronze is the second voice, used for
+emphasis rather than for actions.</p>
+<p>The reference is editorial print: a serious document that expects to be
+read at length. Fraunces on the headings is the whole typographic gesture
+— everything else is the system face.</p>
+<ol>
+<li><strong>The ground is warm and off-white.</strong> Move it to pure white and the
+theme becomes <code>light</code>. That single value is the difference.</li>
+<li><strong>One colour acts.</strong> Navy is the only hue that means &quot;you can do
+something here&quot;. Bronze never becomes a button.</li>
+<li><strong>No ornament.</strong> No glow, no texture you can see, no rounded
+flourishes. The 6 px corner radius is the largest concession.</li>
+<li><strong>Contrast is generous, not maximal.</strong> Ink on paper measures 15.75:1,
+comfortably above the floor, because reading is the point.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="light" data-theme="light">
+                        <h3 class="kp-fw-semibold kp-mb-sm">light</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The neutral one. Pure white, near-black text, and a confident indigo. No
+character of its own by design — this is the theme you pick when you want
+the content to carry everything and the interface to disappear.</p>
+<p>That is a real design position, not an absence of one. Every other theme
+here has a mood; this one is the control against which the others are
+read.</p>
+<ol>
+<li><strong>Pure white ground.</strong> <code>hsl(0, 0%, 100%)</code>. The moment it warms up it
+becomes <code>formal</code>; the moment it cools it becomes a blue-grey theme with
+opinions.</li>
+<li><strong>Indigo, not blue.</strong> <code>hsl(243, 60%, 45%)</code> sits deliberately off the
+default browser blue. It reads as chosen rather than inherited.</li>
+<li><strong>A cyan accent that never acts.</strong> The pale cyan is a highlight
+surface, not a second action colour.</li>
+<li><strong>Nothing else.</strong> No texture, no display face, no ornament. The theme
+is defined by its restraint, so additions cost more here than anywhere.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="dark" data-theme="dark">
+                        <h3 class="kp-fw-semibold kp-mb-sm">dark</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The ordinary dark theme, done properly. A deep slate ground with a blue
+cast (<code>hsl(226, 22%, 8%)</code> — not black), soft off-white text, and a
+luminous violet that lifts off the ground without glaring.</p>
+<p>Where <code>light</code> disappears, this one is meant to be comfortable at night.
+Its whole job is to be the theme someone can read in for two hours.</p>
+<ol>
+<li><strong>Not black, not white.</strong> The ground is 8% lightness and the text is
+93%, giving 14.85:1 rather than the 21:1 of pure black on pure white.
+That gap is deliberate: the extreme ratio causes halation around glyphs
+and pupil fatigue.</li>
+<li><strong>The violet is light, not saturated.</strong> <code>hsl(255, 85%, 74%)</code> works on a
+dark ground because it is bright; a dark saturated violet would vibrate
+against it.</li>
+<li><strong>A blue cast throughout.</strong> Ground, border and muted text all carry the
+same hue family. A neutral grey would read as cheap.</li>
+<li><strong>A starfield you cannot quite see.</strong> The texture is the only ornament
+and it lives near the threshold of visibility.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="cyberpunk" data-theme="cyberpunk">
+                        <h3 class="kp-fw-semibold kp-mb-sm">cyberpunk</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Five things make it read as cyberpunk rather than as &quot;dark with pink&quot;:</p>
+<ol>
+<li><strong>Darkness as canvas.</strong> Near-black with a violet cast
+(<code>hsl(258, 40%, 6%)</code>), never pure black. Neon only works against it.</li>
+<li><strong>Neon as signal, not decoration.</strong> One to three saturated accents,
+used sparsely, on the things that matter. A page that is all neon reads
+as vaporwave.</li>
+<li><strong>The terminal register.</strong> Monospace, uppercase microlabels, dense
+data, identifiers and timestamps used as ornament.</li>
+<li><strong>Imperfection over precision.</strong> Scanlines, grain, the occasional
+glitch — technology that is powerful and worn. The key word is
+<em>occasional</em>: permanent glitch is noise, rare glitch is an event.</li>
+<li><strong>Angular geometry.</strong> Clipped corners, notches, hairline connectors.
+The 4 px radius is the smallest of any theme for this reason.</li>
+</ol>
+<ul>
+<li>Magenta <code>hsl(315, 95%, 64%)</code> acts; cyan <code>hsl(180, 95%, 50%)</code> accents.
+Swapping them changes the theme's personality entirely.</li>
+<li>The foreground is a pale cyan, not white. White text would flatten it.</li>
+<li>The register is decoration, not colour: the theme is complete without
+it. That distinction is why the register is a separate file.</li>
+</ul>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="pastel" data-theme="pastel">
+                        <h3 class="kp-fw-semibold kp-mb-sm">pastel</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Risograph. A lavender-milk ground, plum ink, and the slight
+misregistration of a second pass that never quite lines up. Soft without
+being weak: the ink colours are properly saturated, it is the <em>ground</em>
+that is pale.</p>
+<p>The 16 px corner radius is the largest of any theme and it is doing real
+work — this is the only theme whose geometry is soft.</p>
+<ol>
+<li><strong>The ground is tinted, not white.</strong> <code>hsl(285, 45%, 97%)</code> — a lavender
+so pale it reads as white until you put white next to it.</li>
+<li><strong>Plum, rose and mint.</strong> Three ink colours from a limited palette, the
+way a risograph has a limited drum set.</li>
+<li><strong>The overprint.</strong> Headings carry a 2 px offset shadow in a second ink,
+imitating misregistration. It is the theme's signature and its main
+accessibility risk.</li>
+<li><strong>Soft geometry.</strong> Large radii everywhere. Sharpening them makes it
+another light theme.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="terminal" data-theme="terminal">
+                        <h3 class="kp-fw-semibold kp-mb-sm">terminal</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>A phosphor CRT. Green on near-black, everything monospace, scanlines on
+the glass and a faint bloom on the titles. The most committed theme in the
+set: it does not merely look like a terminal, it accepts a terminal's
+constraints.</p>
+<p><code>--radius: 0</code> is not a style choice. A character cell has no rounded
+corners.</p>
+<ol>
+<li><strong>Monochrome green.</strong> One hue at 120°, varied only by lightness and
+saturation. Introducing a second hue costs the premise.</li>
+<li><strong>Everything is mono.</strong> This is the only theme that overrides the body
+typeface. Losing that makes it green-tinted, not a terminal.</li>
+<li><strong>Near-black, not black.</strong> <code>hsl(120, 10%, 5%)</code> carries a green cast
+even in the ground.</li>
+<li><strong>The scanlines.</strong> A 3 px repeating gradient — measured at roughly
+15.6 cycles per degree, well clear of the band where striped patterns
+cause visual discomfort. Anyone retuning them for a hi-dpi screen must
+check that number again; the uncomfortable band is a period of roughly
+8 to 47 CSS pixels.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="topo" data-theme="topo">
+                        <h3 class="kp-fw-semibold kp-mb-sm">topo</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>A topographic map on kraft paper. A warm sand ground, deep forest ink, a
+clay trail and a lake blue, with contour lines wandering faintly across
+the background.</p>
+<p>Where <code>formal</code> is a printed document, this is a printed <em>map</em>: the same
+respect for paper, but the information is spatial and the palette comes
+from outdoors.</p>
+<ol>
+<li><strong>Kraft, not cream.</strong> <code>hsl(42, 32%, 95%)</code> is more saturated than
+formal's paper and reads as recycled stock.</li>
+<li><strong>Forest green acts.</strong> <code>hsl(158, 42%, 24%)</code> is the only interactive
+colour, and it is dark enough to read as ink rather than as a highlight.</li>
+<li><strong>The contour lines.</strong> A hand-drawn SVG pattern in the texture layer,
+at low opacity. It is the theme's signature and the only ornament.</li>
+<li><strong>Terracotta accents.</strong> The clay tone is warm against the green and
+never acts.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="high-contrast" data-theme="high-contrast">
+                        <h3 class="kp-fw-semibold kp-mb-sm">high-contrast</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Black on white, one signal yellow, and nothing in between. This is the
+theme for someone who finds the other seven too soft — low vision, a
+screen in daylight, tired eyes at the end of a shift — and it is the only
+one here whose reason for existing is not taste.</p>
+<p>It is deliberately loud. A high-contrast theme that has been softened to
+look nice has stopped being a high-contrast theme.</p>
+<ol>
+<li><strong>Pure black on pure white.</strong> 21:1, the highest a screen offers. Any
+grey in the body text is a concession, and there is none.</li>
+<li><strong>The signal yellow.</strong> <code>--accent</code> is <code>hsl(48, 100%, 50%)</code> with black
+ink — the colour every accessibility convention reaches for, because
+it is the one hue that stays distinct for nearly every kind of colour
+vision. It is the only decoration this theme has.</li>
+<li><strong>Status plates are deep, not pale.</strong> The other six light themes tint
+their badges. Pale tints are exactly what this theme exists to avoid,
+so every plate is a saturated colour carrying white ink — except the
+offer badge, which is bright lime with black ink, because it has to
+stay far from the rejection badge for someone with the commonest
+colour deficiency. Measured: 49.5 apart under deuteranopia, where the
+floor is 12 and the other themes sit at 13.</li>
+<li><strong><code>--radius: 0.25rem</code>.</strong> Nearly square. A soft corner blurs the edge
+of a control, and an edge is information here.</li>
+<li><strong>Atkinson Hyperlegible first.</strong> A typeface drawn by the Braille
+Institute specifically to keep letterforms apart at low acuity — b/d,
+i/l, 0/O. It falls back to the house sans if the face is not
+installed, so nothing breaks; it simply gets better when it is there.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="sepia" data-theme="sepia">
+                        <h3 class="kp-fw-semibold kp-mb-sm">sepia</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Warm parchment, brown ink, and not one cool accent anywhere. Formal is
+tidy but it is still blue; this is the only theme in the set that is
+genuinely restful, and it is meant for long reading rather than for
+dashboards.</p>
+<p>The reference is a printed page that has aged well — not a filter over a
+photograph, but paper, ink, and the warmth both acquire.</p>
+<ol>
+<li><strong>No cool hues in the body.</strong> Everything in the reading surface sits
+between 24° and 45°. The moment a blue-grey appears, the page stops
+feeling like paper and starts feeling like a document viewer.</li>
+<li><strong>Ink, not black.</strong> <code>--foreground</code> is <code>hsl(28, 45%, 16%)</code>. True black
+on warm paper reads as a hole punched in the page.</li>
+<li><strong>A serif for display.</strong> The only theme besides terminal that changes
+a typeface, and it changes only the display face — body text stays in
+the house sans, because a serif body at screen sizes costs more than
+it gives.</li>
+<li><strong>The surfaces rise by warmth, not by grey.</strong> Page 94%, card 97%,
+popover 98% lightness, each a little more saturated than the last. A
+raised surface here looks like a fresher sheet, not a lighter one.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="blueprint" data-theme="blueprint">
+                        <h3 class="kp-fw-semibold kp-mb-sm">blueprint</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>A technical drawing. Cyan-white lines on deep Prussian blue, with amber
+where something needs attention. Topo is a map — contour lines, land,
+elevation; this is the other half of that pair: the drawing of a thing
+that does not exist yet.</p>
+<p>Where cyberpunk is a dark blue theme that glows, this one is a dark blue
+theme that measures.</p>
+<ol>
+<li><strong>The Prussian ground.</strong> <code>hsl(215, 65%, 12%)</code> — a blue dark enough to
+read as ink rather than as a dark grey with a tint. Lighten it and the
+theme becomes &quot;dark blue interface&quot;; deepen it and it becomes black.</li>
+<li><strong>Cyan as the drawing line.</strong> <code>--primary</code> is <code>hsl(190, 80%, 62%)</code>,
+which is the colour a blueprint's line actually is. It carries links,
+focus and the first chart series.</li>
+<li><strong>Amber for annotation.</strong> The one warm colour, used where a drawing
+would use a red pencil: <code>--accent</code>, and the second chart series. It is
+the only hue in the theme that is not blue or cyan.</li>
+<li><strong><code>--radius: 0.125rem</code>.</strong> Nearly square, because a drawn line does not
+have rounded ends. This is the second-sharpest theme after
+high-contrast.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="solstice" data-theme="solstice">
+                        <h3 class="kp-fw-semibold kp-mb-sm">solstice</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Warm dark. Charcoal with amber and rust, for the reader who finds dark
+too clinical and cyberpunk too loud. Both existing dark themes are cool —
+one indigo, one magenta-on-violet — and neither is restful.</p>
+<p>The reference is firelight rather than screenlight: the low sun of the
+name, not a neon sign.</p>
+<ol>
+<li><strong>The ground is warm charcoal, not black.</strong> <code>hsl(20, 14%, 10%)</code> — a
+trace of red in the dark. Take the hue out and it becomes dark's
+neutral cousin, which the set already has.</li>
+<li><strong>Amber leads, rust supports.</strong> <code>--primary</code> at 28° and <code>--accent</code> at
+12°, close enough to be one family and far enough apart to tell which
+is which. This is the only theme whose primary and accent are
+neighbours on the wheel.</li>
+<li><strong>A serif for display.</strong> Shared with sepia, and for the same reason:
+warmth reads better with a little contrast in the letterforms.</li>
+<li><strong><code>--radius: 0.625rem</code>.</strong> The softest in the set. Sharp corners fight
+the warmth; this theme is the one place where roundness is doing work.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="brutalism" data-theme="brutalism">
+                        <h3 class="kp-fw-semibold kp-mb-sm">brutalism</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Neo-brutalism, the 2021 kind: off-white paper, boxes drawn with a 3px
+black line, a hard shadow that sits exactly where the box would fall if
+you let go of it, and plates in the colours of a sweet shop — yellow,
+coral, lavender. Nothing is blurred, nothing is translucent, nothing
+pretends to be a material. The reference is Gumroad's redesign and the
+directories that grew around it, not the concrete of the 1960s.</p>
+<p>It is the first theme in the set whose signature is a shadow. Every
+other theme is flat by decision; this one is flat by exaggeration.</p>
+<ol>
+<li><strong>Black is the structure.</strong> <code>--border</code>, <code>--border-strong</code>, <code>--input</code>,
+<code>--ring</code>, <code>--selected</code> and <code>--primary</code> are all the same ink,
+<code>hsl(0, 0%, 7%)</code>. A brutalist box has one line weight and one line
+colour; a grey hairline anywhere would be a different theme.</li>
+<li><strong>The shadow is a knob, not a rule.</strong> <code>--fx-shadow-offset: 4px</code> is the
+whole effect: <code>css/components.css</code> paints
+<code>offset offset 0 0 var(--border-strong)</code> on buttons, cards and inputs
+in every theme, and the other eleven answer 0px, which paints nothing.
+Measured at R0: the eleven fixtures are pixel-identical before and
+after the knob existed.</li>
+<li><strong>Yellow is the default button, black is the primary.</strong> The contrast
+gate holds <code>--primary</code> at 4.5:1 against the page as link text, which
+no yellow can pass on off-white — so the ink is primary (13.4:1 with
+yellow text on it) and the yellow <code>hsl(48, 100%, 60%)</code> is
+<code>--secondary</code>, the plate an ordinary button wears. That is the
+brutalist reading anyway: the loud colour is the common one.</li>
+<li><strong>Radius 0, and a display face with weight.</strong> Archivo Black for
+headings, uppercase with tight tracking; Space Grotesk for the body.
+A rounded corner or a light heading would soften exactly what the
+theme is for.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="deco" data-theme="deco">
+                        <h3 class="kp-fw-semibold kp-mb-sm">deco</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Art Deco, the dark reading: gold on a near-black ground, jewel tones for
+the accents — emerald, sapphire, ruby — and geometry drawn with a ruler
+and a compass: chevrons, double rules, a display face built from
+circles and straight lines. Paris 1925 and the skyscraper lobby, not the
+gilt of a palace.</p>
+<p>The light ivory-and-gold Deco exists too and is not built: on paper it
+sits within a step of formal and sepia. The dark one has no sibling.</p>
+<ol>
+<li><strong>Gold is the action and the structure.</strong> <code>--primary</code>, <code>--ring</code>,
+<code>--selected</code> and both boundaries are the same family at 43°. Gold
+<code>hsl(43, 65%, 52%)</code> on the ground measures 8.16:1; the boundary is a
+quieter gold at 50% lightness and 35% saturation, so a ruled line and
+a button are not the same thing.</li>
+<li><strong>The ground is blue-black, not black.</strong> <code>hsl(200, 25%, 8%)</code> — a
+trace of blue under the gold is what makes the gold look warm. Pure
+black would make this phantom's ground with a different accent.</li>
+<li><strong>Jewels as accents, never as text.</strong> Emerald is <code>--accent</code> with a
+dark ink of its own family (the base pair is a large-text pair at 3:1;
+the derived hover and active states were what forced the dark ink —
+a light ink dropped to 2.6:1 on the lighter active plate). Ruby is
+<code>--destructive</code> and <code>--fx-signal</code>, lifted to 58% so it reads as text.
+Sapphire is <code>--info</code>.</li>
+<li><strong>Poiret One for headings, Josefin Sans for everything else.</strong>
+Poiret One is hairline-thin and lives only on h1–h3, uppercase with
+wide tracking; a control label in it would vanish at 14px.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="academia" data-theme="academia">
+                        <h3 class="kp-fw-semibold kp-mb-sm">academia</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Dark academia: the library at night. Ink and mahogany for the ground,
+parchment for the text, candle gold for what you can act on, oxblood
+and forest green for the blocks that mean something. Garamond for the
+headings, Lora for the reading.</p>
+<p>This is sepia's darker counterpart — Kenny's own framing — and that is
+the reason it is dark. The style's own sources describe a parchment
+ground with oxblood and forest blocks, and that version sits within a
+step of sepia. Turn it over and it has no sibling: solstice is a
+sunset, this is a room.</p>
+<ol>
+<li><strong>The ground is ink with a trace of red.</strong> <code>hsl(24, 30%, 9%)</code>; the
+card is a leather brown a shade lighter. Take the hue out and it is
+dark; take the lightness down and it is phantom.</li>
+<li><strong>Gold acts, oxblood and forest mean.</strong> <code>--primary</code> is candle gold
+<code>hsl(38, 50%, 58%)</code> because the contrast gate holds primary at 4.5:1
+as link text, and oxblood at 30% lightness cannot read on ink (1.9:1
+measured). So the gold is the link and the primary button, forest is
+the ordinary button (<code>--secondary</code>), and oxblood is <code>--accent</code> — a
+plate with parchment ink at 8.42:1.</li>
+<li><strong>Serifs everywhere, but a readable one for the body.</strong> Cormorant
+Garamond is thin and lives on headings; Lora carries the body at
+normal weight. The house pattern that forbids a serif body is met
+halfway: this is the reading theme, and Lora was drawn for screens.</li>
+<li><strong>Radius 0, hairline rules.</strong> A rounded corner in a library is a
+modern intrusion.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="phantom" data-theme="phantom">
+                        <h3 class="kp-fw-semibold kp-mb-sm">phantom</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The playful dark theme the set lacked. Black, white and one violent
+red, cut-paper shapes, a halftone screen, condensed italic headings in
+capitals — the menus of Persona 5, which are the most imitated game UI
+of the last decade. Energy without any light emission: cyberpunk glows,
+this is print.</p>
+<ol>
+<li><strong>Three colours, and the red is a plate.</strong> Red at <code>#E60012</code> on black
+measures 4.12:1, under the text floor, so the red is never a word: it
+is <code>--primary</code> with black ink, lifted to <code>hsl(355, 100%, 58%)</code> so the
+black reads on it, and it is the sidebar, the signal and the
+destructive plate. White text on red is 3.3:1 and is not used.</li>
+<li><strong>White is the second plate.</strong> <code>--accent</code> is a light grey plate with
+black ink — 86% rather than 98%, because a derived active state has
+to be visibly different and white has nowhere to go. Offer is the one
+pure-white plate; rejected is the one red one; they could not be
+further apart on any axis.</li>
+<li><strong>The sidebar is red.</strong> The only theme whose sidebar is a loud
+colour: white text on <code>hsl(355, 100%, 45%)</code> at 4.6:1, the ring in
+white.</li>
+<li><strong>Barlow Condensed, 800, italic, uppercase</strong> for the headings, Barlow
+for the body. The heading treatment is the theme; a regular heading
+would make this a dark grey theme with a red button.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="ticker" data-theme="ticker">
+                        <h3 class="kp-fw-semibold kp-mb-sm">ticker</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Amber fields on black, numerals that line up, panel titles in reverse
+video, nothing that moves. The trading terminal as it is used today —
+data-dense, professional, present tense — rather than the arcade
+nostalgia terminal already owns. This is the theme a table wants:
+JobTracker's pipeline, a ledger, a log.</p>
+<ol>
+<li><strong>Amber acts, yellow labels.</strong> <code>--primary</code> is amber
+<code>hsl(36, 91%, 55%)</code> — 9.71:1 on black — and <code>--accent</code> is the paler
+label yellow. Two hues twenty degrees apart, both with black ink,
+and every other colour on the page is a grey.</li>
+<li><strong>No motion at all.</strong> <code>--fx-duration: 0ms</code>, <code>--fx-lift: 0px</code>, no
+texture that drifts, no flourish under the reduced-motion guard. The
+temptation this theme invites — flash a cell when its value changes
+— is exactly what DI5 counts, and it is refused here.</li>
+<li><strong>Tabular numerals, mono display.</strong> The theme sets
+<code>font-variant-numeric: tabular-nums</code> on its root so columns of
+figures align, and headings are IBM Plex Mono in capitals on an amber
+bar — reverse video, the way a terminal names a screen.</li>
+<li><strong>Radius 0, hairlines at 18%.</strong> A rounded corner or a soft divider
+would say &quot;dashboard product&quot;; this says &quot;screen&quot;.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="nishiki" data-theme="nishiki">
+                        <h3 class="kp-fw-semibold kp-mb-sm">nishiki</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Ukiyo-e, the polychrome woodblock print: unbleached washi for the
+ground, Prussian blue — <em>bero-ai</em>, the imported pigment Hokusai's wave
+is printed in — for the water, safflower red for the seal, and the
+black key-block line that gives every shape its edge. A non-Western
+print tradition, the first in the set, and a flat, outlined, graphic
+one: nothing soft, nothing organic.</p>
+<ol>
+<li><strong>The key-block line.</strong> <code>--border-strong</code> and <code>--input</code> are the ink
+itself, <code>hsl(36, 10%, 10%)</code>. In a woodblock print the black block is
+printed first and every colour sits inside its lines; here every
+control has the same edge, and DI1 is free instead of hard.</li>
+<li><strong>Prussian blue acts, beni marks.</strong> <code>--primary</code> at <code>hsl(215, 51%, 25%)</code>
+measures 10.01:1 on washi; <code>--accent</code> and the signal are beni red
+<code>hsl(1, 58%, 46%)</code> at 5.18:1, used as a plate with washi ink and as
+the hanko seal after a heading.</li>
+<li><strong>Washi, not white.</strong> The ground is <code>hsl(42, 52%, 92%)</code>, the card a
+step lighter, the popover lighter still (DI6 read the other way: the
+paper gets whiter as it rises).</li>
+<li><strong>Shippori Mincho for headings, Zen Kaku Gothic New for the body.</strong>
+Both carry Latin well and both are drawn for Japanese; the Mincho's
+contrast is the brush, the Gothic is the print shop.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="shade-light" data-theme="shade-light">
+                        <h3 class="kp-fw-semibold kp-mb-sm">shade-light</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Reading a book in the shade, not in the sun. The only theme in the set
+built on medium contrast: warm off-white paper and a blue-grey ink
+that stops well short of black, so a long text is restful rather than
+sharp. Derived from Solarized, whose sixteen values were designed for
+exactly this, and shipped as a pair — <code>shade-light</code> and <code>shade-dark</code>
+share one scheme with the lightness steps mirrored.</p>
+<ol>
+<li><strong>The ink is base01, not base00.</strong> Solarized's own light-mode text
+colour <code>#657b83</code> measures 4.13:1 on <code>#fdf6e3</code> and fails AA; the
+darker <code>#586e75</code> — <code>hsl(194, 14%, 40%)</code> — measures 4.99:1 and is the
+text. That is the whole meaning of &quot;medium contrast&quot; here: as low as
+AA allows, and not lower.</li>
+<li><strong>Accents are plates, never words.</strong> Solarized's blue, cyan, yellow,
+magenta and red were drawn for syntax highlighting, where 3:1 is
+normal. As text they fail, so each is deepened where it carries text
+(<code>--primary</code> blue at 38% instead of 49%) and otherwise used as a
+plate with paper ink.</li>
+<li><strong>The card is lighter than the paper.</strong> Solarized puts base2 below
+base3; the DI6 gate, which holds a raised surface above the one
+below it in every theme, sent the card the other way. The base2
+value survives as <code>--secondary</code> and the borders.</li>
+<li><strong>Source Serif 4 for headings, Source Sans 3 for the body</strong>, the
+pair Adobe drew to sit together — this is a text theme and its type
+should say so.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="shade-dark" data-theme="shade-dark">
+                        <h3 class="kp-fw-semibold kp-mb-sm">shade-dark</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The dark half of the shade pair: the same Solarized scheme with the
+lightness steps mirrored, so switching between the two halves changes
+the ground and keeps the accents. Medium contrast on a deep blue-black,
+for reading at night without the glare of white text. See
+<a href="../shade-light/anatomy.md">shade-light</a> for the idea the pair shares;
+this document records only what the dark half does differently.</p>
+<ol>
+<li><strong>The ground is base03, the text is lifted.</strong> <code>hsl(192, 100%, 11%)</code>
+is Solarized's own; the canonical text colour base0 measured 4.28:1
+on the card and was lifted to <code>hsl(186, 8%, 64%)</code>, which reads at
+4.5 on every surface and still stops far short of white.</li>
+<li><strong>Accents lighter than the light half's.</strong> Blue at 60% instead of
+38%, magenta at 58%, red at 66%: the same hues, mirrored across the
+middle, so a plate reads at the same contrast on either ground.</li>
+<li><strong>The layers rise.</strong> Ground 11%, card 14%, popover 17% — deliberate,
+where the light half's card goes the other way.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="mono" data-theme="mono">
+                        <h3 class="kp-fw-semibold kp-mb-sm">mono</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Greyscale, and nothing else: the ink is the brand. Vercel's Geist is the
+living reference — near-white canvas, near-black ink, a mid grey, a
+hairline, and no accent colour anywhere — and the register it produces
+is the one that puts the content first because there is nothing else to
+look at. Different from high-contrast, which keeps a navy, a yellow and
+five chart hues for a safety reason; this theme drops hue for an
+aesthetic one.</p>
+<ol>
+<li><strong>Meaning by lightness.</strong> Every colour that means something elsewhere
+is a grey here, so the seven status plates are a <strong>ladder</strong>: 86% for
+offer, then 74, 62, 52, 34, 22, and 9% for rejected — each pair at
+least 1.25:1 apart, which a unit test holds (<code>gates/gates.test.mjs</code>,
+TH86). The DI4 gate's own pair, offer against rejected, is the two
+ends of the ladder.</li>
+<li><strong>Charts get a pattern as well as a grey.</strong> <code>--chart-pattern-1..5</code>
+are five SVG fills — diagonal, dots, crosshatch, horizontal, vertical
+— drawn at 30–35% black over the series colour, so five greys between
+9% and 55% lightness are told apart by texture before anyone squints
+at the shade. Every other theme answers <code>none</code>.</li>
+<li><strong>The ink is 9%, the action is 14%.</strong> <code>--primary</code> sits a step above
+the text because the visited-link derivation needs room to move: at
+9% the visited colour measured 11.3 from the link, under the floor of
+12, and at 14% it clears (12.7).</li>
+<li><strong>Inter Tight for the text, Geist Mono for headings and numerals.</strong>
+A grotesk set tight is the Geist gesture; the mono is where the
+theme allows itself a voice.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="retro" data-theme="retro">
+                        <h3 class="kp-fw-semibold kp-mb-sm">retro</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The 1995 desktop: mid-grey chrome, a navy title bar, buttons and fields
+drawn as bevels, a pixel face for the headings, and nothing that
+blinks. 98.css is the reference. The OS-chrome reading, not Y2K's
+candy chrome — that would collide with pastel and cyberpunk.</p>
+<p>The style is tamed in exactly two places, both measured: the bevel
+that <em>is</em> the style measured 2.17:1 in the original and cannot be the
+boundary DI1 asks for, and the dotted focus rectangle is forbidden by
+DI2. So the boundary is a gated 38% grey and the bevel sits inside it
+(<code>css/retro-register.css</code>), and the focus ring is the system's.</p>
+<ol>
+<li><strong>The chrome is 75%, not the original's 75% either.</strong> <code>hsl(0, 0%, 75%)</code>
+is the classic surface; the card at 84% and the popover at 90% are
+the &quot;button face&quot; and the &quot;window&quot; of the original, ordered so a
+raised surface is lighter (DI6 read for a light theme).</li>
+<li><strong>Navy acts, teal signals.</strong> <code>--primary</code> is the title-bar navy
+<code>hsl(240, 100%, 25%)</code> — 8.8:1 on the chrome — and the sidebar is
+navy too, with white text. Teal <code>hsl(180, 100%, 20%)</code> is the accent
+and the signal: the desktop colour, deepened until it clears 3:1 on
+the chrome (25% measured 2.62 as a chart series).</li>
+<li><strong>The register carries the bevel.</strong> <code>css/retro-register.css</code> paints
+the raised and sunken edges as inset shadows in the theme's own
+tokens — popover as highlight, foreground as the deep edge, border as
+the mid edge — on buttons, cards, popovers and fields, and inverts
+them on press. Scoped to <code>[data-theme='retro']</code>, inert elsewhere,
+loaded by the showcase and the fixtures. A browser test holds the
+painted boundary at 3:1 with the register on.</li>
+<li><strong>No motion.</strong> <code>--fx-duration: 0ms</code>: the original snapped, and so
+does this. Pixelify Sans on headings only; the body is Instrument
+Sans, because pixel body text under 16px is the readability risk
+every retro guide names.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="grotesk" data-theme="grotesk">
+                        <h3 class="kp-fw-semibold kp-mb-sm">grotesk</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>The International Typographic Style — the Swiss school of Müller-
+Brockmann and Hofmann: white paper, black type, one red, a twelve-column
+grid, oversized flush-left headings, asymmetric columns. The identity is
+carried by typography and the grid rather than by colour, which is what
+sets it apart from <code>light</code> (indigo, soft radius, millimetre grid) and
+from <code>high-contrast</code> (black on white for a safety reason, with a yellow).
+Its closest candidate was brutalism; brutalism is unstyled, this is the
+most styled thing there is.</p>
+<ol>
+<li><strong>One red, and it is text-safe.</strong> <code>hsl(355, 95%, 45%)</code> — <code>#E30613</code>,
+the Swiss red — measures 4.88:1 on white and is the primary, the
+signal, the ring and the mark before every heading. On the grey card
+it is a plate; nowhere else is there a hue except where the semantic
+tokens require one.</li>
+<li><strong>Black is the structure.</strong> Boundaries, inputs, the accent and the
+sidebar are the ink; the grid is the ink at 5%.</li>
+<li><strong>Twelve columns.</strong> The texture is a single vertical hairline
+repeated every twelfth of the width — columns, not squares — which is
+the poster's grid and not light's drawing-table grid.</li>
+<li><strong>Archivo at 800 for headings, Inter for the body.</strong> Both
+Helvetica-class; the heading weight and the tight tracking are the
+theme.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="tazhib" data-theme="tazhib">
+                        <h3 class="kp-fw-semibold kp-mb-sm">tazhib</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Tazhib, the illumination of a Persian manuscript: a lapis-ultramarine
+ground, ivory text, gold ruling, vermilion accents, and an eight-fold
+girih star tiled under the glass. The only dark theme in the set built
+on a saturated pigment rather than a neutral — formal has the navy and
+the bronze but on light paper, blueprint has the blue but as a
+technical drawing, and neither is black anywhere. Nothing here is.</p>
+<ol>
+<li><strong>The ground is a pigment.</strong> <code>hsl(228, 60%, 26%)</code> is lapis, not
+navy; the card and popover are the same pigment lifted (31%, 36%),
+so DI6's rising layers are written in lightness, not in saturation —
+a more saturated lapis would look richer and read as lower.</li>
+<li><strong>Gold acts.</strong> <code>--primary</code> at <code>hsl(43, 67%, 50%)</code> measures 5.89:1
+on lapis and carries a deep-blue ink; the boundaries are a quieter
+gold, and the card carries a gold hairline inset from its edge — the
+ruling a page was drawn inside.</li>
+<li><strong>Vermilion is a plate, never text.</strong> <code>hsl(5, 75%, 55%)</code> on lapis
+measures 3.20:1 — enough for a large-text accent with a dark ink,
+not for a word. Where red must be text (<code>--destructive</code>) it is lifted
+to 70% lightness.</li>
+<li><strong>Markazi Text for headings, Vazirmatn for the body.</strong> Both drawn
+for Arabic script with a Latin that holds its own; the pairing is
+the manuscript and its margin notes.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="nostromo" data-theme="nostromo">
+                        <h3 class="kp-fw-semibold kp-mb-sm">nostromo</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Cassette futurism: the beige plastic of 1979 hardware — warm-grey
+panels, orange indicator LEDs, label tape, vent slots. The case, not the
+screen; the screen inside this case is <code>terminal</code>. Named for the ship
+whose corridors defined the look. A medium-light theme, the second on
+the dusk axis with shade.</p>
+<ol>
+<li><strong>The ground is moulded plastic.</strong> <code>hsl(38, 28%, 78%)</code> — beige with
+the yellow of thirty years — and the card and popover are the same
+plastic lighter, the way a panel catches light.</li>
+<li><strong>Ink acts, orange indicates.</strong> <code>--primary</code> is the ink at 17%
+lightness (not 15%: the visited-link derivation reached 11.7 from a
+15% ink and 12.5 from 17%). The LED orange <code>hsl(22, 87%, 55%)</code> is the
+sidebar's primary and the indicator dot; it measures 1.6:1 on the
+beige and is never text there. The deeper orange at 38% is the
+signal and the selected mark, above 3:1 on the ground.</li>
+<li><strong>The LED is lit by shape as well as colour.</strong> The current page in
+a nav carries a filled dot the others do not have — DI4 applied to
+the theme's own flourish.</li>
+<li><strong>Michroma for headings, Titillium Web for the body.</strong> Michroma is
+the Eurostile of the case labels; Titillium is the sci-fi UI face
+that is not cyberpunk's Chakra Petch, chosen so the two themes share
+no letter.</li>
+</ol>
+                        </div>
+                    </article>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

@@ -145,6 +145,14 @@ and put the round in **AFK mode from R0**.
 | R7 | The bundle, the note and the release | TH106, TH108, M1 | A page loading only the bundle behaves identically to one loading the loose files; every class the migration note names exists, with its gate; the release carries the bundle and checksums covering every copyable file |
 | R8 | The density mode | TH105 | The same table and form are measurably shorter in compact mode in all 24 themes, and touch targets stay above 24px |
 
+### Round four — status
+
+| ID | Status |
+| --- | --- |
+| R0 | **built** 2026-09-06 (AFK); awaiting the combined report. The five layer names declared once in `css/_header.css`; `components.css`, `cyberpunk-register.css` and `retro-register.css` wrapped; six `--kp-space-*` tokens in all 24 themes pinned to today's seventeen fallbacks so nothing shifts. `check-motion` needed repair: its keyframe scanner required a closing brace at column zero and the layer wrap indented every one, and a lazy regex truncated the bodies. **R0-TYPO quarantined** — the typography half cannot meet "nothing shifts". |
+| R1 | **built** 2026-09-06 (AFK); awaiting the combined report. `css/layout.css`, sixteen classes in `@layer kp.layout`, every value on a `--kp-*` knob defaulting to the scale. Fifteen browser tests, all fifteen drilled red. The first drill found **six tests measuring scaffolding rather than the package** — the body margin made `.kp-page` look capped, `<code>` is monospace by user-agent default, the document did not scroll without `overflow-wrap`, and removing the `@layer` statement proves nothing because layer order is also set by first appearance. All six rewritten; the cascade drill is now unlayering `components.css`. That drill also found `.kp-mono` reading `--theme-font-mono`, a token no theme declares. |
+| R2 | **built** 2026-09-06 (AFK); awaiting the combined report. 115 generated classes in six families, `docs/UTILITIES.md` written by hand, four failure paths drilled red. The collision gate's first version reported **"0 class names declared by hand"** — the selector parser threw away every prelude, so it compared against nothing; repaired it reports 189 and immediately refused `.kp-truncate`, which `components.css` already declares more richly. Eight browser tests, each measured on a component rather than a bare div, ten rules drilled red. No font-size family: R0-TYPO blocks it, and the document says so in place of the family. |
+
 **Enforcement for this round.** Unchanged in shape: the commit hook runs
 the whole chain and blocks, CI runs the same chain, `main` is protected.
 The seven new gates join all three lists, and KT7's unit test holds them
