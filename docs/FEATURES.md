@@ -247,3 +247,50 @@ Fixed by TH21 and by what blocks what:
 4. The gates: TH22, DI4, DI5, DI6, DI7 — each drilled red-then-green
 5. Components (TH1-TH8, TH31-TH36) and the showcase
 6. Then TH15, TH19
+
+## Round four — the layout layer, the utility API and the documentation site (2026-09-06)
+
+Twenty features, TH90–TH109, rated over two forms on 2026-09-06: nineteen
+Essential, one Desired, none Later, none dropped. The scope they decompose
+is S22–S31 in `docs/SCOPE.md`. Everything is additive and ships in 3.2.0
+except TH107, which changes existing behaviour and therefore waits for
+4.0.0 together with D3.
+
+The test bar column is the concrete expectation agreed at rating time, not
+in Phase 7. Where a bar says "drilled", it means the test is driven red by
+removing the thing it measures before it is trusted (KT3).
+
+| ID | Feature | Rating | Test bar, agreed at the rating |
+| --- | --- | --- | --- |
+| TH90 | Layout containers: `.kp-page`, `.kp-stack`, `.kp-row` (+ `--end`, `--between`, `--nowrap`), `.kp-autogrid`, `.kp-sidebar`, `.kp-section`, `.kp-center` | Essential | One browser test per class pinning its measurable property: page has a max width and centres; stack leaves a measurable gap between two adjacent children; row aligns its controls on one line and wraps at 320px; autogrid has more columns at 1280 than at 480; sidebar drops below its threshold; section adds space above; center caps its width. Each drilled red by removing the rule |
+| TH91 | Text and content utilities: `.kp-prose`, `.kp-text-muted`, `.kp-text-end`/`-center`, `.kp-mono`, `.kp-code-block` | Essential | Muted text is exactly `--muted-foreground`; prose stops at its measure; mono uses the theme's mono family; a 200-character key in a code block does not widen the page at 320px. All 24 themes, on the documentation page |
+| TH92 | The busy state made visible: a rule for `[aria-busy='true']` | Essential | The same button with and without `aria-busy="true"` differs in at least one computed property, in both channels, and the rule lives in the package rather than in the fixture |
+| TH93 | The utility API: ~123 generated `kp-`-prefixed classes (spacing, gap, display, flex alignment, text, width), no breakpoint variants | Essential | A gate lays the generated stylesheet beside the documented list and goes red on any difference in either direction. One browser test per family measuring the real effect — `.kp-p-md` yields the padding its token says, and follows the token when a theme changes it |
+| TH94 | A spacing and typography scale as tokens in all 24 themes | Essential | The existing token-parity gate covers the names once they are tokens. A page with h1–h6 shows a strictly descending size ladder in every theme, and no layout class carries a literal where a token exists. Built before TH90 and TH93, which read it |
+| TH95 | The table scroll region reachable by keyboard (`tabindex="0"`, `role="region"`, a label) | Essential | In both channels the wrapper carries the three attributes; a browser test tabs to the region and scrolls it with the arrow keys; the label names the table. The test demonstrably fails on the current code before the repair goes in (standing rule 8) |
+| TH96 | The four remaining table layers: cell strategies (`.kp-cell-truncate`, `.kp-cell-break`), column priority (`.kp-col-low`), container queries, a card layout for the plain `.kp-table` | Essential | A 70-character identifier in a breakable cell does not push the table past its container at 320px; a truncated cell shows an ellipsis and keeps the full value reachable; a low-priority column is present at 1280 and gone at 480, header and cells together; the same table in a 400px container adapts while the viewport stays 1280; the plain table falls into cards at narrow like the DataTable, each cell carrying its column header |
+| TH97 | The loud fallback, a version constant in the registry, and a diagnostics page | Essential | An unknown name produces one console warning and one event carrying both the requested and the applied name; the version constant is generated and a gate goes red when it disagrees with `package.json`; the diagnostics page names both versions and both theme lists, and is fed a deliberately mismatched pair in a test so its verdict is itself measured |
+| TH98 | The ten example pages: app shell, login, list-with-form, settings, wizard, empty-and-error, hero, pricing-and-testimonials, article, profile | Essential | Each renders in both channels and appears in the site navigation; the list-with-form page demonstrably contains the two shapes from the chassis-rs report — two fields with a button on one row, and a 70-character table cell — so TH99 has something to measure |
+| TH99 | The overflow and rhythm gate | Essential | Runs over every example page and every documentation page, in both browsers, at 320, 768 and 1280: no horizontal page scroll, no element wider than its container, no two consecutive blocks touching. Demonstrably red once on each of the three faults separately |
+| TH100 | The generated documentation site, one page per component (~45), nine sections each | Essential | The site builds from one generator and the Pages workflow publishes it; every page is reachable from the navigation; a gate counts all nine sections on every component page; the props tables come from the `@typedef` blocks all 17 React files already carry |
+| TH101 | The four documentation gates: coverage, truth, one source, layout | Essential | Each has been red once on an injected fault — a component without a page, a prop in the table that is not in the source and a prop in the source that is not in the table, a snippet that differs from the example rendered beside it, and a page that scrolls sideways. The four drills are recorded in the gate's own comments |
+| TH102 | The per-theme story on the site, rendered from the anatomy documents | Essential | Every theme in `themes/order.json` has its story on the site; a gate goes red as soon as a theme arrives without one. The text demonstrably comes from `themes/<name>/anatomy.md` rather than being a copy of it, and the colours beside it are that theme's live tokens rather than an image |
+| TH103 | The checksum manifest completed (`js/strings.js`, `css/retro-register.css`) plus a gate | Essential | The manifest holds every file the package offers as an export and a vendoring consumer can copy; a gate lays the two lists beside each other and goes red on a difference, so a new file cannot silently fall outside again |
+| TH104 | Container queries beyond the tables (card grid, nav bar, DataTable) | Essential | One test per converted component placing it in a narrow container while the viewport stays wide, measuring the narrow form. The old viewport media query is removed in the same commit, so two mechanisms never coexist |
+| TH105 | A density mode, `data-density="compact"` | Desired | The same table and form are measurably shorter in compact mode, in all 24 themes, and the touch targets of buttons and checkboxes stay above 24px (WCAG 2.5.8) even compact. Depends on TH94 |
+| TH106 | One dist bundle: a single CSS and a single JS file beside the loose files | Essential | A page loading only the bundle behaves identically to one loading the loose files — the same tests run over both setups. The bundle is generated and a gate goes red when it drifts from its sources |
+| TH107 | The confirmation dialog as the default for destructive actions (4.0.0) | Essential | In both channels a click on a destructive button opens a `<dialog>` carrying the attribute's text; Escape and Cancel do nothing; Confirm performs the action once; focus returns to the button; the existing arm-then-act tests stay green against the variant. The contract check that refuses a destructive button with neither confirmation nor undo keeps applying |
+| TH108 | A migration note naming what consumers may delete | Essential | Every class the note names exists in the package — a gate reads the table and compares it with the generated class list, so the note cannot point at something that is not there |
+| TH109 | Zero inline styles on the rebuilt consumer pages | Essential | A gate reads every example page and goes red on a `style` attribute or a page-local `<style>` block, with one exception list for what demonstrably cannot be avoided (the anchor names the popovers need), each with its reason. This is the round's exit criterion for the layout layer |
+
+**Round four tally.** Nineteen Essential, one Desired (TH105), none Later,
+none dropped. Kenny raised three of Claude's own recommendations —
+TH92 (the busy state), TH104 (container queries beyond the tables) and
+TH106 (the dist bundle) — from Desired to Essential.
+
+**M1 amended, 2026-09-06.** Distribution stays a git tag with a checksum
+file, and from now on a release also carries the dist bundle as an asset;
+the checksum file covers every file a consumer can copy, not a hand-picked
+subset (the fault recorded as KT9). M2, M3 and M4 were re-put and confirmed
+unchanged: no ecosystem integration, git is the backup with no runtime
+state, and the storage key stays `theme`.

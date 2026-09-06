@@ -89,13 +89,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                   |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round four: Phase 0 closed 2026-09-06 (S22-S31); Phase 1 and 2 next. Round three's Phase 10 retrospective is still open |
-| Last completed gate | Round four Phase 0 scope, 2026-09-06 (three forms)                                                                      |
-| Next gate           | Round four Phase 2 feature freeze; Phase 10 for round three (KT7, KT8, KT9) still owed                                  |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round)                       |
-| AFK mode            | off                                                                                                                     |
+| Field               | Value                                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round four: Phase 2 frozen 2026-09-06 (TH90-TH109); Phase 3 and 4 next. Round three's Phase 10 retrospective is still open |
+| Last completed gate | Round four Phase 2 freeze, 2026-09-06 (nineteen Essential, one Desired)                                                    |
+| Next gate           | Round four Phase 4 architecture freeze; Phase 10 for round three (KT7, KT8, KT9) still owed                                |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round)                          |
+| AFK mode            | off                                                                                                                        |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
