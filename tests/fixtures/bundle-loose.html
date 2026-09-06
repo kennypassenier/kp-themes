@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Bundle comparison — loose files</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="/css/retro-register.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/utilities.css" />
+    </head>
+    <body>
+        <!-- The two bundle fixtures carry byte-identical markup and differ
+             only in what they load: this one the eight loose files, the
+             other the two bundled ones. Anything that measures differently
+             between them is the bundle's own fault [TH106]. -->
+        <main class="kp-page kp-stack" data-test="page">
+            <button type="button" class="kp-button kp-button--primary kp-p-2xl" data-slot="button" data-test="button">Save</button>
+            <span class="kp-badge kp-fw-bold kp-tt-upper" data-test="badge">state</span>
+            <div class="kp-card kp-mb-lg" data-slot="card" data-test="card">
+                <table class="kp-table" data-test="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="kp-text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>One</td>
+                            <td class="kp-text-end" data-test="cell">42</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="kp-field" data-test="field">
+                <label class="kp-field__label" for="f">Name</label>
+                <input class="kp-field__input" id="f" type="text" />
+            </div>
+            <code class="kp-code-block" data-test="code">a-very-long-unbroken-key-that-must-wrap</code>
+            <div data-density="compact" data-test="compact">
+                <button type="button" class="kp-button" data-test="compact-button">Save</button>
+            </div>
+            <div data-kp-theme-picker data-test="picker">
+                <button type="button" data-kp-theme="dark" data-test="pick-dark">Dark</button>
+            </div>
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

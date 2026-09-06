@@ -142,7 +142,12 @@
         },
         "./css/retro-register": "./css/retro-register.css",
         "./css/layout": "./css/layout.css",
-        "./css/utilities": "./css/utilities.css"
+        "./css/utilities": "./css/utilities.css",
+        "./dist/css": "./dist/kp-themes.css",
+        "./dist/js": {
+            "types": "./js/auto.d.ts",
+            "default": "./dist/kp-themes.js"
+        }
     },
     "types": "./index.d.ts",
     "files": [
@@ -153,6 +158,7 @@
         "fx",
         "js",
         "css",
+        "dist",
         "themes",
         "gates",
         "ha",
@@ -164,7 +170,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -173,6 +179,9 @@
         "check:motion": "node gates/check-motion.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
         "test:browser": "playwright test",
+        "generate:bundle": "node gates/generate-bundle.mjs",
+        "check:bundle": "node gates/generate-bundle.mjs --check",
+        "check:migration": "node gates/check-migration.mjs",
         "generate:utilities": "node gates/generate-utilities.mjs",
         "check:utilities": "node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs",
         "generate:showcase": "node gates/generate-showcase.mjs",

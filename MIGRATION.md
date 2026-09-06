@@ -9,6 +9,66 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 3.1.1 to 3.2.0
+
+Nothing breaks. Everything here is an addition, and most of it is
+something a consumer wrote by hand and can now delete.
+
+### What you can delete
+
+The chassis kit wrote 71 lines of layout glue and 28 inline `style`
+attributes, and its own stylesheet said this was the layout the package
+did not ship. It ships now. If your project has a rule like the one on
+the left, the class on the right replaces it.
+
+| Your own rule                                | The package's class                                                                     |
+| -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| a centred column with a max width            | `.kp-page`                                                                              |
+| a flex column with a gap between children    | `.kp-stack`                                                                             |
+| a row of controls that wraps                 | `.kp-row`, with `.kp-row--end`, `.kp-row--start`, `.kp-row--between`, `.kp-row--nowrap` |
+| a responsive card grid                       | `.kp-autogrid`                                                                          |
+| a sidebar that drops below on narrow screens | `.kp-sidebar` with `.kp-sidebar__aside` and `.kp-sidebar__main`                         |
+| space above a block, except the first        | `.kp-section`                                                                           |
+| a narrow centred box                         | `.kp-center`                                                                            |
+| a readable measure for running text          | `.kp-prose`                                                                             |
+| secondary text in the muted colour           | `.kp-text-muted`                                                                        |
+| right-aligned or centred text                | `.kp-text-end`, `.kp-text-center`                                                       |
+| a monospace span                             | `.kp-mono`                                                                              |
+| a block of code on a card                    | `.kp-code-block`                                                                        |
+
+Spacing, gap, display, alignment, text and size utilities replace most of
+the remaining one-off rules: 115 of them, listed in
+[docs/UTILITIES.md](docs/UTILITIES.md). Every one is a single declaration
+on the theme's own scale.
+
+A busy control no longer needs a class of its own. Setting
+`aria-busy="true"` -- which you should be setting anyway, because that is
+what a screen reader reads -- now also dims the control and changes the
+cursor.
+
+### What is new
+
+- **A compact density mode.** `data-density="compact"` on any element
+  tightens everything inside it. Buttons stay above the 24px pointer
+  target.
+- **A scroll region for wide tables** that a keyboard can reach, in both
+  channels, plus `.kp-cell-break`, `.kp-cell-truncate`, `.kp-col-low` and
+  a card layout for the plain table through `data-kp-cards`.
+- **A dist bundle**: `dist/kp-themes.css` and `dist/kp-themes.js`, one
+  tag each instead of eight. The loose files stay exactly as they are.
+- **An unknown theme name is no longer silent.** It still falls back, but
+  it warns once per session and dispatches an event saying what was
+  asked for and what was applied. If a page of yours has silently been
+  showing the default theme, you will now hear about it.
+- **A documentation site**, with a page per component and the story of
+  every theme.
+
+### One repair
+
+Printing was broken between 3.1.0 and 3.2.0 for every theme: the print
+override lost to the theme's own tokens, so a dark theme printed dark. It
+is fixed. Nothing on your side changes.
+
 ## Coming from 3.1.0 to 3.1.1
 
 Nothing breaks. One theme's signature moved (S20).

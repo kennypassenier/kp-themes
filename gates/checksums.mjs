@@ -38,6 +38,8 @@ export const FILES = [
     'css/tailwind-bridge.css',
     'css/themes.css',
     'css/utilities.css',
+    'dist/kp-themes.css',
+    'dist/kp-themes.js',
     'js/auto.js',
     'js/colorpicker.js',
     'js/combobox.js',

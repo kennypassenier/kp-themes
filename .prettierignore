@@ -11,6 +11,11 @@ showcase/index.html
 showcase/diagnostics.html
 showcase/themes/
 
+# The dist bundle, written by gates/generate-bundle.mjs. esbuild's
+# output has its own shape; reformatting it would put the file and its
+# source permanently at odds.
+dist/
+
 # The documentation site, written by gates/generate-site.mjs. Its shape
 # is the generator's; reformatting it would put the file and its source
 # permanently at odds.

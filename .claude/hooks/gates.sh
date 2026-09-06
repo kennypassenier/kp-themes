@@ -41,6 +41,12 @@ node gates/check-layers.mjs
 echo "→ the utility API matches its source and its documented list (TH93)"
 node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 
+echo "→ the dist bundle matches its sources (TH106)"
+node gates/generate-bundle.mjs --check
+
+echo "→ the migration note points at classes that exist (TH108)"
+node gates/check-migration.mjs
+
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
 

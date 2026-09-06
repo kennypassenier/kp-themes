@@ -14,8 +14,12 @@
 // from there and never from globbing css/ and js/, which would find
 // exactly the files that are there and pass by construction.
 //
-// **What counts as copyable.** Every concrete export target under `css/`
-// or `js/`. Deliberately excluded, each for a reason:
+// **What counts as copyable.** Every concrete export target under `css/`,
+// `js/` or `dist/`. `dist/` joined the rule when the bundle arrived at R7:
+// it is two more files a consumer copies into a static directory, and
+// without the prefix they fell outside the rule silently -- the same
+// shape TH103 exists to prevent. Deliberately excluded, each for a
+// reason:
 //
 //   - the subpath patterns (`./components/*`, `./themes/*`, `./fx/*`):
 //     a pattern names a directory, and enumerating it means globbing,
@@ -38,7 +42,7 @@
 // manifest". A new export declared and not added — `"./js/locale":
 // "./js/locale.js"` — same sentence about js/locale.js, which is the
 // property TH103 asks for. `js/locale.js` added to FILES without an
-// export: "is in the manifest and is not an export under css/ or js/".
+// export: "is in the manifest and is not an export under css/, js/ or dist/".
 //
 // Usage: node gates/check-manifest.mjs
 
@@ -63,7 +67,7 @@ export function copyableExports(pkg) {
         const target = typeof entry === 'string' ? entry : entry.default;
         if (typeof target !== 'string' || target.includes('*')) continue;
         const path = target.replace(/^\.\//, '');
-        if (!/^(css|js)\//.test(path)) continue;
+        if (!/^(css|js|dist)\//.test(path)) continue;
         if (!/\.(css|js)$/.test(path)) continue;
         found.add(path);
     }
@@ -88,7 +92,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     for (const path of FILES) {
         if (!expected.includes(path)) {
             failed++;
-            console.error(`${path} is in the manifest and is not an export under css/ or js/ — remove it, or declare it in "exports".`);
+            console.error(`${path} is in the manifest and is not an export under css/, js/ or dist/ — remove it, or declare it in "exports".`);
         }
     }
 
