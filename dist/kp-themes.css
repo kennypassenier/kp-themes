@@ -4830,7 +4830,15 @@
     }
 
     .kp-shortcuts {
-        width: var(--kp-shortcuts-width, min(28rem, 92vw));
+        /* Border-box, and the default width raised by exactly what used to
+     * sit outside it — 40px of padding plus 2px of border on a 448px
+     * content box, so 30.625rem is the same 490px the sheet has always
+     * been on a wide screen. Content-box made it 373px on a 360px
+     * viewport and the page scrolled sideways [MR-R6-2, DI11]. The knob
+     * therefore means the total width now, which is what a width knob
+     * ought to mean. */
+        box-sizing: border-box;
+        width: var(--kp-shortcuts-width, min(30.625rem, 92vw));
         padding: 1.25rem;
         border: 1px solid var(--border-strong);
         border-radius: var(--radius, 0.5rem);

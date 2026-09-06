@@ -63,6 +63,17 @@ cursor.
 - **A documentation site**, with a page per component and the story of
   every theme.
 
+### One knob changed meaning
+
+`--kp-shortcuts-width` now sets the **total** width of the shortcut
+sheet, where it used to set the content width and leave the padding and
+border outside it. The default moved from `28rem` to `30.625rem` in the
+same breath, so the sheet is the same 490px it has always been on a wide
+screen — but it no longer runs off the side of a 360px phone, where it
+used to measure 373px and push the page sideways. If you set that knob
+yourself, add the 42px back or, better, set the width you actually want
+to see.
+
 ### One repair
 
 Printing was broken between 3.1.0 and 3.2.0 for every theme: the print
