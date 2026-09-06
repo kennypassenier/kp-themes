@@ -398,7 +398,7 @@ export const EXAMPLES = [
                         { class: 'kp-autogrid' },
                         el('Card', { title: 'Open invoices' }, el('p', { class: 'kp-mono' }, '128')),
                         el('Card', { title: 'Overdue' }, el('p', { class: 'kp-mono' }, '7')),
-                        el('Card', { title: 'Paid this month' }, el('p', { class: 'kp-mono' }, '1 284')),
+                        el('Card', { title: 'Paid this month' }, el('p', { class: 'kp-mono' }, '1284')),
                     ),
                 ),
             ),
@@ -474,7 +474,12 @@ export const EXAMPLES = [
                 el('Button', { variant: 'ghost' }, 'Export'),
             ),
             el('Table', {
-                columns: [{ label: 'Reference' }, { label: 'Customer' }, { label: 'Status' }, { label: 'Amount', className: 'kp-text-end' }],
+                columns: [
+                    { label: 'Reference' },
+                    { label: 'Customer' },
+                    { label: 'Status' },
+                    { label: 'Amount', className: 'kp-text-end kp-text-nowrap' },
+                ],
                 rows: [
                     [
                         el('code', { class: 'kp-mono', 'data-example': 'long-cell' }, LONG_VALUE),
