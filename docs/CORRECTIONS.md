@@ -996,3 +996,12 @@ About ten minutes — already exercised once, here.
 
 **9 · Review.** At kp-themes' Phase 10 retrospective for round three,
 together with KT7 and KT8.
+
+**Approved 2026-09-06, all nine fields "Klopt".** The measure in field 4
+stands as written: before performing by hand any action a project's own
+CI might already automate on a trigger about to fire, read that
+workflow's definition first. Recorded here for kp-themes; whether it
+generalizes to `~/Projects/dev-procedure/STANDING_RULES.md` is decided
+at the round's Phase 10 retrospective, together with KT7 and KT8 (field
+9). The measurement in field 7 stays open until kp-themes' next `v*` tag
+push.
