@@ -13,11 +13,14 @@
 // middle of a sentence and nothing would go red. So every construct
 // outside the seven throws, naming the file and the line.
 //
-// The measurement missed one thing, and it is quarantined rather than
-// waved through (AFK rule): nine underscore-emphasis spans across seven
-// documents. `options.emphasis` renders them as `<em>`; without it they
-// are refused like any other unknown syntax. See MR-R6-1 in
-// docs/MINI_ROUNDS.md.
+// There are eight constructs, not the seven T10 first wrote down. That
+// decision was a measurement, and the measurement had miscounted: bold
+// is 327 rather than 323, inline code 193 rather than 189, and
+// underscore emphasis -- nine spans across six documents -- was missed
+// entirely. T10 carries the corrected census in a dated amendment
+// (MR-R6-1, 2026-09-07). The boundary T10 is actually about is
+// unchanged: no tables, no fenced code, no raw HTML, and refuse rather
+// than pass through.
 //
 // Usage: node gates/site/markdown.mjs   (renders all 24 stories, prints the census)
 
@@ -29,7 +32,7 @@ const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 
 /** @typedef {{ text: string, line: number }} Line */
 /** @typedef {{ headings: number, bold: number, code: number, links: number, ordered: number, bullets: number, quotes: number, emphasis: number }} Census */
-/** @typedef {{ file: string, emphasis: boolean, counts: Census }} Ctx */
+/** @typedef {{ file: string, counts: Census }} Ctx */
 
 /** Thrown for syntax outside the seven. Its own class so a caller can tell it from a bug in here. */
 export class MarkdownRefusal extends Error {}
@@ -151,14 +154,6 @@ function renderInline(text, startLine, ctx) {
                 const end = i + 1 + closing.index;
                 const inner = text.slice(i + 1, end);
                 if (!inner.includes('\n')) {
-                    if (!ctx.emphasis) {
-                        refuse(
-                            ctx,
-                            line,
-                            `underscore emphasis (_${inner}_). T10 measured seven constructs and this is an eighth: nine spans across seven ` +
-                                'stories that the count missed. Quarantined as MR-R6-1 in docs/MINI_ROUNDS.md — pass { emphasis: true } to render it as <em>.',
-                        );
-                    }
                     out += `<em>${renderInline(inner, line, ctx)}</em>`;
                     ctx.counts.emphasis++;
                     i = end + 1;
@@ -337,12 +332,12 @@ function renderBlocks(lines, ctx) {
 
 /**
  * @param {string} source
- * @param {{ file?: string, emphasis?: boolean }} [options]
+ * @param {{ file?: string }} [options]
  * @returns {{ html: string, counts: Census }}
  */
 export function renderMarkdown(source, options = {}) {
     /** @type {Ctx} */
-    const ctx = { file: options.file ?? '<string>', emphasis: options.emphasis === true, counts: emptyCensus() };
+    const ctx = { file: options.file ?? '<string>', counts: emptyCensus() };
     const lines = source.split('\n').map((text, index) => ({ text: text.replace(/\s+$/, ''), line: index + 1 }));
     const html = renderBlocks(lines, ctx);
     return { html, counts: ctx.counts };
@@ -370,7 +365,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         const source = readFileSync(ROOT + path, 'utf8');
         const want = census(source);
         try {
-            const { counts } = renderMarkdown(source, { file: path, emphasis: true });
+            const { counts } = renderMarkdown(source, { file: path });
             for (const key of /** @type {(keyof Census)[]} */ (Object.keys(total))) {
                 total[key] += counts[key];
                 expected[key] += want[key];

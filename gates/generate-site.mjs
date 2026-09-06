@@ -36,13 +36,6 @@ const OUT = join(ROOT, 'site');
 /** @type {string[]} */
 const ORDER = JSON.parse(readFileSync(join(ROOT, 'themes/order.json'), 'utf8'));
 
-// MR-R6-1: nine spans across six anatomy documents use underscore
-// emphasis, an eighth construct T10's measurement missed. The renderer
-// refuses it by default; the site passes the flag so all 24 stories can
-// render at all. Provisional, pending the mini-round: the alternative is
-// rewriting those nine spans as bold and dropping the flag.
-const EMPHASIS = { emphasis: true };
-
 const UTILITY_COUNT = utilityNames().length;
 
 // What the published site needs beside the pages this generator writes:
@@ -89,7 +82,7 @@ function story(theme) {
         const after = source.indexOf('\n## ', start + 1);
         blocks.push(source.slice(start + heading.length + 5, after === -1 ? undefined : after).trim());
     }
-    return renderMarkdown(blocks.join('\n\n'), { file, ...EMPHASIS }).html;
+    return renderMarkdown(blocks.join('\n\n'), { file }).html;
 }
 
 /**

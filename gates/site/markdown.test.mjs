@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { census, MarkdownRefusal, renderMarkdown, storyPaths } from './markdown.mjs';
 
-/** @param {string} source @param {{ emphasis?: boolean }} [options] */
+/** @param {string} source @param {{ file?: string }} [options] */
 const html = (source, options = {}) => renderMarkdown(source, { file: 'test.md', ...options }).html;
 
 test('T10: a heading becomes an h element at its level', () => {
@@ -83,11 +83,20 @@ test('T10: syntax that opens and never closes is refused rather than half-render
     assert.throws(() => html('a [label](no-close'), /does not open a \[text\]\(url\) link/);
 });
 
-test('MR-R6-1: underscore emphasis is quarantined, not silently rendered', () => {
-    // T10 measured seven constructs and the count missed this eighth. The
-    // flag is the quarantine: off, it refuses and names the record.
-    assert.throws(() => html('a boundary has to be _lighter_ than the surface'), /underscore emphasis \(_lighter_\).*MR-R6-1/s);
-    assert.equal(html('be _lighter_ than', { emphasis: true }), '<p>be <em>lighter</em> than</p>');
+test('T10: underscore emphasis is one of the eight constructs [MR-R6-1]', () => {
+    // T10 first wrote down seven, on a census that had miscounted: bold
+    // 323 against a true 327, code 189 against 193, and these nine spans
+    // missed altogether. Kenny corrected the decision on 2026-09-07
+    // rather than rewriting nine words, because two of them are what
+    // emphasis is for and bold is not -- a foreign term (_bero-ai_) and
+    // contrastive stress (_is_).
+    assert.equal(html('be _lighter_ than'), '<p>be <em>lighter</em> than</p>');
+    assert.equal(html('the imported pigment — _bero-ai_, from Berlin'), '<p>the imported pigment — <em>bero-ai</em>, from Berlin</p>');
+    // An underscore inside a word is a literal underscore, not emphasis.
+    assert.equal(html('`TAB_CHANGE_EVENT` fires'), '<p><code>TAB_CHANGE_EVENT</code> fires</p>');
+    assert.equal(html('read TAB_CHANGE_EVENT here'), '<p>read TAB_CHANGE_EVENT here</p>');
+    // Asterisk emphasis stays refused: one spelling, not two.
+    assert.throws(() => html('a *starred* word'), /a single \*/);
 });
 
 test('T10: an underscore inside a word stays a literal underscore', () => {
@@ -99,7 +108,7 @@ test('TH102: all 24 stories render, and every construct the source holds comes o
     assert.equal(paths.length, 24);
     for (const path of paths) {
         const source = readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
-        const { html: rendered, counts } = renderMarkdown(source, { file: path, emphasis: true });
+        const { html: rendered, counts } = renderMarkdown(source, { file: path });
         // AR26 in miniature: the census comes from the source, so a
         // renderer that dropped a construct fails here rather than
         // publishing a shorter page.
