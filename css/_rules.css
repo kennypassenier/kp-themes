@@ -581,11 +581,13 @@ textarea:invalid {
         animation: kp-settle var(--fx-duration) var(--fx-ease) both;
     }
 
-    /* terminal — a block cursor after a heading, blinking the way a
-       terminal's does. One opposing change per second: well under the
-       three the flash threshold allows. */
-    [data-theme='terminal'] h1::after,
-    [data-theme='terminal'] h2::after {
+    /* terminal — since 3.1.1: the block cursor used to sit after every
+       h1 and h2 on the page, which read as a screensaver rather than a
+       flourish [Kenny, 2026-09-06]. It moves to the one place a
+       terminal cursor actually means something: the label of the
+       field a person is currently typing into. One opposing change
+       per second: well under the three the flash threshold allows. */
+    [data-theme='terminal'] .kp-field:focus-within .kp-field__label::after {
         content: '\2588';
         margin-inline-start: 0.15em;
         color: var(--primary);

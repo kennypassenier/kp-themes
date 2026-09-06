@@ -86,13 +86,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                             |
-| ------------------- | ------------------------------------------------------------------------------------------------- |
-| Current phase       | Round three: Phase 9 closed — 3.1.0 released 2026-09-05; Phase 10 (retrospective) next            |
-| Last completed gate | Release go for v3.1.0 (third look), 2026-09-05                                                    |
-| Next gate           | Phase 10 retrospective for round three (KT7, KT8, the AFK lessons)                                |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round) |
-| AFK mode            | off                                                                                               |
+| Field               | Value                                                                                                                                                                                                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Current phase       | Round three: Phase 9 closed — 3.1.0 released 2026-09-05; Phase 10 (retrospective) next                                                                                                                                                                             |
+| Last completed gate | Release go for v3.1.0 (third look), 2026-09-05                                                                                                                                                                                                                     |
+| Next gate           | Phase 10 retrospective for round three (KT7, KT8, the AFK lessons)                                                                                                                                                                                                 |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round); patch TH89 (3.1.1, terminal's cursor onto the focused field) awaiting Kenny's merge/release go on [PR #16](https://github.com/kennypassenier/kp-themes/pull/16) |
+| AFK mode            | off                                                                                                                                                                                                                                                                |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

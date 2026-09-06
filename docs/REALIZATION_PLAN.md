@@ -227,6 +227,7 @@ load is exactly what a file check reports as success.
 | Round three R0–R5 (AFK) | 2026-09-05 | built on branch `round-three-scope`, commits `8ac3819` → `7ca453d`; the combined report and the release go are the next form | this document, `docs/CORRECTIONS.md` (KT7) |
 | Round three Phase 5 | 2026-09-05 | six milestones kept as order of work, one release 3.1.0 after R5, Google Fonts in the showcase only, AFK from R0, enforcement unchanged, TH88 added | this document |
 | AFK report L1-L10  | 2026-09-04 | L1, L3, L4, L8, L9, L10 signed off; L2, L5, L6, L7 answered "toon mij dit"; both queued deviations go to their own mini-rounds; Pages switched on | this document, `docs/MINI_ROUNDS.md`               |
+| Patch TH89 | 2026-09-06 | Kenny, outside a phase gate: terminal's block cursor moved off every h1/h2 onto the focused field's label, 3.1.1 | `docs/FEATURES.md`, `CHANGELOG.md`, `MIGRATION.md` |
 
 ## Status
 

@@ -9,6 +9,15 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 3.1.0 to 3.1.1
+
+Nothing breaks. One theme's signature moved (S20).
+
+- **Terminal's blinking block cursor** no longer sits after every `h1`
+  and `h2` on the page. It now appears once, after the label of
+  whichever field currently has focus. A page with no focused field
+  shows no cursor, where before every heading always showed one.
+
 ## Coming from 3.0.0 to 3.1.0
 
 Nothing breaks. Thirteen themes, two knobs and a register arrived; every
