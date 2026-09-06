@@ -179,7 +179,11 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/css/components`      | the component classes                                 |
 | `@kp-soft/themes/css/register`        | the cyberpunk HUD chrome, opt-in                      |
 | `@kp-soft/themes/css/retro-register`  | retro's raised and sunken bevels, opt-in              |
+| `@kp-soft/themes/css/layout`          | the sixteen layout classes                            |
+| `@kp-soft/themes/css/utilities`       | the 115 utility classes                               |
 | `@kp-soft/themes/css/tailwind-bridge` | for Tailwind v4 consumers                             |
+| `@kp-soft/themes/dist/css`            | all of the above in one stylesheet                    |
+| `@kp-soft/themes/dist/js`             | js/auto and everything it imports, in one module      |
 | `@kp-soft/themes/js/core`             | the theme state, framework-free                       |
 | `@kp-soft/themes/js/picker`           | the framework-free picker                             |
 | `@kp-soft/themes/js/components`       | the DI4 and DI10 contracts                            |
@@ -187,6 +191,7 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/js/registry`         | the generated theme list                              |
 | `@kp-soft/themes/js/no-flash`         | the first-paint snippet                               |
 | `@kp-soft/themes/js/strings`          | the dictionary and its defaults                       |
+| `@kp-soft/themes/js/tables`           | the keyboard-reachable table scroll region            |
 | `@kp-soft/themes/js/diagnostics`      | which half of a vendored pair is behind               |
 
 ## Consume the JavaScript
