@@ -5,10 +5,13 @@
 points at so his apps look like one family. Web today; GUI (Avalonia) and
 TUI (Ratatui) later.
 
-**State:** 3.1.0 is released (tag `v3.1.0` on `482e575`, 2026-09-05,
+**State:** 3.1.1 is released (tag `v3.1.1` on `14c0697`, 2026-09-06,
 with `SHA256SUMS`) and live on GitHub Pages — twenty-four themes (thirteen new, chosen from
 twenty-one candidates in `docs/THEME_CANDIDATES.md`), two new knobs, a
 second register, and a showcase that compares two themes side by side.
+3.1.1 is a one-line patch on top: terminal's block cursor moved off
+every heading onto the focused field's label (TH89), outside a phase
+gate, on Kenny's direct request.
 The package began as an extraction from kp-soft (commit `2983abb`,
 2026-09-02); Phase 0 approved that base for use but explicitly **not** the
 picker — see S17 in [docs/SCOPE.md](docs/SCOPE.md); the picker was
@@ -86,13 +89,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Current phase       | Round three: Phase 9 closed — 3.1.0 released 2026-09-05; Phase 10 (retrospective) next                                                                                                                                                                             |
-| Last completed gate | Release go for v3.1.0 (third look), 2026-09-05                                                                                                                                                                                                                     |
-| Next gate           | Phase 10 retrospective for round three (KT7, KT8, the AFK lessons)                                                                                                                                                                                                 |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round); patch TH89 (3.1.1, terminal's cursor onto the focused field) awaiting Kenny's merge/release go on [PR #16](https://github.com/kennypassenier/kp-themes/pull/16) |
-| AFK mode            | off                                                                                                                                                                                                                                                                |
+| Field               | Value                                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round three: Phase 9 closed — 3.1.0 released 2026-09-05, patch 3.1.1 released 2026-09-06; Phase 10 (retrospective) next |
+| Last completed gate | Release 3.1.1 ("Merge en meteen taggen"), 2026-09-06                                                                    |
+| Next gate           | Phase 10 retrospective for round three (KT7, KT8, KT9, the AFK lessons)                                                 |
+| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round)                       |
+| AFK mode            | off                                                                                                                     |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

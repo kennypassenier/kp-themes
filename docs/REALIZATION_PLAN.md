@@ -228,6 +228,7 @@ load is exactly what a file check reports as success.
 | Round three Phase 5 | 2026-09-05 | six milestones kept as order of work, one release 3.1.0 after R5, Google Fonts in the showcase only, AFK from R0, enforcement unchanged, TH88 added | this document |
 | AFK report L1-L10  | 2026-09-04 | L1, L3, L4, L8, L9, L10 signed off; L2, L5, L6, L7 answered "toon mij dit"; both queued deviations go to their own mini-rounds; Pages switched on | this document, `docs/MINI_ROUNDS.md`               |
 | Patch TH89 | 2026-09-06 | Kenny, outside a phase gate: terminal's block cursor moved off every h1/h2 onto the focused field's label, 3.1.1 | `docs/FEATURES.md`, `CHANGELOG.md`, `MIGRATION.md` |
+| Release 3.1.1 | 2026-09-06 | Kenny: "Merge en meteen taggen". PR #16 merged (`14c0697`), tag `v3.1.1` pushed; the automated Release workflow drafted a release from `npm run checksums`'s ten files, and a published release was built to match that same set (four assets: `SHA256SUMS`, `MIGRATION.md`, `css/themes.css`, `css/components.css`) after a first attempt shipped with only three hand-picked checksums instead of the script's ten and was deleted and rebuilt correctly. All ten checksums verified against the tagged tree; GitHub Pages confirmed live with the fix | <https://github.com/kennypassenier/kp-themes/releases/tag/v3.1.1> |
 
 ## Status
 
