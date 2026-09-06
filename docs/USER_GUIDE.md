@@ -336,7 +336,8 @@ the flash threshold, so they are literals rather than knobs:
 A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+). Firefox and older browsers draw that list themselves, in the platform's highlight colour — a known limitation since 3.1.0, not a bug in a theme.
 
 Each theme also has at most one gesture of its own: a rule that draws
-itself under a heading in formal, a blinking block cursor in terminal, a
+itself under a heading in formal, a blinking block cursor after the label
+of the field a person is typing into in terminal (3.1.1), a
 badge that settles in pastel, a drifting contour layer in topo, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in

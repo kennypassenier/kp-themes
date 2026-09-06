@@ -207,6 +207,7 @@ built first.
 | TH86 | Pattern fills for status plates and chart colours | Desired | `--chart-pattern-1..5` and outline/dash badge variants, as tokens per DI9. Test bar: the seven badges of `mono` are pairwise distinguishable with hue removed |
 | TH87 | Retro register stylesheet — raised/sunken bevel on button, input and card, title bar behind h1 | Desired | decoration around a gated `--border-strong`, never instead of it. Test bar: DI1 still passes on every control with the register loaded |
 | TH88 | The showcase compares two themes side by side | Essential | Kenny, 2026-09-05, at the Phase 5 gate: the page had become "unwieldy" for its purpose, comparing themes. Every element is still rendered; the page splits vertically into a left and a right half, each with its own picker at the top choosing that half's theme, and the two halves scroll together. The picker changes this needs are showcase-only — an exception, not a package feature. Test bar: both halves render every specimen, the left picker changes only the left half and the right picker only the right, and scrolling one side scrolls the other by the same amount |
+| TH89 | Terminal's block cursor scoped to the focused field | Essential | Kenny, 2026-09-06: the cursor after every h1/h2 "is een beetje 'too much'" on a page with more than one heading — 3.1.1, outside the round-three rating batch. Test bar: `.kp-field:focus-within .kp-field__label::after` carries the glyph only while a descendant control has focus; no heading carries it |
 
 ## Decisions that are not ratings
 

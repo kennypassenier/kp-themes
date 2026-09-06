@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.1.1 — 2026-09-06
+
+**Terminal's cursor moves off the headings.** The blinking block after
+every `h1` and `h2` read as a screensaver rather than a flourish once a
+page had more than one heading on it. It now appears once, after the
+label of the field a person is currently focused in — the one place a
+terminal cursor actually marks something.
+
+### Changed
+
+- **Terminal's block-cursor signature** now renders on
+  `.kp-field:focus-within .kp-field__label::after` instead of on every
+  `h1::after`/`h2::after`. Same glyph, colour and blink timing (DI5's
+  flash-threshold literal, unchanged); nothing else about the theme's
+  tokens moved (S20).
+
 ## 3.1.0 — 2026-09-05
 
 **Thirteen more themes.** Round three researched eleven candidates and
