@@ -167,11 +167,14 @@ export const FAMILIES = [
     {
         id: 'text',
         title: 'Text',
-        note: 'No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. No font-size family: the typography scale is not a token yet, and the three knobs that look like one disagree about their own default. Quarantined as R0-TYPO. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities.',
+        note: 'No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. The font-size family reads the three steps the components actually use; there are three rather than six because the scale has three, and inventing steps nothing uses would be inventing values. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities.',
         /** @returns {Rule[]} */
         classes: () => {
             /** @type {Rule[]} */
             const out = [];
+            for (const step of ['xs', 'sm', 'md']) {
+                out.push([`kp-fs-${step}`, [['font-size', `var(--kp-text-${step})`]]]);
+            }
             for (const [name, value] of [
                 ['normal', '400'],
                 ['medium', '500'],

@@ -1,6 +1,6 @@
 # The utility API
 
-115 single-purpose classes in `@layer kp.utilities`, the last layer, so a
+118 single-purpose classes in `@layer kp.utilities`, the last layer, so a
 utility beats a component's own value without `!important` (AR17). They
 are generated from `gates/generate-utilities.mjs`; **this list is written
 by hand**, and `gates/check-utilities.mjs` lays the two beside each other
@@ -109,12 +109,17 @@ as well.
 
 ## Text
 
-There is **no font-size family**. The typography scale is not a token
-yet, and the three knobs that look like one disagree about their own
-default: `--kp-text-sm` falls back to `0.8125rem` in twenty rules and to
-`0.875rem` in five. Declaring it would move one of those groups.
-That is R0-TYPO, quarantined at R0 and still open; the font-size
-family waits for it.
+The font-size family reads the three steps the components actually use.
+There are three rather than six because the scale has three: `xs` at
+0.75rem, `sm` at 0.8125rem and `md` at 1rem. Inventing further steps
+that nothing uses would be inventing values.
+
+Those three names used to mean two things each — `--kp-text-sm` fell
+back to `0.8125rem` in twenty rules and to `0.875rem` in five — which is
+why they could not be declared as tokens. R0-TYPO settled it on
+2026-09-07: the six deviating rules got their own knobs at the values
+they already had, so every scale name now means one thing and no text
+moved.
 
 Text alignment, the muted colour, the mono face, the prose measure and
 the code block are **layout classes** (TH91), not utilities:
@@ -123,6 +128,9 @@ the code block are **layout classes** (TH91), not utilities:
 
 | Class | Property and value |
 | ----- | ------------------ |
+| `.kp-fs-xs` | `font-size: var(--kp-text-xs)` |
+| `.kp-fs-sm` | `font-size: var(--kp-text-sm)` |
+| `.kp-fs-md` | `font-size: var(--kp-text-md)` |
 | `.kp-fw-normal` | `font-weight: 400` |
 | `.kp-fw-medium` | `font-weight: 500` |
 | `.kp-fw-semibold` | `font-weight: 600` |

@@ -103,7 +103,7 @@
             <main class="kp-sidebar__main kp-page" id="main">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Utility API</h1>
-                    <p class="kp-prose">115 single-purpose classes in the last cascade layer, so a utility beats a component value without an override. There are no breakpoint variants; the layout containers do responsive work instead.</p>
+                    <p class="kp-prose">118 single-purpose classes in the last cascade layer, so a utility beats a component value without an override. There are no breakpoint variants; the layout containers do responsive work instead.</p>
                 </header>
                 <section class="kp-section" data-sc-section="spacing" id="spacing">
                     <h2 class="kp-fw-semibold">Spacing</h2>
@@ -223,8 +223,11 @@
                 </section>
                 <section class="kp-section" data-sc-section="text" id="text">
                     <h2 class="kp-fw-semibold">Text</h2>
-                    <p class="kp-prose">No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. No font-size family: the typography scale is not a token yet, and the three knobs that look like one disagree about their own default. Quarantined as R0-TYPO. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities.</p>
+                    <p class="kp-prose">No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. The font-size family reads the three steps the components actually use; there are three rather than six because the scale has three, and inventing steps nothing uses would be inventing values. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities.</p>
                     <div class="sc-example__live"><table class="kp-table"><thead><tr><th>Class</th><th>What it sets</th></tr></thead><tbody>
+                            <tr><td><code>.kp-fs-xs</code></td><td><code>font-size: var(--kp-text-xs)</code></td></tr>
+                            <tr><td><code>.kp-fs-sm</code></td><td><code>font-size: var(--kp-text-sm)</code></td></tr>
+                            <tr><td><code>.kp-fs-md</code></td><td><code>font-size: var(--kp-text-md)</code></td></tr>
                             <tr><td><code>.kp-fw-normal</code></td><td><code>font-weight: var(--kp-fw-normal, 400)</code></td></tr>
                             <tr><td><code>.kp-fw-medium</code></td><td><code>font-weight: var(--kp-fw-medium, 500)</code></td></tr>
                             <tr><td><code>.kp-fw-semibold</code></td><td><code>font-weight: var(--kp-fw-semibold, 600)</code></td></tr>

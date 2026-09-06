@@ -133,7 +133,7 @@
     [data-kp-theme-status] {
         margin: 0.5rem 0 0;
         color: var(--destructive);
-        font-size: var(--kp-text-sm, 0.875rem);
+        font-size: var(--kp-theme-status-size, 0.875rem);
     }
 
     /* --- Showing data [TH33] --------------------------------------------
@@ -221,7 +221,7 @@
         padding: 1.5rem clamp(1rem, 4vw, 3rem);
         border-top: 1px solid var(--border);
         color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.875rem);
+        font-size: var(--kp-footer-size, 0.875rem);
     }
 
     /* An error page is a message, not a wall: the destructive colour names
@@ -540,7 +540,7 @@
     }
 
     .kp-field__label {
-        font-size: var(--kp-text-sm, 0.875rem);
+        font-size: var(--kp-field-label-size, 0.875rem);
         font-weight: 600;
     }
 
@@ -671,7 +671,7 @@
         display: flex;
         align-items: baseline;
         gap: 0.5rem;
-        font-size: var(--kp-text-sm, 0.875rem);
+        font-size: var(--kp-field-option-size, 0.875rem);
     }
 
     .kp-field__check {
@@ -867,7 +867,7 @@
     .kp-dialog__description {
         margin: 0 0 var(--kp-space-md);
         color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.875rem);
+        font-size: var(--kp-dialog-description-size, 0.875rem);
     }
 
     .kp-dialog__close {
@@ -1461,7 +1461,7 @@
     .kp-shortcuts__group-label {
         display: block;
         margin: var(--kp-space-sm) 0 var(--kp-space-xs);
-        font-size: var(--kp-text-xs, 0.6875rem);
+        font-size: var(--kp-shortcuts-label-size, 0.6875rem);
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;

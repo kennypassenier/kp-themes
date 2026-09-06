@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 56, 'AR21 counted 56 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 62, 'AR21 counted 62 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -147,8 +147,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // R8 added four: the form gap, the field gap and the two halves of a
     // table cell's padding, each a literal put on the spacing scale so
     // the density mode could reach it. --kp-space-lg came with them, as
-    // the first use of that step in this stylesheet.
-    assert.equal(result.readCount, 56);
+    // the first use of that step in this stylesheet. R0-TYPO then added
+    // six more: the rules that wanted a text size the scale name did not
+    // mean got their own knob, so every scale name means one thing.
+    assert.equal(result.readCount, 62);
     assert.deepEqual(result.unread, []);
 });
 

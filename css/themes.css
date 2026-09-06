@@ -121,6 +121,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
@@ -225,6 +228,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -329,6 +335,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
@@ -437,6 +446,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(315, 95%, 64%);
@@ -541,6 +553,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
@@ -645,6 +660,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -749,6 +767,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
@@ -853,6 +874,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(220, 100%, 30%);
@@ -957,6 +981,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 55%, 32%);
@@ -1061,6 +1088,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(190, 80%, 62%);
@@ -1165,6 +1195,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(28, 85%, 58%);
@@ -1270,6 +1303,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(0, 0%, 7%);
@@ -1374,6 +1410,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(43, 65%, 52%);
@@ -1478,6 +1517,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(38, 50%, 58%);
@@ -1582,6 +1624,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 100%, 58%);
@@ -1686,6 +1731,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(36, 91%, 55%);
@@ -1790,6 +1838,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(215, 51%, 25%);
@@ -1894,6 +1945,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 70%, 38%);
@@ -1998,6 +2052,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 72%, 60%);
@@ -2102,6 +2159,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(0, 0%, 14%);
@@ -2206,6 +2266,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(240, 100%, 25%);
@@ -2310,6 +2373,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 95%, 45%);
@@ -2414,6 +2480,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(43, 67%, 50%);
@@ -2518,6 +2587,9 @@
     --kp-space-lg: 1rem;
     --kp-space-xl: 1.5rem;
     --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 12%, 17%);

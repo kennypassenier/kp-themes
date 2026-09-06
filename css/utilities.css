@@ -375,7 +375,19 @@
         align-self: stretch;
     }
 
-    /* Text — No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. No font-size family: the typography scale is not a token yet, and the three knobs that look like one disagree about their own default. Quarantined as R0-TYPO. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities. */
+    /* Text — No `.kp-truncate`: css/components.css already declares it, with a display and a max-width this family would drop. The collision gate found that. The font-size family reads the three steps the components actually use; there are three rather than six because the scale has three, and inventing steps nothing uses would be inventing values. Alignment, the muted colour, the mono face and the prose measure are layout classes (TH91), not utilities. */
+    .kp-fs-xs {
+        font-size: var(--kp-text-xs);
+    }
+
+    .kp-fs-sm {
+        font-size: var(--kp-text-sm);
+    }
+
+    .kp-fs-md {
+        font-size: var(--kp-text-md);
+    }
+
     .kp-fw-normal {
         font-weight: var(--kp-fw-normal, 400);
     }
