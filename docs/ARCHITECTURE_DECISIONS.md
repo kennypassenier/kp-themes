@@ -276,6 +276,15 @@ stylesheet has been that file's recognition point for as long as it has
 existed; moving it buys nothing. Cheap courtesy rather than an obligation
 — AR0 means no other project's tooling is our responsibility.
 
+**Amended 2026-09-06 (round four, AR25).** The comment stays; a machine
+readable version is added beside it. The generated stylesheet now also
+declares `--kp-themes-version` on `:root`, because the mismatch this
+project actually needs to detect — a vendored stylesheet from one version
+beside JavaScript from another — lives on a consumer's page, and a comment
+is the one place JavaScript cannot look. The reasoning above was right
+about banners and wrong about the reader: it assumed the reader was a
+person.
+
 ## AR11 · The swatch reads the live theme colours
 
 `hooks/use-theme.js` carries the background, foreground and primary colour
@@ -365,3 +374,264 @@ persisting fails, say so (AR6) rather than leaving the page and the memory
 disagreeing in silence. A generation run: the unit is the whole run, and
 the recovery is running it again (AR3), not a promise of atomicity the
 filesystem does not offer for a set of files.
+
+---
+
+# Round four (2026-09-06)
+
+Phase 3 added T10–T13; Phase 4 added AR17–AR26 after an
+`architecture-critic` pass that found eight blocking objections, four of
+them demonstrated in a browser rather than argued. Where the critic was
+simply right and nothing was open to choose, the decision below already
+carries the repair; where reasonable people could differ, Kenny decided
+and the counter-argument is recorded with the decision.
+
+## T10 · The theme stories are rendered by a renderer we own
+
+Measured across the 24 `themes/*/anatomy.md` documents: 323 bold spans,
+189 inline code spans, 128 headings, 97 ordered items, 76 bullets, 54
+quotes, 26 links — and zero tables, zero fenced code blocks. Seven
+constructs, none of them the hard ones.
+
+So: an own renderer for exactly those seven, and it **refuses** anything
+else with the file and line rather than passing it through as literal
+characters. A renderer that silently emits unknown syntax is the same
+silent fallback AR25 exists to remove. T6 is untouched: no dependency.
+
+## T11 · The documentation site extends the generators that exist
+
+Seven generators already work this way — the showcase, the 24 fixtures,
+the theme stylesheet, the registry, the Home Assistant themes, the type
+declarations — all plain Node and template strings, all covered by the
+"generated file differs from its source" gate. A static site generator
+would give navigation for free and cost a large dev dependency with its
+own template language, in a project with zero dependencies. The plumbing
+is written here instead.
+
+## T12 · Code snippets are coloured by a small tokenizer reading tokens
+
+A third-party highlighter brings its own palette, and this project has a
+test (KT8) that fails a page painting a colour that is not the theme's —
+so any library would need remapping onto tokens anyway, and the library
+would then be the smaller half of the work. Instead: a small tokenizer
+for the level a snippet needs, colouring from `--chart-1`, `--chart-2`
+and `--muted-foreground`, so code is green in terminal and gold in tazhib
+like everything else on the page.
+
+## T13 · The targets stand; GitHub Pages becomes a named environment
+
+T8 and T9 are unchanged. Round four adds a fourth environment to T9's
+table: **GitHub Pages**, which has its own fonts and its own scrollbars.
+Not theoretical — round three found the CI runner had fonts and
+scrollbars the PC did not, and two tests went red there that were green
+locally.
+
+## AR17 · The cascade is layered, and a gate proves a utility wins
+
+The draft said utilities load last and therefore win. That is true only at
+equal specificity, and the specificity is not equal: the critic measured,
+in this project's own browser, that `<td class="kp-text-end">` stays on
+`start`, `.kp-p-0` keeps its 8px by 10px padding and `.kp-gap-lg` stays at
+8px, because `.kp-table td` and `.kp-breadcrumb ol` outrank a single-class
+utility whatever the file order. The critic counted 44 such rules in
+`css/components.css`; a narrower re-count here confirmed twelve of one
+shape. Right-aligning a numeric column — the most common use the utility
+API will ever have — did nothing at all.
+
+**Decision:** cascade layers. `@layer kp.components, kp.layout,
+kp.utilities;` puts the order beyond specificity, which is exactly what
+the mechanism exists for, and AR15's baseline covers it. There is no
+`@layer` anywhere in `css/` today, so this is a greenfield choice rather
+than a migration.
+
+**The consequence, taken deliberately:** a consumer's own unlayered CSS
+then wins over everything this package puts in a layer, components
+included. For a package whose whole posture is that a consumer overrides
+it, that is the right default — but it is a decision, not a side effect,
+and it belongs in the user guide.
+
+**And it gets a gate**, because a rule added later at (0,1,1) would break
+a utility silently: for every generated utility, a browser test asserts it
+wins on at least one representative element per component family.
+
+## AR18 · One scale, pinned where it already stands
+
+The scale is declared once per theme in the token source, and the layout
+classes, the generated utilities and the Tailwind bridge all read it. The
+bridge's `@theme` block is **generated** from that source rather than
+hand-kept — the critic showed the draft's claim that "adding a step means
+editing one file" was false while the bridge stayed authored and ungated.
+
+`--kp-space-xs`, `-sm` and `-md` are **pinned to the values they have as
+fallbacks today** — 0.25, 0.5 and 0.75 rem — and the new steps are added
+around them. Round four is otherwise additive, and declaring the tokens
+with different values would silently move spacing in sixteen places in
+`css/components.css` in a minor release, against S20. Whoever wants a
+differently designed scale gets it in 4.0.0, where the other break
+already waits. Once the tokens exist, the sixteen uses lose their
+fallbacks, so a consumer copying `components.css` without the matching
+`themes.css` fails loudly rather than rendering a third set of values.
+
+## AR19 · A descriptor per unit, and the example is the snippet
+
+One descriptor per documented unit: id, **kind** (component, module or
+React-only wrapper — the critic found the draft could not express a unit
+with no framework-free markup), title, intro, when-to-use, examples, and
+the machine-sourced sections of AR21.
+
+The mechanism at its heart survives untouched: the page renders the
+example's markup and prints that same string beneath it. One artefact,
+so the live example and the snippet cannot drift.
+
+## AR20 · The channel comparison is narrowed, and honestly named
+
+The draft compared server-rendered React against the framework-free
+markup and called it proof that both channels agree. It is not: the
+framework-free markup is a string the same person writes in the same
+sitting as the React example, so the comparison proves that person was
+consistent. The critic also demonstrated four categories of legitimate
+difference at once — attribute order, empty attributes, style
+serialisation, letter case — which would put an exception on every page
+on day one.
+
+**Decision:** compare **class names and role/ARIA attributes per element
+in document order, and nothing else.** That is exactly what AR7 promises,
+it is immune to all four noise categories, and it already finds a real
+defect shipped in 3.1.0: the framework-free alert writes its body in a
+bare `<span>` while React writes `<span class="kp-alert__body">`, and that
+class carries `flex: 1`.
+
+It is documentation hygiene, not parity proof. AR7's behaviour suite
+remains the only thing that proves the two channels agree, and this
+decision says so out loud so nobody later reads AR20 and concludes the
+suite is redundant. Exceptions live in the gate as a central dictionary
+with a reason each — never in the descriptors — and the gate reports how
+many pairs it compared and how many it excused. The React examples live
+in real files inside `jsconfig.json`'s include, so `npm run check:types`
+type-checks them; the critic demonstrated that a wrong prop name in a
+documented example (`variant` where the prop is `flavour`) otherwise
+becomes a bogus DOM attribute with no error anywhere.
+
+## AR21 · Every documented fact comes from a source that can be checked
+
+Four machine sources, one human section:
+
+- **Props** from the generated `.d.ts`, not from the `@typedef` — tsc has
+  already resolved the intersection with `HTMLAttributes`, the ref and the
+  optionality, and `gates/check-types.mjs` already fails when those files
+  drift. Reading the JSDoc means writing a second parser that will
+  disagree with tsc.
+- **Attributes** from the framework-free modules. The critic found 83
+  distinct `data-kp-*` attributes — the framework-free channel's props —
+  which the draft documented nowhere. That is the channel kyu, Almanac and
+  the chassis kit actually use.
+- **Events** from the exported constants (`TAB_CHANGE_EVENT`,
+  `COMMIT_EVENT`, …), which are already machine-readable.
+- **Knobs** from the 51 `--kp-*` custom properties the stylesheet reads.
+
+The human section is what a person must write: what it is, and when to use
+it. A descriptor may not restate a machine-sourced fact; the gate refuses
+it.
+
+**One new check falls out of this.** Defaults live in prose ("Default
+true.") and in the destructuring (`wrap = true`) and can disagree today
+with nothing to notice. The truth gate compares them.
+
+## AR22 · The site is committed, deterministic, and assembled once
+
+The draft proposed an atomic write and thereby argued against AR3 without
+saying so. AR3 stands: determinism is the property that matters, and the
+recovery from a half-finished run is running it again — which is also the
+only environment where a half-finished run can happen, since CI always
+starts from a clean checkout.
+
+So: the generated site is **committed**, like the showcase and the 24
+fixtures, and the existing "generated file differs from its source" gate
+covers all sixty pages. `.github/workflows/pages.yml` stops assembling a
+site from its own list of directories and uploads only what the generator
+wrote — the critic pointed out that two lists of what the site consists of
+means the CI one ships.
+
+## AR23 · The layout and utility names are contract from 3.2.0
+
+`.kp-page`, `.kp-stack`, `.kp-row`, `.kp-autogrid`, `.kp-sidebar`,
+`.kp-section`, `.kp-center`, the text utilities and every generated
+`kp-` utility carry the same semver promise as the component classes.
+They are proven on the ten example pages before the release, which is the
+evidence the critic asked for, gathered earlier in the round rather than
+after it.
+
+**`.kp-grid` stays the movable dashboard grid** (`css/components.css:2198`,
+TH56, shipped since 1.2.0). The display utility is `.kp-d-grid`. A
+**collision gate** compares every generated name against the 170 `.kp-`
+names already in the component stylesheet and reports the count, so this
+cannot happen again quietly.
+
+The site's own chrome keeps the `sc-` prefix. And — the critic's sharpest
+catch here — the site's stylesheet is **scaffolding** in the
+`gates/check-layers.mjs` sense: it is inlined beside live examples on 45
+pages, which is KT3's fault at six times the scale. The SCAFFOLDING list
+is derived rather than hand-kept.
+
+## AR24 · Container queries, and the one thing they cannot do
+
+A container query styles a container's **contents**, never the container
+itself — demonstrated: a grid with a container query on itself keeps its
+three columns at 300px while its child gets the narrow form. The rules
+that matter for the movable grid (`css/components.css:2227`) and the nav
+bar sit on that element, so converting them needs a wrapper element in
+markup that kyu, Almanac and the chassis kit hand-write in Rust
+templates.
+
+**Decision (Kenny, against Claude's recommendation): convert everything,
+and TH104 moves to 4.0.0** with a migration note for the three Rust
+projects. The alternative — two mechanisms side by side — is what TH104's
+own text forbids, and Kenny chose the honest version over the convenient
+one. `docs/FEATURES.md` carries the dated amendment.
+
+`container-type: inline-size` applies inline-axis containment, so it
+changes how an element sizes to its contents. Each element that gets it is
+measured before and after, `.kp-table-wrap` first, since TH95 is repairing
+that same wrapper in this round.
+
+## AR25 · The fallback is loud in four places, once per session, and the version is readable
+
+The draft put the warning in `applyTheme`. That function never sees an
+unknown name: `asTheme` returns null inside `storedTheme` and
+`currentTheme`, which then apply `?? DEFAULT_THEME` — so the name is gone
+before anything could warn. Shipped as drafted, TH97 would have passed its
+own drill while Almanac still failed silently.
+
+**All four sites warn**: `storedTheme`, `currentTheme`, `applyTheme` and
+the cross-tab handler.
+
+**Once per session, and the stored value is left alone.** In a
+server-rendered dashboard every click is a page load; warning on each one
+makes any consumer listening to the event unusable, and persisting the
+fallback destroys a preference that would work again after the next
+deployment.
+
+**The version becomes readable** (AR10, amended above): the generated
+stylesheet declares `--kp-themes-version` on `:root`, the registry carries
+the same constant, and the two are compared in the browser. The gate
+comparing the registry to `package.json` can never fail inside this
+repository — both come from the same commit — and the mismatch that
+matters only exists on a consumer's page.
+
+## AR26 · Every new gate says what it expected to check
+
+AR8 applied to round four's seven new gates: the overflow-and-rhythm gate,
+the four documentation gates, the utility-parity gate, the theme-story
+gate, the manifest gate, the migration-note gate and the inline-style
+gate. Each reports the number it expected, and that number comes from the
+**sources** — the class families in `css/components.css`, the exports in
+`components/*.jsx`, the entries in `themes/order.json` — never from
+globbing the directory the generator just wrote, which would always find
+exactly what was written and always pass.
+
+Round four's new thresholds are configuration, not literals: the viewport
+widths (320, 768, 1280), the minimum gap the rhythm check accepts, and the
+utility scale's step count go into `gates/config.json` with their reason.
+The query thresholds that CSS cannot read from a custom property stay
+pinned constants in one declared list, counted by a gate, the way
+`css/components.css:1585` already handles the one that exists today.
