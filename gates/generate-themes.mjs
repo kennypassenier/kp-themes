@@ -132,6 +132,42 @@ function block(theme) {
     return [`${theme.selector} {`, ...body, '', '    /* Derived interaction states — see gates/generate-themes.mjs. */', ...states, '}'].join('\n');
 }
 
+/**
+ * Who this stylesheet is, in a form JavaScript can read [TH97, AR10 as
+ * amended by AR25].
+ *
+ * AR10 put the version in the marker comment and argued that a banner
+ * bought nothing. That argument was right about banners and wrong about
+ * the reader: it assumed the reader was a person. The mismatch this
+ * package actually has to detect lives on a consumer's page — a
+ * css/themes.css vendored at one version beside a js/ from another, which
+ * is exactly how almanac ended up with twenty-four themes in its
+ * stylesheet and eleven in its JavaScript — and a comment is the one
+ * place getComputedStyle cannot look.
+ *
+ * Two properties, not one. The version says which build; the name list
+ * says what that build actually contains, which is the fact a page cares
+ * about and the fact a hand-edited file can get wrong while the version
+ * still agrees.
+ *
+ * Outside the cascade layers, with the other token declarations [AR17].
+ *
+ * @param {string} version
+ * @returns {string}
+ */
+function identity(version) {
+    return [
+        '/* The identity of this file, machine readable [TH97, AR25]. The comment',
+        '   above says the same thing to a person; these two say it to the',
+        '   JavaScript on the page, which is where a vendored stylesheet from one',
+        '   version meets a registry from another. js/diagnostics.js reads them. */',
+        ':root {',
+        `    --kp-themes-version: '${version}';`,
+        `    --kp-themes-names: '${ORDER.join(' ')}';`,
+        '}',
+    ].join('\n');
+}
+
 function build() {
     const dir = new URL('../themes/', import.meta.url);
     // AR10: the version goes inside the marker comment that has been this
@@ -147,7 +183,7 @@ function build() {
     const blocks = ORDER.map(/** @param {string} name */ (name) => block(JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'))));
     // _rules.css already begins with the blank line that separated the last
     // token block from the authored rules, so one newline is enough here.
-    return `${header}\n${blocks.join('\n\n')}\n${rules}`;
+    return `${header}\n${identity(version)}\n\n${blocks.join('\n\n')}\n${rules}`;
 }
 
 /**
@@ -165,6 +201,7 @@ function build() {
  */
 function registry() {
     const dir = new URL('../themes/', import.meta.url);
+    const version = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
     const themes = ORDER.map(
         /** @param {string} name */ (name) => {
             const t = JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'));
@@ -209,6 +246,17 @@ function registry() {
         '',
         '/** The localStorage key. Contract value: consumers read it too [TH26]. */',
         "export const STORAGE_KEY = 'theme';",
+        '',
+        '/**',
+        ' * The version this registry was generated from [TH97, AR25].',
+        ' *',
+        ' * The other half of the pair css/themes.css declares as',
+        ' * `--kp-themes-version`. Comparing the two inside this repository can',
+        ' * never fail — they come from the same commit — so the comparison that',
+        ' * matters happens in the browser, on a page where the two files may',
+        ' * have arrived separately. js/diagnostics.js does it.',
+        ' */',
+        `export const VERSION = '${version}';`,
         '',
     ].join('\n');
 }

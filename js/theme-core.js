@@ -24,6 +24,7 @@
 // and the cross-tab subscription can be declined.
 
 import { THEMES, DEFAULT_THEME, STORAGE_KEY } from './theme-registry.js';
+import { getStrings } from './strings.js';
 
 /**
  * A theme name, as a union of the eleven that exist [KT4].
@@ -46,6 +47,15 @@ import { THEMES, DEFAULT_THEME, STORAGE_KEY } from './theme-registry.js';
 export const THEME_EVENT = 'kp-theme-change';
 /** Fired before a change, cancelable: `{ theme, previous }`. preventDefault() keeps the current theme. */
 export const BEFORE_THEME_EVENT = 'kp-theme-before-change';
+/**
+ * Fired when a name was dropped: `{ requested, applied, source }` [TH97].
+ *
+ * `source` is one of `stored`, `current`, `apply` or `cross-tab` — the
+ * four places a name can be dropped (AR25). A consumer listening to this
+ * learns what its page asked for and what it got, which is the whole of
+ * what the silence used to cost.
+ */
+export const UNKNOWN_THEME_EVENT = 'kp-theme-unknown';
 
 /** @typedef {{ root?: Element, darkClass?: string | null, storageKey?: string }} ThemeConfig */
 
@@ -82,12 +92,114 @@ export const isTheme = (value) => typeof value === 'string' && NAMES.includes(va
 const asTheme = (value) => (isTheme(value) ? value : null);
 
 /**
+ * Where "already said this" is remembered [AR25].
+ *
+ * **sessionStorage, not a module-level flag, and that is the decision.**
+ * In a server-rendered dashboard — almanac, kyu, kp-soft — every click is
+ * a page load, so the module is evaluated again and a module-level flag
+ * is a fresh flag. The warning would then fire on every click, and the
+ * event with it, which is precisely what AR25 forbids: a consumer
+ * listening to `kp-theme-unknown` would get one per navigation and have
+ * to build its own throttle. sessionStorage survives a navigation inside
+ * the tab and dies with the tab, which is what "a session" means here.
+ *
+ * The module-level Set in front of it is a cache, not the mechanism, and
+ * it is also the fallback where sessionStorage throws — private mode, a
+ * blocked cookie policy, a sandboxed iframe. There the warning lasts as
+ * long as the document, which is the best a page with no storage can do,
+ * and it is still better than silence.
+ *
+ * Kept per NAME rather than as one boolean: a page whose stored choice
+ * and whose markup name two different unknown themes has two faults, and
+ * hearing about one of them is how the second one stays hidden. No name
+ * is ever reported twice, which is the property AR25 is about.
+ *
+ * Its own key. `STORAGE_KEY` is never written here: persisting the
+ * fallback would destroy a preference that starts working again the day
+ * the consumer copies a newer stylesheet.
+ */
+const REPORT_KEY = 'kp-themes-unknown-reported';
+
+/** @type {Set<string>} */
+const reported = new Set();
+
+/** @param {string} name @returns {boolean} */
+function alreadyReported(name) {
+    if (reported.has(name)) return true;
+    try {
+        const raw = sessionStorage.getItem(REPORT_KEY);
+        if (raw !== null && raw.split(' ').includes(name)) {
+            reported.add(name);
+            return true;
+        }
+    } catch {
+        // No session storage: the Set above is all there is.
+    }
+    return false;
+}
+
+/** @param {string} name */
+function remember(name) {
+    reported.add(name);
+    try {
+        const raw = sessionStorage.getItem(REPORT_KEY);
+        const names = raw === null || raw === '' ? [] : raw.split(' ');
+        if (!names.includes(name)) sessionStorage.setItem(REPORT_KEY, [...names, name].join(' '));
+    } catch {
+        // See above.
+    }
+}
+
+/**
+ * Say once, out loud, that a name was dropped [TH97, AR25].
+ *
+ * The console for a developer reading the page, the event for code that
+ * wants to do something about it — a health banner, a log line, a fetch
+ * to the server that served the wrong name. Both are behind the same
+ * once-per-session gate: an event nobody can afford to listen to is not
+ * an improvement on silence.
+ *
+ * @param {unknown} requested the name that was asked for
+ * @param {ThemeName} applied the name that was used instead
+ * @param {'stored' | 'current' | 'apply' | 'cross-tab'} source which of the four places dropped it
+ * @param {Element} [root] where the event is dispatched from
+ * @returns {boolean} whether this call was the one that reported it
+ */
+function reportUnknown(requested, applied, source, root) {
+    const name = String(requested);
+    if (alreadyReported(name)) return false;
+    remember(name);
+    console.warn(getStrings().themeUnknown(name, applied));
+    if (typeof document === 'undefined') return true;
+    const element = root ?? rootOf(undefined);
+    element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
+    return true;
+}
+
+/**
+ * A value that was actually there and is not a theme.
+ *
+ * An absent attribute and an empty one are not faults: `data-theme=""` is
+ * what a server writes when it has no preference to write.
+ *
+ * @param {string | null} raw
+ * @returns {raw is string}
+ */
+const isDropped = (raw) => raw !== null && raw !== '' && !isTheme(raw);
+
+/**
  * @param {{ root?: Element }} [options]
  * @returns {ThemeName} the theme the root is currently wearing
  */
 export function currentTheme({ root } = {}) {
     if (typeof document === 'undefined') return DEFAULT_THEME;
-    return asTheme(rootOf(root).getAttribute('data-theme')) ?? DEFAULT_THEME;
+    const element = rootOf(root);
+    const raw = element.getAttribute('data-theme');
+    // Site 2 of 4 [AR25]. The name was already gone by the time
+    // applyTheme could have seen it: `?? DEFAULT_THEME` below is the
+    // silence this exists to break.
+    if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, 'current', element);
+    return asTheme(raw) ?? DEFAULT_THEME;
 }
 
 /**
@@ -108,6 +220,11 @@ export function applyTheme(theme, { root, darkClass, strict = false, announce = 
     if (known === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
     const next = known ?? DEFAULT_THEME;
     const element = rootOf(root);
+    // Site 3 of 4 [AR25]. Only where the name is actually dropped: the
+    // strict branch above threw, and a thrown RangeError is as loud as
+    // this package gets. `undefined` is the caller passing nothing, not a
+    // name that failed.
+    if (known === null && theme !== null && theme !== undefined && theme !== '') reportUnknown(theme, next, 'apply', element);
     const previous = asTheme(element.getAttribute('data-theme'));
     if (announce && previous !== next) {
         const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next, previous } });
@@ -150,11 +267,20 @@ export function storeTheme(theme, { key, storage } = {}) {
  * @returns {ThemeName | null} the stored choice, or null if there is none or storage is unreadable
  */
 export function storedTheme({ key, storage } = {}) {
+    /** @type {string | null} */
+    let raw = null;
     try {
-        return asTheme((storage ?? localStorage).getItem(key ?? config.storageKey));
+        raw = (storage ?? localStorage).getItem(key ?? config.storageKey);
     } catch {
+        // Unreadable storage is not an unknown name; it is no name.
         return null;
     }
+    // Site 1 of 4, and the one almanac actually hit [AR25, S29]: a
+    // preference stored while the page knew twenty-four themes, read back
+    // by a build that knows eleven. The stored value stays exactly as it
+    // is — it will be right again the day that page gets a newer js/.
+    if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, 'stored');
+    return asTheme(raw);
 }
 
 /**
@@ -192,6 +318,14 @@ export function onThemeChange(listener, { crossTab = true, root, key } = {}) {
         // announcement rather than a second mechanism, so a subscriber
         // never has to know which tab a change came from.
         if (e.key !== (key ?? config.storageKey)) return;
+        // Site 4 of 4 [AR25]. The other tab may be a newer deployment of
+        // the same app, which is how this one gets a name it does not
+        // have. Nothing is applied and nothing is stored; this tab keeps
+        // what it is wearing and says so.
+        if (isDropped(e.newValue)) {
+            reportUnknown(e.newValue, currentTheme({ root }), 'cross-tab', rootOf(root));
+            return;
+        }
         const next = asTheme(e.newValue);
         if (next && next !== currentTheme({ root })) applyTheme(next, { root });
     };

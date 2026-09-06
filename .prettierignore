@@ -8,6 +8,7 @@ package-lock.json
 # with itself: the check compares the file to what the generator writes.
 ha/
 showcase/index.html
+showcase/diagnostics.html
 showcase/themes/
 tests/fixtures/.build/
 

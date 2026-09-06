@@ -80,6 +80,17 @@ export {
     useAppearance,
     useTheme,
 } from './hooks/use-theme.js';
-export { BEFORE_THEME_EVENT, THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { BEFORE_THEME_EVENT, THEME_EVENT, UNKNOWN_THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { VERSION } from './js/theme-registry.js';
+export {
+    NAMES_PROPERTY,
+    VERSION_PROPERTY,
+    compareVersions,
+    diagnose,
+    diagnostics,
+    renderDiagnostics,
+    scriptSide,
+    stylesheetSide,
+} from './js/diagnostics.js';
 /** @typedef {import('./hooks/use-theme.js').Theme} Theme */
 /** @typedef {import('./hooks/use-theme.js').UseThemeOptions} UseThemeOptions */

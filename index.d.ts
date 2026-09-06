@@ -40,7 +40,9 @@ export type Strings = import('./js/strings.js').Strings;
 /** @typedef {import('./js/strings.js').Strings} Strings */
 export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';
 export { DEFAULT_THEME, STORAGE_KEY, THEME_LABELS, THEME_RECORDS, THEMES, applyTheme, configureTheme, initializeTheme, isTheme, useAppearance, useTheme, } from './hooks/use-theme.js';
-export { BEFORE_THEME_EVENT, THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { BEFORE_THEME_EVENT, THEME_EVENT, UNKNOWN_THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { VERSION } from './js/theme-registry.js';
+export { NAMES_PROPERTY, VERSION_PROPERTY, compareVersions, diagnose, diagnostics, renderDiagnostics, scriptSide, stylesheetSide, } from './js/diagnostics.js';
 export type Theme = import('./hooks/use-theme.js').Theme;
 export type UseThemeOptions = import('./hooks/use-theme.js').UseThemeOptions;
 /** @typedef {import('./hooks/use-theme.js').Theme} Theme */

@@ -47,6 +47,9 @@ node gates/generate-ha-themes.mjs --check
 echo "→ everything the package exports is actually published"
 node gates/check-package.mjs
 
+echo "→ the checksum manifest holds every file a consumer can copy (TH103)"
+node gates/check-manifest.mjs
+
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 
