@@ -1,12 +1,14 @@
-name: Showcase
+name: Site
 
-# MR5-PAGES: the showcase is published, and only the showcase. A Pages
-# site served from the repository root would publish docs/ as well — the
-# scope documents, the correction log, the mini-round queue — which is
-# not what "publish the showcase" meant.
+# MR5-PAGES: what is published is named here, and only that. A Pages site
+# served from the repository root would publish docs/ as well — the scope
+# documents, the correction log, the mini-round queue — which is not what
+# "publish the site" meant.
 #
-# So the site is assembled here: the showcase and exactly the three
-# directories it loads from, nothing else.
+# So the site is assembled here: the documentation site, the showcase,
+# the example pages and exactly the directories they load from. Every one
+# of those directories is written by a generator whose --check runs in
+# the gate chain, so nothing here can carry a page nobody generated.
 
 on:
   push:
@@ -30,12 +32,15 @@ jobs:
       - name: Assemble the site
         run: |
           mkdir -p _site
+          cp -r site _site/site
           cp -r showcase _site/showcase
+          cp -r examples _site/examples
           cp -r css _site/css
           cp -r js _site/js
-          # The showcase lives one directory down; the root redirects to
+          cp -r dist _site/dist
+          # The start page lives one directory down; the root redirects to
           # it so the Pages URL lands somewhere useful.
-          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./showcase/">\n' > _site/index.html
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./site/">\n' > _site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
