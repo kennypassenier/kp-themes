@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Article</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <article class="kp-prose">
+                    <h1>Why a shared theme package</h1>
+                    <p class="kp-text-muted">Ada Lovelace · 6 September 2026 · 4 minutes</p>
+                    <p>Four applications, four copies of the same palette, and four places to fix a colour that was wrong in all of them. That is where this package started.</p>
+                    <h2>One source, many consumers</h2>
+                    <p>A released version of a theme never changes. Any change to a theme raises the version, so a consumer that pins a version knows exactly what it is looking at.</p>
+                    <ul>
+                        <li>Tokens, generated from one source per theme.</li>
+                        <li>Components, in two channels that behave the same.</li>
+                        <li>A layout layer, so a page needs no stylesheet of its own.</li>
+                    </ul>
+                    <blockquote>
+                        <p>A gate slow enough to be worked around is not a gate.</p>
+                    </blockquote>
+                    <h2>Pinning a version</h2>
+                    <p>The integrity value is the thing to copy, and it is long enough to break a page that does not expect it:</p>
+                    <pre class="kp-code-block">f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7e2504a71c6</pre>
+                    <h2>What ships</h2>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">File</th>
+                                    <th scope="col">What it is</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>css/themes.css</td>
+                                    <td>Every theme as custom properties</td>
+                                </tr>
+                                <tr>
+                                    <td>css/components.css</td>
+                                    <td>The component classes</td>
+                                </tr>
+                                <tr>
+                                    <td>css/layout.css</td>
+                                    <td>The layout layer</td>
+                                </tr>
+                                <tr>
+                                    <td>css/utilities.css</td>
+                                    <td>The generated utility API</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>Copy the ones you need; the checksum file covers all of them.</p>
+                </article>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Empty and error states</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <h1>Reports</h1>
+                <section class="kp-section kp-stack kp-center kp-text-center" data-example="empty">
+                    <h2>No reports yet</h2>
+                    <p class="kp-text-muted">A report appears here as soon as a month has been closed.</p>
+                    <div class="kp-row kp-justify-center">
+                        <button type="button" class="kp-button kp-button--primary">Close this month</button>
+                    </div>
+                </section>
+                <section class="kp-section kp-stack" data-example="error">
+                    <h2>Last attempt</h2>
+                    <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+                        <span class="kp-alert__body">
+                            <span class="kp-alert__label">Error:</span>
+                            The report could not be built: the ledger service did not answer.
+                        </span>
+                    </div>
+                    <div class="kp-row">
+                        <button type="button" class="kp-button">Try again</button>
+                        <button type="button" class="kp-button kp-button--ghost">Show the log</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

@@ -23,5 +23,12 @@
     "badgePlateFloor": {
         "value": 5,
         "why": "KT2-3: how far a status badge's plate must sit from the surface under it before it stops reading as a badge. Deliberately low — the label carries the meaning (DI4), so the plate only has to read as a plate. Measured 2026-09-04: the worst plate sits 5.6 from its card (terminal, withdrawn). This is a floor against a future palette flattening a badge into its card, not a claim that 5 is comfortable."
+    },
+    "overflow": {
+        "//": "TH99, AR26. The three widths the overflow and rhythm gate measures every example page at, and the floor under which two stacked blocks count as touching.",
+        "viewportWidths": [320, 768, 1280],
+        "widthsWhy": "320 is the narrowest viewport WCAG SC 1.4.10 asks a page to reflow into, 768 is the tablet edge where a side column drops below, 1280 is the desktop width the rest of the browser suite already uses.",
+        "minBlockGap": 2,
+        "minBlockGapWhy": "The fault is two blocks TOUCHING — a gap of zero, which is what the chassis kit shipped. Two pixels is the floor that catches that without turning a deliberate 4px heading margin into a violation; it is not a claim that 2px is comfortable spacing."
     }
 }

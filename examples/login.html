@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Sign in</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <div class="kp-center kp-stack">
+                    <h1>Sign in</h1>
+                    <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                        <span class="kp-alert__body">
+                            <span class="kp-alert__label">Info:</span>
+                            Your session expired. Sign in again to pick up where you left off.
+                        </span>
+                    </div>
+                    <form class="kp-stack">
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="login-email">
+                                Email
+                                <span class="kp-field__required">required</span>
+                            </label>
+                            <input id="login-email" class="kp-field__input" type="email" autocomplete="username" required>
+                        </div>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="login-password">
+                                Password
+                                <span class="kp-field__required">required</span>
+                            </label>
+                            <input id="login-password" class="kp-field__input" type="password" autocomplete="current-password" aria-describedby="login-password-help" required>
+                            <span class="kp-field__help" id="login-password-help">At least twelve characters.</span>
+                        </div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="login-remember" type="checkbox">
+                            <label class="kp-field__label" for="login-remember">Keep me signed in</label>
+                        </div>
+                        <button type="submit" class="kp-button kp-button--primary kp-w-full">Sign in</button>
+                    </form>
+                    <p class="kp-text-muted">
+                        <a href="#reset">Forgotten your password?</a>
+                    </p>
+                </div>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>
