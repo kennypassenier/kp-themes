@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>The loud fallback</title>
+        <!-- Deliberately bare: the package's stylesheet and nothing that
+             touches a theme. The tests import js/theme-core.js themselves
+             and drive one path at a time, so a script on this page calling
+             initializeTheme() would spend the one warning a session gets
+             before the test could see which path spent it [TH97, AR25]. -->
+        <link rel="stylesheet" href="/css/themes.css" />
+    </head>
+    <body>
+        <h1>Fallback fixture</h1>
+    </body>
+</html>

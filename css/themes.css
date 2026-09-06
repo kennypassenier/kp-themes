@@ -27,6 +27,15 @@
    any pair drops under WCAG AA (T3). Fallback (no data-theme) = formal.
    ═══════════════════════════════════════════════════════════════════ */
 
+/* The identity of this file, machine readable [TH97, AR25]. The comment
+   above says the same thing to a person; these two say it to the
+   JavaScript on the page, which is where a vendored stylesheet from one
+   version meets a registry from another. js/diagnostics.js reads them. */
+:root {
+    --kp-themes-version: '3.1.1';
+    --kp-themes-names: 'formal light dark cyberpunk pastel terminal topo high-contrast sepia blueprint solstice brutalism deco academia phantom ticker nishiki shade-light shade-dark mono retro grotesk tazhib nostromo';
+}
+
 :root,
 [data-theme='formal'] {
     /* Editorial paper-and-ink with navy and bronze. */

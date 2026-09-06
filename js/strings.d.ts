@@ -81,6 +81,21 @@ export type Strings = {
     contractSemantic: string;
     themeGroupLight: string;
     themeGroupDark: string;
+    themeUnknown: (requested: string, applied: string) => string;
+    diagnosticsHeading: string;
+    diagnosticsStylesheet: string;
+    diagnosticsScript: string;
+    diagnosticsVersion: string;
+    diagnosticsThemes: string;
+    diagnosticsVerdict: string;
+    diagnosticsMatch: string;
+    diagnosticsStylesheetBehind: (stylesheet: string, script: string) => string;
+    diagnosticsScriptBehind: (stylesheet: string, script: string) => string;
+    diagnosticsThemesDiffer: (version: string) => string;
+    diagnosticsNoVersion: string;
+    diagnosticsOnlyInStylesheet: (names: string) => string;
+    diagnosticsOnlyInScript: (names: string) => string;
+    diagnosticsUnknownVersion: string;
 };
 /**
  * @typedef {object} Strings
@@ -166,6 +181,21 @@ export type Strings = {
  * @property {string} contractSemantic
  * @property {string} themeGroupLight
  * @property {string} themeGroupDark
+ * @property {(requested: string, applied: string) => string} themeUnknown
+ * @property {string} diagnosticsHeading
+ * @property {string} diagnosticsStylesheet
+ * @property {string} diagnosticsScript
+ * @property {string} diagnosticsVersion
+ * @property {string} diagnosticsThemes
+ * @property {string} diagnosticsVerdict
+ * @property {string} diagnosticsMatch
+ * @property {(stylesheet: string, script: string) => string} diagnosticsStylesheetBehind
+ * @property {(stylesheet: string, script: string) => string} diagnosticsScriptBehind
+ * @property {(version: string) => string} diagnosticsThemesDiffer
+ * @property {string} diagnosticsNoVersion
+ * @property {(names: string) => string} diagnosticsOnlyInStylesheet
+ * @property {(names: string) => string} diagnosticsOnlyInScript
+ * @property {string} diagnosticsUnknownVersion
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

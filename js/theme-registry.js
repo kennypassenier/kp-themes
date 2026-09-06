@@ -55,3 +55,14 @@ export const DEFAULT_THEME = 'formal';
 
 /** The localStorage key. Contract value: consumers read it too [TH26]. */
 export const STORAGE_KEY = 'theme';
+
+/**
+ * The version this registry was generated from [TH97, AR25].
+ *
+ * The other half of the pair css/themes.css declares as
+ * `--kp-themes-version`. Comparing the two inside this repository can
+ * never fail — they come from the same commit — so the comparison that
+ * matters happens in the browser, on a page where the two files may
+ * have arrived separately. js/diagnostics.js does it.
+ */
+export const VERSION = '3.1.1';

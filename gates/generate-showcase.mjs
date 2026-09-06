@@ -244,8 +244,45 @@ ${STYLE}        </style>
 `;
 }
 
+/**
+ * The diagnostics page [TH97, S29].
+ *
+ * Not a specimen and not part of the comparison: a page a consumer opens
+ * on their OWN site, with their own vendored files, to be told which half
+ * is behind. It carries no text of its own — every word on it is drawn by
+ * js/diagnostics.js out of the dictionary [KT5] — and it links the
+ * package stylesheets the way a consumer links them, because reading
+ * `--kp-themes-version` off `:root` is the whole point and a page that
+ * declared it itself would prove nothing.
+ *
+ * @returns {string}
+ */
+function diagnosticsPage() {
+    return `<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — diagnostics</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <style>
+${STYLE}        </style>
+    </head>
+    <body>
+        <main class="sc-theme" id="kp-diagnostics"></main>
+        <script type="module">
+            import { renderDiagnostics } from '../js/diagnostics.js';
+            renderDiagnostics(document.getElementById('kp-diagnostics'));
+        </script>
+    </body>
+</html>
+`;
+}
+
 const pages = [
     { path: new URL('index.html', OUT), name: 'showcase/index.html', content: showcase() },
+    { path: new URL('diagnostics.html', OUT), name: 'showcase/diagnostics.html', content: diagnosticsPage() },
     ...THEMES.map((t) => ({
         path: new URL(`${t.name}.html`, FIXTURES),
         name: `showcase/themes/${t.name}.html`,
@@ -281,11 +318,11 @@ if (process.argv.includes('--check')) {
         console.error('Run `npm run generate:showcase` and commit the result.');
         process.exit(1);
     }
-    console.log(`Showcase: 1 page and ${THEMES.length} fixtures match their source.`);
+    console.log(`Showcase: ${pages.length - THEMES.length} pages and ${THEMES.length} fixtures match their source.`);
     process.exit(0);
 }
 
 mkdirSync(FIXTURES, { recursive: true });
 for (const file of readdirSync(FIXTURES)) rmSync(new URL(file, FIXTURES));
 for (const page of pages) writeFileSync(page.path, page.content);
-console.log(`wrote showcase/index.html and ${THEMES.length} bare fixtures.`);
+console.log(`wrote showcase/index.html, showcase/diagnostics.html and ${THEMES.length} bare fixtures.`);

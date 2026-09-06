@@ -132,6 +132,10 @@
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"
         },
+        "./js/diagnostics": {
+            "types": "./js/diagnostics.d.ts",
+            "default": "./js/diagnostics.js"
+        },
         "./hooks/controllable": {
             "types": "./hooks/use-controllable.d.ts",
             "default": "./hooks/use-controllable.js"
@@ -160,7 +164,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -180,6 +184,7 @@
         "generate:ha": "node gates/generate-ha-themes.mjs",
         "check:ha": "node gates/generate-ha-themes.mjs --check",
         "check:package": "node gates/check-package.mjs",
+        "check:manifest": "node gates/check-manifest.mjs",
         "generate:types": "node gates/check-types.mjs --write",
         "check:types:consumer": "node gates/check-types.mjs"
     },
