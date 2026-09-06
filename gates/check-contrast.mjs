@@ -106,6 +106,12 @@ const EXEMPT = {
     'link-visited': 'as --link',
     'color-scheme': 'not a colour',
     radius: 'not a colour',
+    'kp-space-xs': 'not a colour (a length: one step of the spacing scale) [TH94]',
+    'kp-space-sm': 'not a colour (a length: one step of the spacing scale) [TH94]',
+    'kp-space-md': 'not a colour (a length: one step of the spacing scale) [TH94]',
+    'kp-space-lg': 'not a colour (a length: one step of the spacing scale) [TH94]',
+    'kp-space-xl': 'not a colour (a length: one step of the spacing scale) [TH94]',
+    'kp-space-2xl': 'not a colour (a length: one step of the spacing scale) [TH94]',
     'theme-font-body': 'not a colour',
     'theme-font-display': 'not a colour',
     'fx-overprint':
