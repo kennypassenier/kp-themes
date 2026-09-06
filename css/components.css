@@ -482,7 +482,8 @@
     .kp-field {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        /* --kp-space-xs is 0.25rem, which is what this was [TH94, TH105]. */
+        gap: var(--kp-field-gap, var(--kp-space-xs));
         max-width: var(--kp-field-max-width, 28rem);
         min-inline-size: 0;
     }
@@ -712,7 +713,10 @@
 
     .kp-table th,
     .kp-table td {
-        padding: 0.5rem 0.625rem;
+        /* --kp-space-sm is 0.5rem, which is what the block padding was. The
+     * inline half has no step equal to 0.625rem, so it keeps its literal
+     * and gets a knob of its own instead [TH94, TH105]. */
+        padding: var(--kp-table-cell-block, var(--kp-space-sm)) var(--kp-table-cell-inline, 0.625rem);
         text-align: start;
         border-bottom: 1px solid var(--border);
     }
@@ -1740,7 +1744,9 @@
     .kp-form {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        /* On the scale rather than a literal, so the density mode reaches
+     * it [TH94, TH105]. --kp-space-lg is 1rem, which is what this was. */
+        gap: var(--kp-form-gap, var(--kp-space-lg));
     }
 
     /* The summary is a landmark, not a banner: it takes focus when a submit

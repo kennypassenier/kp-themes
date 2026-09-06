@@ -183,10 +183,13 @@ function build() {
     // Unlayered, and last: see the header of css/_print.css for why a
     // layered print override loses to every theme's own tokens.
     const print = readFileSync(new URL('../css/_print.css', import.meta.url), 'utf8');
+    // Unlayered and after the token blocks, for the reason css/_density.css
+    // states in its own header.
+    const density = readFileSync(new URL('../css/_density.css', import.meta.url), 'utf8');
     const blocks = ORDER.map(/** @param {string} name */ (name) => block(JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'))));
     // _rules.css already begins with the blank line that separated the last
     // token block from the authored rules, so one newline is enough here.
-    return `${header}\n${identity(version)}\n\n${blocks.join('\n\n')}\n${rules}\n${print}`;
+    return `${header}\n${identity(version)}\n\n${blocks.join('\n\n')}\n${rules}\n${density}\n${print}`;
 }
 
 /**

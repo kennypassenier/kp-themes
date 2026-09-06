@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Density</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- This fixture loads the package and adds no styling of its own
+             [KT3]. The two blocks are identical markup; the only difference
+             is the density attribute, so anything that measures differently
+             between them came from the package. -->
+        <div data-test="roomy">
+            <form class="kp-form" data-test="roomy-form">
+                <div class="kp-field">
+                    <label class="kp-field__label" for="a1">Name</label>
+                    <input class="kp-field__input" id="a1" type="text" />
+                </div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="a2">Email</label>
+                    <input class="kp-field__input" id="a2" type="email" />
+                </div>
+                <button class="kp-button" type="submit" data-test="roomy-button">Save</button>
+            </form>
+            <table class="kp-table" data-test="roomy-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>One</td>
+                        <td>Draft</td>
+                    </tr>
+                    <tr>
+                        <td>Two</td>
+                        <td>Sent</td>
+                    </tr>
+                    <tr>
+                        <td>Three</td>
+                        <td>Offer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div data-test="compact" data-density="compact">
+            <form class="kp-form" data-test="compact-form">
+                <div class="kp-field">
+                    <label class="kp-field__label" for="b1">Name</label>
+                    <input class="kp-field__input" id="b1" type="text" />
+                </div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="b2">Email</label>
+                    <input class="kp-field__input" id="b2" type="email" />
+                </div>
+                <button class="kp-button" type="submit" data-test="compact-button">Save</button>
+            </form>
+            <table class="kp-table" data-test="compact-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>One</td>
+                        <td>Draft</td>
+                    </tr>
+                    <tr>
+                        <td>Two</td>
+                        <td>Sent</td>
+                    </tr>
+                    <tr>
+                        <td>Three</td>
+                        <td>Offer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
