@@ -15,16 +15,25 @@
 //
 //   <div class="kp-datatable" data-kp-datatable data-kp-page-size="10" data-kp-locale="nl">
 //     <input data-kp-datatable-search type="search" />
-//     <table class="kp-table">
-//       <thead><tr>
-//         <th data-kp-sort="text">Name</th>
-//         <th data-kp-sort="number">Amount</th>
-//       </tr></thead>
-//       <tbody>…</tbody>
-//     </table>
+//     <div class="kp-table-wrap">
+//       <table class="kp-table">
+//         <caption>Orders</caption>
+//         <thead><tr>
+//           <th data-kp-sort="text">Name</th>
+//           <th data-kp-sort="number">Amount</th>
+//         </tr></thead>
+//         <tbody>…</tbody>
+//       </table>
+//     </div>
 //     <p data-kp-datatable-status role="status" aria-live="polite"></p>
 //     <nav data-kp-datatable-pager></nav>
 //   </div>
+//
+// The wrapper was optional until 3.2.0 and is now what carries the
+// keyboard-reachable scroll region [TH95] and the container query the
+// card layout reads [TH96, AR24]. Without it a wide table still scrolls
+// the page sideways and the cards fall back to the whole datatable's
+// width, which is the same number in every layout this package draws.
 //
 // The hard part of a data table is not the features. It is that a sighted
 // user sees the rows rearrange and everyone else is told nothing: the sort
@@ -42,6 +51,7 @@
 
 import { getStrings } from './strings.js';
 import { collator, parseNumber, resolveLocale } from './locale.js';
+import { attachTableRegions } from './tables.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -124,8 +134,9 @@ export function dataTable(element) {
  * Attach every data table under `root`.
  *
  * @param {ParentNode} root
- * @param {{ locale?: string, compare?: Compare, filter?: Filter, debounceMs?: number, sortCycle?: 'two' | 'three', pagerClassName?: string, pageLabel?: (at: number, of: number) => string }} [options]
+ * @param {{ locale?: string, compare?: Compare, filter?: Filter, debounceMs?: number, sortCycle?: 'two' | 'three', pagerClassName?: string, pageLabel?: (at: number, of: number) => string, regions?: boolean }} [options]
  *   Defaults, each also settable per table: `data-kp-locale`, `data-kp-debounce`, `data-kp-sort-cycle`.
+ *   `regions` upgrades the scroll wrapper to a named region [TH95]; off leaves the wrapper untouched.
  * @returns {(() => void) & { handles: DataTableHandle[] }} detach
  */
 export function attachDataTables(
@@ -138,6 +149,7 @@ export function attachDataTables(
         sortCycle = 'two',
         pagerClassName = 'kp-button kp-button--ghost',
         pageLabel,
+        regions = true,
     } = {},
 ) {
     /** @type {(() => void)[]} */
@@ -152,6 +164,12 @@ export function attachDataTables(
         const body = table?.tBodies[0];
         if (table === undefined || table === null || body === undefined) continue;
         wrap.dataset.kpDatatableAttached = '';
+
+        // The scroll box is a region a keyboard can reach [TH95]. Here as
+        // well as in auto.js, because a consumer who attaches only the
+        // data tables should not have to know about a second call to make
+        // their table operable.
+        if (regions) cleanups.push(attachTableRegions(wrap));
 
         const search = /** @type {HTMLInputElement | null} */ (wrap.querySelector(SEARCH));
         const status = /** @type {HTMLElement | null} */ (wrap.querySelector(STATUS));

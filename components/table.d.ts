@@ -4,6 +4,7 @@ export type Column = string | {
     align?: 'start' | 'center' | 'end';
     width?: string;
     className?: string;
+    truncate?: boolean;
     render?: (cell: unknown, row: unknown, index: number) => import('react').ReactNode;
 };
 export type TableProps = {
@@ -20,6 +21,19 @@ export type TableProps = {
      */
     wrap?: boolean;
     wrapperClassName?: string;
+    /**
+     * The wrapper as a keyboard-reachable region [TH95]. Default true.
+     */
+    region?: boolean;
+    /**
+     * Its accessible name. Default: the caption, else the dictionary's `tableRegion`.
+     */
+    regionLabel?: string;
+    /**
+     * Rows become cards when the container is narrow [TH96]. Default false.
+     */
+    cards?: boolean;
+    strings?: Partial<import('../js/strings.js').Strings>;
     rowClassName?: (row: unknown, index: number) => string | undefined;
     className?: string;
 };

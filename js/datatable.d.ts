@@ -57,11 +57,12 @@ export declare function dataTable(element: Element): DataTableHandle | null;
  * Attach every data table under `root`.
  *
  * @param {ParentNode} root
- * @param {{ locale?: string, compare?: Compare, filter?: Filter, debounceMs?: number, sortCycle?: 'two' | 'three', pagerClassName?: string, pageLabel?: (at: number, of: number) => string }} [options]
+ * @param {{ locale?: string, compare?: Compare, filter?: Filter, debounceMs?: number, sortCycle?: 'two' | 'three', pagerClassName?: string, pageLabel?: (at: number, of: number) => string, regions?: boolean }} [options]
  *   Defaults, each also settable per table: `data-kp-locale`, `data-kp-debounce`, `data-kp-sort-cycle`.
+ *   `regions` upgrades the scroll wrapper to a named region [TH95]; off leaves the wrapper untouched.
  * @returns {(() => void) & { handles: DataTableHandle[] }} detach
  */
-export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, pagerClassName, pageLabel, }?: {
+export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, pagerClassName, pageLabel, regions, }?: {
     locale?: string;
     compare?: Compare;
     filter?: Filter;
@@ -69,6 +70,7 @@ export declare function attachDataTables(root?: ParentNode, { locale: localeOpti
     sortCycle?: 'two' | 'three';
     pagerClassName?: string;
     pageLabel?: (at: number, of: number) => string;
+    regions?: boolean;
 }): (() => void) & {
     handles: DataTableHandle[];
 };

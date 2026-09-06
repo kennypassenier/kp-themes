@@ -18,6 +18,7 @@ import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes } from './combobox.js';
 import { attachPalettes } from './palette.js';
 import { attachDataTables } from './datatable.js';
+import { attachTableRegions } from './tables.js';
 import { attachForms } from './forms.js';
 import { attachPatterns } from './patterns.js';
 import { attachStructure } from './structure.js';
@@ -44,6 +45,7 @@ export function attachAll(root = document) {
         attachComboboxes(root),
         attachPalettes(root),
         attachDataTables(root),
+        attachTableRegions(root),
         attachForms(root),
         attachPatterns(root),
         attachStructure(root),
