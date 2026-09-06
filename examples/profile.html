@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Profile</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <h1>Ada Lovelace</h1>
+                <div class="kp-sidebar">
+                    <aside class="kp-sidebar__aside">
+                        <div class="kp-card" data-slot="card" data-example="identity">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Ada Lovelace</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <div class="kp-stack">
+                                    <p class="kp-text-muted">Administrator · Amsterdam</p>
+                                    <div class="kp-row kp-gap-xs">
+                                        <span class="kp-badge">Administrator</span>
+                                        <span class="kp-badge">Two-factor on</span>
+                                    </div>
+                                    <button type="button" class="kp-button kp-w-full">Send a message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <div class="kp-sidebar__main kp-stack">
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Details</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Field</th>
+                                                <th scope="col">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Email</td>
+                                                <td>ada@example.org</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Team</td>
+                                                <td>Ledger</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Member since</td>
+                                                <td>4 September 2026</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Recent activity</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <ul class="kp-stack kp-gap-xs">
+                                    <li>Sent invoice 2026-0114</li>
+                                    <li>Closed August</li>
+                                    <li>Invited two people</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Change the display name</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <form class="kp-row kp-row--end">
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="profile-name">Display name</label>
+                                        <input id="profile-name" class="kp-field__input" type="text" value="Ada Lovelace">
+                                    </div>
+                                    <button type="submit" class="kp-button kp-button--primary">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

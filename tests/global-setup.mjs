@@ -9,7 +9,7 @@ import { mkdirSync } from 'node:fs';
 export default async function globalSetup() {
     const dir = new URL('fixtures/.build/', import.meta.url);
     mkdirSync(dir, { recursive: true });
-    for (const name of ['react-mount', 'react-components']) {
+    for (const name of ['react-mount', 'react-components', 'examples-react']) {
         await build({
             entryPoints: [new URL(`fixtures/${name}.jsx`, import.meta.url).pathname],
             outfile: new URL(`${name}.js`, dir).pathname,

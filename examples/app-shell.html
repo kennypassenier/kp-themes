@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Application shell</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+            <div class="kp-mx-auto">
+                <button type="button" class="kp-button kp-button--ghost" popovertarget="user-menu" style="anchor-name: --user-menu">Ada Lovelace</button>
+                <div popover="auto" id="user-menu" class="kp-popover" style="position-anchor: --user-menu">
+                    <ul class="kp-menu">
+                        <li>
+                            <button type="button" class="kp-menu__item">Profile</button>
+                        </li>
+                        <li>
+                            <button type="button" class="kp-menu__item">Sign out</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <h1>Overview</h1>
+                <p class="kp-text-muted kp-prose">Everything on this page is laid out by the package: no page stylesheet, no style attribute except the two the popover anchor needs.</p>
+                <div class="kp-sidebar">
+                    <aside class="kp-sidebar__aside">
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Sections</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <ul class="kp-stack kp-gap-xs">
+                                    <li>
+                                        <a href="#overview">Overview</a>
+                                    </li>
+                                    <li>
+                                        <a href="#invoices">Invoices</a>
+                                    </li>
+                                    <li>
+                                        <a href="#reports">Reports</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </aside>
+                    <div class="kp-sidebar__main">
+                        <div class="kp-autogrid">
+                            <div class="kp-card" data-slot="card">
+                                <div class="kp-card__header">
+                                    <h3 class="kp-card__title">Open invoices</h3>
+                                </div>
+                                <div class="kp-card__body">
+                                    <p class="kp-mono">128</p>
+                                </div>
+                            </div>
+                            <div class="kp-card" data-slot="card">
+                                <div class="kp-card__header">
+                                    <h3 class="kp-card__title">Overdue</h3>
+                                </div>
+                                <div class="kp-card__body">
+                                    <p class="kp-mono">7</p>
+                                </div>
+                            </div>
+                            <div class="kp-card" data-slot="card">
+                                <div class="kp-card__header">
+                                    <h3 class="kp-card__title">Paid this month</h3>
+                                </div>
+                                <div class="kp-card__body">
+                                    <p class="kp-mono">1 284</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="kp-section kp-stack">
+                    <h2>Latest activity</h2>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">When</th>
+                                    <th scope="col">What</th>
+                                    <th scope="col">Who</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>09:14</td>
+                                    <td>Invoice 2026-0114 sent</td>
+                                    <td>Ada</td>
+                                </tr>
+                                <tr>
+                                    <td>08:02</td>
+                                    <td>Report generated</td>
+                                    <td>System</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

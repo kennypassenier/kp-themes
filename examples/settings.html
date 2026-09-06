@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Settings</title>
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Main navigation">
+            <span class="kp-nav__brand">Northwind</span>
+            <ul class="kp-nav__links">
+                <li>
+                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#invoices">Invoices</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#reports">Reports</a>
+                </li>
+                <li>
+                    <a class="kp-nav__link" href="#settings">Settings</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main" class="kp-page" tabindex="-1">
+            <div class="kp-stack">
+                <h1>Settings</h1>
+                <div class="kp-sidebar">
+                    <aside class="kp-sidebar__aside">
+                        <ul class="kp-stack kp-gap-xs">
+                            <li>
+                                <a href="#profile">Profile</a>
+                            </li>
+                            <li>
+                                <a href="#notifications">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="#danger">Danger zone</a>
+                            </li>
+                        </ul>
+                    </aside>
+                    <div class="kp-sidebar__main kp-stack">
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Profile</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <form class="kp-stack">
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="settings-name">Name</label>
+                                        <input id="settings-name" class="kp-field__input" type="text" value="Ada Lovelace">
+                                    </div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="settings-email">Email</label>
+                                        <input id="settings-email" class="kp-field__input" type="email" value="ada@example.org">
+                                    </div>
+                                    <div class="kp-row kp-row--end">
+                                        <button type="submit" class="kp-button kp-button--primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Notifications</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <div class="kp-stack">
+                                    <div class="kp-field kp-field--check">
+                                        <input class="kp-field__check" id="settings-weekly" type="checkbox" checked>
+                                        <label class="kp-field__label" for="settings-weekly">A weekly summary</label>
+                                    </div>
+                                    <div class="kp-field kp-field--check">
+                                        <input class="kp-field__check" id="settings-overdue" type="checkbox">
+                                        <label class="kp-field__label" for="settings-overdue">Every overdue invoice</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-card" data-slot="card" data-example="danger">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Danger zone</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <div class="kp-stack">
+                                    <p>Closing the workspace removes every invoice in it. There is no way back once it is gone.</p>
+                                    <div class="kp-row kp-row--end">
+                                        <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Really close it?">Close the workspace</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

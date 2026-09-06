@@ -44,6 +44,12 @@ node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
 
+echo "→ the ten example pages match their source (TH98)"
+node gates/generate-examples.mjs --check
+
+echo "→ no inline styles on the example pages (TH109)"
+node gates/check-inline-styles.mjs
+
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 
