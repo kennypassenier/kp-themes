@@ -283,6 +283,14 @@ removing the thing it measures before it is trusted (KT3).
 | TH108 | A migration note naming what consumers may delete | Essential | Every class the note names exists in the package — a gate reads the table and compares it with the generated class list, so the note cannot point at something that is not there |
 | TH109 | Zero inline styles on the rebuilt consumer pages | Essential | A gate reads every example page and goes red on a `style` attribute or a page-local `<style>` block, with one exception list for what demonstrably cannot be avoided (the anchor names the popovers need), each with its reason. This is the round's exit criterion for the layout layer |
 
+**TH104 amended 2026-09-06, at the Phase 4 gate.** Converting the movable
+grid and the nav bar to container queries needs a wrapper element in markup
+the Rust consumers hand-write, because a container query cannot style its
+own container. Kenny chose to convert everything rather than leave two
+mechanisms side by side, so **TH104 moves from 3.2.0 to 4.0.0** with a
+migration note for kyu, Almanac and the chassis kit. TH96's table
+conversion is unaffected and stays in 3.2.0. Reasoning in AR24.
+
 **Round four tally.** Nineteen Essential, one Desired (TH105), none Later,
 none dropped. Kenny raised three of Claude's own recommendations —
 TH92 (the busy state), TH104 (container queries beyond the tables) and
