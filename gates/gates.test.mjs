@@ -11,7 +11,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
+import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
@@ -467,4 +467,28 @@ test('TH97: a matching pair is a match, and 3.10.0 is newer than 3.9.0', () => {
     assert.ok((compareVersions('3.10.0', '3.9.0') ?? 0) > 0);
     assert.equal(compareVersions('3.2.0', '3.2'), 0);
     assert.equal(compareVersions('3.2.0', 'nightly'), null);
+});
+
+test('R5-BADGE: every status has a badge rule, and every badge rule has a status', () => {
+    // The plate used to be an inline style, so a server-rendered page
+    // could not have a coloured badge without breaking TH109's bar. The
+    // rules in css/components.css carry it now, and this test is what
+    // keeps them tied to the one list that already exists -- the same
+    // STATUS_NAMES the contrast gate holds all 24 themes to. Drill:
+    // delete one rule and it names the status; add a rule for a name that
+    // is not a status and it names that.
+    const css = readFileSync(new URL('../css/components.css', import.meta.url), 'utf8');
+    const declared = [...css.matchAll(/\.kp-badge\[data-status='([a-z-]+)'\]/g)].map((m) => m[1]);
+    for (const name of STATUS_NAMES) {
+        assert.ok(declared.includes(name), `no .kp-badge[data-status='${name}'] rule in css/components.css`);
+        const rule = new RegExp(
+            `\\.kp-badge\\[data-status='${name}'\\]\\s*\\{[^}]*background:\\s*var\\(--status-${name}\\)[^}]*color:\\s*var\\(--status-${name}-foreground\\)`,
+            's',
+        );
+        assert.match(css, rule, `the ${name} rule does not paint both halves of its own token pair`);
+    }
+    for (const name of declared) {
+        assert.ok(STATUS_NAMES.includes(name), `.kp-badge[data-status='${name}'] is a rule for something that is not a status`);
+    }
+    assert.equal(declared.length, STATUS_NAMES.length);
 });

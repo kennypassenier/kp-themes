@@ -3744,6 +3744,57 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* One rule per status, so a plate comes from a class rather than from
+ * a style attribute [R5-BADGE, TH109]. Before this, the only way to
+ * colour a badge was `style="background: var(--status-offer)"` — which
+ * the React component wrote for you and a server-rendered page had to
+ * write by hand, against the zero-inline-style bar.
+ *
+ * The seven names are `STATUS_NAMES` in gates/check-contrast.mjs, the
+ * same list the contrast gate already holds the 24 themes to; a unit
+ * test lays these rules beside it in both directions, so a new status
+ * cannot arrive without its rule and a rule cannot outlive its status.
+ *
+ * Specificity (0,2,0) beats .kp-badge's (0,1,0), so the plate wins over
+ * the muted default; it stays inside @layer kp.components, so a utility
+ * still wins over it. A consumer pointing the React component at their
+ * own token family keeps the inline style — these rules only know these
+ * seven names. */
+    .kp-badge[data-status='draft'] {
+        background: var(--status-draft);
+        color: var(--status-draft-foreground);
+    }
+
+    .kp-badge[data-status='sent'] {
+        background: var(--status-sent);
+        color: var(--status-sent-foreground);
+    }
+
+    .kp-badge[data-status='screening'] {
+        background: var(--status-screening);
+        color: var(--status-screening-foreground);
+    }
+
+    .kp-badge[data-status='interview'] {
+        background: var(--status-interview);
+        color: var(--status-interview-foreground);
+    }
+
+    .kp-badge[data-status='offer'] {
+        background: var(--status-offer);
+        color: var(--status-offer-foreground);
+    }
+
+    .kp-badge[data-status='rejected'] {
+        background: var(--status-rejected);
+        color: var(--status-rejected-foreground);
+    }
+
+    .kp-badge[data-status='withdrawn'] {
+        background: var(--status-withdrawn);
+        color: var(--status-withdrawn-foreground);
+    }
+
     /* A destructive button with an undo offers it inline, beside itself. */
     .kp-button__undo {
         display: inline-flex;

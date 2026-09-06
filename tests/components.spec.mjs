@@ -102,3 +102,48 @@ for (const channel of SKIP) {
         await expect(page.locator('[data-test="main"]')).toBeFocused();
     });
 }
+
+// A status badge takes its plate from a class, not from a style attribute
+// [R5-BADGE, TH109].
+//
+// css/components.css had no rule per status, so the only way to colour a
+// badge was `style="background: var(--status-offer)"` — which the React
+// component wrote for you and a server-rendered page had to write by
+// hand, against TH109's zero-inline-style bar. Kenny chose on 2026-09-07
+// to generate a rule per name in STATUS_NAMES instead.
+//
+// Drill: delete the `.kp-badge[data-status='offer']` rule from
+// css/components.css and both channels read the muted plate.
+test.describe('a status badge colours itself from its class [R5-BADGE]', () => {
+    const plate = (page, selector) =>
+        page.evaluate((s) => {
+            const el = document.querySelector(s);
+            const probe = document.createElement('span');
+            probe.style.setProperty('background-color', 'var(--status-offer)');
+            probe.style.setProperty('color', 'var(--muted-foreground)');
+            document.body.append(probe);
+            const wanted = getComputedStyle(probe).backgroundColor;
+            const muted = getComputedStyle(probe).color;
+            probe.remove();
+            return {
+                background: getComputedStyle(el).backgroundColor,
+                wanted,
+                mutedInk: muted,
+                inlineStyle: el.getAttribute('style'),
+            };
+        }, selector);
+
+    for (const channel of CHANNELS) {
+        test(`${channel.name}: the plate is the status token`, async ({ page }) => {
+            await page.goto(PAGE);
+            const badge = await plate(page, `${channel.root} [data-test="badge-labelled"]`);
+            expect(badge.background).toBe(badge.wanted);
+        });
+    }
+
+    test('framework-free: and it carries no style attribute at all', async ({ page }) => {
+        await page.goto(PAGE);
+        const badge = await plate(page, '#plain [data-test="badge-labelled"]');
+        expect(badge.inlineStyle).toBeNull();
+    });
+});

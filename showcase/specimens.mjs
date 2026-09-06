@@ -121,10 +121,7 @@ export const SPECIMENS = [
         title: 'Badge',
         note: 'Seven statuses, each of which says what it is — the colour is the second channel, never the only one [TH2, DI4].',
         html: () =>
-            `<div class="sc-row">${STATUSES.map(
-                (s) =>
-                    `<span class="kp-badge" data-kp-semantic data-status="${s}" style="background: var(--status-${s}); color: var(--status-${s}-foreground);">${s}</span>`,
-            ).join('')}</div>`,
+            `<div class="sc-row">${STATUSES.map((s) => `<span class="kp-badge" data-kp-semantic data-status="${s}">${s}</span>`).join('')}</div>`,
     },
     {
         id: 'alerts',
@@ -187,8 +184,8 @@ export const SPECIMENS = [
             // before while js/auto.js gives the box its role and its name.
             `<div class="kp-table-wrap" data-kp-region-label="Applications"><table class="kp-table"><thead><tr><th scope="col">Company</th><th scope="col">Status</th>` +
             `<th scope="col">Amount</th></tr></thead><tbody>` +
-            `<tr><td>Example Inc</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr>` +
-            `<tr><td>Second Ltd</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span></td><td class="kp-numeric">998,00</td></tr>` +
+            `<tr><td>Example Inc</td><td><span class="kp-badge" data-kp-semantic data-status="interview">interview</span></td><td class="kp-numeric">1.284,50</td></tr>` +
+            `<tr><td>Second Ltd</td><td><span class="kp-badge" data-kp-semantic data-status="offer">offer</span></td><td class="kp-numeric">998,00</td></tr>` +
             `</tbody></table></div>`,
     },
     {

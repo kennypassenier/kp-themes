@@ -63,6 +63,22 @@ cursor.
 - **A documentation site**, with a page per component and the story of
   every theme.
 
+### A status badge no longer needs an inline style
+
+`css/components.css` now carries a rule per status, so a server-rendered
+page writes the class and the attribute and gets the plate:
+
+| Before                                                                                                   | Now                                           |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `<span class="kp-badge" style="background: var(--status-offer); color: var(--status-offer-foreground)">` | `<span class="kp-badge" data-status="offer">` |
+
+The seven names are `draft`, `sent`, `screening`, `interview`, `offer`,
+`rejected` and `withdrawn`. The React `Badge` stops writing the inline
+style for those, and keeps writing it when you point `tokenPrefix` at
+your own token family — your names have no rule, so nothing changes for
+you. Colour still may not be the only carrier of meaning: a badge with a
+status and no words is refused, as it always was.
+
 ### One knob changed meaning
 
 `--kp-shortcuts-width` now sets the **total** width of the shortcut
