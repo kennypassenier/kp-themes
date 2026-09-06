@@ -27,6 +27,7 @@ export type Strings = {
     tableRows: (n: number) => string;
     tableRowsFiltered: (shown: number, total: number) => string;
     tablePage: (at: number, of: number) => string;
+    tableRegion: string;
     formRequired: string;
     formInvalid: string;
     formSummaryOne: string;
@@ -111,6 +112,7 @@ export type Strings = {
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
  * @property {(at: number, of: number) => string} tablePage
+ * @property {string} tableRegion
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne

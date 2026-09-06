@@ -180,9 +180,12 @@ export const SPECIMENS = [
     {
         id: 'table',
         title: 'Table',
-        note: 'Wide tables scroll inside their own box; the page does not scroll sideways [TH3, DI11].',
+        note: 'Wide tables scroll inside their own box, and that box is a named region a keyboard can reach [TH3, TH95, DI11].',
         html: () =>
-            `<div class="kp-table-wrap"><table class="kp-table"><thead><tr><th scope="col">Company</th><th scope="col">Status</th>` +
+            // The name of the scroll region [TH95]: an attribute rather
+            // than a caption, so the specimen still shows what it showed
+            // before while js/auto.js gives the box its role and its name.
+            `<div class="kp-table-wrap" data-kp-region-label="Applications"><table class="kp-table"><thead><tr><th scope="col">Company</th><th scope="col">Status</th>` +
             `<th scope="col">Amount</th></tr></thead><tbody>` +
             `<tr><td>Example Inc</td><td><span class="kp-badge" data-kp-semantic data-status="interview" style="background: var(--status-interview); color: var(--status-interview-foreground);">interview</span></td><td class="kp-numeric">1.284,50</td></tr>` +
             `<tr><td>Second Ltd</td><td><span class="kp-badge" data-kp-semantic data-status="offer" style="background: var(--status-offer); color: var(--status-offer-foreground);">offer</span></td><td class="kp-numeric">998,00</td></tr>` +
@@ -314,12 +317,12 @@ export const SPECIMENS = [
     {
         id: 'datatable',
         title: 'DataTable',
-        note: 'Sort a column, filter, page. At 320 px each row becomes a card carrying its column names [TH37].',
+        note: 'Sort a column, filter, page. In a container under 40 rem each row becomes a card carrying its column names [TH37, TH96].',
         html: (theme) =>
             `<div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3">` +
             `<div class="kp-datatable__bar"><input class="kp-datatable__search" type="search" data-kp-datatable-search ` +
             `aria-label="Search the table" placeholder="Search\u2026" /></div>` +
-            `<div class="kp-table-wrap"><table class="kp-table"><thead><tr>` +
+            `<div class="kp-table-wrap" data-kp-region-label="Orders"><table class="kp-table"><thead><tr>` +
             `<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th>` +
             `<th scope="col" data-kp-sort="text">Customer</th><th scope="col" data-kp-sort="number">Amount</th>` +
             `<th scope="col" data-kp-sort="date">Date</th></tr></thead><tbody>` +

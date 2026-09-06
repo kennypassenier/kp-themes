@@ -138,10 +138,14 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
     assert.equal(result.expected, 51, 'AR21 counted 51 --kp-* properties in css/components.css');
-    assert.equal(result.readCount, 50);
-    // Declared, never read through var(): a media query cannot read a
-    // custom property, so the value is repeated in the query [TH26].
-    assert.deepEqual(result.unread, ['--kp-breakpoint-narrow']);
+    // Every one of them is read through var(). The single exception used
+    // to be --kp-breakpoint-narrow, which a media query cannot read, so
+    // its value was repeated in the query [TH26]; R3 replaced that query
+    // with a container query and the knob left the stylesheet altogether,
+    // taking the exception with it. --kp-cell-truncate-max arrived in the
+    // same milestone, which is why the total did not move.
+    assert.equal(result.readCount, 51);
+    assert.deepEqual(result.unread, []);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {

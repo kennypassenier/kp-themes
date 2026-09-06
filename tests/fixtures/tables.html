@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Tables — both channels [R3]</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>Tables, two channels</h1>
+
+        <!-- The five table behaviours of TH95 and TH96, written once per
+             channel with the same data-test names, so one suite drives both
+             [AR7, standing rule 7g]. The only styling this page carries is a
+             width on the hosts: a container query has to be measured against
+             a container of a known size, and the package must supply
+             everything else — a rule written here would be measuring the
+             fixture [KT3]. -->
+
+        <section id="plain">
+            <h2>Framework-free</h2>
+
+            <div data-test="plain-region">
+                <button type="button" class="kp-button" data-test="plain-region-before">Before the table</button>
+                <div style="inline-size: 300px">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                Quarterly revenue
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">First quarter</th>
+                                    <th scope="col">Second quarter</th>
+                                    <th scope="col">Third quarter</th>
+                                    <th scope="col">Fourth quarter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Acme</td>
+                                    <td class="kp-numeric">1284.50</td>
+                                    <td class="kp-numeric">998.00</td>
+                                    <td class="kp-numeric">1102.25</td>
+                                    <td class="kp-numeric">1471.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div data-test="plain-break">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Identifiers
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Field</th>
+                                <th scope="col" class="kp-cell-break">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Key</td>
+                                <td class="kp-cell-break">a3f92b71c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809125</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div data-test="plain-truncate">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Notes
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Field</th>
+                                <th scope="col" class="kp-cell-truncate">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Note</td>
+                                <td
+                                    class="kp-cell-truncate"
+                                    title="A note long enough that no column can hold it, which is the whole point of a truncated cell."
+                                >
+                                    A note long enough that no column can hold it, which is the whole point of a truncated cell.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div data-test="plain-priority">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Invoices
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Customer</th>
+                                <th scope="col" class="kp-col-low" data-test="plain-col-low-header">Updated</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Acme</td>
+                                <td class="kp-col-low" data-test="plain-col-low-cell">2026-09-01</td>
+                                <td class="kp-numeric">100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div data-test="plain-cards" style="inline-size: 400px">
+                <div class="kp-table-wrap">
+                    <table class="kp-table" data-kp-cards>
+                        <caption>
+                            Contacts
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Name" data-test="plain-card-cell">Acme</td>
+                                <td data-label="Role">Customer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div data-test="plain-datatable-cards" style="inline-size: 400px">
+                <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="3">
+                    <div class="kp-datatable__bar">
+                        <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" />
+                    </div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                Orders
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" data-kp-sort="text">Name</th>
+                                    <th scope="col" data-kp-sort="number">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-kp-row-key="r0">
+                                    <td data-label="Name" data-test="plain-datatable-cell">Acme</td>
+                                    <td data-label="Amount" class="kp-numeric">100</td>
+                                </tr>
+                                <tr data-kp-row-key="r1">
+                                    <td data-label="Name">Bakker</td>
+                                    <td data-label="Amount" class="kp-numeric">20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="kp-datatable__bar">
+                        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="react">
+            <h2>React</h2>
+            <div id="react-tables"></div>
+        </section>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-tables.js"></script>
+    </body>
+</html>

@@ -66,6 +66,7 @@
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
  * @property {(at: number, of: number) => string} tablePage
+ * @property {string} tableRegion
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -160,6 +161,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
     /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
     tablePage: (at, of) => `${at} / ${of}`,
+    /**
+     * The name of the scrolling region around a table [TH95], used only
+     * when the table has no caption and the consumer named nothing: a
+     * region with no name is announced as "region" and tells a reader
+     * nothing about what they just tabbed into.
+     */
+    tableRegion: 'Table',
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',
@@ -267,6 +275,7 @@ export const STRINGS_NL = Object.freeze({
     tableRows: (n) => `${n} rijen`,
     tableRowsFiltered: (shown, total) => `${shown} van ${total} rijen`,
     tablePage: (at, of) => `${at} / ${of}`,
+    tableRegion: 'Tabel',
     formRequired: 'verplicht',
     formInvalid: 'Dit veld is niet correct ingevuld.',
     formSummaryOne: 'Er is 1 veld niet correct ingevuld.',

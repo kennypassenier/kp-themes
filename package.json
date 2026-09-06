@@ -124,6 +124,10 @@
             "types": "./js/gridlayout.d.ts",
             "default": "./js/gridlayout.js"
         },
+        "./js/tables": {
+            "types": "./js/tables.d.ts",
+            "default": "./js/tables.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

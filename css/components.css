@@ -649,8 +649,59 @@
 
     .kp-table-wrap {
         /* The table scrolls inside its own box; the page does not scroll
-     * sideways because of it [DI11]. */
+     * sideways because of it [DI11]. Reaching that scrollbar without a
+     * mouse is TH95's repair, and it is not written here: the attributes
+     * that make this box a named region come from components/table.jsx
+     * and js/tables.js, because a `tabindex` is markup, not style. */
         overflow-x: auto;
+
+        /* The size everything below this reads [TH96, AR24]. A table that
+     * falls into cards because the WINDOW is narrow is wrong in every
+     * layout that is not the whole window — a 400 px column on a 1280 px
+     * page kept the table shape and scrolled. The query asks the box the
+     * table actually lives in instead.
+     *
+     * `container-type: inline-size` applies inline-axis containment, so
+     * the element no longer sizes to its contents. Measured before and
+     * after, in Chromium 141 and Firefox 145, at the build of R3:
+     * normal block flow 500 px -> 500 px, and inside `.kp-datatable`
+     * (a column flex container, the shipped shape) 500 px -> 500 px.
+     * A wrapper the consumer has put in a SHRINK-TO-FIT box does move:
+     * as a flex-row item 279/328 px -> 0, as an inline-block 207/244 px
+     * -> 0, in an auto grid track 389/414 px -> 250 px. The user guide
+     * says so, and `tests/tables.spec.mjs` holds the two shapes the
+     * package draws itself. */
+        container: kp-table / inline-size;
+    }
+
+    /* Two ways a cell can hold a value that does not fit [TH96].
+ *
+ * `.kp-cell-break` is for identifiers: a 70-character key with no space
+ * in it is one unbreakable word, and one such word in one row widens the
+ * whole table past its container. `.kp-cell-truncate` is for prose: one
+ * line, an ellipsis, and the value still whole in the cell — a screen
+ * reader reads it, find-in-page finds it, a copy takes it, and both
+ * channels put it in the `title` for the pointer.
+ *
+ * `--kp-cell-truncate-max` is a suggestion rather than a limit, and it
+ * is there for a measured reason: under the automatic table layout a
+ * `max-inline-size` on a `<td>` does not cap the cell — asked for 12rem
+ * it came out 416 px wide in a 500 px container — but it does stop a
+ * `white-space: nowrap` cell from making its column as wide as the whole
+ * sentence and pushing the table out of its wrapper. Without it the
+ * table simply grows and nothing is ever clipped, which is the first cut
+ * of this class, measured red. A hard cap needs `table-layout: fixed` or
+ * a width on the column. */
+    .kp-cell-break {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .kp-cell-truncate {
+        max-inline-size: var(--kp-cell-truncate-max, 12rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .kp-table {
@@ -1511,6 +1562,15 @@
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
+
+        /* The fallback container for a data table whose markup has no
+     * `.kp-table-wrap` [TH96, AR24]: without it, converting the card
+     * layout from a media query to a container query would have taken
+     * the cards away from every consumer who left the wrapper out, which
+     * is a repair that breaks the thing it repairs. Where both exist the
+     * wrapper is nearer and wins, and the two measure the same width in
+     * the shape this package draws. */
+        container: kp-table / inline-size;
     }
 
     .kp-datatable__bar {
@@ -1575,18 +1635,34 @@
         font-variant-numeric: tabular-nums;
     }
 
-    /* Narrow: a row becomes a card [TH37, DI11].
+    /* Narrow: a row becomes a card [TH37, TH96, DI11].
  *
  * The alternative every table reaches for is a horizontal scrollbar, and
  * SC 1.4.10 is about not making a reader drag a page sideways to finish a
  * sentence. The header text is carried into each cell through a data
  * attribute the consumer writes, because a cell without its column name
- * is a value with no question attached. */
-    @media (max-width: 40rem) {
-        /* --kp-breakpoint-narrow is a contract value [TH26]: a media query
-     * cannot read a custom property, so this number is repeated in
-     * docs/USER_GUIDE.md rather than exposed as a knob. */
-        .kp-datatable[data-kp-cards] .kp-table thead {
+ * is a value with no question attached.
+ *
+ * Two things changed in 3.2.0 [TH96]. The width that decides is the
+ * width of the TABLE'S OWN CONTAINER rather than the window's: a table
+ * in a 400 px column on a 1280 px page was told it had 1280 px and kept
+ * a shape that did not fit. And the plain `.kp-table` can do it too, by
+ * asking for it — `data-kp-cards` on the table, `data-label` on the
+ * cells, which is what components/table.jsx writes for the React
+ * channel. Opt-in rather than automatic, because every plain table that
+ * already ships would otherwise change shape in a minor release [S20].
+ *
+ * The container is `.kp-table-wrap`, and `.kp-datatable` as well for the
+ * markup that has no wrapper — the nearest one wins, and in the shape
+ * this package draws the two are the same width [AR24]. */
+    @container kp-table (max-width: 40rem) {
+        /* 40rem is a contract value [TH26]: a container query can no more
+     * read a custom property than a media query can, so this number is
+     * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
+     * the same number as the one this block used as a media query up to
+     * 3.1.1, so no table changes shape at a width it did not before. */
+        .kp-datatable[data-kp-cards] .kp-table thead,
+        .kp-table[data-kp-cards] thead {
             position: absolute;
             width: 1px;
             height: 1px;
@@ -1597,12 +1673,24 @@
         .kp-datatable[data-kp-cards] .kp-table,
         .kp-datatable[data-kp-cards] .kp-table tbody,
         .kp-datatable[data-kp-cards] .kp-table tr,
-        .kp-datatable[data-kp-cards] .kp-table td {
+        .kp-datatable[data-kp-cards] .kp-table td,
+        .kp-table[data-kp-cards],
+        .kp-table[data-kp-cards] tbody,
+        .kp-table[data-kp-cards] tr,
+        .kp-table[data-kp-cards] td {
             display: block;
             width: auto;
         }
 
-        .kp-datatable[data-kp-cards] .kp-table tr {
+        /* The caption is a table part; with the table laid out as blocks
+     * it has no table to sit above, so it becomes one too. */
+        .kp-datatable[data-kp-cards] .kp-table caption,
+        .kp-table[data-kp-cards] caption {
+            display: block;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table tr,
+        .kp-table[data-kp-cards] tr {
             margin-block-end: 0.75rem;
             padding: 0.5rem;
             border: 1px solid var(--border);
@@ -1610,17 +1698,28 @@
             background: var(--card);
         }
 
-        .kp-datatable[data-kp-cards] .kp-table td {
+        .kp-datatable[data-kp-cards] .kp-table td,
+        .kp-table[data-kp-cards] td {
             display: flex;
             gap: 0.75rem;
             justify-content: space-between;
             border: 0;
         }
 
-        .kp-datatable[data-kp-cards] .kp-table td::before {
+        .kp-datatable[data-kp-cards] .kp-table td::before,
+        .kp-table[data-kp-cards] td::before {
             content: attr(data-label);
             color: var(--muted-foreground);
             font-weight: 500;
+        }
+
+        /* The low-priority column, at the same width as the cards [TH96].
+     * Header and cells together: hiding the header alone leaves a column
+     * of values with nothing saying what they are, which is worse than
+     * either keeping it or dropping it. A separate threshold would be a
+     * second layout to reason about, so there is only one. */
+        .kp-table .kp-col-low {
+            display: none;
         }
     }
 

@@ -514,34 +514,6 @@
         border-color: var(--destructive);
     }
 
-    /* Print [TH36]. Paper has no theme: ink is black, the ground is white,
-   and the decorative layers cost toner without carrying meaning. */
-    @media print {
-        :root {
-            color-scheme: light;
-            --background: hsl(0, 0%, 100%);
-            --foreground: hsl(0, 0%, 0%);
-        }
-
-        /* The texture layer is body::after. The first version of this rule
-     * hid body::before, which carries nothing, so the texture printed
-     * for two versions while the guide promised otherwise [KT6]. */
-        body::after {
-            display: none;
-        }
-
-        a {
-            color: inherit;
-        }
-
-        /* A printed page cannot be clicked, so the address has to be on it. */
-        a[href^='http']::after {
-            content: ' (' attr(href) ')';
-            font-size: 0.85em;
-            word-break: break-all;
-        }
-    }
-
     /* ------------------------------------------------------------------
    One signature per theme [HA2].
 
