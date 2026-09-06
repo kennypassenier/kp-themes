@@ -390,3 +390,120 @@ the four findings kp-soft reported against 3.0.0 (P1–P4, recorded in
 `docs/REQUESTS_FROM_CONSUMERS.md`) and D3, the removal of `STRINGS_NL`.
 Both wait for the round after this one. S20 holds: every new theme ships
 in a new minor version; nothing existing changes in place.
+
+## Round four — the layout layer and the documentation site (2026-09-06)
+
+Round four started from four findings chassis-rs reported after vendoring
+3.1.0 into the kit, and from Kenny's question underneath them: what does
+this package actually support, and what should it support next. Phase 0
+ran as three forms — a scope form, a deep dive on the four items that
+needed concrete examples, and a last round on Tailwind, the utility API
+and the documentation site.
+
+**The measurement everything rests on.** kp-themes ships no layout at
+all: every one of the ~150 classes in `css/components.css` is a
+component, the only container is `.kp-form`, headings get a typeface and
+neither a size scale nor margins (`css/_rules.css:282`), and `aria-busy`
+is unstyled. The proof is in a consumer: `crates/chassis/static/chassis.css`
+in the kit is 71 lines whose own header calls itself "layout glue and the
+few utilities @kp-soft/themes deliberately does not ship", and its
+templates carry 28 inline `style=` attributes on top of that.
+
+**S22 · The package grows a layout layer of its own, and does not adopt
+Bootstrap.** Sixteen classes: seven containers (`.kp-page`, `.kp-stack`,
+`.kp-row` with `--end`/`--between`/`--nowrap`, `.kp-autogrid`,
+`.kp-sidebar`, `.kp-section`, `.kp-center`), five text and content
+utilities (`.kp-prose`, `.kp-text-muted`, `.kp-text-end`/`-center`,
+`.kp-mono`, `.kp-code-block`), three table helpers (S28) and a rule for
+`[aria-busy='true']`. Each carries a `--kp-*` knob so a page or a theme
+adjusts it without rewriting the class.
+
+*Build-vs-buy, recorded.* Bootstrap 5.3 was considered as the base and
+rejected on three measured grounds: no active project of Kenny's depends
+on Bootstrap 5 (only one old project on Bootstrap 4), it would place its
+own twenty-odd components beside this package's twenty-two, and its next
+major renames the grid and utility syntax to Tailwind-style prefixes
+(`col-md-6` → `md:col-6`), which would be a class rewrite in every
+consumer template. Own class names stay under this package's own semver.
+
+**S23 · A utility API of about 123 classes, `kp-` prefixed, without
+breakpoint variants.** Spacing and padding over the six-step scale on
+seven sides (84), gap (6), display (5), flex alignment (10), text (13)
+and width (5). Breakpoint variants were declined: they would take the set
+past 300 classes, they are the part Bootstrap 6 is renaming, and the
+primitives plus container queries already do that work. The prefix keeps
+it from colliding on a page that also loads Tailwind or Bootstrap.
+
+**S24 · The Tailwind bridge stays and grows with the new tokens.**
+Measured: `css/tailwind-bridge.css` is 103 lines and has exactly one
+consumer, `kp-soft/resources/css/app.css` (lines 18-21). It maps 31
+tokens onto Tailwind's colour namespace and re-declares them per
+`[data-theme]`; it ships no utility class, so the utility API of S23 does
+not replace it. Tailwind cannot be this package's layout layer, because
+it needs a build step and kyu, Almanac and the chassis kit have no npm —
+that constraint, not preference, is what splits the two.
+
+**S25 · Both channels stay, and new behaviour starts in a pure module.**
+The framework-free channel (`js/`, 22 files, 5798 lines) serves the
+server-rendered consumers; the React channel (`components/`, 34 files,
+5151 lines) serves the npm consumers. `js/listbox.js` is the model: 310
+lines, no imports, no DOM ownership, driven by four files across both
+channels. Standing rule 7g's one-suite-drives-both stays the gate.
+
+**S26 · Ten example pages, and layout failures become a gate.** App
+shell, login, list-with-form, settings, wizard, empty-and-error, hero,
+pricing-and-testimonials, article, profile. A gate measures each at 320,
+768 and 1280 px for horizontal page scroll, elements wider than their
+container, and adjacent blocks with no space between them — the fault
+the kit patched by hand.
+
+**S27 · A generated documentation site, one page per component.** Today
+`.github/workflows/pages.yml` redirects the Pages root to the showcase;
+the site becomes a real site with the showcase as one page in it. Roughly
+45 component pages (58 class families in `css/components.css`, merged
+where they are pairs), plus start, tokens and themes, the layout layer,
+the utility API, the ten example pages and the diagnostics page of S29.
+Each component page carries all nine sections: what it is and when to use
+it, a live example, framework-free markup, React usage, a props table, the
+events it fires, the `--kp-*` knobs it reads, accessibility notes, and
+every variant and state. Generated rather than written, because all 17
+React files already carry a `@typedef` the table can come from, and a
+written page keeps its claim after a rename. Four gates guard it:
+coverage (every family and export has a page), truth (every documented
+prop exists and every prop is documented), one source (the shown snippet
+is the markup the live example renders), and the layout gate of S26.
+
+**S28 · Tables get the whole modern treatment, starting with a defect.**
+The scrolling wrapper is written in four places — `components/table.jsx:69`,
+`components/datatable.jsx:208` and two showcase specimens — and none of
+them sets `tabindex="0"`, `role="region"` or `aria-label`, so a
+keyboard-only user cannot scroll a wide table. That is fixed first. Then
+cell strategies (`.kp-cell-truncate`, `.kp-cell-break`), column priority
+(`.kp-col-low`), container queries instead of media queries, and a card
+layout for the plain `.kp-table` as well as the DataTable, which has one
+already (`css/components.css:1584`, opt-in via `data-kp-cards`).
+
+**S29 · An unknown theme name stops failing silently.** `applyTheme`
+falls back to `formal` without a word (`js/theme-core.js`), the registry
+exports no version, and `css/themes.css` carries its version in a comment
+JavaScript cannot read — so a page whose stylesheet knows 24 themes and
+whose JavaScript knows eleven silently ignores the thirteen new names.
+Kenny confirmed that pattern on almanac.kp-soft.dev: none of the new
+themes worked and all the old ones did. The fallback stays, but it warns,
+the registry gains a version constant, and a diagnostics page lays the
+stylesheet and the JavaScript side by side.
+
+**S30 · A spacing and typography scale as tokens in all 24 themes.**
+`--kp-space-*` exists today only as a fallback inside components
+(`css/components.css:402` and on), is declared nowhere, and stops at md.
+The scale is completed and gated for completeness like the other tokens,
+so the layout layer has something to be consistent with.
+
+**S31 · What lands where.** Everything additive is 3.2.0. The one change
+to existing behaviour — the destructive-action confirmation becomes a
+`<dialog>` naming what will happen, instead of arm-then-act — lands in
+4.0.0, together with D3's removal of `STRINGS_NL`. Also in scope: the
+checksum manifest gains `js/strings.js` and `css/retro-register.css`, a
+density mode (`data-density="compact"`), a single dist bundle, and
+`ECOSYSTEM.md` is brought up to date (it still describes 1.2.0, eleven
+themes and 66 tokens).

@@ -91,9 +91,9 @@ way to get one. Scope stays: define themes, build components on them.
 
 | Field               | Value                                                                                                                   |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round three: Phase 9 closed — 3.1.0 released 2026-09-05, patch 3.1.1 released 2026-09-06; Phase 10 (retrospective) next |
-| Last completed gate | Release 3.1.1 ("Merge en meteen taggen"), 2026-09-06                                                                    |
-| Next gate           | Phase 10 retrospective for round three (KT7, KT8, KT9, the AFK lessons)                                                 |
+| Current phase       | Round four: Phase 0 closed 2026-09-06 (S22-S31); Phase 1 and 2 next. Round three's Phase 10 retrospective is still open |
+| Last completed gate | Round four Phase 0 scope, 2026-09-06 (three forms)                                                                      |
+| Next gate           | Round four Phase 2 feature freeze; Phase 10 for round three (KT7, KT8, KT9) still owed                                  |
 | Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round)                       |
 | AFK mode            | off                                                                                                                     |
 
