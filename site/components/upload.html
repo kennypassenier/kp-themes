@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>File upload — kp-themes</title>
+        <meta name="description" content="A drop zone that is a label over a real file input, a list of the chosen files, and a per-file state the consumer drives: progress, done, or an error with its reason. The sending stays yours." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html" aria-current="page">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">File upload</h1>
+                    <p class="kp-prose">A drop zone that is a label over a real file input, a list of the chosen files, and a per-file state the consumer drives: progress, done, or an error with its reason. The sending stays yours.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">Wherever a person attaches files. Not as an upload client — the request, the retry and the endpoint are the application’s, and a component that owned them would have to know your auth. Not for a single hidden image swap either, where a plain file input with a label is the whole story.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A drop zone with a size limit</figcaption>
+                        <p class="kp-text-muted">The zone is a label pointing at a real file input: Tab reaches it, Enter opens the picker, and a screen reader announces a file field rather than a mysterious box. Dropping is added on top and is nobody’s only route in.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-upload" data-kp-upload data-kp-max-bytes="5000000" data-kp-max-files="5">
+<input type="file" multiple class="kp-sr-only" id="doc-upload-files" data-kp-upload-input />
+<label class="kp-upload__zone" for="doc-upload-files" data-kp-upload-zone>Drop files here or choose them</label>
+<ul class="kp-upload__list" data-kp-upload-list></ul>
+</div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload&quot;</span> <span class="kp-code__keyword">data-kp-upload</span> <span class="kp-code__keyword">data-kp-max-bytes</span><span class="kp-code__string">=&quot;5000000&quot;</span> <span class="kp-code__keyword">data-kp-max-files</span><span class="kp-code__string">=&quot;5&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;file&quot;</span> <span class="kp-code__keyword">multiple</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-input</span> /&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__zone&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-zone</span>&gt;Drop files here or choose them&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__list&quot;</span> <span class="kp-code__keyword">data-kp-upload-list</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">What a row looks like while it is sending, and when it failed</figcaption>
+                        <p class="kp-text-muted">The rows are normally written by the module as files arrive; printed here so the states can be seen at rest. The bar is one element filled by a gradient stop rather than a second element kept in step by hand.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<ul class="kp-upload__list">
+<li class="kp-upload__file" data-state="uploading">
+<span>quarterly-report.pdf</span><span class="kp-upload__size">1.2 MB</span>
+<span class="kp-upload__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Uploading quarterly-report.pdf"></span>
+</li>
+<li class="kp-upload__file" data-state="error">
+<span>holiday.mov</span><span class="kp-upload__size">210 MB</span>
+<span class="kp-upload__message">Larger than the 5 MB limit.</span>
+</li>
+</ul>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__list&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;uploading&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">span</span>&gt;quarterly-report.pdf&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;1.2 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__bar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Uploading quarterly-report.pdf&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">span</span>&gt;holiday.mov&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;210 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__message&quot;</span>&gt;Larger than the 5 MB limit.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-dragging</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-drop</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-locale</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-max-bytes</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-max-files</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-max-total</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-remove-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-upload</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-upload-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-upload-file</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-upload-input</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-upload-list</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-upload-remove</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-upload-zone</code></td><td>selector</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Upload } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/flow.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>Upload</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Upload props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>maxBytes</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>maxFiles</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>maxTotal</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>accept</code></td><td><code>string</code></td><td>optional</td><td>Same syntax as the input's own; also set on the input.</td></tr>
+                            <tr><td><code>multiple</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>dropping</code></td><td><code>boolean</code></td><td>optional</td><td>Drag and drop. Default true.</td></tr>
+                            <tr><td><code>disabled</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>rows</code></td><td><code>UploadRow[]</code></td><td>optional</td><td>Controlled list.</td></tr>
+                            <tr><td><code>onRowsChange</code></td><td><code>(rows: UploadRow[]) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onFiles</code></td><td><code>(files: File[]) =&gt; void</code></td><td>optional</td><td>The accepted files of one pick.</td></tr>
+                            <tr><td><code>onReject</code></td><td><code>(file: File, reason: string, message: string) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onRemove</code></td><td><code>(row: UploadRow) =&gt; boolean | void</code></td><td>optional</td><td>Return false to keep the row.</td></tr>
+                            <tr><td><code>validate</code></td><td><code>(file: File, accepted: File[]) =&gt; string | null</code></td><td>optional</td><td>A reason refuses the file.</td></tr>
+                            <tr><td><code>locale</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>renderRow</code></td><td><code>(row: UploadRow, remove: () =&gt; void) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>removeGlyph</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What the zone shows. Default: `label`, else the dictionary's.</td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-upload-file</code></td><td>Fired for each accepted file. A contract value [TH26]: the detail carries the File and its row.</td></tr>
+                            <tr><td><code>kp-upload-reject</code></td><td>Fired for a file the zone refused: `{ file, reason, item }`.</td></tr>
+                            <tr><td><code>kp-upload-remove</code></td><td>Fired on the row before it is removed, cancelable: `{ file, item }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-progress</code></td><td><code>0%</code></td></tr>
+                            <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.875rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the real file input stays in the tab order under the zone, so the keyboard route is the same one the pointer uses.</li>
+                        <li>Built in — a refusal is a sentence in the row, and sizes are printed in the page’s locale rather than in one hard-coded format.</li>
+                        <li>Built in — removing a file is a button with a name, and the removal is an event a consumer can refuse.</li>
+                        <li>Yours — send the files and report back what happened; the component shows the outcome you give it.</li>
+                        <li>Yours — say what is allowed before the reader picks: the types, the size and how many.</li>
+                        <li>Yours — keep the file input in the markup even though it is visually hidden. Hiding it with display none takes it out of the tab order.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-upload__zone</code></td><td>The target. It is a label, which is what makes it operable without a pointer.</td></tr>
+                            <tr><td><code>dragging</code></td><td>While files are over the zone it takes the primary boundary and the page’s full ink.</td></tr>
+                            <tr><td><code>.kp-upload__file</code></td><td>One row: name, size, and room underneath for a bar or a message.</td></tr>
+                            <tr><td><code>.kp-upload__bar</code></td><td>Progress, as a fill across the row rather than a separate element.</td></tr>
+                            <tr><td><code>.kp-upload__message</code></td><td>Why a file was refused, or what is happening to it, in words under the row.</td></tr>
+                            <tr><td><code>error</code></td><td>A refused or failed row takes the destructive boundary and its message the destructive colour.</td></tr>
+                    </tbody></table></div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

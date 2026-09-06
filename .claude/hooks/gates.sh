@@ -44,6 +44,9 @@ node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
 
+echo "→ the documentation site matches its source and holds its promises (TH100, TH101)"
+node gates/generate-site.mjs --check && node gates/check-site.mjs
+
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 

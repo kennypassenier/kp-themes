@@ -27,6 +27,7 @@ import { extractAttributes } from './site/extract-attributes.mjs';
 import { extractEvents } from './site/extract-events.mjs';
 import { extractKnobs } from './site/extract-knobs.mjs';
 import { extractProps } from './site/extract-props.mjs';
+import { attributeOwners, eventOwners, knobsOf, rowsOf } from './site/selection.mjs';
 import { FAMILIES, names as utilityNames } from './generate-utilities.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -44,6 +45,14 @@ const EMPHASIS = { emphasis: true };
 
 const UTILITY_COUNT = utilityNames().length;
 
+// What the published site needs beside the pages this generator writes:
+// the stylesheets and modules every page loads, and the showcase, which
+// is one entry in the navigation [AR22]. Declared here rather than in
+// .github/workflows/pages.yml, because two lists of what the site
+// consists of means the CI one ships. `--assets` prints it, one per
+// line, and the workflow copies what it is told.
+export const ASSETS = ['css', 'js', 'showcase'];
+
 /**
  * @typedef {{ href: string, label: string }} Link
  * @typedef {{ group: string, links: Link[] }[]} Nav
@@ -52,6 +61,8 @@ const UTILITY_COUNT = utilityNames().length;
  *   events: ReturnType<typeof extractEvents>,
  *   knobs: ReturnType<typeof extractKnobs>,
  *   attributes: ReturnType<typeof extractAttributes>,
+ *   eventOwners: Map<string, Set<string>>,
+ *   attributeOwners: Map<string, Set<string>>,
  * }} Sources
  * @typedef {import('./site/descriptors.mjs').Descriptor} Descriptor
  */
@@ -250,7 +261,19 @@ function utilitiesPage(nav) {
  */
 function componentPage(nav, descriptor, sources) {
     const { props, events, knobs, attributes } = sources;
-    const component = props.components.find((c) => descriptor.exports.includes(c.name));
+    // Every export the page documents, in the order the descriptor names
+    // them, and each with its own table: a page that documented two and
+    // printed one table was showing the first component's props under the
+    // second component's name.
+    //
+    // A component whose props are written inline in the declaration
+    // (`Spinner`, `Skeleton`) is not in `components` — the mapping rule is
+    // `X` is documented by `XProps` — but the extractor parsed its members
+    // all the same and reports it as unmapped with the reason. Reading it
+    // from there is the difference between "no props" and "no props type".
+    const documented = descriptor.exports
+        .map((name) => props.components.find((c) => c.name === name) ?? props.unmapped.find((u) => u.name === name))
+        .filter((c) => c !== undefined);
 
     const examples = descriptor.examples
         .map(
@@ -265,26 +288,29 @@ ${ex.markup}
         )
         .join('\n');
 
-    const propRows = (component?.props ?? [])
-        .map(
-            (p) =>
-                `                            <tr><td><code>${escape(p.name)}</code></td><td><code>${escape(p.type)}</code></td><td>${p.optional ? 'optional' : 'required'}</td><td>${escape(p.description)}</td></tr>`,
-        )
-        .join('\n');
-
-    const ownEvents = events.events.filter((e) => descriptor.classes.some((c) => e.module.includes(c.replace(/^kp-/, ''))));
-    const ownKnobs = knobs.knobs.filter((k) => k.families.some((f) => descriptor.classes.includes(f)));
-    const ownAttributes = attributes.attributes.filter((a) => a.families.some((f) => descriptor.classes.includes(f)));
+    const ownEvents = rowsOf(events.events, sources.eventOwners, descriptor);
+    const ownKnobs = knobsOf(knobs.knobs, descriptor);
+    const ownAttributes = rowsOf(attributes.attributes, sources.attributeOwners, descriptor);
 
     /**
+     * One machine-sourced table, in the package's own scroll wrapper.
+     *
+     * Not a bare table: at 360px the props table on every component page
+     * was 525px wide and the whole document scrolled sideways with it,
+     * which is the fault `.kp-table-wrap` exists to prevent (DI11,
+     * SC 1.4.10). The site holds itself to the bar it sets. The label is
+     * what names the scroll region, so it is the section's own word
+     * rather than a caption repeating the heading above it.
+     *
+     * @param {string} label
      * @param {string[]} head
      * @param {string} rows
      * @param {string} empty
      */
-    const table = (head, rows, empty) =>
+    const table = (label, head, rows, empty) =>
         rows.length === 0
             ? `                    <p class="kp-text-muted">${empty}</p>`
-            : `                    <table class="kp-table"><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>\n${rows}\n                    </tbody></table>`;
+            : `                    <div class="kp-table-wrap" data-kp-region-label="${escape(label)}"><table class="kp-table"><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>\n${rows}\n                    </tbody></table></div>`;
 
     const body = [
         `                <header class="kp-section">
@@ -297,7 +323,9 @@ ${ex.markup}
             'markup',
             'Framework-free markup',
             `                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
 ${table(
+    'Attributes',
     ['Attribute', 'What it does'],
     ownAttributes
         .map((a) => `                            <tr><td><code>${escape(a.name)}</code></td><td>${escape(a.roles.join(', '))}</td></tr>`)
@@ -308,15 +336,41 @@ ${table(
         section(
             'react',
             'React usage',
-            component
-                ? `                    <pre class="kp-code-block"><code>${highlight(`import { ${component.name} } from '@kp-soft/themes/${component.module.replace(/\.jsx$/, '')}';`, 'js')}</code></pre>`
+            documented.length > 0
+                ? `                    <pre class="kp-code-block"><code>${highlight(
+                      `import { ${documented.map((c) => c.name).join(', ')} } from '@kp-soft/themes';`,
+                      'js',
+                  )}</code></pre>
+                    <p class="kp-text-muted">Declared in ${documented.map((c) => `<code>${escape('module' in c ? c.module : c.declaration.replace(/\.d\.ts$/, '.jsx'))}</code>`).join(', ')}; the package re-exports every component from its root.</p>`
                 : `                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>`,
         ),
-        section('props', 'Props', table(['Prop', 'Type', 'Required', 'What it does'], propRows, 'No props: this unit is CSS and markup only.')),
+        section(
+            'props',
+            'Props',
+            documented.length === 0
+                ? `                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>`
+                : documented
+                      .map(
+                          (c) =>
+                              `                    <h3 class="kp-fw-semibold"><code>${escape(c.name)}</code></h3>\n${table(
+                                  `${c.name} props`,
+                                  ['Prop', 'Type', 'Required', 'What it does'],
+                                  c.props
+                                      .map(
+                                          (p) =>
+                                              `                            <tr><td><code>${escape(p.name)}</code></td><td><code>${escape(p.type)}</code></td><td>${p.optional ? 'optional' : 'required'}</td><td>${escape(p.description)}</td></tr>`,
+                                      )
+                                      .join('\n'),
+                                  'This component declares no props of its own.',
+                              )}`,
+                      )
+                      .join('\n'),
+        ),
         section(
             'events',
             'Events',
             table(
+                'Events',
                 ['Event', 'What it means'],
                 ownEvents
                     .map((e) => `                            <tr><td><code>${escape(e.name)}</code></td><td>${escape(e.description)}</td></tr>`)
@@ -328,6 +382,7 @@ ${table(
             'knobs',
             'Knobs',
             table(
+                'Knobs',
                 ['Custom property', 'Default'],
                 ownKnobs
                     .map(
@@ -347,6 +402,7 @@ ${table(
             'variants',
             'Variants and states',
             table(
+                'Variants and states',
                 ['Name', 'What it is'],
                 descriptor.variants
                     .map((v) => `                            <tr><td><code>${escape(v.name)}</code></td><td>${escape(v.what)}</td></tr>`)
@@ -456,11 +512,17 @@ ${highlightCss()}`;
 
 /** Every page the site holds, as a path relative to site/ plus content. */
 function build() {
+    const events = extractEvents();
+    const attributes = extractAttributes();
     const sources = {
         props: extractProps(),
-        events: extractEvents(),
+        events,
         knobs: extractKnobs(),
-        attributes: extractAttributes(),
+        attributes,
+        // Resolved once for the whole site: an attribute's owner depends
+        // on what every other page claims, not only on this one.
+        eventOwners: eventOwners(events.events, DESCRIPTORS),
+        attributeOwners: attributeOwners(attributes.attributes, DESCRIPTORS),
     };
 
     /** @type {{group: string, links: {href: string, label: string}[]}[]} */
@@ -495,6 +557,11 @@ function build() {
         })),
     ];
     return pages;
+}
+
+if (process.argv.includes('--assets')) {
+    for (const asset of ASSETS) console.log(asset);
+    process.exit(0);
 }
 
 const pages = build();

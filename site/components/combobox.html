@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Combobox and tag input — kp-themes</title>
+        <meta name="description" content="A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html" aria-current="page">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Combobox and tag input</h1>
+                    <p class="kp-prose">A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">When there are more options than a select can carry comfortably and the reader knows roughly what they are looking for. Not for a handful of fixed choices — a select is smaller, needs no script and works before the page has finished loading. Not for a free-text field with suggestions you may ignore either: this one is about choosing from a list.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A combobox over a list the server wrote</figcaption>
+                        <p class="kp-text-muted">The options are markup, not a JavaScript array: a page rendered by a server shows the list before any script runs. The status line is not decoration — it is how anyone who cannot see the list shrink is told that it did.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-combobox" data-kp-combobox>
+<label class="kp-field__label" for="doc-combobox-fruit">Fruit</label>
+<input class="kp-combobox__input" id="doc-combobox-fruit" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-fruit-list" placeholder="Pick or type…" />
+<ul class="kp-combobox__list" id="doc-combobox-fruit-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="apple">Apple</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="banana">Banana</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="lemon">Lemon</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span>&gt;Fruit&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Pick or type…&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;apple&quot;</span>&gt;Apple&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;banana&quot;</span>&gt;Banana&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;lemon&quot;</span>&gt;Lemon&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The same markup as a tag input</figcaption>
+                        <p class="kp-text-muted">One flag on the wrapper turns choosing into appending. Tags the server already rendered into the list are read at attach, so a reloaded page keeps them.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-combobox" data-kp-combobox data-kp-tags>
+<label class="kp-field__label" for="doc-combobox-labels">Labels</label>
+<ul class="kp-tag-list" data-kp-tag-list>
+<li class="kp-tag">urgent<button type="button" class="kp-tag__remove" data-kp-tag-remove aria-label="Remove urgent">×</button></li>
+</ul>
+<input class="kp-combobox__input" id="doc-combobox-labels" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-labels-list" />
+<ul class="kp-combobox__list" id="doc-combobox-labels-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="urgent">Urgent</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="bug">Bug</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="idea">Idea</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span> <span class="kp-code__keyword">data-kp-tags</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span>&gt;Labels&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag-list&quot;</span> <span class="kp-code__keyword">data-kp-tag-list</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;urgent&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">data-kp-tag-remove</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove urgent&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;urgent&quot;</span>&gt;Urgent&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;bug&quot;</span>&gt;Bug&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;idea&quot;</span>&gt;Idea&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-backspace-removes</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-close-on-blur</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-combobox</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-combobox-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-combobox-status</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-debounce</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-disabled</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-duplicates</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-loop</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-match</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-max-tags</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-open-on-focus</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-option</code></td><td>prose, selector</td></tr>
+                            <tr><td><code>data-kp-remove-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-stay-open</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-tag-list</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-tag-remove</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-tags</code></td><td>read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Combobox } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/combobox.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>Combobox</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Combobox props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>options</code></td><td><code>ComboboxOption[]</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>label</code></td><td><code>string</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>tags</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>value</code></td><td><code>string</code></td><td>optional</td><td>Controlled text (combobox) — the query.</td></tr>
+                            <tr><td><code>defaultValue</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onQueryChange</code></td><td><code>(query: string) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>values</code></td><td><code>string[]</code></td><td>optional</td><td>Controlled chosen values (tags).</td></tr>
+                            <tr><td><code>defaultValues</code></td><td><code>string[]</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onChange</code></td><td><code>(value: string, values: string[], action: 'add' | 'remove' | 'clear' | 'create') =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>open</code></td><td><code>boolean</code></td><td>optional</td><td>Controlled.</td></tr>
+                            <tr><td><code>defaultOpen</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onOpenChange</code></td><td><code>(open: boolean) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>match</code></td><td><code>keyof typeof MATCHERS | Matcher</code></td><td>optional</td><td>Default substring.</td></tr>
+                            <tr><td><code>openOnFocus</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>closeOnBlur</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>backspaceRemoves</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>stayOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Keep the list open after adding a tag. Default true.</td></tr>
+                            <tr><td><code>maxTags</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>allowDuplicates</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>creatable</code></td><td><code>boolean</code></td><td>optional</td><td>Enter on no match creates the typed value.</td></tr>
+                            <tr><td><code>clearable</code></td><td><code>boolean</code></td><td>optional</td><td>A clear button on the combobox.</td></tr>
+                            <tr><td><code>loop</code></td><td><code>boolean</code></td><td>optional</td><td>Arrow keys wrap. Default true.</td></tr>
+                            <tr><td><code>loading</code></td><td><code>boolean</code></td><td>optional</td><td>Says so in the status line instead of a count.</td></tr>
+                            <tr><td><code>name</code></td><td><code>string</code></td><td>optional</td><td>A hidden input carries the value(s) for a plain &lt;form&gt;.</td></tr>
+                            <tr><td><code>placeholder</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>disabled</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>required</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>renderOption</code></td><td><code>(option: ComboboxOption, state: { active: boolean; selected: boolean; }) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>renderTag</code></td><td><code>(value: string, label: string, remove: () =&gt; void) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>removeGlyph</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>clearGlyph</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>inputProps</code></td><td><code>Record&lt;string, unknown&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ label?: string; input?: string; list?: string; option?: string; tag?: string; status?: string; }</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-combobox-change</code></td><td>The event a consumer listens for. A contract value [TH26]: the detail carries `{ value, label, values, action }` — the value just chosen or removed, its label, every value held (one for a combobox, the whole set for a tag input), and which of 'add' | 'remove' | 'set' it was.</td></tr>
+                            <tr><td><code>kp-combobox-open</code></td><td>Fired when the list opens or closes: `{ open }`.</td></tr>
+                            <tr><td><code>kp-listbox-highlight</code></td><td>Dispatched on the list, bubbling, when the highlight moves: `{ index, option }`.</td></tr>
+                            <tr><td><code>kp-listbox-choose</code></td><td>Dispatched on the list, bubbling, when an option is chosen: `{ index, option }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-combobox-list-max-height</code></td><td><code>15rem</code></td></tr>
+                            <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
+                            <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.875rem</code></td></tr>
+                            <tr><td><code>--kp-z-popover</code></td><td><code>20</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — virtual focus: the highlight travels the list while the cursor stays in the input, so typing keeps working and the current option is announced.</li>
+                        <li>Built in — the number of matches is announced after typing, which is the single most-skipped part of every hand-written combobox.</li>
+                        <li>Built in — Escape closes the list, Enter takes the highlight, and the input keeps its own expanded state in step.</li>
+                        <li>Yours — write the options with a value and a label. The module filters and announces what is there; it fetches nothing.</li>
+                        <li>Yours — give the input a label and the list a name, and give every tag’s remove button a name that includes the tag.</li>
+                        <li>Yours — keep the status paragraph in the markup. Without it the list is silent to anyone who cannot see it.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-combobox</code></td><td>The wrapper. It positions the list, so it is the element the list is measured against.</td></tr>
+                            <tr><td><code>.kp-combobox__list</code></td><td>The floating list: its own surface, a boundary that survives whatever is behind it, and a maximum height it scrolls inside.</td></tr>
+                            <tr><td><code>is-active</code></td><td>The keyboard’s position in the list. It is mirrored on hover so the mouse and the keyboard agree about what Enter would take.</td></tr>
+                            <tr><td><code>hidden option</code></td><td>An option filtered out is hidden rather than removed, so the list the server wrote is still the list after typing.</td></tr>
+                            <tr><td><code>.kp-combobox__clear</code></td><td>The clear control inside the input, at the trailing edge.</td></tr>
+                            <tr><td><code>.kp-tag-list / .kp-tag</code></td><td>With tags on: the chosen values as removable chips above the input.</td></tr>
+                            <tr><td><code>.kp-tag__remove</code></td><td>The remove control on a tag. Its hover takes the destructive colour, and the tap target is widened by the tag rather than by growing the glyph.</td></tr>
+                            <tr><td><code>.kp-combobox__status</code></td><td>The live region that says how many options are left after each keystroke.</td></tr>
+                    </tbody></table></div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>
