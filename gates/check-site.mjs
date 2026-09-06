@@ -8,6 +8,14 @@
 //     React export has a page. Drill: delete a descriptor and the gate
 //     names the families and exports it left uncovered.
 //
+//     And every `data-kp-*` and every event, because those are the
+//     framework-free channel's props and AR21 says the site exists to
+//     document them. The selection rule lives in gates/site/selection.mjs
+//     so the gate and the generator cannot disagree about it: a page
+//     "covers" an attribute exactly when the page prints it. Drill:
+//     remove an alias from a descriptor and the gate names the
+//     attributes that fell off the site.
+//
 //  2. TRUTH — every prop in a page's table exists in the source, and
 //     every prop in the source is in the table. Because the tables are
 //     extracted rather than written, the fault this catches is a
@@ -28,6 +36,9 @@ import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { DESCRIPTORS } from './site/descriptors.mjs';
 import { extractProps } from './site/extract-props.mjs';
+import { extractEvents } from './site/extract-events.mjs';
+import { extractAttributes } from './site/extract-attributes.mjs';
+import { attributeOwners, eventOwners } from './site/selection.mjs';
 import { stripCssComments } from './site/extract-knobs.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -69,12 +80,38 @@ if (uncoveredExports.length > 0) {
     failures.push(`${uncoveredExports.length} React exports have no page: ${uncoveredExports.join(', ')}`);
 }
 
+// The three attributes js/diagnostics.js writes onto its own report are
+// documented by the page that report is on (showcase/diagnostics.html),
+// not by a component: nothing in css/components.css styles them and no
+// component reads them.
+const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status']);
+
+const attributes = extractAttributes().attributes;
+const attributesOwned = attributeOwners(attributes, DESCRIPTORS);
+const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name)).map((a) => a.name);
+if (strayAttributes.length > 0) {
+    failures.push(`${strayAttributes.length} data attributes are on no page: ${strayAttributes.join(', ')}`);
+}
+
+const events = extractEvents().events;
+const eventsOwned = eventOwners(events, DESCRIPTORS);
+const strayEvents = events.filter((e) => !eventsOwned.has(e.name)).map((e) => e.name);
+if (strayEvents.length > 0) {
+    failures.push(`${strayEvents.length} events are on no page: ${strayEvents.join(', ')}`);
+}
+
 // ── 2. Truth ─────────────────────────────────────────────────────────
 const known = new Set(props.components.map((c) => c.name));
+
+// Every page prints one import from the package root, so the root has to
+// export what the page says it does. Drill: delete a line from index.js.
+const index = readFileSync(`${ROOT}index.js`, 'utf8');
 for (const d of DESCRIPTORS) {
     for (const name of d.exports) {
         if (!known.has(name) && !props.unmapped.some((u) => u.name === name)) {
             failures.push(`${d.id} documents the export \`${name}\`, which components/ does not have`);
+        } else if (!new RegExp(`\\b${name}\\b`).test(index)) {
+            failures.push(`${d.id} prints an import of \`${name}\` from the package root, which index.js does not re-export`);
         }
     }
     for (const family of d.classes) {
@@ -115,5 +152,6 @@ if (failures.length > 0) {
 }
 
 console.log(
-    `Site: ${DESCRIPTORS.length} pages cover ${families.size} class families and ${props.components.length} React exports; every example is on its page as written.`,
+    `Site: ${DESCRIPTORS.length} pages cover ${families.size} class families, ${props.components.length} React exports, ` +
+        `${attributesOwned.size} data attributes and ${eventsOwned.size} events; every example is on its page as written.`,
 );

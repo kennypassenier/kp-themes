@@ -56,6 +56,9 @@ node gates/generate-examples.mjs --check
 echo "→ no inline styles on the example pages (TH109)"
 node gates/check-inline-styles.mjs
 
+echo "→ the documentation site matches its source and holds its promises (TH100, TH101)"
+node gates/generate-site.mjs --check && node gates/check-site.mjs
+
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 

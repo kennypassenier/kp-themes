@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Alert — kp-themes</title>
+        <meta name="description" content="A message on a coloured plate that also says, in words, what kind of message it is. Four flavours, no hover and no active state: an alert is a message, not a control." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html" aria-current="page">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Alert</h1>
+                    <p class="kp-prose">A message on a coloured plate that also says, in words, what kind of message it is. Four flavours, no hover and no active state: an alert is a message, not a control.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For something the reader has to know about the page or their last action, in place, where it happened. Not for a message about a single field — that belongs under the field, where the eye already is. Not for something that can be missed either: an alert appears in the page rather than announcing itself, so a passing confirmation is a toast.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The four flavours</figcaption>
+                        <p class="kp-text-muted">Each names itself in text as well as in colour: four coloured plates are one plate to somebody who sees them all the same. The contract enforcer disarms a semantic alert that carries no words.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-alert kp-alert--success" role="status" data-kp-semantic><span><span class="kp-alert__label">Success: </span>The application was sent.</span></div>
+<div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">Warning: </span>Two attachments were larger than the limit.</span></div>
+<div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">Note: </span>Applications are kept for twelve months.</span></div>
+<div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic><span><span class="kp-alert__label">Error: </span>The server refused the file.</span></div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--success&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Success: &lt;/<span class="kp-code__keyword">span</span>&gt;The application was sent.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Two attachments were larger than the limit.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Note: &lt;/<span class="kp-code__keyword">span</span>&gt;Applications are kept for twelve months.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Error: &lt;/<span class="kp-code__keyword">span</span>&gt;The server refused the file.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">With an icon and a way out</figcaption>
+                        <p class="kp-text-muted">The icon is decorative — the word beside it is what carries the meaning — and the close button is a named control rather than a bare glyph.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+<span class="kp-alert__icon" aria-hidden="true">!</span>
+<span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Your session ends in five minutes.</span>
+<button type="button" class="kp-icon-button kp-alert__close" aria-label="Dismiss this message">×</button>
+</div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Your session ends in five minutes.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss this message&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-semantic</code></td><td>selector</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Alert } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/alert.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>Alert</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Alert props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>flavour</code></td><td><code>'success' | 'warning' | 'info' | 'destructive'</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>label</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>separator</code></td><td><code>string</code></td><td>optional</td><td>Between the label and the text. Default &quot;: &quot;.</td></tr>
+                            <tr><td><code>icon</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onDismiss</code></td><td><code>() =&gt; void</code></td><td>optional</td><td>Renders a close button when given.</td></tr>
+                            <tr><td><code>as</code></td><td><code>import('react').ElementType</code></td><td>optional</td><td>Default 'div'.</td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ label?: string; body?: string; icon?: string; close?: string; }</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <p class="kp-text-muted">This unit fires no events.</p>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <p class="kp-text-muted">This unit reads no knobs of its own.</p>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — a semantic alert with no words is refused by the contract enforcer, which is DI4 made mechanical rather than remembered.</li>
+                        <li>Built in — every ground and ink pair on these plates is in the contrast gate; no alert invents a colour.</li>
+                        <li>Yours — choose the role: a status for something the reader can finish reading first, an alert only for what interrupts.</li>
+                        <li>Yours — an alert added after the page has loaded needs a live region, or it appears silently.</li>
+                        <li>Yours — name the dismiss button, and leave the reader a way back to what the message was about.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-alert</code></td><td>The neutral plate, for a message with no flavour at all.</td></tr>
+                            <tr><td><code>.kp-alert--success / --warning / --info / --destructive</code></td><td>The four semantic plates. Each takes its own ground and the ink that is measured against it.</td></tr>
+                            <tr><td><code>.kp-alert__label</code></td><td>The word that names the flavour, in bold, before the message.</td></tr>
+                            <tr><td><code>.kp-alert__icon</code></td><td>A decorative glyph at the leading edge, sized so it does not stretch with the text.</td></tr>
+                            <tr><td><code>.kp-alert__body</code></td><td>The message itself, taking the remaining width — a bare span here leaves the close button in the middle of the plate.</td></tr>
+                            <tr><td><code>.kp-alert__close</code></td><td>The dismiss control, pushed to the trailing edge.</td></tr>
+                    </tbody></table></div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

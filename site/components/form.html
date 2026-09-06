@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Form — kp-themes</title>
+        <meta name="description" content="A form that makes the browser’s own validation reachable: the messages the browser already found are put where a screen reader will read them, gathered into a summary at the top, and the first one takes focus when a submit fails." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html" aria-current="page">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Form</h1>
+                    <p class="kp-prose">A form that makes the browser’s own validation reachable: the messages the browser already found are put where a screen reader will read them, gathered into a summary at the top, and the first one takes focus when a submit fails.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For anything the reader fills in and sends. Not for a single filter or search box — that is one field and needs no summary. Not as a validation engine either: the rules stay the browser’s, so a field validates by declaring what it is rather than by a rule written twice, once here and once on the server.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A form that validates on submit</figcaption>
+                        <p class="kp-text-muted">The summary is empty and hidden until a submit fails; then it names each failing field as a link, takes focus, and each field’s own message appears under it. Native validation stays on, its popups do not.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<form class="kp-form" data-kp-form>
+<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+<div class="kp-field">
+<label class="kp-field__label" for="doc-form-name">Name <span class="kp-field__required">required</span></label>
+<input class="kp-field__input" id="doc-form-name" name="name" required aria-describedby="doc-form-name-help" />
+<span class="kp-field__help" id="doc-form-name-help">As it appears on your pass.</span>
+<span class="kp-field__error" data-kp-field-error hidden></span>
+</div>
+<div class="kp-field">
+<label class="kp-field__label" for="doc-form-mail">Email <span class="kp-field__required">required</span></label>
+<input class="kp-field__input" id="doc-form-mail" name="email" type="email" required />
+<span class="kp-field__error" data-kp-field-error hidden></span>
+</div>
+<button type="submit" class="kp-button kp-button--primary" data-kp-submit>Save</button>
+</form>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">data-kp-form</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span>&gt;Name &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;name&quot;</span> <span class="kp-code__keyword">required</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span>&gt;As it appears on your pass.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span>&gt;Email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Save&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-busy</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-field-error</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-focus-summary</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-form</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-form-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-form-summary</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-revalidate-on</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-submit</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-submit-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-validate-on</code></td><td>read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Form, FormField } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/form.jsx</code>, <code>components/form.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>Form</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Form props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>onValid</code></td><td><code>(data: FormData, done: () =&gt; void, event: import('react').FormEvent&lt;HTMLFormElement&gt;) =&gt; void | Promise&lt;unknown&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onInvalid</code></td><td><code>(errors: Record&lt;string, string&gt;, fields: Control[]) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>busy</code></td><td><code>boolean</code></td><td>optional</td><td>Controlled.</td></tr>
+                            <tr><td><code>errors</code></td><td><code>Record&lt;string, string&gt;</code></td><td>optional</td><td>Errors from outside — a server's — by field name. Merged with what the browser finds.</td></tr>
+                            <tr><td><code>validateOn</code></td><td><code>'blur' | 'change' | 'submit'</code></td><td>optional</td><td>Default blur.</td></tr>
+                            <tr><td><code>revalidateOn</code></td><td><code>'change' | 'blur' | 'none'</code></td><td>optional</td><td>Once a field is marked. Default change.</td></tr>
+                            <tr><td><code>focusOnError</code></td><td><code>boolean</code></td><td>optional</td><td>Move focus to the summary. Default true.</td></tr>
+                            <tr><td><code>summary</code></td><td><code>boolean</code></td><td>optional</td><td>Render the error summary. Default true.</td></tr>
+                            <tr><td><code>summaryHeadingLevel</code></td><td><code>1 | 2 | 3 | 4 | 5 | 6</code></td><td>optional</td><td>Default: a paragraph.</td></tr>
+                            <tr><td><code>renderSummary</code></td><td><code>(state: { count: number; items: { id: string; name: string; }[]; focus: (id: string) =&gt; void; }) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>submitButton</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>actions</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>Replaces the submit button; the consumer renders its own controls.</td></tr>
+                            <tr><td><code>submitLabel</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>busyLabel</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ summary?: string; submit?: string; }</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                    <h3 class="kp-fw-semibold"><code>FormField</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="FormField props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>label</code></td><td><code>import('react').ReactNode</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>name</code></td><td><code>string</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>help</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>error</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>required</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>requiredIndicator</code></td><td><code>boolean</code></td><td>optional</td><td>Show the word beside the label. Default true.</td></tr>
+                            <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>type</code></td><td><code>string</code></td><td>optional</td><td>The control: an input type, or select, textarea, checkbox, radio.</td></tr>
+                            <tr><td><code>options</code></td><td><code>{ value: string; label: import('react').ReactNode; disabled?: boolean; help?: import('react').ReactNode; }[]</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>layout</code></td><td><code>'stacked' | 'inline'</code></td><td>optional</td><td>For a radio group. Default stacked.</td></tr>
+                            <tr><td><code>wrapperProps</code></td><td><code>import('react').HTMLAttributes&lt;HTMLElement&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ label?: string; control?: string; help?: string; error?: string; option?: string; }</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-form-valid</code></td><td>Fired when a form passes validation. A contract value [TH26]: the detail carries the FormData and, since KT6, a `done()` that ends the busy state. A consumer may call it, or return nothing and dispatch `DONE_EVENT` on the form themselves — same effect.</td></tr>
+                            <tr><td><code>kp-form-invalid</code></td><td>Fired when a submit failed validation: `{ fields, names }`.</td></tr>
+                            <tr><td><code>kp-field-validity</code></td><td>Fired on a field when its validity was checked: `{ valid, message }`.</td></tr>
+                            <tr><td><code>kp-form-done</code></td><td>Ends the busy state the submit button took on `VALID_EVENT` [KT6]. Dispatched on the form by `detail.done()`, or by the consumer directly. Nothing dispatches it on its own: a consumer who navigates away on submit must not get back a button that double-sends.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-control-accent</code></td><td><code>var(--primary)</code></td></tr>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-field-gap</code></td><td><code>var(--kp-space-xs)</code></td></tr>
+                            <tr><td><code>--kp-field-max-width</code></td><td><code>28rem</code></td></tr>
+                            <tr><td><code>--kp-form-gap</code></td><td><code>var(--kp-space-lg)</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-glyph-required</code></td><td><code>'\002A\00a0'</code></td></tr>
+                            <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
+                            <tr><td><code>--kp-menu-item-pad</code></td><td><code>0.375rem 0.625rem</code></td></tr>
+                            <tr><td><code>--kp-popover-max-height</code></td><td><code>min(80vh, 40rem)</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.875rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.6875rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the browser’s own popups are turned off and its validation kept: the message is put in the page instead, where it can be styled, read and left standing.</li>
+                        <li>Built in — a failed submit moves focus to the summary, and each entry in it moves focus to the field it names.</li>
+                        <li>Built in — every field that fails is marked invalid and pointed at its message, so it is announced rather than only coloured.</li>
+                        <li>Yours — give each control a name and the constraint that describes it; that is what the browser validates.</li>
+                        <li>Yours — repeat the validation on the server. This is what the reader sees, not what protects the data.</li>
+                        <li>Yours — keep the submit a real submit button, or the form cannot be sent with the keyboard.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-form</code></td><td>The column: fields stacked with one distance between them.</td></tr>
+                            <tr><td><code>.kp-form__summary</code></td><td>The error summary. It is a focus target rather than a banner, because a message that appears above the fold is invisible to someone whose focus is at the bottom.</td></tr>
+                            <tr><td><code>.kp-form__summary-title</code></td><td>The line that says what the summary is, in words, above the list of failing fields.</td></tr>
+                            <tr><td><code>busy</code></td><td>While a save is in flight the form marks itself, so a consumer can disable what it wants to; the outcome is reported back through the callback the event hands over.</td></tr>
+                            <tr><td><code>server errors</code></td><td>Errors a server found are handed in and shown in the same places as the browser’s own, rather than in a second mechanism beside them.</td></tr>
+                    </tbody></table></div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

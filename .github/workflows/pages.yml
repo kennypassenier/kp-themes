@@ -1,14 +1,15 @@
-name: Site
+name: Documentation site
 
-# MR5-PAGES: what is published is named here, and only that. A Pages site
-# served from the repository root would publish docs/ as well — the scope
-# documents, the correction log, the mini-round queue — which is not what
-# "publish the site" meant.
+# S27: what is published is the generated site, with the showcase as one
+# page in it. MR5-PAGES still holds — a Pages site served from the
+# repository root would publish docs/ as well, the scope documents, the
+# correction log, the mini-round queue — so the upload is assembled
+# rather than taken whole.
 #
-# So the site is assembled here: the documentation site, the showcase,
-# the example pages and exactly the directories they load from. Every one
-# of those directories is written by a generator whose --check runs in
-# the gate chain, so nothing here can carry a page nobody generated.
+# AR22: the site is committed, so nothing is generated here. And the list
+# of what it needs beside its own pages lives in the generator
+# (`node gates/generate-site.mjs --assets`), because two lists of what
+# the site consists of means the CI one ships.
 
 on:
   push:
@@ -29,17 +30,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble the site
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # The site as committed matches the sources it was generated from;
+      # publishing a stale one would put a page on the internet that no
+      # gate ever read.
+      - name: The committed site matches its source
+        run: node gates/generate-site.mjs --check
+      - name: Assemble the upload
         run: |
           mkdir -p _site
           cp -r site _site/site
-          cp -r showcase _site/showcase
-          cp -r examples _site/examples
-          cp -r css _site/css
-          cp -r js _site/js
-          cp -r dist _site/dist
-          # The start page lives one directory down; the root redirects to
-          # it so the Pages URL lands somewhere useful.
+          for asset in $(node gates/generate-site.mjs --assets); do
+            cp -r "$asset" "_site/$asset"
+          done
+          # The site lives one directory down; the root redirects to it so
+          # the Pages URL lands somewhere useful.
           printf '<!doctype html><meta http-equiv="refresh" content="0; url=./site/">\n' > _site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
