@@ -916,3 +916,83 @@ accepteerbaar" — which is the platform list Firefox and Chromium before
 135 draw themselves, and is recorded as a known limitation in MIGRATION
 and the USER_GUIDE. 3.1.0 was tagged on `482e575` and published. The loop
 in `docs/MINI_ROUNDS.md` is closed.
+
+## KT9 · The release was improvised past the project's own automation
+
+**Proposed 2026-09-06, live-found during the 3.1.1 patch release.** Kenny
+chose "Merge en meteen taggen" for TH89 (terminal's block cursor onto the
+focused field). Claude merged PR #16, tagged `v3.1.1`, and then hand-built
+a GitHub release instead of reading what the repository already does on a
+tag push.
+
+**1 · What went wrong.** Claude ran `gh release create v3.1.1 ...` with
+three hand-picked files (`themes.css`, `components.css`, `MIGRATION.md`)
+and a `SHA256SUMS` computed by hand over only those three, and published
+it directly — without first reading `.github/workflows/release.yml`.
+That workflow is the actual process: a `v*` tag push runs the gates, then
+`npm run checksums` (`gates/checksums.mjs`, ten files: `css/themes.css`,
+`css/components.css`, `css/cyberpunk-register.css`,
+`css/tailwind-bridge.css`, `js/theme-core.js`, `js/theme-registry.js`,
+`js/theme-picker.js`, `js/components.js`, `js/overlays.js`,
+`js/no-flash.js`), then `gh release create "${GITHUB_REF_NAME}" --draft
+--notes-file CHANGELOG.md SHA256SUMS MIGRATION.md css/themes.css
+css/components.css` — a **draft**, on purpose: "Pushing a tag is a
+technical act; publishing is Kenny's, and the two should not be the same
+keystroke" (the workflow's own comment). Because Claude's manual release
+claimed the tag name first, the CI job's own draft-creation step logged a
+confusing interim URL
+(`.../releases/tag/untagged-c5bf100edd9eedb60203`) instead of a clean
+`v3.1.1` — it still landed correctly as a draft on the right tag
+(`id 383642992`), so no release was lost, but the **published** release
+Claude made (`id 383642993`) carried an incomplete `SHA256SUMS` — three
+of the canonical ten files — for about ten minutes, publicly, before it
+was caught. Evidence: CI run 34044610223's "Draft release" step log;
+`gh api repos/kennypassenier/kp-themes/releases` before and after the
+fix.
+
+**2 · Which gate let it through.** None — this happened outside the
+phase-gate procedure, in a same-turn merge-and-release chosen through a
+one-item form Claude wrote without having read the repository's release
+automation first. KT1's rule (every checkable claim in a form is checked
+in the same turn, with file:line) covers exactly this: the form's
+consequence line promised "Claude tagt v3.1.1 en maakt de GitHub release
+… direct erna" without Claude having checked, that turn, what "de
+release" concretely does in this repository.
+
+**3 · Where else does the same fault already sit.** Checked now:
+`.github/workflows/` holds exactly one tag-triggered workflow
+(`release.yml`); nothing else in this repository automates the same job
+a different way. The generalizable shape — replicating by hand a step a
+project's own CI already automates, without reading that CI's definition
+first — is not yet named anywhere in `~/Projects/dev-procedure/`, so it
+can recur in any project with a release or deploy workflow; kp-themes is
+simply where it was first caught.
+
+**4 · The measure.** Before performing, by hand, any action a project
+might already automate on a trigger Claude is about to fire (a tag push,
+a merge to a deploy branch), check that trigger's workflow file(s) first
+and follow what they do, rather than reconstructing the step from memory
+of an earlier round. Recorded here for kp-themes specifically — the
+`.github/workflows/release.yml` comment now doubles as the answer to
+"what does releasing do here"; whether the rule generalizes to
+`~/Projects/dev-procedure/STANDING_RULES.md` is for the round's
+retrospective to decide, alongside KT7 and KT8.
+
+**5 · Cost.** Near zero — one `ls .github/workflows` / grep before a
+release-shaped action, on top of the checks Claude already runs for
+gates.
+
+**6 · Enforced by.** Discipline only; no gate can force "check the
+automation before improvising its job".
+
+**7 · Measured, and when.** At kp-themes' next `v*` tag push: confirm
+Claude reads the release workflow (or whatever it has become) before
+touching `gh release create` by hand.
+
+**8 · Fallback.** The same repair applies again: delete the wrong
+release object, regenerate from the project's own script
+(`npm run checksums`), verify every checksum against the tagged tree.
+About ten minutes — already exercised once, here.
+
+**9 · Review.** At kp-themes' Phase 10 retrospective for round three,
+together with KT7 and KT8.
