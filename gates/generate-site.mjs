@@ -428,6 +428,10 @@ function siteCss() {
 
     .sc-swatch__chip {
         display: block;
+        /* Border-box, or the 1px border on each side puts the chip 2px
+           past its own list item and the overflow gate reads it as an
+           element wider than its container. */
+        box-sizing: border-box;
         inline-size: 100%;
         block-size: 1.75rem;
         border: 1px solid var(--border);
