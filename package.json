@@ -170,7 +170,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:ids && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -190,6 +190,7 @@
         "generate:examples": "node gates/generate-examples.mjs",
         "check:examples": "node gates/generate-examples.mjs --check",
         "check:examples-wired": "node gates/check-examples-wired.mjs",
+        "check:ids": "node gates/check-ids.mjs",
         "check:inline-styles": "node gates/check-inline-styles.mjs",
         "generate:site": "node gates/generate-site.mjs",
         "check:site": "node gates/generate-site.mjs --check && node gates/check-site.mjs",

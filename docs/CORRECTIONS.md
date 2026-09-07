@@ -1016,3 +1016,75 @@ commit `6f0f9a3`. This closing note is written here because the
 correction's own header says a correction is closed only when field 7 has
 happened, and until now that closure lived only in the queue document —
 found by the round-three retrospective's evidence pass on 2026-09-07.
+
+## KT10 · A frozen Essential feature went unbuilt because one ID meant two things
+
+Approved by Kenny on 2026-09-07, all nine fields unchanged.
+
+**1 · What went wrong.** `docs/FEATURES.md:319` names D3 as "`STRINGS_NL`
+leaves the exports" and lists it among the eight Essential features of
+round five. This project's own Phase 4 text (AR27) and the brief given to
+the W1 agent both used D3 for a different removal — `ARM_EVENT` and
+`DISARM_EVENT`. The agent built those, and the frozen D3 was never built.
+It passed unseen through five milestones, a merge, a full suite of 1302
+browser tests and the combined AFK report. That report even said D3 had
+"no test"; the truth was milder-sounding and worse — it did not exist.
+
+**2 · Which gate let it through.** The procedure has a check for exactly
+this: Phase 6's report carries a registry-coverage item naming, per
+feature ID, what exists with its promised tests and what does not. It
+exists because two frozen Musts on an earlier project turned out never to
+have been built. The item ran; it was filled in wrongly. The search was
+"which tests mention D3" rather than "what does the frozen list say D3
+is".
+
+**3 · Where else the same fault sits — measured, 2026-09-07.** Across
+`FEATURES.md`, `MINI_ROUNDS.md`, `INVENTORY.md`, `SCOPE.md`,
+`ARCHITECTURE_DECISIONS.md` and `CORRECTIONS.md`, **270 IDs are defined
+and 23 are defined in more than one document.** Five of those are
+cross-references to one thing — KT2, KT7, KT8, KT9 and TH47 each appear
+in a correction and in the queue, which is the point. **The other
+eighteen are genuine collisions:** T1 through T16 mean a technology
+choice in `ARCHITECTURE_DECISIONS.md` and an inventoried unit in
+`INVENTORY.md` — `T1` is "Seven palette blocks" there and "the
+framework-free channel is CSS classes plus one script" here — plus D3
+and F1. So the fault is not "D3 was used twice". It is that an ID's
+meaning is kept unique nowhere, and that is true eighteen times.
+
+**4 · The measure.** A gate that refuses an ID meaning two different
+things in two documents: it reads the ID definitions out of the six
+documents and fails when one symbol is defined in two of them, with an
+exception list carrying a reason per line for the real cross-references.
+And the eighteen existing collisions are cleaned up, because a gate that
+is red on day one gets switched off. `INVENTORY.md` takes its own prefix:
+it documents units and has no claim on T, D or F. Deliberately NOT a rule
+saying "check the feature list before reusing an ID" — that is the kind
+of resolution this form exists to replace.
+
+**5 · What it costs.** The gate is small — one script of the same shape
+as the others, plus a drill. The cleanup is the real work: renaming
+eighteen IDs touches hundreds of lines of `INVENTORY.md`, a historical
+document nobody else reads. The risk is that the exception list grows
+until it covers half the cases, at which point the gate measures nothing.
+
+**6 · Who enforces it.** Code. The gate runs in `npm run gates` and in
+the commit hook, so a commit that adds a colliding ID is physically
+refused. That is deliberate: this project's four other named rules are
+discipline-enforced, and this fault happened precisely because a person
+did not look something up.
+
+**7 · How and when it is measured.** At the next Phase 2 that freezes a
+feature list — the moment new IDs come into being, and therefore the only
+moment the gate has anything to say. The measurement is an injected
+colliding ID: the gate must go red naming both documents. A point in the
+process, not a calendar date. The measure stays open in
+`docs/MINI_ROUNDS.md` until that has actually happened.
+
+**8 · The fallback.** If the exception list grows until the gate refuses
+nothing, it is dropped for something blunter: every ID carries its
+document as a prefix — `FEAT-D3`, `INV-D3` — so a collision becomes
+impossible rather than caught. More expensive to read, and it cannot
+break.
+
+**9 · When the measure is reviewed.** At the Phase 10 of the round in
+which field 7's measurement was made.

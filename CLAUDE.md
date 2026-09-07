@@ -90,6 +90,22 @@ consumer arranges its own integration and asks for what it needs. A
 request inside the scope — a component, a type, a token — is the supported
 way to get one. Scope stays: define themes, build components on them.
 
+## Project rule from correction KT10 (2026-09-07)
+
+One ID means one thing. A symbol defined in two of this project's
+documents is refused by `gates/check-ids.mjs`, which runs in `npm run
+gates` and in the commit hook — with an exception list for the handful of
+genuine cross-references, each carrying its reason. `docs/INVENTORY.md`
+has its own `INV-` namespace, because it documents units and has no claim
+on the T, D or F series the other documents use.
+
+Code-enforced, deliberately: the four rules above this one rest on
+discipline, and this fault happened precisely because a person did not
+look something up. A frozen Essential feature went unbuilt through five
+milestones, a merge, 1302 browser tests and a combined report, because
+D3 meant `STRINGS_NL` in the feature list and something else in the
+architecture text. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Procedure status
 
 | Field               | Value                                                                                                                                                                  |

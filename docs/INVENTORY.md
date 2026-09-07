@@ -9,11 +9,11 @@ Brownfield inventory of everything the repository at
 `/home/kenny/Projects/kp-themes` actually contains, at commit `5c378b9`
 (package version 0.1.1, git tags `v0.1.0` and `v0.1.1`). Written from the
 code, not from the documentation; where a document and the code disagree,
-the disagreement is recorded as its own item (D10).
+the disagreement is recorded as its own item (INV-D10).
 
 Scope: every tracked file except `node_modules/`, `.git/` and the
 contents of `package-lock.json` (the lock file itself is inventoried as
-G16). 28 files are tracked; the 27 inventoried here hold 2 820 lines of
+INV-G16). 28 files are tracked; the 27 inventoried here hold 2 820 lines of
 text.
 
 Method: entry points first — `package.json` `exports` and `scripts`,
@@ -33,120 +33,120 @@ file and, where useful, its line.
 | ID | Name | File | State |
 | --- | --- | --- | --- |
 | **T — theme tokens and shared CSS machinery** | | | |
-| T1 | Seven palette blocks | css/themes.css:15-398 | working |
-| T2 | `:root` fallback = formal | css/themes.css:15-16 | working |
-| T3 | Nineteen surface/role tokens | css/themes.css (per block) | working |
-| T4 | Five chart tokens | css/themes.css (per block) | working, unused here |
-| T5 | Eight sidebar tokens | css/themes.css (per block) | working, unused here |
-| T6 | Fourteen status-badge tokens | css/themes.css (per block) | working |
-| T7 | `--radius` per theme | css/themes.css:66,120,173,226,289,342,397 | working |
-| T8 | `--theme-font-display` (3 of 7 themes) | css/themes.css:67,227,344 | half-wired |
-| T9 | `--font-sans` override (terminal only) | css/themes.css:343 | declared, unused in plain CSS |
-| T10 | `--fx-signal` pair (cyberpunk only) | css/themes.css:229-230 | working, ungated |
-| T11 | `--fx-notch` (cyberpunk only) | css/themes.css:232 | working |
-| T12 | `--fx-duration` / `--fx-ease` (cyberpunk only) | css/themes.css:234-236 | working |
-| T13 | Shared texture layer `body::after` | css/themes.css:409-418 | working |
-| T14 | Per-theme texture declarations | css/themes.css:421-479 | working, 6 of 7 themes |
-| T15 | Pastel overprint headings | css/themes.css:452-456 | working |
-| T16 | Terminal phosphor bloom headings | css/themes.css:464-467 | working |
-| T17 | Terminal `::selection` | css/themes.css:469-472 | working |
-| T18 | Formal display-serif headings | css/themes.css:483-487 | working |
-| T19 | Cyberpunk `::selection` | css/themes.css:489-492 | working |
-| T20 | `.glow-*` utilities | css/themes.css:494-512 | working, nothing here emits them |
-| T21 | `.gradient-text` utility | css/themes.css:514-526 | working, nothing here emits it |
-| T22 | `body` colour rule + 400 ms transition | css/themes.css:531-537 | working |
-| T23 | Tokens no gate covers | css/themes.css | observation |
-| T24 | Tokens that do not exist | css/themes.css | absence |
+| INV-T1 | Seven palette blocks | css/themes.css:15-398 | working |
+| INV-T2 | `:root` fallback = formal | css/themes.css:15-16 | working |
+| INV-T3 | Nineteen surface/role tokens | css/themes.css (per block) | working |
+| INV-T4 | Five chart tokens | css/themes.css (per block) | working, unused here |
+| INV-T5 | Eight sidebar tokens | css/themes.css (per block) | working, unused here |
+| INV-T6 | Fourteen status-badge tokens | css/themes.css (per block) | working |
+| INV-T7 | `--radius` per theme | css/themes.css:66,120,173,226,289,342,397 | working |
+| INV-T8 | `--theme-font-display` (3 of 7 themes) | css/themes.css:67,227,344 | half-wired |
+| INV-T9 | `--font-sans` override (terminal only) | css/themes.css:343 | declared, unused in plain CSS |
+| INV-T10 | `--fx-signal` pair (cyberpunk only) | css/themes.css:229-230 | working, ungated |
+| INV-T11 | `--fx-notch` (cyberpunk only) | css/themes.css:232 | working |
+| INV-T12 | `--fx-duration` / `--fx-ease` (cyberpunk only) | css/themes.css:234-236 | working |
+| INV-T13 | Shared texture layer `body::after` | css/themes.css:409-418 | working |
+| INV-T14 | Per-theme texture declarations | css/themes.css:421-479 | working, 6 of 7 themes |
+| INV-T15 | Pastel overprint headings | css/themes.css:452-456 | working |
+| INV-T16 | Terminal phosphor bloom headings | css/themes.css:464-467 | working |
+| INV-T17 | Terminal `::selection` | css/themes.css:469-472 | working |
+| INV-T18 | Formal display-serif headings | css/themes.css:483-487 | working |
+| INV-T19 | Cyberpunk `::selection` | css/themes.css:489-492 | working |
+| INV-T20 | `.glow-*` utilities | css/themes.css:494-512 | working, nothing here emits them |
+| INV-T21 | `.gradient-text` utility | css/themes.css:514-526 | working, nothing here emits it |
+| INV-T22 | `body` colour rule + 400 ms transition | css/themes.css:531-537 | working |
+| INV-T23 | Tokens no gate covers | css/themes.css | observation |
+| INV-T24 | Tokens that do not exist | css/themes.css | absence |
 | **C — picker runtime (hook + React component)** | | | |
-| C1 | `THEME_META` record | hooks/use-theme.js:8-16 | working |
-| C2 | Derived constants | hooks/use-theme.js:21-33 | working |
-| C3 | `isTheme` guard | hooks/use-theme.js:39-45 | working |
-| C4 | localStorage read/write | hooks/use-theme.js:47-63 | working |
-| C5 | Provider-free external store | hooks/use-theme.js:65-91 | working |
-| C6 | `applyTheme` | hooks/use-theme.js:98-106 | working |
-| C7 | `initializeTheme` | hooks/use-theme.js:112-114 | working |
-| C8 | `useTheme` + precedence + revert | hooks/use-theme.js:129-174 | working |
-| C9 | `useAppearance` shim | hooks/use-theme.js:178-181 | dead code here |
-| C10 | `ThemeSwitcher` | components/theme-switcher.jsx:60-142 | working |
-| C11 | Inline SVG icons | components/theme-switcher.jsx:11-48 | working |
-| C12 | Outside-click / Escape dismissal | components/theme-switcher.jsx:72-88 | working |
-| C13 | Tailwind class dependency + `[data-theme-switcher]` | components/theme-switcher.jsx:91-134 | working, conditional |
-| C14 | Dutch default strings | hooks/use-theme.js:9-15, components/theme-switcher.jsx:63-64 | working |
-| C15 | Framework-free picker | — | not present |
+| INV-C1 | `THEME_META` record | hooks/use-theme.js:8-16 | working |
+| INV-C2 | Derived constants | hooks/use-theme.js:21-33 | working |
+| INV-C3 | `isTheme` guard | hooks/use-theme.js:39-45 | working |
+| INV-C4 | localStorage read/write | hooks/use-theme.js:47-63 | working |
+| INV-C5 | Provider-free external store | hooks/use-theme.js:65-91 | working |
+| INV-C6 | `applyTheme` | hooks/use-theme.js:98-106 | working |
+| INV-C7 | `initializeTheme` | hooks/use-theme.js:112-114 | working |
+| INV-C8 | `useTheme` + precedence + revert | hooks/use-theme.js:129-174 | working |
+| INV-C9 | `useAppearance` shim | hooks/use-theme.js:178-181 | dead code here |
+| INV-C10 | `ThemeSwitcher` | components/theme-switcher.jsx:60-142 | working |
+| INV-C11 | Inline SVG icons | components/theme-switcher.jsx:11-48 | working |
+| INV-C12 | Outside-click / Escape dismissal | components/theme-switcher.jsx:72-88 | working |
+| INV-C13 | Tailwind class dependency + `[data-theme-switcher]` | components/theme-switcher.jsx:91-134 | working, conditional |
+| INV-C14 | Dutch default strings | hooks/use-theme.js:9-15, components/theme-switcher.jsx:63-64 | working |
+| INV-C15 | Framework-free picker | — | not present |
 | **F — cyberpunk register and effect components** | | | |
-| F1 | Register texture override | css/cyberpunk-register.css:20-26 | working |
-| F2 | `.microlabel` | css/cyberpunk-register.css:30-40 | working, needs `--font-mono` |
-| F3 | Neon caret | css/cyberpunk-register.css:43-46 | working |
-| F4 | Card underglow | css/cyberpunk-register.css:50-68 | needs `data-slot='card'` |
-| F5 | Clipped corner | css/cyberpunk-register.css:71-80 | needs `data-slot` or `.fx-notch` |
-| F6 | Button charge sweep | css/cyberpunk-register.css:84-94 | needs `data-slot='button'` |
-| F7 | `.fx-brackets` | css/cyberpunk-register.css:98-123 | needs the class |
-| F8 | `.fx-rule` | css/cyberpunk-register.css:127-147 | needs the class |
-| F9 | Themed scrollbar | css/cyberpunk-register.css:150-171 | working |
-| F10 | `.fx-signal-badge` | css/cyberpunk-register.css:174-178 | needs the class |
-| F11 | Reduced-motion guard block | css/cyberpunk-register.css:182-242 | working |
-| F12 | `.fx-flicker` | css/cyberpunk-register.css:184-186, 244-267 | needs the class |
-| F13 | `.fx-pulse` | css/cyberpunk-register.css:190-202, 269-273 | needs the class |
-| F14 | `.fx-glitch` | css/cyberpunk-register.css:206-230, 275-311 | needs class + `data-text` |
-| F15 | `.fx-media` RGB split | css/cyberpunk-register.css:233-236, 313-326 | needs the class |
-| F16 | `.fx-cellpop` | css/cyberpunk-register.css:239-241, 328-336 | needs the class |
-| F17 | Register line budget by markup requirement | css/cyberpunk-register.css | measurement |
-| F18 | `fx/` barrel | fx/index.js | working |
-| F19 | `BootSequence` | fx/boot-sequence.jsx | unverified, needs `motion` |
-| F20 | `DecipherText` | fx/decipher-text.jsx | unverified |
-| F21 | `DigitalRain` | fx/digital-rain.jsx | unverified |
-| F22 | `ScrambleNumber` | fx/scramble-number.jsx | unverified |
-| F23 | Shared guard pattern of the four components | fx/*.jsx | working |
-| F24 | `role="text"` accessibility wrapper | fx/decipher-text.jsx:53, fx/scramble-number.jsx:36 | non-standard |
-| F25 | No component emits a register class | fx/, components/ | observation |
+| INV-F1 | Register texture override | css/cyberpunk-register.css:20-26 | working |
+| INV-F2 | `.microlabel` | css/cyberpunk-register.css:30-40 | working, needs `--font-mono` |
+| INV-F3 | Neon caret | css/cyberpunk-register.css:43-46 | working |
+| INV-F4 | Card underglow | css/cyberpunk-register.css:50-68 | needs `data-slot='card'` |
+| INV-F5 | Clipped corner | css/cyberpunk-register.css:71-80 | needs `data-slot` or `.fx-notch` |
+| INV-F6 | Button charge sweep | css/cyberpunk-register.css:84-94 | needs `data-slot='button'` |
+| INV-F7 | `.fx-brackets` | css/cyberpunk-register.css:98-123 | needs the class |
+| INV-F8 | `.fx-rule` | css/cyberpunk-register.css:127-147 | needs the class |
+| INV-F9 | Themed scrollbar | css/cyberpunk-register.css:150-171 | working |
+| INV-F10 | `.fx-signal-badge` | css/cyberpunk-register.css:174-178 | needs the class |
+| INV-F11 | Reduced-motion guard block | css/cyberpunk-register.css:182-242 | working |
+| INV-F12 | `.fx-flicker` | css/cyberpunk-register.css:184-186, 244-267 | needs the class |
+| INV-F13 | `.fx-pulse` | css/cyberpunk-register.css:190-202, 269-273 | needs the class |
+| INV-F14 | `.fx-glitch` | css/cyberpunk-register.css:206-230, 275-311 | needs class + `data-text` |
+| INV-F15 | `.fx-media` RGB split | css/cyberpunk-register.css:233-236, 313-326 | needs the class |
+| INV-F16 | `.fx-cellpop` | css/cyberpunk-register.css:239-241, 328-336 | needs the class |
+| INV-F17 | Register line budget by markup requirement | css/cyberpunk-register.css | measurement |
+| INV-F18 | `fx/` barrel | fx/index.js | working |
+| INV-F19 | `BootSequence` | fx/boot-sequence.jsx | unverified, needs `motion` |
+| INV-F20 | `DecipherText` | fx/decipher-text.jsx | unverified |
+| INV-F21 | `DigitalRain` | fx/digital-rain.jsx | unverified |
+| INV-F22 | `ScrambleNumber` | fx/scramble-number.jsx | unverified |
+| INV-F23 | Shared guard pattern of the four components | fx/*.jsx | working |
+| INV-F24 | `role="text"` accessibility wrapper | fx/decipher-text.jsx:53, fx/scramble-number.jsx:36 | non-standard |
+| INV-F25 | No component emits a register class | fx/, components/ | observation |
 | **B — Tailwind binding** | | | |
-| B1 | `@theme` colour aliases | css/tailwind-bridge.css:11-53 | working |
-| B2 | `dark` custom variant | css/tailwind-bridge.css:9 | working |
-| B3 | `[data-theme]` re-declaration block | css/tailwind-bridge.css:66-103 | working |
-| B4 | Radius scale mapping | css/tailwind-bridge.css:17-19, 99-101 | working |
-| B5 | Font family mapping | css/tailwind-bridge.css:12-15, 102 | working |
-| B6 | Status tokens are not bridged | css/tailwind-bridge.css | absence |
-| B7 | Consumer obligations of the bridge | css/tailwind-bridge.css + README.md:191-207 | working, external |
+| INV-B1 | `@theme` colour aliases | css/tailwind-bridge.css:11-53 | working |
+| INV-B2 | `dark` custom variant | css/tailwind-bridge.css:9 | working |
+| INV-B3 | `[data-theme]` re-declaration block | css/tailwind-bridge.css:66-103 | working |
+| INV-B4 | Radius scale mapping | css/tailwind-bridge.css:17-19, 99-101 | working |
+| INV-B5 | Font family mapping | css/tailwind-bridge.css:12-15, 102 | working |
+| INV-B6 | Status tokens are not bridged | css/tailwind-bridge.css | absence |
+| INV-B7 | Consumer obligations of the bridge | css/tailwind-bridge.css + README.md:191-207 | working, external |
 | **G — gates, scripts, packaging, tooling** | | | |
-| G1 | Contrast check, what it asserts | scripts/check-contrast.mjs:23-40, 75-98 | working |
-| G2 | Theme discovery from the CSS | scripts/check-contrast.mjs:17-18 | working |
-| G3 | Colour maths | scripts/check-contrast.mjs:49-73 | working |
-| G4 | Target-file argument | scripts/check-contrast.mjs:11-12 | working |
-| G5 | Failure modes | scripts/check-contrast.mjs | observation |
-| G6 | `STATUS_NAMES` export + module side effect | scripts/check-contrast.mjs:21 | dead export |
-| G7 | npm scripts | package.json:32-36 | working |
-| G8 | Export map | package.json:14-21 | working |
-| G9 | `files` array | package.json:22-31 | working |
-| G10 | Peers, engines, `private`, `sideEffects` | package.json:11-13,37-51 | working |
-| G11 | `index.js` barrel | index.js:1-15 | working |
-| G12 | Node pin | .nvmrc | working |
-| G13 | Prettier configuration | .prettierrc, .prettierignore | working |
-| G14 | `jsconfig.json` type checking | jsconfig.json | configured, never run |
-| G15 | `.gitignore` | .gitignore | working |
-| G16 | `package-lock.json` | package-lock.json | stale |
-| G17 | Tooling that is absent | — | absence |
-| G18 | Version and tag surface | package.json, git tags | working |
+| INV-G1 | Contrast check, what it asserts | scripts/check-contrast.mjs:23-40, 75-98 | working |
+| INV-G2 | Theme discovery from the CSS | scripts/check-contrast.mjs:17-18 | working |
+| INV-G3 | Colour maths | scripts/check-contrast.mjs:49-73 | working |
+| INV-G4 | Target-file argument | scripts/check-contrast.mjs:11-12 | working |
+| INV-G5 | Failure modes | scripts/check-contrast.mjs | observation |
+| INV-G6 | `STATUS_NAMES` export + module side effect | scripts/check-contrast.mjs:21 | dead export |
+| INV-G7 | npm scripts | package.json:32-36 | working |
+| INV-G8 | Export map | package.json:14-21 | working |
+| INV-G9 | `files` array | package.json:22-31 | working |
+| INV-G10 | Peers, engines, `private`, `sideEffects` | package.json:11-13,37-51 | working |
+| INV-G11 | `index.js` barrel | index.js:1-15 | working |
+| INV-G12 | Node pin | .nvmrc | working |
+| INV-G13 | Prettier configuration | .prettierrc, .prettierignore | working |
+| INV-G14 | `jsconfig.json` type checking | jsconfig.json | configured, never run |
+| INV-G15 | `.gitignore` | .gitignore | working |
+| INV-G16 | `package-lock.json` | package-lock.json | stale |
+| INV-G17 | Tooling that is absent | — | absence |
+| INV-G18 | Version and tag surface | package.json, git tags | working |
 | **D — documentation** | | | |
-| D1 | README.md | README.md | present, partly stale |
-| D2 | CLAUDE.md | CLAUDE.md | present, stale |
-| D3 | HANDOFF.md | HANDOFF.md | present |
-| D4 | docs/SCOPE.md | docs/SCOPE.md | present, approved |
-| D5 | docs/THEMING.md | docs/THEMING.md | verbatim copy, foreign paths |
-| D6 | docs/CYBERPUNK_THEME_RESEARCH.md | docs/CYBERPUNK_THEME_RESEARCH.md | verbatim copy |
-| D7 | docs/CORRECTIONS.md | docs/CORRECTIONS.md | present |
-| D8 | docs/MINI_ROUNDS.md | docs/MINI_ROUNDS.md | present, one open item |
-| D9 | docs/REQUESTS_FROM_CONSUMERS.md | docs/REQUESTS_FROM_CONSUMERS.md | present |
-| D10 | Contradictions between the documents and the code | — | findings |
+| INV-D1 | README.md | README.md | present, partly stale |
+| INV-D2 | CLAUDE.md | CLAUDE.md | present, stale |
+| INV-D3 | HANDOFF.md | HANDOFF.md | present |
+| INV-D4 | docs/SCOPE.md | docs/SCOPE.md | present, approved |
+| INV-D5 | docs/THEMING.md | docs/THEMING.md | verbatim copy, foreign paths |
+| INV-D6 | docs/CYBERPUNK_THEME_RESEARCH.md | docs/CYBERPUNK_THEME_RESEARCH.md | verbatim copy |
+| INV-D7 | docs/CORRECTIONS.md | docs/CORRECTIONS.md | present |
+| INV-D8 | docs/MINI_ROUNDS.md | docs/MINI_ROUNDS.md | present, one open item |
+| INV-D9 | docs/REQUESTS_FROM_CONSUMERS.md | docs/REQUESTS_FROM_CONSUMERS.md | present |
+| INV-D10 | Contradictions between the documents and the code | — | findings |
 
 ---
 
 ## T — Theme tokens and shared CSS machinery
 
 All of section T lives in `css/themes.css` (537 lines). The file is
-imported by the export path `@kp-soft/themes/css` (G8) and vendored
+imported by the export path `@kp-soft/themes/css` (INV-G8) and vendored
 verbatim by kyu and Almanac (see "Consumers" below).
 
-### T1 · Seven palette blocks
+### INV-T1 · Seven palette blocks
 
 Seven CSS blocks, one per theme, each a flat list of custom properties:
 formal at lines 15-68 (selector `:root, [data-theme='formal']`), light
@@ -157,30 +157,30 @@ out.
 
 Measured token counts per block: formal 48, light 47, dark 47, cyberpunk
 53, pastel 47, terminal 49, topo 47. Forty-seven token names are common
-to all seven (T3 + T4 + T5 + T6 + T7). Seven names appear in fewer than
+to all seven (INV-T3 + INV-T4 + INV-T5 + INV-T6 + INV-T7). Seven names appear in fewer than
 seven blocks and are the entire asymmetry of the file:
 
 | Token | Declared in | Item |
 | --- | --- | --- |
-| `--theme-font-display` | formal, cyberpunk, terminal (3) | T8 |
-| `--font-sans` | terminal (1) | T9 |
-| `--fx-signal`, `--fx-signal-foreground` | cyberpunk (1) | T10 |
-| `--fx-notch` | cyberpunk (1) | T11 |
-| `--fx-duration`, `--fx-ease` | cyberpunk (1) | T12 |
+| `--theme-font-display` | formal, cyberpunk, terminal (3) | INV-T8 |
+| `--font-sans` | terminal (1) | INV-T9 |
+| `--fx-signal`, `--fx-signal-foreground` | cyberpunk (1) | INV-T10 |
+| `--fx-notch` | cyberpunk (1) | INV-T11 |
+| `--fx-duration`, `--fx-ease` | cyberpunk (1) | INV-T12 |
 
-Exercised by: the contrast gate (G1) reads 21 token pairs out of every
+Exercised by: the contrast gate (INV-G1) reads 21 token pairs out of every
 block; JobTracker renders all seven through `ThemeSwitcher`; kyu and
 Almanac ship the same file byte for byte.
 
-### T2 · `:root` fallback = formal
+### INV-T2 · `:root` fallback = formal
 
 `css/themes.css:15-16` binds the formal block to `:root` as well as to
 `[data-theme='formal']`, so a page with no `data-theme` attribute still
-gets a complete token set. Coupled to C6/C7, which are the only things in
+gets a complete token set. Coupled to INV-C6/INV-C7, which are the only things in
 the package that set the attribute, and to kyu's `templates/layout.html:2`
 which hardcodes `data-theme="formal"` on `<html>` instead.
 
-### T3 · Nineteen surface and role tokens
+### INV-T3 · Nineteen surface and role tokens
 
 Per theme: `--background`, `--foreground`, `--card`, `--card-foreground`,
 `--popover`, `--popover-foreground`, `--primary`,
@@ -188,25 +188,25 @@ Per theme: `--background`, `--foreground`, `--card`, `--card-foreground`,
 `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`,
 `--destructive`, `--destructive-foreground`, `--border`, `--input`,
 `--ring`. All values are written as `hsl(h, s%, l%)` with commas — a form
-the contrast script's parser depends on (G3). Fifteen of the nineteen are
-covered by the gate; `--border`, `--input` and `--ring` are not (T23).
+the contrast script's parser depends on (INV-G3). Fifteen of the nineteen are
+covered by the gate; `--border`, `--input` and `--ring` are not (INV-T23).
 
-### T4 · Five chart tokens
+### INV-T4 · Five chart tokens
 
 `--chart-1` … `--chart-5` per theme (e.g. `css/themes.css:37-41` for
 formal). Nothing in this repository consumes them; they are aliased into
-Tailwind by B1 and left to the consumer. No contrast pair covers them.
+Tailwind by INV-B1 and left to the consumer. No contrast pair covers them.
 
-### T5 · Eight sidebar tokens
+### INV-T5 · Eight sidebar tokens
 
 `--sidebar-background`, `--sidebar-foreground`, `--sidebar-primary`,
 `--sidebar-primary-foreground`, `--sidebar-accent`,
 `--sidebar-accent-foreground`, `--sidebar-border`, `--sidebar-ring` per
 theme (formal: `css/themes.css:42-49`). Three of the four pairs are
-gated (G1); `--sidebar-border` and `--sidebar-ring` are not (T23). No
+gated (INV-G1); `--sidebar-border` and `--sidebar-ring` are not (INV-T23). No
 markup in this package uses them.
 
-### T6 · Fourteen status-badge tokens
+### INV-T6 · Fourteen status-badge tokens
 
 Seven `--status-<name>` / `--status-<name>-foreground` pairs per theme:
 draft, sent, screening, interview, offer, rejected, withdrawn. Formal
@@ -220,24 +220,24 @@ Exercised by: the gate checks all seven pairs in all seven themes (49
 assertions), and JobTracker's `dashboard/packages/web/src/components/StatusPill.jsx:24-25`
 reads them directly as `var(--status-${phase})`.
 
-### T7 · `--radius` per theme
+### INV-T7 · `--radius` per theme
 
 One value per theme: formal `0.375rem` (:66), light `0.5rem` (:120), dark
 `0.5rem` (:173), cyberpunk `0.25rem` (:226), pastel `1rem` (:289),
 terminal `0rem` (:342), topo `0.625rem` (:397). Nothing in this package's
 plain CSS applies it; it reaches a page only through the Tailwind radius
-scale (B4). Note that F5 sets `border-radius: 0` on cyberpunk cards and
+scale (INV-B4). Note that INV-F5 sets `border-radius: 0` on cyberpunk cards and
 buttons, overriding the theme's own `0.25rem`.
 
-### T8 · `--theme-font-display`
+### INV-T8 · `--theme-font-display`
 
 Declared by three themes: formal `'Fraunces', Georgia, …` (:67),
 cyberpunk `'Chakra Petch', 'JetBrains Mono', …` (:227), terminal
 `'Share Tech Mono', …` (:344). In plain CSS the token is read exactly
 once, at `css/themes.css:485`, and only for `[data-theme='formal'] h1, h2`
-(T18). Cyberpunk's and terminal's display faces are therefore never
+(INV-T18). Cyberpunk's and terminal's display faces are therefore never
 applied by this stylesheet. The package offers two ways to reach them:
-the Tailwind `--font-display` alias (B5), or a consumer writing its own
+the Tailwind `--font-display` alias (INV-B5), or a consumer writing its own
 rule that reads the token.
 
 **Both plain-CSS consumers took the second route, independently and
@@ -252,7 +252,7 @@ for itself — the same drift the framework-free picker exists to stop,
 in a second place. The fonts themselves are not shipped (see "External
 dependencies").
 
-### T9 · `--font-sans` override in terminal
+### INV-T9 · `--font-sans` override in terminal
 
 `css/themes.css:343` sets `--font-sans` to a monospace stack inside the
 terminal block. No rule in `css/themes.css` or
@@ -275,41 +275,41 @@ signal the package should publish it: kp-themes expresses "terminal's
 body is monospace" as `--font-sans`, a name neither consumer thinks to
 read.
 
-### T10 · `--fx-signal` / `--fx-signal-foreground`
+### INV-T10 · `--fx-signal` / `--fx-signal-foreground`
 
 `css/themes.css:229-230`, cyberpunk only, described in the comment as
-"the rare third signal colour". Read by F10 in the register. No other
+"the rare third signal colour". Read by INV-F10 in the register. No other
 theme declares them, so `.fx-signal-badge` is inert elsewhere — and this
 pair is the one colour pair in the file the contrast gate never checks
-(T23).
+(INV-T23).
 
-### T11 · `--fx-notch`
+### INV-T11 · `--fx-notch`
 
-`css/themes.css:232`, cyberpunk only, `14px`. Read by F5's `clip-path`
+`css/themes.css:232`, cyberpunk only, `14px`. Read by INV-F5's `clip-path`
 with a `var(--fx-notch, 0px)` fallback, so themes that do not declare it
 clip nothing.
 
-### T12 · `--fx-duration` / `--fx-ease`
+### INV-T12 · `--fx-duration` / `--fx-ease`
 
 `css/themes.css:234-236`, cyberpunk only, `140ms` and a custom cubic
-bezier. Read by F4 (`var(--fx-duration, 200ms)`) and F6
+bezier. Read by INV-F4 (`var(--fx-duration, 200ms)`) and INV-F6
 (`var(--fx-duration, 140ms)`), both with literal fallbacks. Note the two
 fallbacks differ from each other.
 
-### T13 · Shared texture layer
+### INV-T13 · Shared texture layer
 
 `css/themes.css:409-418`: one `body::after` pseudo-element, `position:
 fixed`, `inset: 0`, `z-index: 80`, `pointer-events: none`, painting
 `var(--fx-texture, none)` at `var(--fx-texture-opacity, 0)`. A theme that
 declares no texture renders a fully transparent layer rather than
 nothing. This is the only rule in the package that touches `body`
-besides T22, and the only one that assumes a `<body>` element exists.
+besides INV-T22, and the only one that assumes a `<body>` element exists.
 
-Coupling: the layer sits at z-index 80; `BootSequence` (F19) renders at
+Coupling: the layer sits at z-index 80; `BootSequence` (INV-F19) renders at
 `z-[90]` and the switcher's listbox at `z-50`, so the texture paints over
 the picker and under the boot overlay.
 
-### T14 · Per-theme texture declarations
+### INV-T14 · Per-theme texture declarations
 
 Six declarations, each adding `--fx-texture` (+ size, + opacity) to a
 theme block that already exists above: formal, an inline SVG turbulence
@@ -322,37 +322,37 @@ at 6 % (:475-479).
 
 The seventh theme, cyberpunk, has no texture in this file. Its texture
 (vignette + scanlines) is declared in `css/cyberpunk-register.css:20-26`
-(F1), which means a consumer that imports only `@kp-soft/themes/css` —
+(INV-F1), which means a consumer that imports only `@kp-soft/themes/css` —
 which is exactly what kyu and Almanac vendor — gets a cyberpunk theme
 with a blank texture layer.
 
-### T15 · Pastel overprint headings
+### INV-T15 · Pastel overprint headings
 
 `css/themes.css:452-456`: `h1, h2` under `[data-theme='pastel']` get a
 2 px offset `text-shadow` in a second ink. Works on any markup with
 headings.
 
-### T16 · Terminal phosphor bloom
+### INV-T16 · Terminal phosphor bloom
 
 `css/themes.css:464-467`: `h1, h2` under `[data-theme='terminal']` get an
 8 px green glow.
 
-### T17 · Terminal `::selection`
+### INV-T17 · Terminal `::selection`
 
 `css/themes.css:469-472`: green plate, near-black text, for selected text
 in the terminal theme.
 
-### T18 · Formal display-serif headings
+### INV-T18 · Formal display-serif headings
 
 `css/themes.css:483-487`: `h1, h2` under `[data-theme='formal']` use
 `var(--theme-font-display)` with `letter-spacing: -0.01em`. The single
-plain-CSS consumer of T8.
+plain-CSS consumer of INV-T8.
 
-### T19 · Cyberpunk `::selection`
+### INV-T19 · Cyberpunk `::selection`
 
 `css/themes.css:489-492`: magenta plate with dark text.
 
-### T20 · `.glow-primary`, `.glow-accent`, `.glow-card`
+### INV-T20 · `.glow-primary`, `.glow-accent`, `.glow-card`
 
 `css/themes.css:494-512`. Three opt-in classes scoped to
 `[data-theme='cyberpunk']`: two multi-layer `text-shadow` glows and one
@@ -361,14 +361,14 @@ register, so a consumer that skips the register still gets them. Nothing
 in this repository emits these class names (verified: zero hits in
 `components/` and `fx/`).
 
-### T21 · `.gradient-text`
+### INV-T21 · `.gradient-text`
 
 `css/themes.css:514-519` defines a theme-driven gradient text fill from
 `var(--primary)` to `var(--ring)`; `:521-526` overrides it for cyberpunk
 with literal magenta/cyan. Unscoped — the base rule applies in every
 theme. Nothing in this repository emits the class.
 
-### T22 · `body` colour rule
+### INV-T22 · `body` colour rule
 
 `css/themes.css:531-537`: `body { background-color: var(--background);
 color: var(--foreground); transition: background-color 400ms ease, color
@@ -377,18 +377,18 @@ equivalent of kp-soft's Tailwind `@apply`. This is the rule that makes
 the theme govern the page rather than only the components, and the one
 `docs/SCOPE.md` S6 and `docs/CORRECTIONS.md` KT1 both cite.
 
-### T23 · Colour pairs no gate covers
+### INV-T23 · Colour pairs no gate covers
 
 Tokens declared in every theme but never appearing in the contrast
 script's pair lists (`scripts/check-contrast.mjs:23-40`): `--border`,
 `--input`, `--ring`, `--chart-1` … `--chart-5`, `--sidebar-border`,
 `--sidebar-ring`. Also ungated: the cyberpunk-only pair `--fx-signal` /
-`--fx-signal-foreground` (T10). `--accent` / `--accent-foreground` is
+`--fx-signal-foreground` (INV-T10). `--accent` / `--accent-foreground` is
 gated at 3:1 rather than 4.5:1 (`:39-40`). Recorded as a measurement, not
 a defect claim: several of these tokens are not text-on-surface pairs at
 all.
 
-### T24 · Tokens that do not exist
+### INV-T24 · Tokens that do not exist
 
 Verified by listing every token name in the file: there is no
 `--success`, no `--warning`, no `--info`, and no token carrying a hover,
@@ -401,10 +401,10 @@ state. This matches what `docs/SCOPE.md` S6b asserts.
 ## C — Picker runtime (hook + React component)
 
 `hooks/use-theme.js` (181 lines) and `components/theme-switcher.jsx`
-(142 lines). Both are re-exported by `index.js` (G11). `docs/SCOPE.md`
+(142 lines). Both are re-exported by `index.js` (INV-G11). `docs/SCOPE.md`
 S17 records this pair as explicitly **not** approved.
 
-### C1 · `THEME_META`
+### INV-C1 · `THEME_META`
 
 `hooks/use-theme.js:8-16`. A frozen object keyed by theme name; each
 entry is `{ label, dark, bg, fg, primary }`. Seven entries. `dark: true`
@@ -417,7 +417,7 @@ these literals still match the stylesheet.
 This is the "one source of truth for the theme list" of S9. Everything
 else in the module derives from it.
 
-### C2 · Derived constants
+### INV-C2 · Derived constants
 
 `hooks/use-theme.js:21-33`: `THEMES` (`Object.keys(THEME_META)`),
 `DEFAULT_THEME = 'formal'`, `STORAGE_KEY = 'theme'`, `THEME_LABELS`
@@ -428,14 +428,14 @@ a consumer that wants the dark set must recompute it from `THEME_META` —
 which is what `docs/REQUESTS_FROM_CONSUMERS.md:27` shows both vanilla
 consumers doing.
 
-### C3 · `isTheme`
+### INV-C3 · `isTheme`
 
 `hooks/use-theme.js:39` plus the private `asTheme` at :45, which narrows
 a string to a theme or `null`. `isTheme` is exported and is used
 externally: JobTracker's own theme module validates
 two server-supplied theme names with it.
 
-### C4 · localStorage read/write
+### INV-C4 · localStorage read/write
 
 `hooks/use-theme.js:47-63`. `readStored()` returns
 `localStorage.getItem('theme')` or `null`; `writeStored(theme)` sets it.
@@ -445,7 +445,7 @@ private-mode storage degrades to DOM-only theming.
 Storage format: one plain string, one of the seven names, under the key
 `theme`. No JSON, no namespace prefix, no expiry.
 
-### C5 · Provider-free external store
+### INV-C5 · Provider-free external store
 
 `hooks/use-theme.js:65-91`. A module-level `Set` of listeners, a
 module-level `current` theme, `subscribe`, `getSnapshot` and
@@ -456,7 +456,7 @@ meaning a server-rendered page always renders as formal regardless of the
 stored choice. State lives in module scope, so two copies of the package
 in one bundle would not share it.
 
-### C6 · `applyTheme`
+### INV-C6 · `applyTheme`
 
 `hooks/use-theme.js:98-106`. Sets `document.documentElement.dataset.theme`
 and toggles the `dark` class using `DARK_THEMES`, then notifies the store
@@ -467,13 +467,13 @@ JobTracker's entry point.
 This function is the DOM contract the two vanilla consumers reimplemented
 (`kyu/static/theme.js`, `almanac/static/theme.js`).
 
-### C7 · `initializeTheme`
+### INV-C7 · `initializeTheme`
 
 `hooks/use-theme.js:112-114`. `applyTheme(stored ?? fallback)` with
 `fallback` defaulting to `'formal'`. Intended to run before React mounts
 to avoid a flash. Exported; used by JobTracker's `main.jsx`.
 
-### C8 · `useTheme`
+### INV-C8 · `useTheme`
 
 `hooks/use-theme.js:129-174`. Returns `{ theme, updateTheme, saveFailed }`.
 
@@ -492,7 +492,7 @@ to avoid a flash. Exported; used by JobTracker's `main.jsx`.
 - No `prefers-color-scheme` handling anywhere in the module; JobTracker
   supplies that itself in `src/lib/theme.js`.
 
-### C9 · `useAppearance`
+### INV-C9 · `useAppearance`
 
 `hooks/use-theme.js:178-181`. A shim renaming `theme`/`updateTheme` to
 `appearance`/`updateAppearance`, labelled in its own comment as
@@ -500,7 +500,7 @@ compatibility for kp-soft components. Exported from `index.js:11`. No
 caller exists in this repository and none in the three consumers — dead
 code as far as anything reachable goes.
 
-### C10 · `ThemeSwitcher`
+### INV-C10 · `ThemeSwitcher`
 
 `components/theme-switcher.jsx:60-142`, default export, re-exported as a
 named export by `index.js:1`. Renders a wrapper `div` carrying
@@ -534,20 +534,20 @@ trigger is visible and wider than 20 px, that the English `labels`
 override is used, that clicking an option sets `data-theme` on `<html>`
 and `localStorage.theme`, and that the choice survives a reload.
 
-### C11 · Inline SVG icons
+### INV-C11 · Inline SVG icons
 
 `components/theme-switcher.jsx:11-48`. `PaletteIcon` and `CheckIcon`, two
 local components, both `aria-hidden`, replacing lucide icons so the
 package has no icon dependency.
 
-### C12 · Outside-click / Escape dismissal
+### INV-C12 · Outside-click / Escape dismissal
 
 `components/theme-switcher.jsx:72-88`. While open, a `mousedown` listener
 on `document` closes the menu on a click outside the wrapper and a
 `keydown` listener closes it on Escape; both are removed on close and
 unmount.
 
-### C13 · Tailwind class dependency
+### INV-C13 · Tailwind class dependency
 
 The component's own styling is entirely Tailwind/shadcn utility class
 names (`hover:bg-accent`, `bg-popover`, `border-border`,
@@ -561,7 +561,7 @@ Tailwind consumer must add the package as a `@source`
 (JobTracker's `src/app.css:4-8`, README.md:191-207) or the switcher
 renders at 0×0 px.
 
-### C14 · Dutch default strings
+### INV-C14 · Dutch default strings
 
 `hooks/use-theme.js:9-15` ships the labels `'Formeel'`, `'Licht'`,
 `'Donker'`, `'Cyberpunk'`, `'Pastel'`, `'Terminal'`, `'Topografisch'`;
@@ -571,7 +571,7 @@ prop (added in 0.1.1, commit `33ec65e`) overrides the theme names but not
 `label` and `failedMessage`, which have their own props. These are the
 only user-facing strings in the package.
 
-### C15 · Framework-free picker
+### INV-C15 · Framework-free picker
 
 Not present. The repository contains no `.html` file, no vanilla
 `.js` picker and no `<script>`-loadable build. The behaviour exists twice
@@ -591,17 +591,17 @@ Bootstrap. Recorded here because `docs/SCOPE.md` S2 puts it in scope.
 to `[data-theme='cyberpunk']` and inert in the other six themes. The four
 React components live in `fx/` and are exported as `@kp-soft/themes/fx`.
 The two halves share the `fx-` name but nothing else: no component in
-`fx/` emits any class the register styles (F25).
+`fx/` emits any class the register styles (INV-F25).
 
-### F1 · Register texture override
+### INV-F1 · Register texture override
 
 `css/cyberpunk-register.css:20-26` declares `--fx-texture` (a radial
 vignette plus a scanline gradient), `--fx-texture-size` and
 `--fx-texture-opacity: 1` for cyberpunk, feeding the shared `body::after`
-layer of T13. This is the only theme whose texture is not in
-`themes.css`; see T14.
+layer of INV-T13. This is the only theme whose texture is not in
+`themes.css`; see INV-T14.
 
-### F2 · `.microlabel`
+### INV-F2 · `.microlabel`
 
 `:30-40`. Uppercase, letter-spaced, `--muted-foreground`-coloured text
 with a `'// '` prefix in `--accent` via `::before`. Requires
@@ -610,93 +610,93 @@ with a `'// '` prefix in `--accent` via `::before`. Requires
 register without the bridge gets an invalid `font-family` here and falls
 back to the inherited font.
 
-### F3 · Neon caret
+### INV-F3 · Neon caret
 
 `:43-46`. `caret-color: var(--primary)` on `input` and `textarea`. Needs
 no special markup; this is the part of the register that applies in
 JobTracker today.
 
-### F4 · Card underglow
+### INV-F4 · Card underglow
 
 `:50-68`. `[data-slot='card']` becomes `position: relative` and grows a
 2 px `--primary` line along its bottom edge on hover, animated from
 `width: 0` to `100%` over `var(--fx-duration, 200ms)`. Requires shadcn's
 `data-slot="card"` attribute.
 
-### F5 · Clipped corner
+### INV-F5 · Clipped corner
 
 `:71-80`. Two rules: one for `[data-slot='card']` and `.fx-notch`
 together, using `var(--fx-notch, 0px)`; one for `[data-slot='button']`
-with a hardcoded `7px`. Both set `border-radius: 0`, overriding T7.
+with a hardcoded `7px`. Both set `border-radius: 0`, overriding INV-T7.
 `.fx-notch` is the only markup-agnostic escape hatch in this group.
 
-### F6 · Button charge sweep
+### INV-F6 · Button charge sweep
 
 `:84-94`. A skewed cyan light band as a background image on
 `[data-slot='button']`, moved from `105%` to `-5%` on hover over
 `var(--fx-duration, 140ms)`. Requires shadcn's button slot attribute.
 
-### F7 · `.fx-brackets`
+### INV-F7 · `.fx-brackets`
 
 `:98-123`. Two 9×9 px corner brackets in `--accent` on `::before`
 (top-left) and `::after` (bottom-right). Needs the class on the element.
 
-### F8 · `.fx-rule`
+### INV-F8 · `.fx-rule`
 
 `:127-147`. Turns an element into a flex row with a diamond node
 (`::before`) and a fading hairline (`::after`) after the content. Needs
 the class.
 
-### F9 · Themed scrollbar
+### INV-F9 · Themed scrollbar
 
 `:150-171`. `scrollbar-color` / `scrollbar-width` on the themed root plus
 four `::-webkit-scrollbar*` rules, all with literal magenta/void-purple
 values rather than tokens. Needs no markup.
 
-### F10 · `.fx-signal-badge`
+### INV-F10 · `.fx-signal-badge`
 
-`:174-178`. Applies `--fx-signal` / `--fx-signal-foreground` (T10) with
+`:174-178`. Applies `--fx-signal` / `--fx-signal-foreground` (INV-T10) with
 three `!important` declarations — the only `!important` in the package.
 Needs the class.
 
-### F11 · Reduced-motion guard
+### INV-F11 · Reduced-motion guard
 
 `:182-242`. Every animated rule in the register sits inside one
 `@media (prefers-reduced-motion: no-preference)` block. The `@keyframes`
 definitions themselves (:244-336) sit outside it, which is harmless
 because nothing outside the block references them.
 
-### F12 · `.fx-flicker`
+### INV-F12 · `.fx-flicker`
 
 `:184-186` with `@keyframes fx-flicker` at :244-267. A 1.1 s neon-tube
 flicker that runs once. Needs the class.
 
-### F13 · `.fx-pulse`
+### INV-F13 · `.fx-pulse`
 
 `:190-202` with `@keyframes fx-pulse` at :269-273. A pseudo-element
 carrying a static `box-shadow` whose **opacity** is animated on a 2.6 s
 infinite loop — the technique `docs/CYBERPUNK_THEME_RESEARCH.md`
 prescribes. Needs the class.
 
-### F14 · `.fx-glitch`
+### INV-F14 · `.fx-glitch`
 
 `:206-230` with two keyframe sets at :275-311. On hover, two
 pseudo-elements re-render `attr(data-text)` in magenta and cyan with
 `mix-blend-mode: screen` and stepped `clip-path` banding. Needs both the
 class and a `data-text` attribute mirroring the visible text.
 
-### F15 · `.fx-media`
+### INV-F15 · `.fx-media`
 
 `:233-236` with `@keyframes fx-rgb-split` at :313-326. A 170 ms RGB split
 on a hovered `img` or `iframe` inside `.fx-media`. Needs the class.
 
-### F16 · `.fx-cellpop`
+### INV-F16 · `.fx-cellpop`
 
 `:239-241` with `@keyframes fx-cellflash` at :328-336. A one-beat cyan
 flash, described in the source as the puzzle-cell entry effect from
 kp-soft. Needs the class.
 
-### F17 · Register line budget by markup requirement
+### INV-F17 · Register line budget by markup requirement
 
 Full accounting of the 336 lines, so the shadcn coupling can be argued
 with a number rather than an impression:
@@ -717,7 +717,7 @@ with a number rather than an impression:
 need a class the consumer must add, and 37 lines (11 %) work on markup
 every consumer already has.
 
-### F18 · `fx/` barrel
+### INV-F18 · `fx/` barrel
 
 `fx/index.js`, 8 lines, re-exporting the four components. Its comment
 warns that importing the barrel pulls in the optional `motion` peer
@@ -725,7 +725,7 @@ because of `BootSequence`. That is accurate: any consumer importing
 `@kp-soft/themes/fx` resolves `motion/react` even if it only wants
 `ScrambleNumber`.
 
-### F19 · `BootSequence`
+### INV-F19 · `BootSequence`
 
 `fx/boot-sequence.jsx`, 56 lines. Renders a full-screen monospace boot
 log once per browser session when the active theme is cyberpunk: guards
@@ -737,18 +737,18 @@ Props: `lines` (string array, default four lines at :5). Requires
 `motion/react` (`AnimatePresence`, `motion.div`, :1) — the only file in
 the package that touches the optional peer, which is not installed in
 this repository. Uses Tailwind classes (`bg-background`, `z-[90]`,
-`font-mono`). Depends on C8 for the active theme.
+`font-mono`). Depends on INV-C8 for the active theme.
 
-### F20 · `DecipherText`
+### INV-F20 · `DecipherText`
 
 `fx/decipher-text.jsx`, 57 lines. Replaces the characters of `text` with
 random glyphs from a 27-glyph pool (:4) and settles them left to right,
 one character every two animation frames, via `requestAnimationFrame`.
 Outside cyberpunk, or under reduced motion, it renders the plain text
 (:21-24). Props: `text` (required), `delay` (ms, default 0). Depends on
-C8; no `motion` dependency; cancels its frame on unmount.
+INV-C8; no `motion` dependency; cancels its frame on unmount.
 
-### F21 · `DigitalRain`
+### INV-F21 · `DigitalRain`
 
 `fx/digital-rain.jsx`, 64 lines. A `<canvas>` falling-glyph rain, throttled
 to one repaint per 50 ms, DPR-capped at 2, colour read at runtime from
@@ -759,15 +759,15 @@ cyberpunk (:61). Props: `className`. Note the canvas has no intrinsic
 size: it measures `clientWidth`/`clientHeight` once (:26-27), so the
 caller must size it, and it does not react to resizes.
 
-### F22 · `ScrambleNumber`
+### INV-F22 · `ScrambleNumber`
 
 `fx/scramble-number.jsx`, 40 lines. Rattles the digits of `value` through
 a hex alphabet on a 40 ms `setInterval`, settling one character per tick;
 non-digit characters are left alone (:27). Plain value outside cyberpunk
 or under reduced motion. Props: `value` (string, required). Depends on
-C8.
+INV-C8.
 
-### F23 · Shared guard pattern
+### INV-F23 · Shared guard pattern
 
 All four components call `useTheme()` from `../hooks/use-theme.js` and
 compare against the literal `'cyberpunk'`, and all four consult
@@ -777,7 +777,7 @@ effect, so a user changing the OS preference mid-session is not picked up.
 This is the coupling that makes `fx/` unusable without the hook of section
 C — which S17 approves the fx but not the hook.
 
-### F24 · `role="text"` wrapper
+### INV-F24 · `role="text"` wrapper
 
 `fx/decipher-text.jsx:53-55` and `fx/scramble-number.jsx:36-38` both
 render `<span aria-label={…} role="text"><span aria-hidden="true">…`.
@@ -785,7 +785,7 @@ render `<span aria-label={…} role="text"><span aria-hidden="true">…`.
 WebKit-only extension); recorded as a fact about the markup, not as a
 verdict.
 
-### F25 · No component emits a register class
+### INV-F25 · No component emits a register class
 
 Verified by grep across `components/` and `fx/`: zero occurrences of
 `microlabel`, `fx-notch`, `fx-brackets`, `fx-rule`, `fx-signal-badge`,
@@ -794,7 +794,7 @@ Verified by grep across `components/` and `fx/`: zero occurrences of
 occurrences of `data-slot`. The register's class hooks are addressed to
 consumer markup only. This contradicts
 `docs/REQUESTS_FROM_CONSUMERS.md:145-146`, which states that `.fx-notch`
-and `.microlabel` "belong to the React `fx/` components" (D10).
+and `.microlabel` "belong to the React `fx/` components" (INV-D10).
 
 ---
 
@@ -805,21 +805,21 @@ and `.microlabel` "belong to the React `fx/` components" (D10).
 not import it. It contains no colour values of its own — every value is a
 `var()` onto a token from section T.
 
-### B1 · `@theme` colour aliases
+### INV-B1 · `@theme` colour aliases
 
 `:11-53`. Maps 32 theme tokens onto Tailwind v4's `--color-*` namespace,
 so `bg-primary`, `text-muted-foreground`, `border-border`, `bg-chart-3`,
 `bg-sidebar` and the rest resolve to the active theme. Note the one
 rename: `--sidebar-background` becomes `--color-sidebar` (:45, :91).
 
-### B2 · `dark` custom variant
+### INV-B2 · `dark` custom variant
 
 `:9`: `@custom-variant dark (&:is(.dark *))`. Keeps existing `dark:`
-utilities working, driven by the class that C6 toggles. As written the
+utilities working, driven by the class that INV-C6 toggles. As written the
 variant matches *descendants* of `.dark`, so a `dark:` utility placed on
 the `<html>` element itself does not match.
 
-### B3 · `[data-theme]` re-declaration block
+### INV-B3 · `[data-theme]` re-declaration block
 
 `:66-103`, with a 10-line comment (`:55-64`) explaining why. Tailwind
 substitutes a custom property's `var()` where it is *declared*, so the
@@ -830,30 +830,30 @@ the radius scale and `--font-display` on every `[data-theme]` element, so
 records the symptom that led to it (a showcase where swatches changed but
 components did not).
 
-### B4 · Radius scale
+### INV-B4 · Radius scale
 
 `:17-19` and `:99-101`. `--radius-lg: var(--radius)`, `--radius-md:
 calc(var(--radius) - 2px)`, `--radius-sm: calc(var(--radius) - 4px)`.
 For terminal (`--radius: 0rem`) the md and sm values compute to negative
 lengths.
 
-### B5 · Font families
+### INV-B5 · Font families
 
 `:12-15`. `--font-sans` is given a literal Instrument Sans stack;
 `--font-display: var(--theme-font-display, var(--font-sans))` — the only
 mechanism by which cyberpunk's and terminal's display faces reach a page
-(T8); `--font-mono` a JetBrains Mono stack, which the register depends on
-(F2). Re-declared for `--font-display` only at :102, so a nested
+(INV-T8); `--font-mono` a JetBrains Mono stack, which the register depends on
+(INV-F2). Re-declared for `--font-display` only at :102, so a nested
 `[data-theme]` subtree switches display font but not `--font-mono`.
 
-### B6 · Status tokens are not bridged
+### INV-B6 · Status tokens are not bridged
 
-The 14 `--status-*` tokens of T6 have no `--color-status-*` alias
+The 14 `--status-*` tokens of INV-T6 have no `--color-status-*` alias
 anywhere in the file. README.md:128-130 documents this and tells
 consumers to write `bg-[var(--status-offer)]`; JobTracker instead uses
 inline styles (`StatusPill.jsx:24-25`).
 
-### B7 · Consumer obligations
+### INV-B7 · Consumer obligations
 
 Using the bridge is not just an import. Measured in the consumer: a
 Tailwind v4 consumer must (a) `@import 'tailwindcss'` before the bridge,
@@ -868,7 +868,7 @@ did not always hoist the package.
 
 ## G — Gates, scripts, packaging, tooling
 
-### G1 · Contrast check — what it asserts
+### INV-G1 · Contrast check — what it asserts
 
 `scripts/check-contrast.mjs`, 104 lines. For every discovered theme it
 computes the WCAG contrast ratio of 21 token pairs: 20 pairs at a 4.5:1
@@ -880,16 +880,16 @@ and one treats `primary` as link text on the page background (:36).
 Result today, run at inventory time: `All 7 themes pass WCAG AA on 21
 pairs (incl. 7 status badges).`, exit code 0 — 147 assertions.
 
-### G2 · Theme discovery
+### INV-G2 · Theme discovery
 
 `:17`. A regex over the stylesheet text collects every
 `[data-theme='<name>']` block that declares `--background`, deduplicated.
-This is why the register blocks of T14 and F1 are not mistaken for
+This is why the register blocks of INV-T14 and INV-F1 are not mistaken for
 palettes: they declare no `--background`. `:18` throws if fewer than five
 themes are found. The theme name pattern is `[a-z]+`, so a theme named
 `high-contrast` or `theme2` would be silently skipped.
 
-### G3 · Colour maths
+### INV-G3 · Colour maths
 
 `:49-73`. `tokenHsl` extracts `--<token>: hsl(<h>, <s>%, <l>%)` by regex;
 `hslToRgb`, `luminance` (sRGB, the standard 0.03928 / 2.4 transfer) and
@@ -897,7 +897,7 @@ themes are found. The theme name pattern is `[a-z]+`, so a theme named
 `hsl()` with three numbers; the space-separated form and any other colour
 notation would be read as a missing token.
 
-### G4 · Target-file argument
+### INV-G4 · Target-file argument
 
 `:11`. `node scripts/check-contrast.mjs [path]` resolves an optional
 argument relative to the current working directory, defaulting to
@@ -906,7 +906,7 @@ argument relative to the current working directory, defaulting to
 run the shipped script against its own file". Nothing in this repository
 or in the three consumers actually invokes it that way today.
 
-### G5 · Failure modes
+### INV-G5 · Failure modes
 
 Enumerated from the code:
 
@@ -926,16 +926,16 @@ Enumerated from the code:
 5. The target file missing: `readFileSync` throws uncaught at :12.
 6. Not a failure mode but a silence: only the 21 listed pairs are
    checked; a new token added to all seven themes is checked by nothing
-   until it is added to `PAIRS` (T23).
+   until it is added to `PAIRS` (INV-T23).
 
-### G6 · `STATUS_NAMES` export
+### INV-G6 · `STATUS_NAMES` export
 
 `:21` exports `STATUS_NAMES`. The module is not import-safe: reading that
 export runs the whole check at import time and can call
 `process.exit(1)`. Nothing imports it — a dead export on a module that is
 only ever run as a script.
 
-### G7 · npm scripts
+### INV-G7 · npm scripts
 
 `package.json:32-36`: `check:contrast` (runs the script),
 `format` (`prettier --write .`), and `gates`
@@ -943,7 +943,7 @@ only ever run as a script.
 at inventory time. There is no test script, no lint script and no
 type-check script.
 
-### G8 · Export map
+### INV-G8 · Export map
 
 `package.json:14-21`. Six entries: `.` → `index.js`, `./fx` →
 `fx/index.js`, `./css` → `css/themes.css`, `./css/tailwind-bridge`,
@@ -955,7 +955,7 @@ can only be run by file path inside an installed tree — the
 `npx @kp-soft/themes check-contrast` shape floated in
 `docs/REQUESTS_FROM_CONSUMERS.md:124` does not work today.
 
-### G9 · `files` array
+### INV-G9 · `files` array
 
 `package.json:22-31`: `index.js`, `hooks`, `components`, `fx`, `css`,
 `scripts`, `docs`, `README.md`. The published tarball therefore contains
@@ -963,7 +963,7 @@ the two verbatim kp-soft documents and this project's own procedure
 documents. `CLAUDE.md`, `HANDOFF.md`, `jsconfig.json` and the dotfiles
 are not shipped.
 
-### G10 · Peers, engines, flags
+### INV-G10 · Peers, engines, flags
 
 `package.json:37-51`: `peerDependencies` `react >=19` (required) and
 `motion >=12`, the latter marked optional at :41-45; `engines.node
@@ -978,7 +978,7 @@ this repository: prettier 3.x and react 19.2.8 (npm auto-installed the
 peer); `motion` is not installed, so `fx/boot-sequence.jsx` cannot
 resolve its import here.
 
-### G11 · `index.js` barrel
+### INV-G11 · `index.js` barrel
 
 15 lines. Re-exports `ThemeSwitcher` as a named export (:1) and ten
 symbols from the hook (:2-13): `DEFAULT_THEME`, `STORAGE_KEY`,
@@ -988,11 +988,11 @@ re-exports, `Theme` and `UseThemeOptions` (:14-15), which JobTracker
 imports as types. The barrel exports no fx and no CSS. Importing it pulls
 React in, so a non-React consumer has no JavaScript entry point at all.
 
-### G12 · Node pin
+### INV-G12 · Node pin
 
-`.nvmrc`, one line: `26`. Matches `engines` (G10). Local Node is 26.8.1.
+`.nvmrc`, one line: `26`. Matches `engines` (INV-G10). Local Node is 26.8.1.
 
-### G13 · Prettier configuration
+### INV-G13 · Prettier configuration
 
 `.prettierrc`, 16 lines: `semi`, `singleQuote`, `printWidth: 150`,
 `tabWidth: 4`, `htmlWhitespaceSensitivity: css`, plus a YAML override to
@@ -1003,7 +1003,7 @@ copies. Effect: `docs/SCOPE.md`, `docs/CORRECTIONS.md` and the other
 project-owned documents are also unformatted and unchecked. `prettier
 --check .` passes today.
 
-### G14 · `jsconfig.json`
+### INV-G14 · `jsconfig.json`
 
 23 lines. `checkJs: true`, `strict: true`, `noImplicitAny`,
 `noImplicitReturns`, `jsx: react-jsx`, `moduleResolution: bundler`,
@@ -1013,11 +1013,11 @@ repository ever executes these settings; they serve only an editor with
 its own TypeScript. The JSDoc annotations throughout `hooks/`,
 `components/` and `fx/` are therefore unchecked here.
 
-### G15 · `.gitignore`
+### INV-G15 · `.gitignore`
 
 One line, `node_modules/`.
 
-### G16 · `package-lock.json`
+### INV-G16 · `package-lock.json`
 
 Tracked in git, lockfile version 3, three packages (root, prettier,
 react). Its root entry records `"version": "0.1.0"` while
@@ -1025,7 +1025,7 @@ react). Its root entry records `"version": "0.1.0"` while
 bump (its only commit is `d85ea47`, the 0.1.0 extraction). It also
 records no `motion` entry.
 
-### G17 · Tooling that is absent
+### INV-G17 · Tooling that is absent
 
 Observed absences, listed so Phase 2 can reference them: no test of any
 kind (no test runner, no test file, no `tests/` or `__tests__`
@@ -1036,7 +1036,7 @@ no `core.hooksPath` configuration in the repository; no LICENSE file
 `.npmrc`; no HTML file and no showcase page; no machine-readable palette
 export (JSON/TOML) of the kind `docs/SCOPE.md` S5/S16 anticipates.
 
-### G18 · Version and tag surface
+### INV-G18 · Version and tag surface
 
 `package.json` version 0.1.1. Two annotated tags: `v0.1.0` (`d85ea47`)
 and `v0.1.1` (`eeaf85d` → `7cd2e8d`). `git diff v0.1.1..HEAD` over
@@ -1049,7 +1049,7 @@ working tree are identical today.
 
 ## D — Documentation
 
-### D1 · README.md
+### INV-D1 · README.md
 
 213 lines, the consumer-facing document: install snippet, CSS import
 recipes for plain CSS and Tailwind, the Bunny Fonts link tag, the
@@ -1057,31 +1057,31 @@ recipes for plain CSS and Tailwind, the Bunny Fonts link tag, the
 table, the contrast-gate commands, the register's shadcn caveat, the
 provenance paragraph, a "what is NOT here" list, the npm-12 git-install
 note, the `@source` requirement, and the `labels` prop. Accurate on the
-substance; three concrete drifts are listed in D10.
+substance; three concrete drifts are listed in INV-D10.
 
-### D2 · CLAUDE.md
+### INV-D2 · CLAUDE.md
 
 74 lines, project instructions loaded by every session in this directory:
 project identity, consumers, enforcement, the KT1 project rule, the
 procedure-status table, what Phase 1 and 2 inherit, and the document
-table. Current as of commit `5c378b9` — see the note under D10.
+table. Current as of commit `5c378b9` — see the note under INV-D10.
 
-### D3 · HANDOFF.md
+### INV-D3 · HANDOFF.md
 
 59 lines, Dutch, the start prompt for the next session. States Phase 0 is
 closed, points at SCOPE, MINI_ROUNDS, REQUESTS_FROM_CONSUMERS, names
 Phase 1 as the next step and corrects the earlier claim about the
 elicitation widget.
 
-### D4 · docs/SCOPE.md
+### INV-D4 · docs/SCOPE.md
 
-324 lines. The approved Phase 0 scope: 18 statements plus B1, marked
+324 lines. The approved Phase 0 scope: 18 statements plus INV-B1, marked
 APPROVED 2026-09-03, with an "adjusted during the gate" note under
 several statements and a list of open questions carried into Phases 1
 and 2. Non-code artefact; treated here as a claim to check, not as
 evidence.
 
-### D5 · docs/THEMING.md
+### INV-D5 · docs/THEMING.md
 
 78 lines, a verbatim copy of kp-soft's maintainer guide taken at commit
 `2983abb` (header line 1 says so). It describes kp-soft's file layout —
@@ -1093,30 +1093,30 @@ mental model, the register layer and the taste rules ("texture opacity at
 or under ~6 %", "a theme changes tokens, never component markup") does
 apply to the code in this package.
 
-### D6 · docs/CYBERPUNK_THEME_RESEARCH.md
+### INV-D6 · docs/CYBERPUNK_THEME_RESEARCH.md
 
 83 lines, also verbatim from kp-soft. Live findings from cyberpunk.net,
 n-o-d-e.net, Arwes and Cyberpunk 2077, the "five pillars", and technique
 notes. The techniques it prescribes are visibly implemented: the single
-clipped corner (F5), the opacity-only glow pulse (F13), the two-copy
-chromatic aberration (F14), scanlines as a repeating gradient (F1), the
-reduced-motion wrapper (F11) and the settle-left-to-right decipher (F20).
+clipped corner (INV-F5), the opacity-only glow pulse (INV-F13), the two-copy
+chromatic aberration (INV-F14), scanlines as a repeating gradient (INV-F1), the
+reduced-motion wrapper (INV-F11) and the settle-left-to-right decipher (INV-F20).
 It is the only per-theme character document that exists — the other six
 themes have none.
 
-### D7 · docs/CORRECTIONS.md
+### INV-D7 · docs/CORRECTIONS.md
 
 80 lines. One correction, KT1, approved 2026-09-03 across nine fields: a
 checkable claim asserted in a gate form without checking it. Its field 6
 says the resulting rule "lives in this project's `CLAUDE.md`" — it does
-not (D10).
+not (INV-D10).
 
-### D8 · docs/MINI_ROUNDS.md
+### INV-D8 · docs/MINI_ROUNDS.md
 
 10 lines, one table row: KT1-M1, open, triggering at the Phase 2 decision
 form.
 
-### D9 · docs/REQUESTS_FROM_CONSUMERS.md
+### INV-D9 · docs/REQUESTS_FROM_CONSUMERS.md
 
 159 lines, written by the JobTracker session on 2026-09-03. Three
 sections: three consumers building the same picker (with kyu's shipped
@@ -1124,7 +1124,7 @@ markup contract), the contrast gate not reaching consumers, and four
 smaller findings. It is the source of several claims that
 `docs/SCOPE.md` later carries forward.
 
-### D10 · Contradictions between the documents and the code
+### INV-D10 · Contradictions between the documents and the code
 
 Each verified against the code. Four claims about `CLAUDE.md` were made
 in the first draft of this inventory and are withdrawn — see the note at
@@ -1159,7 +1159,7 @@ the end of this section.
 5. **Register ownership of the fx classes.**
    `docs/REQUESTS_FROM_CONSUMERS.md:145-146` says `.fx-notch` and
    `.microlabel` "belong to the React `fx/` components". No component in
-   `fx/` or `components/` emits any of them (F25); they are hooks for
+   `fx/` or `components/` emits any of them (INV-F25); they are hooks for
    consumer markup.
 6. **`docs/THEMING.md` describes another repository.** Its "adding a
    theme = two edits" instruction names `resources/css/app.css` and
@@ -1169,7 +1169,7 @@ the end of this section.
    those two gates exists.
 7. **Register vs. `themes.css` split for cyberpunk.** `README.md:30` says
    `@kp-soft/themes/css` is "the seven themes + textures"; the cyberpunk
-   texture is not in that file but in the register (T14, F1).
+   texture is not in that file but in the register (INV-T14, INV-F1).
 8. **`package-lock.json` is a version behind.** It records
    `"version": "0.1.0"` at both the root and the package entry, while
    `package.json` is at 0.1.1.
@@ -1204,47 +1204,47 @@ gets re-read before it is believed.
 **External dependencies (runtime).** `react >= 19` — hooks
 (`useCallback`, `useEffect`, `useState`, `useRef`,
 `useSyncExternalStore`) and JSX in `hooks/`, `components/` and `fx/`
-(G10, C, F19-F22). `motion >= 12`, optional — only
-`AnimatePresence` and `motion.div` in `fx/boot-sequence.jsx:1` (F19).
+(INV-G10, C, F19-F22). `motion >= 12`, optional — only
+`AnimatePresence` and `motion.div` in `fx/boot-sequence.jsx:1` (INV-F19).
 Tailwind CSS v4, not declared as a dependency at all, but required for
 `css/tailwind-bridge.css` to parse (`@theme`, `@custom-variant`) and for
-`ThemeSwitcher` and `BootSequence` to have any layout (B, C13).
+`ThemeSwitcher` and `BootSequence` to have any layout (B, INV-C13).
 shadcn/ui markup conventions, not a code dependency but a markup
-dependency of 44 register lines (F17).
+dependency of 44 register lines (INV-F17).
 
 **External dependencies (tooling).** `prettier ^3.4.2` — the only
-devDependency, used by `npm run format` and the `gates` script (G7, G13).
-Node >= 26 < 27 (G10, G12), using only `node:fs` and `node:process` in
+devDependency, used by `npm run format` and the `gates` script (INV-G7, INV-G13).
+Node >= 26 < 27 (INV-G10, INV-G12), using only `node:fs` and `node:process` in
 `scripts/check-contrast.mjs`.
 
 **Fonts.** Not shipped and not fetched by any code in the package. The
 themes name Fraunces, Chakra Petch, Share Tech Mono, Instrument Sans and
-JetBrains Mono (T8, T9, B5); README.md:49-64 documents a Bunny Fonts
+JetBrains Mono (INV-T8, INV-T9, INV-B5); README.md:49-64 documents a Bunny Fonts
 `<link>` the consumer must add. Absent it, three themes fall back
 silently.
 
 **Storage formats.** Two, both browser-side, both plain strings:
-`localStorage['theme']` = one of the seven theme names (C4), and
-`sessionStorage['fx-booted']` = `'1'` (F19). No server storage, no files
+`localStorage['theme']` = one of the seven theme names (INV-C4), and
+`sessionStorage['fx-booted']` = `'1'` (INV-F19). No server storage, no files
 written by any code in the package. The DOM itself carries state:
-`<html data-theme="…">` and the `dark` class (C6), plus the
-`data-theme-switcher` marker attribute (C10).
+`<html data-theme="…">` and the `dark` class (INV-C6), plus the
+`data-theme-switcher` marker attribute (INV-C10).
 
 **Network endpoints.** None. No code in the repository performs an HTTP
 request, opens a socket or references a URL at runtime. The only URLs in
 the package are the `data:image/svg+xml` textures inlined in
-`css/themes.css` (T14), the Bunny Fonts link inside a README code block,
+`css/themes.css` (INV-T14), the Bunny Fonts link inside a README code block,
 and the repository URL in `package.json:9`.
 
 **CLI surface.** One executable: `node scripts/check-contrast.mjs
-[path/to/css]` (G4), reachable as `npm run check:contrast`. Two more npm
-scripts: `format` and `gates` (G7). No `bin`, so nothing is exposed as a
+[path/to/css]` (INV-G4), reachable as `npm run check:contrast`. Two more npm
+scripts: `format` and `gates` (INV-G7). No `bin`, so nothing is exposed as a
 command in a consumer's `node_modules/.bin`.
 
 **UI surface.** One rendered component, `ThemeSwitcher` — a button with a
-palette icon opening a seven-item listbox (C10) — and four cyberpunk
+palette icon opening a seven-item listbox (INV-C10) — and four cyberpunk
 effect components (F19-F22). Plus the purely CSS surfaces: the texture
-layer (T13), the heading and selection flourishes (T15-T19), the three
+layer (INV-T13), the heading and selection flourishes (T15-T19), the three
 glow utilities and the gradient text (T20-T21), and the sixteen register
 effects (F1-F16).
 
@@ -1343,61 +1343,61 @@ It works or fails only when a human looks at it.
 
 **Never executed anywhere (no importer at all):**
 
-- C9 `useAppearance` — exported, zero callers here and in all three
+- INV-C9 `useAppearance` — exported, zero callers here and in all three
   consumers.
-- G6 `STATUS_NAMES` — exported from a script nothing imports.
-- F19 `BootSequence`, F20 `DecipherText`, F21 `DigitalRain`,
-  F22 `ScrambleNumber`, F18 the `fx/` barrel — no consumer imports
+- INV-G6 `STATUS_NAMES` — exported from a script nothing imports.
+- INV-F19 `BootSequence`, INV-F20 `DecipherText`, INV-F21 `DigitalRain`,
+  INV-F22 `ScrambleNumber`, INV-F18 the `fx/` barrel — no consumer imports
   `@kp-soft/themes/fx`; kp-soft still runs its own local `.tsx`
-  originals. `motion` is not even installed here, so F19 cannot resolve.
-- F24 the `role="text"` wrapper, being part of F20 and F22.
-- C15's absent framework-free picker — nothing to verify, recorded for
+  originals. `motion` is not even installed here, so INV-F19 cannot resolve.
+- INV-F24 the `role="text"` wrapper, being part of INV-F20 and INV-F22.
+- INV-C15's absent framework-free picker — nothing to verify, recorded for
   completeness.
 
 **CSS with no emitter and no rendering check:**
 
-- T4 chart tokens, T5 sidebar tokens — declared and bridged, used by no
+- INV-T4 chart tokens, INV-T5 sidebar tokens — declared and bridged, used by no
   markup here or in JobTracker.
-- T20 `.glow-primary` / `.glow-accent` / `.glow-card`, T21
+- INV-T20 `.glow-primary` / `.glow-accent` / `.glow-card`, INV-T21
   `.gradient-text` — no file in the package emits these classes.
-- T15, T16, T17, T18, T19 — the heading, selection and display-font
+- INV-T15, INV-T16, INV-T17, INV-T18, INV-T19 — the heading, selection and display-font
   flourishes; no screenshot test, no showcase page.
-- T13 and T14 — the texture layer and six textures; the contrast gate
+- INV-T13 and INV-T14 — the texture layer and six textures; the contrast gate
   explicitly cannot see them (`css/themes.css:404-406`).
-- F1-F16, the whole register: only F3 (`input` / `textarea` caret) is
+- F1-F16, the whole register: only INV-F3 (`input` / `textarea` caret) is
   known to apply at a consumer, because JobTracker imports the register
-  while emitting no `data-slot` and none of the `fx-` classes. F2's
+  while emitting no `data-slot` and none of the `fx-` classes. INV-F2's
   dependency on `--font-mono` from the bridge is unverified in a
   plain-CSS consumer.
-- F17's line accounting is a measurement of the file, not of behaviour.
+- INV-F17's line accounting is a measurement of the file, not of behaviour.
 - B1-B5 — the Tailwind bridge compiles and JobTracker renders with it, so
   it is exercised in a loose sense, but nothing asserts that any specific
-  alias resolves; B3's nested-subtree behaviour in particular has no
+  alias resolves; INV-B3's nested-subtree behaviour in particular has no
   test and no page in this repository to show it.
-- T8 and T9 — cyberpunk's and terminal's fonts reach a page only through
+- INV-T8 and INV-T9 — cyberpunk's and terminal's fonts reach a page only through
   a Tailwind utility a consumer must write; no consumer does today.
 
 **Gate coverage gaps:**
 
-- T23 — `--border`, `--input`, `--ring`, the five chart tokens,
+- INV-T23 — `--border`, `--input`, `--ring`, the five chart tokens,
   `--sidebar-border`, `--sidebar-ring` and the `--fx-signal` pair are in
   no contrast pair.
-- C1's swatch literals (`bg`, `fg`, `primary` in `THEME_META`) are
+- INV-C1's swatch literals (`bg`, `fg`, `primary` in `THEME_META`) are
   duplicates of values in `css/themes.css`; nothing checks that they
   still agree.
-- G5's failure modes 3, 4 and 5 (uncaught throws) have never been
+- INV-G5's failure modes 3, 4 and 5 (uncaught throws) have never been
   triggered.
-- G14 — the whole JSDoc type layer is unchecked in this repository; only
+- INV-G14 — the whole JSDoc type layer is unchecked in this repository; only
   JobTracker's own TypeScript pass ever reads these types, and only for
   the symbols it imports.
 
 **Packaging claims not exercised:**
 
-- G8 — the export map is only exercised for `.`, `./fx` is imported by
+- INV-G8 — the export map is only exercised for `.`, `./fx` is imported by
   nobody, and `./css/register` only by JobTracker. `./package.json` is
   unused.
-- G9 — the `files` array has never been tested by an `npm pack`; the
+- INV-G9 — the `files` array has never been tested by an `npm pack`; the
   package has never been published (`private: true`).
-- G18 — Dependabot's ability to follow a git tag is configured in
+- INV-G18 — Dependabot's ability to follow a git tag is configured in
   JobTracker but has never produced a PR, because no tag has been cut
   since v0.1.1.

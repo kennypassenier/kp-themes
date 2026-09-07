@@ -67,6 +67,9 @@ node gates/generate-showcase.mjs --check
 echo "→ the ten example pages match their source (TH98)"
 node gates/generate-examples.mjs --check
 
+echo "→ one ID means one thing [KT10]"
+node gates/check-ids.mjs
+
 echo "→ an example page carries the hooks its descriptor asks for"
 node gates/check-examples-wired.mjs
 
