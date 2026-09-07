@@ -135,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (5.0.0), Phase 6, AFK: C0 and C1 built 2026-09-07 (the effects skeleton and seven gates; the 93-token contract, the two surfaces, the 5.0.0 cyberpunk palette); C2 next |
-| Last completed gate | Round six Phase 5 (2026-09-07): C0–C6 agreed, all six gates blocking, an alpha tag after C6, AFK from C0 to C5 with one ratification report                                       |
-| Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                                                                                     |
-| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, built at C5); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2          |
-| AFK mode            | on, C0 to C5 (Kenny, 2026-09-07)                                                                                                                                                  |
+| Field               | Value                                                                                                                                                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six (5.0.0), Phase 6, AFK: C0 and C1 built 2026-09-07 (the effects skeleton and seven gates; the 93-token contract, the two surfaces, the 5.0.0 cyberpunk palette); C2 next                                                                        |
+| Last completed gate | Round six Phase 5 (2026-09-07): C0–C6 agreed, all six gates blocking, an alpha tag after C6, AFK from C0 to C5 with one ratification report                                                                                                              |
+| Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                                                                                                                                                            |
+| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, built at C5), R6-Q5 (the push chain read a watch exit code, main moved on a red browser job); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2 |
+| AFK mode            | on, C0 to C5 (Kenny, 2026-09-07)                                                                                                                                                                                                                         |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

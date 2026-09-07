@@ -180,7 +180,11 @@ const report = (found) => found.map((f) => `  [${f.fault}] ${f.where}: ${f.detai
 
 test.describe('the overflow and rhythm gate', () => {
     test('it runs over the ten pages TH98 names, from the descriptor list [AR26]', () => {
-        expect(EXAMPLES.length).toBe(10);
+        // Ten pages TH98 names, plus the concept demo that joined at round
+        // six's C0 [TH126]. C0's CI went red on this line — the browser
+        // job, after the gates job was green — and the push chain read the
+        // wrong signal and moved main anyway (R6-Q5).
+        expect(EXAMPLES.length).toBe(11);
         expect(WIDTHS).toEqual([320, 768, 1280]);
     });
 
