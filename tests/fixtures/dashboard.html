@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Dashboard — the assembly journey [W4]</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <!-- The cyberpunk register is loaded because AR30 is about what the
+             register does to `.kp-button`, and the destructive control this
+             page's journey ends on is one. A fixture that never loaded the
+             file could not show that fault (rule 7e). This page carries no
+             stylesheet of its own for the same reason: everything measured
+             on it is the package's. -->
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+    </head>
+    <body>
+        <!-- W4, the assembly milestone: a page shaped like a real consumer's
+             rather than a gallery of parts. A data table, row actions in a
+             menu on the popover layer, and a destructive item in that menu —
+             the shape JobTracker, kyu and Almanac all draw. Both channels
+             render the same shape so one journey drives both [AR7].
+
+             The framework-free channel comes first in the tab order, the
+             React one after it. -->
+        <h1>Clients</h1>
+
+        <section id="plain">
+            <h2>Framework-free</h2>
+            <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="10" lang="en" data-test="plain-datatable">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption class="kp-sr-only">
+                            Clients
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-sort="text">Name</th>
+                                <th scope="col" data-kp-sort="number">Amount</th>
+                                <th scope="col">Reference</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody data-test="plain-body">
+                            <tr data-kp-row-key="r0" data-test="plain-row-r0">
+                                <td data-label="Name">Acme</td>
+                                <td data-label="Amount">100</td>
+                                <td data-label="Reference">
+                                    <!-- A long identifier with no break opportunity in it, because that is what a real reference
+                                    column holds and it is what pushed kyu's dashboard sideways [TH113, AR32]. --><span
+                                        class="kp-tag"
+                                        data-test="plain-ref-r0"
+                                        >a3f92b71c4d85e6f09ab12cd34ef5678</span
+                                    >
+                                </td>
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm"
+                                        popovertarget="plain-menu-r0"
+                                        aria-haspopup="menu"
+                                        data-test="plain-menu-trigger-r0"
+                                    >
+                                        Row actions
+                                    </button>
+                                    <div popover="auto" id="plain-menu-r0" class="kp-popover" data-test="plain-menu-r0">
+                                        <ul class="kp-menu" role="menu">
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-button kp-menu__item" data-test="plain-edit-r0">
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li role="none">
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-button kp-button--destructive kp-menu__item kp-menu__item--destructive"
+                                                    data-kp-destructive
+                                                    data-kp-confirm="Delete Acme?"
+                                                    data-row="r0"
+                                                    data-test="plain-delete-r0"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-kp-row-key="r1" data-test="plain-row-r1">
+                                <td data-label="Name">Bakker</td>
+                                <td data-label="Amount">20</td>
+                                <td data-label="Reference">
+                                    <!-- A long identifier with no break opportunity in it, because that is what a real reference
+                                    column holds and it is what pushed kyu's dashboard sideways [TH113, AR32]. --><span
+                                        class="kp-tag"
+                                        data-test="plain-ref-r1"
+                                        >b7c41d09e2f6a85b31cd47ef09ab6512</span
+                                    >
+                                </td>
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm"
+                                        popovertarget="plain-menu-r1"
+                                        aria-haspopup="menu"
+                                        data-test="plain-menu-trigger-r1"
+                                    >
+                                        Row actions
+                                    </button>
+                                    <div popover="auto" id="plain-menu-r1" class="kp-popover" data-test="plain-menu-r1">
+                                        <ul class="kp-menu" role="menu">
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-button kp-menu__item" data-test="plain-edit-r1">
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li role="none">
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-button kp-button--destructive kp-menu__item kp-menu__item--destructive"
+                                                    data-kp-destructive
+                                                    data-kp-confirm="Delete Bakker?"
+                                                    data-row="r1"
+                                                    data-test="plain-delete-r1"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-kp-row-key="r2" data-test="plain-row-r2">
+                                <td data-label="Name">Cerise</td>
+                                <td data-label="Amount">1284.50</td>
+                                <td data-label="Reference">
+                                    <!-- A long identifier with no break opportunity in it, because that is what a real reference
+                                    column holds and it is what pushed kyu's dashboard sideways [TH113, AR32]. --><span
+                                        class="kp-tag"
+                                        data-test="plain-ref-r2"
+                                        >c1d84fa20b96e37c58ad12bf46ef9034</span
+                                    >
+                                </td>
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm"
+                                        popovertarget="plain-menu-r2"
+                                        aria-haspopup="menu"
+                                        data-test="plain-menu-trigger-r2"
+                                    >
+                                        Row actions
+                                    </button>
+                                    <div popover="auto" id="plain-menu-r2" class="kp-popover" data-test="plain-menu-r2">
+                                        <ul class="kp-menu" role="menu">
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-button kp-menu__item" data-test="plain-edit-r2">
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li role="none">
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-button kp-button--destructive kp-menu__item kp-menu__item--destructive"
+                                                    data-kp-destructive
+                                                    data-kp-confirm="Delete Cerise?"
+                                                    data-row="r2"
+                                                    data-test="plain-delete-r2"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kp-empty" data-kp-datatable-empty hidden>Nothing found.</div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="react">
+            <h2>React</h2>
+            <div id="react-dashboard"></div>
+        </section>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module">
+            // The CONSUMER's half, and only that: the package asks the
+            // question, this deletes the row. The delete is a plain
+            // delegated click listener — the shape AR27 exists to keep
+            // working, because chassis-rs, kyu and Almanac all have one.
+            import { dataTable } from '/js/datatable.js';
+
+            window.__acts = [];
+            const table = document.querySelector('[data-test="plain-datatable"]');
+            document.addEventListener('click', (event) => {
+                const button = event.target instanceof Element ? event.target.closest('[data-row]') : null;
+                if (button === null) return;
+                window.__acts.push(`plain:${button.dataset.row}`);
+                button.closest('tr')?.remove();
+                // The table is told its rows changed, through the handle the
+                // module exports for exactly this [KT6].
+                dataTable(table)?.refresh();
+            });
+        </script>
+        <script type="module" src="/tests/fixtures/.build/react-dashboard.js"></script>
+    </body>
+</html>
