@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 63, 'AR21 counted 63 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 67, 'AR21 counted 67 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -151,8 +151,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // six more: the rules that wanted a text size the scale name did not
     // mean got their own knob, so every scale name means one thing. And
     // R3-CQ added --kp-table-wrap-min, the floor under a wrapper that
-    // containment collapses.
-    assert.equal(result.readCount, 63);
+    // containment collapses. W2 then added four at once —
+    // --kp-tile-x/y/w/h, the grid tile's place, which js/gridlayout.js
+    // and components/canvas.jsx used to write as inline `grid-column`
+    // and `grid-row` where no rule could ever overrule them [AR31].
+    assert.equal(result.readCount, 67);
     assert.deepEqual(result.unread, []);
 });
 

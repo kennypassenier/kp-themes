@@ -5801,6 +5801,22 @@
         background: var(--card);
         color: var(--card-foreground);
         overflow: hidden;
+
+        /* The tile's place on the grid, derived here from four numbers the
+     * module writes [AR31]. Up to 4.0.0 js/gridlayout.js and
+     * components/canvas.jsx wrote `grid-column` and `grid-row`
+     * themselves, as inline styles — which beat any rule in any layer,
+     * so the narrow rule below could never win once the grid was
+     * attached, and attaching is the only way the grid is used.
+     * Measured at 320px on 3.2.0: before attach the tile read
+     * `1 / -1` at 302px wide, after attach `1 / span 2` at 241px.
+     *
+     * A custom property is a VALUE, not a declaration: the module still
+     * says where the tile is, and the stylesheet still decides what
+     * that means. The defaults are the initial placement, so a tile
+     * nothing has attached to sits exactly where it did before. */
+        grid-column: var(--kp-tile-x, auto) / span var(--kp-tile-w, 1);
+        grid-row: var(--kp-tile-y, auto) / span var(--kp-tile-h, 1);
     }
 
     /* The tile is a tab stop, because moving it is a keyboard gesture first
@@ -5820,6 +5836,10 @@
 
         .kp-grid__tile {
             grid-column: 1 / -1;
+            /* Source order, so two tiles that shared a row do not land on
+         * top of each other in the single column. The height stays the
+         * tile's own. */
+            grid-row: auto / span var(--kp-tile-h, 1);
         }
     }
 }

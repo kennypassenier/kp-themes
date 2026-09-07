@@ -314,7 +314,21 @@ function GridLayoutInner(
                         // without sight can arrange.
                         aria-label={tile.label}
                         aria-describedby={describedBy}
-                        style={{ gridColumn: `${tile.x + 1} / span ${tile.w}`, gridRow: `${tile.y + 1} / span ${tile.h}` }}
+                        // Four numbers, not two track declarations [AR31].
+                        // Up to 4.0.0 this wrote `gridColumn` and `gridRow`,
+                        // which land as inline styles and beat any rule in
+                        // any layer — so the narrow rule in
+                        // css/components.css was dead as soon as the grid
+                        // rendered. A custom property is a value the
+                        // stylesheet reads, so that rule can win again.
+                        style={
+                            /** @type {import('react').CSSProperties} */ ({
+                                '--kp-tile-x': String(tile.x + 1),
+                                '--kp-tile-y': String(tile.y + 1),
+                                '--kp-tile-w': String(tile.w),
+                                '--kp-tile-h': String(tile.h),
+                            })
+                        }
                         onPointerDown={(event) => onPointerDown(event, tile)}
                         onKeyDown={(event) => {
                             if (tile.static) return;

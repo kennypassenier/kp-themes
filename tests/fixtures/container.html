@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Container queries — both channels [TH104, AR31]</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>Container queries, two channels</h1>
+
+        <!-- The grid and the nav bar, each twice: once in a wrapper that is
+             as wide as the page, and once in a wrapper the page has boxed to
+             300px. The narrow pair is measured while the VIEWPORT stays
+             1280px wide, which is the whole claim of TH104.
+
+             The only styling this page carries is a width on the narrow
+             hosts. A container query has to be measured against a container
+             of a known size, and the package must supply everything else —
+             a rule written here would be measuring the fixture [KT3]. -->
+
+        <section id="plain">
+            <h2>Framework-free</h2>
+
+            <div class="kp-grid-wrap" data-test="plain-grid-wide-wrap">
+                <div class="kp-grid" data-kp-grid data-kp-columns="6" data-test="plain-grid-wide">
+                    <div
+                        class="kp-grid__tile"
+                        data-kp-tile="cpu"
+                        data-kp-label="CPU"
+                        data-x="0"
+                        data-y="0"
+                        data-w="2"
+                        data-h="1"
+                        tabindex="0"
+                        role="group"
+                    >
+                        CPU
+                    </div>
+                    <div
+                        class="kp-grid__tile"
+                        data-kp-tile="ram"
+                        data-kp-label="RAM"
+                        data-x="2"
+                        data-y="0"
+                        data-w="2"
+                        data-h="1"
+                        tabindex="0"
+                        role="group"
+                    >
+                        RAM
+                    </div>
+                </div>
+            </div>
+
+            <div style="inline-size: 300px">
+                <div class="kp-grid-wrap" data-test="plain-grid-narrow-wrap">
+                    <div class="kp-grid" data-kp-grid data-kp-columns="6" data-test="plain-grid-narrow">
+                        <div
+                            class="kp-grid__tile"
+                            data-kp-tile="cpu"
+                            data-kp-label="CPU"
+                            data-x="0"
+                            data-y="0"
+                            data-w="2"
+                            data-h="1"
+                            tabindex="0"
+                            role="group"
+                        >
+                            CPU
+                        </div>
+                        <div
+                            class="kp-grid__tile"
+                            data-kp-tile="ram"
+                            data-kp-label="RAM"
+                            data-x="2"
+                            data-y="0"
+                            data-w="2"
+                            data-h="1"
+                            tabindex="0"
+                            role="group"
+                        >
+                            RAM
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" data-test="plain-nav-wide" aria-label="Wide navigation">
+                    <span class="kp-nav__brand">kp</span>
+                    <ul class="kp-nav__links">
+                        <li><a class="kp-nav__link" href="#a" aria-current="page">One</a></li>
+                        <li><a class="kp-nav__link" href="#b">Two</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div style="inline-size: 300px">
+                <div class="kp-nav-wrap">
+                    <nav class="kp-nav" data-test="plain-nav-narrow" aria-label="Narrow navigation">
+                        <span class="kp-nav__brand">kp</span>
+                        <ul class="kp-nav__links">
+                            <li><a class="kp-nav__link" href="#a" aria-current="page">One</a></li>
+                            <li><a class="kp-nav__link" href="#b">Two</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>React</h2>
+            <div id="react-container"></div>
+        </section>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-container.js"></script>
+    </body>
+</html>
