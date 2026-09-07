@@ -816,6 +816,54 @@ border treatment, and not the bevelled corner; and `.kp-button` composes
 the focus shadow with its own rather than replacing it, in every theme.
 The bevel stays available on the elements that already carry it.
 
+### AR30 amended 2026-09-07 — the bevel comes back, drawn from the inside
+
+Kenny asked where the bevel had gone, having approved AR30 without ever
+having been shown the shape it decided about. Mini-round MR-NOTCH.
+
+The original reasoning was right about the mechanism and wrong about the
+conclusion. `clip-path` does clip the focus outline away with the corner
+— 784 painted pixels to 0. What it cannot clip is a ring drawn **inside**
+the box, and nothing had tried that. Under the bevel the indicator is two
+inset rings instead of an outline plus a shadow.
+
+That changes what the halves contrast against: an inset ring reads
+against the button's own fill rather than half against the page, which is
+the promise DI2's two-part design makes. Measured over **24 themes × 4
+button fills = 96 pairs** before it shipped: every pair has at least one
+half at 3.0 or better against the fill, always `--focus-ring-contrast`,
+between 5.00 and 18.30.
+
+**Three things the mini-round turned up that were not the question.**
+
+1. **The old bevel rule reached nothing.** It selected
+   `[data-slot='button']`, which nothing in this package writes on a
+   button, while a comment beside it claimed the bevel stayed "on the
+   elements that already carried it". There were none. `data-slot='card'`
+   is real — `components/card.jsx` writes it — which is why the mistake
+   was easy to make and impossible to see.
+2. **The retro register erased the same ring half, one layer up.**
+   `kp.register` comes after `kp.components`, so its four-layer inset
+   bevel replaced `.kp-button:focus-visible`'s shadow outright. Measured:
+   under retro the focused and unfocused `box-shadow` were **identical**.
+   It now composes the ring in front of the bevel.
+3. **Neither ring fixture loaded `css/retro-register.css`.** The test set
+   `data-theme="retro"` on a page that never had the retro register, so
+   it measured a theme without the thing that breaks it — standing rule
+   7e, in the round that already broke that rule twice. Both fixtures
+   load both registers now, and the retro failure appeared the moment
+   they did.
+
+**And the measurement itself was weaker than it looked.** `bothHalves`
+scored a ring by colour and spread, so a theme whose own decoration is
+ring-coloured passed while focus changed nothing at all — retro's case
+exactly. It now also compares the focused element against an unfocused
+clone. The painted-pixel count had the same shape of fault in the other
+direction: counting inside the box, 171 of cyberpunk's gradient pixels
+are already ring-coloured, so `> 0` passed with the rule deleted. It
+measures the **difference** focus makes now: 1591 against 171, and 0
+without the rule.
+
 ## AR31 · TH104 fixes the grid before it converts it, and warns nobody at runtime
 
 Approved by Kenny on 2026-09-07.

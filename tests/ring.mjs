@@ -82,12 +82,32 @@ export const indicator = (page, testId) =>
         document.body.append(probe);
         const ring = getComputedStyle(probe).color;
         probe.remove();
+        probe.style.color = 'var(--focus-ring-contrast)';
+        document.body.append(probe);
+        const ringContrast = getComputedStyle(probe).color;
+        probe.remove();
+        // The same element, unfocused, read WITHOUT moving focus: a clone
+        // carries the classes and sits under the same theme, and it can
+        // never be the active element. Without this baseline a theme whose
+        // own decoration happens to be --focus-ring-coloured scores a ring
+        // it does not have -- which is exactly how retro passed for two
+        // rounds [AR30 as amended 2026-09-07].
+        const clone = /** @type {HTMLElement} */ (el.cloneNode(true));
+        clone.removeAttribute('data-test');
+        clone.setAttribute('aria-hidden', 'true');
+        clone.tabIndex = -1;
+        el.parentElement?.append(clone);
+        const idle = getComputedStyle(clone);
+        const unfocused = { outlineStyle: idle.outlineStyle, boxShadow: idle.boxShadow };
+        clone.remove();
         return {
             focused: el === document.activeElement,
             outlineStyle: s.outlineStyle,
             outlineWidth: Number.parseFloat(s.outlineWidth),
             boxShadow: s.boxShadow,
             ring,
+            ringContrast,
+            unfocused,
         };
     }, testId);
 
@@ -103,17 +123,39 @@ export const indicator = (page, testId) =>
  * @param {{ outlineStyle: string, outlineWidth: number, boxShadow: string, ring: string }} found
  */
 export function bothHalves(found) {
-    const outer = found.outlineStyle !== 'none' && found.outlineWidth >= 2;
-    const inner = shadowLayers(found.boxShadow).some((layer) => {
-        const px = lengths(layer);
-        return layer.includes(found.ring) && px.length >= 4 && px[3] >= 2;
-    });
-    return { outer, inner };
+    /** A ring layer is one in `colour` with a real SPREAD, inset or not. */
+    const ringLayer = (/** @type {string} */ colour) =>
+        shadowLayers(found.boxShadow).some((layer) => {
+            const px = lengths(layer);
+            return layer.includes(colour) && px.length >= 4 && px[3] >= 2;
+        });
+
+    // An element the register clips cannot show an outline -- clip-path
+    // takes it with the corner. Under the bevel the outer half is an
+    // inset ring in --focus-ring-contrast instead, which is what the
+    // 96-pair contrast measurement of MR-NOTCH was taken for.
+    const outer = (found.outlineStyle !== 'none' && found.outlineWidth >= 2) || ringLayer(found.ringContrast ?? '\u0000');
+    const inner = ringLayer(found.ring);
+
+    // And whatever is found must actually be the FOCUS doing it. A theme
+    // whose decoration is already ring-coloured scores both halves while
+    // focusing changes nothing at all: retro's four-layer bevel read
+    // identically focused and unfocused, and only this comparison sees it.
+    const idle = found.unfocused;
+    const changed = !idle || idle.boxShadow !== found.boxShadow || idle.outlineStyle !== found.outlineStyle;
+
+    return { outer, inner, changed };
 }
 
 /**
- * The pixels the focus indicator actually paints AROUND an element,
- * which is a different question from what its computed style declares.
+ * The pixels the focus indicator actually paints around an element —
+ * or, with `where: 'inside'`, within it. Either is a different question
+ * from what its computed style declares.
+ *
+ * `where` exists because MR-NOTCH put the bevel back on the cyberpunk
+ * button and moved its ring inside: a `clip-path` cannot clip what is
+ * drawn within the box, and counting outside it would now score zero on
+ * a ring that is plainly there.
  *
  * Computed style still reports an outline a `clip-path` has clipped
  * away, which is how AR30's `green 784 -> 0` was found — and it still
@@ -131,7 +173,48 @@ export function bothHalves(found) {
  * @param {{ pad?: number, settleMs?: number }} [options]
  * @returns {Promise<number>}
  */
-export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 400 } = {}) {
+/**
+ * What FOCUS adds in painted ring pixels: the count while focused minus
+ * the count at rest.
+ *
+ * A bare count answers the wrong question. Measured on the cyberpunk
+ * button at MR-NOTCH: 1591 ring-coloured pixels inside the box while
+ * focused, and 171 with nothing focused at all — the gradient's own light
+ * band. A `> 0` assertion passes on those 171 whether the ring exists or
+ * not, which is exactly what the drill found: removing the rule the test
+ * was written for left it green. The difference does not have that
+ * problem, because the background is in both terms and cancels.
+ *
+ * The element must be reachable by `focus()`; this leaves it focused.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} testId
+ * @param {{ pad?: number, settleMs?: number, where?: 'outside' | 'inside' }} [options]
+ * @returns {Promise<{ focused: number, idle: number, delta: number }>}
+ */
+export async function paintedFocusDelta(page, testId, options = {}) {
+    // `either` is the default because a theme decides which side of the
+    // box its ring lives on: under a register that clips the corner it is
+    // drawn inside, everywhere else around. A caller that asks "does
+    // focus paint a ring on this control" should not have to know which
+    // theme it is looking at [MR-NOTCH].
+    const sides = options.where ? [options.where] : ['outside', 'inside'];
+    const target = page.locator(`[data-test="${testId}"]`);
+    /** @type {{ side: string, focused: number, idle: number, delta: number }[]} */
+    const runs = [];
+    for (const side of sides) {
+        await target.focus();
+        const focused = await paintedFocusPixels(page, testId, { ...options, where: side });
+        await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur());
+        const idle = await paintedFocusPixels(page, testId, { ...options, where: side });
+        runs.push({ side, focused, idle, delta: focused - idle });
+    }
+    await target.focus();
+    const best = runs.reduce((a, b) => (b.delta > a.delta ? b : a));
+    return { ...best, runs };
+}
+
+export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 400, where = 'outside', colour = 'focus-ring' } = {}) {
     // A theme switch transitions background-color for --fx-duration; a
     // screenshot taken mid-transition measures the transition.
     await page.waitForTimeout(settleMs);
@@ -143,14 +226,14 @@ export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 40
         width: Math.round(box.width + pad * 2),
         height: Math.round(box.height + pad * 2),
     };
-    const ring = await page.evaluate(() => {
+    const ring = await page.evaluate((token) => {
         const probe = document.createElement('span');
-        probe.style.color = 'var(--focus-ring)';
+        probe.style.color = `var(--${token})`;
         document.body.append(probe);
         const value = getComputedStyle(probe).color;
         probe.remove();
         return value;
-    });
+    }, colour);
     const shot = await page.screenshot({ clip });
     return page.evaluate(
         async ([data, colour, geometry]) => {
@@ -177,7 +260,7 @@ export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 40
                     const cy = y / scale;
                     const inside =
                         cx >= geometry.pad && cx < geometry.pad + geometry.width && cy >= geometry.pad && cy < geometry.pad + geometry.height;
-                    if (inside) continue;
+                    if (geometry.where === 'outside' ? inside : !inside) continue;
                     const i = (y * canvas.width + x) * 4;
                     // A tolerance of 12, because the ring is antialiased
                     // against the ground at both of its edges.
@@ -188,6 +271,6 @@ export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 40
             }
             return painted;
         },
-        [shot.toString('base64'), ring, { pad, width: box.width, height: box.height, clipWidth: clip.width }],
+        [shot.toString('base64'), ring, { pad, width: box.width, height: box.height, clipWidth: clip.width, where }],
     );
 }

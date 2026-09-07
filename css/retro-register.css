@@ -23,6 +23,30 @@
             inset -2px -2px 0 var(--border);
     }
 
+    /* The bevel above is a box-shadow, and kp.register comes after
+   kp.components, so it replaced .kp-button:focus-visible's ring outright
+   -- the same fault W0 repaired one layer down, made again here. Measured
+   before this rule: under retro the focused and unfocused box-shadow were
+   IDENTICAL, so only the outline remained of a deliberately two-part
+   indicator [DI2, AR30 as amended 2026-09-07].
+
+   It hid because neither ring fixture loaded this stylesheet: the test set
+   data-theme="retro" on a page that never had the retro register, so it
+   measured a theme without the thing that breaks it. Standing rule 7e, and
+   the fixtures now load both registers.
+
+   So the ring is composed in front of the bevel rather than instead of
+   it. */
+    [data-theme='retro'] .kp-button:focus-visible,
+    [data-theme='retro'] .kp-icon-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 1px 1px 0 var(--popover),
+            inset -1px -1px 0 var(--foreground),
+            inset 2px 2px 0 var(--card),
+            inset -2px -2px 0 var(--border);
+    }
+
     /* Pressed: the bevel inverts and the label steps one pixel down and
  * right, the way the original's did. No transition: --fx-duration is 0. */
     [data-theme='retro'] .kp-button:active:not(:disabled),

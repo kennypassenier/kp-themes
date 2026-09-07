@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
 // The ring measurement lives in tests/ring.mjs since W4, because the
 // assembly suite measures the same ring on the destructive item inside a
 // row menu and two copies of it would drift apart.
-import { bothHalves, indicator, paintedFocusPixels, tabTo, wearTheme } from './ring.mjs';
+import { bothHalves, indicator, paintedFocusDelta, tabTo, wearTheme } from './ring.mjs';
 
 const FIXTURE = '/tests/fixtures/button.html';
 
@@ -82,9 +82,10 @@ test.describe('the button', () => {
                 // the inner one a box-shadow layer in --focus-ring with a
                 // real spread: `0px 0px 0px 0px` is a layer that paints
                 // nothing, and that is exactly what the layer collision left.
-                const { outer, inner } = bothHalves(found);
-                if (!outer || !inner) {
-                    broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+                const { outer, inner, changed } = bothHalves(found);
+                if (!outer || !inner || !changed) {
+                    const why = !changed ? 'focus changes nothing' : 'half a ring';
+                    broken.push(`${theme}: ${why} — outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
                 }
             }
             expect(broken, `half a ring in:\n${broken.join('\n')}`).toEqual([]);
@@ -119,12 +120,27 @@ test.describe('the button', () => {
     // Drill [KT3]: `clip-path` added to the register's `.kp-button` rule —
     // "cyberpunk: the focus indicator painted 0 pixels" in both browsers,
     // with formal untouched. AR30 measured the same collapse as 784 -> 0.
-    for (const theme of ['formal', 'cyberpunk']) {
+    // Amended at MR-NOTCH, 2026-09-07: cyberpunk's ring moved inside the
+    // button so the bevel could come back, so that is where it is counted.
+    // Counting outside would now read zero on a ring that is plainly
+    // there — and counting inside on formal would read the button's own
+    // fill, so each theme is asked the question it actually answers.
+    // And it asks for the DIFFERENCE focus makes, not a bare count. The
+    // first version of this assertion counted inside the box and passed
+    // with its own rule deleted: 171 of cyberpunk's gradient pixels are
+    // already ring-coloured, and `> 0` was satisfied by those alone.
+    // Drill [KT3], on the assertion as it now stands: the `:focus-visible`
+    // rule removed from the register — 1591 -> 171 focused, so a delta of
+    // 1420 -> 0, in both browsers.
+    for (const [theme, where] of [
+        ['formal', 'outside'],
+        ['cyberpunk', 'inside'],
+    ]) {
         test(`the focus indicator still paints pixels on .kp-button under ${theme} [TH110, AR30]`, async ({ page }) => {
             await wearTheme(page, theme);
             await tabTo(page, 'plain-md');
-            const painted = await paintedFocusPixels(page, 'plain-md');
-            expect(painted, `${theme}: the focus indicator painted ${painted} pixels`).toBeGreaterThan(0);
+            const { focused, idle, delta } = await paintedFocusDelta(page, 'plain-md', { where });
+            expect(delta, `${theme}: focus added ${delta} ring pixels (focused ${focused}, at rest ${idle})`).toBeGreaterThan(100);
         });
     }
 

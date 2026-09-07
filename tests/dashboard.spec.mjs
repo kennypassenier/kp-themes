@@ -44,7 +44,7 @@
 
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { bothHalves, indicator, paintedFocusPixels, tabTo, wearTheme } from './ring.mjs';
+import { bothHalves, indicator, paintedFocusDelta, tabTo, wearTheme } from './ring.mjs';
 
 const PAGE = '/tests/fixtures/dashboard.html';
 
@@ -286,10 +286,16 @@ for (const channel of CHANNELS) {
         const blank = [];
         for (const theme of THEMES) {
             await wearTheme(page, theme);
-            const painted = await paintedFocusPixels(page, `${channel.prefix}-delete-r1`, { settleMs: 150 });
-            if (painted === 0) blank.push(theme);
+            // The DIFFERENCE focus makes, on whichever side of the box the
+            // theme draws it [MR-NOTCH]. A bare count read 0 under
+            // cyberpunk once the bevel came back and the ring moved
+            // inside — and it counted the popover's own border as a ring
+            // in the four themes whose --border-strong equals their
+            // --focus-ring. A difference has the border in both terms.
+            const { delta, side, focused, idle } = await paintedFocusDelta(page, `${channel.prefix}-delete-r1`, { settleMs: 150 });
+            if (delta <= 0) blank.push(`${theme} (${side}: ${focused} focused, ${idle} at rest)`);
         }
-        expect(blank, `the focus indicator painted 0 pixels in:\n${blank.join('\n')}`).toEqual([]);
+        expect(blank, `focus painted no ring in:\n${blank.join('\n')}`).toEqual([]);
     });
 
     // The confirmation's own buttons are built by js/components.js at

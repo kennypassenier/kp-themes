@@ -6082,14 +6082,38 @@
         border-radius: 0;
     }
 
-    /* The bevel does NOT [AR30]. clip-path clips the focus outline away
-   with the corner: measured in painted pixels, both browsers, green
-   784 -> 0 and red 912 -> 0. Hooking .kp-button here as TH110 was
-   drafted would have removed the last visible focus indicator from
-   every button under cyberpunk. The bevel stays on the elements that
-   already carried it, and .fx-notch is the way to ask for it. */
-    [data-theme='cyberpunk'] [data-slot='button'] {
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+    /* AR30, AMENDED 2026-09-07 after Kenny asked where the bevel had gone
+   (mini-round MR-NOTCH). The bevel is back on .kp-button.
+
+   The original reasoning was right about the mechanism and wrong about
+   the conclusion. clip-path DOES clip the focus outline away with the
+   corner -- measured in painted pixels, both browsers, green 784 -> 0 and
+   red 912 -> 0. What it cannot clip is a ring drawn INSIDE the box, and
+   nothing had tried that. So under the bevel the indicator becomes two
+   inset rings rather than an outline plus a shadow.
+
+   That changes what the two halves contrast against: an inset ring reads
+   against the button's own fill rather than half against the page, which
+   is the promise DI2's two-part design makes. Measured over 24 themes x 4
+   button fills = 96 pairs before this shipped: in every pair at least one
+   half reaches 3.0 or better against the fill, always the
+   --focus-ring-contrast half, between 5.00 and 18.30.
+
+   The old rule selected [data-slot='button'] alone, which nothing in this
+   package writes on a button -- so the bevel reached zero elements, while
+   a comment here claimed it "stays on the elements that already carried
+   it". There were none. The notch size stays a knob [KT6]. */
+    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-button {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch, 7px)), calc(100% - var(--kp-button-notch, 7px)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] [data-slot='button']:focus-visible,
+    [data-theme='cyberpunk'] .kp-button:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) * 2) var(--focus-ring-contrast);
     }
 
     /* CP-F2: button "charge" - a skewed light band sweeps through on
@@ -6385,6 +6409,30 @@
     [data-theme='retro'] .kp-popover,
     [data-theme='retro'] .kp-icon-button {
         box-shadow:
+            inset 1px 1px 0 var(--popover),
+            inset -1px -1px 0 var(--foreground),
+            inset 2px 2px 0 var(--card),
+            inset -2px -2px 0 var(--border);
+    }
+
+    /* The bevel above is a box-shadow, and kp.register comes after
+   kp.components, so it replaced .kp-button:focus-visible's ring outright
+   -- the same fault W0 repaired one layer down, made again here. Measured
+   before this rule: under retro the focused and unfocused box-shadow were
+   IDENTICAL, so only the outline remained of a deliberately two-part
+   indicator [DI2, AR30 as amended 2026-09-07].
+
+   It hid because neither ring fixture loaded this stylesheet: the test set
+   data-theme="retro" on a page that never had the retro register, so it
+   measured a theme without the thing that breaks it. Standing rule 7e, and
+   the fixtures now load both registers.
+
+   So the ring is composed in front of the bevel rather than instead of
+   it. */
+    [data-theme='retro'] .kp-button:focus-visible,
+    [data-theme='retro'] .kp-icon-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             inset 1px 1px 0 var(--popover),
             inset -1px -1px 0 var(--foreground),
             inset 2px 2px 0 var(--card),
