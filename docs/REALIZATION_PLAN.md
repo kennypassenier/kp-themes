@@ -408,6 +408,40 @@ will touch is decided now rather than hoped for:
 | W4 | not started |
 | W5 | not started |
 
+### A third flake, named but not yet repaired
+
+Standing rule 8a asks for a name rather than "it was load", and two of
+the three flakes this round produced now have one and are repaired
+(`tests/site.spec.mjs` and `tests/showcase.spec.mjs`, commit `aff22d1`).
+The third is named here and left standing until W4 merges, because its
+repair touches `tests/fixtures/components.html`, which W4 is working in.
+
+**The fault.** Three assertions in `tests/forms.spec.mjs` (lines 117, 131
+and 142) wait for the submit button's busy state. That state is transient
+by construction: the fixture settles the save after **400 ms**, and
+`toBeDisabled()` can only pass if one of its polls lands inside that
+window. When a poll misses it, retrying cannot help — the state is
+already gone — so the assertion waits out its full budget against a
+button that will never be disabled again. Load does not cause this; it
+only decides whether the first poll lands in time.
+
+**Proved rather than reasoned.** Closing the window to 0 ms in both
+channels reproduces it deterministically, with the same messages the
+loaded run produced: `toHaveAttribute(aria-busy) — unexpected value
+"null"` and `toBeDisabled() — unexpected value "enabled"`. Restored, all
+eight pass in 4.5s.
+
+**Also found:** the comment above line 131 says the fixture settles after
+50 ms. It settles after 400. The number in the comment has been wrong
+since it was written.
+
+**The repair, after W4.** Not a longer budget, which makes the window
+harder to hit rather than easier: the fixture's settle becomes a promise
+the test resolves, so the busy state holds until the test has observed
+it, and the assertion stops depending on timing at all. That is also
+rule 27 — a timing value only the fixture's author can change.
+
+
 **Merged into `round-five` on 2026-09-07**, in the order the plan named:
 W1 first, then W0 rebased onto it, then W3. Two conflicts, both the same
 shape — two milestones raising the same counter — resolved as the sum and
