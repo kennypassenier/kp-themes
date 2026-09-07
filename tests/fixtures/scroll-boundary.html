@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>The scroll boundary — three regions, two probes each [TH114]</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>What a scroll region clips</h1>
+
+        <!-- Three scroll regions the package ships, each with the same two
+             probes hanging off its bottom edge [TH114, AR33].
+
+             The two probes in a region carry IDENTICAL declarations —
+             `position: absolute`, `inset-block-start: 100%`, the same size
+             and the same colour — and differ in exactly one thing: the
+             second one has the `popover` attribute and is shown, which puts
+             it in the top layer.
+
+             The test then moves the shown popover onto the exact viewport
+             rectangle its twin occupies. It has to: a top-layer element's
+             `position: absolute` resolves against the initial containing
+             block rather than against its DOM parent, so the same `100%`
+             that means "the region's bottom edge" for the twin means "the
+             bottom of the viewport" for the popover. tests/scroll-boundary.spec.mjs
+             says so where it does it.
+
+             Nothing here supplies the clip: the fixture never writes
+             `overflow`, `contain` or `clip-path` anywhere [KT3, rule 7e].
+             The clip under test comes from `overflow-x: auto` in
+             css/components.css:708 (.kp-table-wrap), css/components.css:1979
+             (.kp-diff) and css/_rules.css:459 (pre).
+
+             `position: relative` on all three regions is the CONSUMER's half
+             of the construction — it is what makes the region the probe's
+             containing block, which is what placing a dropdown against a box
+             actually does. It is on `.kp-table-wrap` too, and that was
+             measured rather than assumed: `container: kp-table / inline-size`
+             (css/components.css:726) does NOT make the wrapper a containing
+             block for an absolutely positioned descendant. Without the
+             `position: relative` the probe resolved against the initial
+             containing block and landed at viewport 580px with the box at
+             0-114px — outside the box altogether, and a test that read that
+             as "clipped" would have been measuring nothing. -->
+
+        <section data-test="table-wrap-section" style="margin-block-end: 8rem">
+            <h2>A table wrapper</h2>
+            <div data-region="table-wrap" class="kp-table-wrap" style="position: relative; inline-size: 300px">
+                <table class="kp-table">
+                    <caption>
+                        Quarterly revenue
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer</th>
+                            <th scope="col">First quarter</th>
+                            <th scope="col">Second quarter</th>
+                            <th scope="col">Third quarter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Acme</td>
+                            <td class="kp-numeric">1284.50</td>
+                            <td class="kp-numeric">998.00</td>
+                            <td class="kp-numeric">1102.25</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div
+                    data-test="table-wrap-absolute"
+                    style="
+                        position: absolute;
+                        inset: auto;
+                        inset-block-start: 100%;
+                        inset-inline-start: 0;
+                        margin: 0;
+                        inline-size: 120px;
+                        block-size: 40px;
+                        background: var(--primary);
+                    "
+                >
+                    absolute
+                </div>
+                <div
+                    data-test="table-wrap-popover"
+                    popover="manual"
+                    style="
+                        position: absolute;
+                        inset: auto;
+                        inset-block-start: 100%;
+                        inset-inline-start: 0;
+                        margin: 0;
+                        inline-size: 120px;
+                        block-size: 40px;
+                        background: var(--primary);
+                    "
+                >
+                    popover
+                </div>
+            </div>
+        </section>
+
+        <section data-test="diff-section" style="margin-block-end: 8rem">
+            <h2>A diff</h2>
+            <pre data-region="diff" class="kp-diff" style="position: relative; inline-size: 300px">
+<span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">1</span><span class="kp-diff__sign"> </span><span>--background: 0 0% 100%;</span></span>
+<span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">2</span><span class="kp-diff__sign">-</span><span>--primary: 220 90% 56%;</span></span>
+<span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">2</span><span class="kp-diff__sign">+</span><span>--primary: 220 90% 48%;</span></span>
+<span
+                    data-test="diff-absolute"
+                    style="position: absolute; inset: auto; inset-block-start: 100%; inset-inline-start: 0; margin: 0; inline-size: 120px; block-size: 40px; background: var(--primary)"
+                >absolute</span
+                ><span
+                    data-test="diff-popover"
+                    popover="manual"
+                    style="position: absolute; inset: auto; inset-block-start: 100%; inset-inline-start: 0; margin: 0; inline-size: 120px; block-size: 40px; background: var(--primary)"
+                >popover</span
+                ></pre>
+        </section>
+
+        <section data-test="pre-section" style="margin-block-end: 8rem">
+            <h2>A code block</h2>
+            <pre data-region="pre" style="position: relative; inline-size: 300px">
+node --experimental-strip-types gates/check-contrast.mjs --theme formal --verbose
+<span
+                    data-test="pre-absolute"
+                    style="position: absolute; inset: auto; inset-block-start: 100%; inset-inline-start: 0; margin: 0; inline-size: 120px; block-size: 40px; background: var(--primary)"
+                >absolute</span
+                ><span
+                    data-test="pre-popover"
+                    popover="manual"
+                    style="position: absolute; inset: auto; inset-block-start: 100%; inset-inline-start: 0; margin: 0; inline-size: 120px; block-size: 40px; background: var(--primary)"
+                >popover</span
+                ></pre>
+        </section>
+    </body>
+</html>
