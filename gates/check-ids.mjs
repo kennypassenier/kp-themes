@@ -43,6 +43,7 @@ export const CROSS_REFERENCES = [
     { id: 'KT9', why: 'the correction and its queued measurement' },
     { id: 'TH47', why: 'the feature and the mini-round that revisited its rating' },
     { id: 'KT10', why: 'the correction and its queued measurement — caught by this gate on the day it was written' },
+    { id: 'TH132', why: 'the feature and its queued mini-round (rated Later at round six) — caught by this gate at the KT10 drill' },
 ];
 
 /** An ID definition: a table row that opens with one, or a heading that names one. */

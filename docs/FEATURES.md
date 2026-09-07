@@ -385,5 +385,36 @@ programme attached (S48).
 | TH128 | Synthwave — after the research programme of S48                  | Essential | its own concept demo (S46) approved before a token is written; the research findings delivered to Kenny first                                       |
 
 Kenny's three annotations are recorded in `docs/SCOPE.md` as S47, S48 and
-TH117's dynamic notch. Round two of Phase 2 — Claude's proposals and the
-four mandatory items — follows; the list is not frozen yet.
+TH117's dynamic notch.
+
+**Round two, rated 2026-09-07** — Claude's eight proposals: seven
+Essential, one Later.
+
+| ID    | Feature                                                                 | Rating    | Test bar agreed                                                                                                                          |
+| ----- | ----------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| TH129 | DI5 computed for JS effects and transitions — reported, never corrected by the gate (S42) | Essential | the report names every effect of TH117–TH122 with its flash rate; an injected 5/s loop shows red in the report (drill); the gate changes nothing |
+| TH130 | One stylesheet list for every CSS gate, in `gates/config.json`          | Essential | `gates.test.mjs` fails when a manifest stylesheet is missing from the list; drill: remove one file                                        |
+| TH131 | The DI5 test reads the register's real keyframes instead of pinning `fx-flicker` by name | Essential | stays green after the register is replaced; drill: a 5/s keyframe turns it red                                                           |
+| TH132 | `.fx-pulse` capped with `--fx-pulse-cycles` (default 3)                  | Later     | queued in `docs/MINI_ROUNDS.md`; the pulse still appears in TH129's report                                                               |
+| TH133 | Three repairs from the inventory: `.kp-card` instead of `[data-slot]`, a mono fallback for `.microlabel`, the phantom "doubled selector" comment | Essential | a bare `.kp-card` gets the register rule (computed); `.microlabel` renders mono without the Tailwind bridge; the README claim holds      |
+| TH134 | The lift plan for 5.0.0, `docs/LIFT_PLAN.md`                             | Essential | 24 rows, each with research, demo and build status; the CLAUDE.md status block points at it                                              |
+| TH135 | The research as a repository document (`docs/RESEARCH_2026-09.md`)      | Essential | every reference carries a URL and the label measured/observed; every theme has a row, "nothing found" included — **delivered 2026-09-07** |
+| TH136 | The hook vocabulary as a contract in README, USER_GUIDE and the site     | Essential | `check-site` truth: every attribute the section names exists in the effects module; every hook in the parity gate is in the table        |
+
+**M1, M3 and M4 re-put and confirmed unchanged. M2 re-put and confirmed
+unchanged** against a recommendation to amend it: the integration stays
+chassis-rs as recorded in round five; the two files chassis-rs does not
+vendor today (the register stylesheet and the effects module) are named
+by TH127's migration note, not by the ecosystem decision.
+
+## The tally of round six
+
+| Rating    | Count  |
+| --------- | ------ |
+| Essential | 21     |
+| Desired   | 0      |
+| Later     | 1      |
+| Don't do  | 0      |
+| **Rated** | **22** |
+
+Plus S47 and S48, two scope amendments made at the gate.

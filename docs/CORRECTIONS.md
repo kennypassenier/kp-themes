@@ -1088,3 +1088,17 @@ break.
 
 **9 · When the measure is reviewed.** At the Phase 10 of the round in
 which field 7's measurement was made.
+
+
+**Field 7, measured 2026-09-07 at round six's Phase 2 freeze.** A
+heading `## TH129 · An injected duplicate for the KT10 drill` appended to
+`docs/SCOPE.md` made the gate exit 1 with
+`TH129 is defined in docs/FEATURES.md and docs/SCOPE.md`; restored, exit
+0. The first attempt used a bold paragraph, which the gate does not count
+as a definition (only a table row or a heading is), so it measured
+nothing — the drill was reshaped, and that limit is now written down
+here. The drill also caught a genuine collision that had been created
+minutes earlier: `TH132` defined by its FEATURES.md row and by the
+heading of its own mini-round entry; excused in `CROSS_REFERENCES` with
+its reason, the shape TH47 set. The loop is closed; the review moment
+(field 9) is round six's Phase 10.
