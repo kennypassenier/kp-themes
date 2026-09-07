@@ -548,6 +548,12 @@ function build() {
                 { href: 'site/layout.html', label: 'Layout layer' },
                 { href: 'site/utilities.html', label: 'Utility API' },
                 { href: 'showcase/index.html', label: 'Showcase' },
+                // The ten pages TH98 built are uploaded to Pages and were
+                // reachable only by typing their URL: nothing on the site
+                // pointed at them. Kenny found that on 2026-09-07 and said
+                // they must be linked. A page that ships and cannot be
+                // navigated to is a page nobody reads.
+                { href: 'examples/index.html', label: 'Example pages' },
             ],
         },
         ...GROUPS.filter((g) => g !== 'Getting started').map((group) => ({

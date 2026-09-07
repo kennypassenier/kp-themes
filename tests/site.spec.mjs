@@ -111,8 +111,11 @@ test('every navigation entry leads to a page that exists [TH100]', async ({ page
     test.setTimeout(CORPUS_BUDGET_MS);
     await page.goto('/site/index.html');
     const hrefs = await page.locator('.sc-nav__link').evaluateAll((els) => els.map((el) => /** @type {HTMLAnchorElement} */ (el).href));
-    // The four fixed entries plus one per documented unit.
-    expect(hrefs.length).toBe(4 + DESCRIPTORS.length);
+    // The five fixed entries plus one per documented unit. The fifth is
+    // the example pages, linked from 2026-09-07: they were published and
+    // reachable only by URL until Kenny noticed the navigation never
+    // mentioned them.
+    expect(hrefs.length).toBe(5 + DESCRIPTORS.length);
     for (const href of hrefs) {
         const response = await request.get(href);
         expect(response.status(), `${href} is in the navigation and does not exist`).toBe(200);
