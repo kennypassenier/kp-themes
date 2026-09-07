@@ -712,3 +712,36 @@ section rule, a form, a dossier card, the tear, and the footer — and
 Kenny approves the concept there before a token is written. This round
 turns the demo into a template the next theme can be poured into; it
 lands in the repository as part of the work, not as a scratch file.
+
+**Amended at the Phase 2 gate, 2026-09-07.** Three of Kenny's ratings
+change what the round is, and the scope says so here rather than drifting
+under it.
+
+**S47 · The token contract grows with the theme, and every theme follows
+in the same change.** Kenny on TH115: "ik wil niks uit de demo verloren
+zien gaan, dus indien nodig moeten er nieuwe tokens aangemaakt worden en
+dan trekken we de rest gelijk met die nieuwe, dat doen we voortaan altijd
+als het over nieuwe thema's of nieuwe componenten/elementen gaat." So the
+81 are a floor, not a ceiling: when a theme, a component or an element
+needs a token the contract does not have, the token is added to the
+contract and every other theme declares it in the same change — the
+parity gate stays at 100% at every commit. S44's "no change to the
+81-token contract" is replaced by this.
+
+**S48 · 5.0.0 lifts every theme, research first, synthwave next.** Kenny
+on TH128: "Ik wil een grote 5.0.0 update maken, met vele thema's die onder
+de loep worden genomen om alles next level te maken … Ik wil elk bestaand
+thema verbeteren. Dan pas doen we v5.0.0." The order he set: a deep dive
+across dribbble.com, behance.net, webflow.com and sites like them — every
+aspect of every page: effects, buttons, transitions, menus, scroll
+triggers — noting per reference which of the twenty-four themes it fits,
+not only synthwave; the findings come to Kenny; synthwave is built first;
+the next theme is chosen from the findings; and 5.0.0 ships only when
+every existing theme has been through it. Research may run in parallel.
+S43 ("synthwave after") and S45's "a round per theme after it" are
+replaced: the rounds still happen one theme at a time, each with the
+concept demo (S46) as its gate, but they all land in one major.
+
+**TH117's dynamic notch.** Kenny: the navbar's notch sat on one side in
+the demo; when the navbar sits on the other side of the screen, the
+notch sits on the other side too. The geometry follows the placement.

@@ -106,6 +106,16 @@ milestones, a merge, 1302 browser tests and a combined report, because
 D3 meant `STRINGS_NL` in the feature list and something else in the
 architecture text. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from Kenny's answer of 2026-09-07 (TH115)
+
+The token contract is a floor, not a ceiling. When a theme, a component or
+an element needs a token the contract does not have, the token is added
+and **every other theme declares it in the same change** — the parity
+gate stays at 100% at every commit, and nothing a concept demo showed is
+lost for want of a token. Code-enforced by `gates/check-tokens.mjs`
+(parity) and discipline-enforced for the "in the same change" half.
+Recorded as S47 in [docs/SCOPE.md](docs/SCOPE.md).
+
 ## Round six — the next cyberpunk (opened 2026-09-07)
 
 Kenny wants a cyberpunk that "spits off the screen": signal yellow with
@@ -125,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (the next cyberpunk, a new major): Phase 0 closed 2026-09-07; Phase 1 next                                                                          |
-| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                |
-| Next gate           | Round six Phase 1 (inventory of what the new register touches), then the correction form for D3 and round three's Phase 10, whose form is open and unanswered |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                            |
-| AFK mode            | off                                                                                                                                                           |
+| Field               | Value                                                                                                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Current phase       | Round six: Phase 2 round one rated 2026-09-07 (TH115–TH128, all Essential); round two (Claude's proposals, mandatory items) next; research for 5.0.0 running (S48) |
+| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                     |
+| Next gate           | Phase 2 round two, then the tally and the freeze; the research findings of S48 go to Kenny before synthwave starts                                                 |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                 |
+| AFK mode            | off                                                                                                                                                                |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

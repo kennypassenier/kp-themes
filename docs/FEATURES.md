@@ -359,3 +359,31 @@ the next release.
 
 **Frozen 2026-09-07.** Kenny confirmed the tally (F1: Akkoord) and froze
 the list (F2: Bevriezen). Changes from here go through mini-rounds only.
+
+## Round six — the next cyberpunk, and the road to 5.0.0 (2026-09-07)
+
+Fourteen features rated in round one of Phase 2, **all fourteen
+Essential** — including TH123, which was recommended Desired, and TH128,
+which was recommended Later and came back Essential with a research
+programme attached (S48).
+
+| ID    | Feature                                                          | Rating    | Test bar agreed                                                                                                                                       |
+| ----- | ---------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TH115 | The palette as tokens — the 81, plus any token the demo needs (S47) | Essential | `check-tokens` parity at 100% across all themes, `check-contrast` green on every pair, the DI table computed for the new theme, `ha/kp-cyberpunk.yaml` regenerated |
+| TH116 | Two surfaces in one theme, `data-kp-surface="hero|app"`           | Essential | a fixture with both surfaces under cyberpunk where every text/ground pair passes contrast; the parity gate (TH125) sees all themes answer the hook  |
+| TH117 | The navbar: strip geometry, dash-prefixed dropdown, one-shot hover glitch; the notch follows the navbar's side of the screen | Essential | hit test on the dropdown link hits the link in both browsers; keyboard reachable; `clip-path` computed and mirrored when the navbar is placed on the other side; glitch runs once (DI5 computed); one suite drives both channels |
+| TH118 | Buttons: notch, mirrored variant, slit flanks, one-shot charge   | Essential | difference-from-rest focus measurement on both sides per variant; `clip-path` per variant computed; KT3 drill                                        |
+| TH119 | Decipher and one slice glitch on headings, both channels          | Essential | final text equals source in both channels; runs once per page; reduced motion gives the end state at once; the slice's flash count computed and reported |
+| TH120 | Classified emphasis: `mark` clears itself; the dossier variant   | Essential | `::after` scaleX 1→0 with the measured stagger; text always in the DOM; reduced motion clears at once; the dossier opens and closes in both channels |
+| TH121 | The razor tear, `data-kp-divider="tear"`, generated at build     | Essential | pixel sampling above and below the ridge at five x positions in both orders; no JS for the rest state                                                 |
+| TH122 | Hairlines that draw under headings when scrolled into view       | Essential | scaleX 0 before, 1 after entering the viewport; reduced motion always 1; without the module: drawn                                                    |
+| TH123 | Scanlines and vignette retuned on the new palette                 | Essential | texture opacity under the DI9 ceiling; the scanline visible on a hero screenshot                                                                      |
+| TH124 | The register answers every component root                        | Essential | a coverage gate: 64 roots answered or excused with a reason; the dashboard fixture passes DI1, DI2, DI4; drill red by removing one root               |
+| TH125 | The effects module in both channels, with the hook parity gate   | Essential | `check-closure` green; `check-manifest` counts the file; one suite drives both channels; parity gate drilled red; mid-session reduced-motion stops every effect |
+| TH126 | The concept demo as a template in the repository (S46)           | Essential | passes `check-examples-wired` and `check-inline-styles`; renders in both channels; is the fixture for TH117–TH122; in the site navigation           |
+| TH127 | The major: migration note, anatomy rewritten, old theme in 4.x   | Essential | `check-migration` green; `check-ids` green; the ecosystem entry updated                                                                                |
+| TH128 | Synthwave — after the research programme of S48                  | Essential | its own concept demo (S46) approved before a token is written; the research findings delivered to Kenny first                                       |
+
+Kenny's three annotations are recorded in `docs/SCOPE.md` as S47, S48 and
+TH117's dynamic notch. Round two of Phase 2 — Claude's proposals and the
+four mandatory items — follows; the list is not frozen yet.
