@@ -1,43 +1,175 @@
 {
     "//": "The hook matrix [S45, AR36]. Every theme answers every hook: with a selector scoped to that theme (a rule containing [data-theme='<name>'] in the named stylesheet), or with the word quiet and a reason. The default row is the shared base answer; a theme row overrides one hook at a time. gates/check-hooks.mjs refuses a theme that leaves a hook unanswered, a non-quiet answer whose selector is not scoped to the theme, and a quiet answer without a reason.",
     "hooks": {
-        "surface": "data-kp-surface: hero or app — which ground a section stands on [TH116]",
-        "emphasis": "<mark> — an emphasis the theme may reveal [TH120]",
-        "reveal": "data-kp-reveal: headline, emphasis or rule — something that arrives [TH119, TH122]",
-        "divider": "data-kp-divider — a section transition [TH121]",
+        "surface": "data-kp-surface: hero or app \u2014 which ground a section stands on [TH116]",
+        "emphasis": "<mark> \u2014 an emphasis the theme may reveal [TH120]",
+        "reveal": "data-kp-reveal: headline, emphasis or rule \u2014 something that arrives [TH119, TH122]",
+        "divider": "data-kp-divider \u2014 a section transition [TH121]",
         "accent": "the heading accent: h1 and h2 inside a surface [TH122]"
     },
     "default": {
-        "surface": { "quiet": "one ground; both surfaces read the theme's own tokens (AR38 gives every theme the hero sources, C1)" },
-        "emphasis": { "css": "css/_rules.css", "selector": "mark" },
-        "reveal": { "quiet": "no reveal; the element stands in its rest state" },
-        "divider": { "quiet": "no divider; a plain section boundary" },
-        "accent": { "quiet": "no accent beyond the heading's own type" }
+        "surface": {
+            "css": "css/_rules.css",
+            "selector": "[data-kp-surface]"
+        },
+        "emphasis": {
+            "css": "css/_rules.css",
+            "selector": "mark"
+        },
+        "reveal": {
+            "quiet": "no reveal; the element stands in its rest state"
+        },
+        "divider": {
+            "quiet": "no divider; a plain section boundary"
+        },
+        "accent": {
+            "quiet": "no accent beyond the heading's own type"
+        }
     },
     "themes": {
-        "formal": {},
-        "light": {},
-        "dark": {},
-        "cyberpunk": {},
-        "pastel": {},
-        "terminal": {},
-        "topo": {},
-        "high-contrast": {},
-        "sepia": {},
-        "blueprint": {},
-        "solstice": {},
-        "brutalism": {},
-        "deco": {},
-        "academia": {},
-        "phantom": {},
-        "ticker": {},
-        "nishiki": {},
-        "shade-light": {},
-        "shade-dark": {},
-        "mono": {},
-        "retro": {},
-        "grotesk": {},
-        "tazhib": {},
-        "nostromo": {}
+        "formal": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='formal'] [data-kp-surface='hero']"
+            }
+        },
+        "light": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='light'] [data-kp-surface='hero']"
+            }
+        },
+        "dark": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='dark'] [data-kp-surface='hero']"
+            }
+        },
+        "cyberpunk": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='cyberpunk'] [data-kp-surface='hero']"
+            }
+        },
+        "pastel": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='pastel'] [data-kp-surface='hero']"
+            }
+        },
+        "terminal": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='terminal'] [data-kp-surface='hero']"
+            }
+        },
+        "topo": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='topo'] [data-kp-surface='hero']"
+            }
+        },
+        "high-contrast": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='high-contrast'] [data-kp-surface='hero']"
+            }
+        },
+        "sepia": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='sepia'] [data-kp-surface='hero']"
+            }
+        },
+        "blueprint": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='blueprint'] [data-kp-surface='hero']"
+            }
+        },
+        "solstice": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='solstice'] [data-kp-surface='hero']"
+            }
+        },
+        "brutalism": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='brutalism'] [data-kp-surface='hero']"
+            }
+        },
+        "deco": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='deco'] [data-kp-surface='hero']"
+            }
+        },
+        "academia": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='academia'] [data-kp-surface='hero']"
+            }
+        },
+        "phantom": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='phantom'] [data-kp-surface='hero']"
+            }
+        },
+        "ticker": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='ticker'] [data-kp-surface='hero']"
+            }
+        },
+        "nishiki": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='nishiki'] [data-kp-surface='hero']"
+            }
+        },
+        "shade-light": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='shade-light'] [data-kp-surface='hero']"
+            }
+        },
+        "shade-dark": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='shade-dark'] [data-kp-surface='hero']"
+            }
+        },
+        "mono": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='mono'] [data-kp-surface='hero']"
+            }
+        },
+        "retro": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='retro'] [data-kp-surface='hero']"
+            }
+        },
+        "grotesk": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='grotesk'] [data-kp-surface='hero']"
+            }
+        },
+        "tazhib": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='tazhib'] [data-kp-surface='hero']"
+            }
+        },
+        "nostromo": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='nostromo'] [data-kp-surface='hero']"
+            }
+        }
     }
 }

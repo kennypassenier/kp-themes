@@ -231,27 +231,32 @@ and it lives near the threshold of visibility.</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>Five things make it read as cyberpunk rather than as &quot;dark with pink&quot;:</p>
+<p>Two grounds in one theme, and a palette of four:</p>
 <ol>
-<li><strong>Darkness as canvas.</strong> Near-black with a violet cast
-(<code>hsl(258, 40%, 6%)</code>), never pure black. Neon only works against it.</li>
-<li><strong>Neon as signal, not decoration.</strong> One to three saturated accents,
-used sparsely, on the things that matter. A page that is all neon reads
-as vaporwave.</li>
-<li><strong>The terminal register.</strong> Monospace, uppercase microlabels, dense
-data, identifiers and timestamps used as ornament.</li>
-<li><strong>Imperfection over precision.</strong> Scanlines, grain, the occasional
-glitch — technology that is powerful and worn. The key word is
-<em>occasional</em>: permanent glitch is noise, rare glitch is an event.</li>
-<li><strong>Angular geometry.</strong> Clipped corners, notches, hairline connectors.
-The 4 px radius is the smallest of any theme for this reason.</li>
+<li><strong>Signal yellow as ground and primary.</strong> <code>hsl(56, 98%, 51%)</code>, the
+frame colour read off the reference. It is the hero's ground and the
+app's primary — the one colour that is both a surface and a signal.</li>
+<li><strong>A void with a violet cast</strong> for the app surface: <code>hsl(270, 9%, 4%)</code>,
+never pure black. Cards and popovers rise from it in two steps.</li>
+<li><strong>Blood red where something is wrong.</strong> <code>hsl(353, 84%, 58%)</code> for the
+destructive plate on the void; the deeper <code>hsl(353, 84%, 42%)</code> for the
+alert and the second ink on yellow, where it reads at 4.7.</li>
+<li><strong>Cyan for what must be read.</strong> Microlabels, form labels, hairlines:
+<code>hsl(184, 100%, 50%)</code> as the accent, never as a ground.</li>
 </ol>
+<p>Violet lives only inside a glitch slice (S40), and the register at C2
+paints it there; the token file carries it as a chart colour and nowhere
+else.</p>
 <ul>
-<li>Magenta <code>hsl(315, 95%, 64%)</code> acts; cyan <code>hsl(180, 95%, 50%)</code> accents.
-Swapping them changes the theme's personality entirely.</li>
-<li>The foreground is a pale cyan, not white. White text would flatten it.</li>
-<li>The register is decoration, not colour: the theme is complete without
-it. That distinction is why the register is a separate file.</li>
+<li>Yellow acts and grounds; red alarms; cyan labels. Swap any two and it
+is a different theme.</li>
+<li>The app foreground is a warm smoke, not white. White text on the void
+reads as a terminal; smoke reads as print.</li>
+<li>The radius is 0. Every corner is either square or a notch (<code>--fx-notch</code>
+14px), and the notch is the register's, not the token file's.</li>
+<li>The register is decoration: the theme is complete with <code>themes.css</code>
+alone, and <code>check-hooks</code> holds that every hook has an answer here even
+when the register is off.</li>
 </ul>
                         </div>
                     </article>

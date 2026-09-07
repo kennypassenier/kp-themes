@@ -65,6 +65,18 @@ const PAIRS = [
     ['card', 'link-visited'],
     ['muted', 'foreground'], // TH32: code, pre and kbd sit on the muted surface
     ...STATUS_NAMES.map((s) => [`status-${s}`, `status-${s}-foreground`]),
+    // TH116: the hero surface is a second ground with its own ink, second
+    // ink, muted ink, button, alert and card. Every text pair a component
+    // can form on it is measured like the app's [AR38].
+    ['surface-hero-bg', 'surface-hero-fg'],
+    ['surface-hero-bg', 'surface-hero-fg-2'],
+    ['surface-hero-bg', 'surface-hero-muted'],
+    ['surface-hero-bg', 'surface-hero-primary'], // the hero's link and button colour as text on the hero
+    ['surface-hero-bg', 'surface-hero-danger'], // the alert as text on the hero
+    ['surface-hero-primary', 'surface-hero-primary-foreground'],
+    ['surface-hero-danger', 'surface-hero-danger-foreground'],
+    ['surface-hero-card', 'surface-hero-card-foreground'],
+    ['surface-hero-card', 'surface-hero-muted'], // muted ink on the hero card
 ];
 // Accent surfaces carry large text/icons in this design system: 3:1.
 const LARGE_PAIRS = [['accent', 'accent-foreground']];
@@ -76,6 +88,8 @@ const LARGE_PAIRS = [['accent', 'accent-foreground']];
  * line; a HUD accent is a graphic, not prose.
  */
 const NON_TEXT_PAIRS = [
+    ['surface-hero-bg', 'surface-hero-border'], // TH116: the hero's frame is a boundary on its ground (SC 1.4.11)
+
     ['background', 'fx-signal'],
     ['background', 'chart-1'],
     ['background', 'chart-2'],
@@ -109,6 +123,7 @@ const EXEMPT = {
     'kp-text-xs': 'not a colour (a length: one step of the typography scale) [TH94, R0-TYPO]',
     'kp-text-sm': 'not a colour (a length: one step of the typography scale) [TH94, R0-TYPO]',
     'kp-text-md': 'not a colour (a length: one step of the typography scale) [TH94, R0-TYPO]',
+    'kp-text-display': 'not a colour (a length: the display step of the typography scale, a headline on a hero) [S47]',
     'kp-space-xs': 'not a colour (a length: one step of the spacing scale) [TH94]',
     'kp-space-sm': 'not a colour (a length: one step of the spacing scale) [TH94]',
     'kp-space-md': 'not a colour (a length: one step of the spacing scale) [TH94]',
@@ -157,6 +172,19 @@ const DISTANCE_PAIRS = [
     ['destructive', 'destructive-active', 10],
 ];
 
+/**
+ * The hero block of a theme, `[data-theme='x'] [data-kp-surface='hero']`
+ * [TH116, AR38]: where the generator writes the hero's derived states.
+ *
+ * @param {string} name @returns {string}
+ */
+function heroBlock(name) {
+    const re = new RegExp(`\\[data-theme='${name}'\\] \\[data-kp-surface='hero'\\]\\s*\\{([^}]+)\\}`);
+    const m = css.match(re);
+    if (!m) throw new Error(`hero block not found: ${name} (the generator writes one per theme since C1)`);
+    return m[1];
+}
+
 /** @param {string} name @returns {string} */
 function themeBlock(name) {
     const re = new RegExp(`\\[data-theme='${name}'\\]\\s*\\{([^}]+)\\}`);
@@ -180,7 +208,11 @@ function hslToRgb({ h, s, l }) {
     const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
     const m = l - c / 2;
     const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-    return [r + m, g + m, b + m];
+    // Rounded to 8 bits per channel, because that is what the browser
+    // paints: light's warning pair measured 4.50 here and 4.48 on the
+    // rendered page (tests/surfaces.spec.mjs, 2026-09-07) until this
+    // rounding matched the browser's [TH116].
+    return [r + m, g + m, b + m].map((v) => Math.round(v * 255) / 255);
 }
 
 /** @param {number[]} rgb */
@@ -228,6 +260,28 @@ for (const theme of THEMES) {
         if (d < floor) {
             failures++;
             console.error(`FAIL ${theme}: --${b} is only ${d.toFixed(1)} from --${a} (need >= ${floor}); the difference is not visible`);
+        }
+    }
+    // KT2 on the hero: the pressed button and alert are visibly pressed.
+    // The base lives in the theme block, the state in the hero block.
+    for (const [source, target] of [
+        ['surface-hero-primary', 'primary'],
+        ['surface-hero-danger', 'destructive'],
+    ]) {
+        try {
+            const base = tokenHsl(block, source);
+            const active = tokenHsl(heroBlock(theme), `${target}-active`);
+            const d = distance(
+                hsl(`hsl(${base.h}, ${base.s * 100}%, ${base.l * 100}%)`),
+                hsl(`hsl(${active.h}, ${active.s * 100}%, ${active.l * 100}%)`),
+            );
+            if (d < 10) {
+                failures++;
+                console.error(`FAIL ${theme}: on the hero, --${target}-active is only ${d.toFixed(1)} from --${source} (need >= 10)`);
+            }
+        } catch (e) {
+            failures++;
+            console.error(`FAIL ${theme}: hero states: ${e instanceof Error ? e.message : String(e)}`);
         }
     }
     for (const token of unaccountedTokens(block)) {

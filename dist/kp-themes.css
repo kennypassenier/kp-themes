@@ -130,6 +130,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(40, 25%, 97%);
+    --surface-hero-fg: hsl(220, 30%, 13%);
+    --surface-hero-fg-2: hsl(218, 45%, 24%);
+    --surface-hero-muted: hsl(220, 12%, 36%);
+    --surface-hero-border: hsl(220, 14%, 56%);
+    --surface-hero-primary: hsl(218, 45%, 24%);
+    --surface-hero-primary-foreground: hsl(40, 30%, 97%);
+    --surface-hero-danger: hsl(0, 60%, 40%);
+    --surface-hero-danger-foreground: hsl(40, 30%, 97%);
+    --surface-hero-card: hsl(40, 30%, 99%);
+    --surface-hero-card-foreground: hsl(220, 30%, 13%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(218, 45%, 24%);
     --link-visited: hsl(271, 49%, 12%);
@@ -170,7 +186,7 @@
     --success: hsl(150, 55%, 88%);
     --success-foreground: hsl(150, 70%, 27%);
     --warning: hsl(38, 85%, 88%);
-    --warning-foreground: hsl(38, 100%, 29%);
+    --warning-foreground: hsl(38, 100%, 28%);
     --info: hsl(205, 75%, 88%);
     --info-foreground: hsl(205, 90%, 35%);
     --border: hsl(220, 13%, 88%);
@@ -236,6 +252,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 100%);
+    --surface-hero-fg: hsl(224, 25%, 12%);
+    --surface-hero-fg-2: hsl(243, 60%, 45%);
+    --surface-hero-muted: hsl(224, 12%, 38%);
+    --surface-hero-border: hsl(220, 10%, 57%);
+    --surface-hero-primary: hsl(243, 60%, 45%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
+    --surface-hero-danger: hsl(0, 72%, 42%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(224, 25%, 12%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(243, 60%, 45%);
@@ -344,6 +376,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(226, 22%, 8%);
+    --surface-hero-fg: hsl(220, 20%, 93%);
+    --surface-hero-fg-2: hsl(255, 85%, 74%);
+    --surface-hero-muted: hsl(220, 12%, 70%);
+    --surface-hero-border: hsl(226, 16%, 45%);
+    --surface-hero-primary: hsl(255, 85%, 74%);
+    --surface-hero-primary-foreground: hsl(256, 40%, 12%);
+    --surface-hero-danger: hsl(0, 70%, 68%);
+    --surface-hero-danger-foreground: hsl(0, 55%, 10%);
+    --surface-hero-card: hsl(226, 20%, 11%);
+    --surface-hero-card-foreground: hsl(220, 20%, 93%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(255, 85%, 74%);
     --link-visited: hsl(333, 63%, 66%);
@@ -364,78 +412,73 @@
 }
 
 [data-theme='cyberpunk'] {
-    /* Void-purple night, neon magenta and cyan. */
-    --background: hsl(258, 40%, 6%);
-    --foreground: hsl(190, 60%, 92%);
-    --card: hsl(258, 35%, 9%);
-    --card-foreground: hsl(190, 60%, 92%);
-    --popover: hsl(258, 35%, 9%);
-    --popover-foreground: hsl(190, 60%, 92%);
-    --primary: hsl(315, 95%, 64%);
-    --primary-foreground: hsl(315, 90%, 8%);
-    --secondary: hsl(258, 30%, 14%);
-    --secondary-foreground: hsl(190, 40%, 88%);
-    --muted: hsl(258, 28%, 13%);
-    --muted-foreground: hsl(200, 30%, 72%);
-    --accent: hsl(180, 95%, 50%);
-    --accent-foreground: hsl(185, 95%, 8%);
-    --destructive: hsl(350, 95%, 64%);
-    --destructive-foreground: hsl(350, 90%, 8%);
-    --success: hsl(160, 90%, 20%);
-    --success-foreground: hsl(160, 100%, 45%);
-    --warning: hsl(25, 95%, 20%);
-    --warning-foreground: hsl(25, 100%, 58%);
-    --info: hsl(190, 90%, 20%);
-    --info-foreground: hsl(190, 100%, 48%);
-    --border: hsl(280, 40%, 22%);
-    --border-strong: hsl(285, 45%, 47%);
-    --input: hsl(285, 45%, 47%);
-    --ring: hsl(315, 95%, 64%);
-    --selected: hsl(315, 95%, 38%);
-    --chart-1: hsl(315, 95%, 64%);
-    --chart-2: hsl(180, 95%, 50%);
-    --chart-3: hsl(265, 90%, 72%);
-    --chart-4: hsl(85, 90%, 55%);
-    --chart-5: hsl(35, 95%, 60%);
-    --sidebar-background: hsl(260, 45%, 4%);
-    --sidebar-foreground: hsl(190, 50%, 88%);
-    --sidebar-primary: hsl(315, 95%, 64%);
-    --sidebar-primary-foreground: hsl(315, 90%, 8%);
-    --sidebar-accent: hsl(258, 35%, 12%);
-    --sidebar-accent-foreground: hsl(180, 80%, 80%);
-    --sidebar-border: hsl(280, 40%, 18%);
-    --sidebar-ring: hsl(180, 95%, 50%);
-
-    /* Status badges (application pipeline): neon plates, dark text; draft/withdrawn stay dim. */
-    --status-draft: hsl(258, 25%, 22%);
-    --status-draft-foreground: hsl(200, 30%, 85%);
-    --status-sent: hsl(180, 95%, 50%);
-    --status-sent-foreground: hsl(185, 95%, 8%);
-    --status-screening: hsl(55, 97%, 52%);
-    --status-screening-foreground: hsl(55, 100%, 7%);
-    --status-interview: hsl(315, 95%, 64%);
-    --status-interview-foreground: hsl(315, 90%, 8%);
+    /* Signal yellow on a void with a violet cast; blood red where something is wrong; cyan for what must be read [S40]. */
+    /* The app surface is the void. The hero surface below is the yellow, and the register at C2 paints the rest. */
+    --background: hsl(270, 9%, 4%);
+    --foreground: hsl(50, 12%, 82%);
+    --card: hsl(255, 10%, 8%);
+    --card-foreground: hsl(50, 12%, 82%);
+    --popover: hsl(255, 10%, 10%);
+    --popover-foreground: hsl(50, 12%, 82%);
+    --primary: hsl(56, 98%, 51%);
+    --primary-foreground: hsl(53, 36%, 5%);
+    --secondary: hsl(255, 10%, 14%);
+    --secondary-foreground: hsl(50, 12%, 85%);
+    --muted: hsl(255, 8%, 12%);
+    --muted-foreground: hsl(50, 8%, 55%);
+    --accent: hsl(184, 100%, 50%);
+    --accent-foreground: hsl(185, 100%, 8%);
+    --destructive: hsl(353, 84%, 58%);
+    --destructive-foreground: hsl(353, 60%, 7%);
+    --success: hsl(150, 80%, 16%);
+    --success-foreground: hsl(150, 90%, 55%);
+    --warning: hsl(30, 90%, 18%);
+    --warning-foreground: hsl(40, 100%, 60%);
+    --info: hsl(190, 80%, 16%);
+    --info-foreground: hsl(184, 100%, 55%);
+    --border: hsl(56, 60%, 16%);
+    --border-strong: hsl(56, 40%, 42%);
+    --input: hsl(56, 40%, 42%);
+    --ring: hsl(56, 98%, 51%);
+    --selected: hsl(56, 100%, 43%);
+    --chart-1: hsl(56, 98%, 51%);
+    --chart-2: hsl(184, 100%, 50%);
+    --chart-3: hsl(353, 84%, 62%);
+    --chart-4: hsl(263, 100%, 70%);
+    --chart-5: hsl(50, 12%, 82%);
+    --sidebar-background: hsl(270, 9%, 3%);
+    --sidebar-foreground: hsl(50, 12%, 82%);
+    --sidebar-primary: hsl(56, 98%, 51%);
+    --sidebar-primary-foreground: hsl(53, 36%, 5%);
+    --sidebar-accent: hsl(255, 10%, 10%);
+    --sidebar-accent-foreground: hsl(184, 80%, 75%);
+    --sidebar-border: hsl(56, 40%, 14%);
+    --sidebar-ring: hsl(184, 100%, 50%);
+    --status-draft: hsl(255, 10%, 22%);
+    --status-draft-foreground: hsl(50, 12%, 88%);
+    --status-sent: hsl(184, 100%, 50%);
+    --status-sent-foreground: hsl(185, 100%, 8%);
+    --status-screening: hsl(56, 98%, 51%);
+    --status-screening-foreground: hsl(53, 36%, 5%);
+    --status-interview: hsl(263, 90%, 72%);
+    --status-interview-foreground: hsl(263, 90%, 10%);
     --status-offer: hsl(85, 90%, 55%);
     --status-offer-foreground: hsl(85, 100%, 8%);
-    --status-rejected: hsl(350, 95%, 64%);
-    --status-rejected-foreground: hsl(350, 90%, 16%);
-    --status-withdrawn: hsl(265, 30%, 26%);
-    --status-withdrawn-foreground: hsl(265, 25%, 80%);
+    --status-rejected: hsl(353, 84%, 62%);
+    --status-rejected-foreground: hsl(353, 90%, 12%);
+    --status-withdrawn: hsl(263, 30%, 26%);
+    --status-withdrawn-foreground: hsl(263, 25%, 82%);
     --color-scheme: dark;
-    --theme-font-body: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif;
-    --radius: 0.25rem;
-    --theme-font-display: 'Chakra Petch', 'JetBrains Mono', ui-monospace, monospace;
-    /* CP-B1: the rare third signal colour (cyberpunk.net's #FCEE0A). */
-    --fx-signal: hsl(55, 97%, 52%);
-    --fx-signal-foreground: hsl(55, 100%, 7%);
-    /* CP-C1: one clipped corner per panel; other themes leave this 0. */
+    --theme-font-body: 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --radius: 0;
+    --theme-font-display: 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --fx-signal: hsl(56, 98%, 51%);
+    --fx-signal-foreground: hsl(53, 36%, 5%);
     --fx-notch: 14px;
-    /* CP-E3: HUD motion - short and sharp; other themes fall back to
-       their own defaults via var() fallbacks. */
-    --fx-duration: 140ms;
-    --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
-    --fx-overprint: hsl(180, 95%, 50%);
-    --fx-scanline: hsl(190, 80%, 70%);
+    --fx-duration: 180ms;
+    --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+    --fx-overprint: hsl(184, 100%, 50%);
+    --fx-scanline: hsl(56, 98%, 51%);
     --fx-lift: 1px;
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
@@ -443,8 +486,6 @@
     --chart-pattern-3: none;
     --chart-pattern-4: none;
     --chart-pattern-5: none;
-
-    /* The spacing scale [TH94, AR18]. xs, sm and md carry the values they already had as fallbacks in css/components.css, so declaring them shifts nothing (S20); lg, xl and 2xl are the new steps above them. A theme may retune the whole rhythm here. */
     --kp-space-xs: 0.25rem;
     --kp-space-sm: 0.5rem;
     --kp-space-md: 0.75rem;
@@ -455,23 +496,39 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: signal yellow with ink on it, red for the alert, the deeper yellow for a card [TH116, S40]. */
+    --surface-hero-bg: hsl(56, 98%, 51%);
+    --surface-hero-fg: hsl(53, 36%, 5%);
+    --surface-hero-fg-2: hsl(353, 84%, 42%);
+    --surface-hero-muted: hsl(56, 64%, 20%);
+    --surface-hero-border: hsl(54, 50%, 30%);
+    --surface-hero-primary: hsl(53, 36%, 5%);
+    --surface-hero-primary-foreground: hsl(56, 98%, 51%);
+    --surface-hero-danger: hsl(353, 84%, 42%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
+    --surface-hero-card: hsl(56, 100%, 43%);
+    --surface-hero-card-foreground: hsl(53, 36%, 5%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(3.2rem, 9vw, 7.4rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
-    --link: hsl(315, 95%, 64%);
-    --link-visited: hsl(360, 100%, 66%);
-    --focus-ring: hsl(190, 60%, 92%);
-    --focus-ring-contrast: hsl(258, 40%, 6%);
-    --primary-hover: hsl(313, 100%, 67%);
-    --primary-active: hsl(312, 66%, 71%);
-    --primary-disabled: hsl(314, 79%, 56%);
-    --secondary-hover: hsl(257, 25%, 17%);
-    --secondary-active: hsl(257, 19%, 24%);
-    --secondary-disabled: hsl(259, 44%, 9%);
-    --accent-hover: hsl(180, 100%, 60%);
-    --accent-active: hsl(179, 59%, 83%);
-    --accent-disabled: hsl(180, 100%, 45%);
-    --destructive-hover: hsl(350, 100%, 67%);
-    --destructive-active: hsl(353, 55%, 69%);
-    --destructive-disabled: hsl(348, 79%, 56%);
+    --link: hsl(56, 98%, 51%);
+    --link-visited: hsl(135, 100%, 77%);
+    --focus-ring: hsl(50, 12%, 82%);
+    --focus-ring-contrast: hsl(270, 9%, 4%);
+    --primary-hover: hsl(60, 100%, 62%);
+    --primary-active: hsl(62, 91%, 84%);
+    --primary-disabled: hsl(55, 100%, 44%);
+    --secondary-hover: hsl(255, 7%, 20%);
+    --secondary-active: hsl(255, 6%, 26%);
+    --secondary-disabled: hsl(256, 21%, 6%);
+    --accent-hover: hsl(180, 100%, 62%);
+    --accent-active: hsl(179, 63%, 84%);
+    --accent-disabled: hsl(185, 100%, 44%);
+    --destructive-hover: hsl(355, 100%, 66%);
+    --destructive-active: hsl(357, 77%, 70%);
+    --destructive-disabled: hsl(346, 95%, 41%);
 }
 
 [data-theme='pastel'] {
@@ -562,6 +619,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(285, 45%, 97%);
+    --surface-hero-fg: hsl(285, 25%, 20%);
+    --surface-hero-fg-2: hsl(330, 55%, 42%);
+    --surface-hero-muted: hsl(285, 12%, 38%);
+    --surface-hero-border: hsl(300, 22%, 57%);
+    --surface-hero-primary: hsl(330, 55%, 42%);
+    --surface-hero-primary-foreground: hsl(330, 60%, 98%);
+    --surface-hero-danger: hsl(355, 65%, 44%);
+    --surface-hero-danger-foreground: hsl(355, 70%, 98%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(285, 25%, 20%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(330, 55%, 42%);
     --link-visited: hsl(26, 100%, 32%);
@@ -600,7 +673,7 @@
     --destructive: hsl(0, 90%, 62%);
     --destructive-foreground: hsl(0, 100%, 6%);
     --success: hsl(120, 85%, 19%);
-    --success-foreground: hsl(120, 100%, 43%);
+    --success-foreground: hsl(120, 100%, 44%);
     --warning: hsl(65, 90%, 19%);
     --warning-foreground: hsl(65, 100%, 43%);
     --info: hsl(150, 60%, 19%);
@@ -668,6 +741,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(120, 10%, 5%);
+    --surface-hero-fg: hsl(120, 85%, 68%);
+    --surface-hero-fg-2: hsl(120, 90%, 50%);
+    --surface-hero-muted: hsl(120, 25%, 62%);
+    --surface-hero-border: hsl(120, 30%, 34%);
+    --surface-hero-primary: hsl(120, 90%, 50%);
+    --surface-hero-primary-foreground: hsl(120, 100%, 4%);
+    --surface-hero-danger: hsl(0, 90%, 62%);
+    --surface-hero-danger-foreground: hsl(0, 100%, 6%);
+    --surface-hero-card: hsl(120, 9%, 7%);
+    --surface-hero-card-foreground: hsl(120, 85%, 68%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(120, 90%, 50%);
@@ -776,6 +865,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(42, 32%, 95%);
+    --surface-hero-fg: hsl(160, 28%, 14%);
+    --surface-hero-fg-2: hsl(158, 42%, 24%);
+    --surface-hero-muted: hsl(160, 12%, 34%);
+    --surface-hero-border: hsl(160, 20%, 47%);
+    --surface-hero-primary: hsl(158, 42%, 24%);
+    --surface-hero-primary-foreground: hsl(42, 40%, 96%);
+    --surface-hero-danger: hsl(8, 62%, 40%);
+    --surface-hero-danger-foreground: hsl(30, 40%, 97%);
+    --surface-hero-card: hsl(42, 38%, 98%);
+    --surface-hero-card-foreground: hsl(160, 28%, 14%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(158, 42%, 24%);
     --link-visited: hsl(189, 100%, 12%);
@@ -882,6 +987,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 100%);
+    --surface-hero-fg: hsl(0, 0%, 0%);
+    --surface-hero-fg-2: hsl(220, 100%, 30%);
+    --surface-hero-muted: hsl(0, 0%, 20%);
+    --surface-hero-border: hsl(0, 0%, 0%);
+    --surface-hero-primary: hsl(220, 100%, 30%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
+    --surface-hero-danger: hsl(0, 100%, 32%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(0, 0%, 0%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(220, 100%, 30%);
@@ -990,6 +1111,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(38, 42%, 94%);
+    --surface-hero-fg: hsl(28, 45%, 16%);
+    --surface-hero-fg-2: hsl(24, 55%, 32%);
+    --surface-hero-muted: hsl(28, 22%, 36%);
+    --surface-hero-border: hsl(30, 22%, 52%);
+    --surface-hero-primary: hsl(24, 55%, 32%);
+    --surface-hero-primary-foreground: hsl(38, 55%, 97%);
+    --surface-hero-danger: hsl(6, 60%, 38%);
+    --surface-hero-danger-foreground: hsl(38, 55%, 97%);
+    --surface-hero-card: hsl(38, 50%, 97%);
+    --surface-hero-card-foreground: hsl(28, 45%, 16%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 55%, 32%);
     --link-visited: hsl(49, 100%, 13%);
@@ -1097,6 +1234,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(215, 65%, 12%);
+    --surface-hero-fg: hsl(190, 55%, 92%);
+    --surface-hero-fg-2: hsl(190, 80%, 62%);
+    --surface-hero-muted: hsl(195, 30%, 72%);
+    --surface-hero-border: hsl(200, 45%, 58%);
+    --surface-hero-primary: hsl(190, 80%, 62%);
+    --surface-hero-primary-foreground: hsl(215, 70%, 10%);
+    --surface-hero-danger: hsl(2, 70%, 62%);
+    --surface-hero-danger-foreground: hsl(0, 60%, 10%);
+    --surface-hero-card: hsl(215, 60%, 16%);
+    --surface-hero-card-foreground: hsl(190, 55%, 92%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(190, 80%, 62%);
     --link-visited: hsl(229, 72%, 76%);
@@ -1203,6 +1356,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(20, 14%, 10%);
+    --surface-hero-fg: hsl(35, 30%, 90%);
+    --surface-hero-fg-2: hsl(28, 85%, 58%);
+    --surface-hero-muted: hsl(32, 18%, 70%);
+    --surface-hero-border: hsl(30, 20%, 55%);
+    --surface-hero-primary: hsl(28, 85%, 58%);
+    --surface-hero-primary-foreground: hsl(24, 60%, 10%);
+    --surface-hero-danger: hsl(0, 65%, 60%);
+    --surface-hero-danger-foreground: hsl(0, 60%, 8%);
+    --surface-hero-card: hsl(20, 14%, 14%);
+    --surface-hero-card-foreground: hsl(35, 30%, 90%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(28, 85%, 58%);
@@ -1312,6 +1481,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(50, 100%, 97%);
+    --surface-hero-fg: hsl(0, 0%, 7%);
+    --surface-hero-fg-2: hsl(0, 0%, 7%);
+    --surface-hero-muted: hsl(0, 0%, 28%);
+    --surface-hero-border: hsl(0, 0%, 7%);
+    --surface-hero-primary: hsl(0, 0%, 7%);
+    --surface-hero-primary-foreground: hsl(48, 100%, 60%);
+    --surface-hero-danger: hsl(0, 85%, 40%);
+    --surface-hero-danger-foreground: hsl(50, 100%, 97%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(0, 0%, 7%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(0, 0%, 7%);
     --link-visited: hsl(100, 0%, 0%);
@@ -1418,6 +1603,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(200, 25%, 8%);
+    --surface-hero-fg: hsl(42, 60%, 88%);
+    --surface-hero-fg-2: hsl(43, 65%, 52%);
+    --surface-hero-muted: hsl(42, 30%, 72%);
+    --surface-hero-border: hsl(43, 35%, 50%);
+    --surface-hero-primary: hsl(43, 65%, 52%);
+    --surface-hero-primary-foreground: hsl(200, 30%, 8%);
+    --surface-hero-danger: hsl(355, 80%, 58%);
+    --surface-hero-danger-foreground: hsl(355, 60%, 8%);
+    --surface-hero-card: hsl(200, 22%, 11%);
+    --surface-hero-card-foreground: hsl(42, 60%, 88%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(43, 65%, 52%);
@@ -1526,6 +1727,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(24, 30%, 9%);
+    --surface-hero-fg: hsl(38, 40%, 90%);
+    --surface-hero-fg-2: hsl(38, 50%, 58%);
+    --surface-hero-muted: hsl(36, 30%, 72%);
+    --surface-hero-border: hsl(32, 25%, 52%);
+    --surface-hero-primary: hsl(38, 50%, 58%);
+    --surface-hero-primary-foreground: hsl(24, 40%, 10%);
+    --surface-hero-danger: hsl(0, 65%, 60%);
+    --surface-hero-danger-foreground: hsl(0, 60%, 8%);
+    --surface-hero-card: hsl(22, 28%, 13%);
+    --surface-hero-card-foreground: hsl(38, 40%, 90%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(38, 50%, 58%);
     --link-visited: hsl(83, 46%, 73%);
@@ -1632,6 +1849,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 4%);
+    --surface-hero-fg: hsl(0, 0%, 98%);
+    --surface-hero-fg-2: hsl(355, 100%, 58%);
+    --surface-hero-muted: hsl(0, 0%, 68%);
+    --surface-hero-border: hsl(0, 0%, 60%);
+    --surface-hero-primary: hsl(355, 100%, 58%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 4%);
+    --surface-hero-danger: hsl(355, 100%, 58%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 4%);
+    --surface-hero-card: hsl(0, 0%, 9%);
+    --surface-hero-card-foreground: hsl(0, 0%, 98%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 100%, 58%);
@@ -1740,6 +1973,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 4%);
+    --surface-hero-fg: hsl(40, 12%, 90%);
+    --surface-hero-fg-2: hsl(36, 91%, 55%);
+    --surface-hero-muted: hsl(0, 0%, 62%);
+    --surface-hero-border: hsl(0, 0%, 52%);
+    --surface-hero-primary: hsl(36, 91%, 55%);
+    --surface-hero-primary-foreground: hsl(36, 90%, 8%);
+    --surface-hero-danger: hsl(0, 100%, 68%);
+    --surface-hero-danger-foreground: hsl(0, 60%, 8%);
+    --surface-hero-card: hsl(0, 0%, 8%);
+    --surface-hero-card-foreground: hsl(40, 12%, 90%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(36, 91%, 55%);
     --link-visited: hsl(89, 48%, 58%);
@@ -1846,6 +2095,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(42, 52%, 92%);
+    --surface-hero-fg: hsl(36, 10%, 10%);
+    --surface-hero-fg-2: hsl(215, 51%, 25%);
+    --surface-hero-muted: hsl(36, 10%, 32%);
+    --surface-hero-border: hsl(36, 10%, 10%);
+    --surface-hero-primary: hsl(215, 51%, 25%);
+    --surface-hero-primary-foreground: hsl(42, 52%, 95%);
+    --surface-hero-danger: hsl(1, 58%, 42%);
+    --surface-hero-danger-foreground: hsl(42, 52%, 95%);
+    --surface-hero-card: hsl(42, 60%, 95%);
+    --surface-hero-card-foreground: hsl(36, 10%, 10%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(215, 51%, 25%);
@@ -1954,6 +2219,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(44, 87%, 94%);
+    --surface-hero-fg: hsl(194, 14%, 40%);
+    --surface-hero-fg-2: hsl(205, 70%, 38%);
+    --surface-hero-muted: hsl(194, 14%, 40%);
+    --surface-hero-border: hsl(180, 8%, 48%);
+    --surface-hero-primary: hsl(205, 70%, 38%);
+    --surface-hero-primary-foreground: hsl(44, 87%, 96%);
+    --surface-hero-danger: hsl(1, 71%, 42%);
+    --surface-hero-danger-foreground: hsl(44, 87%, 96%);
+    --surface-hero-card: hsl(44, 87%, 97%);
+    --surface-hero-card-foreground: hsl(194, 14%, 40%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 70%, 38%);
     --link-visited: hsl(269, 31%, 40%);
@@ -2060,6 +2341,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(192, 100%, 11%);
+    --surface-hero-fg: hsl(186, 8%, 64%);
+    --surface-hero-fg-2: hsl(205, 72%, 60%);
+    --surface-hero-muted: hsl(186, 8%, 62%);
+    --surface-hero-border: hsl(194, 14%, 50%);
+    --surface-hero-primary: hsl(205, 72%, 60%);
+    --surface-hero-primary-foreground: hsl(192, 100%, 11%);
+    --surface-hero-danger: hsl(1, 85%, 66%);
+    --surface-hero-danger-foreground: hsl(1, 60%, 10%);
+    --surface-hero-card: hsl(192, 81%, 14%);
+    --surface-hero-card-foreground: hsl(186, 8%, 64%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 72%, 60%);
@@ -2168,6 +2465,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 98%);
+    --surface-hero-fg: hsl(0, 0%, 9%);
+    --surface-hero-fg-2: hsl(0, 0%, 14%);
+    --surface-hero-muted: hsl(0, 0%, 38%);
+    --surface-hero-border: hsl(0, 0%, 50%);
+    --surface-hero-primary: hsl(0, 0%, 14%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 98%);
+    --surface-hero-danger: hsl(0, 0%, 25%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 98%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(0, 0%, 9%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(0, 0%, 14%);
     --link-visited: hsl(100, 0%, 3%);
@@ -2274,6 +2587,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 75%);
+    --surface-hero-fg: hsl(0, 0%, 10%);
+    --surface-hero-fg-2: hsl(240, 100%, 25%);
+    --surface-hero-muted: hsl(0, 0%, 25%);
+    --surface-hero-border: hsl(0, 0%, 38%);
+    --surface-hero-primary: hsl(240, 100%, 25%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
+    --surface-hero-danger: hsl(0, 100%, 25%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
+    --surface-hero-card: hsl(0, 0%, 84%);
+    --surface-hero-card-foreground: hsl(0, 0%, 10%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(240, 100%, 25%);
@@ -2382,6 +2711,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(0, 0%, 100%);
+    --surface-hero-fg: hsl(0, 0%, 7%);
+    --surface-hero-fg-2: hsl(355, 95%, 45%);
+    --surface-hero-muted: hsl(0, 0%, 40%);
+    --surface-hero-border: hsl(0, 0%, 7%);
+    --surface-hero-primary: hsl(355, 95%, 45%);
+    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
+    --surface-hero-danger: hsl(355, 95%, 40%);
+    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
+    --surface-hero-card: hsl(0, 0%, 100%);
+    --surface-hero-card-foreground: hsl(0, 0%, 7%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 95%, 45%);
     --link-visited: hsl(317, 60%, 48%);
@@ -2488,6 +2833,22 @@
     --kp-text-xs: 0.75rem;
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
+
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(228, 60%, 26%);
+    --surface-hero-fg: hsl(42, 55%, 89%);
+    --surface-hero-fg-2: hsl(43, 67%, 50%);
+    --surface-hero-muted: hsl(230, 30%, 74%);
+    --surface-hero-border: hsl(43, 45%, 52%);
+    --surface-hero-primary: hsl(43, 67%, 50%);
+    --surface-hero-primary-foreground: hsl(228, 60%, 12%);
+    --surface-hero-danger: hsl(5, 90%, 70%);
+    --surface-hero-danger-foreground: hsl(5, 60%, 8%);
+    --surface-hero-card: hsl(228, 57%, 31%);
+    --surface-hero-card-foreground: hsl(42, 55%, 89%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(43, 67%, 50%);
@@ -2596,6 +2957,22 @@
     --kp-text-sm: 0.8125rem;
     --kp-text-md: 1rem;
 
+    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
+    --surface-hero-bg: hsl(38, 28%, 78%);
+    --surface-hero-fg: hsl(24, 12%, 15%);
+    --surface-hero-fg-2: hsl(24, 12%, 17%);
+    --surface-hero-muted: hsl(30, 10%, 30%);
+    --surface-hero-border: hsl(30, 12%, 42%);
+    --surface-hero-primary: hsl(24, 12%, 17%);
+    --surface-hero-primary-foreground: hsl(38, 30%, 90%);
+    --surface-hero-danger: hsl(10, 80%, 28%);
+    --surface-hero-danger-foreground: hsl(38, 30%, 90%);
+    --surface-hero-card: hsl(38, 30%, 83%);
+    --surface-hero-card-foreground: hsl(24, 12%, 15%);
+
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
+    --kp-text-display: clamp(2rem, 4vw, 3rem);
+
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(24, 12%, 17%);
     --link-visited: hsl(53, 22%, 5%);
@@ -2613,6 +2990,565 @@
     --destructive-hover: hsl(6, 100%, 21%);
     --destructive-active: hsl(0, 100%, 18%);
     --destructive-disabled: hsl(10, 58%, 39%);
+}
+
+/* The hero surface, per theme [TH116, AR38]: what a component reads inside
+   [data-kp-surface='hero'] is remapped to the theme's hero sources, with the
+   states derived for the hero ground. Generated; the register layers above. */
+@layer kp.base {
+    :root [data-kp-surface='hero'],
+    [data-theme='formal'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(218, 58%, 18%);
+        --primary-active: hsl(219, 81%, 12%);
+        --primary-disabled: hsl(218, 34%, 34%);
+        --destructive-hover: hsl(356, 80%, 31%);
+        --destructive-active: hsl(358, 100%, 24%);
+        --destructive-disabled: hsl(2, 51%, 51%);
+    }
+    [data-theme='light'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(249, 78%, 36%);
+        --primary-active: hsl(254, 100%, 28%);
+        --primary-disabled: hsl(238, 64%, 56%);
+        --destructive-hover: hsl(358, 100%, 32%);
+        --destructive-active: hsl(3, 88%, 29%);
+        --destructive-disabled: hsl(3, 67%, 54%);
+    }
+    [data-theme='dark'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(256, 100%, 80%);
+        --primary-active: hsl(259, 100%, 83%);
+        --primary-disabled: hsl(256, 57%, 63%);
+        --destructive-hover: hsl(0, 94%, 76%);
+        --destructive-active: hsl(1, 100%, 80%);
+        --destructive-disabled: hsl(359, 50%, 56%);
+    }
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(50, 65%, 1%);
+        --primary-active: hsl(41, 100%, 0%);
+        --primary-disabled: hsl(53, 15%, 13%);
+        --destructive-hover: hsl(354, 100%, 34%);
+        --destructive-active: hsl(0, 100%, 30%);
+        --destructive-disabled: hsl(358, 77%, 57%);
+    }
+    [data-theme='pastel'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(328, 69%, 34%);
+        --primary-active: hsl(325, 100%, 25%);
+        --primary-disabled: hsl(332, 51%, 54%);
+        --destructive-hover: hsl(349, 93%, 33%);
+        --destructive-active: hsl(353, 100%, 28%);
+        --destructive-disabled: hsl(358, 66%, 57%);
+    }
+    [data-theme='terminal'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(119, 100%, 59%);
+        --primary-active: hsl(116, 85%, 73%);
+        --primary-disabled: hsl(120, 100%, 43%);
+        --destructive-hover: hsl(1, 100%, 66%);
+        --destructive-active: hsl(4, 62%, 68%);
+        --destructive-disabled: hsl(358, 74%, 53%);
+    }
+    [data-theme='topo'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(160, 62%, 17%);
+        --primary-active: hsl(161, 100%, 11%);
+        --primary-disabled: hsl(156, 29%, 34%);
+        --destructive-hover: hsl(8, 76%, 32%);
+        --destructive-active: hsl(5, 100%, 25%);
+        --destructive-disabled: hsl(9, 52%, 51%);
+    }
+    [data-theme='high-contrast'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(226, 100%, 26%);
+        --primary-active: hsl(238, 100%, 22%);
+        --primary-disabled: hsl(220, 74%, 41%);
+        --destructive-hover: hsl(0, 100%, 28%);
+        --destructive-active: hsl(4, 78%, 25%);
+        --destructive-disabled: hsl(4, 68%, 45%);
+    }
+    [data-theme='sepia'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(25, 71%, 25%);
+        --primary-active: hsl(26, 100%, 18%);
+        --primary-disabled: hsl(23, 42%, 43%);
+        --destructive-hover: hsl(5, 73%, 31%);
+        --destructive-active: hsl(1, 99%, 23%);
+        --destructive-disabled: hsl(7, 48%, 49%);
+    }
+    [data-theme='blueprint'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(190, 100%, 70%);
+        --primary-active: hsl(182, 100%, 74%);
+        --primary-disabled: hsl(189, 67%, 48%);
+        --destructive-hover: hsl(3, 90%, 70%);
+        --destructive-active: hsl(3, 100%, 75%);
+        --destructive-disabled: hsl(1, 52%, 51%);
+    }
+    [data-theme='solstice'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(28, 100%, 65%);
+        --primary-active: hsl(30, 83%, 72%);
+        --primary-disabled: hsl(31, 89%, 43%);
+        --destructive-hover: hsl(1, 83%, 68%);
+        --destructive-active: hsl(1, 100%, 74%);
+        --destructive-disabled: hsl(358, 53%, 48%);
+    }
+    [data-theme='brutalism'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(44, 0%, 2%);
+        --primary-active: hsl(44, 0%, 0%);
+        --primary-disabled: hsl(44, 0%, 15%);
+        --destructive-hover: hsl(0, 100%, 33%);
+        --destructive-active: hsl(4, 78%, 31%);
+        --destructive-disabled: hsl(4, 72%, 53%);
+    }
+    [data-theme='deco'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(42, 77%, 60%);
+        --primary-active: hsl(42, 96%, 68%);
+        --primary-disabled: hsl(46, 100%, 36%);
+        --destructive-hover: hsl(357, 100%, 67%);
+        --destructive-active: hsl(358, 88%, 71%);
+        --destructive-disabled: hsl(350, 83%, 43%);
+    }
+    [data-theme='academia'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(38, 61%, 66%);
+        --primary-active: hsl(38, 80%, 73%);
+        --primary-disabled: hsl(38, 44%, 47%);
+        --destructive-hover: hsl(1, 83%, 68%);
+        --destructive-active: hsl(1, 100%, 74%);
+        --destructive-disabled: hsl(358, 53%, 48%);
+    }
+    [data-theme='phantom'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(357, 100%, 64%);
+        --primary-active: hsl(1, 74%, 68%);
+        --primary-disabled: hsl(352, 100%, 43%);
+        --destructive-hover: hsl(357, 100%, 64%);
+        --destructive-active: hsl(1, 74%, 68%);
+        --destructive-disabled: hsl(352, 100%, 43%);
+    }
+    [data-theme='ticker'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(37, 100%, 63%);
+        --primary-active: hsl(39, 87%, 72%);
+        --primary-disabled: hsl(37, 100%, 42%);
+        --destructive-hover: hsl(1, 100%, 72%);
+        --destructive-active: hsl(3, 71%, 74%);
+        --destructive-disabled: hsl(358, 71%, 55%);
+    }
+    [data-theme='nishiki'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(215, 66%, 19%);
+        --primary-active: hsl(215, 93%, 13%);
+        --primary-disabled: hsl(215, 38%, 35%);
+        --destructive-hover: hsl(358, 72%, 34%);
+        --destructive-active: hsl(356, 100%, 25%);
+        --destructive-disabled: hsl(3, 54%, 53%);
+    }
+    [data-theme='shade-light'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(203, 100%, 29%);
+        --primary-active: hsl(205, 100%, 25%);
+        --primary-disabled: hsl(206, 52%, 50%);
+        --destructive-hover: hsl(357, 100%, 32%);
+        --destructive-active: hsl(3, 88%, 29%);
+        --destructive-disabled: hsl(3, 66%, 54%);
+    }
+    [data-theme='shade-dark'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(205, 90%, 68%);
+        --primary-active: hsl(202, 100%, 73%);
+        --primary-disabled: hsl(204, 60%, 48%);
+        --destructive-hover: hsl(2, 100%, 72%);
+        --destructive-active: hsl(4, 77%, 75%);
+        --destructive-disabled: hsl(359, 61%, 54%);
+    }
+    [data-theme='mono'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(44, 0%, 9%);
+        --primary-active: hsl(44, 0%, 3%);
+        --primary-disabled: hsl(44, 0%, 23%);
+        --destructive-hover: hsl(44, 0%, 19%);
+        --destructive-active: hsl(44, 0%, 13%);
+        --destructive-disabled: hsl(44, 0%, 35%);
+    }
+    [data-theme='retro'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(243, 100%, 21%);
+        --primary-active: hsl(236, 71%, 16%);
+        --primary-disabled: hsl(225, 94%, 32%);
+        --destructive-hover: hsl(0, 100%, 21%);
+        --destructive-active: hsl(2, 90%, 17%);
+        --destructive-disabled: hsl(5, 67%, 37%);
+    }
+    [data-theme='grotesk'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(0, 100%, 40%);
+        --primary-active: hsl(4, 78%, 38%);
+        --primary-disabled: hsl(1, 100%, 61%);
+        --destructive-hover: hsl(0, 100%, 35%);
+        --destructive-active: hsl(4, 78%, 33%);
+        --destructive-disabled: hsl(1, 79%, 56%);
+    }
+    [data-theme='tazhib'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(42, 79%, 59%);
+        --primary-active: hsl(42, 97%, 67%);
+        --primary-disabled: hsl(45, 100%, 36%);
+        --destructive-hover: hsl(6, 100%, 75%);
+        --destructive-active: hsl(7, 72%, 78%);
+        --destructive-disabled: hsl(4, 63%, 59%);
+    }
+    [data-theme='nostromo'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(24, 17%, 11%);
+        --primary-active: hsl(24, 30%, 6%);
+        --primary-disabled: hsl(24, 8%, 26%);
+        --destructive-hover: hsl(6, 100%, 21%);
+        --destructive-active: hsl(0, 100%, 18%);
+        --destructive-disabled: hsl(10, 58%, 39%);
+    }
 }
 @layer kp.base {
     /* ═══════════════════════════════════════════════════════════════════
@@ -3088,6 +4024,17 @@
         background: var(--warning);
         color: var(--warning-foreground);
         padding: 0 0.15em;
+    }
+
+    /* A surface paints its own ground [TH116, AR38]. The generated hero block
+       in themes.css remaps what a component reads inside
+       [data-kp-surface='hero']; this is the rule that paints it — without it
+       the remap changes every colour but the ground, which is what the
+       critic's blocking objection to AR38 was about. The app surface paints
+       the theme's own background, so a page with both is two grounds. */
+    [data-kp-surface] {
+        background-color: var(--background);
+        color: var(--foreground);
     }
 
     blockquote {

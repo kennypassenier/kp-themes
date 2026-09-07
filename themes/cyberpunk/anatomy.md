@@ -1,78 +1,95 @@
 # cyberpunk — anatomy
 
 > How this theme answers the questions in
-> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). The longer
-> research behind it is in
-> [CYBERPUNK_THEME_RESEARCH.md](../../docs/CYBERPUNK_THEME_RESEARCH.md);
-> this document is the part that is binding.
+> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). This is the
+> 5.0.0 theme (S39, S40): it replaces the 4.x cyberpunk under the same
+> name, and 4.0.0's theme stays what 4.0.0 shipped, retrievable from its
+> tag (S20). The research behind it is
+> [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the older
+> [CYBERPUNK_THEME_RESEARCH.md](../../docs/CYBERPUNK_THEME_RESEARCH.md)
+> is the 4.x theme's.
 
 ## The idea
 
-Five things make it read as cyberpunk rather than as "dark with pink":
+Two grounds in one theme, and a palette of four:
 
-1. **Darkness as canvas.** Near-black with a violet cast
-   (`hsl(258, 40%, 6%)`), never pure black. Neon only works against it.
-2. **Neon as signal, not decoration.** One to three saturated accents,
-   used sparsely, on the things that matter. A page that is all neon reads
-   as vaporwave.
-3. **The terminal register.** Monospace, uppercase microlabels, dense
-   data, identifiers and timestamps used as ornament.
-4. **Imperfection over precision.** Scanlines, grain, the occasional
-   glitch — technology that is powerful and worn. The key word is
-   _occasional_: permanent glitch is noise, rare glitch is an event.
-5. **Angular geometry.** Clipped corners, notches, hairline connectors.
-   The 4 px radius is the smallest of any theme for this reason.
+1. **Signal yellow as ground and primary.** `hsl(56, 98%, 51%)`, the
+   frame colour read off the reference. It is the hero's ground and the
+   app's primary — the one colour that is both a surface and a signal.
+2. **A void with a violet cast** for the app surface: `hsl(270, 9%, 4%)`,
+   never pure black. Cards and popovers rise from it in two steps.
+3. **Blood red where something is wrong.** `hsl(353, 84%, 58%)` for the
+   destructive plate on the void; the deeper `hsl(353, 84%, 42%)` for the
+   alert and the second ink on yellow, where it reads at 4.7.
+4. **Cyan for what must be read.** Microlabels, form labels, hairlines:
+   `hsl(184, 100%, 50%)` as the accent, never as a ground.
+
+Violet lives only inside a glitch slice (S40), and the register at C2
+paints it there; the token file carries it as a chart colour and nowhere
+else.
+
+## Two surfaces
+
+The hero surface is signal yellow with ink on it (`hsl(53, 36%, 5%)`);
+the app surface is the void with smoke on it (`hsl(50, 12%, 82%)`). A
+component inside `[data-kp-surface='hero']` reads `--background`,
+`--primary`, `--card` and the rest as usual — the generated hero block
+in `css/themes.css` remaps them to the `surface-hero-*` sources, and
+derives the hero button's hover, active and disabled away from the
+yellow's own lightness rather than the theme's (AR38). The hero button
+is ink with yellow text; the alert is the deeper red with white text;
+the hero card is the deeper yellow `hsl(56, 100%, 43%)` with ink on it.
 
 ## What is load-bearing
 
-- Magenta `hsl(315, 95%, 64%)` acts; cyan `hsl(180, 95%, 50%)` accents.
-  Swapping them changes the theme's personality entirely.
-- The foreground is a pale cyan, not white. White text would flatten it.
-- The register is decoration, not colour: the theme is complete without
-  it. That distinction is why the register is a separate file.
+- Yellow acts and grounds; red alarms; cyan labels. Swap any two and it
+  is a different theme.
+- The app foreground is a warm smoke, not white. White text on the void
+  reads as a terminal; smoke reads as print.
+- The radius is 0. Every corner is either square or a notch (`--fx-notch`
+  14px), and the notch is the register's, not the token file's.
+- The register is decoration: the theme is complete with `themes.css`
+  alone, and `check-hooks` holds that every hook has an answer here even
+  when the register is off.
 
 ## Answers to the invariant questions
 
-**DI1 — hairline or boundary?** Its border is a violet `hsl(280, 40%, 22%)`
-— visible as an edge but far under 3:1. A boundary here can afford to be
-much brighter than in `dark`, because the theme's own language is bright
-lines on darkness.
+**DI1 — hairline or boundary?** `--border` is a yellow-tinted hairline
+on the void (`hsl(56, 60%, 16%)`), under 3:1 on purpose; `--border-strong`
+and `--input` are `hsl(56, 40%, 42%)`, over 3:1 on every app surface. On
+the hero the frame is the olive `hsl(54, 50%, 30%)`, 3:1 on the yellow
+and on the deeper yellow.
 
-**DI3 — does this theme follow the derivation?** **No, and this is its
-opt-out.** Hover on neon is not "one step lighter" — a saturated magenta
-has almost nowhere lighter to go before it turns pink and loses its
-identity. Cyberpunk expresses hover as a _glow_: unchanged fill, added
-luminance around the edge. That forfeits the monotonicity guarantee of
-AR12, so this theme's state values are checked in full rather than by
-worst case.
+**DI3 — does this theme follow the derivation?** **Yes.** The 4.x theme
+took the opt-out (a smaller step, because neon has no headroom); yellow
+and ink have plenty, so the states derive at the house step and the
+worst-case shortcut of AR12 applies again.
 
-**DI4 — palette or code?** A code, and it passes today at 73.1 — by
-accident rather than design, because its status colours happen to differ
-in lightness. That accident should be made deliberate so it survives a
-future tweak.
+**DI4 — palette or code?** A code. Offer is acid green, rejected is red;
+the pair stays apart under deuteranopia because they differ in
+lightness as well as hue, which is the deliberate version of what the
+4.x theme had by accident.
 
-**DI5 — animation?** **Yes, and this is the theme that needs the flash
-number computed.** It ships a flicker, a pulse and falling characters. The
-pulse runs indefinitely. Nobody has computed the luminance transitions per
-second for any of them, and DI5 is the one invariant whose violation
-causes physical injury.
+**DI5 — animation?** **Yes, and every rate is in the table.** The
+register's effects each carry a row in `TIMINGS` (js/effects.js) and
+`check-motion` reports the luminance transitions per second for every
+one; per S42 the findings are shown, and nothing is changed on their
+account until Kenny orders it.
 
-**DI6 — light or dark, and is the ordering deliberate?** Dark, and the
-ordering is wrong: 0.0034 → 0.0058 → 0.0050. The popover sinks. Accidental.
+**DI6 — light or dark, and is the ordering deliberate?** Dark. The three
+app surfaces rise: 4% → 8% → 10%. The hero is a light surface inside a
+dark theme, and the generator derives its states from its own lightness
+so nothing on it moves the wrong way.
+
+**DI9 — texture?** The scanline is yellow at the register's opacity; its
+effective value is measured by `check-texture`, and the 4.x texture's
+0.55 sits in the pending list until C2 replaces it (R6-Q2 for the
+ceiling itself).
 
 ## What this theme may not do
 
-- Use pure black, or white text.
-- Let the glitch run continuously.
-- Become all-neon. If more than a few things glow, the effect is gone.
-- Depend on the register for its colours. The theme must be correct with
-  `themes.css` alone — which is why the register's texture declaration
-  moves into the theme in L3 (TH13).
-
-## Open for L3
-
-Success and info almost write themselves — the cyan family already carries
-"informational". Warning is the hard one: amber is a warm hue in a theme
-built on violet, magenta and cyan, and the honest options are a hot orange
-that fits the neon language or a deliberate break for safety's sake. That
-decision belongs on the showcase, seen next to the others.
+- Use pure black, or white on the void.
+- Paint yellow as a ground anywhere but the hero.
+- Let violet out of the glitch.
+- Depend on the register for a colour: `themes.css` alone must pass every
+  gate, and does.

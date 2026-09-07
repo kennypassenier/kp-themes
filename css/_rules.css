@@ -474,6 +474,17 @@
         padding: 0 0.15em;
     }
 
+    /* A surface paints its own ground [TH116, AR38]. The generated hero block
+       in themes.css remaps what a component reads inside
+       [data-kp-surface='hero']; this is the rule that paints it — without it
+       the remap changes every colour but the ground, which is what the
+       critic's blocking objection to AR38 was about. The app surface paints
+       the theme's own background, so a page with both is two grounds. */
+    [data-kp-surface] {
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
     blockquote {
         margin-inline-start: 0;
         padding-inline-start: 1rem;

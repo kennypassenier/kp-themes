@@ -25,6 +25,21 @@ const DISTANCE_FLOOR = config.perceptualDistanceFloor.value;
 /** Surfaces a boundary can be drawn against. */
 const SURFACES = ['background', 'card', 'popover'];
 
+/** The hero's own surfaces [TH116]: its ground and its card. */
+const HERO_SURFACES = ['surface-hero-bg', 'surface-hero-card'];
+
+/** Where the hero's focus ring can land: its ground, card, button and alert. */
+const HERO_FOCUS_SURFACES = ['surface-hero-bg', 'surface-hero-card', 'surface-hero-primary', 'surface-hero-danger'];
+
+/** The hero's interactive sources [TH116]. */
+const HERO_INTERACTIVE = ['surface-hero-primary', 'surface-hero-danger'];
+
+/** @param {string} value an hsl() literal */
+function isDark(value) {
+    const m = value.match(/hsl\([^,]+,[^,]+,\s*([\d.]+)%/);
+    return m !== null && Number(m[1]) < 50;
+}
+
 /** The application-pipeline statuses, the same seven the contrast gate names. */
 const STATUS_NAMES = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'];
 
@@ -88,6 +103,24 @@ export function checkBoundaries(theme) {
             const ratio = contrast(hsl(value), hsl(theme.tokens[surface]));
             if (ratio < BOUNDARY_FLOOR) {
                 problems.push(`--${token} on --${surface} is ${ratio.toFixed(2)}, under the ${BOUNDARY_FLOOR.toFixed(1)} floor of SC 1.4.11`);
+            }
+        }
+    }
+    // TH116: on the hero the generator remaps --input to the hero's frame
+    // and --selected to the hero's button colour, so those two sources are
+    // the boundaries measured against the hero ground and the hero card.
+    for (const token of ['surface-hero-border', 'surface-hero-primary']) {
+        const value = theme.tokens[token];
+        if (value === undefined) {
+            problems.push(`declares no --${token}`);
+            continue;
+        }
+        for (const surface of HERO_SURFACES) {
+            const ratio = contrast(hsl(value), hsl(theme.tokens[surface]));
+            if (ratio < BOUNDARY_FLOOR) {
+                problems.push(
+                    `--${token} on --${surface} is ${ratio.toFixed(2)}, under the ${BOUNDARY_FLOOR.toFixed(1)} floor of SC 1.4.11 (the hero surface, TH116)`,
+                );
             }
         }
     }
@@ -175,6 +208,24 @@ export function checkFocusRing(theme) {
             );
         }
     }
+    // DI2 on the hero [TH116]: the generator remaps the ring to the hero's
+    // ink and ground, so that pair and every hero surface are measured.
+    const heroInner = theme.tokens['surface-hero-fg'];
+    const heroOuter = theme.tokens['surface-hero-bg'];
+    if (heroInner !== undefined && heroOuter !== undefined) {
+        const heroPair = contrast(hsl(heroInner), hsl(heroOuter));
+        if (heroPair < BOUNDARY_FLOOR) {
+            problems.push(`on the hero the two focus rings are ${heroPair.toFixed(2)} apart, under ${BOUNDARY_FLOOR.toFixed(1)}`);
+        }
+        for (const surface of HERO_FOCUS_SURFACES) {
+            const best = Math.max(contrast(hsl(heroInner), hsl(theme.tokens[surface])), contrast(hsl(heroOuter), hsl(theme.tokens[surface])));
+            if (best < BOUNDARY_FLOOR) {
+                problems.push(
+                    `neither hero focus ring reaches ${BOUNDARY_FLOOR.toFixed(1)} on --${surface} (best ${best.toFixed(2)}), so focus is invisible there`,
+                );
+            }
+        }
+    }
     return problems;
 }
 
@@ -217,6 +268,19 @@ export function checkStateVisibility(theme) {
         if (seen < floor) {
             problems.push(
                 `--${surface}-active is only ${seen.toFixed(1)} from --${surface} (floor ${floor}); pressing the control changes nothing anyone can see`,
+            );
+        }
+    }
+    const heroDark = isDark(theme.tokens['surface-hero-bg'] ?? theme.tokens.background);
+    for (const surface of HERO_INTERACTIVE) {
+        const base = theme.tokens[surface];
+        const ink = theme.tokens[`${surface}-foreground`];
+        if (base === undefined || ink === undefined) continue;
+        const active = deriveVisible(base, config.derivation.active, { towardsLight: heroDark, stepL }, { floor, ink });
+        const seen = distance(hsl(base), hsl(active));
+        if (seen < floor) {
+            problems.push(
+                `--${surface}-active is only ${seen.toFixed(1)} from --${surface} (floor ${floor}) on the hero; pressing changes nothing anyone can see`,
             );
         }
     }
@@ -298,6 +362,21 @@ export function checkStates(theme) {
         const ratio = contrast(hsl(active), hsl(ink));
         if (ratio < 4.5) {
             problems.push(`--${surface}-active (${active}) carries --${surface}-foreground at ${ratio.toFixed(2)}, under 4.5`);
+        }
+    }
+    // The hero's button and alert, derived away from the hero ground's
+    // own lightness — the hero may be light in a dark theme [TH116, AR38].
+    const heroDark = isDark(theme.tokens['surface-hero-bg'] ?? theme.tokens.background);
+    for (const surface of HERO_INTERACTIVE) {
+        const base = theme.tokens[surface];
+        const ink = theme.tokens[`${surface}-foreground`];
+        if (base === undefined || ink === undefined) continue;
+        const active = derive(base, config.derivation.active, { towardsLight: heroDark, stepL });
+        const ratio = contrast(hsl(active), hsl(ink));
+        if (ratio < 4.5) {
+            problems.push(
+                `--${surface}-active (${active}) carries --${surface}-foreground at ${ratio.toFixed(2)}, under 4.5 (the hero surface, TH116)`,
+            );
         }
     }
     return problems;

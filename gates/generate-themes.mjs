@@ -133,6 +133,88 @@ function block(theme) {
 }
 
 /**
+ * What the hero surface remaps, source → the token a component reads
+ * [TH116, AR38]. A component inside `[data-kp-surface='hero']` keeps
+ * reading `--background`, `--primary` and the rest; the surface changes
+ * what those mean. Everything not listed here — secondary, accent, muted,
+ * popover, input, ring — stays the app's, on purpose: the hero has its
+ * own ground, ink, frame, button, alert and card, and borrows the rest.
+ */
+export const HERO_REMAP = [
+    ['surface-hero-bg', 'background'],
+    ['surface-hero-fg', 'foreground'],
+    ['surface-hero-muted', 'muted-foreground'],
+    ['surface-hero-border', 'border-strong'],
+    ['surface-hero-border', 'input'],
+    ['surface-hero-primary', 'selected'],
+    ['surface-hero-primary', 'primary'],
+    ['surface-hero-primary-foreground', 'primary-foreground'],
+    ['surface-hero-danger', 'destructive'],
+    ['surface-hero-danger-foreground', 'destructive-foreground'],
+    ['surface-hero-card', 'card'],
+    ['surface-hero-card-foreground', 'card-foreground'],
+];
+
+/** The hero's interactive surfaces: the ones that get derived states. */
+export const HERO_INTERACTIVE = [
+    ['surface-hero-primary', 'primary'],
+    ['surface-hero-danger', 'destructive'],
+];
+
+/** @param {string} value an hsl() literal */
+export function isDark(value) {
+    const m = value.match(/hsl\([^,]+,[^,]+,\s*([\d.]+)%/);
+    return m !== null && Number(m[1]) < 50;
+}
+
+/**
+ * The hero block: `[data-theme='x'] [data-kp-surface='hero']` remaps the
+ * tokens a component reads to the hero sources, then derives hover,
+ * active and disabled for the hero's button and alert exactly as
+ * derivedStates() does for the app ground — the critic's blocking
+ * objection to the first draft was a hero button that hovered with the
+ * app's colour. The states move away from the hero ground's own
+ * lightness, because a dark theme may carry a light hero. The focus ring
+ * follows the hero's ink and ground (DI2 on the hero is measured by
+ * check-invariants.mjs). The block sits inside `@layer kp.base`, so the
+ * register layers above it as usual.
+ *
+ * @param {{selector: string, entries: Array<{raw?: string, token?: string, value?: string}>, derivation?: {stepL: number}}} theme
+ * @returns {string}
+ */
+function heroBlock(theme) {
+    const tokens = Object.fromEntries(theme.entries.filter((e) => e.token !== undefined).map((e) => [e.token, e.value]));
+    const stepL = theme.derivation?.stepL ?? CONFIG.derivation.stepL;
+    // A theme's selector may be a list (`:root, [data-theme='formal']`);
+    // each member gets the surface, on its own line as prettier writes it.
+    const selectors = theme.selector
+        .split(',')
+        .map((part) => `${part.trim()} [data-kp-surface='hero']`)
+        .join(',\n    ');
+    const out = [`    ${selectors} {`];
+    for (const [source, target] of HERO_REMAP) {
+        if (tokens[source] === undefined) throw new Error(`${theme.selector} declares no --${source} (S47: every theme carries the hero sources)`);
+        out.push(`        --${target}: var(--${source});`);
+    }
+    out.push(`        --link: var(--surface-hero-fg-2);`);
+    out.push(`        --focus-ring: var(--surface-hero-fg);`);
+    out.push(`        --focus-ring-contrast: var(--surface-hero-bg);`);
+    const d = CONFIG.derivation;
+    const heroDark = isDark(tokens['surface-hero-bg']);
+    for (const [source, target] of HERO_INTERACTIVE) {
+        const base = tokens[source];
+        const ink = tokens[`${source}-foreground`];
+        out.push(`        --${target}-hover: ${derive(base, d.hover, { towardsLight: heroDark, stepL })};`);
+        out.push(
+            `        --${target}-active: ${deriveVisible(base, d.active, { towardsLight: heroDark, stepL }, { floor: CONFIG.stateVisibilityFloor.value, ink })};`,
+        );
+        out.push(`        --${target}-disabled: ${derive(base, 1.5, { towardsLight: !heroDark, stepL })};`);
+    }
+    out.push('    }');
+    return out.join('\n');
+}
+
+/**
  * Who this stylesheet is, in a form JavaScript can read [TH97, AR10 as
  * amended by AR25].
  *
@@ -186,10 +268,20 @@ function build() {
     // Unlayered and after the token blocks, for the reason css/_density.css
     // states in its own header.
     const density = readFileSync(new URL('../css/_density.css', import.meta.url), 'utf8');
-    const blocks = ORDER.map(/** @param {string} name */ (name) => block(JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8'))));
-    // _rules.css already begins with the blank line that separated the last
-    // token block from the authored rules, so one newline is enough here.
-    return `${header}\n${identity(version)}\n\n${blocks.join('\n\n')}\n${rules}\n${density}\n${print}`;
+    const sources = ORDER.map(/** @param {string} name */ (name) => JSON.parse(readFileSync(new URL(`${name}/tokens.json`, dir), 'utf8')));
+    const blocks = sources.map(block);
+    // The hero surface, per theme [TH116, AR38], after the token blocks
+    // and before the authored rules; _rules.css begins with its own blank
+    // line.
+    const heroes = [
+        '/* The hero surface, per theme [TH116, AR38]: what a component reads inside',
+        "   [data-kp-surface='hero'] is remapped to the theme's hero sources, with the",
+        '   states derived for the hero ground. Generated; the register layers above. */',
+        '@layer kp.base {',
+        ...sources.map(heroBlock),
+        '}',
+    ].join('\n');
+    return `${header}\n${identity(version)}\n\n${blocks.join('\n\n')}\n\n${heroes}\n${rules}\n${density}\n${print}`;
 }
 
 /**
