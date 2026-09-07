@@ -128,7 +128,7 @@ export const DESCRIPTORS = [
         classes: ['kp-button', 'kp-confirm'],
         exports: ['Button'],
         aliases: ['confirm', 'contract', 'destructive', 'armed', 'undo', 'action', 'key'],
-        intro: 'One button in four looks, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.',
+        intro: 'One button in four looks and three sizes, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.',
         whenToUse:
             'For anything that acts on the page or sends something. Not for navigation — a control that goes to another URL is a link, and a link painted as a button loses the middle click, the context menu and what a screen reader says about it. Not for a bar of icons either: that is the icon button, which is the same paint at a square size.',
         examples: [
@@ -141,6 +141,15 @@ export const DESCRIPTORS = [
 <button type="button" class="kp-button kp-button--destructive">Destructive</button>
 <button type="button" class="kp-button kp-button--ghost">Ghost</button>
 <button type="button" class="kp-button kp-button--primary" disabled>Disabled</button>
+`,
+            },
+            {
+                title: 'Three sizes',
+                why: 'The middle step is the unmodified button, so `.kp-button` on its own is `md` and nothing that exists today changes size. The small step is floored at the 24px pointer target even under the compact density, and the large one is the row-leading action on a marketing page. Every measure behind them is a knob.',
+                markup: `
+<button type="button" class="kp-button kp-button--sm">Small</button>
+<button type="button" class="kp-button">Medium</button>
+<button type="button" class="kp-button kp-button--lg">Large</button>
 `,
             },
             {
@@ -168,6 +177,11 @@ export const DESCRIPTORS = [
             { name: '.kp-button--primary', what: 'One per view. The action the reader came to take.' },
             { name: '.kp-button--destructive', what: 'Deletes and disconnections. It has to carry a confirmation or an undo as well.' },
             { name: '.kp-button--ghost', what: 'No ground and no boundary until it is hovered, for actions that sit inside dense rows.' },
+            {
+                name: '.kp-button--sm',
+                what: 'The small step, for a control that sits inside a table row or a menu. Its height is floored so the compact density cannot take it under the 24px pointer target.',
+            },
+            { name: '.kp-button--lg', what: 'The large step, for the one action a landing page is about. There is no modifier for the middle step: that is `.kp-button` itself.' },
             { name: '.kp-button__undo', what: 'The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.' },
             {
                 name: '.kp-confirm',

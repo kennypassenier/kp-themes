@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Button — kp-themes</title>
-        <meta name="description" content="One button in four looks, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open." />
+        <meta name="description" content="One button in four looks and three sizes, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open." />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
         <link rel="stylesheet" href="../../css/layout.css" />
@@ -104,7 +104,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Button</h1>
-                    <p class="kp-prose">One button in four looks, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.</p>
+                    <p class="kp-prose">One button in four looks and three sizes, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.</p>
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>
@@ -127,6 +127,18 @@
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>&gt;Destructive&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Ghost&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;Disabled&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Three sizes</figcaption>
+                        <p class="kp-text-muted">The middle step is the unmodified button, so `.kp-button` on its own is `md` and nothing that exists today changes size. The small step is floored at the 24px pointer target even under the compact density, and the large one is the row-leading action on a marketing page. Every measure behind them is a knob.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<button type="button" class="kp-button kp-button--sm">Small</button>
+<button type="button" class="kp-button">Medium</button>
+<button type="button" class="kp-button kp-button--lg">Large</button>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Small&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Medium&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--lg&quot;</span>&gt;Large&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A destructive button that confirms</figcaption>
@@ -261,6 +273,8 @@
                             <tr><td><code>.kp-button--primary</code></td><td>One per view. The action the reader came to take.</td></tr>
                             <tr><td><code>.kp-button--destructive</code></td><td>Deletes and disconnections. It has to carry a confirmation or an undo as well.</td></tr>
                             <tr><td><code>.kp-button--ghost</code></td><td>No ground and no boundary until it is hovered, for actions that sit inside dense rows.</td></tr>
+                            <tr><td><code>.kp-button--sm</code></td><td>The small step, for a control that sits inside a table row or a menu. Its height is floored so the compact density cannot take it under the 24px pointer target.</td></tr>
+                            <tr><td><code>.kp-button--lg</code></td><td>The large step, for the one action a landing page is about. There is no modifier for the middle step: that is `.kp-button` itself.</td></tr>
                             <tr><td><code>.kp-button__undo</code></td><td>The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.</td></tr>
                             <tr><td><code>.kp-confirm</code></td><td>The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.</td></tr>
                             <tr><td><code>:hover / :active</code></td><td>Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.</td></tr>
