@@ -1102,3 +1102,132 @@ minutes earlier: `TH132` defined by its FEATURES.md row and by the
 heading of its own mini-round entry; excused in `CROSS_REFERENCES` with
 its reason, the shape TH47 set. The loop is closed; the review moment
 (field 9) is round six's Phase 10.
+
+## KT11 · The concept page was not the approved demo, and no gate compared them
+
+Approved by Kenny on 2026-09-08, all nine fields unchanged.
+
+**1 · What went wrong.** C0's `examples/concept.html` was a reduced page
+in the component vocabulary — a heading, a lede, two buttons, a form, two
+cards — while S46 says the concept demo has "the same structure and
+elements" as the approved demo. Kenny found it on the live page while
+answering the ratification form; no gate had seen it. Evidence:
+`git show b6c5e5e:showcase/examples.mjs` (the C0 descriptor, 60 lines
+against 250 now) and `docs/SCOPE.md` S46.
+
+**2 · Which gate let it through.** None: S46 was a textual requirement
+without a measurement. The hooks gate checks that every theme answers the
+hooks and the examples-wired gate that the attributes reach the page;
+neither compares the concept page with the approved demo. Phase 5 named
+no gate for S46, so the fault was already in the realization plan.
+
+**3 · Where else the same fault sits — measured, 2026-09-07.** One place.
+The showcase specimens and the ten other example pages have no approved
+demo as their source; the concept demo is the only page with an "exact
+source". The same kind of fault — a textual requirement without a
+measurement — sits in other frozen requirements: TH127 (the migration
+note) and TH134–TH136 (documentation) have no gate either; they come up at
+C6.
+
+**4 · The measure.** The approved demo is an inventory in the repository:
+`showcase/concept-demo.json` names thirty elements of the demo — the
+picker, the brand, the strip with its dropdown, language break and cta,
+the hero, the side note, the laurels, the microlabel, the headline, the
+lede with its marks, the mirror button, the ghost button, the platforms
+line, the spec sheet with its swatch, the tear, the app ground, the
+heading with its rule, the form, the select, the textarea, the checkbox,
+the confirmed wipe button, the dossier with its label, the trigger, the
+second tear, the footer — each with the text the generated page must
+carry, and a unit test in `gates/gates.test.mjs` refuses a concept page
+in which one is missing. When the demo is ever replaced (S46: for
+synthwave too), the inventory changes in the same commit.
+
+**5 · What it costs.** One JSON file of about twenty lines and one test;
+every change to the demo touches two files instead of one. No new rule
+for Kenny.
+
+**6 · Who enforces it.** Code: the unit test runs in `npm run gates`, in
+the commit hook and in CI. The substantive half — whether an element also
+looks as it does in the demo — stays discipline-enforced through Kenny's
+own look (standing rule 39) and the register gate that makes every
+component root answer.
+
+**7 · How and when it is measured.** At the building of the measure
+itself, before the form. Measured 2026-09-07: the test is green on the
+page as it stands live and red with the laurels taken out of the
+descriptor (drill). The loop closed at the moment the measure came into
+being; the second measurement is the next change to the demo (synthwave),
+where the inventory must move in the same commit.
+
+**8 · The fallback.** If the test stays green with a missing element, the
+inventory becomes a pixel comparison: a screenshot of the approved demo
+per element beside the rendering under cyberpunk, with a threshold —
+heavier, but then it measures the shape and not only the presence.
+
+**9 · When the measure is reviewed.** At this round's Phase 10: if S46
+becomes a standing rule of the dev procedure ("an approved demo is an
+inventory with a test"), the project rule here is redundant and moves to
+the procedure.
+
+
+## KT12 · The push chain read a watch exit code, and `main` moved on a red browser job
+
+Approved by Kenny on 2026-09-08, all nine fields unchanged; field 7 was
+measured before the form was answered. Queued as R6-Q5.
+
+**1 · What went wrong.** Claude pushed commit `b6c5e5e` (C0) to `main`
+while CI was not green: the `gates` job was green, the `browser` job red
+on one assertion (`tests/overflow.spec.mjs` still expected ten example
+pages). The push chain read the exit code of a `gh run watch` that had
+been moved to the background, which reported 0, instead of the conclusion
+per job. Evidence: `gh run view 34152005920` → gates success, browser
+failure; `git log origin/main` showed `b6c5e5e` before the correction.
+
+**2 · Which gate let it through.** Standing rule 36 (wait on the checks
+of that sha) was followed to the letter and still let this through,
+because it does not say which signal counts. The commit hook and CI
+itself worked; the weak link was Claude's reading of CI.
+
+**3 · Where else the same fault sits — measured in this conversation.**
+C1's poll did not find the run (an empty run id after 30 s) and so read
+nothing; the polls of C2, C3 and C4 have read the conclusion per job
+since. In other projects: every session that uses
+`gh run watch --exit-status` in a background task has the same blind
+spot; no inventory over the other repositories was made (that belongs to
+their sessions).
+
+**4 · The measure.** The push chain reads
+`gh run view --json conclusion,jobs` for the exact sha and moves `main`
+only when every job says success; an empty run id or a watch exit code
+never counts. On a red job `main` stays where it is and the fault is
+repaired on the branch first.
+
+**5 · What it costs.** One extra API read per push and two lines of
+shell; the waiting time is unchanged. No new rule for Kenny.
+
+**6 · Who enforces it.** Discipline, in the session (the chain is a shell
+recipe, not code in the repository). Code enforcement is branch
+protection on `main` requiring the `browser` job as well — until this
+correction `main` required only the `gates` check; set by Claude with
+the gh token on Kenny's go (field 9), 2026-09-08: `main` now requires
+`gates` and `browser`.
+
+**7 · How and when it is measured.** At the first push chain after the
+measure came into being — and that measurement happened before the form
+was answered. On commit `a02d31f` the chain read per job: gates success,
+browser failure (run 34163234434, one test that polled the compare page's
+scroll sync too early in chromium), and `main` stayed. The fault was
+repaired on the branch (`f968063` and `713922e`; the second because the
+first forgot the generated page, which the examples gate on CI saw) and
+`main` moved only after a run green per job. R6-Q5 is closed on Kenny's
+confirmation of this field.
+
+**8 · The fallback.** If `main` ever again sits on a commit with a red CI
+job: `main` is reset at once to the last green sha (a force-push by
+Claude after Kenny's go), and branch protection is set on both jobs so
+GitHub refuses it.
+
+**9 · When the measure is reviewed.** At this round's Phase 10: with
+branch protection requiring both jobs, the shell rule has become
+redundant and may go.
+

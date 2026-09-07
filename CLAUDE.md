@@ -116,6 +116,25 @@ lost for want of a token. Code-enforced by `gates/check-tokens.mjs`
 (parity) and discipline-enforced for the "in the same change" half.
 Recorded as S47 in [docs/SCOPE.md](docs/SCOPE.md).
 
+## Project rule from correction KT11 (2026-09-08)
+
+The approved concept demo is an inventory, not a description.
+`showcase/concept-demo.json` names every element of the approved demo with
+the text the generated page must carry, and a unit test in
+`gates/gates.test.mjs` refuses `examples/concept.html` when one is missing.
+When the demo is replaced (S46, for synthwave and every theme after), the
+inventory changes in the same commit. Code-enforced for presence;
+discipline-enforced for appearance, through Kenny's own look at the URL.
+Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
+## Project rule from correction KT12 (2026-09-08)
+
+The push chain reads `gh run view --json conclusion,jobs` for the exact
+sha and moves `main` only when every job says success; an empty run id or
+a watch exit code never counts. `main` requires both CI jobs (`gates` and
+`browser`) as status checks since 2026-09-08, so GitHub refuses what the
+chain would miss. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Round six — the next cyberpunk (opened 2026-09-07)
 
 Kenny wants a cyberpunk that "spits off the screen": signal yellow with
@@ -135,13 +154,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (5.0.0), Phase 6: C0–C5 built and ratified 2026-09-07 except C5, redone on Kenny's reading (the demo exact, compare as a measured diff); C6 next with Q1, Q3, Q6 answered                                                                                                            |
-| Last completed gate | Round six Phase 5 (2026-09-07): C0–C6 agreed, all six gates blocking, an alpha tag after C6, AFK from C0 to C5 with one ratification report                                                                                                                                                    |
-| Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                                                                                                                                                                                                  |
-| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, built at C5), R6-Q5 (the push chain read a watch exit code, main moved on a red browser job), R6-Q6 (nishiki over the font budget); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2 |
-| AFK mode            | on, C0 to C5 (Kenny, 2026-09-07)                                                                                                                                                                                                                                                               |
+| Field               | Value                                                                                                                                                                                                                                                                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six (5.0.0), Phase 6: C0–C5 built and ratified 2026-09-07 except C5, redone on Kenny's reading (the demo exact, compare as a measured diff); C6 next with Q1, Q3, Q6 answered                                                                                                                                                     |
+| Last completed gate | Round six Phase 5 (2026-09-07): C0–C6 agreed, all six gates blocking, an alpha tag after C6, AFK from C0 to C5 with one ratification report                                                                                                                                                                                             |
+| Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                                                                                                                                                                                                                                           |
+| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, reopened 2026-09-08 on Kenny's second reading — one page per theme, pending his V1 answer), R6-Q6 (nishiki over the font budget); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2. Closed: R6-Q5 (KT12, measured on a02d31f) |
+| AFK mode            | on, C0 to C5 (Kenny, 2026-09-07)                                                                                                                                                                                                                                                                                                        |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
