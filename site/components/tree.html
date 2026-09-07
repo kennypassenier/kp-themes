@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Tree</h1>
                     <p class="kp-prose">A nested list a keyboard can walk: arrows move and open, Home and End jump to the ends, and typing a few letters finds the next matching item. The twisty points the way the branch will go rather than the way it is.</p>
@@ -115,36 +116,34 @@
                         <figcaption class="kp-fw-semibold">A tree with one closed branch</figcaption>
                         <p class="kp-text-muted">A closed branch is skipped by the arrows, because Down should go to the next thing you can see; walking into a folder that is shut is the bug that makes a tree feel broken rather than merely awkward.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <ul class="kp-tree" role="tree" data-kp-tree aria-label="Project files">
-<li role="treeitem" aria-expanded="false">Components
-<ul role="group">
-<li role="treeitem">button.jsx</li>
-<li role="treeitem">card.jsx</li>
+    <li role="treeitem" aria-expanded="false">Components
+        <ul role="group">
+            <li role="treeitem">button.jsx</li>
+            <li role="treeitem">card.jsx</li>
+        </ul>
+    </li>
+    <li role="treeitem" aria-expanded="true">Styles
+        <ul role="group">
+            <li role="treeitem">components.css</li>
+        </ul>
+    </li>
+    <li role="treeitem">README.md</li>
 </ul>
-</li>
-<li role="treeitem" aria-expanded="true">Styles
-<ul role="group">
-<li role="treeitem">components.css</li>
-</ul>
-</li>
-<li role="treeitem">README.md</li>
-</ul>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tree&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tree&quot;</span> <span class="kp-code__keyword">data-kp-tree</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Project files&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Components
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;button.jsx&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;card.jsx&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Styles
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;components.css&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;README.md&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Components
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;button.jsx&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;card.jsx&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Styles
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;components.css&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;README.md&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -227,6 +226,7 @@
                             <tr><td><code>hover</code></td><td>A quiet ground on the item under the pointer. It is not selection and nothing depends on it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

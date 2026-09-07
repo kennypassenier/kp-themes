@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Timeline</h1>
                     <p class="kp-prose">An ordered list of things that happened, each with its moment and a marker down the left. The rule between markers is drawn on the marker itself, so a one-item timeline has no line hanging under it.</p>
@@ -115,20 +116,18 @@
                         <figcaption class="kp-fw-semibold">Two events</figcaption>
                         <p class="kp-text-muted">The moment is a time element and the marker is decorative, so the entry reads as “2026-09-04 14:07, version 1.1.0 released” rather than as a bullet with a date attached.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <ol class="kp-timeline">
-<li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>
-<span><time class="kp-timeline__when" datetime="2026-09-04T14:07">2026-09-04 14:07</time>Version 1.1.0 released</span></li>
-<li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>
-<span><time class="kp-timeline__when" datetime="2026-09-04T12:27">2026-09-04 12:27</time>Version 1.0.0 released</span></li>
+    <li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span><time class="kp-timeline__when" datetime="2026-09-04T14:07">2026-09-04 14:07</time>Version 1.1.0 released</span></li>
+    <li class="kp-timeline__item"><span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span><time class="kp-timeline__when" datetime="2026-09-04T12:27">2026-09-04 12:27</time>Version 1.0.0 released</span></li>
 </ol>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-04T14:07&quot;</span>&gt;2026-09-04 14:07&lt;/<span class="kp-code__keyword">time</span>&gt;Version 1.1.0 released&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-04T12:27&quot;</span>&gt;2026-09-04 12:27&lt;/<span class="kp-code__keyword">time</span>&gt;Version 1.0.0 released&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-04T14:07&quot;</span>&gt;2026-09-04 14:07&lt;/<span class="kp-code__keyword">time</span>&gt;Version 1.1.0 released&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-04T12:27&quot;</span>&gt;2026-09-04 12:27&lt;/<span class="kp-code__keyword">time</span>&gt;Version 1.0.0 released&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ol</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -181,6 +180,7 @@
                             <tr><td><code>.kp-timeline__when</code></td><td>The moment, quiet, above the text, in same-width digits so a column of times lines up.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

@@ -1881,10 +1881,20 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        /* A long value does not push the page sideways [DI11]. It was an
+     * inline-flex with nothing to stop it: a 44-character key measured
+     * 344px inside a 360px viewport and put the copy button at 421.
+     * Hidden until the documentation site stopped wrapping its examples
+     * in a scroll box, which is the kind of thing a scroll box hides. */
+        max-inline-size: 100%;
     }
 
     .kp-copyable__value {
         font-family: var(--font-mono, ui-monospace, monospace);
+        /* Break the value rather than the layout: a key, a hash or an id
+     * has no spaces to wrap at. */
+        overflow-wrap: anywhere;
+        min-inline-size: 0;
     }
 
     /* Confirmed in words on the button, not by colour: a green flash is

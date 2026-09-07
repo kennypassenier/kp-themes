@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Colour picker</h1>
                     <p class="kp-prose">Three labelled sliders, a swatch, and the number that makes this one different: the WCAG contrast ratio of the chosen colour against the current theme’s own background, measured with the same function the contrast gate uses.</p>
@@ -115,30 +116,28 @@
                         <figcaption class="kp-fw-semibold">A picker measured against the page background</figcaption>
                         <p class="kp-text-muted">The verdict is a sentence in a live region, not a green tick: the colour is the second carrier, never the only one. Sliders rather than a canvas, because a canvas needs a pointer.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
-<label class="kp-field__label" for="doc-color-h">Hue</label>
-<input id="doc-color-h" type="range" data-kp-channel="h" min="0" max="360" value="220" />
-<label class="kp-field__label" for="doc-color-s">Saturation</label>
-<input id="doc-color-s" type="range" data-kp-channel="s" min="0" max="100" value="90" />
-<label class="kp-field__label" for="doc-color-l">Lightness</label>
-<input id="doc-color-l" type="range" data-kp-channel="l" min="0" max="100" value="56" />
-<span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
-<output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
-<p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+    <label class="kp-field__label" for="doc-color-h">Hue</label>
+    <input id="doc-color-h" type="range" data-kp-channel="h" min="0" max="360" value="220" />
+    <label class="kp-field__label" for="doc-color-s">Saturation</label>
+    <input id="doc-color-s" type="range" data-kp-channel="s" min="0" max="100" value="90" />
+    <label class="kp-field__label" for="doc-color-l">Lightness</label>
+    <input id="doc-color-l" type="range" data-kp-channel="l" min="0" max="100" value="56" />
+    <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+    <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+    <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker</span> <span class="kp-code__keyword">data-kp-against</span><span class="kp-code__string">=&quot;--background&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span>&gt;Hue&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;h&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;360&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;220&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span>&gt;Saturation&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;s&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;90&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span>&gt;Lightness&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;l&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;56&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__swatch&quot;</span> <span class="kp-code__keyword">data-kp-swatch</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">output</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__value&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-value</span>&gt;&lt;/<span class="kp-code__keyword">output</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span>&gt;Hue&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;h&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;360&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;220&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span>&gt;Saturation&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;s&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;90&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span>&gt;Lightness&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;l&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;56&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__swatch&quot;</span> <span class="kp-code__keyword">data-kp-swatch</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">output</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__value&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-value</span>&gt;&lt;/<span class="kp-code__keyword">output</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -221,6 +220,7 @@
                             <tr><td><code>following the theme</code></td><td>The picker can re-measure when the page’s theme changes, so the same colour is judged again against the new background.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

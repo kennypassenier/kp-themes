@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Tooltip</h1>
                     <p class="kp-prose">A short label on the popover surface, anchored to the thing it describes. The React component opens it on hover and on focus, with a delay at both ends, and closes it on Escape.</p>
@@ -115,10 +116,8 @@
                         <figcaption class="kp-fw-semibold">The surface, on a popover</figcaption>
                         <p class="kp-text-muted">Shown here as the browser’s own popover so it can be opened and looked at; the React component adds the hover and focus timing on top of the same two classes.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button" popovertarget="doc-tooltip" style="anchor-name: --doc-tooltip">What is a register?</button>
 <span popover="auto" id="doc-tooltip" role="tooltip" class="kp-popover kp-tooltip" style="position-anchor: --doc-tooltip">An optional stylesheet that changes the texture of a theme without changing its colours.</span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">popovertarget</span><span class="kp-code__string">=&quot;doc-tooltip&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;anchor-name: --doc-tooltip&quot;</span>&gt;What is a register?&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">popover</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tooltip&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --doc-tooltip&quot;</span>&gt;An optional stylesheet that changes the texture of a theme without changing its colours.&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
@@ -183,6 +182,7 @@
                             <tr><td><code>Escape</code></td><td>Closes it, like every other layer in the package.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

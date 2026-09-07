@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Visually hidden</h1>
                     <p class="kp-prose">Text that is not drawn and is still announced. It is for the things a page says by looking, which are silent to anyone who is not looking.</p>
@@ -115,11 +116,9 @@
                         <figcaption class="kp-fw-semibold">A name for a control that shows a glyph</figcaption>
                         <p class="kp-text-muted">The word is read out and takes no room; the glyph is marked decorative so it is not announced beside it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button kp-button--ghost"><span aria-hidden="true">⌫</span><span class="kp-sr-only">Remove this filter</span></button>
 <label class="kp-sr-only" for="doc-hidden-search">Search applications</label>
 <input class="kp-field__input" id="doc-hidden-search" type="search" placeholder="Search…" />
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;⌫&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Remove this filter&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-hidden-search&quot;</span>&gt;Search applications&lt;/<span class="kp-code__keyword">label</span>&gt;
@@ -163,6 +162,7 @@
                             <tr><td><code>.kp-sr-only</code></td><td>The only state. It keeps the text in the document and out of the picture: one pixel, clipped, and never with display taken away, which would take it out of the reading too.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

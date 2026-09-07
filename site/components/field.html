@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Form field</h1>
                     <p class="kp-prose">A label, a control, optional help text and an error, with the wiring between them: the label points at the control, the help and the error are announced with it, and an invalid field says what is wrong in words rather than by turning red.</p>
@@ -115,70 +116,66 @@
                         <figcaption class="kp-fw-semibold">A field with help, and the same field invalid</figcaption>
                         <p class="kp-text-muted">The error is text and it names the problem. A red border is one carrier and a silent one; the message is read out because the control points at it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-field">
-<label class="kp-field__label" for="doc-field-mail">Email</label>
-<input class="kp-field__input" id="doc-field-mail" type="email" placeholder="name@example.com" aria-describedby="doc-field-mail-help" />
-<span class="kp-field__help" id="doc-field-mail-help">We never pass this on.</span>
+    <label class="kp-field__label" for="doc-field-mail">Email</label>
+    <input class="kp-field__input" id="doc-field-mail" type="email" placeholder="name@example.com" aria-describedby="doc-field-mail-help" />
+    <span class="kp-field__help" id="doc-field-mail-help">We never pass this on.</span>
 </div>
 <div class="kp-field kp-field--invalid">
-<label class="kp-field__label" for="doc-field-bad">Email</label>
-<input class="kp-field__input" id="doc-field-bad" type="email" value="not-an-address" aria-invalid="true" aria-describedby="doc-field-bad-error" />
-<span class="kp-field__error" id="doc-field-bad-error">Enter a valid address.</span>
+    <label class="kp-field__label" for="doc-field-bad">Email</label>
+    <input class="kp-field__input" id="doc-field-bad" type="email" value="not-an-address" aria-invalid="true" aria-describedby="doc-field-bad-error" />
+    <span class="kp-field__error" id="doc-field-bad-error">Enter a valid address.</span>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-mail&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;name@example.com&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-field-mail-help&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-mail-help&quot;</span>&gt;We never pass this on.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-mail&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;name@example.com&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-field-mail-help&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-mail-help&quot;</span>&gt;We never pass this on.&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--invalid&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-bad&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-bad&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;not-an-address&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-field-bad-error&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-bad-error&quot;</span>&gt;Enter a valid address.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-bad&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-bad&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;not-an-address&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-field-bad-error&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-bad-error&quot;</span>&gt;Enter a valid address.&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">The other four controls</figcaption>
                         <p class="kp-text-muted">A field is not always a text box. Select, textarea, checkbox and a radio group carry the same label, help and error wiring, so a real form does not grow a hand-written half beside the component.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-field">
-<label class="kp-field__label" for="doc-field-country">Country</label>
-<select class="kp-field__input" id="doc-field-country"><option>Pick…</option><option>Belgium</option><option>The Netherlands</option></select>
+    <label class="kp-field__label" for="doc-field-country">Country</label>
+    <select class="kp-field__input" id="doc-field-country"><option>Pick…</option><option>Belgium</option><option>The Netherlands</option></select>
 </div>
 <div class="kp-field">
-<label class="kp-field__label" for="doc-field-notes">Notes</label>
-<textarea class="kp-field__input kp-field__input--multiline" id="doc-field-notes"></textarea>
+    <label class="kp-field__label" for="doc-field-notes">Notes</label>
+    <textarea class="kp-field__input kp-field__input--multiline" id="doc-field-notes"></textarea>
 </div>
 <div class="kp-field kp-field--check">
-<input class="kp-field__check" id="doc-field-post" type="checkbox" checked />
-<label class="kp-field__label" for="doc-field-post">Keep me posted</label>
+    <input class="kp-field__check" id="doc-field-post" type="checkbox" checked />
+    <label class="kp-field__label" for="doc-field-post">Keep me posted</label>
 </div>
 <fieldset class="kp-field kp-fieldset" role="radiogroup">
-<legend class="kp-field__label">How do we reach you?</legend>
-<div class="kp-field__option"><input class="kp-field__check" id="doc-field-r1" name="doc-field-reach" type="radio" /><label for="doc-field-r1">Email</label></div>
-<div class="kp-field__option"><input class="kp-field__check" id="doc-field-r2" name="doc-field-reach" type="radio" /><label for="doc-field-r2">Telephone</label></div>
+    <legend class="kp-field__label">How do we reach you?</legend>
+    <div class="kp-field__option"><input class="kp-field__check" id="doc-field-r1" name="doc-field-reach" type="radio" /><label for="doc-field-r1">Email</label></div>
+    <div class="kp-field__option"><input class="kp-field__check" id="doc-field-r2" name="doc-field-reach" type="radio" /><label for="doc-field-r2">Telephone</label></div>
 </fieldset>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-country&quot;</span>&gt;Country&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-country&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Pick…&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Belgium&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;The Netherlands&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-country&quot;</span>&gt;Country&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-country&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Pick…&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Belgium&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;The Netherlands&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-notes&quot;</span>&gt;Notes&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-notes&quot;</span>&gt;&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-notes&quot;</span>&gt;Notes&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-notes&quot;</span>&gt;&lt;/<span class="kp-code__keyword">textarea</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-post&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-post&quot;</span>&gt;Keep me posted&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-post&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-post&quot;</span>&gt;Keep me posted&lt;/<span class="kp-code__keyword">label</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-fieldset&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;radiogroup&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;How do we reach you?&lt;/<span class="kp-code__keyword">legend</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-r1&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;doc-field-reach&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> /&gt;&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-r1&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-r2&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;doc-field-reach&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> /&gt;&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-r2&quot;</span>&gt;Telephone&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;How do we reach you?&lt;/<span class="kp-code__keyword">legend</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-r1&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;doc-field-reach&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> /&gt;&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-r1&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-field-r2&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;doc-field-reach&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> /&gt;&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-field-r2&quot;</span>&gt;Telephone&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">fieldset</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -258,6 +255,7 @@
                             <tr><td><code>.kp-field__required</code></td><td>The required marking: a star and the word, because a star alone is read as “star”.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

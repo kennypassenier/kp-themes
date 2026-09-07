@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Health</h1>
                     <p class="kp-prose">A dot and a word for the state of something being watched — a service, a job, a connection. The word is what carries it; the dot is the second channel.</p>
@@ -115,11 +116,9 @@
                         <figcaption class="kp-fw-semibold">Three states</figcaption>
                         <p class="kp-text-muted">The dot is marked decorative and the word beside it is the label, so the row reads as “Database, healthy” rather than as a coloured circle nobody can name.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Healthy</span>
 <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Degraded</span>
 <span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Unreachable</span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;ok&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Healthy&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;warn&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Degraded&lt;/<span class="kp-code__keyword">span</span>&gt;
@@ -176,6 +175,7 @@
                             <tr><td><code>no state</code></td><td>Without a state the dot takes the quiet ground — unknown, which is a fourth thing and not a fourth colour.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

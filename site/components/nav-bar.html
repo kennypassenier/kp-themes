@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Navigation bar</h1>
                     <p class="kp-prose">The bar across the top of an application: a brand, a row of links, and room at the end for whatever the page keeps there. The current page is marked by weight and by a thicker underline, not by colour alone.</p>
@@ -115,24 +116,22 @@
                         <figcaption class="kp-fw-semibold">A brand and three links</figcaption>
                         <p class="kp-text-muted">The current page carries the current-page marking, which is what a screen reader announces, and the weight and underline are what everyone else sees.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <nav class="kp-nav" aria-label="Main">
-<a class="kp-nav__brand" href="#nav-bar">kp</a>
-<ul class="kp-nav__links">
-<li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
-<li><a class="kp-nav__link" href="#example">Applications</a></li>
-<li><a class="kp-nav__link" href="#variants">Settings</a></li>
-</ul>
+    <a class="kp-nav__brand" href="#nav-bar">kp</a>
+    <ul class="kp-nav__links">
+        <li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
+        <li><a class="kp-nav__link" href="#example">Applications</a></li>
+        <li><a class="kp-nav__link" href="#variants">Settings</a></li>
+    </ul>
 </nav>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Main&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">a</span>&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -194,6 +193,7 @@
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

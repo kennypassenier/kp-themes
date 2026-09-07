@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Card</h1>
                     <p class="kp-prose">A raised surface with its own ground and ink: a title, a body, and optional slots for a header row, its actions and a footer. A raised surface is never darker than the one below it.</p>
@@ -115,46 +116,42 @@
                         <figcaption class="kp-fw-semibold">Title and body</figcaption>
                         <p class="kp-text-muted">The smallest useful card. The body takes the quiet ink, which is what makes the title the title without a size change.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-card">
-<h3 class="kp-card__title">Example Inc</h3>
-<p class="kp-card__body">Applied on 4 September; interview on the eleventh.</p>
+    <h3 class="kp-card__title">Example Inc</h3>
+    <p class="kp-card__body">Applied on 4 September; interview on the eleventh.</p>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">h3</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">With a header row, actions and a footer</figcaption>
                         <p class="kp-text-muted">The header lays the title and its controls on one baseline; the footer is separated by a rule rather than by distance alone, so it still reads as a footer in a dense list.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-card">
-<div class="kp-card__header">
-<h3 class="kp-card__title">Example Inc</h3>
-<div class="kp-card__actions">
-<button type="button" class="kp-button kp-button--ghost">Edit</button>
-<button type="button" class="kp-button">Open</button>
+    <div class="kp-card__header">
+        <h3 class="kp-card__title">Example Inc</h3>
+        <div class="kp-card__actions">
+            <button type="button" class="kp-button kp-button--ghost">Edit</button>
+            <button type="button" class="kp-button">Open</button>
+        </div>
+    </div>
+    <p class="kp-card__body">Applied on 4 September; interview on the eleventh.</p>
+    <div class="kp-card__footer"><span class="kp-timestamp">Updated 2026-09-06 14:07</span></div>
 </div>
-</div>
-<p class="kp-card__body">Applied on 4 September; interview on the eleventh.</p>
-<div class="kp-card__footer"><span class="kp-timestamp">Updated 2026-09-06 14:07</span></div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">h3</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__actions&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Edit&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Updated 2026-09-06 14:07&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Edit&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Updated 2026-09-06 14:07&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -218,6 +215,7 @@
                             <tr><td><code>.kp-card__footer</code></td><td>A closing row, separated by a rule and the scale’s own distance.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

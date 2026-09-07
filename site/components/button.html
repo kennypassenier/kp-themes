@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Button</h1>
                     <p class="kp-prose">One button in four looks, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.</p>
@@ -115,13 +116,11 @@
                         <figcaption class="kp-fw-semibold">The four looks and a disabled one</figcaption>
                         <p class="kp-text-muted">Hover, active and disabled are derived from the base colour by the theme generator rather than authored per theme, so a new theme gets all three by declaring one.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button">Default</button>
 <button type="button" class="kp-button kp-button--primary">Primary</button>
 <button type="button" class="kp-button kp-button--destructive">Destructive</button>
 <button type="button" class="kp-button kp-button--ghost">Ghost</button>
 <button type="button" class="kp-button kp-button--primary" disabled>Disabled</button>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Default&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Primary&lt;/<span class="kp-code__keyword">button</span>&gt;
@@ -133,9 +132,7 @@
                         <figcaption class="kp-fw-semibold">A destructive button that confirms</figcaption>
                         <p class="kp-text-muted">The first click arms the button and changes its label; a second click within the window acts, and moving away disarms it. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete this application?">Delete</button>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete this application?&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
@@ -143,18 +140,16 @@
                         <figcaption class="kp-fw-semibold">A row action that acts at once and offers the way back</figcaption>
                         <p class="kp-text-muted">The optimistic half: the row goes away immediately, an undo appears beside it, and the action commits only when the window closes. The consumer hears both outcomes as events.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <ul class="kp-stack">
-<li data-kp-undo-target>Application at Example Inc
-<button type="button" class="kp-button kp-button--ghost" data-kp-undo-action>Delete</button>
-</li>
+    <li data-kp-undo-target>Application at Example Inc
+        <button type="button" class="kp-button kp-button--ghost" data-kp-undo-action>Delete</button>
+    </li>
 </ul>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-undo-target</span>&gt;Application at Example Inc
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-undo-action</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-undo-target</span>&gt;Application at Example Inc
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-undo-action</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -248,6 +243,7 @@
                             <tr><td><code>armed</code></td><td>A confirming button between its first and second click. The module writes the state, the label changes, and a timeout disarms it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

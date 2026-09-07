@@ -20,7 +20,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { DESCRIPTORS, GROUPS } from './site/descriptors.mjs';
-import { escape, section, shell } from './site/chrome.mjs';
+import { escape, indent, section, shell } from './site/chrome.mjs';
 import { highlight, highlightCss } from './site/highlight.mjs';
 import { renderMarkdown } from './site/markdown.mjs';
 import { extractAttributes } from './site/extract-attributes.mjs';
@@ -270,6 +270,7 @@ function componentPage(nav, descriptor, sources) {
         .filter((c) => c !== undefined);
 
     const examples = descriptor.examples
+        .map((ex) => ({ ...ex, markup: indent(ex.markup) }))
         .map(
             (ex) => `                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">${escape(ex.title)}</figcaption>
@@ -495,8 +496,23 @@ function siteCss() {
         overflow-wrap: anywhere;
     }
 
+    /* Not a scroll container. overflow-x:auto computes overflow-y to
+       auto as well, which turns this box into a clip for anything
+       absolutely positioned inside it — every combobox list, date picker,
+       colour picker, menu and tooltip on the site was trapped in it and
+       had to be scrolled to. Measured on the combobox page: the open list
+       ran 60px past the box and the box grew a scrollbar. Wide examples
+       are handled where they are wide: the package's own tables carry
+       .kp-table-wrap, which is a scroll region on purpose. */
     .sc-example__live {
-        overflow-x: auto;
+        overflow: visible;
+    }
+
+    /* The reading column begins where the navigation ends, rather than
+       being centred inside the main column with a band of nothing in
+       front of it. .kp-page still supplies the measure and the padding. */
+    .sc-measure {
+        margin-inline: 0;
     }
 
     /* One rule per swatch token rather than a style attribute on each

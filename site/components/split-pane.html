@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Split pane</h1>
                     <p class="kp-prose">Two panes with a separator between them that can be dragged, and moved with the arrow keys. One custom property drives the whole layout, so the pointer and the keyboard move the same thing.</p>
@@ -115,32 +116,30 @@
                         <figcaption class="kp-fw-semibold">A list beside a detail</figcaption>
                         <p class="kp-text-muted">The separator is a real separator with a value, minimum and maximum, so it is announced as a slider and moved with the arrows rather than only dragged.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-split" data-kp-split>
-<div class="kp-split__pane">
-<p class="kp-fw-semibold">Applications</p>
-<p>Example Inc</p>
-<p>Second Ltd</p>
+    <div class="kp-split__pane">
+        <p class="kp-fw-semibold">Applications</p>
+        <p>Example Inc</p>
+        <p>Second Ltd</p>
+    </div>
+    <div class="kp-split__separator" role="separator" tabindex="0" aria-orientation="vertical" aria-valuemin="10" aria-valuemax="90" aria-valuenow="50" aria-label="Resize the panes"></div>
+    <div class="kp-split__pane">
+        <p class="kp-fw-semibold">Example Inc</p>
+        <p>Applied on 4 September; interview on the eleventh.</p>
+    </div>
 </div>
-<div class="kp-split__separator" role="separator" tabindex="0" aria-orientation="vertical" aria-valuemin="10" aria-valuemax="90" aria-valuenow="50" aria-label="Resize the panes"></div>
-<div class="kp-split__pane">
-<p class="kp-fw-semibold">Example Inc</p>
-<p>Applied on 4 September; interview on the eleventh.</p>
-</div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split&quot;</span> <span class="kp-code__keyword">data-kp-split</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">p</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">p</span>&gt;Second Ltd&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__separator&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-orientation</span><span class="kp-code__string">=&quot;vertical&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;90&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;50&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Resize the panes&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">p</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Second Ltd&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__separator&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-orientation</span><span class="kp-code__string">=&quot;vertical&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;90&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;50&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Resize the panes&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Applied on 4 September; interview on the eleventh.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -218,6 +217,7 @@
                             <tr><td><code>focused separator</code></td><td>It takes the focus ring inside its own edge, because a two-pixel bar has no room for a ring outside it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

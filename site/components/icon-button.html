@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Icon button</h1>
                     <p class="kp-prose">A square, quiet button for a single glyph: the theme menu’s trigger, the close on a dialog, an alert or a toast. It has no ground until it is hovered, and the wash it takes then has no hue of its own, so it stays quiet in every theme.</p>
@@ -115,10 +116,8 @@
                         <figcaption class="kp-fw-semibold">A close button and a menu trigger</figcaption>
                         <p class="kp-text-muted">The size is fixed so a row of them lines up, and the glyph inside is capped rather than the button growing around it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-icon-button" aria-label="Close">×</button>
 <button type="button" class="kp-icon-button" aria-label="More actions">⋯</button>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;More actions&quot;</span>&gt;⋯&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
@@ -164,6 +163,7 @@
                             <tr><td><code>with an svg child</code></td><td>An inline glyph is sized by the button rather than by its own attributes, so icons from different sets end up the same size.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

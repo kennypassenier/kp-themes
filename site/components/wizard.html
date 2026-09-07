@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Wizard</h1>
                     <p class="kp-prose">A form in steps, with an indicator that says where you are and what is still coming. It borrows the form’s validation rather than repeating it, so a step that will not validate does not advance.</p>
@@ -115,44 +116,42 @@
                         <figcaption class="kp-fw-semibold">Two steps, a back and a next</figcaption>
                         <p class="kp-text-muted">The indicator is an ordered list rather than a row of dots: the steps have names and a number, which is what “step two of four” needs in order to be said out loud.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-wizard" data-kp-wizard>
-<ol class="kp-wizard__steps">
-<li data-kp-step-label>Details</li>
-<li data-kp-step-label>Review</li>
-</ol>
-<p data-kp-wizard-status role="status" aria-live="polite"></p>
-<section data-kp-step>
-<div class="kp-field">
-<label class="kp-field__label" for="doc-wizard-name">Name</label>
-<input class="kp-field__input" id="doc-wizard-name" required />
+    <ol class="kp-wizard__steps">
+        <li data-kp-step-label>Details</li>
+        <li data-kp-step-label>Review</li>
+    </ol>
+    <p data-kp-wizard-status role="status" aria-live="polite"></p>
+    <section data-kp-step>
+        <div class="kp-field">
+            <label class="kp-field__label" for="doc-wizard-name">Name</label>
+            <input class="kp-field__input" id="doc-wizard-name" required />
+        </div>
+    </section>
+    <section data-kp-step hidden>Ready to send.</section>
+    <div class="kp-wizard__actions">
+        <button type="button" class="kp-button" data-kp-wizard-back>Back</button>
+        <button type="button" class="kp-button kp-button--primary" data-kp-wizard-next>Next</button>
+    </div>
 </div>
-</section>
-<section data-kp-step hidden>Ready to send.</section>
-<div class="kp-wizard__actions">
-<button type="button" class="kp-button" data-kp-wizard-back>Back</button>
-<button type="button" class="kp-button kp-button--primary" data-kp-wizard-next>Next</button>
-</div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard&quot;</span> <span class="kp-code__keyword">data-kp-wizard</span>&gt;
-&lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__steps&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Details&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Review&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ol</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-wizard-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-wizard-name&quot;</span>&gt;Name&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wizard-name&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">section</span>&gt;
-&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span> <span class="kp-code__keyword">hidden</span>&gt;Ready to send.&lt;/<span class="kp-code__keyword">section</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__actions&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-wizard-back</span>&gt;Back&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-wizard-next</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__steps&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Details&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Review&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-wizard-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-wizard-name&quot;</span>&gt;Name&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wizard-name&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span> <span class="kp-code__keyword">hidden</span>&gt;Ready to send.&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-wizard-back</span>&gt;Back&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-wizard-next</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -240,6 +239,7 @@
                             <tr><td><code>held transition</code></td><td>A step change can be refused or delayed by a listener or an async check, which is what a step that needs a server answer was missing.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

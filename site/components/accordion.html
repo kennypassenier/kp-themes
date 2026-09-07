@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Accordion</h1>
                     <p class="kp-prose">Disclosure sections built on the browser’s own details element, so opening, closing and the keyboard come from the platform rather than from a hand-written toggle.</p>
@@ -115,28 +116,26 @@
                         <figcaption class="kp-fw-semibold">Two sections, one open</figcaption>
                         <p class="kp-text-muted">A details element is already keyboard-operable and its state is already announced; the classes only paint. The open attribute is the whole of the open state.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-accordion">
-<details class="kp-accordion__item" open>
-<summary class="kp-accordion__summary">What is a theme?</summary>
-<div class="kp-accordion__body">A block of tokens on the document, which every component reads.</div>
-</details>
-<details class="kp-accordion__item">
-<summary class="kp-accordion__summary">What is a register?</summary>
-<div class="kp-accordion__body">An optional stylesheet that adds a texture without changing the colours.</div>
-</details>
+    <details class="kp-accordion__item" open>
+        <summary class="kp-accordion__summary">What is a theme?</summary>
+        <div class="kp-accordion__body">A block of tokens on the document, which every component reads.</div>
+    </details>
+    <details class="kp-accordion__item">
+        <summary class="kp-accordion__summary">What is a register?</summary>
+        <div class="kp-accordion__body">An optional stylesheet that adds a texture without changing the colours.</div>
+    </details>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span> <span class="kp-code__keyword">open</span>&gt;
-&lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;What is a theme?&lt;/<span class="kp-code__keyword">summary</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;A block of tokens on the document, which every component reads.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">details</span>&gt;
-&lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;What is a register?&lt;/<span class="kp-code__keyword">summary</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;An optional stylesheet that adds a texture without changing the colours.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">details</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span> <span class="kp-code__keyword">open</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;What is a theme?&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;A block of tokens on the document, which every component reads.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;What is a register?&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;An optional stylesheet that adds a texture without changing the colours.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -191,6 +190,7 @@
                             <tr><td><code>open</code></td><td>The browser’s own state; the React component can also keep one section open at a time.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

@@ -35,6 +35,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { DESCRIPTORS } from './site/descriptors.mjs';
+import { indent } from './site/chrome.mjs';
 import { extractProps } from './site/extract-props.mjs';
 import { extractEvents } from './site/extract-events.mjs';
 import { extractAttributes } from './site/extract-attributes.mjs';
@@ -134,7 +135,11 @@ for (const d of DESCRIPTORS) {
         // string by the generator; this reads the page back and checks
         // that they are still the same string on the page itself, so a
         // change to the generator cannot quietly break the promise.
-        if (!page.includes(example.markup)) {
+        // The generator indents the markup once and uses the result for
+        // both the live block and the snippet, so the promise is still
+        // that they are the same string -- this compares against that
+        // string rather than against the flat source [AR19].
+        if (!page.includes(indent(example.markup))) {
             failures.push(`${d.id}: the live example "${example.title}" is not on the page as written`);
         }
     }

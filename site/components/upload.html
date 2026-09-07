@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">File upload</h1>
                     <p class="kp-prose">A drop zone that is a label over a real file input, a list of the chosen files, and a per-file state the consumer drives: progress, done, or an error with its reason. The sending stays yours.</p>
@@ -115,46 +116,42 @@
                         <figcaption class="kp-fw-semibold">A drop zone with a size limit</figcaption>
                         <p class="kp-text-muted">The zone is a label pointing at a real file input: Tab reaches it, Enter opens the picker, and a screen reader announces a file field rather than a mysterious box. Dropping is added on top and is nobody’s only route in.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-upload" data-kp-upload data-kp-max-bytes="5000000" data-kp-max-files="5">
-<input type="file" multiple class="kp-sr-only" id="doc-upload-files" data-kp-upload-input />
-<label class="kp-upload__zone" for="doc-upload-files" data-kp-upload-zone>Drop files here or choose them</label>
-<ul class="kp-upload__list" data-kp-upload-list></ul>
+    <input type="file" multiple class="kp-sr-only" id="doc-upload-files" data-kp-upload-input />
+    <label class="kp-upload__zone" for="doc-upload-files" data-kp-upload-zone>Drop files here or choose them</label>
+    <ul class="kp-upload__list" data-kp-upload-list></ul>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload&quot;</span> <span class="kp-code__keyword">data-kp-upload</span> <span class="kp-code__keyword">data-kp-max-bytes</span><span class="kp-code__string">=&quot;5000000&quot;</span> <span class="kp-code__keyword">data-kp-max-files</span><span class="kp-code__string">=&quot;5&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;file&quot;</span> <span class="kp-code__keyword">multiple</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-input</span> /&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__zone&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-zone</span>&gt;Drop files here or choose them&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__list&quot;</span> <span class="kp-code__keyword">data-kp-upload-list</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;file&quot;</span> <span class="kp-code__keyword">multiple</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-input</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__zone&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-upload-files&quot;</span> <span class="kp-code__keyword">data-kp-upload-zone</span>&gt;Drop files here or choose them&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__list&quot;</span> <span class="kp-code__keyword">data-kp-upload-list</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">What a row looks like while it is sending, and when it failed</figcaption>
                         <p class="kp-text-muted">The rows are normally written by the module as files arrive; printed here so the states can be seen at rest. The bar is one element filled by a gradient stop rather than a second element kept in step by hand.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <ul class="kp-upload__list">
-<li class="kp-upload__file" data-state="uploading">
-<span>quarterly-report.pdf</span><span class="kp-upload__size">1.2 MB</span>
-<span class="kp-upload__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Uploading quarterly-report.pdf"></span>
-</li>
-<li class="kp-upload__file" data-state="error">
-<span>holiday.mov</span><span class="kp-upload__size">210 MB</span>
-<span class="kp-upload__message">Larger than the 5 MB limit.</span>
-</li>
+    <li class="kp-upload__file" data-state="uploading">
+        <span>quarterly-report.pdf</span><span class="kp-upload__size">1.2 MB</span>
+        <span class="kp-upload__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Uploading quarterly-report.pdf"></span>
+    </li>
+    <li class="kp-upload__file" data-state="error">
+        <span>holiday.mov</span><span class="kp-upload__size">210 MB</span>
+        <span class="kp-upload__message">Larger than the 5 MB limit.</span>
+    </li>
 </ul>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__list&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;uploading&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">span</span>&gt;quarterly-report.pdf&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;1.2 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__bar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Uploading quarterly-report.pdf&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">span</span>&gt;holiday.mov&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;210 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__message&quot;</span>&gt;Larger than the 5 MB limit.&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;uploading&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;quarterly-report.pdf&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;1.2 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__bar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Uploading quarterly-report.pdf&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__file&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;holiday.mov&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__size&quot;</span>&gt;210 MB&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-upload__message&quot;</span>&gt;Larger than the 5 MB limit.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -249,6 +246,7 @@
                             <tr><td><code>error</code></td><td>A refused or failed row takes the destructive boundary and its message the destructive colour.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

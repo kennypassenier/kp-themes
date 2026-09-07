@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Showing data</h1>
                     <p class="kp-prose">Six classes that are not components — nobody imports a URL — but that every data-heavy page rewrites badly. Each fixes one specific failure: a page that scrolls sideways because of one long link, or a column of numbers that jitters between rows.</p>
@@ -115,14 +116,12 @@
                         <figcaption class="kp-fw-semibold">All six at rest</figcaption>
                         <p class="kp-text-muted">The URL and the identifier wrap anywhere rather than pushing the page sideways; the amount and the moment use same-width digits; the masked value keeps its shape without claiming to be the real one; the last line is cut with an ellipsis.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <p class="kp-url">https://example.test/a/very/long/path/that-would-otherwise-widen-the-page?with=query&amp;and=more</p>
 <p class="kp-id">a3f9-2b71-0c4d-8e15</p>
 <p class="kp-numeric">1,284.50 · 998.00 · 12.75</p>
 <p class="kp-timestamp">2026-09-06 14:07</p>
 <p class="kp-masked">•••• •••• •••• 4417</p>
 <p class="kp-truncate">This sentence is cut off with an ellipsis as soon as its column is narrower than the text itself, instead of making the row taller.</p>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-url&quot;</span>&gt;https://example.test/a/very/long/path/that-would-otherwise-widen-the-page?with=query&amp;amp;and=more&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-id&quot;</span>&gt;a3f9-2b71-0c4d-8e15&lt;/<span class="kp-code__keyword">p</span>&gt;
@@ -174,6 +173,7 @@
                             <tr><td><code>.kp-truncate</code></td><td>One line with an ellipsis. Put the whole value in the title, or use the cell class that keeps it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
