@@ -15,7 +15,18 @@
 
              Each case is removed independently by the suite, so a component
              that still pushes the page sideways is named on its own rather
-             than taking the other four down with it. -->
+             than taking the other four down with it.
+
+             The value is a run of repeated letters rather than something
+             shaped like a real credential. It needs exactly one property
+             -- no break opportunity anywhere in it -- and an invented API
+             key has that property while also being indistinguishable from
+             a copied one. Standing rule 10a: a sample of a secret is
+             invented, and visibly so, built from a handful of distinct
+             characters so a copied value fails on sight. The first
+             version of this fixture read like a live payment-provider
+             key, and GitHub's push protection refused the branch -- the
+             rule enforcing itself from the outside. -->
         <p data-case="button">
             <button type="button" class="kp-button" data-test="button">AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE</button>
         </p>
