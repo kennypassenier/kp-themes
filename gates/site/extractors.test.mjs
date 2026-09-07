@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 67, 'AR21 counted 67 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 72, 'AR21 counted 72 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -154,8 +154,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // containment collapses. W2 then added four at once —
     // --kp-tile-x/y/w/h, the grid tile's place, which js/gridlayout.js
     // and components/canvas.jsx used to write as inline `grid-column`
-    // and `grid-row` where no rule could ever overrule them [AR31].
-    assert.equal(result.readCount, 67);
+    // and `grid-row` where no rule could ever overrule them [AR31]. TH104
+    // then added five: the two wrapper floors and the nav bar's three
+    // padding knobs, which used to be one `clamp(…, 3vw, …)` reading the
+    // window.
+    assert.equal(result.readCount, 72);
     assert.deepEqual(result.unread, []);
 });
 

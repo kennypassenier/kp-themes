@@ -78,21 +78,32 @@ const ALERT_LABEL = { success: s.alertSuccess, warning: s.alertWarning, info: s.
  * @type {Record<string, (props: Record<string, any>, children: Child[]) => Child | Child[]>}
  */
 const TO_MARKUP = {
-    // components/nav-bar.jsx: the skip link first, then the nav.
+    // components/nav-bar.jsx: the skip link first, then the wrapper the
+    // narrow rule measures [TH104, AR24], then the nav. The skip link
+    // stays outside the wrapper, as it does in the component: it is the
+    // first focusable thing on the page and belongs to the page.
     NavBar: (p, kids) => [
         el('a', { class: 'kp-skip-link', href: p.skipTo ?? '#main' }, s.skipToContent),
         el(
-            'nav',
-            { class: 'kp-nav', 'aria-label': s.mainNavigation },
-            p.brand !== undefined ? el('span', { class: 'kp-nav__brand' }, p.brand) : null,
+            'div',
+            { class: 'kp-nav-wrap' },
             el(
-                'ul',
-                { class: 'kp-nav__links' },
-                (p.links ?? []).map((/** @type {Record<string, any>} */ link) =>
-                    el('li', {}, el('a', { class: 'kp-nav__link', href: link.href, 'aria-current': link.current ? 'page' : undefined }, link.label)),
+                'nav',
+                { class: 'kp-nav', 'aria-label': s.mainNavigation },
+                p.brand !== undefined ? el('span', { class: 'kp-nav__brand' }, p.brand) : null,
+                el(
+                    'ul',
+                    { class: 'kp-nav__links' },
+                    (p.links ?? []).map((/** @type {Record<string, any>} */ link) =>
+                        el(
+                            'li',
+                            {},
+                            el('a', { class: 'kp-nav__link', href: link.href, 'aria-current': link.current ? 'page' : undefined }, link.label),
+                        ),
+                    ),
                 ),
+                kids,
             ),
-            kids,
         ),
     ],
 

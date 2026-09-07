@@ -193,6 +193,8 @@ export const ColorPicker = forwardRef(ColorPickerInner);
  * @property {number} [commitMs]        The settle time. Default 400.
  * @property {(tile: Tile) => import('react').ReactNode} [render]
  * @property {(tile: Tile) => string} [tileClassName]
+ * @property {boolean} [wrap]          Render the `.kp-grid-wrap` container the narrow rule needs. Default true.
+ * @property {string} [wrapClassName]  Extra classes for that wrapper.
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').CSSProperties} [style]
@@ -218,6 +220,8 @@ function GridLayoutInner(
         commitMs = 400,
         render,
         tileClassName,
+        wrap = true,
+        wrapClassName = '',
         strings,
         className = '',
         style,
@@ -285,7 +289,14 @@ function GridLayoutInner(
         target.addEventListener('pointercancel', onUp);
     };
 
-    return (
+    // The wrapper is what the narrow rule reads [TH104, AR24]: a container
+    // query styles a container's contents, never the container itself, so
+    // the element that has to change columns cannot be the one carrying
+    // `container-type`. It is rendered here rather than left to the
+    // consumer, because a component that needs a div around it to work is
+    // a component that does not work. `wrap={false}` is the way out for a
+    // page that already establishes a container of its own [KT6].
+    const grid = (
         <div
             ref={inner}
             className={`kp-grid ${className}`.trim()}
@@ -353,5 +364,6 @@ function GridLayoutInner(
             })}
         </div>
     );
+    return wrap ? <div className={`kp-grid-wrap ${wrapClassName}`.trim()}>{grid}</div> : grid;
 }
 export const GridLayout = forwardRef(GridLayoutInner);

@@ -19,23 +19,19 @@ const LINKS = [
     { href: '#b', label: 'Two' },
 ];
 
+// No `.kp-grid-wrap` or `.kp-nav-wrap` written here: both components
+// render their own (`wrap`, default true), which is the difference
+// between the channels — markup written by hand adds the wrapper, a
+// component brings it. The assertions over the two are identical.
 createRoot(document.getElementById('react-container')).render(
     <>
-        <div className="kp-grid-wrap" data-test="react-grid-wide-wrap">
-            <GridLayout tiles={TILES} data-test="react-grid-wide" />
-        </div>
+        <GridLayout tiles={TILES} data-test="react-grid-wide" />
         <div style={{ inlineSize: '300px' }}>
-            <div className="kp-grid-wrap" data-test="react-grid-narrow-wrap">
-                <GridLayout tiles={TILES} data-test="react-grid-narrow" />
-            </div>
+            <GridLayout tiles={TILES} data-test="react-grid-narrow" />
         </div>
-        <div className="kp-nav-wrap">
-            <NavBar brand="kp" links={LINKS} skipLink={false} label="Wide navigation" data-test="react-nav-wide" />
-        </div>
+        <NavBar brand="kp" links={LINKS} skipLink={false} label="Wide navigation" data-test="react-nav-wide" />
         <div style={{ inlineSize: '300px' }}>
-            <div className="kp-nav-wrap">
-                <NavBar brand="kp" links={LINKS} skipLink={false} label="Narrow navigation" data-test="react-nav-narrow" />
-            </div>
+            <NavBar brand="kp" links={LINKS} skipLink={false} label="Narrow navigation" data-test="react-nav-narrow" />
         </div>
     </>,
 );

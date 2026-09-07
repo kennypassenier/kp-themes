@@ -193,9 +193,11 @@ export const SPECIMENS = [
         title: 'Navigation bar',
         note: 'The current page is marked by weight and aria-current, not by colour alone [TH7, DI4].',
         html: () =>
-            `<nav class="kp-nav" aria-label="Example navigation"><span class="kp-nav__brand">kp</span>` +
+            // The wrapper is the box the bar measures itself against
+            // [TH104, AR24]; components/nav-bar.jsx renders its own.
+            `<div class="kp-nav-wrap"><nav class="kp-nav" aria-label="Example navigation"><span class="kp-nav__brand">kp</span>` +
             `<ul class="kp-nav__links"><li><a class="kp-nav__link" href="#surfaces" aria-current="page">Overview</a></li>` +
-            `<li><a class="kp-nav__link" href="#status">Statuses</a></li></ul></nav>`,
+            `<li><a class="kp-nav__link" href="#status">Statuses</a></li></ul></nav></div>`,
     },
     {
         id: 'overlays',
@@ -411,7 +413,9 @@ export const SPECIMENS = [
         title: 'Movable grid layout',
         note: 'Focus a tile and use the arrows to move it, Shift and the arrows to resize. Dragging is the easy half [TH56].',
         html: () =>
-            `<div class="kp-grid" data-kp-grid data-kp-columns="6">` +
+            // The wrapper is the box the grid measures itself against
+            // [TH104, AR24]; components/canvas.jsx renders its own.
+            `<div class="kp-grid-wrap"><div class="kp-grid" data-kp-grid data-kp-columns="6">` +
             [
                 ['cpu', 'CPU', 0, 0, 2, 1],
                 ['ram', 'RAM', 2, 0, 2, 1],
@@ -423,7 +427,7 @@ export const SPECIMENS = [
                         `data-w="${w}" data-h="${h}" tabindex="0" role="group">${label}</div>`,
                 )
                 .join('') +
-            `</div>`,
+            `</div></div>`,
     },
     {
         id: 'text',

@@ -841,7 +841,7 @@ export const DESCRIPTORS = [
         id: 'grid-layout',
         title: 'Movable grid layout',
         group: 'Data',
-        classes: ['kp-grid'],
+        classes: ['kp-grid', 'kp-grid-wrap'],
         exports: ['GridLayout'],
         aliases: ['tile', 'columns', 'rows', 'commit', 'label', 'step', 'pointer', 'dragging'],
         intro: 'A dashboard the reader arranges: tiles on a coarse grid that move with the arrow keys and resize with Shift and the arrows, and a layout that can be handed back to be stored. Dragging exists too, and it is the half that was easy.',
@@ -850,12 +850,14 @@ export const DESCRIPTORS = [
         examples: [
             {
                 title: 'Three tiles on a six-column grid',
-                why: 'The position lives in attributes rather than in inline styles, because the consumer stores the numbers and the stylesheet turns them into a grid area. Reading a layout back out of a style string is how a dashboard loses somebody’s arrangement.',
+                why: 'The position lives in attributes rather than in inline styles, because the consumer stores the numbers and the stylesheet turns them into a grid area. Reading a layout back out of a style string is how a dashboard loses somebody’s arrangement. The wrapper is what the narrow rule measures: a container query styles a container’s contents, never the container itself, so the element that changes column count cannot be the one that is the container. GridLayout renders it for you.',
                 markup: `
+<div class="kp-grid-wrap">
 <div class="kp-grid" data-kp-grid data-kp-columns="6">
 <div class="kp-grid__tile" data-kp-tile="cpu" data-kp-label="CPU" data-x="0" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">CPU</div>
 <div class="kp-grid__tile" data-kp-tile="ram" data-kp-label="RAM" data-x="2" data-y="0" data-w="2" data-h="1" tabindex="0" role="group">RAM</div>
 <div class="kp-grid__tile" data-kp-tile="disk" data-kp-label="Disk" data-x="4" data-y="0" data-w="2" data-h="2" tabindex="0" role="group">Disk</div>
+</div>
 </div>
 `,
             },
@@ -864,6 +866,7 @@ export const DESCRIPTORS = [
             { name: '.kp-grid__tile', what: 'One tile. It is a tab stop, because moving it is a keyboard gesture first and a drag second.' },
             { name: 'moving / resizing', what: 'Arrows move, Shift and the arrows resize, and the tile says where it is and how big it is in words.' },
             { name: 'dragging', what: 'While a pointer is moving a tile it is marked, so the stylesheet can show it leaving its place.' },
+            { name: '.kp-grid-wrap', what: 'The box the grid measures itself against. Below the narrow threshold it is the wrapper’s width that decides, not the window’s, so a grid in a 300px panel of a wide page collapses too.' },
             { name: 'narrow', what: 'Below the narrow threshold the grid becomes one column in source order: a six-column dashboard on a phone is six columns of nothing.' },
             { name: 'commit', what: 'A drag reports its final layout once the movement settles rather than on every pixel.' },
         ],
@@ -1386,7 +1389,7 @@ export const DESCRIPTORS = [
         id: 'nav-bar',
         title: 'Navigation bar',
         group: 'Navigation',
-        classes: ['kp-nav'],
+        classes: ['kp-nav', 'kp-nav-wrap'],
         exports: ['NavBar'],
         intro: 'The bar across the top of an application: a brand, a row of links, and room at the end for whatever the page keeps there. The current page is marked by weight and by a thicker underline, not by colour alone.',
         whenToUse:
@@ -1394,8 +1397,9 @@ export const DESCRIPTORS = [
         examples: [
             {
                 title: 'A brand and three links',
-                why: 'The current page carries the current-page marking, which is what a screen reader announces, and the weight and underline are what everyone else sees.',
+                why: 'The current page carries the current-page marking, which is what a screen reader announces, and the weight and underline are what everyone else sees. The wrapper is what the narrow rule measures: a container query styles a container’s contents, never the container itself, and the rule that changes is the bar’s own padding. NavBar renders it for you.',
                 markup: `
+<div class="kp-nav-wrap">
 <nav class="kp-nav" aria-label="Main">
 <a class="kp-nav__brand" href="#nav-bar">kp</a>
 <ul class="kp-nav__links">
@@ -1404,12 +1408,14 @@ export const DESCRIPTORS = [
 <li><a class="kp-nav__link" href="#variants">Settings</a></li>
 </ul>
 </nav>
+</div>
 `,
             },
         ],
         variants: [
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
+            { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
         ],
         accessibility: [

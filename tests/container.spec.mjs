@@ -46,9 +46,9 @@ for (const channel of CHANNELS) {
             };
         }, host('grid-wide'));
         expect(measured.viewport).toBe(320);
-        // Drill: with the `@media (max-width: 40rem)` block removed from
-        // css/components.css the tile reads `1 / span 2` again, in both
-        // channels and both browsers.
+        // Drill: with the `@container kp-grid (max-width: 40rem)` block
+        // removed from css/components.css the tile reads `1 / span 2`
+        // again, in both channels and both browsers.
         expect(measured.column).toBe('1 / -1');
         // The position is a value the stylesheet reads, not a track the
         // module dictates: neither channel may write `grid-column` or
@@ -57,4 +57,78 @@ for (const channel of CHANNELS) {
         // One column, so the tile spans the grid's whole content box.
         expect(measured.tile).toBe(measured.grid);
     });
+
+    test(`${channel}: a grid in a 300px container collapses while the viewport stays 1280 [TH104]`, async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await open(page);
+        const read = (selector) =>
+            page.evaluate((s) => {
+                const grid = document.querySelector(s);
+                const tile = grid.querySelector('.kp-grid__tile');
+                return {
+                    viewport: window.innerWidth,
+                    grid: grid.clientWidth,
+                    tracks: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
+                    column: getComputedStyle(tile).gridColumn,
+                };
+            }, selector);
+
+        // The same component, the same page, the same window: only the box
+        // it was given differs. That is the whole claim of TH104 — up to
+        // 3.2.0 the width that decided was the window's, so this grid was
+        // told it had 1280px and kept a shape that did not fit.
+        const wide = await read(host('grid-wide'));
+        expect(wide.viewport).toBe(1280);
+        expect(wide.tracks).toBe(6);
+        expect(wide.column).toBe('1 / span 2');
+
+        const narrow = await read(host('grid-narrow'));
+        expect(narrow.viewport).toBe(1280);
+        expect(narrow.grid).toBeLessThanOrEqual(300);
+        // Drill: with `container: kp-grid / inline-size` removed from
+        // .kp-grid-wrap the query never matches, this reads six tracks and
+        // `1 / span 2` — red in both channels and both browsers.
+        expect(narrow.tracks).toBe(1);
+        expect(narrow.column).toBe('1 / -1');
+    });
+
+    test(`${channel}: a nav bar in a 300px container takes its narrow inset while the viewport stays 1280 [TH104]`, async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await open(page);
+        const inset = (selector) =>
+            page.evaluate((s) => {
+                const nav = document.querySelector(s);
+                return { viewport: window.innerWidth, box: nav.clientWidth, pad: getComputedStyle(nav).paddingInlineStart };
+            }, selector);
+
+        // Up to 3.2.0 this padding was `clamp(0.75rem, 3vw, 1.5rem)` — it
+        // read the WINDOW, so both of these measured 24px on a 1280px page
+        // however narrow the column around them was.
+        const wide = await inset(host('nav-wide'));
+        expect(wide.viewport).toBe(1280);
+        expect(wide.pad).toBe('24px');
+
+        const narrow = await inset(host('nav-narrow'));
+        expect(narrow.viewport).toBe(1280);
+        expect(narrow.box).toBeLessThanOrEqual(300);
+        // Drill: with `container: kp-nav / inline-size` removed from
+        // .kp-nav-wrap the query never matches and this measures 24px too
+        // — red in both channels and both browsers.
+        expect(narrow.pad).toBe('12px');
+    });
 }
+
+// The way out of the wrapper, both halves of KT6: a page that already
+// establishes a container of its own turns the component's off, and the
+// query still finds the outer one.
+test('the React components hand the wrapper back [TH104, KT6]', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(URL);
+    await page.waitForSelector('[data-test="react-grid-wide"] .kp-grid__tile');
+    const wrappers = await page.evaluate(() => ({
+        grid: document.querySelector('[data-test="react-grid-wide"]').parentElement.className,
+        nav: document.querySelector('[data-test="react-nav-wide"]').parentElement.className,
+    }));
+    expect(wrappers.grid).toBe('kp-grid-wrap');
+    expect(wrappers.nav).toBe('kp-nav-wrap');
+});

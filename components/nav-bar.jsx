@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { skipTo as jumpTo } from '../js/components.js';
 // Navigation bar [TH7, TH36].
@@ -44,6 +44,8 @@ import { skipTo as jumpTo } from '../js/components.js';
  * @property {import('react').ElementType} [linkComponent]
  * @property {(link: NavLink, props: { className: string, href: string, 'aria-current': string | undefined }) => import('react').ReactNode} [renderLink]
  * @property {'ul' | 'div'} [listAs]  Default 'ul'.
+ * @property {boolean} [wrap]       Render the `.kp-nav-wrap` container the narrow rule needs. Default true.
+ * @property {string} [wrapClassName]  Extra classes for that wrapper.
  * @property {string} [label]       The nav's accessible name. Default: the dictionary's.
  * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
@@ -67,6 +69,8 @@ function NavBarInner(
         linkComponent: Link = 'a',
         renderLink,
         listAs: List = 'ul',
+        wrap = true,
+        wrapClassName = '',
         label,
         classNames = {},
         strings,
@@ -79,6 +83,17 @@ function NavBarInner(
     const s = useStrings(strings);
     const Brand = brandComponent ?? Link;
     const Item = List === 'ul' ? 'li' : 'div';
+    // The wrapper is what the narrow rule reads [TH104, AR24]: a container
+    // query styles a container's contents, never the container itself, and
+    // the rule that changes is the bar's own padding. It is rendered here
+    // rather than left to the consumer, because a component that needs a
+    // div around it to work is a component that does not work.
+    // `wrap={false}` is the way out for a page that already establishes a
+    // container of its own [KT6]. The skip link stays OUTSIDE it: it is
+    // the first focusable thing on the page and belongs to the page, not
+    // to the bar.
+    const Wrap = wrap ? 'div' : Fragment;
+    const wrapProps = wrap ? { className: `kp-nav-wrap ${wrapClassName}`.trim() } : {};
     return (
         <>
             {skipLink && (
@@ -95,39 +110,41 @@ function NavBarInner(
                     {skipLabel ?? s.skipToContent}
                 </a>
             )}
-            <nav ref={ref} className={`kp-nav ${className}`.trim()} aria-label={label ?? s.mainNavigation} {...rest}>
-                {brand !== undefined &&
-                    (brandHref ? (
-                        <Brand className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()} href={brandHref}>
-                            {brand}
-                        </Brand>
-                    ) : (
-                        <span className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()}>{brand}</span>
-                    ))}
-                <List className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
-                    {links.map((l) => {
-                        const current = l.current === true ? 'page' : l.current === false || l.current === undefined ? undefined : l.current;
-                        const props = {
-                            className: `kp-nav__link ${classNames.link ?? ''} ${l.className ?? ''}`.trim(),
-                            href: l.href,
-                            'aria-current': current,
-                        };
-                        return (
-                            <Item key={l.href} className={classNames.item}>
-                                {renderLink ? (
-                                    renderLink(l, props)
-                                ) : (
-                                    <Link {...props} aria-disabled={l.disabled ? 'true' : undefined} target={l.target} rel={l.rel}>
-                                        {l.icon}
-                                        {l.label}
-                                    </Link>
-                                )}
-                            </Item>
-                        );
-                    })}
-                </List>
-                {children}
-            </nav>
+            <Wrap {...wrapProps}>
+                <nav ref={ref} className={`kp-nav ${className}`.trim()} aria-label={label ?? s.mainNavigation} {...rest}>
+                    {brand !== undefined &&
+                        (brandHref ? (
+                            <Brand className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()} href={brandHref}>
+                                {brand}
+                            </Brand>
+                        ) : (
+                            <span className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()}>{brand}</span>
+                        ))}
+                    <List className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
+                        {links.map((l) => {
+                            const current = l.current === true ? 'page' : l.current === false || l.current === undefined ? undefined : l.current;
+                            const props = {
+                                className: `kp-nav__link ${classNames.link ?? ''} ${l.className ?? ''}`.trim(),
+                                href: l.href,
+                                'aria-current': current,
+                            };
+                            return (
+                                <Item key={l.href} className={classNames.item}>
+                                    {renderLink ? (
+                                        renderLink(l, props)
+                                    ) : (
+                                        <Link {...props} aria-disabled={l.disabled ? 'true' : undefined} target={l.target} rel={l.rel}>
+                                            {l.icon}
+                                            {l.label}
+                                        </Link>
+                                    )}
+                                </Item>
+                            );
+                        })}
+                    </List>
+                    {children}
+                </nav>
+            </Wrap>
         </>
     );
 }

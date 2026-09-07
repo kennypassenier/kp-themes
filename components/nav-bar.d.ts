@@ -39,6 +39,14 @@ export type NavBarProps = {
      */
     listAs?: 'ul' | 'div';
     /**
+     * Render the `.kp-nav-wrap` container the narrow rule needs. Default true.
+     */
+    wrap?: boolean;
+    /**
+     * Extra classes for that wrapper.
+     */
+    wrapClassName?: string;
+    /**
      * The nav's accessible name. Default: the dictionary's.
      */
     label?: string;
