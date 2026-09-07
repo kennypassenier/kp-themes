@@ -745,3 +745,17 @@ concept demo (S46) as its gate, but they all land in one major.
 **TH117's dynamic notch.** Kenny: the navbar's notch sat on one side in
 the demo; when the navbar sits on the other side of the screen, the
 notch sits on the other side too. The geometry follows the placement.
+
+**The findings form, answered 2026-09-07.** Kenny adopted all
+twenty-four directions from `docs/RESEARCH_2026-09.md` — including the
+five where the recommendation was to hold back (light, ticker, nishiki,
+shade-dark, tazhib), which now carry a second research pass before their
+concept demo — and chose the order **by finding quality**. The order
+and the directions live in `docs/LIFT_PLAN.md` (TH134).
+
+**S46, sharpened 2026-09-07.** Every concept demo is reachable at a URL
+Kenny can open in a browser, and the form that asks for his approval
+names that URL — standing rule 39 applied to the demo. The round-six
+demo is at
+<https://claude.ai/code/artifact/f1cb3978-0bd7-4108-a329-971b0a2afe89>;
+from TH126 on, the site serves `concept/<theme>.html`.
