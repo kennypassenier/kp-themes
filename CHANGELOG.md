@@ -1,5 +1,92 @@
 # Changelog
 
+## 4.0.0 — 2026-09-07
+
+**A destructive button asks before it acts, and four things that were
+broken in public stop being broken.** The major version is the
+confirmation: a click on a destructive control no longer arms the button
+for a second click but opens a dialog. Everything else in this release
+is either a repair of something the released package got wrong or an
+addition that breaks nothing.
+
+`MIGRATION.md` has the consumer-facing detail; this is what changed and
+why.
+
+### The confirmation is a dialog [TH107, D3, AR27, AR28, AR29]
+
+A native `<dialog>` opened through `showModal()`, so the browser supplies
+the focus trap, the Escape close and the return of focus. Confirm
+re-fires the click behind a one-shot lock, which is the only shape that
+costs consumers listening for ordinary clicks nothing — measured, because
+the obvious version does not work: without the lock the re-fired click is
+caught by the same listener and reopens the dialog, `["open", "confirm",
+"open"]` and nothing ever performed. `ARM_EVENT` and `DISARM_EVENT` leave
+the exports; arm-then-act survives as `data-kp-confirm-mode="inline"`.
+
+The dialog re-shows the popover it displaced before returning focus,
+because `showModal()` light-dismisses an open `popover="auto"` and a row
+action lives in a menu.
+
+### Four faults the released package had
+
+Each was found by the `architecture-critic` before this round was frozen,
+and each started as a test that failed on the released code.
+
+- **A destructive React button could never be confirmed.** The React
+  button wrote `data-kp-confirm` and the framework-free module selected
+  it document-wide, so the two channels re-armed each other's button
+  forever and the action never fired at any number of clicks. The test
+  asserting otherwise was green only because its fixture did not attach
+  the module over the React part.
+- **Half the focus ring was missing on every button in every theme.**
+  `.kp-button`'s own `box-shadow` sat in a later cascade layer than the
+  global two-part ring and replaced its inner half. It composes now.
+- **The cyberpunk register never reached the package's own buttons.**
+  Every button rule in it selected `[data-slot='button']`, an attribute
+  `css/components.css` never sets.
+- **The movable grid's collapse rule had been dead since it was
+  written.** `js/gridlayout.js` wrote the tile's place as an inline
+  style, which beats any rule in any layer, so the narrow rule lost the
+  moment the grid was attached — the only way it is used. The place is
+  four custom properties now.
+
+### Container queries beyond the tables [TH104, AR31]
+
+The card grid and the nav bar read the box they are given rather than the
+width of the window; the nav bar's `clamp(…, 3vw, …)` was the same fault
+in a different disguise. Both need one wrapper element, which the React
+components render themselves and `MIGRATION.md` spells out for
+hand-written markup. The DataTable needed nothing — `@container kp-table`
+has carried it since 3.2.0, checked rather than assumed.
+
+### The button, and the page's edges [TH110, TH111, TH113, AR30, AR32]
+
+Three button sizes as modifier classes with a `size` prop beside them.
+One shared rule stops `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health`
+and `.kp-copyable` pushing the page sideways at 320 and 360px.
+
+### What a scroll region clips [TH114, AR33]
+
+Six assertions and a section of the guide, replacing an assumption with a
+measurement: an absolutely positioned child of `.kp-table-wrap`,
+`.kp-diff` or a `<pre>` is clipped, and a popover is not — it lives in the
+top layer, where no ancestor's overflow applies.
+
+### Two new gates, both blocking
+
+`check:closure` holds the import closure of the six modules chassis-rs
+bakes into a Rust binary at exactly those six, because one import edge
+would make its whole chassis fail to load. `check:wrappers` refuses one
+of this package's own pages that draws a converted component outside a
+container that carries it — 65 components over 82 pages today.
+
+### Also
+
+`README.md` and `docs/SCOPE.md` no longer disagree about the git route
+[TH112]. Three flaky tests were given a cause rather than an excuse: two
+budgets that never scaled with their corpus, and one assertion racing a
+state the fixture threw away after 400ms.
+
 ## 3.2.0 — 2026-09-07
 
 **The layout the package kept telling consumers to write themselves.** A

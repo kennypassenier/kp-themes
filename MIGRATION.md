@@ -64,6 +64,43 @@ document-wide attach anyway.
   `.kp-dialog__description` and `.kp-dialog__actions`, plus
   `.kp-confirm` on the dialog itself. No new stylesheet.
 
+### The button looks different, in three ways [TH110, TH111, TH113, AR30, AR32]
+
+Nothing here changes an API. All three change what a button renders, so
+they are named rather than left to be noticed.
+
+**The focus ring is whole again.** The indicator has always been two
+parts — an `outline` in `--focus-ring-contrast` and a `box-shadow` in
+`--focus-ring` — so that whatever a control sits on, one of the two
+contrasts with it. `.kp-button` set its own `box-shadow` in a later
+cascade layer and erased the inner half, in every theme, since the rule
+was written. It now composes the two. If you override `box-shadow` on
+`.kp-button` yourself, compose it the same way or you will erase the ring
+again; `--kp-focus-ring-inner-width` is the knob both halves read.
+
+**Buttons under `cyberpunk` change shape.** The register's rules selected
+`[data-slot='button']` only, which no rule in `css/components.css` ever
+sets, so the package's own buttons never received them. `.kp-button` now
+takes the square corner and the charge gradient. It deliberately does
+**not** take the bevelled `clip-path`: that clips the focus outline away
+entirely — measured at 784 painted pixels down to 0 — so the bevel stays
+on the elements that already carried it.
+
+**A long unbroken value now wraps instead of widening the page.**
+`.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable`
+share one rule: `max-inline-size: 100%` and `overflow-wrap: anywhere`.
+At 360px those five used to push the page to 607, 485, 483 and 581px.
+The cost is real and you should know it before you see it: `anywhere`
+breaks mid-word, so a badge reading `Overdue` in a narrow column can come
+out as `Overd` / `ue`. One instance of that exists on this package's own
+example pages and is recorded as MR-W4-1. If a particular badge must
+never break, set `overflow-wrap: normal` on it and give it room.
+
+**New, and additive:** `.kp-button--sm` and `.kp-button--lg`, a `size`
+prop on the React `Button` defaulting to `md`, and ten `--kp-*` knobs
+behind them. The small step is floored so compact density cannot push a
+button under the 24px WCAG 2.5.8 asks of a pointer target.
+
 ### The movable grid and the nav bar need one element around them
 
 Both now decide their narrow form from the width of the **box they are
