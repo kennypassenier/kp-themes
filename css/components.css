@@ -875,15 +875,51 @@
 
     /* --- Navigation bar [TH7] -------------------------------------------- */
 
+    /* The box the nav bar measures itself against [TH104, AR24].
+ *
+ * A container query styles a container's CONTENTS, never the container
+ * itself, and the rule that has to change is the nav's own padding — so
+ * the query needs an element one level up. components/nav-bar.jsx
+ * renders this itself (`wrap`, default true); markup written by hand
+ * adds it, which is what MIGRATION.md's 4.0.0 section is for. */
+    .kp-nav-wrap {
+        container: kp-nav / inline-size;
+        /* The same floor as .kp-table-wrap, for the same reason: inline-size
+     * containment stops this box sizing to its contents, so in a
+     * shrink-to-fit parent — a flex row, an inline-block — it goes to
+     * zero. `auto` is the initial value in every context, so the default
+     * is a true no-op [R3-CQ, KT6]. */
+        min-inline-size: var(--kp-nav-wrap-min, auto);
+    }
+
     .kp-nav {
         display: flex;
         align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
-        padding: 0.625rem clamp(0.75rem, 3vw, 1.5rem);
+        /* Up to 3.2.0 the inline padding was `clamp(0.75rem, 3vw, 1.5rem)`:
+     * it read the WINDOW, so a nav in a 300px column on a 1280px page
+     * was given the padding of a 1280px page. The two ends of that ramp
+     * are now the wide default here and the narrow value in the
+     * @container block below [TH104]. Both are knobs [KT6]. */
+        padding: var(--kp-nav-pad-block, 0.625rem) var(--kp-nav-pad-inline, 1.5rem);
         background: var(--card);
         color: var(--card-foreground);
         border-bottom: 1px solid var(--border-strong);
+    }
+
+    /* Narrow: the bar takes the smaller inset, the way it used to below a
+ * 400px window — except that the width which decides is now the width of
+ * the box the nav actually lives in [TH104, DI11]. */
+    @container kp-nav (max-width: 40rem) {
+        /* 40rem is a contract value [TH26]: a container query can no more
+     * read a custom property than a media query can, so this number is
+     * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
+     * the same number the table's card query uses, so the package steps
+     * at one width rather than at two. */
+        .kp-nav {
+            padding-inline: var(--kp-nav-pad-inline-narrow, 0.75rem);
+        }
     }
 
     .kp-nav__brand {
@@ -2467,6 +2503,20 @@
 
     /* --- Movable grid layout [TH56] -------------------------------------- */
 
+    /* The box the grid measures itself against [TH104, AR24].
+ *
+ * A container query styles a container's CONTENTS, never the container
+ * itself, and the rule that has to change is `grid-template-columns` on
+ * the grid — so the query needs an element one level up.
+ * components/canvas.jsx renders this itself (`wrap`, default true);
+ * markup written by hand adds it, which is what MIGRATION.md's 4.0.0
+ * section is for. */
+    .kp-grid-wrap {
+        container: kp-grid / inline-size;
+        /* The same floor as .kp-table-wrap, for the same reason [R3-CQ, KT6]. */
+        min-inline-size: var(--kp-grid-wrap-min, auto);
+    }
+
     .kp-grid {
         display: grid;
         grid-template-columns: repeat(var(--kp-grid-columns, 6), 1fr);
@@ -2484,6 +2534,22 @@
         background: var(--card);
         color: var(--card-foreground);
         overflow: hidden;
+
+        /* The tile's place on the grid, derived here from four numbers the
+     * module writes [AR31]. Up to 4.0.0 js/gridlayout.js and
+     * components/canvas.jsx wrote `grid-column` and `grid-row`
+     * themselves, as inline styles — which beat any rule in any layer,
+     * so the narrow rule below could never win once the grid was
+     * attached, and attaching is the only way the grid is used.
+     * Measured at 320px on 3.2.0: before attach the tile read
+     * `1 / -1` at 302px wide, after attach `1 / span 2` at 241px.
+     *
+     * A custom property is a VALUE, not a declaration: the module still
+     * says where the tile is, and the stylesheet still decides what
+     * that means. The defaults are the initial placement, so a tile
+     * nothing has attached to sits exactly where it did before. */
+        grid-column: var(--kp-tile-x, auto) / span var(--kp-tile-w, 1);
+        grid-row: var(--kp-tile-y, auto) / span var(--kp-tile-h, 1);
     }
 
     /* The tile is a tab stop, because moving it is a keyboard gesture first
@@ -2493,16 +2559,28 @@
         outline-offset: 2px;
     }
 
-    /* On a narrow screen the arrangement stops being an arrangement: one
- * column, source order. A six-column dashboard at 320 px is six columns
- * of nothing [DI11]. */
-    @media (max-width: 40rem) {
+    /* In a narrow BOX the arrangement stops being an arrangement: one
+ * column, source order. A six-column dashboard at 320px is six columns of
+ * nothing [DI11], and so is one in a 320px panel on a wide page — which
+ * is why the width that decides is the wrapper's rather than the
+ * window's since 4.0.0 [TH104]. The media query this replaced is gone
+ * rather than kept beside it: two mechanisms that can disagree are worse
+ * than either. */
+    @container kp-grid (max-width: 40rem) {
+        /* 40rem is a contract value [TH26], the same number the table's card
+     * query and the nav bar use. It is the number this block used as a
+     * media query up to 3.2.0, so no grid changes shape at a width it did
+     * not before. */
         .kp-grid {
             grid-template-columns: 1fr;
         }
 
         .kp-grid__tile {
             grid-column: 1 / -1;
+            /* Source order, so two tiles that shared a row do not land on
+         * top of each other in the single column. The height stays the
+         * tile's own. */
+            grid-row: auto / span var(--kp-tile-h, 1);
         }
     }
 }

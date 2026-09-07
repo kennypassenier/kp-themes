@@ -123,6 +123,14 @@ export type GridLayoutProps = {
     commitMs?: number;
     render?: (tile: Tile) => import('react').ReactNode;
     tileClassName?: (tile: Tile) => string;
+    /**
+     * Render the `.kp-grid-wrap` container the narrow rule needs. Default true.
+     */
+    wrap?: boolean;
+    /**
+     * Extra classes for that wrapper.
+     */
+    wrapClassName?: string;
     strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;
     style?: import('react').CSSProperties;

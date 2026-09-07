@@ -193,6 +193,8 @@ export const ColorPicker = forwardRef(ColorPickerInner);
  * @property {number} [commitMs]        The settle time. Default 400.
  * @property {(tile: Tile) => import('react').ReactNode} [render]
  * @property {(tile: Tile) => string} [tileClassName]
+ * @property {boolean} [wrap]          Render the `.kp-grid-wrap` container the narrow rule needs. Default true.
+ * @property {string} [wrapClassName]  Extra classes for that wrapper.
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').CSSProperties} [style]
@@ -218,6 +220,8 @@ function GridLayoutInner(
         commitMs = 400,
         render,
         tileClassName,
+        wrap = true,
+        wrapClassName = '',
         strings,
         className = '',
         style,
@@ -285,7 +289,14 @@ function GridLayoutInner(
         target.addEventListener('pointercancel', onUp);
     };
 
-    return (
+    // The wrapper is what the narrow rule reads [TH104, AR24]: a container
+    // query styles a container's contents, never the container itself, so
+    // the element that has to change columns cannot be the one carrying
+    // `container-type`. It is rendered here rather than left to the
+    // consumer, because a component that needs a div around it to work is
+    // a component that does not work. `wrap={false}` is the way out for a
+    // page that already establishes a container of its own [KT6].
+    const grid = (
         <div
             ref={inner}
             className={`kp-grid ${className}`.trim()}
@@ -314,7 +325,21 @@ function GridLayoutInner(
                         // without sight can arrange.
                         aria-label={tile.label}
                         aria-describedby={describedBy}
-                        style={{ gridColumn: `${tile.x + 1} / span ${tile.w}`, gridRow: `${tile.y + 1} / span ${tile.h}` }}
+                        // Four numbers, not two track declarations [AR31].
+                        // Up to 4.0.0 this wrote `gridColumn` and `gridRow`,
+                        // which land as inline styles and beat any rule in
+                        // any layer — so the narrow rule in
+                        // css/components.css was dead as soon as the grid
+                        // rendered. A custom property is a value the
+                        // stylesheet reads, so that rule can win again.
+                        style={
+                            /** @type {import('react').CSSProperties} */ ({
+                                '--kp-tile-x': String(tile.x + 1),
+                                '--kp-tile-y': String(tile.y + 1),
+                                '--kp-tile-w': String(tile.w),
+                                '--kp-tile-h': String(tile.h),
+                            })
+                        }
                         onPointerDown={(event) => onPointerDown(event, tile)}
                         onKeyDown={(event) => {
                             if (tile.static) return;
@@ -339,5 +364,6 @@ function GridLayoutInner(
             })}
         </div>
     );
+    return wrap ? <div className={`kp-grid-wrap ${wrapClassName}`.trim()}>{grid}</div> : grid;
 }
 export const GridLayout = forwardRef(GridLayoutInner);

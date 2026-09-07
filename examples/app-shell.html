@@ -11,36 +11,38 @@
     </head>
     <body>
         <a class="kp-skip-link" href="#main">Skip to the content</a>
-        <nav class="kp-nav" aria-label="Main navigation">
-            <span class="kp-nav__brand">Northwind</span>
-            <ul class="kp-nav__links">
-                <li>
-                    <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
-                </li>
-                <li>
-                    <a class="kp-nav__link" href="#invoices">Invoices</a>
-                </li>
-                <li>
-                    <a class="kp-nav__link" href="#reports">Reports</a>
-                </li>
-                <li>
-                    <a class="kp-nav__link" href="#settings">Settings</a>
-                </li>
-            </ul>
-            <div class="kp-mx-auto">
-                <button type="button" class="kp-button kp-button--ghost" popovertarget="user-menu" style="anchor-name: --user-menu">Ada Lovelace</button>
-                <div popover="auto" id="user-menu" class="kp-popover" style="position-anchor: --user-menu">
-                    <ul class="kp-menu">
-                        <li>
-                            <button type="button" class="kp-menu__item">Profile</button>
-                        </li>
-                        <li>
-                            <button type="button" class="kp-menu__item">Sign out</button>
-                        </li>
-                    </ul>
+        <div class="kp-nav-wrap">
+            <nav class="kp-nav" aria-label="Main navigation">
+                <span class="kp-nav__brand">Northwind</span>
+                <ul class="kp-nav__links">
+                    <li>
+                        <a class="kp-nav__link" href="#overview" aria-current="page">Overview</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#invoices">Invoices</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#reports">Reports</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#settings">Settings</a>
+                    </li>
+                </ul>
+                <div class="kp-mx-auto">
+                    <button type="button" class="kp-button kp-button--ghost" popovertarget="user-menu" style="anchor-name: --user-menu">Ada Lovelace</button>
+                    <div popover="auto" id="user-menu" class="kp-popover" style="position-anchor: --user-menu">
+                        <ul class="kp-menu">
+                            <li>
+                                <button type="button" class="kp-menu__item">Profile</button>
+                            </li>
+                            <li>
+                                <button type="button" class="kp-menu__item">Sign out</button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
         <main id="main" class="kp-page" tabindex="-1">
             <div class="kp-stack">
                 <h1>Overview</h1>

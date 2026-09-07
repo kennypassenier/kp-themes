@@ -469,6 +469,48 @@ The clip is not a defect and there is no repair for it: `overflow-x: auto`
 is what keeps a wide table off the page's own scrollbar (SC 1.4.10, DI11).
 Use the top layer for the thing that has to escape.
 
+## The grid and the nav bar measure their own box too [TH104]
+
+From 4.0.0 the movable grid and the navigation bar ask the same question
+the tables ask: how much room have I actually been given? Both need one
+element around them to ask it, because a container query styles a
+container's **contents** and never the container itself — and what has to
+change is the grid's own column count and the bar's own padding.
+
+```html
+<div class="kp-grid-wrap">
+    <div class="kp-grid" data-kp-grid data-kp-columns="6">…</div>
+</div>
+
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">…</nav>
+</div>
+```
+
+`<GridLayout>` and `<NavBar>` render that wrapper themselves. Pass
+`wrap={false}` if your page already establishes a container of its own,
+and `wrapClassName` to put your classes on it. **Markup you write by
+hand needs the wrapper added**, and without it nothing breaks — the
+component simply keeps its wide form in every box, which is what 3.2.0
+did everywhere.
+
+The threshold is **40rem**, the same number the tables use, and it is a
+contract value for the same reason: CSS cannot read a custom property in
+a query. Below it the grid becomes one column in source order, and the
+nav bar takes `--kp-nav-pad-inline-narrow` (0.75rem) instead of
+`--kp-nav-pad-inline` (1.5rem). Both of those are knobs, as is
+`--kp-nav-pad-block`.
+
+Up to 3.2.0 the bar's inline padding was `clamp(0.75rem, 3vw, 1.5rem)` —
+it read the **window**, so a bar in a 300px column of a 1280px page was
+given a 1280px page's padding. If you were overriding that `padding`
+declaration, override the two knobs instead.
+
+Each wrapper carries `container-type: inline-size`, so it no longer sizes
+to its contents; `--kp-grid-wrap-min` and `--kp-nav-wrap-min` are the
+same floor `--kp-table-wrap-min` is, defaulting to `auto` and doing
+nothing until you set one.
+
 ## The page shell [TH36]
 
 ```html

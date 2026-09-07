@@ -114,25 +114,29 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A brand and three links</figcaption>
-                        <p class="kp-text-muted">The current page carries the current-page marking, which is what a screen reader announces, and the weight and underline are what everyone else sees.</p>
+                        <p class="kp-text-muted">The current page carries the current-page marking, which is what a screen reader announces, and the weight and underline are what everyone else sees. The wrapper is what the narrow rule measures: a container query styles a container’s contents, never the container itself, and the rule that changes is the bar’s own padding. NavBar renders it for you.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<nav class="kp-nav" aria-label="Main">
-    <a class="kp-nav__brand" href="#nav-bar">kp</a>
-    <ul class="kp-nav__links">
-        <li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
-        <li><a class="kp-nav__link" href="#example">Applications</a></li>
-        <li><a class="kp-nav__link" href="#variants">Settings</a></li>
-    </ul>
-</nav>
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <a class="kp-nav__brand" href="#nav-bar">kp</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
+            <li><a class="kp-nav__link" href="#example">Applications</a></li>
+            <li><a class="kp-nav__link" href="#variants">Settings</a></li>
+        </ul>
+    </nav>
+</div>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Main&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">a</span>&gt;
-    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
-        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-    &lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Main&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -160,6 +164,8 @@
                             <tr><td><code>linkComponent</code></td><td><code>import('react').ElementType</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>renderLink</code></td><td><code>(link: NavLink, props: { className: string; href: string; 'aria-current': string | undefined; }) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>listAs</code></td><td><code>'ul' | 'div'</code></td><td>optional</td><td>Default 'ul'.</td></tr>
+                            <tr><td><code>wrap</code></td><td><code>boolean</code></td><td>optional</td><td>Render the `.kp-nav-wrap` container the narrow rule needs. Default true.</td></tr>
+                            <tr><td><code>wrapClassName</code></td><td><code>string</code></td><td>optional</td><td>Extra classes for that wrapper.</td></tr>
                             <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The nav's accessible name. Default: the dictionary's.</td></tr>
                             <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
@@ -173,7 +179,12 @@
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
-                    <p class="kp-text-muted">This unit reads no knobs of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-nav-pad-block</code></td><td><code>0.625rem</code></td></tr>
+                            <tr><td><code>--kp-nav-pad-inline</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-nav-pad-inline-narrow</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-nav-wrap-min</code></td><td><code>auto</code></td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
                     <h2 class="kp-fw-semibold">Accessibility</h2>
@@ -190,6 +201,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-nav__brand</code></td><td>The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.</td></tr>
                             <tr><td><code>.kp-nav__links</code></td><td>The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.</td></tr>
+                            <tr><td><code>.kp-nav-wrap</code></td><td>The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.</td></tr>
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
                     </tbody></table></div>
                 </section>

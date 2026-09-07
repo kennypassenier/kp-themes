@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 74, 'AR21 counted 74 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 83, 'AR21 counted 83 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -152,14 +152,22 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // mean got their own knob, so every scale name means one thing. And
     // R3-CQ added --kp-table-wrap-min, the floor under a wrapper that
     // containment collapses.
+    // Round five added twenty across three milestones, merged as a sum
+    // rather than settled as a choice between three counts.
     // W0 added ten: the size scale's eight (a height, a block padding, an
     // inline padding and a type size for each of the two new steps),
     // --kp-focus-ring-inner-width for the ring .kp-button now composes
     // rather than replaces, and --kp-space-xl, whose first use in this
-    // stylesheet is the large button's inline padding [TH111, AR30]. W1
-    // added the eleventh, --kp-confirm-max-width, on the dialog TH107
-    // opens: one question wants a narrower box than a form.
-    assert.equal(result.readCount, 74);
+    // stylesheet is the large button's inline padding [TH111, AR30].
+    // W1 added one, --kp-confirm-max-width, on the dialog TH107 opens:
+    // one question wants a narrower box than a form.
+    // W2 added nine — --kp-tile-x/y/w/h, the grid tile's place, which
+    // js/gridlayout.js and components/canvas.jsx used to write as inline
+    // `grid-column` and `grid-row` where no rule could ever overrule them
+    // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
+    // three padding knobs, which used to be one `clamp(…, 3vw, …)`
+    // reading the window rather than its own box.
+    assert.equal(result.readCount, 83);
     assert.deepEqual(result.unread, []);
 });
 

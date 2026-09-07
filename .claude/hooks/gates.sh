@@ -58,6 +58,9 @@ node gates/generate-bundle.mjs --check
 echo "→ the migration note points at classes that exist (TH108)"
 node gates/check-migration.mjs
 
+echo "→ a converted component sits inside its container (TH104, AR31)"
+node gates/check-wrappers.mjs
+
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
 

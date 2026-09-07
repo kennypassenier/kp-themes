@@ -21,12 +21,17 @@
 // into a grid area. Reading a layout back out of a style string is how a
 // dashboard loses someone's arrangement.
 //
+// Since 4.0.0 [AR31]: the placement is written as custom properties
+// (--kp-tile-x/y/w/h) rather than as inline `grid-column` and `grid-row`.
+// An inline style beats any rule in any layer, so the narrow rule in
+// css/components.css could never win once a grid was attached.
+//
 // Since 3.0.0 [KT6]: applyLayout() is the other half of layoutOf() —
 // the first version could store a layout and not restore one; a pointer
 // drag exists beside the keyboard, with the keyboard still the tested
 // route; the tile's own aria-label is kept and the geometry goes into a
 // description; the step, the row bound and the commit debounce are
-// knobs; and detach removes the inline placement it wrote.
+// knobs; and detach removes the placement properties it wrote.
 
 import { getStrings } from './strings.js';
 const GRID = '[data-kp-grid]';
@@ -88,8 +93,16 @@ function place(tile) {
     const y = Number(tile.dataset.y ?? 0);
     const w = Number(tile.dataset.w ?? 1);
     const h = Number(tile.dataset.h ?? 1);
-    tile.style.gridColumn = `${x + 1} / span ${w}`;
-    tile.style.gridRow = `${y + 1} / span ${h}`;
+    // Four numbers, not two track declarations [AR31]. Up to 4.0.0 this
+    // wrote `grid-column` and `grid-row` as inline styles, which beat any
+    // rule in any layer — so the collapse-to-one-column rule in
+    // css/components.css was dead the moment a grid was attached, and
+    // attaching is the only way a grid is used. A custom property is a
+    // value the stylesheet reads, so the narrow rule can win again.
+    tile.style.setProperty('--kp-tile-x', String(x + 1));
+    tile.style.setProperty('--kp-tile-y', String(y + 1));
+    tile.style.setProperty('--kp-tile-w', String(w));
+    tile.style.setProperty('--kp-tile-h', String(h));
     // Said in words, because a tile that only announces itself by moving
     // is a tile nobody without sight can arrange. As a description, not
     // the label: the label is the tile's name and stays the consumer's.
@@ -254,8 +267,7 @@ export function attachGrids(root = document, { step = 1, rows = Infinity, commit
             grid.removeEventListener('pointerdown', onPointerDown);
             for (const element of grid.querySelectorAll(TILE)) {
                 const tile = /** @type {HTMLElement} */ (element);
-                tile.style.removeProperty('grid-column');
-                tile.style.removeProperty('grid-row');
+                for (const property of ['--kp-tile-x', '--kp-tile-y', '--kp-tile-w', '--kp-tile-h']) tile.style.removeProperty(property);
                 const description = tile.querySelector('[data-kp-tile-position]');
                 if (description !== null) {
                     const rest = (tile.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((id) => id !== '' && id !== description.id);

@@ -350,6 +350,13 @@ blocking, and each has to be red once before it counts (rule 7d):
 - **The wrapper gate.** AR31 refuses a runtime warning, so the check
   moves to this package's own pages: a component converted to a
   container query must sit inside a wrapper that establishes one.
+  Built as `gates/check-wrappers.mjs` and drilled red twice on
+  2026-09-07 — ten `missing-wrapper` findings with the wrapper taken out
+  of the example pages' nav bar, and one `unlisted` finding with a
+  `@container kp-card` block added to the stylesheet. It reads the
+  container names out of `css/components.css` rather than from a
+  constant, so a future conversion cannot fall outside it by accident
+  (AR26).
 
 ### Round five — the Phase 5 gate, 2026-09-07
 
@@ -396,7 +403,7 @@ will touch is decided now rather than hoped for:
 | --- | --- |
 | W0 | **built** 2026-09-07 (AFK), in a parallel worktree. The focus ring is repaired: `.kp-button:focus-visible` now composes the inner ring with the brutalist offset shadow instead of replacing it, and both `css/_rules.css` and the button read one knob so the two halves cannot drift again. The cyberpunk register reaches `.kp-button` for the square corner and the charge gradient, and deliberately **not** for the `clip-path` bevel — the drill that added it back reported `cyberpunk: the focus indicator painted 0 pixels`. Three button sizes as modifier classes (T15), ten new `--kp-*` knobs, and the small step floored so compact density cannot push it under 24px. One shared overflow rule for `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable`. Standing rule 8 held: 16 of 24 ring tests and 8 of 10 overflow tests were red on today's code first. Eight drills, all red, all restored — and drill 3 reshaped the measurement twice, because a focused-vs-unfocused pixel diff was measuring the theme-switch transition and a two-colour pixel count was scoring the page background. |
 | W1 | **built** 2026-09-07 (AFK), in a parallel worktree. The confirmation is a native `<dialog>` written in `js/components.js` itself — no import edge to `js/overlays.js`, which the new closure gate now holds — and both channels open the same one through the exported `openConfirmation()`. Confirm re-fires the click behind AR27's one-shot lock: measured `["open","confirm","closed"] x2, acts: 2`, against `["open","confirm","open"] x2, acts: 0` with the lock taken back out. The popover the dialog displaces is re-shown before focus returns. AR29 was drilled red first (standing rule 8): the rewritten test attaches the module over the React part, as `js/auto.js` does in the field, and the react channel failed `expected 1, received 0` in both browsers before the ownership mark went in. Arm-then-act survives as `data-kp-confirm-mode="inline"` / `confirmMode="inline"`. `ARM_EVENT` and `DISARM_EVENT` left the exports (D3). Four drills red, plus two on the new gate. |
-| W2 | not started |
+| W2 | **built**, 2026-09-07. The grid tile's place is four custom properties instead of an inline `grid-column` / `grid-row` (the collapse rule had been dead since it was written); the grid and the nav bar read `@container kp-grid` and `@container kp-nav` and their viewport mechanisms are gone; the DataTable needed nothing, `@container kp-table` has carried it since 3.2.0. `MIGRATION.md` carries the 4.0.0 wrapper instruction and `gates/check-wrappers.mjs` blocks a page that draws a converted component outside a container |
 | W3 | **built** 2026-09-07 (AFK), in a parallel worktree. Six assertions in `tests/scroll-boundary.spec.mjs` pin both halves in `.kp-table-wrap`, `.kp-diff` and the `<pre>` rule: an absolutely positioned child is clipped, a popover is not. Measurement is a hit test rather than a rectangle, because `getBoundingClientRect` reports where a clipped element *would* be and would have scored both halves as escaping. Three are drillable and went red; three are not, and the attempt was made rather than assumed — with all three `overflow-x: auto` declarations removed at once the clipping cases went red and the popover cases stayed green, which is the top layer answering rather than this package. Two facts were measured that the draft had wrong: `container-type` does **not** make a wrapper a containing block, and a top-layer element's `position: absolute` resolves against the initial containing block in document coordinates. TH112's dated correction sits under the struck constraint in `docs/SCOPE.md`; the README was right and is untouched. |
 | W4 | not started |
 | W5 | not started |

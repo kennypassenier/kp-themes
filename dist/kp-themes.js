@@ -3709,8 +3709,10 @@ function place(tile) {
   const y = Number(tile.dataset.y ?? 0);
   const w = Number(tile.dataset.w ?? 1);
   const h = Number(tile.dataset.h ?? 1);
-  tile.style.gridColumn = `${x + 1} / span ${w}`;
-  tile.style.gridRow = `${y + 1} / span ${h}`;
+  tile.style.setProperty("--kp-tile-x", String(x + 1));
+  tile.style.setProperty("--kp-tile-y", String(y + 1));
+  tile.style.setProperty("--kp-tile-w", String(w));
+  tile.style.setProperty("--kp-tile-h", String(h));
   const s = getStrings();
   const name = tile.dataset.kpLabel ?? tile.getAttribute("aria-label") ?? tile.dataset.kpTile ?? s.tileFallbackName;
   let description = (
@@ -3847,8 +3849,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
           /** @type {HTMLElement} */
           element2
         );
-        tile.style.removeProperty("grid-column");
-        tile.style.removeProperty("grid-row");
+        for (const property of ["--kp-tile-x", "--kp-tile-y", "--kp-tile-w", "--kp-tile-h"]) tile.style.removeProperty(property);
         const description = tile.querySelector("[data-kp-tile-position]");
         if (description !== null) {
           const rest = (tile.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== description.id);

@@ -64,6 +64,82 @@ document-wide attach anyway.
   `.kp-dialog__description` and `.kp-dialog__actions`, plus
   `.kp-confirm` on the dialog itself. No new stylesheet.
 
+### The movable grid and the nav bar need one element around them
+
+Both now decide their narrow form from the width of the **box they are
+given** rather than the width of the window (TH104). A container query
+styles a container's contents and never the container itself, so the
+element that changes — the grid's column count, the bar's padding —
+cannot be the one carrying `container-type`. Each needs a wrapper.
+
+```html
+<!-- before -->
+<div class="kp-grid" data-kp-grid data-kp-columns="6">…</div>
+<nav class="kp-nav" aria-label="Main">…</nav>
+
+<!-- after -->
+<div class="kp-grid-wrap">
+    <div class="kp-grid" data-kp-grid data-kp-columns="6">…</div>
+</div>
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">…</nav>
+</div>
+```
+
+This is markup, so it is for whoever writes the markup: **kyu, Almanac
+and the chassis kit hand-write these in Rust templates and have to add
+the two divs.** React consumers do not — `<GridLayout>` and `<NavBar>`
+render their own wrapper. Pass `wrap={false}` if your page already
+establishes a container of its own, `wrapClassName` to put classes on it.
+
+Nothing breaks without the wrapper: the component keeps the wide form in
+every box, which is exactly what 3.2.0 did everywhere. What you lose is
+the narrow form. The threshold is 40rem of wrapper width.
+
+Put the wrapper around the `<nav>` only. The skip link stays outside it —
+it is the first focusable thing on the page and belongs to the page, not
+to the bar.
+
+### The nav bar's padding is two knobs instead of a `clamp()`
+
+Up to 3.2.0 the bar declared `padding: 0.625rem clamp(0.75rem, 3vw,
+1.5rem)`. `3vw` read the window, so a bar in a 300px column of a 1280px
+page was given a 1280px page's inset. The two ends of that ramp are now
+named, and the narrow one is what the container query picks:
+
+| Was                                             | Is                                                                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `padding: 0.625rem clamp(0.75rem, 3vw, 1.5rem)` | `--kp-nav-pad-block` (0.625rem), `--kp-nav-pad-inline` (1.5rem), `--kp-nav-pad-inline-narrow` (0.75rem) |
+
+If you were overriding that `padding` declaration, override the knobs
+instead. The step replaces a ramp: the inset no longer changes on every
+pixel of width, it changes once, at 40rem.
+
+Both wrappers carry a floor of their own, `--kp-grid-wrap-min` and
+`--kp-nav-wrap-min`, the same shape as `--kp-table-wrap-min`: they
+default to `auto` and do nothing until you set one. Set one if your
+wrapper lives in a shrink-to-fit box (a flex row, an inline-block), where
+inline-size containment takes it to zero.
+
+### A grid tile's place is four custom properties
+
+`js/gridlayout.js` and `<GridLayout>` used to write `grid-column` and
+`grid-row` as inline styles. An inline style beats any rule in any layer,
+so the collapse-to-one-column rule had been dead since it was written —
+measured at 320px on 3.2.0, a tile read `1 / -1` at 302px before the grid
+was attached and `1 / span 2` at 241px after, and attaching is the only
+way the grid is used.
+
+Both channels now write `--kp-tile-x`, `--kp-tile-y`, `--kp-tile-w` and
+`--kp-tile-h`, and `.kp-grid__tile` derives its tracks from them. If you
+were reading a tile's placement out of `element.style.gridColumn`, read
+the `data-x` / `data-y` / `data-w` / `data-h` attributes instead — they
+have always been the contract, and `layoutOf()` and the layout events
+hand you the same numbers. If you were overriding `grid-column` on a
+tile, set the custom properties instead: your override still works, but
+it now also beats the narrow rule, which is the fault this change
+removes.
+
 ## Coming from 3.1.1 to 3.2.0
 
 Nothing breaks. Everything here is an addition, and most of it is
