@@ -507,3 +507,69 @@ checksum manifest gains `js/strings.js` and `css/retro-register.css`, a
 density mode (`data-density="compact"`), a single dist bundle, and
 `ECOSYSTEM.md` is brought up to date (it still describes 1.2.0, eleven
 themes and 66 tokens).
+
+## Round five — the three that waited for a major (2026-09-07)
+
+Approved by Kenny on 2026-09-07, all six statements "Klopt". The round
+exists because three decisions he had already taken were all waiting on
+the same thing: a major version. Round five clears them; it does not
+invent anything.
+
+**S32 · Why there is a round five.** Three settled decisions each change
+behaviour a consumer relies on today, which semver answers with 4.0.0.
+They were not postponed for being unimportant. The scope below is
+therefore mostly things Kenny has already rated, and the round is
+small and sharply bounded by design.
+
+**S33 · TH107 is in: the confirmation dialog.** A click on a destructive
+button opens a `<dialog>` carrying the attribute's text; Escape and
+Cancel do nothing; Confirm performs the action once; focus returns to
+the button. Both channels. It replaces arm-then-act, which is what 3.2.0
+does and what the documentation site described back to Kenny on
+2026-09-07 — the sighting that opened this round. It touches both
+channels, the contract enforcer that today disarms a destructive button
+carrying neither confirmation nor undo, and the existing arm-then-act
+tests, which become tests of the dialog.
+
+**S34 · TH104 is in: container queries beyond the tables.** The movable
+card grid and the nav bar still listen to the window rather than to the
+box they sit in. Converting them needs a wrapper element in markup that
+kyu, Almanac and the chassis kit write by hand, because a container
+query cannot style its own container — which is why this is a major and
+why each of the three gets a migration note. Kenny's choice of
+2026-09-06 stands: convert everything rather than leave two mechanisms
+side by side.
+
+**S35 · D3 is in: `STRINGS_NL` goes.** The bundled Dutch dictionary has
+been an export since 2.0.0; removing an export is a breaking change, so
+it waited for exactly this round. The words do not leave the world: S20
+keeps them in the 2.0.0 through 3.2.0 tags, and the migration note says
+how a consumer takes them into their own project.
+
+**S36 · The four consumer reports are the round's first work.** P1 (a
+wrong import in the migration guide), P2 (the allow-git instruction does
+not hold across a version jump), P3 (the cyberpunk layer skips their own
+components) and P4 (a request for a size scale on the button) have sat
+untouched in `docs/REQUESTS_FROM_CONSUMERS.md` since round three, on
+Kenny's instruction to keep them for the next round. **None of the four
+has been measured by this project.** Standing rule 13b makes a report
+from another session a claim until this project reproduces it, so they
+go through Phase 1 — reproduce and measure — before Phase 2 rates them.
+P1 and P2 are documentation faults and are probably smaller than a
+round; P3 and P4 touch the code.
+
+**S37 · What is not in.** TH47, the visual filter builder, keeps
+waiting: Kenny asked for more explanation on 2026-09-04 and it has been
+unrated since. It returns in Phase 2 if he wants to rate it then, but it
+does not shape the scope. KT6-M1 stays outside the round because it is a
+measurement JobTracker owes, not this project. And no new themes and no
+new components: this round is clearing, not extending. Anything that
+wants in during Phase 2 goes through the ordinary rating.
+
+**V1, decided 2026-09-07: the site fixes ride along in 4.0.0.** The four
+fixes Kenny found on the published site were merged to `main` so the
+site itself is correct straight away — the Pages workflow runs on every
+commit there and needs no tag. Three of them touch only the
+documentation site. The fourth is a package change, `.kp-copyable` no
+longer pushing a long value off a narrow screen, and Kenny chose to let
+it reach consumers with 4.0.0 rather than cutting a 3.2.1 for it.

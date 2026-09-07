@@ -177,3 +177,16 @@ session (standing rule 13b) until this project reproduces it.
 Picked up at the start of the round after the theme round, as its first
 inventory item; P1 and P2 are documentation faults and may be smaller
 than a round.
+
+## Measured by this project, 2026-09-07 (round five, Phase 1)
+
+Standing rule 13b: a report from another session is a claim until this
+project reproduces it. All four were put to the test here. Two reproduce,
+one does not, one is a request rather than a fault.
+
+| id | verdict | what the measurement found |
+| --- | --- | --- |
+| P1 | **does not reproduce** | Every one of the 8 import paths named in `MIGRATION.md` resolves to a declared export, and every named import exists in the module it comes from. Two apparent misses were artefacts of the checker: `BootSequence` is a default export, and `THEME_META` appears only on the `-` side of a diff showing what to replace. The guide has been rewritten twice since the report (2.0.0 and 3.0.0 sections, then 3.2.0), which is the likely explanation. |
+| P2 | **reproduces, as a contradiction** | `README.md:543` still documents `allow-git`, including which value to use and when, while `docs/SCOPE.md:323` says that requirement was **dropped** by the mini-round of 2026-09-04 because "nothing is fetched over npm any more". Both cannot be true; the README's own line says the setting applies "only if you take the git-dependency route", which JobTracker does. So the scope statement is the one that is wrong, not the README. |
+| P3 | **reproduces, and narrower than reported** | Measured in the browser under `cyberpunk`: a `.kp-button` gets nothing from the register (`box-shadow: none`), while the same button with `data-slot="button"` gets the magenta shadow and border. `css/components.css` contains **zero** `data-slot` references, and only `components/card.jsx` writes one — the React `Button` does not. So the register's **button** treatment reaches nothing this package renders in either channel. The **card** treatment is fine: `.kp-card` measures identically with and without the attribute. |
+| P4 | **not a fault** | A request for a size scale on the button. It goes to Phase 2 for a rating like any other feature. |
