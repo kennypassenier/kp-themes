@@ -469,3 +469,58 @@ it — W3 read as 12 of 12 failing and W1 as 26 of 50 passing, both green
 on a dedicated port. `playwright.config.mjs` already documents
 `KP_TEST_PORT`; what it does not do is default to something unique per
 checkout. Standing rule 32, met from the side it warns about.
+
+## Round six — the next cyberpunk, the hooks and the fonts (towards 5.0.0)
+
+Seven milestones. What gets built was frozen in Phase 2 (TH115–TH136)
+and the architecture in Phase 4 (T17–T21, AR34–AR46). C5 is the
+**assembly milestone** the procedure requires: its exit criterion is
+that the concept demo, served at a URL Kenny opens, does what the
+approved demo did — not that the parts exist. **No tag closes this
+round**: S48 ships 5.0.0 only when every theme has been lifted, so the
+round ends on `main` with the site showing the new cyberpunk under a
+"next" banner, and the package version stays 4.0.0 until 5.0.0 (R1 at
+the gate).
+
+| ID | Milestone | Features and decisions | Exit criterion |
+| --- | --- | --- | --- |
+| C0 | The walking skeleton and the new gates | AR34 (empty module), AR36, AR37, AR39 (manifest walk), AR40 (table pass), AR41 (drift), AR42 (the `concept` entry) | `js/effects.js` exports `attachEffects` that attaches nothing yet and is wired in `js/auto.js`; `themes/hooks.json` exists with a `default` row and every theme passes `check-hooks.mjs` with quiet answers; `check-register-coverage.mjs`, `check-fonts.mjs`, the tear drift check, the `url()` walk in `check-manifest.mjs` and the table pass in `check-motion.mjs` each **fired red once** on an injected violation and the drill is recorded; `examples/concept.html` renders the standard page in both channels under every theme with the quiet answers and passes `check-examples-wired` and `check-inline-styles`; CI green on the sha |
+| C1 | Tokens and the two surfaces | TH115, TH116, S47, AR38 | The new `themes/cyberpunk/tokens.json` carries the palette (S40) and every theme carries the hero sources; `check-tokens` parity at 100% on the grown contract; `generate-themes.mjs` emits the hero ground with hover, active and disabled under `[data-kp-surface="hero"]`; `check-contrast`, `check-invariants` (`FOCUS_SURFACES`) and the DI table iterate both surfaces for all 24 themes and are green; `ha/kp-cyberpunk.yaml` regenerated; the Theme union unchanged |
+| C2 | The register | TH117, TH118, TH121, TH123, TH124, TH133, AR37, AR41, AR43, AR46 | The coverage gate is green over the 64 roots (eight excused with reason); the navbar clip-path is computed and mirrors under `data-kp-nav-side="end"`; the dropdown hit test hits the link in both browsers; notch, mirror and slit measured per variant with the focus-ring delta on both sides; the tear's pixels above and below the ridge match the two surfaces at five x positions in both orders, for both seeds; the texture's effective opacity reads 0.06 or under through the DI9 gate; `.kp-card` without `data-slot` gets the register rule; every knob of AR43 has its default in the register |
+| C3 | The effects module | TH119, TH120, TH122, TH125, TH129, T17, T20, AR34, AR35, AR40, AR44, AR45 | One suite drives React and framework-free in chromium and firefox: headline decipher ends equal to the source and runs once per session, emphasis clears with the measured stagger and the text is always in the DOM, the rule draws on entering the viewport and stands drawn without the script; the root attribute is set before first paint (no flash measured on a streamed fixture); a mid-session reduced-motion switch resolves every running effect to rest; `reports/di5.md` names every effect with its rate, three calibrations within 10%, an injected 5/s loop shows red in the report and the gate changes nothing; `kp-effect-unknown` fires once for a bad value and diagnostics list it; `check-closure` green; `DecipherText` wraps the module |
+| C4 | The fonts | T19, AR39 | `fonts/<family>/` with latin subsets for every named family and script subsets for nishiki and tazhib; `css/fonts.css`, the `./fonts/<family>` exports, the manifest and `SHA256SUMS` cover every file; `check-fonts.mjs` green on licence, reserved names and the 1.5 MB per-theme budget, red once on an injected reserved-name subset; `release.yml` attaches `fonts.tar`; a tarball test proves the fonts install (rule 7f); the fixture without webfonts still passes its screenshot check (T19's fallback) |
+| C5 | **Assembly: the concept demo does its own job** | all of the above, S46, E1 | `examples/concept.html?theme=cyberpunk` on the live site reproduces the approved demo's measured checks — three fonts loaded, the outline button face and ink, the dropdown hit test, the tear pixels, the marks cleared, no inline styles — and a dashboard fixture under cyberpunk is operable end to end with the keyboard alone in both channels and browsers; the "bare chassis-rs" test (no register, no effects, no webfonts) proves the page stays functional and readable; the concept index links all 24 themes; **Kenny has opened the URL** before the gate is signed (rule 39) |
+| C6 | Documentation and the round's close | TH127, TH134, TH135, TH136 | `MIGRATION.md` carries a "5.0.0 (in progress)" section naming the meaning change of `cyberpunk`, the two files chassis-rs does not vendor, the fonts and the hooks; `themes/cyberpunk/anatomy.md` rewritten on the new palette with the three stale claims gone; the hook vocabulary documented in README, USER_GUIDE and the site with `check-site` truth green; the lift plan's cyberpunk row reads done; the ecosystem entry updated; `main` fast-forwarded and the site deployed, no tag |
+
+### How the seven run
+
+C0 first, alone: the gates must exist and have fired before feature
+code lands (Phase 5's rule). C1 next, alone: tokens feed everything.
+Then **C2, C3 and C4 in parallel** — they own disjoint files
+(`css/cyberpunk-register.css` and `themes.css` output; `js/effects.js`,
+`fx/`, `tests/effects.spec.mjs`; `fonts/`, `css/fonts.css`,
+`gates/check-fonts.mjs`) — each in its own worktree with its own
+`KP_TEST_PORT`, as round five learned. C5 after all three merge; C6
+last.
+
+### Enforcement for this round
+
+Unchanged in shape: the commit hook runs the whole chain and blocks, CI
+runs the same chain, `main` is protected, and the KT7 test lays the
+lists side by side. Six gates join the chain at C0, every one blocking
+and every one red once before it counts (rule 7d): `check-hooks.mjs`
+(AR36), `check-register-coverage.mjs` (AR37), `check-fonts.mjs` (AR39),
+the tear drift check (AR41), the `url()` walk in `check-manifest.mjs`
+(AR39) and the table pass in `check-motion.mjs` (AR40, report-only by
+S42 — it fails only on a missing or malformed table). The browser suite
+stays outside the commit hook and inside CI, as today.
+
+### Discipline-only measures during an AFK stretch (rule 7h)
+
+KT3's drill comment (a test goes red before it counts) is
+discipline-only; round five applied it at every test and the report
+said so. Same here: every new browser test carries its drill line, and
+the AFK report lists any that do not. S42 (DI5 reported, not corrected)
+is mechanical by construction — the gate cannot edit an effect. Rule 39
+(Kenny opens the live URL before the release-shaped go) is the C5 exit
+criterion itself.

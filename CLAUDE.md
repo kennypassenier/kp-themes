@@ -135,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| Current phase       | Round six: Phase 3 decided 2026-09-07 (T17–T21; S19 reversed — fonts ship); Phase 4 next       |
-| Last completed gate | Round six Phase 3 — five tech choices, targets unchanged, two environments added to T9         |
-| Next gate           | Phase 4 (architecture, with the architecture-critic), including the shape of the shipped fonts |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2             |
-| AFK mode            | off                                                                                            |
+| Field               | Value                                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six: Phase 4 frozen 2026-09-07 (AR34–AR46 as revised after the critic); Phase 5 next              |
+| Last completed gate | Round six Phase 4 — thirteen decisions taken as revised after twenty critic objections, the list frozen |
+| Next gate           | Phase 5 (realization plan: milestones, enforcement, the AFK choice) of round six                        |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                      |
+| AFK mode            | off                                                                                                     |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

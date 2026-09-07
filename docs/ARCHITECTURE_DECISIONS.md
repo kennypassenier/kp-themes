@@ -1014,6 +1014,11 @@ and all five held. The decisions below are the revised list; each names
 the objection it answers, and the gate form shows both sides. Kenny
 freezes the list at the gate.
 
+**Frozen 2026-09-07.** Kenny took every decision as revised (AR34–AR46:
+Herzien) and froze the list (F1: Bevriezen). Changes go through
+mini-rounds only; the critic re-runs with the build phase as its lens
+before Phase 6 starts (L7).
+
 ## AR34 · One effects module; the start state is armed by a root attribute before first paint
 
 `js/effects.js` exports `attachEffects(root = document, options) →
