@@ -166,6 +166,10 @@ const audit = (page, { faults = ['page-scroll', 'overflow', 'rhythm'], ...rest }
                     // Only a stacked pair: two controls side by side in a row
                     // overlap vertically and are not a rhythm question.
                     if (below.top < above.bottom - 0.5) continue;
+                    // A divider between surfaces IS the rhythm there (a tear that
+                    // touches both grounds, or a step of space under a quiet
+                    // theme); the pair on either side of it is not a fault.
+                    if (children[i - 1].hasAttribute('data-kp-divider') || children[i].hasAttribute('data-kp-divider')) continue;
                     const gap = below.top - above.bottom;
                     if (gap < minGap) {
                         found.push({

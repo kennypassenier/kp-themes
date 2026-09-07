@@ -4032,6 +4032,15 @@
         color: var(--foreground);
     }
 
+    /* A divider between surfaces [S45, TH121]: the quiet answer is room —
+       one step of the spacing scale — so a section and what follows never
+       touch (the rhythm gate measured 0px under formal); a register may
+       paint a tear across it. */
+    [data-kp-divider] {
+        display: block;
+        block-size: var(--kp-space-xl);
+    }
+
     blockquote {
         margin-inline-start: 0;
         padding-inline-start: 1rem;

@@ -136,7 +136,8 @@ test.describe('the cyberpunk register on the concept page [C2]', () => {
                 b.setAttribute('data-test', 'probe');
                 row?.prepend(b);
             }, variant);
-            await tabTo(page, 'probe');
+            // The theme picker above the page adds 24 tabbable buttons.
+            await tabTo(page, 'probe', 200);
             const { delta, focused, idle } = await paintedFocusDelta(page, 'probe', { where: 'inside' });
             expect(delta, `focus added ${delta} ring pixels (focused ${focused}, at rest ${idle})`).toBeGreaterThan(100);
         });
@@ -175,8 +176,9 @@ test.describe('the cyberpunk register on the concept page [C2]', () => {
                     };
                     const hero = paint(root.getPropertyValue('--surface-hero-bg').trim());
                     const app = paint(root.getPropertyValue('--background').trim());
+                    const footer = paint(root.getPropertyValue('--sidebar-background').trim());
                     probe.remove();
-                    return { x: r.left, y: r.top, w: r.width, h: r.height, hero, app, dpr: devicePixelRatio };
+                    return { x: r.left, y: r.top, w: r.width, h: r.height, hero, app, footer, dpr: devicePixelRatio };
                 },
                 [afterApp, seed],
             );
@@ -204,8 +206,10 @@ test.describe('the cyberpunk register on the concept page [C2]', () => {
                 },
                 [Array.from(png), box.w, box.h],
             );
+            // After the hero the tear falls from the hero ground into the app
+            // ground; after the app surface it falls into the footer's ground.
             const above = channels(afterApp ? box.app : box.hero);
-            const below = channels(afterApp ? box.hero : box.app);
+            const below = channels(afterApp ? box.footer : box.app);
             for (const sample of pixels) {
                 expect(close(sample.top, above), `x=${sample.fx}: above the ridge ${sample.top} should be ${above}`).toBe(true);
                 expect(close(sample.bottom, below), `x=${sample.fx}: below the ridge ${sample.bottom} should be ${below}`).toBe(true);

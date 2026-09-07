@@ -73,6 +73,45 @@ const GROUND = `(el) => {
         // decoration sized to a band or a corner (a button's slit, a
         // heading's bracket frame) is painted over the real ground.
         const fills = /^(auto( auto)?|100% 100%|cover)$/.test(style.backgroundSize.split(',')[0].trim());
+        // A face layer — one colour painted twice as a gradient, inset a few
+        // pixels (the register's outline button paints its face that way) —
+        // is the ground the text sits on, whatever the frame colour behind it.
+        // A face layer — one colour painted twice as a gradient, inset a few
+        // pixels (the register's outline button paints its face that way) —
+        // is the ground the text sits on, whatever the frame colour behind
+        // it. It must fill the box: a heading's bracket corners are the same
+        // shape at 1.2rem × 2px and are not a ground.
+        // Split a layer list on the commas outside parentheses: a gradient
+        // carries commas of its own, and a lookahead cannot count depth.
+        const splitLayers = (value) => {
+            const out = [];
+            let depth = 0;
+            let current = '';
+            for (const ch of value) {
+                if (ch === '(') depth++;
+                else if (ch === ')') depth--;
+                if (ch === ',' && depth === 0) {
+                    out.push(current.trim());
+                    current = '';
+                } else current += ch;
+            }
+            if (current.trim()) out.push(current.trim());
+            return out;
+        };
+        const layers = image && image !== 'none' ? splitLayers(image) : [];
+        const sizes = splitLayers(style.backgroundSize);
+        const faceAt = layers.findIndex((layer, i) => {
+            const m = layer.match(/^linear-gradient\\((rgba?\\([^)]*\\)), (rgba?\\([^)]*\\))\\)$/);
+            if (!m || m[1] !== m[2] || /rgba\\(\\d+, \\d+, \\d+, 0\\)/.test(m[1])) return false;
+            // Computed sizes are pixels: the face fills the box when it is
+            // within a few pixels of the element's own width and height.
+            // calc(100% - 4px) carries spaces: split the size on spaces outside parentheses.
+            const size = (sizes[i] ?? sizes[0] ?? 'auto').match(/calc\\([^)]*\\)|\\S+/g) ?? ['auto'];
+            const box = node.getBoundingClientRect();
+            const near = (part, full) => part === 'auto' || part === '100%' || /^calc\\(100% - \\d+px\\)$/.test(part) || Math.abs(parseFloat(part) - full) <= 8;
+            return near(size[0], box.width) && near(size[1] ?? size[0], box.height);
+        });
+        if (faceAt !== -1) return [layers[faceAt].match(/rgba?\\([^)]*\\)/)[0]];
         if (image && image !== 'none' && fills) {
             const stops = image.match(/rgba?\\([^)]*\\)/g) ?? [];
             const opaque = stops.filter((c) => !/rgba\\(\\d+, \\d+, \\d+, 0\\)/.test(c));

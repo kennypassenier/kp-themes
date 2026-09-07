@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 83, 'AR21 counted 83 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 84, 'AR21 counted 84 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -148,6 +148,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // table cell's padding, each a literal put on the spacing scale so
     // the density mode could reach it. --kp-space-lg came with them, as
     // the first use of that step in this stylesheet. R0-TYPO then added
+    // Round six (the concept demo's spec sheet) added --kp-mono: the mono
+    // sample reads the register's mono face, with monospace as its fallback.
     // six more: the rules that wanted a text size the scale name did not
     // mean got their own knob, so every scale name means one thing. And
     // R3-CQ added --kp-table-wrap-min, the floor under a wrapper that
@@ -167,7 +169,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    assert.equal(result.readCount, 83);
+    assert.equal(result.readCount, 84);
     assert.deepEqual(result.unread, []);
 });
 

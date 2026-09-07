@@ -70,6 +70,16 @@
         grid-template-columns: repeat(auto-fit, minmax(var(--kp-autogrid-min, 16rem), 1fr));
         gap: var(--kp-autogrid-gap, var(--kp-space-lg));
     }
+    /* A tighter minimum, for a grid that must keep its columns on a phone
+       (three footer columns at 320px; the concept demo, round six). */
+    .kp-autogrid--tight {
+        --kp-autogrid-min: 10rem;
+    }
+    /* A page that uses the whole viewport: two frames side by side need
+       the width more than the measure (the compare page, round six). */
+    .kp-page--full {
+        max-inline-size: none;
+    }
 
     /* Content with a side column that drops below when there is no room for
        both — no media query, so it behaves the same inside a narrow

@@ -19,6 +19,7 @@ import process from 'node:process';
 import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 import { THEMES } from '../js/theme-registry.js';
 import { noFlashSnippet } from '../js/no-flash.js';
+import { comparePages } from './generate-compare.mjs';
 
 const OUT = new URL('../examples/', import.meta.url);
 
@@ -131,126 +132,10 @@ function index() {
     return page('example pages', renderHTML(body, 8));
 }
 
-/**
- * The concept demo under the 4.0.0 bundle [MR-R6-COMPARE]: the same
- * descriptor body, the release's own dist/kp-themes.css and kp-themes.js
- * vendored under showcase/baseline/4.0.0/ and held to that release's
- * SHA256SUMS by gates/check-baseline.mjs. What a consumer with the old
- * stylesheet sees on the new markup, which is what the compare page puts
- * beside the current build. The 4.0.0 script knows no `?theme=`; the
- * compare page sets the theme on both documents itself.
- */
-function baselineConcept() {
-    const concept = EXAMPLES.find((example) => example.id === 'concept');
-    if (!concept) throw new Error('no concept example');
-    return `<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes — ${concept.title}, under 4.0.0</title>
-        <link rel="stylesheet" href="../showcase/baseline/4.0.0/kp-themes.css" />
-    </head>
-    <body>
-${renderHTML(concept.body, 8)}
-        <script type="module" src="../showcase/baseline/4.0.0/kp-themes.js"></script>
-    </body>
-</html>
-`;
-}
-
-/**
- * The compare page [MR-R6-COMPARE]: 4.0.0 on the left, the current build
- * on the right, the same theme in both from `?theme=<name>`, each in its
- * own frame. Kenny asked for it during C0: "de oude vs de nieuwe versie
- * links vs rechts vergelijken". The frames are sized by attribute, not
- * style (TH109); the script below is the page's only behaviour and sets
- * the theme on both documents once they have loaded.
- */
-function compare() {
-    const body = [
-        el(
-            'main',
-            { id: 'main', class: 'kp-page' },
-            el(
-                'div',
-                { class: 'kp-stack' },
-                el('h1', {}, 'Old against new'),
-                el(
-                    'p',
-                    { class: 'kp-prose kp-text-muted' },
-                    'The concept demo twice: on the left under the 4.0.0 release, on the right under the current build, the same theme in both. ' +
-                        'Pick a theme below; the choice lands in the address bar so a link carries it.',
-                ),
-                el(
-                    'ul',
-                    { class: 'kp-row', id: 'compare-themes' },
-                    THEMES.map((theme) =>
-                        el('li', {}, el('a', { href: `compare.html?theme=${theme.name}`, 'data-theme-link': theme.name }, theme.label)),
-                    ),
-                ),
-                el(
-                    'div',
-                    { class: 'kp-autogrid', 'data-kp-compare': '' },
-                    el(
-                        'section',
-                        { class: 'kp-stack', 'aria-labelledby': 'compare-old' },
-                        el('h2', { id: 'compare-old' }, '4.0.0'),
-                        el('iframe', {
-                            src: 'concept-4.0.0.html',
-                            title: 'The concept demo under 4.0.0',
-                            width: '100%',
-                            height: '900',
-                            'data-compare-side': 'old',
-                        }),
-                    ),
-                    el(
-                        'section',
-                        { class: 'kp-stack', 'aria-labelledby': 'compare-new' },
-                        el('h2', { id: 'compare-new' }, 'Current build'),
-                        el('iframe', {
-                            src: 'concept.html',
-                            title: 'The concept demo under the current build',
-                            width: '100%',
-                            height: '900',
-                            'data-compare-side': 'new',
-                        }),
-                    ),
-                ),
-            ),
-        ),
-    ];
-    const script = `
-        <script type="module">
-            // The theme from the query on both frames, once each has loaded;
-            // the 4.0.0 script knows no query parameter, so the page sets the
-            // attribute itself. Same origin, so the documents are reachable.
-            const theme = new URLSearchParams(location.search).get('theme');
-            const frames = document.querySelectorAll('iframe[data-compare-side]');
-            const apply = (frame) => {
-                if (!theme) return;
-                try {
-                    frame.contentDocument?.documentElement.setAttribute('data-theme', theme);
-                } catch {
-                    // A frame not yet reachable applies on load below.
-                }
-            };
-            for (const frame of frames) {
-                frame.addEventListener('load', () => apply(frame));
-                apply(frame);
-            }
-            if (theme) document.documentElement.setAttribute('data-theme', theme);
-            for (const link of document.querySelectorAll('[data-theme-link]')) {
-                if (link.getAttribute('data-theme-link') === theme) link.setAttribute('aria-current', 'page');
-            }
-        </script>`;
-    return page('old against new', renderHTML(body, 8) + script, { themeFromQuery: true });
-}
-
 const pages = [
     { name: 'examples/index.html', file: 'index.html', content: index() },
-    { name: 'examples/compare.html', file: 'compare.html', content: compare() },
-    { name: 'examples/concept-4.0.0.html', file: 'concept-4.0.0.html', content: baselineConcept() },
+    // The compare page and its two specimen frames [MR-R6-COMPARE].
+    ...comparePages(),
     ...EXAMPLES.map((example) => ({
         name: `examples/${example.id}.html`,
         file: `${example.id}.html`,

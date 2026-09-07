@@ -125,7 +125,7 @@ export const DESCRIPTORS = [
         id: 'effects',
         title: 'Effects and surfaces',
         group: 'Theming',
-        classes: [],
+        classes: ['kp-laurels', 'kp-side-note', 'kp-platforms', 'kp-spec'],
         exports: [],
         // The hook vocabulary of round six [S45, AR35]: a consumer marks
         // what a passage IS and a theme decides what that looks like. The
@@ -136,6 +136,16 @@ export const DESCRIPTORS = [
         whenToUse:
             'Mark the structure of a page you want a theme to be able to dramatise: the opening surface, the working surface, the seam between them, the words that carry the point. Do not use the attributes to ask for a particular effect — there is no attribute for a glitch or a flicker, only for the thing a theme may glitch or flicker. A theme decides, and a reader who asked for reduced motion gets the words without the drama.',
         examples: [
+            {
+                title: 'The demo pieces: laurels, a side note, a platforms line and a spec sheet',
+                why: 'The four pieces the concept demo carries beside the components: a list of claims, a note in the margin, a row of names and a sheet of the theme’s own values. Quiet in every theme — a list, a note, a row, a card — and a register may dramatise them; cyberpunk sets the laurels in dotted bars, turns the note vertical and cuts two corners off the sheet.',
+                markup: `
+<ul class="kp-laurels" aria-label="Measured against"><li><b>93 tokens</b>parity gate</li><li><b>DI5 safe</b>no flashing</li></ul>
+<p class="kp-side-note">SECTOR 06</p>
+<div class="kp-platforms"><span>Chromium</span><span>Firefox</span></div>
+<aside class="kp-spec" aria-label="Palette"><dl><dt>ground</dt><dd><i class="kp-spec__swatch" data-token="surface-hero-bg"></i>--surface-hero-bg</dd><dt>display</dt><dd><span class="kp-spec__font" data-font="display">Aa</span> --theme-font-display</dd></dl></aside>
+`,
+            },
             {
                 title: 'Two surfaces and the seam between them',
                 why: 'The hero and the app are two grounds in one page: a theme can give the hero its loud register and keep the app surface calm. The divider is the seam a theme may draw; the marked phrases are what a theme may reveal. The concept demo in the examples is this markup at full length, under every theme.',

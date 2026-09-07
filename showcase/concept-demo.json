@@ -1,0 +1,125 @@
+{
+    "//": "The approved concept demo as an inventory [S46, correction L4 of 2026-09-07]: every element of the 'Signal Yellow' demo the concept page must carry, each with the marker its rendered HTML shows. gates.test.mjs refuses examples/concept.html when one is missing, so the page cannot drift into a reduced version again without a gate saying so. Replace the demo (S46: synthwave next) and this list changes in the same commit.",
+    "elements": [
+        {
+            "what": "the theme picker above the page",
+            "marker": "data-kp-theme-picker"
+        },
+        {
+            "what": "the brand",
+            "marker": "class=\"kp-nav__brand\""
+        },
+        {
+            "what": "a strip link with a dropdown",
+            "marker": "aria-haspopup=\"true\""
+        },
+        {
+            "what": "the dropdown list",
+            "marker": "class=\"kp-nav__menu\""
+        },
+        {
+            "what": "the language break in the strip",
+            "marker": "kp-nav__link--lang"
+        },
+        {
+            "what": "the cta link in the strip",
+            "marker": "kp-nav__link--cta"
+        },
+        {
+            "what": "the hero surface",
+            "marker": "data-kp-surface=\"hero\""
+        },
+        {
+            "what": "the side note in the margin",
+            "marker": "class=\"kp-side-note\""
+        },
+        {
+            "what": "the laurels",
+            "marker": "class=\"kp-laurels\""
+        },
+        {
+            "what": "the microlabel above the headline",
+            "marker": "class=\"microlabel\""
+        },
+        {
+            "what": "the deciphering headline",
+            "marker": "data-kp-reveal=\"headline\""
+        },
+        {
+            "what": "the lede with marks",
+            "marker": "kp-lede"
+        },
+        {
+            "what": "a mark in the lede",
+            "marker": "<mark>"
+        },
+        {
+            "what": "the mirrored primary button",
+            "marker": "kp-button--mirror"
+        },
+        {
+            "what": "a ghost button",
+            "marker": "kp-button--ghost"
+        },
+        {
+            "what": "the platforms line",
+            "marker": "class=\"kp-platforms\""
+        },
+        {
+            "what": "the spec sheet",
+            "marker": "class=\"kp-spec\""
+        },
+        {
+            "what": "a swatch in the spec sheet",
+            "marker": "class=\"kp-spec__swatch\""
+        },
+        {
+            "what": "the razor tear after the hero",
+            "marker": "<div data-kp-divider>"
+        },
+        {
+            "what": "the app surface",
+            "marker": "data-kp-surface=\"app\""
+        },
+        {
+            "what": "a section heading with the drawn rule",
+            "marker": "data-kp-reveal=\"rule\""
+        },
+        {
+            "what": "the form",
+            "marker": "data-kp-form"
+        },
+        {
+            "what": "a select field",
+            "marker": "<select"
+        },
+        {
+            "what": "a multiline field",
+            "marker": "kp-field__input--multiline"
+        },
+        {
+            "what": "the checkbox field",
+            "marker": "kp-field--check"
+        },
+        {
+            "what": "the destructive wipe with its confirmation",
+            "marker": "data-kp-confirm"
+        },
+        {
+            "what": "the dossier card with the emphasis reveal",
+            "marker": "data-kp-reveal=\"emphasis\" data-kp-label"
+        },
+        {
+            "what": "the dossier trigger",
+            "marker": "data-kp-reveal-trigger"
+        },
+        {
+            "what": "the second tear before the footer",
+            "marker": "data-kp-divider=\"alt\""
+        },
+        {
+            "what": "the footer",
+            "marker": "class=\"kp-footer\""
+        }
+    ]
+}

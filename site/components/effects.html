@@ -123,6 +123,20 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The demo pieces: laurels, a side note, a platforms line and a spec sheet</figcaption>
+                        <p class="kp-text-muted">The four pieces the concept demo carries beside the components: a list of claims, a note in the margin, a row of names and a sheet of the theme’s own values. Quiet in every theme — a list, a note, a row, a card — and a register may dramatise them; cyberpunk sets the laurels in dotted bars, turns the note vertical and cuts two corners off the sheet.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<ul class="kp-laurels" aria-label="Measured against"><li><b>93 tokens</b>parity gate</li><li><b>DI5 safe</b>no flashing</li></ul>
+<p class="kp-side-note">SECTOR 06</p>
+<div class="kp-platforms"><span>Chromium</span><span>Firefox</span></div>
+<aside class="kp-spec" aria-label="Palette"><dl><dt>ground</dt><dd><i class="kp-spec__swatch" data-token="surface-hero-bg"></i>--surface-hero-bg</dd><dt>display</dt><dd><span class="kp-spec__font" data-font="display">Aa</span> --theme-font-display</dd></dl></aside>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-laurels&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Measured against&quot;</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;93 tokens&lt;/<span class="kp-code__keyword">b</span>&gt;parity gate&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;DI5 safe&lt;/<span class="kp-code__keyword">b</span>&gt;no flashing&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-side-note&quot;</span>&gt;SECTOR 06&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-platforms&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Chromium&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Firefox&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Palette&quot;</span>&gt;&lt;<span class="kp-code__keyword">dl</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;ground&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;surface-hero-bg&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--surface-hero-bg&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;display&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__font&quot;</span> <span class="kp-code__keyword">data-font</span><span class="kp-code__string">=&quot;display&quot;</span>&gt;Aa&lt;/<span class="kp-code__keyword">span</span>&gt; --theme-font-display&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">dl</span>&gt;&lt;/<span class="kp-code__keyword">aside</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Two surfaces and the seam between them</figcaption>
                         <p class="kp-text-muted">The hero and the app are two grounds in one page: a theme can give the hero its loud register and keep the app surface calm. The divider is the seam a theme may draw; the marked phrases are what a theme may reveal. The concept demo in the examples is this markup at full length, under every theme.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -179,7 +193,11 @@
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
-                    <p class="kp-text-muted">This unit reads no knobs of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-mono</code></td><td><code>monospace</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
                     <h2 class="kp-fw-semibold">Accessibility</h2>

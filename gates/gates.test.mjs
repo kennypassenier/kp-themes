@@ -854,3 +854,16 @@ test('TH130: every stylesheet the manifest ships has an entry in the one list, a
     // Drill [TH130]: `css/layout.css` deleted from the list → "is in the
     // manifest and has no entry", red (2026-09-07).
 });
+
+// ── S46: the concept page is the approved demo, element for element ─────────
+
+test('S46: every element of the approved demo is on the concept page [correction L4]', () => {
+    const inventory = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8'));
+    const html = readFileSync(new URL('../examples/concept.html', import.meta.url), 'utf8');
+    assert.ok(inventory.elements.length >= 25, `only ${inventory.elements.length} elements inventoried`);
+    for (const { what, marker } of inventory.elements) {
+        assert.ok(html.includes(marker), `the concept page lacks ${what} (no "${marker}" in examples/concept.html)`);
+    }
+    // Drill [L7]: the laurels removed from the descriptor and the page
+    // regenerated → "lacks the laurels", red (2026-09-07).
+});

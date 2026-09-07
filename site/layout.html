@@ -117,7 +117,7 @@
                     <p class="kp-prose">Classes for the shape of a page, in the cascade layer after the components, so a layout class wins on a component that sets the same property itself. Every value reads a knob whose default is the theme spacing scale.</p>
                 </header>
                 <section class="kp-section" data-sc-section="classes" id="classes">
-                    <h2 class="kp-fw-semibold">The 21 rules</h2>
+                    <h2 class="kp-fw-semibold">The 23 rules</h2>
                     <div class="sc-example__live"><table class="kp-table"><thead><tr><th>Selector</th><th>What it is for</th><th>Knobs</th></tr></thead><tbody>
                             <tr><td><code>.kp-page</code></td><td>The page itself: a measure to read within, centred, with margins that shrink on a phone instead of stepping at a breakpoint.</td><td><code>--kp-page-max</code>, <code>--kp-page-pad</code>, <code>--kp-space-md</code>, <code>--kp-space-xl</code>, <code>--kp-page-pad-block</code></td></tr>
                             <tr><td><code>.kp-stack</code></td><td>Vertical rhythm. This is the fault the round started from: two fields and a button touched because a field has no vertical margin and nothing above it supplied one.</td><td><code>--kp-stack-gap</code>, <code>--kp-space-md</code></td></tr>
@@ -127,6 +127,8 @@
                             <tr><td><code>.kp-row--between</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-row--nowrap</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-autogrid</code></td><td>A grid that picks its own column count from the space it has. The minimum track is the knob: a card wants 16rem, a tile less.</td><td><code>--kp-autogrid-min</code>, <code>--kp-autogrid-gap</code>, <code>--kp-space-lg</code></td></tr>
+                            <tr><td><code>.kp-autogrid--tight</code></td><td>A tighter minimum, for a grid that must keep its columns on a phone (three footer columns at 320px; the concept demo, round six).</td><td>—</td></tr>
+                            <tr><td><code>.kp-page--full</code></td><td>A page that uses the whole viewport: two frames side by side need the width more than the measure (the compare page, round six).</td><td>—</td></tr>
                             <tr><td><code>.kp-sidebar</code></td><td>Content with a side column that drops below when there is no room for both — no media query, so it behaves the same inside a narrow container as it does in a narrow window.</td><td><code>--kp-sidebar-gap</code>, <code>--kp-space-lg</code></td></tr>
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__aside</code></td><td></td><td><code>--kp-sidebar-width</code></td></tr>
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__main</code></td><td></td><td><code>--kp-sidebar-break</code></td></tr>

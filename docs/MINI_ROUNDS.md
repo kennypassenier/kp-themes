@@ -62,6 +62,8 @@ gate against the committed copy of that release's `SHA256SUMS` — the
 package comparing itself to its own promise (S20). Same name on both
 sides, because the new cyberpunk replaces the old under its name (S39).
 
+**Kenny's second reading (2026-09-07, after the first build):** not two whole pages — "de compare.html pagina gaat nu enkel de verschillen tussen de oude en de nieuwe versie highlighten … toon enkel de verschillen waar toepasbaar. En zeg het er duidelijk bij wat er anders is. Nog altijd side by side", full width, scrolling together. The page is now a measured diff per theme (`gates/generate-compare.mjs`) with a pair of specimen frames showing only the touched sections.
+
 **Where it lands.** TH126 grows by the compare page; C5's exit criterion
 gains "the compare page shows 4.0.0 on the left and the current build on
 the right for the theme in the query, and Kenny has opened it". The

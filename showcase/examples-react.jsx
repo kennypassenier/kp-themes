@@ -38,6 +38,7 @@ const RENAME = {
     colspan: 'colSpan',
     rowspan: 'rowSpan',
     autocomplete: 'autoComplete',
+    novalidate: 'noValidate',
     popovertarget: 'popoverTarget',
     readonly: 'readOnly',
     maxlength: 'maxLength',

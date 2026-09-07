@@ -4037,6 +4037,15 @@
         color: var(--foreground);
     }
 
+    /* A divider between surfaces [S45, TH121]: the quiet answer is room —
+       one step of the spacing scale — so a section and what follows never
+       touch (the rhythm gate measured 0px under formal); a register may
+       paint a tear across it. */
+    [data-kp-divider] {
+        display: block;
+        block-size: var(--kp-space-xl);
+    }
+
     blockquote {
         margin-inline-start: 0;
         padding-inline-start: 1rem;
@@ -4570,6 +4579,164 @@
         inset-block-start: 0.5rem;
     }
 
+    /* ====================================================================
+ * The concept demo's own pieces [S46, round six]: laurels, a side note,
+ * a platforms line and a spec sheet. Quiet by default — a list, a note,
+ * a row, a card — so a theme without an answer shows them plainly and a
+ * register may dramatise them.
+ * ==================================================================== */
+    .kp-laurels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: var(--kp-text-sm);
+        color: var(--muted-foreground);
+    }
+    .kp-laurels b {
+        display: block;
+        color: var(--foreground);
+    }
+    .kp-side-note {
+        margin: 0;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-platforms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.5rem;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-spec {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        padding: 1rem 1.25rem;
+        font-size: var(--kp-text-sm);
+        line-height: 1.7;
+    }
+    .kp-spec dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.15rem 1.2rem;
+    }
+    .kp-spec dt {
+        color: var(--muted-foreground);
+    }
+    .kp-spec dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+    .kp-spec__swatch {
+        display: inline-block;
+        inline-size: 0.9em;
+        block-size: 0.9em;
+        vertical-align: -0.1em;
+        margin-inline-end: 0.4em;
+        border: 1px solid var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='surface-hero-bg'] {
+        background: var(--surface-hero-bg);
+    }
+    .kp-spec__swatch[data-token='background'] {
+        background: var(--background);
+    }
+    .kp-spec__swatch[data-token='destructive'] {
+        background: var(--destructive);
+    }
+    .kp-spec__swatch[data-token='accent'] {
+        background: var(--accent);
+    }
+    .kp-spec__swatch[data-token='chart-4'] {
+        background: var(--chart-4);
+    }
+    .kp-spec__swatch[data-token='foreground'] {
+        background: var(--foreground);
+    }
+    .kp-spec__swatch[data-token='card'] {
+        background: var(--card);
+    }
+    .kp-spec__swatch[data-token='card-foreground'] {
+        background: var(--card-foreground);
+    }
+    .kp-spec__swatch[data-token='primary'] {
+        background: var(--primary);
+    }
+    .kp-spec__swatch[data-token='primary-foreground'] {
+        background: var(--primary-foreground);
+    }
+    .kp-spec__swatch[data-token='secondary'] {
+        background: var(--secondary);
+    }
+    .kp-spec__swatch[data-token='muted'] {
+        background: var(--muted);
+    }
+    .kp-spec__swatch[data-token='muted-foreground'] {
+        background: var(--muted-foreground);
+    }
+    .kp-spec__swatch[data-token='border'] {
+        background: var(--border);
+    }
+    .kp-spec__swatch[data-token='border-strong'] {
+        background: var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='input'] {
+        background: var(--input);
+    }
+    .kp-spec__swatch[data-token='selected'] {
+        background: var(--selected);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg'] {
+        background: var(--surface-hero-fg);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg-2'] {
+        background: var(--surface-hero-fg-2);
+    }
+    .kp-spec__swatch[data-token='surface-hero-muted'] {
+        background: var(--surface-hero-muted);
+    }
+    .kp-spec__swatch[data-token='surface-hero-border'] {
+        background: var(--surface-hero-border);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary'] {
+        background: var(--surface-hero-primary);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary-foreground'] {
+        background: var(--surface-hero-primary-foreground);
+    }
+    .kp-spec__swatch[data-token='surface-hero-danger'] {
+        background: var(--surface-hero-danger);
+    }
+    .kp-spec__swatch[data-token='surface-hero-card'] {
+        background: var(--surface-hero-card);
+    }
+    .kp-spec__swatch[data-token='success'] {
+        background: var(--success);
+    }
+    .kp-spec__swatch[data-token='warning'] {
+        background: var(--warning);
+    }
+    .kp-spec__swatch[data-token='info'] {
+        background: var(--info);
+    }
+    .kp-spec__swatch[data-token='link'] {
+        background: var(--link);
+    }
+    .kp-spec__font[data-font='display'] {
+        font-family: var(--theme-font-display);
+    }
+    .kp-spec__font[data-font='body'] {
+        font-family: var(--theme-font-body);
+    }
+    .kp-spec__font[data-font='mono'] {
+        font-family: var(--kp-mono, monospace);
+    }
     .kp-footer {
         padding: 1.5rem clamp(1rem, 4vw, 3rem);
         border-top: 1px solid var(--border);
@@ -7249,7 +7416,7 @@
     }
 
     [data-theme='cyberpunk'] [data-kp-surface='app'] + [data-kp-divider]::before {
-        background: var(--surface-hero-bg);
+        background: var(--sidebar-background);
     }
 
     /* ── The navbar [TH117] ───────────────────────────────────────────── */
@@ -7995,6 +8162,206 @@
         background: var(--primary);
     }
 
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    /* The hero grid of the reference: the copy wide, the spec sheet beside
+       it, both aligned to the bottom. */
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: end;
+    }
+
+    @container (max-width: 52rem) {
+        [data-theme='cyberpunk'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] {
+        position: relative;
+        overflow: hidden;
+        padding-block: 3rem 4.5rem;
+    }
+
+    /* The vertical microlabel in the margin, like the shots' side numbers. */
+    [data-theme='cyberpunk'] .kp-side-note {
+        position: absolute;
+        right: 1rem;
+        top: 3rem;
+        writing-mode: vertical-rl;
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.35em;
+        color: var(--muted-foreground);
+    }
+
+    /* Laurels: uppercase, each item between two dotted bars. */
+    [data-theme='cyberpunk'] .kp-laurels {
+        gap: 1.5rem 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.8rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-laurels li {
+        position: relative;
+        padding-inline: 0.9rem;
+        background:
+            repeating-linear-gradient(0deg, var(--foreground) 0 2px, transparent 2px 4px) left / 3px 100% no-repeat,
+            repeating-linear-gradient(0deg, var(--foreground) 0 2px, transparent 2px 4px) right / 3px 100% no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-laurels b {
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+    }
+
+    /* The lede: heavier, narrower, the hero's ink. */
+    [data-theme='cyberpunk'] .kp-lede {
+        max-width: 34rem;
+        font-size: 1.15rem;
+        font-weight: 500;
+    }
+
+    /* The platforms line: mono, a square before every name. */
+    [data-theme='cyberpunk'] .kp-platforms {
+        margin-top: 2.4rem;
+        gap: 0.4rem 1.6rem;
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-platforms span::before {
+        content: '■ ';
+        color: var(--foreground);
+    }
+
+    /* The spec sheet: an ink card with two clipped corners, mono, the
+       terms in the accent. On the hero its ground is the hero's ink. */
+    [data-theme='cyberpunk'] .kp-spec {
+        background: var(--surface-hero-fg);
+        color: var(--surface-hero-primary-foreground);
+        border: 0;
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        line-height: 1.7;
+        padding: 1.4rem 1.5rem 1.6rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-spec dt {
+        color: var(--accent);
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='cyberpunk'] .kp-spec dd {
+        color: var(--surface-hero-primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-spec__swatch {
+        border-color: hsl(from var(--surface-hero-primary-foreground) h s l / 0.25);
+    }
+
+    /* The two link modifiers of the strip: the language break and the cta. */
+    [data-theme='cyberpunk'] .kp-nav__link--lang {
+        border-left: 1px solid hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        padding-inline: 1.6rem;
+        font-weight: 700;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link--cta,
+    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link--cta {
+        background: var(--primary-hover);
+    }
+
+    /* Select and textarea: the same control. The select keeps the
+       package's `appearance: base-select` (KT8: the option list wears the
+       theme), so the arrow is the picker icon, in the primary. */
+    [data-theme='cyberpunk'] select.kp-field__input::picker-icon {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input--multiline {
+        min-height: 6rem;
+        resize: vertical;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check {
+        appearance: none;
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        margin: 0;
+        border: 1px solid var(--primary);
+        background: var(--card);
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    /* The footer: near-black, mono headings in the primary, links uppercase. */
+    [data-theme='cyberpunk'] .kp-footer {
+        padding: 3rem clamp(1rem, 4vw, 3rem) 2.5rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer h4 {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 0.6rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer a {
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer a:hover,
+    [data-theme='cyberpunk'] .kp-footer a:focus-visible {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-footer .microlabel {
+        margin-top: 2rem;
+        color: var(--muted-foreground);
+    }
+
     /* ── Compatibility with the 4.x register ──────────────────────────── */
 
     /* Three of the old opt-in classes keep a meaning: a glitch is the new
@@ -8429,6 +8796,16 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--kp-autogrid-min, 16rem), 1fr));
         gap: var(--kp-autogrid-gap, var(--kp-space-lg));
+    }
+    /* A tighter minimum, for a grid that must keep its columns on a phone
+       (three footer columns at 320px; the concept demo, round six). */
+    .kp-autogrid--tight {
+        --kp-autogrid-min: 10rem;
+    }
+    /* A page that uses the whole viewport: two frames side by side need
+       the width more than the measure (the compare page, round six). */
+    .kp-page--full {
+        max-inline-size: none;
     }
 
     /* Content with a side column that drops below when there is no room for

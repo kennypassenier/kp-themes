@@ -217,6 +217,164 @@
         inset-block-start: 0.5rem;
     }
 
+    /* ====================================================================
+ * The concept demo's own pieces [S46, round six]: laurels, a side note,
+ * a platforms line and a spec sheet. Quiet by default — a list, a note,
+ * a row, a card — so a theme without an answer shows them plainly and a
+ * register may dramatise them.
+ * ==================================================================== */
+    .kp-laurels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: var(--kp-text-sm);
+        color: var(--muted-foreground);
+    }
+    .kp-laurels b {
+        display: block;
+        color: var(--foreground);
+    }
+    .kp-side-note {
+        margin: 0;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-platforms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.5rem;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-spec {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        padding: 1rem 1.25rem;
+        font-size: var(--kp-text-sm);
+        line-height: 1.7;
+    }
+    .kp-spec dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.15rem 1.2rem;
+    }
+    .kp-spec dt {
+        color: var(--muted-foreground);
+    }
+    .kp-spec dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+    .kp-spec__swatch {
+        display: inline-block;
+        inline-size: 0.9em;
+        block-size: 0.9em;
+        vertical-align: -0.1em;
+        margin-inline-end: 0.4em;
+        border: 1px solid var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='surface-hero-bg'] {
+        background: var(--surface-hero-bg);
+    }
+    .kp-spec__swatch[data-token='background'] {
+        background: var(--background);
+    }
+    .kp-spec__swatch[data-token='destructive'] {
+        background: var(--destructive);
+    }
+    .kp-spec__swatch[data-token='accent'] {
+        background: var(--accent);
+    }
+    .kp-spec__swatch[data-token='chart-4'] {
+        background: var(--chart-4);
+    }
+    .kp-spec__swatch[data-token='foreground'] {
+        background: var(--foreground);
+    }
+    .kp-spec__swatch[data-token='card'] {
+        background: var(--card);
+    }
+    .kp-spec__swatch[data-token='card-foreground'] {
+        background: var(--card-foreground);
+    }
+    .kp-spec__swatch[data-token='primary'] {
+        background: var(--primary);
+    }
+    .kp-spec__swatch[data-token='primary-foreground'] {
+        background: var(--primary-foreground);
+    }
+    .kp-spec__swatch[data-token='secondary'] {
+        background: var(--secondary);
+    }
+    .kp-spec__swatch[data-token='muted'] {
+        background: var(--muted);
+    }
+    .kp-spec__swatch[data-token='muted-foreground'] {
+        background: var(--muted-foreground);
+    }
+    .kp-spec__swatch[data-token='border'] {
+        background: var(--border);
+    }
+    .kp-spec__swatch[data-token='border-strong'] {
+        background: var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='input'] {
+        background: var(--input);
+    }
+    .kp-spec__swatch[data-token='selected'] {
+        background: var(--selected);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg'] {
+        background: var(--surface-hero-fg);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg-2'] {
+        background: var(--surface-hero-fg-2);
+    }
+    .kp-spec__swatch[data-token='surface-hero-muted'] {
+        background: var(--surface-hero-muted);
+    }
+    .kp-spec__swatch[data-token='surface-hero-border'] {
+        background: var(--surface-hero-border);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary'] {
+        background: var(--surface-hero-primary);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary-foreground'] {
+        background: var(--surface-hero-primary-foreground);
+    }
+    .kp-spec__swatch[data-token='surface-hero-danger'] {
+        background: var(--surface-hero-danger);
+    }
+    .kp-spec__swatch[data-token='surface-hero-card'] {
+        background: var(--surface-hero-card);
+    }
+    .kp-spec__swatch[data-token='success'] {
+        background: var(--success);
+    }
+    .kp-spec__swatch[data-token='warning'] {
+        background: var(--warning);
+    }
+    .kp-spec__swatch[data-token='info'] {
+        background: var(--info);
+    }
+    .kp-spec__swatch[data-token='link'] {
+        background: var(--link);
+    }
+    .kp-spec__font[data-font='display'] {
+        font-family: var(--theme-font-display);
+    }
+    .kp-spec__font[data-font='body'] {
+        font-family: var(--theme-font-body);
+    }
+    .kp-spec__font[data-font='mono'] {
+        font-family: var(--kp-mono, monospace);
+    }
     .kp-footer {
         padding: 1.5rem clamp(1rem, 4vw, 3rem);
         border-top: 1px solid var(--border);
