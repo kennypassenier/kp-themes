@@ -1,0 +1,11 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "fixtures",
+            "runtimeExecutable": "sh",
+            "runtimeArgs": ["-c", "PORT=4300 node tests/fixtures/server.mjs"],
+            "port": 4300
+        }
+    ]
+}

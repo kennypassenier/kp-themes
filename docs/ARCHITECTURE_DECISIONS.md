@@ -694,7 +694,7 @@ the package.
 No new gate scripts, no new generators, no new dev dependency. TH104
 uses the container queries 3.2.0 introduced for the tables; TH110 is one
 selector in the existing register; TH112 is documentation; TH113 is two
-CSS properties; TH114 is a test plus a sentence in the guide; D3 removes
+CSS properties; TH114 is a test plus a sentence in the guide; D4 removes
 an export. The existing 22-check chain covers this work.
 
 Recorded as a decision rather than left implicit, so nobody adds tooling
@@ -730,7 +730,15 @@ Re-firing rather than dispatching a new `kp-confirm-accepted` event is
 the choice that costs consumers nothing: chassis-rs, kyu and Almanac all
 listen for ordinary clicks, and a custom event would make every one of
 them change code to keep working. `ARM_EVENT` and `DISARM_EVENT`
-(`js/components.js:33-35`) are retired; D3 removes them.
+(`js/components.js:33-35`) are retired; D4 removes them.
+
+**Renumbered 2026-09-07, at the AFK report.** This text said D3, which is
+the ID round five froze for a different removal — `STRINGS_NL` leaving
+`js/strings.js` and `index.js`, decided by Kenny on 2026-09-05. Two
+removals had one number, and the consequence was worse than untidy: W1
+was briefed with the wrong meaning and built this one while the frozen
+D3 went unbuilt. The events are D4 from here; D3 keeps the meaning the
+feature list gave it.
 
 ## AR28 · The dialog is built in `js/components.js`, and it restores the menu it displaced
 

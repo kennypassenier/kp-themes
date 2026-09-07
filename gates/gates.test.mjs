@@ -320,6 +320,24 @@ test("TH86: mono's seven status plates are a lightness ladder, apart with hue re
     }
 });
 
+test('D3 and D4: two removals stay removed', () => {
+    // The registry-coverage item of round five's AFK report, answered
+    // "Dichten" by Kenny on 2026-09-07. Both removals were shipped and
+    // neither was pinned: re-adding either export would have broken no
+    // gate at all. Finding that also found the worse half -- D3 and D4
+    // had shared one number, W1 was briefed with the wrong meaning, and
+    // the frozen D3 went unbuilt until this same turn.
+    const read = (/** @type {string} */ file) => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+    for (const file of ['index.js', 'index.d.ts', 'js/strings.js', 'js/strings.d.ts']) {
+        assert.ok(!/\bexport\b[^\n]*\bSTRINGS_NL\b/.test(read(file)), `${file} still exports STRINGS_NL [D3]`);
+    }
+    for (const file of ['index.js', 'index.d.ts', 'js/components.js', 'js/components.d.ts']) {
+        const source = read(file);
+        assert.ok(!/\bexport\b[^\n]*\bARM_EVENT\b/.test(source), `${file} still exports ARM_EVENT [D4]`);
+        assert.ok(!/\bexport\b[^\n]*\bDISARM_EVENT\b/.test(source), `${file} still exports DISARM_EVENT [D4]`);
+    }
+});
+
 test('AR28: the vendored modules import nothing outside themselves', () => {
     // The gate's own subject, as a unit: the six files chassis-rs bakes
     // in are closed under import. Drilled red twice against the real

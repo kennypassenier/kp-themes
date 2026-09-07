@@ -71,7 +71,7 @@ React button anyway, pass `attachConfirmations(root, { ownedBy: '' })`.
 ### `kp-confirm-arm` and `kp-confirm-disarm` no longer fire
 
 They were removed in 4.0.0 together with arm-then-act as the default
-(D3). The dialog replaces what they announced: use the `onConfirmOpen`
+(D4). The dialog replaces what they announced: use the `onConfirmOpen`
 and `onConfirmCancel` props, or call `openConfirmation()` yourself.
 
 ### A destructive button is disabled and I did not disable it

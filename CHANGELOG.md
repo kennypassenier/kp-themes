@@ -12,7 +12,7 @@ addition that breaks nothing.
 `MIGRATION.md` has the consumer-facing detail; this is what changed and
 why.
 
-### The confirmation is a dialog [TH107, D3, AR27, AR28, AR29]
+### The confirmation is a dialog [TH107, D4, AR27, AR28, AR29]
 
 A native `<dialog>` opened through `showModal()`, so the browser supplies
 the focus trap, the Escape close and the return of focus. Confirm

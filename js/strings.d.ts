@@ -212,18 +212,6 @@ export type Strings = {
  */
 export declare const DEFAULT_STRINGS: Strings;
 /**
- * Dutch, kept as an export rather than as the default.
- *
- * Three consumers — kyu, almanac and kp-soft — were reading Dutch until
- * 2.0.0 and would otherwise have had to write it out again. One line
- * restores what they had:
- *
- *   setStrings(STRINGS_NL);
- *
- * @type {Strings}
- */
-export declare const STRINGS_NL: Strings;
-/**
  * Replace some or all of the strings, for the framework-free channel and
  * for anything that reads them outside React.
  *

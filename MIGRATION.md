@@ -11,7 +11,7 @@ with what it becomes.
 
 ## Coming from 3.2.0 to 4.0.0
 
-**The confirmation is a dialog now** [TH107, AR27, AR28, AR29, D3]. This
+**The confirmation is a dialog now** [TH107, AR27, AR28, AR29, D4]. This
 is a break, and it is why 4.0.0 is a major. The rest of 4.0.0 is written
 up by the milestones that own it; what follows is the confirmation.
 
@@ -35,8 +35,8 @@ back before focus does — `showModal()` light-dismisses every open
 | Was                                                                            | Is                                                                 |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
 | the first click armed the button, relabelled it and set `data-kp-armed="true"` | the click opens a dialog; nothing is written on the button         |
-| `CONFIRM_ARM_EVENT` / `ARM_EVENT` (`kp-confirm-arm`)                           | removed (D3) — use `onConfirmOpen`, or call `openConfirmation()`   |
-| `CONFIRM_DISARM_EVENT` / `DISARM_EVENT` (`kp-confirm-disarm`)                  | removed (D3) — use `onConfirmCancel`                               |
+| `CONFIRM_ARM_EVENT` / `ARM_EVENT` (`kp-confirm-arm`)                           | removed (D4) — use `onConfirmOpen`, or call `openConfirmation()`   |
+| `CONFIRM_DISARM_EVENT` / `DISARM_EVENT` (`kp-confirm-disarm`)                  | removed (D4) — use `onConfirmCancel`                               |
 | `attachConfirmations` attached to every `[data-kp-confirm]`                    | it skips an element another channel owns (`data-kp-confirm-owner`) |
 
 If your page styles or observes `[data-kp-armed]`, either move to the
@@ -63,6 +63,26 @@ document-wide attach anyway.
 - The dialog reuses `.kp-dialog`, `.kp-dialog__title`,
   `.kp-dialog__description` and `.kp-dialog__actions`, plus
   `.kp-confirm` on the dialog itself. No new stylesheet.
+
+### `STRINGS_NL` is gone [D3]
+
+The Dutch string set left `js/strings.js` and `index.js`. It existed as a
+bridge: three consumers read Dutch until 2.0.0 moved every string into a
+replaceable dictionary with English defaults, and `STRINGS_NL` let them
+restore what they had with one line. Removing an export is a breaking
+change, which is why it waited for a major.
+
+Nothing is lost. S20 says a released version never changes, so the
+`v2.0.0` and `v3.0.0` tags still carry the seventy-two lines verbatim:
+
+```
+git show v3.0.0:js/strings.js
+```
+
+If you were calling `setStrings(STRINGS_NL)`, copy that object into your
+own code and keep calling `setStrings()` with it. That is the supported
+shape — a consumer owns its own words, and this package owns only the
+English defaults and the door.
 
 ### The button looks different, in three ways [TH110, TH111, TH113, AR30, AR32]
 

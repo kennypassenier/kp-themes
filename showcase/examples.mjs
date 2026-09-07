@@ -488,7 +488,13 @@ export const EXAMPLES = [
                 columns: [
                     { label: 'Reference' },
                     { label: 'Customer' },
-                    { label: 'Status' },
+                    // MR-W4-1, Kenny's answer of 2026-09-07: the badge is not
+                    // wrong, this column was too narrow. AR32's
+                    // `overflow-wrap: anywhere` is what keeps a long value off
+                    // the page's own scrollbar, and it breaks a word to do it
+                    // -- measured here as `Overd` / `ue` inside the pill at
+                    // 1100px. The repair is the column, not the component.
+                    { label: 'Status', className: 'kp-text-nowrap' },
                     { label: 'Amount', className: 'kp-text-end kp-text-nowrap' },
                 ],
                 rows: [
