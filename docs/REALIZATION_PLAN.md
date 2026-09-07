@@ -343,6 +343,13 @@ blocking, and each has to be red once before it counts (rule 7d):
 - **The wrapper gate.** AR31 refuses a runtime warning, so the check
   moves to this package's own pages: a component converted to a
   container query must sit inside a wrapper that establishes one.
+  Built as `gates/check-wrappers.mjs` and drilled red twice on
+  2026-09-07 — ten `missing-wrapper` findings with the wrapper taken out
+  of the example pages' nav bar, and one `unlisted` finding with a
+  `@container kp-card` block added to the stylesheet. It reads the
+  container names out of `css/components.css` rather than from a
+  constant, so a future conversion cannot fall outside it by accident
+  (AR26).
 
 ### Round five — the Phase 5 gate, 2026-09-07
 
@@ -389,7 +396,7 @@ will touch is decided now rather than hoped for:
 | --- | --- |
 | W0 | not started |
 | W1 | not started |
-| W2 | not started |
+| W2 | **built**, 2026-09-07. The grid tile's place is four custom properties instead of an inline `grid-column` / `grid-row` (the collapse rule had been dead since it was written); the grid and the nav bar read `@container kp-grid` and `@container kp-nav` and their viewport mechanisms are gone; the DataTable needed nothing, `@container kp-table` has carried it since 3.2.0. `MIGRATION.md` carries the 4.0.0 wrapper instruction and `gates/check-wrappers.mjs` blocks a page that draws a converted component outside a container |
 | W3 | not started |
 | W4 | not started |
 | W5 | not started |

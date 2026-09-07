@@ -18,6 +18,7 @@ import { checkSecondHalves, checkStateVisibility, themes } from './check-invaria
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { loosePhrases } from './check-strings.mjs';
 import { copyableExports } from './check-manifest.mjs';
+import { drawn, establishers, queried, REQUIRED } from './check-wrappers.mjs';
 import { FILES } from './checksums.mjs';
 import { compareVersions, diagnose } from '../js/diagnostics.js';
 import { DEFAULT_STRINGS } from '../js/strings.js';
@@ -316,6 +317,59 @@ test("TH86: mono's seven status plates are a lightness ladder, apart with hue re
             assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
         }
     }
+});
+
+test('TH104: the wrapper check answers by ancestry, not by proximity', () => {
+    // The whole point of the gate is depth: a container query binds to the
+    // NEAREST container at ANY depth, so a wrapper three elements up is a
+    // correct wrapper and a sibling one is not.
+    const wrappers = new Map([['kp-grid', ['kp-grid-wrap']]]);
+    const deep = '<div class="kp-grid-wrap"><main><section><div class="kp-grid"></div></section></main></div>';
+    assert.deepEqual(
+        drawn(deep, REQUIRED, wrappers).map((f) => f.wrapped),
+        [true],
+    );
+    const sibling = '<div class="kp-grid-wrap"></div><div class="kp-grid"></div>';
+    assert.deepEqual(
+        drawn(sibling, REQUIRED, wrappers).map((f) => f.wrapped),
+        [false],
+    );
+    // The element itself is not its own container: that is AR24 in one line.
+    assert.deepEqual(
+        drawn('<div class="kp-grid kp-grid-wrap"></div>', REQUIRED, wrappers).map((f) => f.wrapped),
+        [false],
+    );
+    // A void element in between must not unbalance the stack, or every
+    // later element would look wrapped when it is not.
+    const afterVoid = '<div class="kp-grid-wrap"><img src="a.png" /></div><div class="kp-grid"></div>';
+    assert.deepEqual(
+        drawn(afterVoid, REQUIRED, wrappers).map((f) => f.wrapped),
+        [false],
+    );
+    // An opt-in table needs the attribute; a plain one asks for nothing.
+    const tables = new Map([['kp-table', ['kp-table-wrap', 'kp-datatable']]]);
+    assert.equal(drawn('<table class="kp-table"></table>', REQUIRED, tables).length, 0);
+    assert.deepEqual(
+        drawn('<table class="kp-table" data-kp-cards></table>', REQUIRED, tables).map((f) => f.wrapped),
+        [false],
+    );
+});
+
+test('TH104: the container names and their wrappers are read from the stylesheet', () => {
+    // AR26: the gate's expectation comes from the source. A conversion
+    // that arrives without an entry in REQUIRED is caught by this pair
+    // disagreeing, so the list cannot silently fall behind.
+    const css = readFileSync(new URL('../css/components.css', import.meta.url), 'utf8');
+    const names = queried(css);
+    const wrappers = establishers(css);
+    for (const entry of REQUIRED) {
+        assert.ok(names.has(entry.container), `nothing queries @container ${entry.container}`);
+        assert.ok((wrappers.get(entry.container) ?? []).length > 0, `nothing establishes a container named ${entry.container}`);
+    }
+    assert.deepEqual([...names].sort(), REQUIRED.map((e) => e.container).sort());
+    // Both classes that can carry the table's container are found, which
+    // is what lets a DataTable without a .kp-table-wrap still pass.
+    assert.deepEqual(wrappers.get('kp-table'), ['kp-table-wrap', 'kp-datatable']);
 });
 
 test('KT7: every check script runs in the gates chain, in the hook, and CI runs the chain', () => {
