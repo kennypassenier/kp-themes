@@ -55,7 +55,7 @@ const COLOUR = /#[0-9a-fA-F]{3,8}\b|hsla?\([^)]*\)|rgba?\([^)]*\)|\boklch\([^)]*
  * fixture pages, never installed by a consumer. They may style their own
  * furniture and may not style the document.
  */
-const SCAFFOLDING = ['../showcase/showcase.css'];
+const SCAFFOLDING = ['../showcase/showcase.css', '../showcase/compare.css'];
 
 /**
  * Bare-element rules the scaffolding is allowed, each with its reason.

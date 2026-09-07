@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" data-kp-theme-from-query>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Phantom, old against new</title>
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem("theme");
+                    if (t) document.documentElement.setAttribute("data-theme", t);
+                    document.documentElement.setAttribute("data-kp-effects", '');
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
+    </head>
+    <body>
+        <main id="main" class="kp-page kp-page--full" tabindex="-1" data-compare-theme="phantom">
+            <div class="kp-stack">
+                <h1>Phantom — old against new</h1>
+                <p class="kp-prose kp-text-muted">
+                    The whole concept demo twice: on the left under the 4.0.0 release, on the right under the current build, scrolling together. 
+                    The differences are measured from the two stylesheets and the shipped fonts, said below, and marked on the demo where they show. 
+                    Both sides share the current component layer, so what differs is the theme.
+                </p>
+                <ul class="kp-row" id="compare-themes">
+                    <li>
+                        <a href="compare-formal.html" data-theme-link="formal">Formal</a>
+                    </li>
+                    <li>
+                        <a href="compare-light.html" data-theme-link="light">Light</a>
+                    </li>
+                    <li>
+                        <a href="compare-dark.html" data-theme-link="dark">Dark</a>
+                    </li>
+                    <li>
+                        <a href="compare-cyberpunk.html" data-theme-link="cyberpunk">Cyberpunk</a>
+                    </li>
+                    <li>
+                        <a href="compare-pastel.html" data-theme-link="pastel">Pastel</a>
+                    </li>
+                    <li>
+                        <a href="compare-terminal.html" data-theme-link="terminal">Terminal</a>
+                    </li>
+                    <li>
+                        <a href="compare-topo.html" data-theme-link="topo">Topographic</a>
+                    </li>
+                    <li>
+                        <a href="compare-high-contrast.html" data-theme-link="high-contrast">High contrast</a>
+                    </li>
+                    <li>
+                        <a href="compare-sepia.html" data-theme-link="sepia">Sepia</a>
+                    </li>
+                    <li>
+                        <a href="compare-blueprint.html" data-theme-link="blueprint">Blueprint</a>
+                    </li>
+                    <li>
+                        <a href="compare-solstice.html" data-theme-link="solstice">Solstice</a>
+                    </li>
+                    <li>
+                        <a href="compare-brutalism.html" data-theme-link="brutalism">Brutalism</a>
+                    </li>
+                    <li>
+                        <a href="compare-deco.html" data-theme-link="deco">Art Deco</a>
+                    </li>
+                    <li>
+                        <a href="compare-academia.html" data-theme-link="academia">Dark Academia</a>
+                    </li>
+                    <li>
+                        <a href="compare-phantom.html" data-theme-link="phantom" aria-current="page">Phantom</a>
+                    </li>
+                    <li>
+                        <a href="compare-ticker.html" data-theme-link="ticker">Ticker</a>
+                    </li>
+                    <li>
+                        <a href="compare-nishiki.html" data-theme-link="nishiki">Nishiki</a>
+                    </li>
+                    <li>
+                        <a href="compare-shade-light.html" data-theme-link="shade-light">Shade (light)</a>
+                    </li>
+                    <li>
+                        <a href="compare-shade-dark.html" data-theme-link="shade-dark">Shade (dark)</a>
+                    </li>
+                    <li>
+                        <a href="compare-mono.html" data-theme-link="mono">Mono</a>
+                    </li>
+                    <li>
+                        <a href="compare-retro.html" data-theme-link="retro">Retro</a>
+                    </li>
+                    <li>
+                        <a href="compare-grotesk.html" data-theme-link="grotesk">Grotesk</a>
+                    </li>
+                    <li>
+                        <a href="compare-tazhib.html" data-theme-link="tazhib">Tazhib</a>
+                    </li>
+                    <li>
+                        <a href="compare-nostromo.html" data-theme-link="nostromo">Nostromo</a>
+                    </li>
+                </ul>
+                <h2>What is different</h2>
+                <ul class="kp-stack" data-compare-lines>
+                    <li>Typography: Barlow and Barlow Condensed now ship with the package and load here; 4.0.0 shipped no font file, so the browser drew the system fallback.</li>
+                    <li>New in 5.0.0: 11 hero tokens and the display text step, all pointing at values this theme already had — the hero paints the same ground as the app, so nothing visible changed.</li>
+                </ul>
+                <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
+                    <section class="kp-stack" aria-label="Phantom under 4.0.0">
+                        <h3>Phantom under 4.0.0</h3>
+                        <iframe src="compare-frame-4.0.0.html?theme=phantom&amp;mark=type" title="Phantom under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                    </section>
+                    <section class="kp-stack" aria-label="Phantom under the current build">
+                        <h3>Phantom under the current build</h3>
+                        <iframe src="compare-frame.html?theme=phantom&amp;mark=type" title="Phantom under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                    </section>
+                </div>
+                <p class="kp-prose">
+                    <a href="concept.html?theme=phantom">The concept demo on its own</a>
+                     under this theme, with the picker.
+                </p>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+        <script>
+            // The page wears its theme, and the frames of a pair scroll
+            // together (same origin, so each frame's window is reachable).
+            (function () {
+                var name = document.querySelector('[data-compare-theme]').getAttribute('data-compare-theme');
+                document.documentElement.setAttribute('data-theme', name);
+                // js/auto.js runs after this script, applies the visitor's
+                // stored theme and then the query on a page that opts in;
+                // give it the query, so the page wears its own theme.
+                if (new URLSearchParams(location.search).get('theme') !== name) history.replaceState(null, '', location.pathname + '?theme=' + name + location.hash);
+                document.querySelectorAll('[data-compare-pair]').forEach(function (pair) {
+                    var frames = pair.querySelectorAll('iframe');
+                    var lock = false;
+                    frames.forEach(function (frame) {
+                        function attach() {
+                            var win = frame.contentWindow;
+                            // One listener per document: a load event and the
+                            // early attach below can both reach the same window.
+                            if (!win || win.kpCompareSynced) return;
+                            win.kpCompareSynced = true;
+                            win.addEventListener('scroll', function () {
+                                if (lock) return;
+                                lock = true;
+                                frames.forEach(function (other) {
+                                    if (other !== frame && other.contentWindow) other.contentWindow.scrollTo(win.scrollX, win.scrollY);
+                                });
+                                lock = false;
+                            });
+                        }
+                        frame.addEventListener('load', attach);
+                        // The frame may have loaded before this script ran: the
+                        // parser yields on a page with frames, and a cached
+                        // page fires its load first (CI run 34163234434,
+                        // chromium: the right frame never followed).
+                        try {
+                            var doc = frame.contentDocument;
+                            if (doc && doc.readyState === 'complete' && doc.location.href !== 'about:blank') attach();
+                        } catch (e) {
+                            /* a frame that is not ours yet */
+                        }
+                    });
+                });
+            })();
+        </script>
+    </body>
+</html>

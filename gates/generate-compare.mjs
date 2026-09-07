@@ -32,7 +32,7 @@
 
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { el, renderHTML } from '../showcase/examples.mjs';
+import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 import { THEMES } from '../js/theme-registry.js';
 import { noFlashSnippet } from '../js/no-flash.js';
 import { CEILING, strongestAlpha } from './check-texture.mjs';
@@ -246,14 +246,29 @@ export function diffs() {
 const CURRENT = ['fonts.css', 'themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
 
 /**
+ * The component layer, which both frames share. What a compare page shows
+ * is the THEME — tokens, fonts, register, texture — so the left frame
+ * loads the 4.0.0 bundle for those and the current component, layout and
+ * utility sheets on top (same layer names, later rules win inside a
+ * layer, the 4.0.0 register stays above them in `kp.register`). Without
+ * this the left would show the 4.0.0 component layer missing the demo's
+ * newer pieces, and a theme that did not change would look changed.
+ */
+const COMPONENT_LAYER = ['components.css', 'layout.css', 'utilities.css'];
+
+/**
  * @param {string} title
  * @param {string} body
- * @param {{ baseline?: boolean, script?: string }} [options]
+ * @param {{ baseline?: boolean, frame?: boolean, script?: string }} [options]
  */
-function page(title, body, { baseline = false, script = '' } = {}) {
-    const links = baseline
-        ? '        <link rel="stylesheet" href="../showcase/baseline/4.0.0/kp-themes.css" />'
-        : CURRENT.map((sheet) => `        <link rel="stylesheet" href="../css/${sheet}" />`).join('\n');
+function page(title, body, { baseline = false, frame = false, script = '' } = {}) {
+    const sheets = baseline
+        ? ['../showcase/baseline/4.0.0/kp-themes.css', ...COMPONENT_LAYER.map((sheet) => `../css/${sheet}`)]
+        : CURRENT.map((sheet) => `../css/${sheet}`);
+    // The marks live in scaffolding the frames alone load [TH109: no
+    // page-local style block], guarded by gates/check-layers.mjs.
+    if (frame) sheets.push('../showcase/compare.css');
+    const links = sheets.map((href) => `        <link rel="stylesheet" href="${href}" />`).join('\n');
     const module = baseline ? '../showcase/baseline/4.0.0/kp-themes.js' : '../js/auto.js';
     return `<!doctype html>
 <html lang="en" data-kp-theme-from-query>
@@ -274,228 +289,47 @@ ${body}
 `;
 }
 
-/** The specimen sections, one per category, in the package's vocabulary. */
-function specimenBody() {
-    const section = (/** @type {string} */ cat, /** @type {string} */ title, /** @type {any[]} */ ...children) =>
-        el('section', { class: 'kp-section kp-stack', 'data-compare-cat': cat, hidden: '' }, el('p', { class: 'kp-text-muted' }, title), ...children);
-    return renderHTML(
-        [
-            el(
-                'main',
-                { id: 'main', class: 'kp-page', tabindex: '-1' },
-                section(
-                    'type',
-                    'Typography',
-                    el('h1', {}, 'Stop looking like a theme.'),
-                    el('h2', {}, 'Request a handle'),
-                    el(
-                        'p',
-                        { class: 'kp-prose' },
-                        'Signal yellow on void. Blood red ',
-                        el('mark', {}, 'where it counts'),
-                        '. A register that behaves like a place, not a palette.',
-                    ),
-                    el('p', { class: 'kp-mono' }, '/// FILE 06 · STATUS: PREVIEW · 0x1F'),
-                ),
-                section(
-                    'palette',
-                    'Palette',
-                    el(
-                        'dl',
-                        { class: 'kp-spec' },
-                        ...[
-                            'background',
-                            'foreground',
-                            'card',
-                            'primary',
-                            'primary-foreground',
-                            'secondary',
-                            'accent',
-                            'destructive',
-                            'border',
-                            'border-strong',
-                            'success',
-                            'warning',
-                            'info',
-                            'link',
-                        ].flatMap((token) => [el('dt', {}, `--${token}`), el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': token }))]),
-                    ),
-                ),
-                section(
-                    'surfaces',
-                    'The two surfaces',
-                    el(
-                        'div',
-                        { class: 'kp-section kp-stack', 'data-kp-surface': 'hero' },
-                        el('h1', {}, 'A hero surface'),
-                        el(
-                            'p',
-                            { class: 'kp-prose' },
-                            'Every component inside reads the hero tokens: a ',
-                            el('mark', {}, 'marked phrase'),
-                            ', a button, a card.',
-                        ),
-                        el(
-                            'div',
-                            { class: 'kp-row' },
-                            el('Button', { variant: 'primary' }, 'Primary'),
-                            el('Button', {}, 'Default'),
-                            el('Button', { variant: 'ghost' }, 'Ghost'),
-                        ),
-                        el('Card', { title: 'A card on the hero' }, el('p', {}, 'Its ground is the hero card source.')),
-                    ),
-                    el(
-                        'div',
-                        { class: 'kp-section kp-stack', 'data-kp-surface': 'app' },
-                        el('h2', {}, 'The app surface'),
-                        el(
-                            'p',
-                            { class: 'kp-prose' },
-                            'Forms and tables live here; the theme keeps it readable before anything else: ',
-                            el('mark', {}, 'a marked phrase'),
-                            '.',
-                        ),
-                        el(
-                            'div',
-                            { class: 'kp-row' },
-                            el('Button', { variant: 'primary' }, 'Primary'),
-                            el('Button', {}, 'Default'),
-                            el('Button', { variant: 'ghost' }, 'Ghost'),
-                        ),
-                    ),
-                ),
-                section(
-                    'nav',
-                    'The navigation bar',
-                    el('NavBar', {
-                        brand: 'kp-themes',
-                        skipLink: false,
-                        links: [
-                            {
-                                href: '#a',
-                                label: 'Themes',
-                                links: [
-                                    { href: '#a1', label: 'Signal' },
-                                    { href: '#a2', label: 'Synthwave' },
-                                ],
-                            },
-                            { href: '#b', label: 'Components' },
-                            { href: '#c', label: 'Docs' },
-                            { href: '#d', label: 'Try it', className: 'kp-nav__link--cta' },
-                        ],
-                    }),
-                ),
-                section(
-                    'buttons',
-                    'Buttons',
-                    el(
-                        'div',
-                        { class: 'kp-row' },
-                        el('Button', { variant: 'primary' }, 'Primary'),
-                        el('Button', { variant: 'primary', class: 'kp-button--mirror' }, 'Mirrored'),
-                        el('Button', {}, 'Default'),
-                        el('Button', { variant: 'destructive', confirm: 'Delete it' }, 'Destructive'),
-                        el('Button', { variant: 'ghost' }, 'Ghost'),
-                        el('Button', { disabled: true }, 'Disabled'),
-                    ),
-                ),
-                section(
-                    'fields',
-                    'Fields',
-                    el(
-                        'form',
-                        { class: 'kp-form kp-stack', 'data-kp-form': '', novalidate: '' },
-                        el('Field', {
-                            id: 'cmp-handle',
-                            label: 'Handle',
-                            name: 'handle',
-                            placeholder: 'v.night',
-                            help: 'Lowercase, dots allowed, no spaces.',
-                        }),
-                        el('Field', {
-                            id: 'cmp-mail',
-                            label: 'Contact',
-                            name: 'mail',
-                            type: 'email',
-                            error: 'Enter a valid address.',
-                            value: 'nope',
-                        }),
-                        el(
-                            'div',
-                            { class: 'kp-field' },
-                            el('label', { class: 'kp-field__label', for: 'cmp-district' }, 'District'),
-                            el(
-                                'select',
-                                { class: 'kp-field__input', id: 'cmp-district', name: 'district' },
-                                el('option', {}, 'Watson'),
-                                el('option', {}, 'Dogtown'),
-                            ),
-                        ),
-                        el(
-                            'div',
-                            { class: 'kp-field kp-field--check' },
-                            el('input', { class: 'kp-field__check', id: 'cmp-terms', name: 'terms', type: 'checkbox', checked: '' }),
-                            el('label', { class: 'kp-field__label', for: 'cmp-terms' }, 'I understand.'),
-                        ),
-                    ),
-                ),
-                section(
-                    'dossier',
-                    'The dossier card',
-                    el(
-                        'Card',
-                        { title: 'Signal', 'data-kp-reveal': 'emphasis', 'data-kp-label': 'Classified' },
-                        el('p', { class: 'microlabel' }, 'FILE 06 · STATUS: PREVIEW'),
-                        el(
-                            'p',
-                            {},
-                            'The first one was ',
-                            el('mark', {}, 'violet night and magenta'),
-                            '; this one is built on ',
-                            el('mark', {}, 'signal yellow and blood red'),
-                            '.',
-                        ),
-                        el('div', { class: 'kp-row' }, el('Button', { variant: 'primary', 'data-kp-reveal-trigger': '' }, 'Open the file')),
-                    ),
-                ),
-                section(
-                    'divider',
-                    'The divider',
-                    el('div', { class: 'kp-section', 'data-kp-surface': 'hero' }, el('p', { class: 'kp-prose' }, 'The hero surface ends here.')),
-                    el('div', { 'data-kp-divider': '' }),
-                    el('div', { class: 'kp-section', 'data-kp-surface': 'app' }, el('p', { class: 'kp-prose' }, 'The app surface begins here.')),
-                ),
-                section(
-                    'texture',
-                    'The texture layer',
-                    el(
-                        'div',
-                        { class: 'kp-section kp-stack', 'data-kp-surface': 'app', 'data-compare-texture': '' },
-                        el('h2', {}, 'A panel under the texture'),
-                        el(
-                            'p',
-                            { class: 'kp-prose' },
-                            'The layer over the whole viewport: scanlines, grain or stars. DI9 says it is felt, not seen.',
-                        ),
-                        el('p', { class: 'kp-prose' }, 'Look at the empty ground below, where nothing else paints.'),
-                    ),
-                ),
-            ),
-        ],
-        8,
+/**
+ * The approved concept demo, whole, without the theme picker and its
+ * status line: a frame wears the theme its query names, and a picker
+ * inside a frame would change one side only.
+ */
+function demoBody() {
+    const concept = EXAMPLES.find((example) => example.id === 'concept');
+    if (!concept) throw new Error('the concept example is missing');
+    const body = concept.body.filter(
+        (node) => !(node && typeof node === 'object' && ('data-kp-theme-picker' in node.props || 'data-kp-theme-status' in node.props)),
     );
+    return renderHTML(body, 8);
 }
 
-const SPECIMEN_SCRIPT = `
+/**
+ * Where each measured difference shows on the demo: a category from
+ * diffs() → the elements to mark, with the label the mark carries. The
+ * frame script reads `?mark=` and sets `data-compare-mark` on them; the
+ * scaffolding paints the outline and the label.
+ */
+const MARKS = {
+    type: [
+        ['[data-kp-surface="hero"] h1', 'Typography'],
+        ['[data-kp-surface="app"] h2', 'Typography'],
+    ],
+    palette: [['.kp-spec', 'Palette']],
+    surfaces: [['[data-kp-surface="hero"]', 'Two surfaces']],
+    nav: [['.kp-nav', 'Navigation']],
+    buttons: [['[data-kp-surface="hero"] .kp-row', 'Buttons']],
+    fields: [['.kp-form', 'Fields']],
+    dossier: [['.kp-card[data-kp-reveal="emphasis"]', 'Dossier']],
+    divider: [['[data-kp-divider]', 'Tear']],
+    texture: [['[data-kp-surface="app"]', 'Texture']],
+};
+
+const FRAME_SCRIPT = `
         <script>
-            // Which sections this frame shows, the theme, and the texture
-            // factor of the R6-Q2 proposal — all from the query.
+            // The theme, the marks and the texture factor of the R6-Q2
+            // proposal — all from the query.
             (function () {
                 var params = new URLSearchParams(location.search);
-                var show = (params.get('show') || '').split(',').filter(Boolean);
-                document.querySelectorAll('[data-compare-cat]').forEach(function (section) {
-                    section.hidden = show.length > 0 && show.indexOf(section.getAttribute('data-compare-cat')) === -1;
-                });
                 var theme = params.get('theme');
                 if (theme) document.documentElement.setAttribute('data-theme', theme);
                 var factor = parseFloat(params.get('texture') || '');
@@ -503,107 +337,67 @@ const SPECIMEN_SCRIPT = `
                     var current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity')) || 0;
                     document.documentElement.style.setProperty('--fx-texture-opacity', String(current * factor));
                 }
+                var MARKS = ${JSON.stringify(MARKS)};
+                (params.get('mark') || '').split(',').forEach(function (cat) {
+                    (MARKS[cat] || []).forEach(function (pair) {
+                        document.querySelectorAll(pair[0]).forEach(function (node) {
+                            if (!node.hasAttribute('data-compare-mark')) node.setAttribute('data-compare-mark', pair[1]);
+                        });
+                    });
+                });
             })();
         </script>`;
 
-/** @param {ThemeDiff} d */
-function themeSection(d) {
-    const list = el(
-        'ul',
-        { class: 'kp-stack', 'data-compare-lines': '' },
-        d.lines.map((line) => el('li', {}, line)),
-    );
-    const pairs = [];
-    const specimenShow = d.show.filter((cat) => cat !== 'texture' || d.texture.old !== d.texture.now);
-    if (specimenShow.length > 0) {
-        const q = `?theme=${d.name}&show=${specimenShow.join(',')}`;
-        pairs.push(
-            el(
-                'div',
-                { class: 'kp-autogrid kp-autogrid--tight', 'data-compare-pair': '' },
-                el(
-                    'section',
-                    { class: 'kp-stack', 'aria-label': '4.0.0' },
-                    el('h3', {}, '4.0.0'),
-                    el('iframe', {
-                        src: `compare-specimen-4.0.0.html${q}`,
-                        title: `${d.label} under 4.0.0`,
-                        width: '100%',
-                        height: '720',
-                        'data-compare-side': 'old',
-                    }),
-                ),
-                el(
-                    'section',
-                    { class: 'kp-stack', 'aria-label': 'Current build' },
-                    el('h3', {}, 'Current build'),
-                    el('iframe', {
-                        src: `compare-specimen.html${q}`,
-                        title: `${d.label} under the current build`,
-                        width: '100%',
-                        height: '720',
-                        'data-compare-side': 'new',
-                    }),
-                ),
-            ),
-        );
-    }
-    if (d.texture.proposal !== null && d.texture.now !== null && d.texture.now > CEILING) {
-        const factor = (d.texture.proposal / d.texture.now).toFixed(3);
-        pairs.push(
-            el(
-                'div',
-                { class: 'kp-autogrid kp-autogrid--tight', 'data-compare-pair': 'texture' },
-                el(
-                    'section',
-                    { class: 'kp-stack', 'aria-label': 'Texture today' },
-                    el('h3', {}, `Texture today (${d.texture.now})`),
-                    el('iframe', {
-                        src: `compare-specimen.html?theme=${d.name}&show=texture`,
-                        title: `${d.label} texture today`,
-                        width: '100%',
-                        height: '520',
-                        'data-compare-side': 'old',
-                    }),
-                ),
-                el(
-                    'section',
-                    { class: 'kp-stack', 'aria-label': 'Texture proposal' },
-                    el('h3', {}, `Proposal (${d.texture.proposal})`),
-                    el('iframe', {
-                        src: `compare-specimen.html?theme=${d.name}&show=texture&texture=${factor}`,
-                        title: `${d.label} texture at the ceiling`,
-                        width: '100%',
-                        height: '520',
-                        'data-compare-side': 'new',
-                    }),
-                ),
-            ),
-        );
-    }
+/** The row of theme links, the current one marked. */
+function themeLinks(/** @type {string | null} */ current) {
     return el(
-        'section',
-        { class: 'kp-stack', 'data-compare-theme': d.name, hidden: '' },
-        el('h2', {}, `${d.label} — old against new`),
-        el('p', { class: 'kp-text-muted' }, 'What is different'),
-        list,
-        ...pairs,
+        'ul',
+        { class: 'kp-row', id: 'compare-themes' },
+        THEMES.map((theme) =>
+            el(
+                'li',
+                {},
+                el(
+                    'a',
+                    {
+                        href: `compare-${theme.name}.html`,
+                        'data-theme-link': theme.name,
+                        ...(theme.name === current ? { 'aria-current': 'page' } : {}),
+                    },
+                    theme.label,
+                ),
+            ),
+        ),
     );
 }
 
-const COMPARE_SCRIPT = `
+/**
+ * @param {string} kind
+ * @param {{ src: string, title: string }} left
+ * @param {{ src: string, title: string }} right
+ */
+function pair(kind, left, right) {
+    const frame = (/** @type {{ src: string, title: string }} */ side, /** @type {string} */ role) =>
+        el(
+            'section',
+            { class: 'kp-stack', 'aria-label': side.title },
+            el('h3', {}, side.title),
+            el('iframe', { src: side.src, title: side.title, width: '100%', height: '900', 'data-compare-side': role }),
+        );
+    return el('div', { class: 'kp-autogrid kp-autogrid--tight', 'data-compare-pair': kind }, frame(left, 'old'), frame(right, 'new'));
+}
+
+const PAGE_SCRIPT = `
         <script>
-            // One theme at a time, from the query; the frames of a pair scroll
+            // The page wears its theme, and the frames of a pair scroll
             // together (same origin, so each frame's window is reachable).
             (function () {
-                var theme = new URLSearchParams(location.search).get('theme') || 'cyberpunk';
-                document.querySelectorAll('[data-compare-theme]').forEach(function (section) {
-                    section.hidden = section.getAttribute('data-compare-theme') !== theme;
-                });
-                document.querySelectorAll('[data-theme-link]').forEach(function (link) {
-                    if (link.getAttribute('data-theme-link') === theme) link.setAttribute('aria-current', 'page');
-                });
-                document.documentElement.setAttribute('data-theme', theme);
+                var name = document.querySelector('[data-compare-theme]').getAttribute('data-compare-theme');
+                document.documentElement.setAttribute('data-theme', name);
+                // js/auto.js runs after this script, applies the visitor's
+                // stored theme and then the query on a page that opts in;
+                // give it the query, so the page wears its own theme.
+                if (new URLSearchParams(location.search).get('theme') !== name) history.replaceState(null, '', location.pathname + '?theme=' + name + location.hash);
                 document.querySelectorAll('[data-compare-pair]').forEach(function (pair) {
                     var frames = pair.querySelectorAll('iframe');
                     var lock = false;
@@ -625,9 +419,9 @@ const COMPARE_SCRIPT = `
                         }
                         frame.addEventListener('load', attach);
                         // The frame may have loaded before this script ran: the
-                        // parser yields on a page with this many frames, and a
-                        // cached specimen fires its load first (CI run
-                        // 34163234434, chromium: the right frame never followed).
+                        // parser yields on a page with frames, and a cached
+                        // page fires its load first (CI run 34163234434,
+                        // chromium: the right frame never followed).
                         try {
                             var doc = frame.contentDocument;
                             if (doc && doc.readyState === 'complete' && doc.location.href !== 'about:blank') attach();
@@ -640,16 +434,84 @@ const COMPARE_SCRIPT = `
         </script>`;
 
 /**
- * The three generated files: the compare page and the two specimen pages.
+ * A statement that lists every token (cyberpunk's palette line names 77)
+ * folds behind its first clause, so the page stays readable and the
+ * measurement stays on it.
+ * @param {string} line
+ */
+function foldLong(line) {
+    const at = line.indexOf(' — ');
+    if (line.length < 240 || at === -1) return [line];
+    return [el('details', {}, el('summary', {}, line.slice(0, at)), el('p', { class: 'kp-prose' }, line.slice(at + 3)))];
+}
+
+/** One theme's page: the statements, then the whole demo twice. @param {ThemeDiff} d */
+function themePage(d) {
+    const marks = d.show.filter((cat) => cat !== 'texture' || d.texture.old !== d.texture.now).join(',');
+    const q = `?theme=${d.name}${marks ? `&mark=${marks}` : ''}`;
+    const pairs = [
+        pair(
+            '',
+            { src: `compare-frame-4.0.0.html${q}`, title: `${d.label} under 4.0.0` },
+            { src: `compare-frame.html${q}`, title: `${d.label} under the current build` },
+        ),
+    ];
+    if (d.texture.proposal !== null && d.texture.now !== null && d.texture.now > CEILING) {
+        const factor = (d.texture.proposal / d.texture.now).toFixed(3);
+        pairs.push(
+            pair(
+                'texture',
+                { src: `compare-frame.html?theme=${d.name}&mark=texture`, title: `Texture today (${d.texture.now})` },
+                { src: `compare-frame.html?theme=${d.name}&mark=texture&texture=${factor}`, title: `Proposal (${d.texture.proposal})` },
+            ),
+        );
+    }
+    const body = [
+        el(
+            'main',
+            { id: 'main', class: 'kp-page kp-page--full', tabindex: '-1', 'data-compare-theme': d.name },
+            el(
+                'div',
+                { class: 'kp-stack' },
+                el('h1', {}, `${d.label} — old against new`),
+                el(
+                    'p',
+                    { class: 'kp-prose kp-text-muted' },
+                    'The whole concept demo twice: on the left under the 4.0.0 release, on the right under the current build, scrolling together. ',
+                    'The differences are measured from the two stylesheets and the shipped fonts, said below, and marked on the demo where they show. ',
+                    'Both sides share the current component layer, so what differs is the theme.',
+                ),
+                themeLinks(d.name),
+                el('h2', {}, 'What is different'),
+                el(
+                    'ul',
+                    { class: 'kp-stack', 'data-compare-lines': '' },
+                    d.lines.map((line) => el('li', {}, ...foldLong(line))),
+                ),
+                ...pairs,
+                el(
+                    'p',
+                    { class: 'kp-prose' },
+                    el('a', { href: `concept.html?theme=${d.name}` }, 'The concept demo on its own'),
+                    ' under this theme, with the picker.',
+                ),
+            ),
+        ),
+    ];
+    return page(`${d.label}, old against new`, renderHTML(body, 8), { script: PAGE_SCRIPT });
+}
+
+/**
+ * The generated files: the index, one page per theme, and the two frames.
  *
  * @returns {{ name: string, file: string, content: string }[]}
  */
 export function comparePages() {
     const all = diffs();
-    const body = [
+    const index = [
         el(
             'main',
-            { id: 'main', class: 'kp-page kp-page--full', tabindex: '-1' },
+            { id: 'main', class: 'kp-page', tabindex: '-1' },
             el(
                 'div',
                 { class: 'kp-stack' },
@@ -657,32 +519,24 @@ export function comparePages() {
                 el(
                     'p',
                     { class: 'kp-prose kp-text-muted' },
-                    'What changed for a theme between the 4.0.0 release and the current build, measured from the two stylesheets and the shipped fonts, and shown side by side — only the pieces the change touches, the left frame under 4.0.0, the right under the current build, scrolling together. ',
-                    el('a', { href: 'concept.html' }, 'The whole concept demo'),
-                    ' shows everything.',
+                    'One page per theme: the whole concept demo under the 4.0.0 release on the left and under the current build on the right, the measured differences said above and marked on the demo.',
                 ),
-                el(
-                    'ul',
-                    { class: 'kp-row', id: 'compare-themes' },
-                    THEMES.map((theme) =>
-                        el('li', {}, el('a', { href: `compare.html?theme=${theme.name}`, 'data-theme-link': theme.name }, theme.label)),
-                    ),
-                ),
-                ...all.map(themeSection),
+                themeLinks(null),
             ),
         ),
     ];
     return [
-        { name: 'examples/compare.html', file: 'compare.html', content: page('old against new', renderHTML(body, 8), { script: COMPARE_SCRIPT }) },
+        { name: 'examples/compare.html', file: 'compare.html', content: page('old against new', renderHTML(index, 8)) },
+        ...all.map((d) => ({ name: `examples/compare-${d.name}.html`, file: `compare-${d.name}.html`, content: themePage(d) })),
         {
-            name: 'examples/compare-specimen.html',
-            file: 'compare-specimen.html',
-            content: page('compare specimen, current build', specimenBody(), { script: SPECIMEN_SCRIPT }),
+            name: 'examples/compare-frame.html',
+            file: 'compare-frame.html',
+            content: page('compare frame, current build', demoBody(), { frame: true, script: FRAME_SCRIPT }),
         },
         {
-            name: 'examples/compare-specimen-4.0.0.html',
-            file: 'compare-specimen-4.0.0.html',
-            content: page('compare specimen, 4.0.0', specimenBody(), { baseline: true, script: SPECIMEN_SCRIPT }),
+            name: 'examples/compare-frame-4.0.0.html',
+            file: 'compare-frame-4.0.0.html',
+            content: page('compare frame, 4.0.0', demoBody(), { baseline: true, frame: true, script: FRAME_SCRIPT }),
         },
     ];
 }

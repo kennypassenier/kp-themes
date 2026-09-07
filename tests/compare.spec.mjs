@@ -1,75 +1,127 @@
-// The compare page: only what changed between 4.0.0 and the current
-// build, per theme, side by side, scrolling together [MR-R6-COMPARE, C5].
+// The compare pages: one page per theme, the whole concept demo under
+// 4.0.0 on the left and under the current build on the right, the
+// measured differences said above the pair and marked on the demo where
+// they show [MR-R6-COMPARE, C5, Kenny's third reading of 2026-09-08].
 //
-// Kenny's second reading of the first version: full width, the halves
-// scrolled together, and only the differences with a plain statement of
-// each. So the page is asked three things per theme: the statement
-// exists and is the measured one, the pair shows exactly the sections the
-// differences touch (the left under the 4.0.0 bundle, the right under the
-// current build), and a scroll in one frame moves the other.
+// The third reading found two things the second version's tests had not:
+// every theme section was visible at once (`.kp-stack` sets display and
+// beats the hidden attribute — the test checked the attribute, not the
+// paint), and a theme whose only difference is typography showed a near
+// empty frame. So these tests ask for what is painted: one theme per
+// page, the demo whole in both frames (every element of the approved
+// inventory), the marks on exactly the pieces the measurement names and
+// every mark visible, the left frame really 4.0.0, the right really the
+// current build, and the frames scrolling together.
 //
-// Drills [KT3], performed 2026-09-07 in both browsers and restored:
-//   - the right frame's `src` pointed at the 4.0.0 specimen → both sides
-//     lack the 5.0.0 token, red on "the right is not the current build";
+// Drills [KT3], performed 2026-09-08 in both browsers and restored:
+//   - the MARKS map emptied in the generator → no mark on cyberpunk, red
+//     on "the marks name the touched pieces";
+//   - the left frame's stylesheet list given the current themes.css →
+//     the left declares the 5.0.0 hero token, red on "the left is 4.0.0";
 //   - the sync listener's `scrollTo` removed → the other frame stays at
-//     0, red on "the frames scroll together";
-//   - `show=` dropped from the frame query → every section visible on the
-//     left, red on "only the sections the differences touch".
+//     0, red on "the frames scroll together".
+//
+// Flake, named [8a]: CI run 34163234434 (chromium only, 2026-09-07) saw
+// the right frame stay at 0 in the scroll test; the page now attaches its
+// sync to a frame that loaded before the script ran, and the test waits
+// for both documents before it scrolls.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { THEMES } from '../js/theme-registry.js';
+
+const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements.filter(
+    // The picker and its status line stay outside the frames on purpose.
+    (e) => !/theme-picker|theme-status/.test(e.marker),
+);
 
 /** @param {import('@playwright/test').Page} page @param {string} theme */
 async function open(page, theme) {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.setViewportSize({ width: 1400, height: 900 });
-    await page.goto(`/examples/compare.html?theme=${theme}`);
+    await page.goto(`/examples/compare-${theme}.html`);
     await expect(page.locator(`[data-compare-theme="${theme}"]`)).toBeVisible();
+    const pair = page.locator('[data-compare-pair=""]');
+    for (const side of ['old', 'new']) {
+        await expect(pair.frameLocator(`iframe[data-compare-side="${side}"]`).locator('[data-kp-surface="app"]')).toBeVisible();
+    }
+    return pair;
 }
 
-test.describe('the compare page', () => {
-    test('cyberpunk: the statement names the rewritten register, and the pair shows the touched sections only — 4.0.0 left, current right', async ({
+/** @param {import('@playwright/test').FrameLocator} frame */
+const marks = (frame) =>
+    frame.locator('[data-compare-mark]').evaluateAll((els) =>
+        els.map((e) => ({
+            label: e.getAttribute('data-compare-mark'),
+            visible: getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().height > 0,
+        })),
+    );
+
+/** @param {import('@playwright/test').FrameLocator} frame */
+const identity = (frame) =>
+    frame.locator('html').evaluate((html) => ({
+        theme: html.getAttribute('data-theme'),
+        heroSource: getComputedStyle(html).getPropertyValue('--surface-hero-bg').trim(),
+    }));
+
+/**
+ * The source the frame was served, as text: the inventory's markers are
+ * written the way the generator writes them (`<div data-kp-divider>`),
+ * and a browser serialises the same attribute as `data-kp-divider=""`.
+ * @param {import('@playwright/test').Page} page @param {import('@playwright/test').Locator} iframe
+ */
+const served = async (page, iframe) => {
+    const src = await iframe.getAttribute('src');
+    const response = await page.request.get(new URL(src ?? '', page.url()).toString());
+    return response.text();
+};
+
+test.describe('the compare pages', () => {
+    test('cyberpunk: the statement names the rewritten register, the demo is whole on both sides, and the marks name the touched pieces', async ({
         page,
     }) => {
-        await open(page, 'cyberpunk');
-        const lines = await page.locator('[data-compare-theme="cyberpunk"] [data-compare-lines] li').allTextContents();
+        const pair = await open(page, 'cyberpunk');
+        const lines = await page.locator('[data-compare-lines] li').allTextContents();
         expect(lines.join(' ')).toMatch(/register is rewritten/);
         expect(lines.join(' ')).toMatch(/Two surfaces/);
-        // Other themes' sections are hidden.
-        expect(await page.locator('[data-compare-theme]:not([hidden])').count()).toBe(1);
-        const pair = page.locator('[data-compare-theme="cyberpunk"] [data-compare-pair=""]');
         const old = pair.frameLocator('iframe[data-compare-side="old"]');
         const current = pair.frameLocator('iframe[data-compare-side="new"]');
-        await expect(current.locator('[data-compare-cat="nav"]')).toBeVisible();
-        await expect(old.locator('[data-compare-cat="nav"]')).toBeVisible();
-        // Only the sections the differences touch: the palette section is
-        // hidden unless a token changed value, and on cyberpunk it did.
-        const visible = await current
-            .locator('[data-compare-cat]:not([hidden])')
-            .evaluateAll((els) => els.map((e) => e.getAttribute('data-compare-cat')));
-        expect(visible).toEqual(expect.arrayContaining(['nav', 'buttons', 'fields', 'dossier', 'divider']));
-        expect(visible, 'only the sections the differences touch').not.toContain('type-never');
-        const identity = (frame) =>
-            frame.locator('html').evaluate((html) => ({
-                theme: html.getAttribute('data-theme'),
-                heroSource: getComputedStyle(html).getPropertyValue('--surface-hero-bg').trim(),
-            }));
+        for (const side of ['old', 'new']) {
+            const html = await served(page, pair.locator(`iframe[data-compare-side="${side}"]`));
+            for (const { what, marker } of INVENTORY) expect(html, `the ${side} frame lacks ${what}`).toContain(marker);
+        }
+        const found = await marks(current);
+        const labels = new Set(found.map((m) => m.label));
+        expect([...labels], 'the marks name the touched pieces').toEqual(
+            expect.arrayContaining(['Navigation', 'Buttons', 'Fields', 'Dossier', 'Tear', 'Two surfaces', 'Typography', 'Palette']),
+        );
+        expect(
+            found.filter((m) => !m.visible),
+            'every mark is painted',
+        ).toEqual([]);
+        // The same marks on the left, so the eye finds the same piece on both sides.
+        expect(new Set((await marks(old)).map((m) => m.label))).toEqual(labels);
         expect((await identity(old)).theme).toBe('cyberpunk');
         expect((await identity(current)).theme).toBe('cyberpunk');
-        expect((await identity(old)).heroSource, 'the left declares a 5.0.0 token').toBe('');
-        expect((await identity(current)).heroSource, 'the right is not the current build').not.toBe('');
+        expect((await identity(old)).heroSource, 'the left is 4.0.0').toBe('');
+        expect((await identity(current)).heroSource, 'the right is the current build').not.toBe('');
     });
 
     // pastel, not light: light's warning ink moved one step at C1, so its
-    // palette section shows too — the measurement, not the test, decides.
-    test('pastel: the statement is about typography, and the pair shows the type section alone', async ({ page }) => {
-        await open(page, 'pastel');
-        const lines = await page.locator('[data-compare-theme="pastel"] [data-compare-lines] li').allTextContents();
+    // palette is marked too — the measurement, not the test, decides.
+    test('pastel: the statement is about typography, the demo is whole, and only the type is marked', async ({ page }) => {
+        const pair = await open(page, 'pastel');
+        const lines = await page.locator('[data-compare-lines] li').allTextContents();
         expect(lines.join(' ')).toMatch(/Typography: Instrument Sans/);
         expect(lines.join(' ')).toMatch(/nothing visible changed/);
-        const current = page.locator('[data-compare-theme="pastel"] [data-compare-pair=""]').frameLocator('iframe[data-compare-side="new"]');
-        const visible = await current
-            .locator('[data-compare-cat]:not([hidden])')
-            .evaluateAll((els) => els.map((e) => e.getAttribute('data-compare-cat')));
-        expect(visible, 'only the sections the differences touch').toEqual(['type']);
+        const old = pair.frameLocator('iframe[data-compare-side="old"]');
+        const current = pair.frameLocator('iframe[data-compare-side="new"]');
+        const found = await marks(current);
+        expect(new Set(found.map((m) => m.label)), 'only the type is marked').toEqual(new Set(['Typography']));
+        expect(found.filter((m) => !m.visible)).toEqual([]);
+        expect((await identity(old)).theme).toBe('pastel');
+        const html = await served(page, pair.locator('iframe[data-compare-side="old"]'));
+        for (const { what, marker } of INVENTORY) expect(html, `the left frame lacks ${what}`).toContain(marker);
         // And the face really differs: Instrument Sans loads on the right, not on the left.
         const loaded = (frame) =>
             frame.locator('html').evaluate(async () => {
@@ -77,15 +129,14 @@ test.describe('the compare page', () => {
                 return [...document.fonts].some((f) => f.status === 'loaded' && f.family.replace(/^["']|["']$/g, '') === 'Instrument Sans');
             });
         await expect.poll(() => loaded(current)).toBe(true);
-        const old = page.locator('[data-compare-theme="pastel"] [data-compare-pair=""]').frameLocator('iframe[data-compare-side="old"]');
         expect(await loaded(old)).toBe(false);
     });
 
     test('dark: the R6-Q2 proposal pair paints the texture lower on the right', async ({ page }) => {
         await open(page, 'dark');
-        const lines = await page.locator('[data-compare-theme="dark"] [data-compare-lines] li').allTextContents();
+        const lines = await page.locator('[data-compare-lines] li').allTextContents();
         expect(lines.join(' ')).toMatch(/proposal for R6-Q2/);
-        const pair = page.locator('[data-compare-theme="dark"] [data-compare-pair="texture"]');
+        const pair = page.locator('[data-compare-pair="texture"]');
         const opacity = (side) =>
             pair
                 .frameLocator(`iframe[data-compare-side="${side}"]`)
@@ -95,19 +146,9 @@ test.describe('the compare page', () => {
         await expect.poll(() => opacity('new')).toBeLessThan(0.1);
     });
 
-    // Flake, named [8a]: CI run 34163234434 (chromium only, 2026-09-07) saw
-    // the right frame stay at 0. Two races, both closed: the page attached
-    // its sync on each frame's load event and missed a frame that had
-    // loaded before the script ran, and this test scrolled the left frame
-    // before that frame's own document was in place. Both documents are
-    // now awaited before the scroll.
     test('the frames of a pair scroll together', async ({ page }) => {
-        await open(page, 'cyberpunk');
-        const pair = page.locator('[data-compare-theme="cyberpunk"] [data-compare-pair=""]');
+        const pair = await open(page, 'cyberpunk');
         const left = pair.locator('iframe[data-compare-side="old"]');
-        for (const side of ['old', 'new']) {
-            await expect(pair.frameLocator(`iframe[data-compare-side="${side}"]`).locator('[data-compare-cat="nav"]')).toBeVisible();
-        }
         await expect
             .poll(() =>
                 left.evaluate(
@@ -123,9 +164,20 @@ test.describe('the compare page', () => {
             .toBeGreaterThan(200);
     });
 
-    test('every theme is linked, and the chosen one is marked current', async ({ page }) => {
+    test('one theme per page: the index links all 24, each page marks its own and shows no other', async ({ page }) => {
+        await page.goto('/examples/compare.html');
+        expect(await page.locator('[data-theme-link]').count()).toBe(THEMES.length);
         await open(page, 'nostromo');
-        expect(await page.locator('[data-theme-link]').count()).toBe(24);
         await expect(page.locator('[data-theme-link="nostromo"]')).toHaveAttribute('aria-current', 'page');
+        expect(await page.locator('[data-compare-theme]').count()).toBe(1);
+        expect(await page.locator('h1').first().textContent()).toMatch(/Nostromo/);
+        // The page wears its own theme, not the visitor's stored one (the
+        // third reading: a pastel page in cyberpunk chrome).
+        await page.evaluate(() => localStorage.setItem('kp-theme', 'cyberpunk'));
+        await page.reload();
+        await expect.poll(() => page.locator('html').getAttribute('data-theme')).toBe('nostromo');
+        // What the paint says, not the attribute: this is the fault of the
+        // second version, where every section was visible at once.
+        expect(await page.locator('iframe').evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== 'none').length)).toBe(2);
     });
 });

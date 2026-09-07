@@ -1,6 +1,6 @@
 // The vendored 4.0.0 bundle is the release's own [MR-R6-COMPARE, S20].
 //
-// examples/compare.html shows the concept demo under the 4.0.0 release on
+// examples/compare-<theme>.html shows the concept demo under the 4.0.0 release on
 // the left and the current build on the right. The left side needs the
 // 4.0.0 stylesheet and script, so they are vendored under
 // showcase/baseline/4.0.0/ beside that release's SHA256SUMS — and this

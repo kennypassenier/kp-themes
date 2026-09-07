@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-kp-theme-from-query>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — compare frame, current build</title>
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem("theme");
+                    if (t) document.documentElement.setAttribute("data-theme", t);
+                    document.documentElement.setAttribute("data-kp-effects", '');
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
+        <link rel="stylesheet" href="../showcase/compare.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <div class="kp-nav-wrap">
+            <nav class="kp-nav" aria-label="Main navigation">
+                <span class="kp-nav__brand">kp-themes</span>
+                <ul class="kp-nav__links">
+                    <li>
+                        <a class="kp-nav__link" href="#try" data-kp-text="Themes" aria-haspopup="true">Themes</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-2">Signal</a>
+                            </li>
+                            <li>
+                                <a href="#try-3">Synthwave</a>
+                            </li>
+                            <li>
+                                <a href="#try-4">Nostromo</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#try-5" data-kp-text="Components" aria-haspopup="true">Components</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-6">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="#try-7">Forms</a>
+                            </li>
+                            <li>
+                                <a href="#dossier">Dossiers</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#effects" data-kp-text="Effects">Effects</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#docs" data-kp-text="Docs">Docs</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link kp-nav__link--lang" href="#try-8" data-kp-text="EN" aria-haspopup="true">EN</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-9">Nederlands</a>
+                            </li>
+                            <li>
+                                <a href="#try-10">English</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link kp-nav__link--cta" href="#try-11" data-kp-text="Try it">Try it</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <main id="main" class="kp-page" tabindex="-1">
+            <section class="kp-section kp-stack" data-kp-surface="hero" data-example="concept-hero">
+                <p class="kp-side-note" aria-hidden="true">NC · 2077 · SECTOR 06 · 0x1F</p>
+                <div class="kp-autogrid" data-kp-hero-grid>
+                    <div class="kp-stack">
+                        <ul class="kp-laurels" aria-label="What this register is measured against">
+                            <li>
+                                <b>“Spits off the screen”</b>
+                                the brief
+                            </li>
+                            <li>
+                                <b>93 tokens</b>
+                                parity gate
+                            </li>
+                            <li>
+                                <b>DI5 safe</b>
+                                no flashing
+                            </li>
+                        </ul>
+                        <p class="microlabel">register 02 · preview build</p>
+                        <h1 class="kp-text-balance" data-kp-reveal="headline">Stop looking like a theme.</h1>
+                        <p class="kp-prose kp-lede">
+                            Signal yellow on void. Blood red 
+                            <mark>where it counts</mark>
+                            . Neon only 
+                            <mark>where it hurts</mark>
+                            . A cyberpunk register for kp-themes that behaves like a place, not a palette.
+                        </p>
+                        <div class="kp-row">
+                            <button data-kp-reveal="emphasis" type="button" class="kp-button kp-button--primary kp-button--mirror">Try the demo</button>
+                            <button type="button" class="kp-button">Read the spec</button>
+                            <button type="button" class="kp-button kp-button--ghost">Ghost</button>
+                        </div>
+                        <div class="kp-platforms" aria-label="Where it renders">
+                            <span>Chromium</span>
+                            <span>Firefox</span>
+                            <span>Framework-free</span>
+                            <span>React</span>
+                        </div>
+                    </div>
+                    <aside class="kp-spec" id="spec" aria-label="Palette and type">
+                        <dl>
+                            <dt>ground</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="surface-hero-bg"></i>
+                                --surface-hero-bg
+                            </dd>
+                            <dt>void</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="background"></i>
+                                --background
+                            </dd>
+                            <dt>alert</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="destructive"></i>
+                                --destructive
+                            </dd>
+                            <dt>label</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="accent"></i>
+                                --accent
+                            </dd>
+                            <dt>glitch</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="chart-4"></i>
+                                --chart-4
+                            </dd>
+                            <dt>display</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="display">Aa Bb Cc</span>
+                                 --theme-font-display
+                            </dd>
+                            <dt>body</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="body">Aa Bb Cc</span>
+                                 --theme-font-body
+                            </dd>
+                            <dt>mono</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="mono">Aa Bb Cc</span>
+                                 --kp-mono
+                            </dd>
+                        </dl>
+                    </aside>
+                </div>
+            </section>
+            <div data-kp-divider></div>
+            <section class="kp-section kp-stack" data-kp-surface="app" id="try" data-example="concept-app">
+                <div class="kp-autogrid">
+                    <div class="kp-stack">
+                        <p class="microlabel">access.request_form</p>
+                        <h2 data-kp-reveal="rule">Request a handle</h2>
+                        <form class="kp-form kp-stack" data-kp-form novalidate>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-handle">
+                                    Handle
+                                    <span class="kp-field__required">required</span>
+                                </label>
+                                <input id="concept-handle" class="kp-field__input" type="text" name="handle" placeholder="v.night" autocomplete="username" aria-describedby="concept-handle-help" required>
+                                <span class="kp-field__help" id="concept-handle-help">Lowercase, dots allowed, no spaces.</span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-mail">
+                                    Contact
+                                    <span class="kp-field__required">required</span>
+                                </label>
+                                <input id="concept-mail" class="kp-field__input" type="email" name="mail" placeholder="you@dogtown.nc" autocomplete="email" aria-describedby="concept-mail-help" required>
+                                <span class="kp-field__help" id="concept-mail-help">We answer within one cycle.</span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-district">District</label>
+                                <select class="kp-field__input" id="concept-district" name="district">
+                                    <option>Watson</option>
+                                    <option>Westbrook</option>
+                                    <option>Santo Domingo</option>
+                                    <option>Dogtown</option>
+                                </select>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-why">Why you</label>
+                                <textarea class="kp-field__input kp-field__input--multiline" id="concept-why" name="why" placeholder="Two lines. Make them count."></textarea>
+                            </div>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" id="concept-terms" name="terms" type="checkbox">
+                                <label class="kp-field__label" for="concept-terms">I understand this register ships no theme picker of its own.</label>
+                            </div>
+                            <div class="kp-row">
+                                <button type="submit" class="kp-button kp-button--primary">Send request</button>
+                                <button type="reset" class="kp-button kp-button--destructive kp-button--mirror" data-kp-destructive data-kp-confirm="Wipe the form">Wipe form</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="kp-stack" id="dossier">
+                        <p class="microlabel">dossier.kp-themes-06</p>
+                        <h2 data-kp-reveal="rule">The register, on record</h2>
+                        <div class="kp-card" data-slot="card" data-kp-reveal="emphasis" data-kp-label="Classified" data-example="concept-dossier">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Signal</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <p class="microlabel">FILE 06 · STATUS: PREVIEW · CLEARANCE: KENNY</p>
+                                <p>
+                                    A second cyberpunk register for kp-themes. The first one was 
+                                    <mark>violet night and magenta</mark>
+                                    ; this one is built on 
+                                    <mark>signal yellow and blood red</mark>
+                                    , with cyan for what must be read and violet only inside a glitch. Every effect is 
+                                    <mark>opt-in and reduced-motion safe</mark>
+                                    , and the old register stays exactly as shipped.
+                                </p>
+                                <p>Open the file to clear the redactions. They lift one after another, the way a document does when the clearance comes through — not all at once.</p>
+                                <div class="kp-row">
+                                    <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">Open the file</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div data-kp-divider="alt"></div>
+            <footer class="kp-footer" data-example="concept-footer">
+                <div class="kp-autogrid kp-autogrid--tight">
+                    <div>
+                        <h4>kp-themes</h4>
+                        <p class="kp-prose">The house theme system. Twenty-four themes, two registers, one promise: a released theme never changes.</p>
+                    </div>
+                    <div>
+                        <h4>Registers</h4>
+                        <ul>
+                            <li>
+                                <a href="#try-12">Signal</a>
+                            </li>
+                            <li>
+                                <a href="#try-13">Cyberpunk (archived)</a>
+                            </li>
+                            <li>
+                                <a href="#try-14">Retro</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Channels</h4>
+                        <ul>
+                            <li>
+                                <a href="#try-15">Framework-free</a>
+                            </li>
+                            <li>
+                                <a href="#try-16">React</a>
+                            </li>
+                            <li>
+                                <a href="#try-17">Home Assistant</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="microlabel">/// BUILD 5.0.0-PREVIEW · RENDERED FROM TOKENS · NO IMAGES WERE HARMED</p>
+            </footer>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+        <script>
+            // The theme, the marks and the texture factor of the R6-Q2
+            // proposal — all from the query.
+            (function () {
+                var params = new URLSearchParams(location.search);
+                var theme = params.get('theme');
+                if (theme) document.documentElement.setAttribute('data-theme', theme);
+                var factor = parseFloat(params.get('texture') || '');
+                if (factor > 0) {
+                    var current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity')) || 0;
+                    document.documentElement.style.setProperty('--fx-texture-opacity', String(current * factor));
+                }
+                var MARKS = {"type":[["[data-kp-surface=\"hero\"] h1","Typography"],["[data-kp-surface=\"app\"] h2","Typography"]],"palette":[[".kp-spec","Palette"]],"surfaces":[["[data-kp-surface=\"hero\"]","Two surfaces"]],"nav":[[".kp-nav","Navigation"]],"buttons":[["[data-kp-surface=\"hero\"] .kp-row","Buttons"]],"fields":[[".kp-form","Fields"]],"dossier":[[".kp-card[data-kp-reveal=\"emphasis\"]","Dossier"]],"divider":[["[data-kp-divider]","Tear"]],"texture":[["[data-kp-surface=\"app\"]","Texture"]]};
+                (params.get('mark') || '').split(',').forEach(function (cat) {
+                    (MARKS[cat] || []).forEach(function (pair) {
+                        document.querySelectorAll(pair[0]).forEach(function (node) {
+                            if (!node.hasAttribute('data-compare-mark')) node.setAttribute('data-compare-mark', pair[1]);
+                        });
+                    });
+                });
+            })();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-kp-theme-from-query>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Cyberpunk, old against new</title>
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem("theme");
+                    if (t) document.documentElement.setAttribute("data-theme", t);
+                    document.documentElement.setAttribute("data-kp-effects", '');
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
+    </head>
+    <body>
+        <main id="main" class="kp-page kp-page--full" tabindex="-1" data-compare-theme="cyberpunk">
+            <div class="kp-stack">
+                <h1>Cyberpunk — old against new</h1>
+                <p class="kp-prose kp-text-muted">
+                    The whole concept demo twice: on the left under the 4.0.0 release, on the right under the current build, scrolling together. 
+                    The differences are measured from the two stylesheets and the shipped fonts, said below, and marked on the demo where they show. 
+                    Both sides share the current component layer, so what differs is the theme.
+                </p>
+                <ul class="kp-row" id="compare-themes">
+                    <li>
+                        <a href="compare-formal.html" data-theme-link="formal">Formal</a>
+                    </li>
+                    <li>
+                        <a href="compare-light.html" data-theme-link="light">Light</a>
+                    </li>
+                    <li>
+                        <a href="compare-dark.html" data-theme-link="dark">Dark</a>
+                    </li>
+                    <li>
+                        <a href="compare-cyberpunk.html" data-theme-link="cyberpunk" aria-current="page">Cyberpunk</a>
+                    </li>
+                    <li>
+                        <a href="compare-pastel.html" data-theme-link="pastel">Pastel</a>
+                    </li>
+                    <li>
+                        <a href="compare-terminal.html" data-theme-link="terminal">Terminal</a>
+                    </li>
+                    <li>
+                        <a href="compare-topo.html" data-theme-link="topo">Topographic</a>
+                    </li>
+                    <li>
+                        <a href="compare-high-contrast.html" data-theme-link="high-contrast">High contrast</a>
+                    </li>
+                    <li>
+                        <a href="compare-sepia.html" data-theme-link="sepia">Sepia</a>
+                    </li>
+                    <li>
+                        <a href="compare-blueprint.html" data-theme-link="blueprint">Blueprint</a>
+                    </li>
+                    <li>
+                        <a href="compare-solstice.html" data-theme-link="solstice">Solstice</a>
+                    </li>
+                    <li>
+                        <a href="compare-brutalism.html" data-theme-link="brutalism">Brutalism</a>
+                    </li>
+                    <li>
+                        <a href="compare-deco.html" data-theme-link="deco">Art Deco</a>
+                    </li>
+                    <li>
+                        <a href="compare-academia.html" data-theme-link="academia">Dark Academia</a>
+                    </li>
+                    <li>
+                        <a href="compare-phantom.html" data-theme-link="phantom">Phantom</a>
+                    </li>
+                    <li>
+                        <a href="compare-ticker.html" data-theme-link="ticker">Ticker</a>
+                    </li>
+                    <li>
+                        <a href="compare-nishiki.html" data-theme-link="nishiki">Nishiki</a>
+                    </li>
+                    <li>
+                        <a href="compare-shade-light.html" data-theme-link="shade-light">Shade (light)</a>
+                    </li>
+                    <li>
+                        <a href="compare-shade-dark.html" data-theme-link="shade-dark">Shade (dark)</a>
+                    </li>
+                    <li>
+                        <a href="compare-mono.html" data-theme-link="mono">Mono</a>
+                    </li>
+                    <li>
+                        <a href="compare-retro.html" data-theme-link="retro">Retro</a>
+                    </li>
+                    <li>
+                        <a href="compare-grotesk.html" data-theme-link="grotesk">Grotesk</a>
+                    </li>
+                    <li>
+                        <a href="compare-tazhib.html" data-theme-link="tazhib">Tazhib</a>
+                    </li>
+                    <li>
+                        <a href="compare-nostromo.html" data-theme-link="nostromo">Nostromo</a>
+                    </li>
+                </ul>
+                <h2>What is different</h2>
+                <ul class="kp-stack" data-compare-lines>
+                    <li>Typography: Rajdhani and Big Shoulders Display now ship with the package and load here; 4.0.0 shipped no font file, so the browser drew the system fallback.</li>
+                    <li>
+                        <details>
+                            <summary>Palette: 77 tokens changed value</summary>
+                            <p class="kp-prose">--background hsl(258, 40%, 6%) → hsl(270, 9%, 4%); --foreground hsl(190, 60%, 92%) → hsl(50, 12%, 82%); --card hsl(258, 35%, 9%) → hsl(255, 10%, 8%); --card-foreground hsl(190, 60%, 92%) → hsl(50, 12%, 82%); --popover hsl(258, 35%, 9%) → hsl(255, 10%, 10%); --popover-foreground hsl(190, 60%, 92%) → hsl(50, 12%, 82%); --primary hsl(315, 95%, 64%) → hsl(56, 98%, 51%); --primary-foreground hsl(315, 90%, 8%) → hsl(53, 36%, 5%); --secondary hsl(258, 30%, 14%) → hsl(255, 10%, 14%); --secondary-foreground hsl(190, 40%, 88%) → hsl(50, 12%, 85%); --muted hsl(258, 28%, 13%) → hsl(255, 8%, 12%); --muted-foreground hsl(200, 30%, 72%) → hsl(50, 8%, 55%); --accent hsl(180, 95%, 50%) → hsl(184, 100%, 50%); --accent-foreground hsl(185, 95%, 8%) → hsl(185, 100%, 8%); --destructive hsl(350, 95%, 64%) → hsl(353, 84%, 58%); --destructive-foreground hsl(350, 90%, 8%) → hsl(353, 60%, 7%); --success hsl(160, 90%, 20%) → hsl(150, 80%, 16%); --success-foreground hsl(160, 100%, 45%) → hsl(150, 90%, 55%); --warning hsl(25, 95%, 20%) → hsl(30, 90%, 18%); --warning-foreground hsl(25, 100%, 58%) → hsl(40, 100%, 60%); --info hsl(190, 90%, 20%) → hsl(190, 80%, 16%); --info-foreground hsl(190, 100%, 48%) → hsl(184, 100%, 55%); --border hsl(280, 40%, 22%) → hsl(56, 60%, 16%); --border-strong hsl(285, 45%, 47%) → hsl(56, 40%, 42%); --input hsl(285, 45%, 47%) → hsl(56, 40%, 42%); --ring hsl(315, 95%, 64%) → hsl(56, 98%, 51%); --selected hsl(315, 95%, 38%) → hsl(56, 100%, 43%); --chart-1 hsl(315, 95%, 64%) → hsl(56, 98%, 51%); --chart-2 hsl(180, 95%, 50%) → hsl(184, 100%, 50%); --chart-3 hsl(265, 90%, 72%) → hsl(353, 84%, 62%); --chart-4 hsl(85, 90%, 55%) → hsl(263, 100%, 70%); --chart-5 hsl(35, 95%, 60%) → hsl(50, 12%, 82%); --sidebar-background hsl(260, 45%, 4%) → hsl(270, 9%, 3%); --sidebar-foreground hsl(190, 50%, 88%) → hsl(50, 12%, 82%); --sidebar-primary hsl(315, 95%, 64%) → hsl(56, 98%, 51%); --sidebar-primary-foreground hsl(315, 90%, 8%) → hsl(53, 36%, 5%); --sidebar-accent hsl(258, 35%, 12%) → hsl(255, 10%, 10%); --sidebar-accent-foreground hsl(180, 80%, 80%) → hsl(184, 80%, 75%); --sidebar-border hsl(280, 40%, 18%) → hsl(56, 40%, 14%); --sidebar-ring hsl(180, 95%, 50%) → hsl(184, 100%, 50%); --status-draft hsl(258, 25%, 22%) → hsl(255, 10%, 22%); --status-draft-foreground hsl(200, 30%, 85%) → hsl(50, 12%, 88%); --status-sent hsl(180, 95%, 50%) → hsl(184, 100%, 50%); --status-sent-foreground hsl(185, 95%, 8%) → hsl(185, 100%, 8%); --status-screening hsl(55, 97%, 52%) → hsl(56, 98%, 51%); --status-screening-foreground hsl(55, 100%, 7%) → hsl(53, 36%, 5%); --status-interview hsl(315, 95%, 64%) → hsl(263, 90%, 72%); --status-interview-foreground hsl(315, 90%, 8%) → hsl(263, 90%, 10%); --status-rejected hsl(350, 95%, 64%) → hsl(353, 84%, 62%); --status-rejected-foreground hsl(350, 90%, 16%) → hsl(353, 90%, 12%); --status-withdrawn hsl(265, 30%, 26%) → hsl(263, 30%, 26%); --status-withdrawn-foreground hsl(265, 25%, 80%) → hsl(263, 25%, 82%); --theme-font-body 'Chakra Petch', ui-sans-serif, system-ui, sans-serif → 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif; --radius 0.25rem → 0; --theme-font-display 'Chakra Petch', 'JetBrains Mono', ui-monospace, monospace → 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif; --fx-signal hsl(55, 97%, 52%) → hsl(56, 98%, 51%); --fx-signal-foreground hsl(55, 100%, 7%) → hsl(53, 36%, 5%); --fx-duration 140ms → 180ms; --fx-ease cubic-bezier(0.2, 0.9, 0.25, 1) → cubic-bezier(0.2, 0.9, 0.2, 1); --fx-overprint hsl(180, 95%, 50%) → hsl(184, 100%, 50%); --fx-scanline hsl(190, 80%, 70%) → hsl(56, 98%, 51%); --link hsl(315, 95%, 64%) → hsl(56, 98%, 51%); --link-visited hsl(360, 100%, 66%) → hsl(135, 100%, 77%); --focus-ring hsl(190, 60%, 92%) → hsl(50, 12%, 82%); --focus-ring-contrast hsl(258, 40%, 6%) → hsl(270, 9%, 4%); --primary-hover hsl(313, 100%, 67%) → hsl(60, 100%, 62%); --primary-active hsl(312, 66%, 71%) → hsl(62, 91%, 84%); --primary-disabled hsl(314, 79%, 56%) → hsl(55, 100%, 44%); --secondary-hover hsl(257, 25%, 17%) → hsl(255, 7%, 20%); --secondary-active hsl(257, 19%, 24%) → hsl(255, 6%, 26%); --secondary-disabled hsl(259, 44%, 9%) → hsl(256, 21%, 6%); --accent-hover hsl(180, 100%, 60%) → hsl(180, 100%, 62%); --accent-active hsl(179, 59%, 83%) → hsl(179, 63%, 84%); --accent-disabled hsl(180, 100%, 45%) → hsl(185, 100%, 44%); --destructive-hover hsl(350, 100%, 67%) → hsl(355, 100%, 66%); --destructive-active hsl(353, 55%, 69%) → hsl(357, 77%, 70%); --destructive-disabled hsl(348, 79%, 56%) → hsl(346, 95%, 41%).</p>
+                        </details>
+                    </li>
+                    <li>Two surfaces: the hero is signal yellow with ink on it and the app surface stays the void — eleven hero tokens are new, and every component reads them inside the hero.</li>
+                    <li>The register is rewritten from the approved demo: the navigation strip with its cut corner and stepped notch and the dash-prefixed dropdown; the notched buttons with the slit and the charge sweep; the fields with the clipped corner and the accent caret; the dossier card with the file stamp and the redactions that lift; the razor tear between surfaces; and the scanlines at exactly the DI9 ceiling. The old .fx-flicker, .fx-pulse, .fx-cellpop and .fx-media classes are gone with the 4.x theme.</li>
+                    <li>Texture: the layer painted at 0.55 in 4.0.0 and paints at 0.06 now (DI9 ceiling 0.06).</li>
+                </ul>
+                <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
+                    <section class="kp-stack" aria-label="Cyberpunk under 4.0.0">
+                        <h3>Cyberpunk under 4.0.0</h3>
+                        <iframe src="compare-frame-4.0.0.html?theme=cyberpunk&amp;mark=type,palette,surfaces,nav,buttons,fields,dossier,divider,texture" title="Cyberpunk under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                    </section>
+                    <section class="kp-stack" aria-label="Cyberpunk under the current build">
+                        <h3>Cyberpunk under the current build</h3>
+                        <iframe src="compare-frame.html?theme=cyberpunk&amp;mark=type,palette,surfaces,nav,buttons,fields,dossier,divider,texture" title="Cyberpunk under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                    </section>
+                </div>
+                <p class="kp-prose">
+                    <a href="concept.html?theme=cyberpunk">The concept demo on its own</a>
+                     under this theme, with the picker.
+                </p>
+            </div>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+        <script>
+            // The page wears its theme, and the frames of a pair scroll
+            // together (same origin, so each frame's window is reachable).
+            (function () {
+                var name = document.querySelector('[data-compare-theme]').getAttribute('data-compare-theme');
+                document.documentElement.setAttribute('data-theme', name);
+                // js/auto.js runs after this script, applies the visitor's
+                // stored theme and then the query on a page that opts in;
+                // give it the query, so the page wears its own theme.
+                if (new URLSearchParams(location.search).get('theme') !== name) history.replaceState(null, '', location.pathname + '?theme=' + name + location.hash);
+                document.querySelectorAll('[data-compare-pair]').forEach(function (pair) {
+                    var frames = pair.querySelectorAll('iframe');
+                    var lock = false;
+                    frames.forEach(function (frame) {
+                        function attach() {
+                            var win = frame.contentWindow;
+                            // One listener per document: a load event and the
+                            // early attach below can both reach the same window.
+                            if (!win || win.kpCompareSynced) return;
+                            win.kpCompareSynced = true;
+                            win.addEventListener('scroll', function () {
+                                if (lock) return;
+                                lock = true;
+                                frames.forEach(function (other) {
+                                    if (other !== frame && other.contentWindow) other.contentWindow.scrollTo(win.scrollX, win.scrollY);
+                                });
+                                lock = false;
+                            });
+                        }
+                        frame.addEventListener('load', attach);
+                        // The frame may have loaded before this script ran: the
+                        // parser yields on a page with frames, and a cached
+                        // page fires its load first (CI run 34163234434,
+                        // chromium: the right frame never followed).
+                        try {
+                            var doc = frame.contentDocument;
+                            if (doc && doc.readyState === 'complete' && doc.location.href !== 'about:blank') attach();
+                        } catch (e) {
+                            /* a frame that is not ours yet */
+                        }
+                    });
+                });
+            })();
+        </script>
+    </body>
+</html>

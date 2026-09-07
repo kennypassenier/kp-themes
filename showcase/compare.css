@@ -1,0 +1,24 @@
+/* Scaffolding for the compare frames [MR-R6-COMPARE]: the marks that say
+ * where a theme differs between 4.0.0 and the current build. Loaded by
+ * the two frame pages only, never by a consumer; gates/check-layers.mjs
+ * holds it to its own furniture, like showcase.css. Colours come from the
+ * theme's own warning pair, which 4.0.0 declares too. */
+[data-compare-mark] {
+    position: relative;
+    outline: 3px dashed var(--warning);
+    outline-offset: 6px;
+}
+
+[data-compare-mark]::before {
+    content: attr(data-compare-mark);
+    position: absolute;
+    inset-block-start: -1.7em;
+    inset-inline-end: 0;
+    z-index: 5;
+    padding: 0 0.5em;
+    background: var(--warning);
+    color: var(--warning-foreground);
+    font: 600 11px/1.6 var(--theme-font-mono, monospace);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}

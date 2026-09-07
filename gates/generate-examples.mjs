@@ -123,8 +123,8 @@ function index() {
                 el(
                     'p',
                     { class: 'kp-prose' },
-                    el('a', { href: 'compare.html?theme=cyberpunk' }, 'Old against new'),
-                    ': the same demo under the 4.0.0 release on the left and the current build on the right, for any theme.',
+                    el('a', { href: 'compare.html' }, 'Old against new'),
+                    ': one page per theme, the same demo under the 4.0.0 release on the left and the current build on the right, the differences marked.',
                 ),
             ),
         ),
@@ -134,7 +134,7 @@ function index() {
 
 const pages = [
     { name: 'examples/index.html', file: 'index.html', content: index() },
-    // The compare page and its two specimen frames [MR-R6-COMPARE].
+    // The compare index, one page per theme and the two frames [MR-R6-COMPARE].
     ...comparePages(),
     ...EXAMPLES.map((example) => ({
         name: `examples/${example.id}.html`,
