@@ -94,7 +94,7 @@ way to get one. Scope stays: define themes, build components on them.
 | Current phase       | Round five (4.0.0): Phase 0 scope approved 2026-09-07 (S32-S37), Phase 1 measured the four consumer reports         |
 | Last completed gate | Round five Phase 0, 2026-09-07 — six statements all "Klopt"; the site fixes ride along in 4.0.0 rather than a 3.2.1 |
 | Next gate           | Phase 2: rate TH104, TH107, D3 and P1-P4, then freeze; round three's Phase 10 (KT7, KT8, KT9) still owed            |
-| Open queue items    | KT6-M1 (waits on JobTracker), TH47 (returns in Phase 2), PROC-H1 (the procedure repository)                         |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository)                                                    |
 | AFK mode            | off                                                                                                                 |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy

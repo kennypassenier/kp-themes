@@ -558,10 +558,14 @@ go through Phase 1 — reproduce and measure — before Phase 2 rates them.
 P1 and P2 are documentation faults and are probably smaller than a
 round; P3 and P4 touch the code.
 
-**S37 · What is not in.** TH47, the visual filter builder, keeps
-waiting: Kenny asked for more explanation on 2026-09-04 and it has been
-unrated since. It returns in Phase 2 if he wants to rate it then, but it
-does not shape the scope. KT6-M1 stays outside the round because it is a
+**S37 · What is not in.** TH47, the visual filter builder, stays out.
+**Corrected 2026-09-07:** the statement Kenny approved said it had been
+unrated since 2026-09-04, on the authority of a mini-round row that was
+stale. It was rated that same day — `docs/FEATURES.md:143` records
+**Later**, because it shares its whole mechanism with TH37's filtering
+and is superstructure rather than a second system. So it stays out of
+this round on its own rating rather than on a missing one, and the queue
+row is closed. KT6-M1 stays outside the round because it is a
 measurement JobTracker owes, not this project. And no new themes and no
 new components: this round is clearing, not extending. Anything that
 wants in during Phase 2 goes through the ordinary rating.
