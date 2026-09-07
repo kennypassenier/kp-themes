@@ -138,6 +138,18 @@ test('the showcase and every fixture load the faces their tokens name [R0]', asy
     // the same token values, so Kenny judges a theme in its own letter.
     // Drill [KT3]: with fontLinks() returning '' in the generator, no page
     // carries the link and the first expectation reads 0.
+    //
+    // This test asserts the LINK the generator wrote and the family the
+    // stylesheet computes -- both of which are in the markup. It never
+    // needed the font itself, and yet it fetched one from Google for each
+    // of 24 pages and then failed on the 30s budget whenever the network
+    // was slow, which is a red test about somebody else's CDN. Standing
+    // rule 8a: the name is "a test that reaches the public internet for
+    // data it does not assert on", and rule 35 says the same fault waits
+    // on a CI runner with different egress. The requests are refused here,
+    // and the budget scales with the number of themes.
+    test.setTimeout(10_000 + THEMES.length * 1_000);
+    await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
     await page.goto('/showcase/index.html');
     const href = await page.getAttribute('link[data-sc-fonts]', 'href');
     expect(href).toContain('fonts.googleapis.com/css2?');

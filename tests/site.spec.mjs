@@ -64,7 +64,18 @@ const SIDEWAYS_EXCEPTIONS = {
     'shortcut-sheet': 'MR-R6-2',
 };
 
+// A corpus-wide test navigates once per documented unit, and Playwright's
+// per-test budget is 30s whatever the test does — sized for one
+// navigation, not for forty-odd. It held while the corpus was small and
+// started failing at 42 pages whenever the machine was busy, which reads
+// as a defect in whatever milestone happened to be building. Standing
+// rule 8a: that is a name, not weather — the budget was never scaled to
+// the work. These tests now ask for one second per page plus ten, so the
+// budget grows with the corpus instead of being outgrown by it.
+const CORPUS_BUDGET_MS = 10_000 + DESCRIPTORS.length * 1_000;
+
 test('no documentation page scrolls sideways at 360px [DI11]', async ({ page }) => {
+    test.setTimeout(CORPUS_BUDGET_MS);
     await page.setViewportSize({ width: 360, height: 800 });
     /** @type {string[]} */
     const sideways = [];
@@ -97,6 +108,7 @@ test('the package’s own stylesheet paints the live examples, not the site’s 
 // /site/site/index.html — and this went red on the first of them with a
 // 404. Restored.
 test('every navigation entry leads to a page that exists [TH100]', async ({ page, request }) => {
+    test.setTimeout(CORPUS_BUDGET_MS);
     await page.goto('/site/index.html');
     const hrefs = await page.locator('.sc-nav__link').evaluateAll((els) => els.map((el) => /** @type {HTMLAnchorElement} */ (el).href));
     // The four fixed entries plus one per documented unit.
