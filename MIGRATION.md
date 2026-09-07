@@ -9,6 +9,61 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 3.2.0 to 4.0.0
+
+**The confirmation is a dialog now** [TH107, AR27, AR28, AR29, D3]. This
+is a break, and it is why 4.0.0 is a major. The rest of 4.0.0 is written
+up by the milestones that own it; what follows is the confirmation.
+
+### Nothing to change, in the ordinary case
+
+A destructive button with `data-kp-confirm="…"` (React: `confirm="…"`)
+now swallows the click and opens a modal `<dialog>` carrying that phrase.
+Escape and Cancel do nothing at all. Confirm **re-fires the click on the
+button**, so the `onclick`, the listener or the React `onClick` you
+already had runs, exactly once, and focus returns to the button. That is
+the whole point of re-firing rather than announcing a new event: chassis,
+kyu and Almanac all listen for an ordinary click, and none of them has to
+change code.
+
+If the button lives inside a menu on the popover layer, that menu comes
+back before focus does — `showModal()` light-dismisses every open
+`popover="auto"`, and a button inside a closed popover cannot take focus.
+
+### What does change
+
+| Was                                                                            | Is                                                                 |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| the first click armed the button, relabelled it and set `data-kp-armed="true"` | the click opens a dialog; nothing is written on the button         |
+| `CONFIRM_ARM_EVENT` / `ARM_EVENT` (`kp-confirm-arm`)                           | removed (D3) — use `onConfirmOpen`, or call `openConfirmation()`   |
+| `CONFIRM_DISARM_EVENT` / `DISARM_EVENT` (`kp-confirm-disarm`)                  | removed (D3) — use `onConfirmCancel`                               |
+| `attachConfirmations` attached to every `[data-kp-confirm]`                    | it skips an element another channel owns (`data-kp-confirm-owner`) |
+
+If your page styles or observes `[data-kp-armed]`, either move to the
+dialog's own `[data-kp-confirm-dialog]` or keep the old behaviour: add
+`data-kp-confirm-mode="inline"` to the element, `confirmMode="inline"` to
+the React button, or `{ mode: 'inline' }` to `attachConfirmations`.
+
+### A defect this repairs
+
+If you load `js/auto.js` **and** render React `Button`s — which kyu,
+Almanac and chassis all do — a React destructive button with a
+confirmation never acted, at any number of clicks: the two channels
+re-armed each other's button forever. The React button now marks its
+element `data-kp-confirm-owner="react"` and the module skips it. Pass
+`attachConfirmations(root, { ownedBy: '' })` if you want the old
+document-wide attach anyway.
+
+### New, and worth knowing
+
+- `openConfirmation(button, { phrase, strings, onAccept, onCancel, className })`
+  is exported: it builds and shows the dialog and hands it back.
+- Three new dictionary keys: `confirmAccept`, `confirmCancel` and
+  `confirmDescription`. English by default, replaceable like the rest.
+- The dialog reuses `.kp-dialog`, `.kp-dialog__title`,
+  `.kp-dialog__description` and `.kp-dialog__actions`, plus
+  `.kp-confirm` on the dialog itself. No new stylesheet.
+
 ## Coming from 3.1.1 to 3.2.0
 
 Nothing breaks. Everything here is an addition, and most of it is

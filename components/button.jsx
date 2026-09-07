@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { CONFIRM_WINDOW_MS } from '../js/components.js';
+import { CONFIRM_WINDOW_MS, openConfirmation } from '../js/components.js';
 import { UNDO_MS } from '../js/patterns.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
@@ -10,6 +10,14 @@ import { useControllable } from '../hooks/use-controllable.js';
 // the same way when the destructive contract is broken: it does not throw.
 // A page that mixes both channels must not be able to tell them apart,
 // and one bad button should not take a dashboard down.
+//
+// Since 4.0.0 [TH107, AR27, AR29]: the default obstacle is the modal
+// dialog, opened through the same `openConfirmation` the framework-free
+// channel uses, so both channels are one implementation and cannot drift.
+// `confirmMode="inline"` keeps the arm-then-act of 3.x. And the element
+// says who owns its confirmation, because js/auto.js attaches the module
+// over the whole document: without the mark the two channels re-armed
+// each other's button forever and the action never fired.
 //
 // Since 3.0.0 [KT6]: `onUndo` does something — for two versions it was
 // declared, checked for truthiness to satisfy the contract, and never
@@ -26,8 +34,12 @@ import { useControllable } from '../hooks/use-controllable.js';
  * @property {() => void} [onUndo]  Offered instead of a confirmation — SC 3.3.4 accepts either. Called if the person takes the undo.
  * @property {number} [undoMs]  How long the undo is offered. Default UNDO_MS.
  * @property {import('react').ReactNode} [undoLabel]  Default: the dictionary's `undo`.
- * @property {number} [confirmWindowMs]
- * @property {boolean} [armed]  Controlled armed state.
+ * @property {number} [confirmWindowMs]  How long `confirmMode="inline"` stays armed.
+ * @property {'dialog'|'inline'} [confirmMode]  Default 'dialog': a modal <dialog> [TH107]. 'inline' is 3.x's arm-then-act.
+ * @property {(dialog: HTMLDialogElement) => void} [onConfirmOpen]  Handed the dialog this opened, so the state has a way out [KT6].
+ * @property {() => void} [onConfirmCancel]  Escape or Cancel. The action does not run.
+ * @property {string} [confirmDialogClassName]
+ * @property {boolean} [armed]  Controlled armed state (`confirmMode="inline"` only).
  * @property {(armed: boolean) => void} [onArmedChange]
  * @property {boolean} [disarmOnBlur]  Default true.
  * @property {(rule: 'DI10', message: string) => void} [onContractError]  Default: console.error.
@@ -47,6 +59,10 @@ function ButtonInner(
         undoMs = UNDO_MS,
         undoLabel,
         confirmWindowMs = CONFIRM_WINDOW_MS,
+        confirmMode = 'dialog',
+        onConfirmOpen,
+        onConfirmCancel,
+        confirmDialogClassName = '',
         armed: armedProp,
         onArmedChange,
         disarmOnBlur = true,
@@ -69,6 +85,13 @@ function ButtonInner(
     const undoTimer = useRef(0);
     /** @type {import('react').RefObject<HTMLButtonElement | null>} */
     const inner = useRef(null);
+    // AR27's one-shot lock, this channel's half: Confirm re-fires the
+    // click on the element so a consumer's ordinary onClick runs, and
+    // this lets that one click through. Cleared on the tick it is
+    // consumed — never on a timer, or the button stays unguarded.
+    const unlocked = useRef(false);
+    /** @type {import('react').RefObject<HTMLDialogElement | null>} */
+    const dialog = useRef(null);
     useImperativeHandle(ref, () => /** @type {HTMLButtonElement} */ (inner.current), []);
 
     const broken = variant === 'destructive' && confirm === undefined && onUndo === undefined;
@@ -84,13 +107,40 @@ function ButtonInner(
         () => () => {
             clearTimeout(timer.current);
             clearTimeout(undoTimer.current);
+            // Nothing this component opened outlives it [KT6].
+            dialog.current?.close('');
         },
         [],
     );
 
     /** @param {import('react').MouseEvent<HTMLButtonElement>} event */
     const handle = (event) => {
-        if (confirm !== undefined && !armed) {
+        if (confirm !== undefined && confirmMode === 'dialog') {
+            if (unlocked.current)
+                unlocked.current = false; // the re-fired click, through untouched
+            else {
+                // The click is the question, not the action.
+                event.preventDefault();
+                const element = inner.current;
+                if (element === null) return;
+                dialog.current = openConfirmation(element, {
+                    phrase: confirm,
+                    strings: s,
+                    className: confirmDialogClassName,
+                    onCancel: () => {
+                        dialog.current = null;
+                        onConfirmCancel?.();
+                    },
+                    onAccept: () => {
+                        dialog.current = null;
+                        unlocked.current = true;
+                        element.click();
+                    },
+                });
+                onConfirmOpen?.(dialog.current);
+                return;
+            }
+        } else if (confirm !== undefined && !armed) {
             // The first click is the obstacle, not the action.
             event.preventDefault();
             setArmed(true);
@@ -122,8 +172,11 @@ function ButtonInner(
                 disabled={broken || disabled}
                 data-kp-destructive={variant === 'destructive' ? '' : undefined}
                 data-kp-confirm={confirm}
+                // AR29: this channel owns this button's confirmation, so
+                // the framework-free module skips it.
+                data-kp-confirm-owner={confirm === undefined ? undefined : 'react'}
                 data-kp-undo={onUndo ? '' : undefined}
-                data-kp-armed={armed ? 'true' : undefined}
+                data-kp-armed={armed && confirmMode === 'inline' ? 'true' : undefined}
                 data-kp-contract-error={broken ? 'DI10' : undefined}
                 onBlur={(/** @type {import('react').FocusEvent<HTMLButtonElement>} */ event) => {
                     if (disarmOnBlur) setArmed(false);
@@ -131,7 +184,7 @@ function ButtonInner(
                 }}
                 onClick={handle}
             >
-                {armed ? confirm : children}
+                {armed && confirmMode === 'inline' ? confirm : children}
             </As>
             {undoOpen && (
                 <span className="kp-button__undo" role="status" data-kp-undo-offer>

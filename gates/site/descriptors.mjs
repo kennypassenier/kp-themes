@@ -125,7 +125,7 @@ export const DESCRIPTORS = [
         id: 'button',
         title: 'Button',
         group: 'Forms',
-        classes: ['kp-button'],
+        classes: ['kp-button', 'kp-confirm'],
         exports: ['Button'],
         aliases: ['confirm', 'contract', 'destructive', 'armed', 'undo', 'action', 'key'],
         intro: 'One button in four looks, and the two contracts a button can carry: an action that cannot be taken back must offer a confirmation or an undo, and a row action can act at once and offer the way back beside itself while the window is open.',
@@ -145,9 +145,10 @@ export const DESCRIPTORS = [
             },
             {
                 title: 'A destructive button that confirms',
-                why: 'The first click arms the button and changes its label; a second click within the window acts, and moving away disarms it. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.',
+                why: 'Since 4.0.0 the click opens a modal dialog carrying your phrase: Escape and Cancel do nothing, Confirm re-fires the click so your own handler runs exactly once, and focus comes back to the button. Add `data-kp-confirm-mode="inline"` for the arm-then-act of 3.x, where the label changes and a second click acts. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.',
                 markup: `
 <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete this application?">Delete</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete this application?" data-kp-confirm-mode="inline">Delete, the 3.x way</button>
 `,
             },
             {
@@ -168,9 +169,16 @@ export const DESCRIPTORS = [
             { name: '.kp-button--destructive', what: 'Deletes and disconnections. It has to carry a confirmation or an undo as well.' },
             { name: '.kp-button--ghost', what: 'No ground and no boundary until it is hovered, for actions that sit inside dense rows.' },
             { name: '.kp-button__undo', what: 'The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.' },
+            {
+                name: '.kp-confirm',
+                what: 'The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.',
+            },
             { name: ':hover / :active', what: 'Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.' },
             { name: ':disabled', what: 'A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.' },
-            { name: 'armed', what: 'A confirming button between its first and second click. The module writes the state, the label changes, and a timeout disarms it.' },
+            {
+                name: 'armed',
+                what: 'A confirming button between its first and second click, in the `inline` variant only. The module writes the state, the label changes, and a timeout disarms it. The default variant opens a dialog instead and writes nothing on the button.',
+            },
         ],
         accessibility: [
             'Built in — a destructive action with no way back is disarmed rather than left to fire, which is SC 3.3.4 turned into something a review cannot forget.',

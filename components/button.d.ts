@@ -16,9 +16,25 @@ export type ButtonProps = {
      * Default: the dictionary's `undo`.
      */
     undoLabel?: import('react').ReactNode;
+    /**
+     * How long `confirmMode="inline"` stays armed.
+     */
     confirmWindowMs?: number;
     /**
-     * Controlled armed state.
+     * Default 'dialog': a modal <dialog> [TH107]. 'inline' is 3.x's arm-then-act.
+     */
+    confirmMode?: 'dialog' | 'inline';
+    /**
+     * Handed the dialog this opened, so the state has a way out [KT6].
+     */
+    onConfirmOpen?: (dialog: HTMLDialogElement) => void;
+    /**
+     * Escape or Cancel. The action does not run.
+     */
+    onConfirmCancel?: () => void;
+    confirmDialogClassName?: string;
+    /**
+     * Controlled armed state (`confirmMode="inline"` only).
      */
     armed?: boolean;
     onArmedChange?: (armed: boolean) => void;

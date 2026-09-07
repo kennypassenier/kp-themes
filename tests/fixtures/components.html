@@ -37,6 +37,47 @@
             <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-undo data-test="destructive-undo">
                 Verwijderen
             </button>
+            <!-- The variant TH107 kept: arm-then-act, as 3.x shipped it. -->
+            <button
+                type="button"
+                class="kp-button kp-button--destructive"
+                data-kp-destructive
+                data-kp-confirm="Zeker?"
+                data-kp-confirm-mode="inline"
+                data-test="destructive-inline"
+                onclick="window.__acted && window.__acted('plain-inline')"
+            >
+                Verwijderen
+            </button>
+            <!-- A row action where a row action actually lives: inside a
+                 menu on the popover layer, which showModal() light-dismisses
+                 [AR28]. -->
+            <button
+                type="button"
+                class="kp-button kp-button--ghost"
+                popovertarget="plain-row-menu"
+                aria-haspopup="menu"
+                data-test="plain-menu-trigger"
+            >
+                Rijacties
+            </button>
+            <div popover="auto" id="plain-row-menu" class="kp-popover" data-test="plain-menu">
+                <ul class="kp-menu" role="menu">
+                    <li role="none">
+                        <button
+                            type="button"
+                            role="menuitem"
+                            class="kp-button kp-button--destructive kp-menu__item kp-menu__item--destructive"
+                            data-kp-destructive
+                            data-kp-confirm="Zeker?"
+                            data-test="destructive-in-menu"
+                            onclick="window.__acted && window.__acted('plain-menu')"
+                        >
+                            Verwijderen
+                        </button>
+                    </li>
+                </ul>
+            </div>
             <span class="kp-badge" data-kp-semantic data-status="offer" data-test="badge-labelled">Aanbod</span>
             <span class="kp-badge" data-kp-semantic data-status="rejected" data-test="badge-bare"></span>
             <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic data-test="alert">

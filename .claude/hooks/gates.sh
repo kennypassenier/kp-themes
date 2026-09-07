@@ -46,6 +46,9 @@ node gates/check-motion.mjs
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
 
+echo "→ the import closure of the modules chassis-rs vendors (AR28)"
+node gates/check-closure.mjs
+
 echo "→ the utility API matches its source and its documented list (TH93)"
 node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 

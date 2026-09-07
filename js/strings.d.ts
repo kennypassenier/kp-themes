@@ -69,6 +69,9 @@ export type Strings = {
     contrastPasses: string;
     contrastFails: string;
     confirm: string;
+    confirmAccept: string;
+    confirmCancel: string;
+    confirmDescription: string;
     save: string;
     mainNavigation: string;
     skipToContent: string;
@@ -169,6 +172,9 @@ export type Strings = {
  * @property {string} contrastPasses
  * @property {string} contrastFails
  * @property {string} confirm
+ * @property {string} confirmAccept
+ * @property {string} confirmCancel
+ * @property {string} confirmDescription
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent

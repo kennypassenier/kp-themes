@@ -108,6 +108,9 @@
  * @property {string} contrastPasses
  * @property {string} contrastFails
  * @property {string} confirm
+ * @property {string} confirmAccept
+ * @property {string} confirmCancel
+ * @property {string} confirmDescription
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
@@ -233,6 +236,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     contrastPasses: 'passes',
     contrastFails: 'too little',
     confirm: 'Confirm',
+    /** The confirmation dialog TH107 opens: its two buttons, its description, and what a screen reader hears when it opens. */
+    confirmAccept: 'Yes, do it',
+    confirmCancel: 'Cancel',
+    confirmDescription: 'This cannot be undone. Cancel leaves everything as it is.',
     save: 'Save',
     mainNavigation: 'Main navigation',
     skipToContent: 'Skip to the content',
@@ -359,6 +366,9 @@ export const STRINGS_NL = Object.freeze({
     contrastPasses: 'haalbaar',
     contrastFails: 'te weinig',
     confirm: 'Bevestigen',
+    confirmAccept: 'Ja, doen',
+    confirmCancel: 'Annuleren',
+    confirmDescription: 'Dit kan niet ongedaan gemaakt worden. Annuleren laat alles zoals het is.',
     save: 'Opslaan',
     mainNavigation: 'Hoofdnavigatie',
     skipToContent: 'Naar de inhoud',

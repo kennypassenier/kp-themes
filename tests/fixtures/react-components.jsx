@@ -12,7 +12,7 @@ import Card from '../../components/card.jsx';
 import Field from '../../components/field.jsx';
 import Table from '../../components/table.jsx';
 import NavBar from '../../components/nav-bar.jsx';
-import { Dialog, Tabs } from '../../components/overlays.jsx';
+import { Dialog, DropdownMenu, Tabs } from '../../components/overlays.jsx';
 import Combobox from '../../components/combobox.jsx';
 import { CommandPalette, ShortcutSheet } from '../../components/palette.jsx';
 import DataTable from '../../components/datatable.jsx';
@@ -46,6 +46,37 @@ function Cases() {
             <Button variant="destructive" onUndo={() => {}} data-test="destructive-undo">
                 Verwijderen
             </Button>
+            {/* The variant TH107 kept: arm-then-act, as 3.x shipped it. */}
+            <Button
+                variant="destructive"
+                confirm="Zeker?"
+                confirmMode="inline"
+                data-test="destructive-inline"
+                onClick={() => window.__acted?.('react-inline')}
+            >
+                Verwijderen
+            </Button>
+            {/* A row action where a row action actually lives: inside a
+                menu on the popover layer, which showModal() light-dismisses
+                [AR28]. */}
+            <DropdownMenu
+                id="react-row-menu"
+                label="Rijacties"
+                className="kp-button--ghost"
+                data-test="react-menu"
+                items={[{ id: 'delete', destructive: true, label: 'Verwijderen' }]}
+                renderItem={(item) => (
+                    <Button
+                        variant="destructive"
+                        confirm="Zeker?"
+                        role="menuitem"
+                        data-test="destructive-in-menu"
+                        onClick={() => window.__acted?.('react-menu')}
+                    >
+                        {item.label}
+                    </Button>
+                )}
+            />
             <Badge status="offer" data-test="badge-labelled">
                 Aanbod
             </Badge>

@@ -339,7 +339,14 @@ blocking, and each has to be red once before it counts (rule 7d):
 - **The import-closure gate.** The set of files chassis-rs bakes in is
   closed under import today, and AR28 turns on keeping it that way. The
   gate walks the import graph from those entry points and fails when it
-  reaches a file outside the vendored set.
+  reaches a file outside the vendored set. **Built at W1 as
+  `gates/check-closure.mjs`**, blocking in all three lists. The six are
+  derived from this repository alone (standing rule 35): `js/no-flash.js`,
+  `js/theme-registry.js`, `js/theme-core.js`, `js/theme-picker.js`,
+  `js/strings.js` and `js/components.js` — the modules holding the five
+  functions `chassis.js` calls, plus their closure. Drilled red twice: an
+  `overlays.js` import added to `js/components.js`, and a bare
+  `react-dom/client` specifier added to `js/theme-picker.js`.
 - **The wrapper gate.** AR31 refuses a runtime warning, so the check
   moves to this package's own pages: a component converted to a
   container query must sit inside a wrapper that establishes one.
@@ -388,7 +395,7 @@ will touch is decided now rather than hoped for:
 | ID | Status |
 | --- | --- |
 | W0 | not started |
-| W1 | not started |
+| W1 | **built** 2026-09-07 (AFK), in a parallel worktree. The confirmation is a native `<dialog>` written in `js/components.js` itself — no import edge to `js/overlays.js`, which the new closure gate now holds — and both channels open the same one through the exported `openConfirmation()`. Confirm re-fires the click behind AR27's one-shot lock: measured `["open","confirm","closed"] x2, acts: 2`, against `["open","confirm","open"] x2, acts: 0` with the lock taken back out. The popover the dialog displaces is re-shown before focus returns. AR29 was drilled red first (standing rule 8): the rewritten test attaches the module over the React part, as `js/auto.js` does in the field, and the react channel failed `expected 1, received 0` in both browsers before the ownership mark went in. Arm-then-act survives as `data-kp-confirm-mode="inline"` / `confirmMode="inline"`. `ARM_EVENT` and `DISARM_EVENT` left the exports (D3). Four drills red, plus two on the new gate. |
 | W2 | not started |
 | W3 | not started |
 | W4 | not started |
