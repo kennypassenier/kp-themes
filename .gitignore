@@ -5,3 +5,10 @@ playwright-report/
 SHA256SUMS
 *.tgz
 .claude/worktrees/
+
+# Throwaway measurement specs. This project writes them constantly --
+# "does this actually overflow", "what does the register paint" -- and
+# they exist for one command before being deleted. A formatter complaining
+# about a probe is noise, and a probe that reaches a commit is a mistake
+# the ignore below catches rather than hides.
+tests/tmp-*.spec.mjs

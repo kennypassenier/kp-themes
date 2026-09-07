@@ -654,3 +654,48 @@ utility scale's step count go into `gates/config.json` with their reason.
 The query thresholds that CSS cannot read from a custom property stay
 pinned constants in one declared list, counted by a gate, the way
 `css/components.css:1585` already handles the one that exists today.
+
+## Round five — 4.0.0 (2026-09-07)
+
+Phase 3 approved by Kenny on 2026-09-07. Phase 4 follows, after an
+`architecture-critic` pass over the draft.
+
+## T14 · The confirmation dialog is a native `<dialog>`
+
+TH107 asks for a dialog carrying the attribute's phrase, where Escape
+and Cancel do nothing, Confirm acts once, and focus returns to the
+button. The browser does the three hard parts — the focus trap, the
+Escape close, and returning focus — and this package already relies on
+that twice: `js/overlays.js` for ordinary dialogs and `js/palette.js`
+for the command palette, both through `showModal()`.
+
+The alternatives were put with their cost. A `role="dialog"` layer means
+hand-writing a focus trap in a package that has one three times over. A
+non-modal popover does not block the page, so a second click can land
+while the question is open — which is the thing a confirmation exists to
+prevent. `<dialog>` sits inside AR15's browser baseline.
+
+## T15 · The button's size scale is modifier classes
+
+`.kp-button--sm` and `.kp-button--lg` beside the four variants the button
+already carries, rather than a `data-kp-size` attribute.
+
+The attribute is the cleaner separation on paper — size and colour
+variant are independent axes, and the badge's status plate became
+`data-status` on 2026-09-07 for exactly that reason. Kenny chose classes
+anyway, and the reasoning is recorded because it is not the abstract
+argument: the button already carries four modifier classes, and a fifth
+axis through a second mechanism would make the button the one component
+mixing both styles. Consistency on this component beats purity across
+the package.
+
+## T16 · Everything else uses machinery that exists
+
+No new gate scripts, no new generators, no new dev dependency. TH104
+uses the container queries 3.2.0 introduced for the tables; TH110 is one
+selector in the existing register; TH112 is documentation; TH113 is two
+CSS properties; TH114 is a test plus a sentence in the guide; D3 removes
+an export. The existing 22-check chain covers this work.
+
+Recorded as a decision rather than left implicit, so nobody adds tooling
+later on the grounds that the round never said not to.
