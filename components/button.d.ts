@@ -1,6 +1,10 @@
 export type ButtonProps = {
     variant?: 'default' | 'primary' | 'destructive' | 'ghost';
     /**
+     * The size scale [TH111]. Default 'md', the unmodified button.
+     */
+    size?: 'sm' | 'md' | 'lg';
+    /**
      * Phrase shown on the first click; the second click acts [DI10].
      */
     confirm?: string;

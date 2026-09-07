@@ -137,7 +137,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 63, 'AR21 counted 63 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 73, 'AR21 counted 73 kp knobs in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -152,7 +152,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // mean got their own knob, so every scale name means one thing. And
     // R3-CQ added --kp-table-wrap-min, the floor under a wrapper that
     // containment collapses.
-    assert.equal(result.readCount, 63);
+    // W0 added ten: the size scale's eight (a height, a block padding, an
+    // inline padding and a type size for each of the two new steps),
+    // --kp-focus-ring-inner-width for the ring .kp-button now composes
+    // rather than replaces, and --kp-space-xl, whose first use in this
+    // stylesheet is the large button's inline padding [TH111, AR30].
+    assert.equal(result.readCount, 73);
     assert.deepEqual(result.unread, []);
 });
 

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Button — the focus ring, the register and the size scale</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <!-- The cyberpunk register is loaded here and the retro one is not.
+             TH110 is about the register reaching `.kp-button`, and the first
+             measurement of it was taken on a fixture that never loaded the
+             file — the fixture could not have shown the fault (rule 7e).
+             This page carries no stylesheet of its own for the same reason:
+             everything measured on it comes from the package. -->
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+    </head>
+    <body>
+        <!-- Tab order matters: the tests reach a button with the keyboard,
+             because :focus-visible does not match a programmatic focus. The
+             three framework-free buttons come first, the three React ones
+             after them. -->
+        <section id="plain">
+            <button type="button" class="kp-button kp-button--sm" data-test="plain-sm">Save</button>
+            <button type="button" class="kp-button" data-test="plain-md">Save</button>
+            <button type="button" class="kp-button kp-button--lg" data-test="plain-lg">Save</button>
+        </section>
+
+        <section id="react">
+            <div id="react-button"></div>
+        </section>
+
+        <script type="module" src="/tests/fixtures/.build/react-button.js"></script>
+    </body>
+</html>

@@ -80,14 +80,29 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch, 0px)), calc(100% - var(--fx-notch, 0px)) 100%, 0 100%);
     }
 
-    [data-theme='cyberpunk'] [data-slot='button'] {
+    /* The square corner reaches this package's own button too [TH110].
+   Every button rule here selected [data-slot='button'] alone -- a shadcn
+   markup hook that css/components.css never writes -- so the register
+   reached no .kp-button at all. */
+    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-button {
         border-radius: 0;
+    }
+
+    /* The bevel does NOT [AR30]. clip-path clips the focus outline away
+   with the corner: measured in painted pixels, both browsers, green
+   784 -> 0 and red 912 -> 0. Hooking .kp-button here as TH110 was
+   drafted would have removed the last visible focus indicator from
+   every button under cyberpunk. The bevel stays on the elements that
+   already carried it, and .fx-notch is the way to ask for it. */
+    [data-theme='cyberpunk'] [data-slot='button'] {
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
     }
 
     /* CP-F2: button "charge" - a skewed light band sweeps through on
    hover. Background-position only; no stacking-context tricks. */
-    [data-theme='cyberpunk'] [data-slot='button'] {
+    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-button {
         background-image: linear-gradient(105deg, transparent 0 42%, hsl(from var(--accent) h s l / 0.22) 42% 58%, transparent 58% 100%);
         background-size: 280% 100%;
         background-position: 105% 0;
@@ -95,12 +110,14 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-slot='button'] {
+        [data-theme='cyberpunk'] [data-slot='button'],
+        [data-theme='cyberpunk'] .kp-button {
             transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
         }
     }
 
-    [data-theme='cyberpunk'] [data-slot='button']:hover {
+    [data-theme='cyberpunk'] [data-slot='button']:hover,
+    [data-theme='cyberpunk'] .kp-button:hover {
         background-position: -5% 0;
     }
 

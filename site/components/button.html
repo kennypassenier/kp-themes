@@ -188,6 +188,7 @@
                     <h3 class="kp-fw-semibold"><code>Button</code></h3>
                     <div class="kp-table-wrap" data-kp-region-label="Button props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>variant</code></td><td><code>'default' | 'primary' | 'destructive' | 'ghost'</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td>optional</td><td>The size scale [TH111]. Default 'md', the unmodified button.</td></tr>
                             <tr><td><code>confirm</code></td><td><code>string</code></td><td>optional</td><td>Phrase shown on the first click; the second click acts [DI10].</td></tr>
                             <tr><td><code>onUndo</code></td><td><code>() =&gt; void</code></td><td>optional</td><td>Offered instead of a confirmation — SC 3.3.4 accepts either. Called if the person takes the undo.</td></tr>
                             <tr><td><code>undoMs</code></td><td><code>number</code></td><td>optional</td><td>How long the undo is offered. Default UNDO_MS.</td></tr>
@@ -214,9 +215,22 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-button-height-lg</code></td><td><code>calc(var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem))</code></td></tr>
+                            <tr><td><code>--kp-button-height-sm</code></td><td><code>max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)))</code></td></tr>
+                            <tr><td><code>--kp-button-padding-block-lg</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-button-padding-block-sm</code></td><td><code>var(--kp-space-xs, 0.25rem)</code></td></tr>
+                            <tr><td><code>--kp-button-padding-inline-lg</code></td><td><code>var(--kp-space-xl, 1.5rem)</code></td></tr>
+                            <tr><td><code>--kp-button-padding-inline-sm</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-button-text-lg</code></td><td><code>calc(var(--kp-text-md, 1rem) * 1.125)</code></td></tr>
+                            <tr><td><code>--kp-button-text-sm</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
-                            <tr><td><code>--kp-space-xs</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xl</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
