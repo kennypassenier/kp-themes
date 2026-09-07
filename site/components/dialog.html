@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Dialog</h1>
                     <p class="kp-prose">The browser’s own dialog element, painted. Opened as a modal it traps focus, closes on Escape and puts focus back where it came from — all three for free, which is why none of them is written here.</p>
@@ -115,60 +116,56 @@
                         <figcaption class="kp-fw-semibold">A button that opens a modal dialog</figcaption>
                         <p class="kp-text-muted">The trigger names the dialog by id and the module wires the two together. Escape closes it and focus returns to the button.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button" data-kp-dialog="doc-dialog">Delete application</button>
 <dialog class="kp-dialog" id="doc-dialog">
-<h2 class="kp-dialog__title">Delete this application?</h2>
-<p class="kp-dialog__description">It disappears from your list. This cannot be undone.</p>
-<div class="kp-dialog__actions">
-<button type="button" class="kp-button" data-kp-dialog-close>Cancel</button>
-<button type="button" class="kp-button kp-button--destructive" data-kp-dialog-close>Delete</button>
-</div>
+    <h2 class="kp-dialog__title">Delete this application?</h2>
+    <p class="kp-dialog__description">It disappears from your list. This cannot be undone.</p>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button" data-kp-dialog-close>Cancel</button>
+        <button type="button" class="kp-button kp-button--destructive" data-kp-dialog-close>Delete</button>
+    </div>
 </dialog>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-dialog</span><span class="kp-code__string">=&quot;doc-dialog&quot;</span>&gt;Delete application&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Delete this application?&lt;/<span class="kp-code__keyword">h2</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;It disappears from your list. This cannot be undone.&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Delete this application?&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;It disappears from your list. This cannot be undone.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">The parts, with the dialog left open</figcaption>
                         <p class="kp-text-muted">Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <dialog class="kp-dialog" open>
-<h2 class="kp-dialog__title">Invite a colleague</h2>
-<p class="kp-dialog__description">They get an email with a link that expires in a week.</p>
-<button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close">×</button>
-<div class="kp-field">
-<label class="kp-field__label" for="doc-dialog-mail">Email</label>
-<input class="kp-field__input" id="doc-dialog-mail" type="email" />
-</div>
-<div class="kp-dialog__actions">
-<button type="button" class="kp-button">Cancel</button>
-<button type="button" class="kp-button kp-button--primary">Send</button>
-</div>
+    <h2 class="kp-dialog__title">Invite a colleague</h2>
+    <p class="kp-dialog__description">They get an email with a link that expires in a week.</p>
+    <button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close">×</button>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-dialog-mail">Email</label>
+        <input class="kp-field__input" id="doc-dialog-mail" type="email" />
+    </div>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button">Cancel</button>
+        <button type="button" class="kp-button kp-button--primary">Send</button>
+    </div>
 </dialog>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog&quot;</span> <span class="kp-code__keyword">open</span>&gt;
-&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Invite a colleague&lt;/<span class="kp-code__keyword">h2</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;They get an email with a link that expires in a week.&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-dialog__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-dialog-mail&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> /&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Send&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Invite a colleague&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;They get an email with a link that expires in a week.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-dialog__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-dialog-mail&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Send&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -248,6 +245,7 @@
                             <tr><td><code>backdrop</code></td><td>A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

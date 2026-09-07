@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Spinner</h1>
                     <p class="kp-prose">A small ring that turns while something is happening whose end is not known. It stops turning for a reader who asked for less motion, and it says what it is in words.</p>
@@ -115,9 +116,7 @@
                         <figcaption class="kp-fw-semibold">A spinner with its name</figcaption>
                         <p class="kp-text-muted">The ring’s track is its own head at a quarter of its alpha rather than a grey boundary: in a theme where both were black, nothing visibly turned.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span class="kp-spinner" role="status" aria-label="Loading"></span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
@@ -125,9 +124,7 @@
                         <figcaption class="kp-fw-semibold">Inside the button that started the wait</figcaption>
                         <p class="kp-text-muted">Beside the label rather than instead of it: a button whose text disappears has changed size and meaning at the moment the reader is looking away.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button kp-button--primary" aria-busy="true"><span class="kp-spinner" aria-hidden="true"></span> Saving…</button>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Saving…&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
@@ -182,6 +179,7 @@
                             <tr><td><code>decorative</code></td><td>Beside a label that already says what is happening, the ring is marked hidden so the wait is not announced twice.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

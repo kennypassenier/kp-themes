@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Pagination</h1>
                     <p class="kp-prose">Numbered pages with previous and next, gaps where the range is cut, and the current page marked by weight as well as by the attribute that announces it.</p>
@@ -115,30 +116,28 @@
                         <figcaption class="kp-fw-semibold">Five pages with a gap</figcaption>
                         <p class="kp-text-muted">The gap is decorative and hidden from a screen reader — “…” read out between page numbers is noise. Real links, so a page can be opened in a new tab.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <nav class="kp-pagination" aria-label="Pagination">
-<ul>
-<li><a href="#pagination">Previous</a></li>
-<li><a href="#pagination">1</a></li>
-<li><a href="#pagination" aria-current="page">2</a></li>
-<li><a href="#pagination">3</a></li>
-<li class="kp-pagination__gap" aria-hidden="true">…</li>
-<li><a href="#pagination">9</a></li>
-<li><a href="#pagination">Next</a></li>
-</ul>
+    <ul>
+        <li><a href="#pagination">Previous</a></li>
+        <li><a href="#pagination">1</a></li>
+        <li><a href="#pagination" aria-current="page">2</a></li>
+        <li><a href="#pagination">3</a></li>
+        <li class="kp-pagination__gap" aria-hidden="true">…</li>
+        <li><a href="#pagination">9</a></li>
+        <li><a href="#pagination">Next</a></li>
+    </ul>
 </nav>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pagination&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pagination&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">ul</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;Previous&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;1&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;3&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pagination__gap&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;…&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;9&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;Previous&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;1&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;3&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pagination__gap&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;…&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;9&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#pagination&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -204,6 +203,7 @@
                             <tr><td><code>first / last</code></td><td>Optional jumps to either end for a long list.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

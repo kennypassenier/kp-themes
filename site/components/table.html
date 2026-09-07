@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Table</h1>
                     <p class="kp-prose">The plain table: header, rows, tabular numerals, and a wrapper that scrolls a wide table inside its own box instead of pushing the page sideways. That box is a named region a keyboard can reach.</p>
@@ -115,90 +116,84 @@
                         <figcaption class="kp-fw-semibold">A table in its scroll region</figcaption>
                         <p class="kp-text-muted">The wrapper is upgraded on attach: it becomes focusable, takes the region role, and is named after the caption — so someone who cannot use a mouse can reach the scrollbar and is told which table they landed in.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-table-wrap">
-<table class="kp-table">
-<caption>Applications</caption>
-<thead><tr><th scope="col">Company</th><th scope="col">Status</th><th scope="col">Amount</th></tr></thead>
-<tbody>
-<tr><td>Example Inc</td><td>Interview</td><td class="kp-numeric">1,284.50</td></tr>
-<tr><td>Second Ltd</td><td>Offer</td><td class="kp-numeric">998.00</td></tr>
-</tbody>
-</table>
+    <table class="kp-table">
+        <caption>Applications</caption>
+        <thead><tr><th scope="col">Company</th><th scope="col">Status</th><th scope="col">Amount</th></tr></thead>
+        <tbody>
+            <tr><td>Example Inc</td><td>Interview</td><td class="kp-numeric">1,284.50</td></tr>
+            <tr><td>Second Ltd</td><td>Offer</td><td class="kp-numeric">998.00</td></tr>
+        </tbody>
+    </table>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">caption</span>&gt;Applications&lt;/<span class="kp-code__keyword">caption</span>&gt;
-&lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Company&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
-&lt;<span class="kp-code__keyword">tbody</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Interview&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;1,284.50&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Second Ltd&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Offer&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;998.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;/<span class="kp-code__keyword">tbody</span>&gt;
-&lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span>&gt;Applications&lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Company&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Interview&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;1,284.50&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Second Ltd&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Offer&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;998.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Cells that do not fit, and a column that may go</figcaption>
                         <p class="kp-text-muted">Two different problems: an identifier is one unbreakable word that widens the whole table, and a sentence is prose that should be cut with the full value still in the cell. The low-priority column is dropped at the same width the rows become cards.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-table-wrap">
-<table class="kp-table">
-<caption>Deliveries</caption>
-<thead><tr><th scope="col">Key</th><th scope="col">Note</th><th scope="col" class="kp-col-low">Updated</th></tr></thead>
-<tbody>
-<tr>
-<td class="kp-cell-break">7f3a9c21-4e18-4b7d-9f02-6d5e8a1c0b44</td>
-<td class="kp-cell-truncate" title="Left with a neighbour who was not in when the courier came back">Left with a neighbour who was not in when the courier came back</td>
-<td class="kp-col-low kp-timestamp">2026-09-06 14:07</td>
-</tr>
-</tbody>
-</table>
+    <table class="kp-table">
+        <caption>Deliveries</caption>
+        <thead><tr><th scope="col">Key</th><th scope="col">Note</th><th scope="col" class="kp-col-low">Updated</th></tr></thead>
+        <tbody>
+            <tr>
+                <td class="kp-cell-break">7f3a9c21-4e18-4b7d-9f02-6d5e8a1c0b44</td>
+                <td class="kp-cell-truncate" title="Left with a neighbour who was not in when the courier came back">Left with a neighbour who was not in when the courier came back</td>
+                <td class="kp-col-low kp-timestamp">2026-09-06 14:07</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">caption</span>&gt;Deliveries&lt;/<span class="kp-code__keyword">caption</span>&gt;
-&lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Key&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Note&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-col-low&quot;</span>&gt;Updated&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
-&lt;<span class="kp-code__keyword">tbody</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-cell-break&quot;</span>&gt;7f3a9c21-4e18-4b7d-9f02-6d5e8a1c0b44&lt;/<span class="kp-code__keyword">td</span>&gt;
-&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-cell-truncate&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Left with a neighbour who was not in when the courier came back&quot;</span>&gt;Left with a neighbour who was not in when the courier came back&lt;/<span class="kp-code__keyword">td</span>&gt;
-&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-col-low kp-timestamp&quot;</span>&gt;2026-09-06 14:07&lt;/<span class="kp-code__keyword">td</span>&gt;
-&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;/<span class="kp-code__keyword">tbody</span>&gt;
-&lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span>&gt;Deliveries&lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Key&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Note&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-col-low&quot;</span>&gt;Updated&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-cell-break&quot;</span>&gt;7f3a9c21-4e18-4b7d-9f02-6d5e8a1c0b44&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-cell-truncate&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Left with a neighbour who was not in when the courier came back&quot;</span>&gt;Left with a neighbour who was not in when the courier came back&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-col-low kp-timestamp&quot;</span>&gt;2026-09-06 14:07&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Rows as cards in a narrow container</figcaption>
                         <p class="kp-text-muted">Opt-in, because every table that already ships would otherwise change shape in a minor release. The width that decides is the width of the table’s own container, not the window’s, so a table in a narrow column falls into cards on a wide page.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-table-wrap">
-<table class="kp-table" data-kp-cards>
-<caption>Orders</caption>
-<thead><tr><th scope="col">Customer</th><th scope="col">Amount</th></tr></thead>
-<tbody>
-<tr><td data-label="Customer">Acme</td><td data-label="Amount" class="kp-numeric">100.00</td></tr>
-<tr><td data-label="Customer">Bakker</td><td data-label="Amount" class="kp-numeric">20.00</td></tr>
-</tbody>
-</table>
+    <table class="kp-table" data-kp-cards>
+        <caption>Orders</caption>
+        <thead><tr><th scope="col">Customer</th><th scope="col">Amount</th></tr></thead>
+        <tbody>
+            <tr><td data-label="Customer">Acme</td><td data-label="Amount" class="kp-numeric">100.00</td></tr>
+            <tr><td data-label="Customer">Bakker</td><td data-label="Amount" class="kp-numeric">20.00</td></tr>
+        </tbody>
+    </table>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span> <span class="kp-code__keyword">data-kp-cards</span>&gt;
-&lt;<span class="kp-code__keyword">caption</span>&gt;Orders&lt;/<span class="kp-code__keyword">caption</span>&gt;
-&lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Customer&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
-&lt;<span class="kp-code__keyword">tbody</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Customer&quot;</span>&gt;Acme&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Amount&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;100.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Customer&quot;</span>&gt;Bakker&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Amount&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;20.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;/<span class="kp-code__keyword">tbody</span>&gt;
-&lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span> <span class="kp-code__keyword">data-kp-cards</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span>&gt;Orders&lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Customer&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Customer&quot;</span>&gt;Acme&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Amount&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;100.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Customer&quot;</span>&gt;Bakker&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Amount&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;20.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -277,6 +272,7 @@
                             <tr><td><code>row hover</code></td><td>A quiet wash on the hovered row; it is not a selection, and nothing depends on it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

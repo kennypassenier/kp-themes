@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Alert</h1>
                     <p class="kp-prose">A message on a coloured plate that also says, in words, what kind of message it is. Four flavours, no hover and no active state: an alert is a message, not a control.</p>
@@ -115,12 +116,10 @@
                         <figcaption class="kp-fw-semibold">The four flavours</figcaption>
                         <p class="kp-text-muted">Each names itself in text as well as in colour: four coloured plates are one plate to somebody who sees them all the same. The contract enforcer disarms a semantic alert that carries no words.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-alert kp-alert--success" role="status" data-kp-semantic><span><span class="kp-alert__label">Success: </span>The application was sent.</span></div>
 <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">Warning: </span>Two attachments were larger than the limit.</span></div>
 <div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">Note: </span>Applications are kept for twelve months.</span></div>
 <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic><span><span class="kp-alert__label">Error: </span>The server refused the file.</span></div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--success&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Success: &lt;/<span class="kp-code__keyword">span</span>&gt;The application was sent.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Two attachments were larger than the limit.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
@@ -131,18 +130,16 @@
                         <figcaption class="kp-fw-semibold">With an icon and a way out</figcaption>
                         <p class="kp-text-muted">The icon is decorative — the word beside it is what carries the meaning — and the close button is a named control rather than a bare glyph.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
-<span class="kp-alert__icon" aria-hidden="true">!</span>
-<span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Your session ends in five minutes.</span>
-<button type="button" class="kp-icon-button kp-alert__close" aria-label="Dismiss this message">×</button>
+    <span class="kp-alert__icon" aria-hidden="true">!</span>
+    <span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Your session ends in five minutes.</span>
+    <button type="button" class="kp-icon-button kp-alert__close" aria-label="Dismiss this message">×</button>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Your session ends in five minutes.&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss this message&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Your session ends in five minutes.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss this message&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -204,6 +201,7 @@
                             <tr><td><code>.kp-alert__close</code></td><td>The dismiss control, pushed to the trailing edge.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

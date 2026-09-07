@@ -13,6 +13,14 @@
 /**
  * One page of the site.
  *
+ * The measure lives on a wrapper INSIDE the main column, never on the
+ * column itself. Sharing one element makes .kp-page's cap fight
+ * .kp-sidebar__main's growth: the main column stops at its measure, the
+ * free space has nowhere else to go, and the aside — which grows too —
+ * swallows it. Measured at a 1585px viewport: the navigation was 481px
+ * wide instead of its 16rem, and the reading column started 272px past
+ * the end of the links.
+ *
  * @param {{ title: string, description: string, depth: number, nav: {group: string, links: Link[]}[], current: string, body: string }} page
  * @returns {string}
  */
@@ -58,8 +66,10 @@ ${section.links
 ${nav}
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
 ${page.body}
+                </div>
             </main>
         </div>
         <script type="module" src="${up}js/auto.js"></script>
@@ -87,4 +97,50 @@ ${body}
  */
 export function escape(text) {
     return String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+}
+
+/** Elements HTML closes for you, so a line opening one changes no depth. */
+const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+
+/**
+ * Re-indent a descriptor's markup so the snippet reads as a tree.
+ *
+ * The descriptors write markup flat, one tag per line at column zero,
+ * because that is pleasant to write inside a template literal and
+ * unpleasant to read on a page: a field's label and input sat level with
+ * the div that holds them. This walks the lines and indents by depth.
+ *
+ * The SAME string is rendered live and printed as the snippet (AR19), so
+ * this runs once and both use its result. Whitespace between block
+ * elements does not change what the browser draws.
+ *
+ * @param {string} markup
+ * @returns {string}
+ */
+export function indent(markup) {
+    let depth = 0;
+    return markup
+        .trim()
+        .split('\n')
+        .map((raw) => {
+            const line = raw.trim();
+            if (line === '') return '';
+            // A line that closes before it opens dedents itself first:
+            // `</div>` and `</li><li>` alike.
+            if (/^<\//.test(line)) depth = Math.max(0, depth - 1);
+            const out = '    '.repeat(depth) + line;
+            // Count what this line leaves open. A tag that opens and
+            // closes on the same line is a wash, and so is a void element.
+            for (const tag of line.matchAll(/<(\/?)([a-zA-Z][a-zA-Z0-9-]*)\b[^>]*?(\/?)>/g)) {
+                const [, closing, name, selfClosing] = tag;
+                if (selfClosing || VOID.has(name.toLowerCase())) continue;
+                if (closing) {
+                    // The dedent for a line that STARTS with a close was
+                    // already taken above; only later closes count here.
+                    if (line.indexOf(tag[0]) > 0) depth = Math.max(0, depth - 1);
+                } else depth += 1;
+            }
+            return out;
+        })
+        .join('\n');
 }

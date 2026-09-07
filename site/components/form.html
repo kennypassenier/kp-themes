@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Form</h1>
                     <p class="kp-prose">A form that makes the browser’s own validation reachable: the messages the browser already found are put where a screen reader will read them, gathered into a summary at the top, and the first one takes focus when a submit fails.</p>
@@ -115,38 +116,36 @@
                         <figcaption class="kp-fw-semibold">A form that validates on submit</figcaption>
                         <p class="kp-text-muted">The summary is empty and hidden until a submit fails; then it names each failing field as a link, takes focus, and each field’s own message appears under it. Native validation stays on, its popups do not.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <form class="kp-form" data-kp-form>
-<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
-<div class="kp-field">
-<label class="kp-field__label" for="doc-form-name">Name <span class="kp-field__required">required</span></label>
-<input class="kp-field__input" id="doc-form-name" name="name" required aria-describedby="doc-form-name-help" />
-<span class="kp-field__help" id="doc-form-name-help">As it appears on your pass.</span>
-<span class="kp-field__error" data-kp-field-error hidden></span>
-</div>
-<div class="kp-field">
-<label class="kp-field__label" for="doc-form-mail">Email <span class="kp-field__required">required</span></label>
-<input class="kp-field__input" id="doc-form-mail" name="email" type="email" required />
-<span class="kp-field__error" data-kp-field-error hidden></span>
-</div>
-<button type="submit" class="kp-button kp-button--primary" data-kp-submit>Save</button>
+    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-form-name">Name <span class="kp-field__required">required</span></label>
+        <input class="kp-field__input" id="doc-form-name" name="name" required aria-describedby="doc-form-name-help" />
+        <span class="kp-field__help" id="doc-form-name-help">As it appears on your pass.</span>
+        <span class="kp-field__error" data-kp-field-error hidden></span>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-form-mail">Email <span class="kp-field__required">required</span></label>
+        <input class="kp-field__input" id="doc-form-mail" name="email" type="email" required />
+        <span class="kp-field__error" data-kp-field-error hidden></span>
+    </div>
+    <button type="submit" class="kp-button kp-button--primary" data-kp-submit>Save</button>
 </form>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">data-kp-form</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span>&gt;Name &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;name&quot;</span> <span class="kp-code__keyword">required</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span>&gt;As it appears on your pass.&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span>&gt;Email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Save&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span>&gt;Name &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;name&quot;</span> <span class="kp-code__keyword">required</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-name-help&quot;</span>&gt;As it appears on your pass.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span>&gt;Email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-form-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Save&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -266,6 +265,7 @@
                             <tr><td><code>server errors</code></td><td>Errors a server found are handed in and shown in the same places as the browser’s own, rather than in a second mechanism beside them.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

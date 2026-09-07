@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Toast</h1>
                     <p class="kp-prose">A short message in a stack at the corner of the window that removes itself after a while. Errors go to a second, assertive stack, because those are the ones that must interrupt.</p>
@@ -115,12 +116,10 @@
                         <figcaption class="kp-fw-semibold">The four flavours, at rest</figcaption>
                         <p class="kp-text-muted">Printed here on the page so the variants can be seen; in an application the module puts them into the fixed stack at the corner of the window. The flavour is a rule down the leading edge and the message says it too.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-toast kp-toast--success">Saved: the application was sent.</div>
 <div class="kp-toast kp-toast--warning">Two files were skipped.</div>
 <div class="kp-toast kp-toast--info">Your session ends in five minutes.</div>
 <div class="kp-toast kp-toast--error">The server refused the file.<button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--success&quot;</span>&gt;Saved: the application was sent.&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--warning&quot;</span>&gt;Two files were skipped.&lt;/<span class="kp-code__keyword">div</span>&gt;
@@ -131,9 +130,7 @@
                         <figcaption class="kp-fw-semibold">The region a consumer writes once</figcaption>
                         <p class="kp-text-muted">One polite region for ordinary messages; the module makes a second assertive one for errors when it needs it. The stack is fixed to the corner of the window and sits above the texture layer, because a toast under an overlay is a toast nobody can read.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-toasts" role="status" aria-live="polite"></div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toasts&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
@@ -199,6 +196,7 @@
                             <tr><td><code>with an action</code></td><td>A toast can carry one control — an undo — and then it should stay long enough to be used.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

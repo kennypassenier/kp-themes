@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Progress</h1>
                     <p class="kp-prose">A determinate bar for work whose end is known, painted in the theme’s own colours rather than the browser’s grey — the one control the package did not paint was the one that looked wrong in every theme.</p>
@@ -115,18 +116,16 @@
                         <figcaption class="kp-fw-semibold">A bar, and a bar with its number</figcaption>
                         <p class="kp-text-muted">The value belongs on the element, where the browser reports it, rather than in a width. The percentage beside it is for the reader who wants the number.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <progress class="kp-progress" value="40" max="100" aria-label="Import"></progress>
 <span class="kp-progress__wrap">
-<progress class="kp-progress" value="40" max="100" aria-label="Import"></progress>
-<span class="kp-progress__value">40%</span>
+    <progress class="kp-progress" value="40" max="100" aria-label="Import"></progress>
+    <span class="kp-progress__value">40%</span>
 </span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Import&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Import&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;40%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Import&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;40%&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -187,6 +186,7 @@
                             <tr><td><code>indeterminate</code></td><td>A progress element with no value is the browser’s own indeterminate bar; for waiting with no end in sight the spinner says it better.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

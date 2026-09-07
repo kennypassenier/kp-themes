@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Shortcut sheet</h1>
                     <p class="kp-prose">The dialog that lists what the keys do — the page every application with shortcuts owes its readers, and the one that is usually a paragraph in a help centre.</p>
@@ -115,42 +116,40 @@
                         <figcaption class="kp-fw-semibold">A sheet with two groups, left open</figcaption>
                         <p class="kp-text-muted">Shown open here; in an application it opens on its own key. The rows are a definition list, so each key is read together with what it does.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <dialog class="kp-shortcuts" data-kp-shortcuts data-kp-hotkey="none" aria-label="Keyboard shortcuts" open>
-<h2 class="kp-dialog__title">Keyboard shortcuts</h2>
-<section class="kp-shortcuts__group">
-<h3 class="kp-shortcuts__group-label">Anywhere</h3>
-<dl class="kp-shortcuts__list">
-<div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt><dd>Open the commands</dd></div>
-<div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">?</kbd></dt><dd>Show this sheet</dd></div>
-</dl>
-</section>
-<section class="kp-shortcuts__group">
-<h3 class="kp-shortcuts__group-label">In a list</h3>
-<dl class="kp-shortcuts__list">
-<div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">J</kbd></dt><dd>Next row</dd></div>
-<div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">K</kbd></dt><dd>Previous row</dd></div>
-</dl>
-</section>
+    <h2 class="kp-dialog__title">Keyboard shortcuts</h2>
+    <section class="kp-shortcuts__group">
+        <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+        <dl class="kp-shortcuts__list">
+            <div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt><dd>Open the commands</dd></div>
+            <div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">?</kbd></dt><dd>Show this sheet</dd></div>
+        </dl>
+    </section>
+    <section class="kp-shortcuts__group">
+        <h3 class="kp-shortcuts__group-label">In a list</h3>
+        <dl class="kp-shortcuts__list">
+            <div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">J</kbd></dt><dd>Next row</dd></div>
+            <div class="kp-shortcuts__row"><dt><kbd class="kp-palette__keys">K</kbd></dt><dd>Previous row</dd></div>
+        </dl>
+    </section>
 </dialog>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts&quot;</span> <span class="kp-code__keyword">data-kp-shortcuts</span> <span class="kp-code__keyword">data-kp-hotkey</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Keyboard shortcuts&quot;</span> <span class="kp-code__keyword">open</span>&gt;
-&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Keyboard shortcuts&lt;/<span class="kp-code__keyword">h2</span>&gt;
-&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group-label&quot;</span>&gt;Anywhere&lt;/<span class="kp-code__keyword">h3</span>&gt;
-&lt;<span class="kp-code__keyword">dl</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__list&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;Ctrl K&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Open the commands&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;?&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Show this sheet&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">dl</span>&gt;
-&lt;/<span class="kp-code__keyword">section</span>&gt;
-&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group-label&quot;</span>&gt;In a list&lt;/<span class="kp-code__keyword">h3</span>&gt;
-&lt;<span class="kp-code__keyword">dl</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__list&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;J&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Next row&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;K&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Previous row&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">dl</span>&gt;
-&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Keyboard shortcuts&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group-label&quot;</span>&gt;Anywhere&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">dl</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;Ctrl K&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Open the commands&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;?&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Show this sheet&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">dl</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__group-label&quot;</span>&gt;In a list&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">dl</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;J&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Next row&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts__row&quot;</span>&gt;&lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;K&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Previous row&lt;/<span class="kp-code__keyword">dd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">dl</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -216,6 +215,7 @@
                             <tr><td><code>.kp-shortcuts__group-label</code></td><td>A small heading over a group of rows, for a sheet long enough to need sections.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

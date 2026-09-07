@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Copyable value</h1>
                     <p class="kp-prose">A value in the mono face with a button beside it that copies it and then says so, in words on the button, for as long as the confirmation lasts. When the clipboard refuses, that is said too.</p>
@@ -115,32 +116,28 @@
                         <figcaption class="kp-fw-semibold">A token with a copy button</figcaption>
                         <p class="kp-text-muted">The confirmation is words on the button rather than a green flash, because a flash is invisible to a screen reader and to anyone who looked away.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span class="kp-copyable">
-<span class="kp-copyable__value" id="doc-copy-token">a3f9-2b71</span>
-<button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="doc-copy-token">Copy</button>
+    <span class="kp-copyable__value" id="doc-copy-token">a3f9-2b71</span>
+    <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="doc-copy-token">Copy</button>
 </span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-copy-token&quot;</span>&gt;a3f9-2b71&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy</span><span class="kp-code__string">=&quot;doc-copy-token&quot;</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-copy-token&quot;</span>&gt;a3f9-2b71&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy</span><span class="kp-code__string">=&quot;doc-copy-token&quot;</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Copying a value that is not on screen</figcaption>
                         <p class="kp-text-muted">The button can carry the text itself, for a value that is shortened on screen or not shown at all.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span class="kp-copyable">
-<span class="kp-copyable__value">https://example.test/i/a3f9…</span>
-<button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy data-kp-copy-value="https://example.test/invite/a3f9-2b71-0c4d" aria-label="Copy the invitation link">Copy</button>
+    <span class="kp-copyable__value">https://example.test/i/a3f9…</span>
+    <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy data-kp-copy-value="https://example.test/invite/a3f9-2b71-0c4d" aria-label="Copy the invitation link">Copy</button>
 </span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span>&gt;https://example.test/i/a3f9…&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy</span> <span class="kp-code__keyword">data-kp-copy-value</span><span class="kp-code__string">=&quot;https://example.test/invite/a3f9-2b71-0c4d&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Copy the invitation link&quot;</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span>&gt;https://example.test/i/a3f9…&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy</span> <span class="kp-code__keyword">data-kp-copy-value</span><span class="kp-code__string">=&quot;https://example.test/invite/a3f9-2b71-0c4d&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Copy the invitation link&quot;</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -216,6 +213,7 @@
                             <tr><td><code>with a toast</code></td><td>The confirmation can be a toast as well as the button’s own label, for a copy that happens far from where the reader is looking.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Skip link</h1>
                     <p class="kp-prose">The first thing a keyboard user meets on a page: a link past the header and the navigation, invisible until it is focused and then unmissable.</p>
@@ -115,10 +116,8 @@
                         <figcaption class="kp-fw-semibold">The link and its target</figcaption>
                         <p class="kp-text-muted">It is out of sight until it takes focus, then it appears at the top corner. Tab into the box below to see it. The target takes focus itself, so the next Tab continues inside the content.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <a class="kp-skip-link" href="#doc-skip-main">Skip to content</a>
 <div id="doc-skip-main" tabindex="-1">The page’s content starts here.</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skip-link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#doc-skip-main&quot;</span>&gt;Skip to content&lt;/<span class="kp-code__keyword">a</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-skip-main&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>&gt;The page’s content starts here.&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
@@ -168,6 +167,7 @@
                             <tr><td><code>focused</code></td><td>It drops into the top corner on the primary plate, above every other layer, with an underline.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

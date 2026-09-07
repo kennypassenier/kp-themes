@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Breadcrumb</h1>
                     <p class="kp-prose">The trail from the top of the hierarchy to where the reader is now, with a separator drawn by the stylesheet rather than written into the markup.</p>
@@ -115,22 +116,20 @@
                         <figcaption class="kp-fw-semibold">Three levels, the last one where you are</figcaption>
                         <p class="kp-text-muted">The separator is a stylesheet glyph, so it is never selected or read out as text; the last entry is not a link, because it is the page you are on.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <nav class="kp-breadcrumb" aria-label="Breadcrumb">
-<ol>
-<li><a href="#breadcrumb">Home</a></li>
-<li><a href="#example">Applications</a></li>
-<li><span aria-current="page">Example Inc</span></li>
-</ol>
+    <ol>
+        <li><a href="#breadcrumb">Home</a></li>
+        <li><a href="#example">Applications</a></li>
+        <li><span aria-current="page">Example Inc</span></li>
+    </ol>
 </nav>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-breadcrumb&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Breadcrumb&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">ol</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Home&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Home&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Example Inc&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -187,6 +186,7 @@
                             <tr><td><code>wrapping</code></td><td>A long trail wraps to a second line instead of scrolling sideways.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Skeleton</h1>
                     <p class="kp-prose">Grey shapes standing in for content that is on its way, in the shape of what will arrive. It pulses where motion is welcome and stands still where it is not.</p>
@@ -115,20 +116,18 @@
                         <figcaption class="kp-fw-semibold">A paragraph, a block and an avatar</figcaption>
                         <p class="kp-text-muted">Three shapes: lines, a block for an image or a card, and a circle. Stacked lines take their distance from the stylesheet rather than from an inline style nothing could beat.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div aria-hidden="true">
-<span class="kp-skeleton"></span>
-<span class="kp-skeleton"></span>
-<span class="kp-skeleton"></span>
+    <span class="kp-skeleton"></span>
+    <span class="kp-skeleton"></span>
+    <span class="kp-skeleton"></span>
 </div>
 <div aria-hidden="true"><span class="kp-skeleton kp-skeleton--block"></span></div>
 <div aria-hidden="true"><span class="kp-skeleton kp-skeleton--circle"></span></div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--block&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--circle&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
@@ -190,6 +189,7 @@
                             <tr><td><code>reduced motion</code></td><td>The pulse is inside the reduced-motion guard; the shapes are simply there for a reader who asked for stillness.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

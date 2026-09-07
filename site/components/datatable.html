@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Data table</h1>
                     <p class="kp-prose">Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data.</p>
@@ -115,62 +116,60 @@
                         <figcaption class="kp-fw-semibold">Search, sort, page and select</figcaption>
                         <p class="kp-text-muted">Everything is markup the server wrote, so the table is readable before any script runs. The status paragraph says how many rows are showing after each change, which is what makes the filtering audible.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-datatable" data-kp-datatable data-kp-page-size="3">
-<div class="kp-datatable__bar">
-<input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" placeholder="Search…" />
+    <div class="kp-datatable__bar">
+        <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" placeholder="Search…" />
+    </div>
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption>Orders</caption>
+            <thead><tr>
+                    <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th>
+                    <th scope="col" data-kp-sort="text">Customer</th>
+                    <th scope="col" data-kp-sort="number">Amount</th>
+                    <th scope="col" data-kp-sort="date">Date</th>
+                </tr></thead>
+            <tbody>
+                <tr data-kp-row-key="r0"><td><input type="checkbox" data-kp-select-row aria-label="Select Acme" /></td><td>Acme</td><td class="kp-numeric">100.00</td><td class="kp-timestamp">2026-03-01</td></tr>
+                <tr data-kp-row-key="r1"><td><input type="checkbox" data-kp-select-row aria-label="Select Bakker" /></td><td>Bakker</td><td class="kp-numeric">20.00</td><td class="kp-timestamp">2026-01-12</td></tr>
+                <tr data-kp-row-key="r2"><td><input type="checkbox" data-kp-select-row aria-label="Select Cerise" /></td><td>Cerise</td><td class="kp-numeric">1,284.50</td><td class="kp-timestamp">2026-09-04</td></tr>
+                <tr data-kp-row-key="r3"><td><input type="checkbox" data-kp-select-row aria-label="Select Delta" /></td><td>Delta</td><td class="kp-numeric">7.00</td><td class="kp-timestamp">2025-11-30</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="kp-empty" data-kp-datatable-empty hidden>Nothing found.</div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+        <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+    </div>
 </div>
-<div class="kp-table-wrap">
-<table class="kp-table">
-<caption>Orders</caption>
-<thead><tr>
-<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th>
-<th scope="col" data-kp-sort="text">Customer</th>
-<th scope="col" data-kp-sort="number">Amount</th>
-<th scope="col" data-kp-sort="date">Date</th>
-</tr></thead>
-<tbody>
-<tr data-kp-row-key="r0"><td><input type="checkbox" data-kp-select-row aria-label="Select Acme" /></td><td>Acme</td><td class="kp-numeric">100.00</td><td class="kp-timestamp">2026-03-01</td></tr>
-<tr data-kp-row-key="r1"><td><input type="checkbox" data-kp-select-row aria-label="Select Bakker" /></td><td>Bakker</td><td class="kp-numeric">20.00</td><td class="kp-timestamp">2026-01-12</td></tr>
-<tr data-kp-row-key="r2"><td><input type="checkbox" data-kp-select-row aria-label="Select Cerise" /></td><td>Cerise</td><td class="kp-numeric">1,284.50</td><td class="kp-timestamp">2026-09-04</td></tr>
-<tr data-kp-row-key="r3"><td><input type="checkbox" data-kp-select-row aria-label="Select Delta" /></td><td>Delta</td><td class="kp-numeric">7.00</td><td class="kp-timestamp">2025-11-30</td></tr>
-</tbody>
-</table>
-</div>
-<div class="kp-empty" data-kp-datatable-empty hidden>Nothing found.</div>
-<div class="kp-datatable__bar">
-<p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
-<div class="kp-datatable__pager" data-kp-datatable-pager></div>
-</div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-page-size</span><span class="kp-code__string">=&quot;3&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__search&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">data-kp-datatable-search</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search the table&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Search…&quot;</span> /&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">caption</span>&gt;Orders&lt;/<span class="kp-code__keyword">caption</span>&gt;
-&lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-all</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select all visible rows&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;
-&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Customer&lt;/<span class="kp-code__keyword">th</span>&gt;
-&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;number&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;
-&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;date&quot;</span>&gt;Date&lt;/<span class="kp-code__keyword">th</span>&gt;
-&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
-&lt;<span class="kp-code__keyword">tbody</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r0&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Acme&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Acme&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;100.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-03-01&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r1&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Bakker&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Bakker&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;20.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-01-12&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r2&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Cerise&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Cerise&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;1,284.50&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-09-04&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r3&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Delta&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Delta&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;7.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2025-11-30&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
-&lt;/<span class="kp-code__keyword">tbody</span>&gt;
-&lt;/<span class="kp-code__keyword">table</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty&quot;</span> <span class="kp-code__keyword">data-kp-datatable-empty</span> <span class="kp-code__keyword">hidden</span>&gt;Nothing found.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__pager&quot;</span> <span class="kp-code__keyword">data-kp-datatable-pager</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__search&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">data-kp-datatable-search</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search the table&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Search…&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span>&gt;Orders&lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-all</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select all visible rows&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Customer&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;number&quot;</span>&gt;Amount&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;date&quot;</span>&gt;Date&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r0&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Acme&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Acme&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;100.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-03-01&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r1&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Bakker&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Bakker&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;20.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-01-12&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r2&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Cerise&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Cerise&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;1,284.50&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2026-09-04&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;r3&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select Delta&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Delta&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;7.00&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;2025-11-30&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty&quot;</span> <span class="kp-code__keyword">data-kp-datatable-empty</span> <span class="kp-code__keyword">hidden</span>&gt;Nothing found.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__pager&quot;</span> <span class="kp-code__keyword">data-kp-datatable-pager</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -286,6 +285,7 @@
                             <tr><td><code>clickable rows</code></td><td>A row can be marked as a control, which gives it the pointer cursor and an activation of its own.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

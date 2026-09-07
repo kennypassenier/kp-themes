@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Page shell</h1>
                     <p class="kp-prose">The two pieces every application has and nobody designs: the footer under the content, and the page that says something went wrong.</p>
@@ -115,27 +116,23 @@
                         <figcaption class="kp-fw-semibold">An error page</figcaption>
                         <p class="kp-text-muted">A message, not a wall: the destructive colour names the failure in the heading, and the explanation stays in the ordinary ink at a readable measure.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-error">
-<h1>404</h1>
-<p>This page does not exist. It may have been renamed, or the link may be older than the page.</p>
-<a class="kp-button" href="#page-shell">Back to the start</a>
+    <h1>404</h1>
+    <p>This page does not exist. It may have been renamed, or the link may be older than the page.</p>
+    <a class="kp-button" href="#page-shell">Back to the start</a>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-error&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">h1</span>&gt;404&lt;/<span class="kp-code__keyword">h1</span>&gt;
-&lt;<span class="kp-code__keyword">p</span>&gt;This page does not exist. It may have been renamed, or the link may be older than the page.&lt;/<span class="kp-code__keyword">p</span>&gt;
-&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#page-shell&quot;</span>&gt;Back to the start&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">h1</span>&gt;404&lt;/<span class="kp-code__keyword">h1</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;This page does not exist. It may have been renamed, or the link may be older than the page.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#page-shell&quot;</span>&gt;Back to the start&lt;/<span class="kp-code__keyword">a</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A footer</figcaption>
                         <p class="kp-text-muted">Quiet ink over a rule, with the page’s own outer distance, so it closes the page rather than starting a new region.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <footer class="kp-footer">kp-themes · twenty-four themes, one set of tokens</footer>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-footer&quot;</span>&gt;kp-themes · twenty-four themes, one set of tokens&lt;/<span class="kp-code__keyword">footer</span>&gt;</code></pre>
                     </figure>
@@ -182,6 +179,7 @@
                             <tr><td><code>.kp-footer</code></td><td>A rule above, quiet ink, and the same outer distance as the page.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

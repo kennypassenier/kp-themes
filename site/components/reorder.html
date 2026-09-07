@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Reorder list</h1>
                     <p class="kp-prose">A list whose items can be moved: a real grab handle that moves an item with the arrow keys, and a pointer drag beside it. Every move is announced in words and reported as the new order.</p>
@@ -115,18 +116,16 @@
                         <figcaption class="kp-fw-semibold">Three items with a handle each</figcaption>
                         <p class="kp-text-muted">The handle is a real button, not a decorative grip: it has to be reachable by Tab or the arrow keys have nothing to act on. Dragging is the easy half and the platform gives it away.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <ul class="kp-reorder" data-kp-reorder aria-label="Report columns">
-<li data-kp-item="name"><button type="button" data-kp-handle aria-label="Move Name">⠿</button> Name</li>
-<li data-kp-item="amount"><button type="button" data-kp-handle aria-label="Move Amount">⠿</button> Amount</li>
-<li data-kp-item="date"><button type="button" data-kp-handle aria-label="Move Date">⠿</button> Date</li>
+    <li data-kp-item="name"><button type="button" data-kp-handle aria-label="Move Name">⠿</button> Name</li>
+    <li data-kp-item="amount"><button type="button" data-kp-handle aria-label="Move Amount">⠿</button> Amount</li>
+    <li data-kp-item="date"><button type="button" data-kp-handle aria-label="Move Date">⠿</button> Date</li>
 </ul>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-reorder&quot;</span> <span class="kp-code__keyword">data-kp-reorder</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Report columns&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;name&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Name&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Name&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;amount&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Amount&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Amount&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;date&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Date&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Date&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;name&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Name&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Name&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;amount&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Amount&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Amount&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;date&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Date&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Date&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -200,6 +199,7 @@
                             <tr><td><code>item label</code></td><td>The name used in the announcement can be the item’s own text or a label element inside it.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Dropdown menu</h1>
                     <p class="kp-prose">A list of actions on the popover layer, anchored under the control that opens it. The browser gives it light dismiss, Escape and focus return; the package gives it the looks and the anchor.</p>
@@ -115,26 +116,24 @@
                         <figcaption class="kp-fw-semibold">A menu with a destructive entry</figcaption>
                         <p class="kp-text-muted">Anchor positioning puts the list under its button without either of them measuring the other, and the popover is the browser’s, so Escape and clicking away are free.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <button type="button" class="kp-button" popovertarget="doc-menu" style="anchor-name: --doc-menu">Actions</button>
 <div popover="auto" id="doc-menu" class="kp-popover" style="position-anchor: --doc-menu">
-<ul class="kp-menu">
-<li><button type="button" class="kp-menu__item">Edit</button></li>
-<li><button type="button" class="kp-menu__item">Duplicate</button></li>
-<li><hr class="kp-menu__separator" /></li>
-<li><button type="button" class="kp-menu__item kp-menu__item--destructive">Delete</button></li>
-</ul>
+    <ul class="kp-menu">
+        <li><button type="button" class="kp-menu__item">Edit</button></li>
+        <li><button type="button" class="kp-menu__item">Duplicate</button></li>
+        <li><hr class="kp-menu__separator" /></li>
+        <li><button type="button" class="kp-menu__item kp-menu__item--destructive">Delete</button></li>
+    </ul>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">popovertarget</span><span class="kp-code__string">=&quot;doc-menu&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;anchor-name: --doc-menu&quot;</span>&gt;Actions&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">popover</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-menu&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --doc-menu&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Edit&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Duplicate&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">hr</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__separator&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Edit&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Duplicate&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">hr</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__separator&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -205,6 +204,7 @@
                             <tr><td><code>hover</code></td><td>A wash of the page’s ink rather than the accent colour, so a highlighted row is quiet in every theme.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

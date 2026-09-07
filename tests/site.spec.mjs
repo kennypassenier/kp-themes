@@ -114,3 +114,98 @@ test('every navigation entry leads to a page that exists [TH100]', async ({ page
         expect(groups, `nothing in the navigation shows the group "${descriptor.group}"`).toContain(descriptor.group);
     }
 });
+
+// Three things Kenny found on the published site, 2026-09-07.
+
+// The measure sits on a wrapper inside the main column, not on the column
+// itself. Sharing one element made .kp-page's cap fight
+// .kp-sidebar__main's growth: the column stopped at its measure, the free
+// space had nowhere else to go, and the aside — which grows too —
+// swallowed it. Measured before the fix at a 1585px viewport: the
+// navigation was 481px wide instead of 16rem, and the reading column
+// started 272px past the end of the links.
+//
+// Drill: put `kp-page` back on the <main> in gates/site/chrome.mjs and
+// the navigation measures well over its declared width again.
+test('the navigation keeps its width and the reading column follows it [MR-SITE]', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 });
+    await page.goto('/site/components/button.html');
+    const box = await page.evaluate(() => {
+        const nav = document.querySelector('.sc-nav').getBoundingClientRect();
+        const h1 = document.querySelector('h1').getBoundingClientRect();
+        const probe = document.createElement('div');
+        probe.style.inlineSize = 'var(--kp-sidebar-width, 16rem)';
+        document.body.append(probe);
+        const declared = probe.getBoundingClientRect().width;
+        probe.remove();
+        return { nav: nav.width, declared, gap: h1.left - nav.right };
+    });
+    // Its declared width, not whatever the main column refused. A couple
+    // of pixels of slack for the column's own boundary; before the fix it
+    // was 481 against a declared 256.
+    expect(box.nav).toBeLessThan(box.declared + 4);
+    // And the text begins within a page's padding of the links, rather
+    // than centred behind a band of nothing.
+    expect(box.gap).toBeLessThan(64);
+});
+
+// A live example is not a scroll container. `overflow-x: auto` computes
+// overflow-y to `auto` as well, so the box clipped everything absolutely
+// positioned inside it: every combobox list, date picker, colour picker,
+// menu and tooltip on the site. Measured before the fix: the open list ran
+// 60px past the box, and the box grew a scrollbar to reach it.
+//
+// Drill: set `overflow-x: auto` on .sc-example__live in
+// gates/generate-site.mjs and the list is clipped again.
+test('an open list is not trapped inside its example box [MR-SITE]', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/site/components/combobox.html');
+    const input = page.locator('.sc-example__live .kp-combobox__input').first();
+    await input.click();
+    await input.type('a');
+    await expect(page.locator('.sc-example__live [role="listbox"]').first()).toBeVisible();
+    const measured = await page.evaluate(() => {
+        const live = document.querySelector('.sc-example__live');
+        const list = live.querySelector('[role="listbox"]');
+        const box = live.getBoundingClientRect();
+        const rect = list.getBoundingClientRect();
+        // Whether the box CLIPS is the property, not whether its content
+        // is taller than it: scrollHeight exceeds clientHeight either way
+        // once a dropdown is open, and only a scroll container hides it.
+        return {
+            listHeight: rect.height,
+            clips: getComputedStyle(live).overflowY !== 'visible' || getComputedStyle(live).overflowX !== 'visible',
+            reachesPastTheBox: rect.bottom > box.bottom,
+            onScreen: rect.bottom <= window.innerHeight,
+        };
+    });
+    expect(measured.listHeight).toBeGreaterThan(0);
+    expect(measured.clips, 'the example box is a clip for anything positioned inside it').toBe(false);
+    // It genuinely hangs out of the box — which is what a dropdown does,
+    // and exactly what the old overflow turned into a scrollbar.
+    expect(measured.reachesPastTheBox).toBe(true);
+    expect(measured.onScreen, 'the list runs off the bottom of the window').toBe(true);
+});
+
+// The snippet reads as a tree. The descriptors write markup flat, one tag
+// per line at column zero, which is pleasant to write and unpleasant to
+// read: a field's label and input sat level with the div holding them.
+//
+// Drill: stop calling indent() in gates/generate-site.mjs and every line
+// of every snippet starts at column zero.
+test('a printed snippet is indented by its nesting [MR-SITE]', async ({ page }) => {
+    await page.goto('/site/components/field.html');
+    const lines = await page.evaluate(() => {
+        const block = document.querySelector('[data-sc-snippet] code');
+        return block.textContent.split('\n');
+    });
+    const parent = lines.findIndex((l) => l.includes('class="kp-field"'));
+    const child = lines.findIndex((l) => l.includes('kp-field__label'));
+    expect(parent).toBeGreaterThanOrEqual(0);
+    expect(child).toBeGreaterThan(parent);
+    const depth = (line) => line.length - line.trimStart().length;
+    expect(depth(lines[child]), 'the label is not indented inside its field').toBeGreaterThan(depth(lines[parent]));
+    // And the close comes back out again.
+    const closing = lines.findIndex((l, i) => i > child && l.trim() === '</div>');
+    expect(depth(lines[closing])).toBe(depth(lines[parent]));
+});

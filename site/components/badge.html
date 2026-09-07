@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Badge</h1>
                     <p class="kp-prose">A small pill for a state — a status, a count, a label. It says what it is in text; the colour is the second channel and never the only one.</p>
@@ -115,13 +116,11 @@
                         <figcaption class="kp-fw-semibold">A row of statuses</figcaption>
                         <p class="kp-text-muted">Each badge names its status. The status colours come from the theme’s own scale, so the same seven states look right in all twenty-four themes.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span class="kp-badge" data-kp-semantic data-status="draft">draft</span>
 <span class="kp-badge" data-kp-semantic data-status="sent">sent</span>
 <span class="kp-badge" data-kp-semantic data-status="interview">interview</span>
 <span class="kp-badge" data-kp-semantic data-status="offer">offer</span>
 <span class="kp-badge" data-kp-semantic data-status="rejected">rejected</span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;draft&quot;</span>&gt;draft&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;sent&quot;</span>&gt;sent&lt;/<span class="kp-code__keyword">span</span>&gt;
@@ -133,9 +132,7 @@
                         <figcaption class="kp-fw-semibold">A count beside a label</figcaption>
                         <p class="kp-text-muted">Without the semantic marking a badge is just a pill on the quiet surface, which is what a count wants: it is a number, not a state.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <span>Unread <span class="kp-badge">12</span></span>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span>&gt;Unread &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;12&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
@@ -195,6 +192,7 @@
                             <tr><td><code>with a status</code></td><td>The status attribute is what a consumer paints from, using the theme’s own status pair for that name.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

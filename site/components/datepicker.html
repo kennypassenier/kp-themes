@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Date picker</h1>
                     <p class="kp-prose">A text input that takes a typed date, with a calendar beside it for the reader who would rather look. The value is kept as an ISO date whatever the page’s locale prints, so a consumer never parses a localised string.</p>
@@ -115,48 +116,44 @@
                         <figcaption class="kp-fw-semibold">Typed, with the calendar as an aid</figcaption>
                         <p class="kp-text-muted">Typing always works and the grid never has to open, which is what keeps the control usable for someone who would otherwise be walked through thirty-one buttons. The panel is built when it is opened rather than written by the server.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-datepicker" data-kp-datepicker>
-<div class="kp-field">
-<label class="kp-field__label" for="doc-date-from">From</label>
-<input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd-mm-yyyy" data-kp-date-input />
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-date-from">From</label>
+        <input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd-mm-yyyy" data-kp-date-input />
+    </div>
+    <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
+    <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
 </div>
-<button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
-<div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker&quot;</span> <span class="kp-code__keyword">data-kp-datepicker</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span>&gt;From&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;dd-mm-yyyy&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span>&gt;From&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;dd-mm-yyyy&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A range with a floor and weekends closed</figcaption>
                         <p class="kp-text-muted">The bounds and the closed days are declared on the markup, so a server that already knows them does not have to repeat them in script.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-datepicker" data-kp-datepicker data-kp-min="2026-01-01" data-kp-max="2026-12-31" data-kp-disabled-days="0,6">
-<div class="kp-field">
-<label class="kp-field__label" for="doc-date-visit">Visit</label>
-<input class="kp-field__input" id="doc-date-visit" type="text" inputmode="numeric" data-kp-date-input />
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-date-visit">Visit</label>
+        <input class="kp-field__input" id="doc-date-visit" type="text" inputmode="numeric" data-kp-date-input />
+    </div>
+    <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
+    <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
 </div>
-<button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
-<div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
-</div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker&quot;</span> <span class="kp-code__keyword">data-kp-datepicker</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;2026-01-01&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;2026-12-31&quot;</span> <span class="kp-code__keyword">data-kp-disabled-days</span><span class="kp-code__string">=&quot;0,6&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-visit&quot;</span>&gt;Visit&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-visit&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-visit&quot;</span>&gt;Visit&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-visit&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -256,6 +253,7 @@
                             <tr><td><code>disabled day</code></td><td>Outside the bounds or on a closed weekday: present, marked, and refusing the click.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>

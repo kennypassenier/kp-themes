@@ -100,7 +100,8 @@
                     </div>
                 </div>
             </nav>
-            <main class="kp-sidebar__main kp-page" id="main">
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Combobox and tag input</h1>
                     <p class="kp-prose">A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value.</p>
@@ -115,62 +116,58 @@
                         <figcaption class="kp-fw-semibold">A combobox over a list the server wrote</figcaption>
                         <p class="kp-text-muted">The options are markup, not a JavaScript array: a page rendered by a server shows the list before any script runs. The status line is not decoration — it is how anyone who cannot see the list shrink is told that it did.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-combobox" data-kp-combobox>
-<label class="kp-field__label" for="doc-combobox-fruit">Fruit</label>
-<input class="kp-combobox__input" id="doc-combobox-fruit" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-fruit-list" placeholder="Pick or type…" />
-<ul class="kp-combobox__list" id="doc-combobox-fruit-list" role="listbox" hidden>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="apple">Apple</li>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="banana">Banana</li>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="lemon">Lemon</li>
-</ul>
-<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+    <label class="kp-field__label" for="doc-combobox-fruit">Fruit</label>
+    <input class="kp-combobox__input" id="doc-combobox-fruit" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-fruit-list" placeholder="Pick or type…" />
+    <ul class="kp-combobox__list" id="doc-combobox-fruit-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="apple">Apple</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="banana">Banana</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="lemon">Lemon</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span>&gt;Fruit&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Pick or type…&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;apple&quot;</span>&gt;Apple&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;banana&quot;</span>&gt;Banana&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;lemon&quot;</span>&gt;Lemon&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span>&gt;Fruit&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Pick or type…&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-fruit-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;apple&quot;</span>&gt;Apple&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;banana&quot;</span>&gt;Banana&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;lemon&quot;</span>&gt;Lemon&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">The same markup as a tag input</figcaption>
                         <p class="kp-text-muted">One flag on the wrapper turns choosing into appending. Tags the server already rendered into the list are read at attach, so a reloaded page keeps them.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-
 <div class="kp-combobox" data-kp-combobox data-kp-tags>
-<label class="kp-field__label" for="doc-combobox-labels">Labels</label>
-<ul class="kp-tag-list" data-kp-tag-list>
-<li class="kp-tag">urgent<button type="button" class="kp-tag__remove" data-kp-tag-remove aria-label="Remove urgent">×</button></li>
-</ul>
-<input class="kp-combobox__input" id="doc-combobox-labels" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-labels-list" />
-<ul class="kp-combobox__list" id="doc-combobox-labels-list" role="listbox" hidden>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="urgent">Urgent</li>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="bug">Bug</li>
-<li class="kp-combobox__option" role="option" data-kp-option data-value="idea">Idea</li>
-</ul>
-<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+    <label class="kp-field__label" for="doc-combobox-labels">Labels</label>
+    <ul class="kp-tag-list" data-kp-tag-list>
+        <li class="kp-tag">urgent<button type="button" class="kp-tag__remove" data-kp-tag-remove aria-label="Remove urgent">×</button></li>
+    </ul>
+    <input class="kp-combobox__input" id="doc-combobox-labels" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="doc-combobox-labels-list" />
+    <ul class="kp-combobox__list" id="doc-combobox-labels-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="urgent">Urgent</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="bug">Bug</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="idea">Idea</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
 </div>
-
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span> <span class="kp-code__keyword">data-kp-tags</span>&gt;
-&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span>&gt;Labels&lt;/<span class="kp-code__keyword">label</span>&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag-list&quot;</span> <span class="kp-code__keyword">data-kp-tag-list</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;urgent&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">data-kp-tag-remove</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove urgent&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> /&gt;
-&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;urgent&quot;</span>&gt;Urgent&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;bug&quot;</span>&gt;Bug&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;idea&quot;</span>&gt;Idea&lt;/<span class="kp-code__keyword">li</span>&gt;
-&lt;/<span class="kp-code__keyword">ul</span>&gt;
-&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span>&gt;Labels&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag-list&quot;</span> <span class="kp-code__keyword">data-kp-tag-list</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;urgent&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">data-kp-tag-remove</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove urgent&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-combobox-labels-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;urgent&quot;</span>&gt;Urgent&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;bug&quot;</span>&gt;Bug&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;idea&quot;</span>&gt;Idea&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -291,6 +288,7 @@
                             <tr><td><code>.kp-combobox__status</code></td><td>The live region that says how many options are left after each keystroke.</td></tr>
                     </tbody></table></div>
                 </section>
+                </div>
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
