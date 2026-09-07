@@ -17,7 +17,7 @@ Everything here is additive. Nothing that worked in 3.1.1 stops working.
   defaults to the theme's own spacing scale.
   [docs/LAYOUT.md](docs/LAYOUT.md).
 - **A utility API** (`css/utilities.css`, exported as `./css/utilities`):
-  115 single-purpose classes in six families, generated from one source
+  118 single-purpose classes in six families, generated from one source
   and documented by hand so the two can disagree.
   [docs/UTILITIES.md](docs/UTILITIES.md).
 - **Cascade layers** — `kp.base`, `kp.components`, `kp.register`,
@@ -53,10 +53,30 @@ Everything here is additive. Nothing that worked in 3.1.1 stops working.
 - **The stylesheet declares its own version** and the theme names it
   knows, as custom properties, so JavaScript can read them.
 - **The checksum manifest** is derived from the package exports rather
-  than hand-picked, and covers every file a vendoring consumer can copy.
+  than hand-picked, and from what those exports import, so a file a
+  consumer has to copy alongside them cannot fall outside it. That is how
+  `js/locale.js` — imported by the date picker, the data table and the
+  upload field, and exported by nothing — got in.
+- **The typography scale is a set of tokens.** `--kp-text-xs`, `--kp-text-sm`
+  and `--kp-text-md` are declared in all 24 themes. The six component rules
+  that wanted a size the scale name did not mean kept their own value under
+  their own knob, so no text moved anywhere.
+- **A floor under a collapsed table wrapper.** `--kp-table-wrap-min` does
+  nothing by default and gives a way out to a consumer who puts
+  `.kp-table-wrap` in a box that shrinks to fit, where inline-size
+  containment takes it to zero.
 
 ### Fixed
 
+- **A status badge needed an inline style to be coloured.** `css/components.css`
+  carries a rule per status now, so `<span class="kp-badge" data-status="offer">`
+  gets its plate from the class. The React `Badge` stops writing the style for
+  the seven names the package ships and keeps writing it for a consumer's own
+  token family.
+- **The shortcut sheet ran off a phone.** It was content-box, so at a 360px
+  viewport it measured 373px and pushed the page sideways. It is border-box now,
+  with the default width raised by exactly what used to sit outside it, so a wide
+  screen sees the same 490px it always did.
 - **Printing dropped the theme again.** Between the cascade layers
   landing and this release, the print override sat inside a layer while
   the theme tokens did not, and unlayered CSS wins; a dark theme printed

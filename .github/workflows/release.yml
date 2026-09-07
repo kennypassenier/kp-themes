@@ -12,6 +12,12 @@ name: Release
 # The checksums are generated here rather than committed: they would
 # change on every stylesheet edit, and a file that is wrong between
 # commits is worse than no file.
+#
+# M1 as amended on 2026-09-06: a release also carries the dist bundle, so
+# the consumer who wants two tags instead of eight can take them from the
+# release rather than from npm. And the checksum file covers every file a
+# consumer can copy rather than a hand-picked few -- the fault recorded as
+# KT9, where three of ten files were attached by hand.
 
 on:
   push:
@@ -47,4 +53,5 @@ jobs:
             --draft \
             --title "${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md \
-            SHA256SUMS MIGRATION.md css/themes.css css/components.css
+            SHA256SUMS MIGRATION.md css/themes.css css/components.css \
+            dist/kp-themes.css dist/kp-themes.js
