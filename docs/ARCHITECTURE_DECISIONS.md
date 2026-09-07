@@ -1004,3 +1004,147 @@ and without the register and the effects module until it vendors them
 site. One test loads the fixture the way chassis-rs does — no register,
 no effects module, no webfonts — and proves the page stays functional
 and readable (S45's quiet answers).
+
+## Round six — Phase 4 draft (2026-09-07, before the critic)
+
+Eleven decisions for the effects module, the hooks, the register, the
+fonts and the demo template. Drafted from the frozen list (TH115–TH136),
+the Phase 3 choices (T17–T21) and the inventory (INV-R1–R85). The critic
+attacks this draft next; surviving objections go into the gate form.
+
+## AR34 · One effects module, one attach, one detach, no ambient work
+
+`js/effects.js` exports `attachEffects(root = document, options) →
+detach`, the shape every module already has (INV-R31). Importing it does
+nothing; `js/auto.js` calls it like the other eighteen. Inside: one
+`IntersectionObserver` per root for the reveals (T17), one
+`matchMedia('(prefers-reduced-motion: reduce)')` subscription that
+resolves every running effect to its rest state mid-session (DI7), and
+one `onThemeChange` subscription (INV-R35) that re-reads which answers
+apply. React gets `<Effects>` and `useEffects()` wrapping the same
+function (AR29's pattern: the module owns behaviour, React owns
+lifecycle). `detach` removes every observer, listener and class the
+module added. No timers survive `detach`.
+
+## AR35 · The hook vocabulary is five attributes and one element, read by the module and answered by CSS
+
+The contract of S45, concretely: `data-kp-surface="hero|app"` (TH116),
+`<mark>` for emphasis (TH120), `data-kp-reveal="decipher|classified|
+draw"` (TH119, TH120, TH122), `data-kp-divider="tear"` (TH121) and the
+heading accent, which needs no attribute — every `h1`/`h2` inside a
+`data-kp-surface` gets the theme's answer. The module only ever toggles
+state classes (`is-in`, `is-cleared`, `is-deciphered`, `is-glitching`);
+the register decides what those classes look like. A theme with no rule
+for a class has answered quietly. The dossier variant is the same hook on
+a container: `data-kp-reveal="classified"` on a card with a
+`data-kp-reveal-trigger` child.
+
+## AR36 · The hook parity gate reads a per-theme manifest, not the CSS
+
+`gates/check-hooks.mjs` refuses a theme that does not answer every hook.
+"Answer" is declared, not inferred from selectors: each theme carries
+`themes/<name>/hooks.json` naming, per hook, either the register rule
+that answers it (`"emphasis": "css/cyberpunk-register.css#mark"`) or
+`"quiet"` with one line of reason. The gate checks the file exists, every
+hook has an entry, every referenced selector exists in the named
+stylesheet, and no entry is empty. Inferring from CSS was measured
+against: `declared()` in `check-migration.mjs` is the only selector
+parser the gates have and it cannot tell an answer from an accident.
+Drilled red at birth by removing one entry (rule 7d).
+
+## AR37 · The register coverage gate lists the 64 roots and demands a rule or a reason
+
+`gates/check-register-coverage.mjs` parses `css/components.css` for the
+`.kp-*` roots (the 64 of INV-R23, read at run time so the list cannot go
+stale), parses the register for the roots it touches, and fails on any
+root with neither a rule nor an entry in an exception list with its
+reason (KT10's `CROSS_REFERENCES` shape). TH124's bar. Drilled red by
+removing one root's rule.
+
+## AR38 · Two surfaces are twelve tokens, declared by all twenty-four themes
+
+TH116's surfaces are tokens under S47: `surface-hero-bg`,
+`surface-hero-fg`, `surface-hero-muted`, `surface-hero-border`,
+`surface-hero-primary`, `surface-hero-primary-fg`, and the same six for
+`app`. The contract grows from 81 to 93 and the parity gate holds every
+theme to it in the same change; a theme with one ground declares both
+sets equal. `[data-kp-surface="hero"]` remaps `--background`,
+`--foreground`, `--border`, `--primary` and `--primary-foreground` to the
+hero set, so every component underneath reads the surface without
+knowing it. Contrast pairs for both sets join `check-contrast.mjs`.
+
+## AR39 · Fonts ship as latin woff2 subsets under `fonts/`, declared in `css/fonts.css`, gated on licence and size
+
+T19's shape. Inventory, measured 2026-09-07 from the `theme-font-body`
+and `theme-font-display` tokens: 29 distinct first-choice families across
+the 24 themes (Instrument Sans in fourteen), plus cyberpunk's new Big
+Shoulders Display and Rajdhani and synthwave's candidates; all on Google
+Fonts. Layout: `fonts/<family-slug>/<weight>.woff2`, latin subset only,
+the weights a theme actually uses; `css/fonts.css` holds one
+`@font-face` per file with `font-display: swap`; a new export
+`./css/fonts`; every file joins the manifest and `SHA256SUMS`
+(`check-manifest.mjs` derives it). `gates/check-fonts.mjs` refuses a
+family without a recorded SIL OFL (or equivalent) licence file beside it,
+a face no theme names, and a total over the size budget knob
+`fontsBudgetBytes` in `gates/config.json` (proposed default 3 MB; the
+critic should question the number). Consumers keep the choice: the
+stylesheet is opt-in like the registers, and a theme's fallback stack
+still renders without it (T19's tested fallback stays).
+
+## AR40 · The DI5 timing table is a JSON export of the module, checked by the gate and calibrated by one test
+
+`js/effects.js` exports `TIMINGS`: per effect `{ durationMs, cycles,
+property, luminanceSteps }`; the register's keyframes carry the same
+facts in a comment block the gate parses (`/* di5: opacity 1→0→1, 600ms,
+once */`). `check-motion.mjs` grows a second pass that reads both and
+writes `reports/di5.md` — every effect, its flash rate, pass or over. Per
+S42 the gate never edits an effect; it fails only when the table is
+missing or malformed. One Playwright test drives the slice glitch,
+samples luminance per frame and asserts within 10% of the table (T20).
+
+## AR41 · The tear generator pins its seed as a contract value
+
+`gates/generate-tear.mjs` builds the razor path from a seeded generator
+(the demo's algorithm: runs 40–180px, 18% deep cuts, 32% notches) and
+writes `css/cyberpunk-register.css`'s `--fx-tear` data URI. The seed is a
+pinned constant with a comment saying why: a changed seed changes a
+released theme's shape, which S20 forbids inside a version. A gate
+compares the generated URI with the committed one and fails on drift
+(T18).
+
+## AR42 · The concept demo is one template rendered per theme, in both channels, at `concept/<theme>.html`
+
+TH126: `showcase/concept.mjs` renders the standard page (S46's element
+list) from the same `el`/`renderHTML` helpers as the examples; a React
+twin renders it through the components. `gates/generate-concept.mjs`
+writes `concept/<theme>.html` for every theme into the site output; the
+site navigation links them (the S46 requirement that Kenny opens a URL).
+The page is the fixture for TH117–TH122 and passes
+`check-examples-wired` and `check-inline-styles` like any example. It
+carries no theme-specific markup — only the hooks — so the same file is
+the demo for synthwave next.
+
+## AR43 · The configuration surface of round six
+
+Knobs, all CSS custom properties with a default in the register or a
+`data-kp-*` attribute, per KT6 and standing rule 27: `--kp-button-notch`
+(7px), `--kp-button-slit` (10px), `.kp-button--mirror`; `--kp-nav-notch`
+(14px) and `data-kp-nav-side="start|end"` for TH117's dynamic notch;
+`--kp-decipher-cps` (30 characters per second) and `--kp-decipher-glyphs`;
+`--kp-reveal-stagger` (160ms); `--kp-reveal-threshold` (0.3, the
+IntersectionObserver ratio); `--kp-classified-delay` (1500ms);
+`--kp-tear-height` (44px); `--fx-pulse-cycles` stays queued (TH132).
+`attachEffects(root, { reduceMotion, theme })` overrides the two
+subscriptions for tests. Contract values, pinned with a comment: the tear
+seed (AR41), the DI5 thresholds 3/s and 10%, the hook names of AR35.
+
+## AR44 · No state, no transaction; an effect that has run leaves only a class
+
+Standing rule 33 asked: the effects module stores nothing — not in
+`localStorage`, not in the theme store. "Already run" is a class on the
+element and dies with the page; navigating back runs it again, which is
+the intended behaviour of a load effect. The only persisted state in the
+package stays the theme key (M4). Error model: an effect never throws
+into the page — a missing target, an unknown hook value or a theme
+without an answer is a silent no-op, and `attachEffects` returns a
+`detach` that is safe to call twice.
