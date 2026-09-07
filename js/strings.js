@@ -114,6 +114,8 @@
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
+ * @property {string} diagnosticsEffects  The diagnostics row that lists unknown hook values [AR44]
+ * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
  * @property {string} breadcrumb
  * @property {string} pagination
@@ -271,6 +273,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     diagnosticsScript: 'JavaScript (js/theme-registry.js)',
     diagnosticsVersion: 'Version',
     diagnosticsThemes: 'Themes',
+    diagnosticsEffects: 'Unknown effect hooks',
+    diagnosticsEffectsNone: 'none reported on this page',
     diagnosticsVerdict: 'Verdict',
     diagnosticsMatch: 'The stylesheet and the JavaScript come from the same version, and they know the same themes.',
     diagnosticsStylesheetBehind: (stylesheet, script) =>

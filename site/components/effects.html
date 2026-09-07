@@ -159,6 +159,7 @@
                             <tr><td><code>data-kp-reveal-every</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-surface</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-text</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -172,7 +173,8 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
-                            <tr><td><code>kp-effect-unknown</code></td><td>Fired once per page, on `document`, the first time a hook carries a value the module does not know [AR44]. `detail.attribute`, `detail.value` and `detail.accepted` say which and what would work. The module never throws into a page.</td></tr>
+                            <tr><td><code>kp-effect-unknown</code></td><td>Dispatched once per page on an element that names a surface or a reveal the vocabulary does not know, bubbling. detail: `{ hook, value, accepted }`. Never thrown [AR44].</td></tr>
+                            <tr><td><code>kp-reveal</code></td><td>Dispatched on an element when its reveal has reached its rest state, bubbling. detail: `{ reveal, routine, skipped }` — `skipped` says the element went straight to rest (reduced motion, a quiet theme, or seen this session) rather than through the motion.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -197,6 +199,7 @@
                             <tr><td><code>data-kp-reveal</code></td><td>headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every=&quot;load&quot; says otherwise.</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>A control that replays the reveals of the surface it sits in.</td></tr>
                             <tr><td><code>&lt;mark&gt;</code></td><td>Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.</td></tr>
+                            <tr><td><code>data-kp-text</code></td><td>The copy of a headline or a navigation label that a register’s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.</td></tr>
                             <tr><td><code>data-kp-effects</code></td><td>What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.</td></tr>
                             <tr><td><code>kp-effect-unknown</code></td><td>The event the module dispatches on an element that names a surface or a reveal it does not know, so a typo is heard rather than silently quiet.</td></tr>
                     </tbody></table></div>

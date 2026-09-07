@@ -34,11 +34,14 @@ var STORAGE_KEY = "theme";
 
 // js/no-flash.js
 var THEME_ATTRIBUTE = "data-theme";
-function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE } = {}) {
+var EFFECTS_ATTRIBUTE = "data-kp-effects";
+function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false } = {}) {
+  const arm = effects ? `
+        document.documentElement.setAttribute(${JSON.stringify(EFFECTS_ATTRIBUTE)}, '');` : "";
   return `(function () {
     try {
         var t = localStorage.getItem(${JSON.stringify(key)});
-        if (t) document.documentElement.setAttribute(${JSON.stringify(attribute)}, t);
+        if (t) document.documentElement.setAttribute(${JSON.stringify(attribute)}, t);${arm}
     } catch (e) {}
 })();`;
 }
@@ -177,6 +180,8 @@ var DEFAULT_STRINGS = Object.freeze({
   diagnosticsScript: "JavaScript (js/theme-registry.js)",
   diagnosticsVersion: "Version",
   diagnosticsThemes: "Themes",
+  diagnosticsEffects: "Unknown effect hooks",
+  diagnosticsEffectsNone: "none reported on this page",
   diagnosticsVerdict: "Verdict",
   diagnosticsMatch: "The stylesheet and the JavaScript come from the same version, and they know the same themes.",
   diagnosticsStylesheetBehind: (stylesheet, script) => `The stylesheet is behind: it is version ${stylesheet} and the JavaScript is version ${script}. Copy a newer css/themes.css.`,
@@ -3771,38 +3776,36 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
 
 // js/effects.js
 var HOOKS = Object.freeze({
-  /** `hero` or `app`: which ground a section stands on [TH116]. */
   surface: "data-kp-surface",
-  /** `headline`, `emphasis` or `rule`: what a revealed element is. */
   reveal: "data-kp-reveal",
-  /** The element a container's reveal listens to instead of the load. */
   revealTrigger: "data-kp-reveal-trigger",
-  /** `load`: run this reveal on every load, not once per session [AR44]. */
   revealEvery: "data-kp-reveal-every",
-  /** A section transition. Bare, or `section`. */
   divider: "data-kp-divider",
-  /** The label a register may draw with `content: attr()` [KT5]. */
   label: "data-kp-label",
-  /** `start` or `end`: which side of the screen the navbar sits on [TH117]. */
   navSide: "data-kp-nav-side"
 });
 var SURFACES = Object.freeze(["hero", "app"]);
 var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
 var STATE = Object.freeze({
-  /** The element has entered the viewport (or the page has loaded). */
   in: "is-in",
-  /** An emphasis has cleared its redaction. */
   cleared: "is-cleared",
-  /** A headline has finished deciphering. */
   deciphered: "is-deciphered",
-  /** A one-shot glitch is running. */
-  glitching: "is-glitching"
+  glitching: "is-glitching",
+  noise: "is-noise"
 });
+var ROUTINES = Object.freeze({
+  headline: "--kp-reveal-headline",
+  emphasis: "--kp-reveal-emphasis",
+  rule: "--kp-reveal-rule"
+});
+var ROOT_ATTRIBUTE = "data-kp-effects";
+var DONE_ATTRIBUTE = "data-kp-effects-done";
+var TEXT_ATTRIBUTE = "data-kp-text";
 var UNKNOWN_EVENT = "kp-effect-unknown";
+var REVEAL_EVENT = "kp-reveal";
+var MEMO_PREFIX = "kp-effects:";
+var GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
 var TIMINGS = Object.freeze({
-  // The register's own keyframes, as shipped in 4.0.0. Their opacity
-  // stops are the ones gates/check-motion.mjs already parses; listing
-  // them here is what lets the table pass and the keyframe parse agree.
   // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
   // glitch (two steps, once), the headline's slice burst (one burst of
   // six bands, once) and the charge sweep (a transform, no luminance).
@@ -3812,9 +3815,6 @@ var TIMINGS = Object.freeze({
   "kp-slice-1": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
   "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
   "kp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
-  // The base layer's and the components' keyframes. Where a duration is
-  // a token (`var(--fx-duration)`), the row carries cyberpunk's 140ms,
-  // the shortest any theme declares, so the rate is the worst case.
   "kp-slide-in": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-rule-in": { durationMs: 420, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-settle": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -3824,29 +3824,304 @@ var TIMINGS = Object.freeze({
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] }
 });
+var started = /* @__PURE__ */ new WeakSet();
+var unknownReported = /* @__PURE__ */ new Set();
 function attachEffects(root = document, options = {}) {
-  void options;
+  const doc = root.ownerDocument ?? /** @type {Document} */
+  root;
+  const html = doc.documentElement;
+  const manageRoot = options.manageRoot ?? true;
+  const view = doc.defaultView;
+  const query = view && typeof view.matchMedia === "function" ? view.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  const reduced = () => options.reduceMotion ?? (query ? query.matches : false);
+  const rootStyle = view ? view.getComputedStyle(html) : null;
+  const knob = (name, fallback2) => {
+    const n = rootStyle ? parseFloat(rootStyle.getPropertyValue(name)) : NaN;
+    return Number.isFinite(n) ? n : fallback2;
+  };
+  const cfg = {
+    threshold: options.threshold ?? knob("--kp-reveal-threshold", 0.6),
+    cps: options.cps ?? knob("--kp-decipher-cps", 26),
+    lead: knob("--kp-decipher-lead", 260),
+    swap: knob("--kp-decipher-swap", 0.5),
+    stagger: options.stagger ?? knob("--kp-reveal-stagger", 260),
+    delay: options.delay ?? knob("--kp-classified-delay", 1500)
+  };
+  if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
   let detached = false;
-  const check = (element) => {
-    if (detached) return;
+  const timers = /* @__PURE__ */ new Set();
+  const frames = /* @__PURE__ */ new Set();
+  const cleanups = [];
+  const finishers = [];
+  let io = null;
+  let pending = 0;
+  const done = () => {
+    if (detached || pending > 0) return;
+    html.setAttribute(DONE_ATTRIBUTE, "");
+  };
+  const announce = (el, reveal, routine, skipped) => {
+    el.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
+  };
+  const later = (fn, ms) => {
+    const id = setTimeout(() => {
+      timers.delete(id);
+      if (!detached) fn();
+    }, ms);
+    timers.add(id);
+  };
+  const routineOf = (el, reveal) => view ? view.getComputedStyle(el).getPropertyValue(ROUTINES[reveal]).trim() : "";
+  const memoKey = (el, reveal) => {
+    const kind = reveal === "emphasis" && el.matches("mark") ? "loose" : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].indexOf(el);
+    return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:${kind}`;
+  };
+  const seen = (el, reveal) => {
+    if (el.getAttribute(HOOKS.revealEvery) === "load") return false;
+    try {
+      const key = memoKey(el, reveal);
+      const storage = view?.sessionStorage;
+      if (!storage) return false;
+      if (storage.getItem(key)) return true;
+      storage.setItem(key, "1");
+      return false;
+    } catch {
+      return false;
+    }
+  };
+  const checkValues = (el) => {
     const pairs = [
       [HOOKS.surface, SURFACES],
       [HOOKS.reveal, REVEALS]
     ];
-    for (const [hook, known] of pairs) {
-      const value = element.getAttribute(hook);
-      if (value === null || known.includes(value)) continue;
-      element.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value } }));
+    for (const [hook, accepted] of pairs) {
+      const value = el.getAttribute(hook);
+      if (value === null || accepted.includes(value)) continue;
+      const key = `${hook}=${value}`;
+      if (unknownReported.has(key)) continue;
+      unknownReported.add(key);
+      el.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
     }
   };
-  for (const element of root.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) check(element);
+  const headline = (el) => {
+    const text = el.textContent ?? "";
+    el.setAttribute(TEXT_ATTRIBUTE, text);
+    if (!el.hasAttribute("aria-label")) el.setAttribute("aria-label", text);
+    const routine = routineOf(el, "headline");
+    const rest = (skipped) => {
+      el.textContent = text;
+      el.classList.add(STATE.deciphered);
+      announce(el, "headline", routine, skipped);
+    };
+    if (routine === "" || reduced() || seen(el, "headline")) {
+      rest(true);
+      return;
+    }
+    pending++;
+    const chars = [...text];
+    const spans = chars.map((ch) => {
+      const span = doc.createElement("span");
+      span.setAttribute("data-glyph", "");
+      span.setAttribute("aria-hidden", "true");
+      if (/\s/.test(ch)) span.textContent = ch;
+      else {
+        span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        span.classList.add(STATE.noise);
+      }
+      return span;
+    });
+    el.replaceChildren(...spans);
+    const perChar = 1e3 / Math.max(1, cfg.cps);
+    let start = 0;
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      rest(false);
+      el.classList.add(STATE.glitching);
+      const off = () => el.classList.remove(STATE.glitching);
+      el.addEventListener("animationend", off, { once: true });
+      later(off, TIMINGS["kp-slice-1"].durationMs + 50);
+      pending--;
+      done();
+    };
+    finishers.push(finish);
+    const tick = (now) => {
+      frames.delete(id);
+      if (detached || finished) return;
+      if (start === 0) start = now;
+      const t = now - start;
+      let all = true;
+      spans.forEach((span, i) => {
+        const ch = chars[i] ?? "";
+        if (/\s/.test(ch)) return;
+        if (t > cfg.lead + i * perChar) {
+          if (span.classList.contains(STATE.noise)) {
+            span.textContent = ch;
+            span.classList.remove(STATE.noise);
+          }
+        } else {
+          all = false;
+          if (Math.random() < cfg.swap) span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+      });
+      if (all) finish();
+      else id = schedule();
+    };
+    let id = 0;
+    const schedule = () => {
+      const next = view ? view.requestAnimationFrame(tick) : 0;
+      frames.add(next);
+      return next;
+    };
+    id = schedule();
+  };
+  const clearInSteps = (marks, first, step, on, routine) => {
+    if (marks.length === 0) return;
+    pending++;
+    finishers.push(() => {
+      for (const mark of marks) mark.classList.add(STATE.cleared);
+    });
+    marks.forEach((mark, i) => {
+      later(
+        () => {
+          mark.classList.add(STATE.cleared);
+          if (i === marks.length - 1) {
+            pending--;
+            announce(on, "emphasis", routine, false);
+            done();
+          }
+        },
+        first + i * step
+      );
+    });
+  };
+  const emphasis = (container) => {
+    const marks = [...container.querySelectorAll("mark")];
+    const routine = routineOf(container, "emphasis");
+    const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
+    if (marks.length === 0) {
+      announce(container, "emphasis", routine, true);
+      return;
+    }
+    const atRest = () => {
+      for (const mark of marks) mark.classList.add(STATE.cleared);
+      announce(container, "emphasis", routine, true);
+    };
+    if (routine === "" || reduced()) {
+      atRest();
+      if (trigger) wireTrigger(trigger, marks, container, routine);
+      return;
+    }
+    if (trigger) {
+      wireTrigger(trigger, marks, container, routine);
+      trigger.setAttribute("aria-pressed", "false");
+      return;
+    }
+    if (seen(container, "emphasis")) {
+      atRest();
+      return;
+    }
+    clearInSteps(marks, cfg.delay, cfg.stagger, container, routine);
+  };
+  const wireTrigger = (trigger, marks, container, routine) => {
+    const onClick = () => {
+      const open = trigger.getAttribute("aria-pressed") !== "true";
+      trigger.setAttribute("aria-pressed", String(open));
+      for (const mark of marks) mark.classList.toggle(STATE.cleared, open);
+      announce(container, "emphasis", routine, false);
+    };
+    trigger.addEventListener("click", onClick);
+    cleanups.push(() => trigger.removeEventListener("click", onClick));
+  };
+  const looseMarks = (scope) => {
+    const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started.has(m));
+    if (marks.length === 0) return;
+    for (const m of marks) started.add(m);
+    const first = marks[0];
+    const routine = routineOf(first, "emphasis");
+    if (routine === "" || reduced() || seen(first, "emphasis")) {
+      for (const mark of marks) mark.classList.add(STATE.cleared);
+      announce(first, "emphasis", routine, true);
+      return;
+    }
+    clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
+  };
+  const rule = (el) => {
+    const routine = routineOf(el, "rule");
+    const draw = (skipped) => {
+      el.classList.add(STATE.in);
+      announce(el, "rule", routine, skipped);
+    };
+    if (routine === "" || reduced() || seen(el, "rule") || !view || typeof view.IntersectionObserver !== "function") {
+      draw(true);
+      return;
+    }
+    pending++;
+    finishers.push(() => draw(false));
+    io ??= new view.IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          io?.unobserve(entry.target);
+          entry.target.classList.add(STATE.in);
+          announce(entry.target, "rule", routine, false);
+          pending--;
+          done();
+        }
+      },
+      { threshold: cfg.threshold }
+    );
+    io.observe(el);
+  };
+  const startOne = (el) => {
+    if (started.has(el)) return;
+    checkValues(el);
+    const reveal = el.getAttribute(HOOKS.reveal);
+    if (reveal === null || !REVEALS.includes(reveal)) return;
+    started.add(el);
+    if (reveal === "headline") headline(el);
+    else if (reveal === "emphasis") emphasis(el);
+    else rule(el);
+  };
+  const scan = (scope) => {
+    if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
+    if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
+    for (const el of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el);
+    looseMarks(scope);
+    done();
+  };
+  const onPreference = () => {
+    if (!reduced()) return;
+    for (const id of timers) clearTimeout(id);
+    timers.clear();
+    for (const id of frames) view?.cancelAnimationFrame(id);
+    frames.clear();
+    io?.disconnect();
+    io = null;
+    for (const finish of finishers.splice(0)) finish();
+    pending = 0;
+    done();
+  };
+  if (query) {
+    query.addEventListener("change", onPreference);
+    cleanups.push(() => query.removeEventListener("change", onPreference));
+  }
+  scan(root);
   return {
     detach() {
       if (detached) return;
       detached = true;
+      for (const id of timers) clearTimeout(id);
+      timers.clear();
+      for (const id of frames) view?.cancelAnimationFrame(id);
+      frames.clear();
+      io?.disconnect();
+      io = null;
+      for (const cleanup of cleanups.splice(0)) cleanup();
+      if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
     },
     observe(element) {
-      check(element);
+      if (detached) return;
+      scan(element);
     }
   };
 }
@@ -3873,7 +4148,10 @@ function attachAll(root = document) {
     attachColorPickers(root),
     attachGrids(root)
   ];
-  const effects = attachEffects(root);
+  const effects = attachEffects(
+    /** @type {Document | Element} */
+    root
+  );
   return () => {
     for (const detach of detaches) if (typeof detach === "function") detach();
     effects.detach();

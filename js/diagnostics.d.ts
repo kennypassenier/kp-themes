@@ -11,6 +11,10 @@ export type Side = {
      * the theme names this half knows
      */
     themes: string[];
+    /**
+     * the hook values js/effects.js reported as unknown on this page [AR44]
+     */
+    unknownEffects?: string[];
 };
 export type Report = {
     status: 'match' | 'stylesheet-behind' | 'script-behind' | 'themes-differ' | 'no-version';

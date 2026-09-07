@@ -76,6 +76,11 @@ export type Strings = {
     mainNavigation: string;
     skipToContent: string;
     /**
+     * The diagnostics row that lists unknown hook values [AR44]
+     */
+    diagnosticsEffects: string;
+    diagnosticsEffectsNone: string;
+    /**
      * The stamp a register may print on an emphasis reveal (the dossier) [AR35]
      */
     classified: string;
@@ -182,6 +187,8 @@ export type Strings = {
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
+ * @property {string} diagnosticsEffects  The diagnostics row that lists unknown hook values [AR44]
+ * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
  * @property {string} breadcrumb
  * @property {string} pagination

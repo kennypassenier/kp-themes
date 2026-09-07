@@ -60,7 +60,7 @@ export function attachAll(root = document) {
     ];
     // The effects handle is an object rather than a function [AR34]; its
     // detach is called with the others.
-    const effects = attachEffects(root);
+    const effects = attachEffects(/** @type {Document | Element} */ (root));
     return () => {
         for (const detach of detaches) if (typeof detach === 'function') detach();
         effects.detach();

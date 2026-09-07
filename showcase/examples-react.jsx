@@ -160,7 +160,7 @@ const TO_REACT = {
             actions={p.actions === undefined ? undefined : toReact(p.actions, 'actions')}
             footer={p.footer === undefined ? undefined : toReact(p.footer, 'footer')}
             className={p.class}
-            data-example={p['data-example']}
+            {...Object.fromEntries(Object.entries(p).filter(([name]) => name.startsWith('data-')))}
         >
             {kids(children)}
         </Card>

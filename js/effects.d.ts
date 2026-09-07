@@ -1,136 +1,122 @@
-/**
- * The hook vocabulary [AR35]. Contract values: a consumer writes these
- * into markup, and a theme answers them in `themes/hooks.json`. Every
- * value names what an element IS, never what one theme does with it — a
- * "tear" is a horizon under synthwave, so the attribute stays bare.
- */
+/** The attributes of the hook vocabulary [AR35]. Contract values. */
 export declare const HOOKS: Readonly<{
-    /** `hero` or `app`: which ground a section stands on [TH116]. */
     surface: "data-kp-surface";
-    /** `headline`, `emphasis` or `rule`: what a revealed element is. */
     reveal: "data-kp-reveal";
-    /** The element a container's reveal listens to instead of the load. */
     revealTrigger: "data-kp-reveal-trigger";
-    /** `load`: run this reveal on every load, not once per session [AR44]. */
     revealEvery: "data-kp-reveal-every";
-    /** A section transition. Bare, or `section`. */
     divider: "data-kp-divider";
-    /** The label a register may draw with `content: attr()` [KT5]. */
     label: "data-kp-label";
-    /** `start` or `end`: which side of the screen the navbar sits on [TH117]. */
     navSide: "data-kp-nav-side";
 }>;
-/** The values `data-kp-surface` accepts. */
+/** The surfaces a section can stand on [TH116]. */
 export declare const SURFACES: readonly string[];
-/** The values `data-kp-reveal` accepts. */
+/** What an element can be revealed as [TH119, TH120, TH122]. */
 export declare const REVEALS: readonly string[];
 /**
- * The state classes the module toggles [AR35]. Contract values: a
- * consumer will select on them the day they exist, so they never change
- * inside a major.
+ * The state classes this module toggles, and nothing else. Contract
+ * values: a consumer may select on them, a register does.
  */
 export declare const STATE: Readonly<{
-    /** The element has entered the viewport (or the page has loaded). */
     in: "is-in";
-    /** An emphasis has cleared its redaction. */
     cleared: "is-cleared";
-    /** A headline has finished deciphering. */
     deciphered: "is-deciphered";
-    /** A one-shot glitch is running. */
     glitching: "is-glitching";
+    noise: "is-noise";
 }>;
 /**
- * The root attribute that arms the start states [AR34]. Set before first
- * paint by the head-script slot, so the register can key a start state
- * on `[data-kp-effects] [data-kp-reveal]:not(.is-in)` and a page without
- * the script keeps the rest state (drawn, cleared, legible).
+ * The custom properties a theme declares to say which reveals it performs
+ * [S45]: `--kp-reveal-headline: decipher`, `--kp-reveal-emphasis:
+ * classified`, `--kp-reveal-rule: draw`. Absent or empty means quiet.
  */
+export declare const ROUTINES: Readonly<{
+    headline: "--kp-reveal-headline";
+    emphasis: "--kp-reveal-emphasis";
+    rule: "--kp-reveal-rule";
+}>;
+/** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
-/** Set on an element the module has started, so a second attach skips it. */
+/** Set on the root once the reveals of a load have run. */
 export declare const DONE_ATTRIBUTE = "data-kp-effects-done";
+/** The copy of a headline the register's slice pseudo-elements read. */
+export declare const TEXT_ATTRIBUTE = "data-kp-text";
 /**
- * Fired once per page, on `document`, the first time a hook carries a
- * value the module does not know [AR44]. `detail.attribute`,
- * `detail.value` and `detail.accepted` say which and what would work.
- * The module never throws into a page.
+ * Dispatched once per page on an element that names a surface or a
+ * reveal the vocabulary does not know, bubbling. detail:
+ * `{ hook, value, accepted }`. Never thrown [AR44].
  */
 export declare const UNKNOWN_EVENT = "kp-effect-unknown";
 /**
- * The DI5 timing table [TH129, AR40]. One row per effect and per register
- * keyframe: how long it runs, how often, which property moves, and the
- * luminance steps it makes where the property is opacity. The gate reads
- * this table beside the register's keyframes and fails when a keyframe
- * has no row; it computes the flash rate and reports it, and per S42 it
- * corrects nothing.
- *
- * `cycles` is `Infinity` for a loop, which is what the report is for.
- *
- * @type {Readonly<Record<string, Readonly<{ durationMs: number, cycles: number, property: string, luminanceSteps: readonly number[] }>>>}
+ * Dispatched on an element when its reveal has reached its rest state,
+ * bubbling. detail: `{ reveal, routine, skipped }` — `skipped` says the
+ * element went straight to rest (reduced motion, a quiet theme, or seen
+ * this session) rather than through the motion.
  */
-export declare const TIMINGS: Readonly<Record<string, Readonly<{
+export declare const REVEAL_EVENT = "kp-reveal";
+/** The sessionStorage key prefix of the once-per-session memo [AR44, M4]. */
+export declare const MEMO_PREFIX = "kp-effects:";
+/** The glyphs a headline deciphers through [AR40]: no block glyphs. */
+export declare const GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
+/**
+ * DI5 for every animation the package runs [TH129, T20, AR40].
+ *
+ * One row per keyframe name: how long, how often, what moves, and the
+ * opacity at each keyframe step (the luminance the gate rates). The
+ * register's keyframes carry no comment of their own; this is the table
+ * and gates/check-motion.mjs refuses a keyframe without a row or a row
+ * whose steps drift from its keyframe. Rates are reported, never
+ * corrected (S42).
+ *
+ * @type {Readonly<Record<string, { durationMs: number, cycles: number, property: string, luminanceSteps: number[] }>>}
+ */
+export declare const TIMINGS: Readonly<Record<string, {
     durationMs: number;
     cycles: number;
     property: string;
-    luminanceSteps: readonly number[];
-}>>>;
+    luminanceSteps: number[];
+}>>;
 export type EffectsOptions = {
     /**
-     * override the media query, for tests
+     * override the media query (a test, or a consumer's own switch)
      */
     reduceMotion?: boolean;
     /**
-     * override the active theme, for tests
-     */
-    theme?: string;
-    /**
-     * IntersectionObserver ratio (default 0.6)
+     * IntersectionObserver ratio for the rule (default: `--kp-reveal-threshold`, 0.6)
      */
     threshold?: number;
     /**
-     * decipher characters per second (default 26)
+     * decipher characters per second (default: `--kp-decipher-cps`, 26)
      */
     cps?: number;
     /**
-     * emphasis stagger in ms (default 260)
+     * ms between one mark clearing and the next (default: `--kp-reveal-stagger`, 260)
      */
     stagger?: number;
     /**
-     * classified delay in ms (default 1500)
+     * ms before the first mark clears on load (default: `--kp-classified-delay`, 1500)
      */
     delay?: number;
+    /**
+     * set and, on detach, remove the root attribute (default true; a wrapper around one element passes false)
+     */
+    manageRoot?: boolean;
 };
 export type EffectsHandle = {
     /**
-     * stop everything the module started; safe to call twice
+     * stop everything the module started and remove the root attribute; safe to call twice
      */
     detach: () => void;
     /**
-     * start an element rendered after attach [AR34]
+     * start an element rendered after attach, and its subtree [AR34]
      */
     observe: (element: Element) => void;
 };
+/** What has been reported as unknown on this page, for js/diagnostics.js. */
+export declare function unknownEffects(): any[];
 /**
- * @typedef {object} EffectsOptions
- * @property {boolean} [reduceMotion] override the media query, for tests
- * @property {string} [theme] override the active theme, for tests
- * @property {number} [threshold] IntersectionObserver ratio (default 0.6)
- * @property {number} [cps] decipher characters per second (default 26)
- * @property {number} [stagger] emphasis stagger in ms (default 260)
- * @property {number} [delay] classified delay in ms (default 1500)
- */
-/**
- * @typedef {object} EffectsHandle
- * @property {() => void} detach stop everything the module started; safe to call twice
- * @property {(element: Element) => void} observe start an element rendered after attach [AR34]
- */
-/**
- * Attach the effects under `root` and return a handle.
+ * Attach the reveals under `root` and return a handle.
  *
- * C0: attaches nothing. The handle is the real shape so a caller written
- * today keeps working when C3 fills it in.
- *
- * @param {ParentNode} [root]
+ * @param {Document | Element} [root]
  * @param {EffectsOptions} [options]
  * @returns {EffectsHandle}
  */
-export declare function attachEffects(root?: ParentNode, options?: EffectsOptions): EffectsHandle;
+export declare function attachEffects(root?: Document | Element, options?: EffectsOptions): EffectsHandle;

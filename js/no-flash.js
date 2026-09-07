@@ -23,18 +23,27 @@ import { STORAGE_KEY } from './theme-registry.js';
 /** The attribute the stylesheet keys on. A contract value [TH26]. */
 export const THEME_ATTRIBUTE = 'data-theme';
 
+/** The attribute the register keys its reveal start states on [AR34]; the same value as ROOT_ATTRIBUTE in js/effects.js. */
+export const EFFECTS_ATTRIBUTE = 'data-kp-effects';
+
 /**
  * The snippet to inline inside <script> in <head>, before the stylesheet
  * link. Plain ES5, no imports, no dependency on this package being loaded.
  *
- * @param {{ key?: string, attribute?: string }} [options]
+ * @param {{ key?: string, attribute?: string, effects?: boolean }} [options]
  * @returns {string}
  */
-export function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE } = {}) {
+export function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false } = {}) {
+    // `effects: true` also arms the reveals of js/effects.js before first
+    // paint [AR34]: the register keys its start states on the attribute,
+    // so a page that will attach the module never paints the rest state
+    // first and snaps. A page that never attaches it leaves this off and
+    // shows every reveal at rest.
+    const arm = effects ? `\n        document.documentElement.setAttribute(${JSON.stringify(EFFECTS_ATTRIBUTE)}, '');` : '';
     return `(function () {
     try {
         var t = localStorage.getItem(${JSON.stringify(key)});
-        if (t) document.documentElement.setAttribute(${JSON.stringify(attribute)}, t);
+        if (t) document.documentElement.setAttribute(${JSON.stringify(attribute)}, t);${arm}
     } catch (e) {}
 })();`;
 }

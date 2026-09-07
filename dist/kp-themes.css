@@ -7037,6 +7037,11 @@
         --kp-charge: 520ms;
         --kp-tear-height: 44px;
         --fx-notch-sm: 8px;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           three and leaves a theme that declares none at rest. */
+        --kp-reveal-headline: decipher;
+        --kp-reveal-emphasis: classified;
+        --kp-reveal-rule: draw;
         /* The mono face for microlabels, identifiers and timestamps; C4
            ships Share Tech Mono (R6-Q1 decides under which name). */
         --kp-mono: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
@@ -7137,6 +7142,12 @@
 
     [data-theme='cyberpunk'] [data-kp-reveal='headline']::after {
         color: var(--chart-4);
+    }
+
+    /* The decipher's glyph cells: fixed width so the line does not dance. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] [data-glyph] {
+        display: inline-block;
+        min-width: 0.48em;
     }
 
     /* The decipher's noise glyphs, while the module swaps them in. */

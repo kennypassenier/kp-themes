@@ -1,15 +1,18 @@
 /** The attribute the stylesheet keys on. A contract value [TH26]. */
 export declare const THEME_ATTRIBUTE = "data-theme";
+/** The attribute the register keys its reveal start states on [AR34]; the same value as ROOT_ATTRIBUTE in js/effects.js. */
+export declare const EFFECTS_ATTRIBUTE = "data-kp-effects";
 /**
  * The snippet to inline inside <script> in <head>, before the stylesheet
  * link. Plain ES5, no imports, no dependency on this package being loaded.
  *
- * @param {{ key?: string, attribute?: string }} [options]
+ * @param {{ key?: string, attribute?: string, effects?: boolean }} [options]
  * @returns {string}
  */
-export declare function noFlashSnippet({ key, attribute }?: {
+export declare function noFlashSnippet({ key, attribute, effects }?: {
     key?: string;
     attribute?: string;
+    effects?: boolean;
 }): string;
 /** The snippet with the defaults, for the common case. */
 export declare const NO_FLASH_SNIPPET: string;

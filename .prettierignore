@@ -38,3 +38,5 @@ tests/fixtures/.build/
 # about a probe is noise, and a probe that reaches a commit is a mistake
 # the ignore below catches rather than hides.
 tests/tmp-*.spec.mjs
+# Generated ledgers: written by a gate, refused by the same gate when stale.
+reports/

@@ -1,103 +1,129 @@
-// The effects module [TH125, AR34, AR35, AR43, AR44].
+// The effects module [S45, AR34, AR35, AR44]: the reveals of the hook
+// vocabulary, in one file, for both channels.
 //
-// One module for every effect a theme answers a hook with: the reveal of
-// a headline, an emphasis that clears itself, a rule that draws in. The
-// consumer writes MEANING into the HTML — `data-kp-reveal="headline"`,
-// `<mark>`, `data-kp-divider` — and the active theme decides what that
-// looks like [S45]. This module only ever toggles the state classes below;
-// the register decides what a state class looks like, and a theme with no
-// rule for it has answered quietly.
+// A consumer marks what a passage IS — `data-kp-surface="hero"`, a
+// `<mark>`, `data-kp-reveal="headline|emphasis|rule"`, `data-kp-divider`
+// — and a theme decides what that looks like. This module performs the
+// part a stylesheet cannot: the decipher of a headline, the clearance of
+// marks one after another, the rule that draws when its heading scrolls
+// into view. It toggles state classes only (STATE); the register paints.
 //
-// Pure [KT6]: importing this file does nothing. `js/auto.js` calls
-// attachEffects() like the other eighteen attach functions, and a React
-// island wraps the same function. Everything the module starts, `detach`
-// stops; nothing survives it.
+// Which reveals a theme performs is the theme's answer, read from three
+// custom properties on the root (`--kp-reveal-headline: decipher`, and so
+// on, ROUTINES): a theme that declares none has answered quietly, and the
+// module leaves the element at rest. Under formal a headline is a
+// headline.
 //
-// C0 (2026-09-07): the walking skeleton. attachEffects() attaches nothing
-// yet — the observers arrive at C3 — but the contract values, the timing
-// table and the shape of the handle are the ones the gates already read,
-// so a gate that fires red today fires red on the real thing later.
+// Every reveal has a rest state that holds without this script: the
+// register keys its start states on the root attribute `data-kp-effects`,
+// which the head snippet (js/no-flash.js) sets before first paint and
+// attachEffects() sets again, so a page without the module shows drawn
+// rules and clear marks, and a page with it never flashes from rest to
+// start [AR34].
+//
+// Reveals run once per session per page by default — a server-rendered
+// dashboard is a full load per click, and nobody wants the heading to
+// decipher on every one — and `data-kp-reveal-every="load"` opts back in
+// [AR44]. The memo is sessionStorage, key per path and hook, the module's
+// only storage (M4).
+//
+// Nothing here throws. An unknown surface or reveal value is reported
+// once per page as `kp-effect-unknown` with the accepted values, and
+// js/diagnostics.js lists it. Reduced motion, at attach or mid-session,
+// resolves every running reveal to its rest state at once [DI7].
+//
+//   import { attachEffects } from '@kp-soft/themes/js/effects';
+//   const effects = attachEffects(document, { threshold: 0.6 });
+//   effects.observe(elementRenderedLater);
+//   effects.detach();
+//
+// DI5: every animation the register runs has its row in TIMINGS below,
+// and gates/check-motion.mjs holds the table and the keyframes in step
+// and reports every rate (S42: reported, never corrected by the gate).
 
-/**
- * The hook vocabulary [AR35]. Contract values: a consumer writes these
- * into markup, and a theme answers them in `themes/hooks.json`. Every
- * value names what an element IS, never what one theme does with it — a
- * "tear" is a horizon under synthwave, so the attribute stays bare.
- */
+/** The attributes of the hook vocabulary [AR35]. Contract values. */
 export const HOOKS = Object.freeze({
-    /** `hero` or `app`: which ground a section stands on [TH116]. */
     surface: 'data-kp-surface',
-    /** `headline`, `emphasis` or `rule`: what a revealed element is. */
     reveal: 'data-kp-reveal',
-    /** The element a container's reveal listens to instead of the load. */
     revealTrigger: 'data-kp-reveal-trigger',
-    /** `load`: run this reveal on every load, not once per session [AR44]. */
     revealEvery: 'data-kp-reveal-every',
-    /** A section transition. Bare, or `section`. */
     divider: 'data-kp-divider',
-    /** The label a register may draw with `content: attr()` [KT5]. */
     label: 'data-kp-label',
-    /** `start` or `end`: which side of the screen the navbar sits on [TH117]. */
     navSide: 'data-kp-nav-side',
 });
 
-/** The values `data-kp-surface` accepts. */
+/** The surfaces a section can stand on [TH116]. */
 export const SURFACES = Object.freeze(['hero', 'app']);
 
-/** The values `data-kp-reveal` accepts. */
+/** What an element can be revealed as [TH119, TH120, TH122]. */
 export const REVEALS = Object.freeze(['headline', 'emphasis', 'rule']);
 
 /**
- * The state classes the module toggles [AR35]. Contract values: a
- * consumer will select on them the day they exist, so they never change
- * inside a major.
+ * The state classes this module toggles, and nothing else. Contract
+ * values: a consumer may select on them, a register does.
  */
 export const STATE = Object.freeze({
-    /** The element has entered the viewport (or the page has loaded). */
     in: 'is-in',
-    /** An emphasis has cleared its redaction. */
     cleared: 'is-cleared',
-    /** A headline has finished deciphering. */
     deciphered: 'is-deciphered',
-    /** A one-shot glitch is running. */
     glitching: 'is-glitching',
+    noise: 'is-noise',
 });
 
 /**
- * The root attribute that arms the start states [AR34]. Set before first
- * paint by the head-script slot, so the register can key a start state
- * on `[data-kp-effects] [data-kp-reveal]:not(.is-in)` and a page without
- * the script keeps the rest state (drawn, cleared, legible).
+ * The custom properties a theme declares to say which reveals it performs
+ * [S45]: `--kp-reveal-headline: decipher`, `--kp-reveal-emphasis:
+ * classified`, `--kp-reveal-rule: draw`. Absent or empty means quiet.
  */
+export const ROUTINES = Object.freeze({
+    headline: '--kp-reveal-headline',
+    emphasis: '--kp-reveal-emphasis',
+    rule: '--kp-reveal-rule',
+});
+
+/** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
-/** Set on an element the module has started, so a second attach skips it. */
+/** Set on the root once the reveals of a load have run. */
 export const DONE_ATTRIBUTE = 'data-kp-effects-done';
 
+/** The copy of a headline the register's slice pseudo-elements read. */
+export const TEXT_ATTRIBUTE = 'data-kp-text';
+
 /**
- * Fired once per page, on `document`, the first time a hook carries a
- * value the module does not know [AR44]. `detail.attribute`,
- * `detail.value` and `detail.accepted` say which and what would work.
- * The module never throws into a page.
+ * Dispatched once per page on an element that names a surface or a
+ * reveal the vocabulary does not know, bubbling. detail:
+ * `{ hook, value, accepted }`. Never thrown [AR44].
  */
 export const UNKNOWN_EVENT = 'kp-effect-unknown';
 
 /**
- * The DI5 timing table [TH129, AR40]. One row per effect and per register
- * keyframe: how long it runs, how often, which property moves, and the
- * luminance steps it makes where the property is opacity. The gate reads
- * this table beside the register's keyframes and fails when a keyframe
- * has no row; it computes the flash rate and reports it, and per S42 it
- * corrects nothing.
+ * Dispatched on an element when its reveal has reached its rest state,
+ * bubbling. detail: `{ reveal, routine, skipped }` — `skipped` says the
+ * element went straight to rest (reduced motion, a quiet theme, or seen
+ * this session) rather than through the motion.
+ */
+export const REVEAL_EVENT = 'kp-reveal';
+
+/** The sessionStorage key prefix of the once-per-session memo [AR44, M4]. */
+export const MEMO_PREFIX = 'kp-effects:';
+
+/** The glyphs a headline deciphers through [AR40]: no block glyphs. */
+export const GLYPHS = '01<>/\\|=+*#%@&$?!ZXKQ';
+
+/**
+ * DI5 for every animation the package runs [TH129, T20, AR40].
  *
- * `cycles` is `Infinity` for a loop, which is what the report is for.
+ * One row per keyframe name: how long, how often, what moves, and the
+ * opacity at each keyframe step (the luminance the gate rates). The
+ * register's keyframes carry no comment of their own; this is the table
+ * and gates/check-motion.mjs refuses a keyframe without a row or a row
+ * whose steps drift from its keyframe. Rates are reported, never
+ * corrected (S42).
  *
- * @type {Readonly<Record<string, Readonly<{ durationMs: number, cycles: number, property: string, luminanceSteps: readonly number[] }>>>}
+ * @type {Readonly<Record<string, { durationMs: number, cycles: number, property: string, luminanceSteps: number[] }>>}
  */
 export const TIMINGS = Object.freeze({
-    // The register's own keyframes, as shipped in 4.0.0. Their opacity
-    // stops are the ones gates/check-motion.mjs already parses; listing
-    // them here is what lets the table pass and the keyframe parse agree.
     // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
     // glitch (two steps, once), the headline's slice burst (one burst of
     // six bands, once) and the charge sweep (a transform, no luminance).
@@ -107,9 +133,6 @@ export const TIMINGS = Object.freeze({
     'kp-slice-1': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-slice-2': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-charge': { durationMs: 520, cycles: 1, property: 'transform', luminanceSteps: [] },
-    // The base layer's and the components' keyframes. Where a duration is
-    // a token (`var(--fx-duration)`), the row carries cyberpunk's 140ms,
-    // the shortest any theme declares, so the rate is the worst case.
     'kp-slide-in': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-rule-in': { durationMs: 420, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-settle': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -122,59 +145,388 @@ export const TIMINGS = Object.freeze({
 
 /**
  * @typedef {object} EffectsOptions
- * @property {boolean} [reduceMotion] override the media query, for tests
- * @property {string} [theme] override the active theme, for tests
- * @property {number} [threshold] IntersectionObserver ratio (default 0.6)
- * @property {number} [cps] decipher characters per second (default 26)
- * @property {number} [stagger] emphasis stagger in ms (default 260)
- * @property {number} [delay] classified delay in ms (default 1500)
+ * @property {boolean} [reduceMotion] override the media query (a test, or a consumer's own switch)
+ * @property {number} [threshold] IntersectionObserver ratio for the rule (default: `--kp-reveal-threshold`, 0.6)
+ * @property {number} [cps] decipher characters per second (default: `--kp-decipher-cps`, 26)
+ * @property {number} [stagger] ms between one mark clearing and the next (default: `--kp-reveal-stagger`, 260)
+ * @property {number} [delay] ms before the first mark clears on load (default: `--kp-classified-delay`, 1500)
+ * @property {boolean} [manageRoot] set and, on detach, remove the root attribute (default true; a wrapper around one element passes false)
  */
 
 /**
  * @typedef {object} EffectsHandle
- * @property {() => void} detach stop everything the module started; safe to call twice
- * @property {(element: Element) => void} observe start an element rendered after attach [AR34]
+ * @property {() => void} detach stop everything the module started and remove the root attribute; safe to call twice
+ * @property {(element: Element) => void} observe start an element rendered after attach, and its subtree [AR34]
  */
 
+/** Elements this module has started, so a second attach does not start them again [AR34]. */
+const started = new WeakSet();
+
+/** The unknown hook values reported on this page, `hook=value`, for the diagnostics [AR44]. */
+const unknownReported = new Set();
+
+/** What has been reported as unknown on this page, for js/diagnostics.js. */
+export function unknownEffects() {
+    return [...unknownReported];
+}
+
 /**
- * Attach the effects under `root` and return a handle.
+ * Attach the reveals under `root` and return a handle.
  *
- * C0: attaches nothing. The handle is the real shape so a caller written
- * today keeps working when C3 fills it in.
- *
- * @param {ParentNode} [root]
+ * @param {Document | Element} [root]
  * @param {EffectsOptions} [options]
  * @returns {EffectsHandle}
  */
 export function attachEffects(root = document, options = {}) {
-    void options;
+    const doc = root.ownerDocument ?? /** @type {Document} */ (root);
+    const html = doc.documentElement;
+    const manageRoot = options.manageRoot ?? true;
+    const view = doc.defaultView;
+    const query = view && typeof view.matchMedia === 'function' ? view.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const reduced = () => options.reduceMotion ?? (query ? query.matches : false);
+    const rootStyle = view ? view.getComputedStyle(html) : null;
+    /** @param {string} name @param {number} fallback */
+    const knob = (name, fallback) => {
+        const n = rootStyle ? parseFloat(rootStyle.getPropertyValue(name)) : NaN;
+        return Number.isFinite(n) ? n : fallback;
+    };
+    // The knobs are read once per attach, not per element [AR43].
+    const cfg = {
+        threshold: options.threshold ?? knob('--kp-reveal-threshold', 0.6),
+        cps: options.cps ?? knob('--kp-decipher-cps', 26),
+        lead: knob('--kp-decipher-lead', 260),
+        swap: knob('--kp-decipher-swap', 0.5),
+        stagger: options.stagger ?? knob('--kp-reveal-stagger', 260),
+        delay: options.delay ?? knob('--kp-classified-delay', 1500),
+    };
+    if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, '');
+
     let detached = false;
-    // C0 ships the contract and one behaviour: an element that names a
-    // surface or a reveal the vocabulary does not know is reported [AR44],
-    // so a typo in a consumer's markup is heard rather than quietly
-    // unstyled. The reveals themselves arrive at C3.
-    /** @param {Element} element */
-    const check = (element) => {
-        if (detached) return;
+    /** @type {Set<ReturnType<typeof setTimeout>>} */
+    const timers = new Set();
+    /** @type {Set<number>} */
+    const frames = new Set();
+    /** @type {Array<() => void>} */
+    const cleanups = [];
+    /** @type {Array<() => void>} */
+    const finishers = [];
+    /** @type {IntersectionObserver | null} */
+    let io = null;
+    let pending = 0;
+
+    const done = () => {
+        if (detached || pending > 0) return;
+        html.setAttribute(DONE_ATTRIBUTE, '');
+    };
+    /** @param {Element} el @param {string} reveal @param {string} routine @param {boolean} skipped */
+    const announce = (el, reveal, routine, skipped) => {
+        el.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
+    };
+    /** @param {() => void} fn @param {number} ms */
+    const later = (fn, ms) => {
+        const id = setTimeout(() => {
+            timers.delete(id);
+            if (!detached) fn();
+        }, ms);
+        timers.add(id);
+    };
+    /** @param {Element} el @param {'headline' | 'emphasis' | 'rule'} reveal */
+    const routineOf = (el, reveal) => (view ? view.getComputedStyle(el).getPropertyValue(ROUTINES[reveal]).trim() : '');
+    /**
+     * The memo key: the path, the hook, and the element's position among
+     * its kind — so the hero's marks and the dossier's are two memos, and
+     * a second headline on the page is its own [AR44].
+     *
+     * @param {Element} el @param {string} reveal
+     */
+    const memoKey = (el, reveal) => {
+        const kind = reveal === 'emphasis' && el.matches('mark') ? 'loose' : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].indexOf(el);
+        return `${MEMO_PREFIX}${view?.location.pathname ?? ''}:${reveal}:${kind}`;
+    };
+    /** @param {Element} el @param {string} reveal @returns {boolean} true when this page already ran the reveal this session */
+    const seen = (el, reveal) => {
+        if (el.getAttribute(HOOKS.revealEvery) === 'load') return false;
+        try {
+            const key = memoKey(el, reveal);
+            const storage = view?.sessionStorage;
+            if (!storage) return false;
+            if (storage.getItem(key)) return true;
+            storage.setItem(key, '1');
+            return false;
+        } catch {
+            return false;
+        }
+    };
+
+    // ── Unknown values [AR44] ─────────────────────────────────────────
+    /** @param {Element} el */
+    const checkValues = (el) => {
         /** @type {[string, readonly string[]][]} */
         const pairs = [
             [HOOKS.surface, SURFACES],
             [HOOKS.reveal, REVEALS],
         ];
-        for (const [hook, known] of pairs) {
-            const value = element.getAttribute(hook);
-            if (value === null || known.includes(value)) continue;
-            element.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value } }));
+        for (const [hook, accepted] of pairs) {
+            const value = el.getAttribute(hook);
+            if (value === null || accepted.includes(value)) continue;
+            const key = `${hook}=${value}`;
+            if (unknownReported.has(key)) continue;
+            unknownReported.add(key);
+            el.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
         }
     };
-    for (const element of root.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) check(element);
+
+    // ── The headline: decipher, then one slice burst [TH119] ───────────
+    /** @param {Element} el */
+    const headline = (el) => {
+        const text = el.textContent ?? '';
+        el.setAttribute(TEXT_ATTRIBUTE, text);
+        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);
+        const routine = routineOf(el, 'headline');
+        /** @param {boolean} skipped */
+        const rest = (skipped) => {
+            el.textContent = text;
+            el.classList.add(STATE.deciphered);
+            announce(el, 'headline', routine, skipped);
+        };
+        if (routine === '' || reduced() || seen(el, 'headline')) {
+            rest(true);
+            return;
+        }
+        pending++;
+        const chars = [...text];
+        const spans = chars.map((ch) => {
+            const span = doc.createElement('span');
+            span.setAttribute('data-glyph', '');
+            span.setAttribute('aria-hidden', 'true');
+            if (/\s/.test(ch)) span.textContent = ch;
+            else {
+                span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                span.classList.add(STATE.noise);
+            }
+            return span;
+        });
+        el.replaceChildren(...spans);
+        const perChar = 1000 / Math.max(1, cfg.cps);
+        let start = 0;
+        let finished = false;
+        const finish = () => {
+            if (finished) return;
+            finished = true;
+            rest(false);
+            el.classList.add(STATE.glitching);
+            const off = () => el.classList.remove(STATE.glitching);
+            el.addEventListener('animationend', off, { once: true });
+            // No animation (a quiet register, or reduced motion switched on
+            // mid-run): the class comes off on its own.
+            later(off, TIMINGS['kp-slice-1'].durationMs + 50);
+            pending--;
+            done();
+        };
+        finishers.push(finish);
+        /** @param {number} now */
+        const tick = (now) => {
+            frames.delete(id);
+            if (detached || finished) return;
+            if (start === 0) start = now;
+            const t = now - start;
+            let all = true;
+            spans.forEach((span, i) => {
+                const ch = chars[i] ?? '';
+                if (/\s/.test(ch)) return;
+                if (t > cfg.lead + i * perChar) {
+                    if (span.classList.contains(STATE.noise)) {
+                        span.textContent = ch;
+                        span.classList.remove(STATE.noise);
+                    }
+                } else {
+                    all = false;
+                    if (Math.random() < cfg.swap) span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                }
+            });
+            if (all) finish();
+            else id = schedule();
+        };
+        let id = 0;
+        const schedule = () => {
+            const next = view ? view.requestAnimationFrame(tick) : 0;
+            frames.add(next);
+            return next;
+        };
+        id = schedule();
+    };
+
+    // ── Emphasis: marks clear themselves, or on a trigger [TH120] ──────
+    /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
+    const clearInSteps = (marks, first, step, on, routine) => {
+        if (marks.length === 0) return;
+        pending++;
+        finishers.push(() => {
+            for (const mark of marks) mark.classList.add(STATE.cleared);
+        });
+        marks.forEach((mark, i) => {
+            later(
+                () => {
+                    mark.classList.add(STATE.cleared);
+                    if (i === marks.length - 1) {
+                        pending--;
+                        announce(on, 'emphasis', routine, false);
+                        done();
+                    }
+                },
+                first + i * step,
+            );
+        });
+    };
+    /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
+    const emphasis = (container) => {
+        const marks = [...container.querySelectorAll('mark')];
+        const routine = routineOf(container, 'emphasis');
+        const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
+        // A container with nothing to clear (a button that carries the hook
+        // for its own reveal) touches neither the marks nor the memo.
+        if (marks.length === 0) {
+            announce(container, 'emphasis', routine, true);
+            return;
+        }
+        const atRest = () => {
+            for (const mark of marks) mark.classList.add(STATE.cleared);
+            announce(container, 'emphasis', routine, true);
+        };
+        if (routine === '' || reduced()) {
+            atRest();
+            if (trigger) wireTrigger(trigger, marks, container, routine);
+            return;
+        }
+        if (trigger) {
+            // The dossier: the marks stay covered until the trigger opens the
+            // file; the register staggers the lift. A second press closes it.
+            wireTrigger(trigger, marks, container, routine);
+            trigger.setAttribute('aria-pressed', 'false');
+            return;
+        }
+        if (seen(container, 'emphasis')) {
+            atRest();
+            return;
+        }
+        clearInSteps(marks, cfg.delay, cfg.stagger, container, routine);
+    };
+    /** @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine */
+    const wireTrigger = (trigger, marks, container, routine) => {
+        const onClick = () => {
+            const open = trigger.getAttribute('aria-pressed') !== 'true';
+            trigger.setAttribute('aria-pressed', String(open));
+            for (const mark of marks) mark.classList.toggle(STATE.cleared, open);
+            announce(container, 'emphasis', routine, false);
+        };
+        trigger.addEventListener('click', onClick);
+        cleanups.push(() => trigger.removeEventListener('click', onClick));
+    };
+    /** The marks outside any emphasis container clear on load, one after another. */
+    /** @param {ParentNode} scope */
+    const looseMarks = (scope) => {
+        const marks = [...scope.querySelectorAll('mark')].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started.has(m));
+        if (marks.length === 0) return;
+        for (const m of marks) started.add(m);
+        const first = marks[0];
+        const routine = routineOf(first, 'emphasis');
+        if (routine === '' || reduced() || seen(first, 'emphasis')) {
+            for (const mark of marks) mark.classList.add(STATE.cleared);
+            announce(first, 'emphasis', routine, true);
+            return;
+        }
+        clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
+    };
+
+    // ── The rule: drawn when its heading enters the viewport [TH122] ───
+    /** @param {Element} el */
+    const rule = (el) => {
+        const routine = routineOf(el, 'rule');
+        /** @param {boolean} skipped */
+        const draw = (skipped) => {
+            el.classList.add(STATE.in);
+            announce(el, 'rule', routine, skipped);
+        };
+        if (routine === '' || reduced() || seen(el, 'rule') || !view || typeof view.IntersectionObserver !== 'function') {
+            draw(true);
+            return;
+        }
+        pending++;
+        finishers.push(() => draw(false));
+        io ??= new view.IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (!entry.isIntersecting) continue;
+                    io?.unobserve(entry.target);
+                    entry.target.classList.add(STATE.in);
+                    announce(entry.target, 'rule', routine, false);
+                    pending--;
+                    done();
+                }
+            },
+            { threshold: cfg.threshold },
+        );
+        io.observe(el);
+    };
+
+    // ── Dispatch ──────────────────────────────────────────────────────
+    /** @param {Element} el */
+    const startOne = (el) => {
+        if (started.has(el)) return;
+        checkValues(el);
+        const reveal = el.getAttribute(HOOKS.reveal);
+        if (reveal === null || !REVEALS.includes(reveal)) return;
+        started.add(el);
+        if (reveal === 'headline') headline(el);
+        else if (reveal === 'emphasis') emphasis(el);
+        else rule(el);
+    };
+    /** @param {ParentNode | Element} scope */
+    const scan = (scope) => {
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
+        for (const el of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el);
+        looseMarks(scope);
+        done();
+    };
+
+    // Reduced motion switched on mid-session: every running reveal
+    // resolves to its rest state at once [DI7].
+    const onPreference = () => {
+        if (!reduced()) return;
+        for (const id of timers) clearTimeout(id);
+        timers.clear();
+        for (const id of frames) view?.cancelAnimationFrame(id);
+        frames.clear();
+        io?.disconnect();
+        io = null;
+        for (const finish of finishers.splice(0)) finish();
+        pending = 0;
+        done();
+    };
+    if (query) {
+        query.addEventListener('change', onPreference);
+        cleanups.push(() => query.removeEventListener('change', onPreference));
+    }
+
+    scan(root);
+
     return {
         detach() {
             if (detached) return;
             detached = true;
+            for (const id of timers) clearTimeout(id);
+            timers.clear();
+            for (const id of frames) view?.cancelAnimationFrame(id);
+            frames.clear();
+            io?.disconnect();
+            io = null;
+            for (const cleanup of cleanups.splice(0)) cleanup();
+            if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
         },
         observe(element) {
-            check(element);
+            if (detached) return;
+            scan(element);
         },
     };
 }

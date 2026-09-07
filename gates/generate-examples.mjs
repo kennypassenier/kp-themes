@@ -18,9 +18,12 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 import { THEMES } from '../js/theme-registry.js';
+import { noFlashSnippet } from '../js/no-flash.js';
 
 const OUT = new URL('../examples/', import.meta.url);
 
+/* The head script: the stored theme before the stylesheet (TH23) and the
+ * effects armed before first paint (AR34), in one inline snippet. */
 /** The stylesheets a page loads, in cascade order [AR17]. */
 // The two registers are opt-in for a consumer (README) and were left off
 // these pages by omission rather than by decision -- no generator said a
@@ -47,6 +50,9 @@ ${html}
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>kp-themes — ${title}</title>
+        <script>
+            ${noFlashSnippet({ effects: true }).replace(/\n/g, '\n            ')}
+        </script>
 ${links}
     </head>
     <body>

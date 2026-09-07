@@ -24,6 +24,7 @@
 // Every sentence it produces comes from js/strings.js [KT5].
 
 import { THEMES, VERSION } from './theme-registry.js';
+import { unknownEffects } from './effects.js';
 import { getStrings } from './strings.js';
 
 /** The custom property carrying the stylesheet's version [AR25]. */
@@ -35,6 +36,7 @@ export const NAMES_PROPERTY = '--kp-themes-names';
  * @typedef {object} Side
  * @property {string | null} version the version this half was generated from, or null when it does not say
  * @property {string[]} themes the theme names this half knows
+ * @property {string[]} [unknownEffects] the hook values js/effects.js reported as unknown on this page [AR44]
  */
 
 /**
@@ -103,7 +105,7 @@ export function stylesheetSide({ root } = {}) {
  * @returns {Side}
  */
 export function scriptSide() {
-    return { version: VERSION, themes: THEMES.map((t) => t.name) };
+    return { version: VERSION, themes: THEMES.map((t) => t.name), unknownEffects: unknownEffects() };
 }
 
 /**
@@ -194,6 +196,12 @@ export function renderDiagnostics(target, { root, stylesheet, script, strings } 
     tbody.append(
         row(s.diagnosticsVersion, report.stylesheet.version ?? unknown, report.script.version ?? unknown, 'version'),
         row(s.diagnosticsThemes, report.stylesheet.themes.join(' '), report.script.themes.join(' '), 'themes'),
+        row(
+            s.diagnosticsEffects,
+            '—',
+            report.script.unknownEffects?.length ? report.script.unknownEffects.join(' ') : s.diagnosticsEffectsNone,
+            'effects',
+        ),
     );
     table.append(thead, tbody);
 

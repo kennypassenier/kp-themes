@@ -42,6 +42,7 @@ node gates/check-contrast.mjs
 
 echo "→ motion: flash threshold and reduced-motion guards (DI5, DI7)"
 node gates/check-motion.mjs
+node gates/check-motion.mjs --report --check
 
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
