@@ -29,20 +29,35 @@
 //   - `.jsx` files, `index.js`, `hooks/` and `fx/`: the React channel
 //     arrives through npm for the same reason. The manifest is for the
 //     half a person copies by hand, and that half is the stylesheets and
-//     the framework-free modules.
+//     the framework-free modules. The walk stays inside that half too:
+//     `fx/when.js` is the same shape as `js/locale.js` -- imported by
+//     four `.jsx` effects and exported by nothing -- and it stays out,
+//     because nobody vendors `.jsx`.
 //   - `./package.json`: npm ships and verifies it whatever we say.
 //
-// A new export under css/ or js/ therefore lands in this gate's expected
-// list the moment it is declared, and the manifest has to grow with it.
-// That is the property TH103 asks for: a new file cannot silently fall
-// outside again.
+// **And what those files import** (R4-LOCALE, 2026-09-07). Being an
+// export is not the property that matters -- having to be copied is.
+// `js/locale.js` was never an export, yet `js/datepicker.js`,
+// `js/datatable.js` and `js/upload.js` all import it, so a consumer
+// vendoring the date picker copied a file that broke on its own import.
+// The gate therefore walks the import graph from every copyable export
+// and expects what it reaches. Measured when the rule changed: from 33
+// copyable exports the walk reaches exactly one file that is not itself
+// one. Kenny chose this over exporting the file, because a measure that
+// fits only the place a fault showed up meets you again somewhere else,
+// and this one adds no public name to the package.
 //
-// **Drilled red three times, 2026-09-06.** `js/strings.js` deleted from
-// FILES: "js/strings.js is an export a consumer can copy and is not in the
-// manifest". A new export declared and not added — `"./js/locale":
-// "./js/locale.js"` — same sentence about js/locale.js, which is the
-// property TH103 asks for. `js/locale.js` added to FILES without an
-// export: "is in the manifest and is not an export under css/, js/ or dist/".
+// A new export under css/ or js/ therefore lands in this gate's expected
+// list the moment it is declared, and so does a new file that one of them
+// starts importing. The manifest has to grow with either. That is the
+// property TH103 asks for: a new file cannot silently fall outside
+// again.
+//
+// **Drilled red three times, 2026-09-06**, and once more when the rule
+// grew: `js/strings.js` deleted from FILES; a new export declared and not
+// added; a file in FILES that is neither exported nor imported. And on
+// 2026-09-07, the walk itself — an export made to import a module nothing
+// else reaches, which the gate then demanded by name.
 //
 // Usage: node gates/check-manifest.mjs
 
@@ -54,9 +69,10 @@ import { FILES } from './checksums.mjs';
  * The export targets a vendoring consumer copies, from `exports` alone.
  *
  * @param {{exports?: Record<string, string | Record<string, string>>}} pkg
+ * @param {{follow?: boolean}} [options] follow imports as well (default true)
  * @returns {string[]} repo-relative paths, sorted
  */
-export function copyableExports(pkg) {
+export function copyableExports(pkg, { follow = true } = {}) {
     /** @type {Set<string>} */
     const found = new Set();
     for (const [name, entry] of Object.entries(pkg.exports ?? {})) {
@@ -71,7 +87,52 @@ export function copyableExports(pkg) {
         if (!/\.(css|js)$/.test(path)) continue;
         found.add(path);
     }
+    if (follow) for (const path of [...found]) reachableFrom(path, found);
     return [...found].sort();
+}
+
+/**
+ * Add every file `entry` imports, and what those import in turn.
+ *
+ * A relative import in a module a consumer copies is a file they have to
+ * copy with it, whether or not the package calls it an export. Only
+ * relative specifiers count: a bare one is a dependency, and this package
+ * has none at runtime.
+ *
+ * @param {string} entry repo-relative path
+ * @param {Set<string>} found mutated
+ */
+function reachableFrom(entry, found) {
+    let source;
+    try {
+        source = readFileSync(new URL(`../${entry}`, import.meta.url), 'utf8');
+    } catch {
+        return;
+    }
+    const dir = entry.slice(0, entry.lastIndexOf('/'));
+    for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) {
+        const target = normalise(`${dir}/${match[1]}`);
+        if (!/\.(css|js)$/.test(target)) continue;
+        if (found.has(target)) continue;
+        found.add(target);
+        reachableFrom(target, found);
+    }
+}
+
+/**
+ * Resolve `.` and `..` in a repo-relative path, without touching disk.
+ * @param {string} path
+ * @returns {string}
+ */
+function normalise(path) {
+    /** @type {string[]} */
+    const out = [];
+    for (const part of path.split('/')) {
+        if (part === '.' || part === '') continue;
+        if (part === '..') out.pop();
+        else out.push(part);
+    }
+    return out.join('/');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -86,13 +147,17 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     for (const path of expected) {
         if (!FILES.includes(path)) {
             failed++;
-            console.error(`${path} is an export a consumer can copy and is not in the manifest — add it to FILES in gates/checksums.mjs.`);
+            console.error(
+                `${path} is a file a consumer copies — an export under css/, js/ or dist/, or something one of those imports — and is not in the manifest. Add it to FILES in gates/checksums.mjs.`,
+            );
         }
     }
     for (const path of FILES) {
         if (!expected.includes(path)) {
             failed++;
-            console.error(`${path} is in the manifest and is not an export under css/, js/ or dist/ — remove it, or declare it in "exports".`);
+            console.error(
+                `${path} is in the manifest and is neither an export under css/, js/ or dist/ nor a file one of them imports — remove it, or declare it in "exports".`,
+            );
         }
     }
 
@@ -100,5 +165,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(`\n${failed} difference(s) between the manifest and what the package offers.`);
         process.exit(1);
     }
-    console.log(`Manifest: ${expected.length} copyable exports, all ${FILES.length} of them checksummed.`);
+    // Named apart, because "34 exports" would be false: one of them is a
+    // file no export names, reached by walking what they import.
+    const declared = copyableExports(pkg, { follow: false }).length;
+    console.log(`Manifest: ${declared} copyable exports plus ${expected.length - declared} file(s) they import, all ${FILES.length} checksummed.`);
 }

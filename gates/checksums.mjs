@@ -51,6 +51,7 @@ export const FILES = [
     'js/forms.js',
     'js/gridlayout.js',
     'js/listbox.js',
+    'js/locale.js',
     'js/no-flash.js',
     'js/overlays.js',
     'js/palette.js',
