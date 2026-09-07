@@ -40,3 +40,7 @@ tests/fixtures/.build/
 tests/tmp-*.spec.mjs
 # Generated ledgers: written by a gate, refused by the same gate when stale.
 reports/
+# Generated from fonts/families.json and held by its own gate; its unicode-range lines are one value each on purpose.
+css/fonts.css
+# The 4.0.0 bundle vendored for the compare page, verified against its own SHA256SUMS [MR-R6-COMPARE].
+showcase/baseline/

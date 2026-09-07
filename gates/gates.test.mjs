@@ -11,6 +11,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
@@ -819,4 +820,21 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
         assert.ok(m, `${knob} is not declared in the register's theme block`);
         assert.equal(m[1].trim(), value, `${knob} defaults to ${m[1].trim()}, AR43 says ${value}`);
     }
+});
+
+// ── Round six, C4: the fonts travel in the tarball [T19, AR39, rule 7f] ──────
+
+test('T19: the packed tarball carries css/fonts.css, fonts/families.json and a subset face with its licence', () => {
+    const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: new URL('../', import.meta.url), encoding: 'utf8' });
+    // npm 11 keys the dry-run report by package name.
+    const report = Object.values(JSON.parse(out))[0];
+    const files = report.files.map((/** @type {{ path: string }} */ f) => f.path);
+    for (const expected of ['css/fonts.css', 'fonts/families.json', 'fonts/rajdhani/rajdhani-regular.woff2', 'fonts/rajdhani/LICENSE']) {
+        assert.ok(files.includes(expected), `${expected} is not in the tarball`);
+    }
+    // And nothing from a family with a Reserved Font Name.
+    assert.ok(
+        !files.some((/** @type {string} */ f) => f.startsWith('fonts/sharetechmono/') && f.endsWith('.woff2')),
+        'a reserved-name face travelled',
+    );
 });

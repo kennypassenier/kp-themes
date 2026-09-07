@@ -20,5 +20,5 @@
         "types": ["node", "react"]
     },
     "include": ["index.js", "hooks", "components", "fx", "js", "gates", "showcase"],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "showcase/baseline"]
 }

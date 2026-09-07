@@ -45,7 +45,7 @@ const UTILITY_COUNT = utilityNames().length;
 // here rather than in .github/workflows/pages.yml, because two lists of
 // what the site consists of means the CI one ships. `--assets` prints
 // it, one per line, and the workflow copies what it is told.
-export const ASSETS = ['css', 'js', 'dist', 'showcase', 'examples'];
+export const ASSETS = ['css', 'js', 'dist', 'showcase', 'examples', 'fonts'];
 
 /**
  * @typedef {{ href: string, label: string }} Link

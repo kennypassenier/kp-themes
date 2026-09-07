@@ -32,7 +32,9 @@ const OUT = new URL('../examples/', import.meta.url);
 // verbatim. Kenny found it on the published site on 2026-09-07 and chose
 // to load them: a page that exists to show what a theme looks like shows
 // it whole.
-const SHEETS = ['themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
+// fonts.css joined at round six's C4 (T19): a page that exists to show a
+// theme shows it in its own face.
+const SHEETS = ['fonts.css', 'themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
 
 /**
  * @param {string} title

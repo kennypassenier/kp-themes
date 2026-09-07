@@ -79,6 +79,7 @@ node gates/check-register-coverage.mjs
 
 echo "→ the shipped fonts: licence, reserved names, budget (T19, AR39)"
 node gates/check-fonts.mjs
+node gates/generate-fonts-css.mjs --check
 
 echo "→ the tear matches its parameters (TH121, AR41)"
 node gates/generate-tear.mjs --check

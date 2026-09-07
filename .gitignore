@@ -12,3 +12,5 @@ SHA256SUMS
 # about a probe is noise, and a probe that reaches a commit is a mistake
 # the ignore below catches rather than hides.
 tests/tmp-*.spec.mjs
+# The release asset the workflow builds from fonts/ [AR39].
+fonts.tar

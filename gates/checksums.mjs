@@ -36,6 +36,7 @@ export const FILES = [
     'css/layout.css',
     'css/retro-register.css',
     'css/tailwind-bridge.css',
+    'css/fonts.css',
     'css/themes.css',
     'css/utilities.css',
     'dist/kp-themes.css',
@@ -65,7 +66,30 @@ export const FILES = [
     'js/theme-registry.js',
     'js/upload.js',
     'js/wizard.js',
+    // The shipped fonts [T19, AR39]: every file under fonts/ that
+    // fonts/families.json names — the faces, each family's LICENSE, the
+    // plan itself and the kanji list — derived rather than typed, because
+    // fifty-five hand-kept paths would be the 3.1.1 fault at scale.
+    ...fontFiles(),
 ];
+
+/**
+ * @returns {string[]} the paths under fonts/ a consumer copies, in a stable order
+ */
+export function fontFiles() {
+    /** @type {Record<string, any>} */
+    const families = JSON.parse(readFileSync(new URL('../fonts/families.json', import.meta.url), 'utf8'));
+    delete families['//'];
+    const out = ['fonts/families.json', 'fonts/jis-level-1.txt'];
+    for (const [slug, family] of Object.entries(families)) {
+        if (family.reservedFontName && !family.subset) continue;
+        out.push(`fonts/${slug}/LICENSE`);
+        for (const face of family.faces) {
+            for (const script of face.scripts) out.push(`fonts/${slug}/${face.file}${face.scripts.length > 1 ? `-${script}` : ''}.woff2`);
+        }
+    }
+    return out;
+}
 
 export function checksums() {
     return (

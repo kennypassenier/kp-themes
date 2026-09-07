@@ -48,6 +48,11 @@ jobs:
         run: npm run gates
       - name: Checksums
         run: npm run checksums
+      # The shipped fonts as one asset [T19, AR39]: every woff2 and LICENSE
+      # under fonts/, with families.json, so a consumer that vendors a
+      # stylesheet takes the faces in one download.
+      - name: Fonts
+        run: tar -cf fonts.tar fonts
       # A draft, never a published release. Pushing a tag is a technical
       # act; publishing is Kenny's, and the two should not be the same
       # keystroke. A draft can also be deleted without leaving a hole in
@@ -60,5 +65,5 @@ jobs:
             --draft \
             --title "${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md \
-            SHA256SUMS MIGRATION.md css/themes.css css/components.css \
-            dist/kp-themes.css dist/kp-themes.js
+            SHA256SUMS MIGRATION.md css/themes.css css/components.css css/fonts.css \
+            dist/kp-themes.css dist/kp-themes.js fonts.tar

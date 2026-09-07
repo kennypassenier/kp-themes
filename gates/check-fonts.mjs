@@ -44,7 +44,7 @@ const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 
 export const REDISTRIBUTABLE = ['OFL-1.1', 'Apache-2.0', 'UFL-1.0'];
 
 /**
- * @typedef {{ family: string, licence: string, reservedFontName: boolean, subset: boolean, themes: string[], scripts: string[] }} Family
+ * @typedef {{ family: string, licence: string, reservedFontName: boolean, subset: boolean, themes: string[], scripts: string[], why?: string }} Family
  */
 
 /**
@@ -65,6 +65,14 @@ export function audit(families, readDir, themeFamilies, budgetBytes, onDisk) {
     const bytesBySlug = new Map();
     for (const [slug, entry] of Object.entries(families)) {
         const dir = readDir(slug);
+        // A family with a Reserved Font Name ships nothing until R6-Q1 is
+        // decided: listed, with its reason, and not a fault — as long as it
+        // really ships nothing.
+        if (entry.reservedFontName && !entry.subset) {
+            if (dir !== null && dir.files.length > 0)
+                problems.push(`${entry.family}: declares a Reserved Font Name and ships ${dir.files.length} file(s) anyway (reserved)`);
+            continue;
+        }
         if (dir === null || dir.files.length === 0) {
             problems.push(`${entry.family}: fonts/${slug}/ has no woff2 file (missing)`);
             continue;
@@ -172,7 +180,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // The stylesheet and the listing must agree: a family declared and
     // not listed has no licence record; one listed and not declared is a
     // file nobody can load.
-    const listed = Object.values(families).map((f) => f.family);
+    const listed = Object.values(families)
+        .filter((f) => !(f.reservedFontName && !f.subset))
+        .map((f) => f.family);
     for (const family of declared)
         if (!listed.includes(family)) problems.push(`${family}: declared in css/fonts.css and not listed in fonts/families.json`);
     for (const family of listed)

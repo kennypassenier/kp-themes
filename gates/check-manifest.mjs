@@ -61,9 +61,32 @@
 //
 // Usage: node gates/check-manifest.mjs
 
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import process from 'node:process';
 import { FILES } from './checksums.mjs';
+
+/**
+ * Every file under a directory, recursively, as repository-relative paths.
+ *
+ * @param {URL} url @param {string} prefix
+ * @returns {string[]}
+ */
+function filesUnder(url, prefix) {
+    /** @type {string[]} */
+    const out = [];
+    /** @type {import('node:fs').Dirent[]} */
+    let entries = [];
+    try {
+        entries = readdirSync(url, { withFileTypes: true });
+    } catch {
+        return out;
+    }
+    for (const entry of entries) {
+        if (entry.isDirectory()) out.push(...filesUnder(new URL(`${entry.name}/`, url), `${prefix}/${entry.name}`));
+        else out.push(`${prefix}/${entry.name}`);
+    }
+    return out.sort();
+}
 
 /**
  * The export targets a vendoring consumer copies, from `exports` alone.
@@ -76,12 +99,20 @@ export function copyableExports(pkg, { follow = true } = {}) {
     /** @type {Set<string>} */
     const found = new Set();
     for (const [name, entry] of Object.entries(pkg.exports ?? {})) {
-        // A pattern is a directory, and a directory is a glob.
-        if (name.includes('*')) continue;
         // `default` is the file that runs; `types` is the declaration
         // beside it, which is npm's business and not a vendored file.
         const target = typeof entry === 'string' ? entry : entry.default;
-        if (typeof target !== 'string' || target.includes('*')) continue;
+        if (typeof target !== 'string') continue;
+        // A pattern is a directory export (`./fonts/*` → `./fonts/*`): it
+        // says everything under that directory is a consumer's to copy —
+        // the faces, each family's LICENSE, the plan and the kanji list
+        // [T19, AR39] — so every file under it joins the expected set.
+        if (name.includes('*') || target.includes('*')) {
+            const dir = target.replace(/^\.\//, '').replace(/\/\*$/, '');
+            if (!/^(css|js|dist|fonts)$/.test(dir)) continue;
+            for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
+            continue;
+        }
         const path = target.replace(/^\.\//, '');
         // `fonts/` joined the rule at round six's C0 (AR39): a shipped face
         // is a file a consumer copies exactly like a stylesheet, and the
