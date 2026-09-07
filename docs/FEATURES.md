@@ -282,6 +282,11 @@ removing the thing it measures before it is trusted (KT3).
 | TH107 | The confirmation dialog as the default for destructive actions (4.0.0) | Essential | In both channels a click on a destructive button opens a `<dialog>` carrying the attribute's text; Escape and Cancel do nothing; Confirm performs the action once; focus returns to the button; the existing arm-then-act tests stay green against the variant. The contract check that refuses a destructive button with neither confirmation nor undo keeps applying |
 | TH108 | A migration note naming what consumers may delete | Essential | Every class the note names exists in the package — a gate reads the table and compares it with the generated class list, so the note cannot point at something that is not there |
 | TH109 | Zero inline styles on the rebuilt consumer pages | Essential | A gate reads every example page and goes red on a `style` attribute or a page-local `<style>` block, with one exception list for what demonstrably cannot be avoided (the anchor names the popovers need), each with its reason. This is the round's exit criterion for the layout layer |
+| TH110 | The cyberpunk register reaches the package's own buttons | Essential | A `.kp-button` under cyberpunk measures differently from the same button under formal, in both channels, and the test goes red when the register's rule is removed. Measured before rating: `.kp-button` reads `box-shadow: none` while the same button with `data-slot="button"` reads the magenta shadow, and `css/components.css` carries zero `data-slot` references. The card half is already correct |
+| TH111 | A size scale on the button | Essential | Three sizes measurably different in height in all 24 themes, each reading the typography scale R0-TYPO declared, and none below the 24px WCAG 2.5.8 asks of a pointer target — the floor the density mode already respects |
+| TH112 | The allow-git contradiction resolved | Essential | Documentation, so no browser test: the bar is that a reader of both documents gets one answer rather than two. `README.md:543` documents the setting; `docs/SCOPE.md:323` says the requirement was dropped on 2026-09-04 because nothing is fetched over npm. The README is the correct half — the git route exists and JobTracker takes it — so the scope statement carries a dated correction rather than being quietly rewritten |
+| TH113 | The same overflow shape on four more components | Essential | None of `.kp-button`, `.kp-badge`, `.kp-tag` or `.kp-health` pushes the page sideways at 320 and 360px with an unbroken value, in both browsers, and each test goes red when its own rule is removed. Measured at 360px before rating: 607, 485, 483 and 581px respectively, all four scrolling the page; `.kp-icon-button` stays at 36px because it has a fixed size |
+| TH114 | The clip trap in the package's own scroll regions | Essential | An absolutely positioned element inside each of `.kp-table-wrap`, `.kp-diff` and the `<pre>` rule is visible past that box, or the guide says in words that it cannot be and why. Measured before rating: `.kp-table-wrap` does clip — `overflow-x: auto` computes `overflow-y` to `auto` — but nothing positioned lives inside one today, so this was rated as a latent hazard rather than a defect. Kenny rated it Essential anyway |
 
 **TH104 amended 2026-09-06, at the Phase 4 gate.** Converting the movable
 grid and the nav bar to container queries needs a wrapper element in markup
@@ -302,3 +307,55 @@ the checksum file covers every file a consumer can copy, not a hand-picked
 subset (the fault recorded as KT9). M2, M3 and M4 were re-put and confirmed
 unchanged: no ecosystem integration, git is the backup with no runtime
 state, and the storage key stays `theme`.
+
+
+## Round five — the three that waited for a major (2026-09-07)
+
+Eight features, **all eight Essential**, nothing Desired, nothing Later,
+nothing dropped.
+
+Three were carried in already rated and frozen, each waiting on a major:
+**TH104** (container queries beyond the tables), **TH107** (the
+confirmation dialog) and **D3** (`STRINGS_NL` leaves the exports). They
+are not re-rated; they are built.
+
+Five were rated in this round's Phase 2, all Essential: **TH110**,
+**TH111**, **TH112**, **TH113** and **TH114**. The first three came out
+of the four kp-soft reports after this project measured them itself
+(P1 did not reproduce and produced nothing to build; P4 became TH111).
+The last two are Claude's own proposals, both measured before being put:
+TH113 is a real fault on four components, TH114 a latent hazard that
+Kenny rated Essential over a recommendation of Later.
+
+**M1, M3 and M4 were re-put and confirmed unchanged.**
+
+**M2 replaced, 2026-09-07.** The standing answer said there was no
+ecosystem integration and named kyu as the only candidate. Kenny: *"kyu
+is geen releasekanaal meer. momenteel wordt chassis-rs gebruikt om onze
+thema's in te bakken in onze Rust API applicaties."* Measured in
+chassis-rs rather than assumed:
+`crates/chassis/src/shell/assets.rs` bakes **eight** of this package's
+files into the binary with `include_bytes!` — `themes.css`,
+`components.css` and six `js/` modules — and serves them under a content
+hash. It pins one version constant (`KP_THEMES_VERSION = "3.1.0"`) and
+keeps a `KP_THEMES.sha256` built from **our** release manifest, checked
+by a unit test so their gate holds offline. All eight copies verify
+against our `v3.1.0` tag byte-for-byte.
+
+So the answer is: **there is an integration, and it is chassis-rs.** Its
+shape is vendoring-with-verification — this package ships a tag plus a
+checksum file, chassis-rs copies eight files and checks them offline
+against it. kyu as a release channel is dropped as a candidate. Revisit
+when a consumer needs something other than a verified copy.
+
+Two things follow for this round. chassis-rs sits two releases behind,
+and its own notes say it waits on us: *"the kp-themes hold (layout
+utilities, theme revert, confirm dialog)"*. Two of those three shipped in
+3.2.0; the third is TH107. And their manifest records that they had to
+take `strings.js` from the tag by hand because our release manifest did
+not list it although `theme-picker.js` imports it — which is exactly the
+fault repaired as R4-LOCALE on 2026-09-07. That handwork disappears at
+the next release.
+
+**Frozen 2026-09-07.** Kenny confirmed the tally (F1: Akkoord) and froze
+the list (F2: Bevriezen). Changes from here go through mini-rounds only.
