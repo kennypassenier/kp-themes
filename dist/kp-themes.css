@@ -2987,8 +2987,12 @@
     :focus-visible {
         /* The same token the components read; the global ring ignored it [KT6]. */
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 2px var(--focus-ring);
+        /* The offset is the width of the inner ring, so the two touch — one
+     * knob rather than two literals that can drift, and the same knob
+     * .kp-button's composed ring reads [AR30, KT6]. Default 2px, which is
+     * what both lines said before. */
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     /* DI6, actually reaching the browser.
@@ -3651,6 +3655,33 @@
  * contrast gate. No component invents a colour.
  * ==================================================================== */
 
+    /* The overflow floor, written once [TH113, AR32].
+ *
+ * Five inline-flex components that held a single unbroken value at its
+ * full width and pushed the document sideways with it. Measured at 360px
+ * before this rule: .kp-button 607, .kp-badge 485, .kp-tag 483,
+ * .kp-health 581. A key, a hash or an id has no space to wrap at, so the
+ * value has to be allowed to break rather than the layout.
+ *
+ * One rule the five share rather than five copies of it: AR32, and the
+ * reason is that .kp-copyable already grew its own copy in 3.2.0 and the
+ * other four did not inherit it. overflow-wrap is inherited, so the
+ * anonymous flex item that carries the text gets it from here -- and
+ * `anywhere` rather than `break-word` because only `anywhere` takes the
+ * min-content contribution down, which is what a flex item's automatic
+ * minimum size is measured against.
+ *
+ * .kp-icon-button is deliberately not in this list: it has a fixed size.
+ */
+    .kp-button,
+    .kp-badge,
+    .kp-tag,
+    .kp-health,
+    .kp-copyable {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
     /* --- Button [TH1] ---------------------------------------------------- */
 
     .kp-button {
@@ -3674,6 +3705,27 @@
      * down and right — brutalism's signature [TH85]. 0px everywhere else,
      * which paints nothing: the knob is the only theme-shaped thing here. */
         box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* The focus ring composed with the offset shadow, not instead of it
+ * [AR30, DI2].
+ *
+ * The focus indicator is two parts: an outline in --focus-ring-contrast
+ * and an inner ring in --focus-ring (css/_rules.css, `:focus-visible`, in
+ * @layer kp.base). The rule above sets box-shadow in @layer kp.components
+ * for the brutalist offset, and a later layer wins whatever the
+ * specificity — so on every button in every theme the inner half read
+ * `0px 0px 0px 0px`, which paints nothing. Half a ring is exactly what
+ * DI2's two-part design exists to prevent.
+ *
+ * Restated here with both layers, the ring first so it is not buried
+ * under the offset. --kp-focus-ring-inner-width is the same knob the
+ * global rule reads, so the two halves cannot drift apart [KT6].
+ */
+    .kp-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -3759,6 +3811,39 @@
     .kp-button--ghost:hover:not(:disabled) {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
+    }
+
+    /* The size scale [TH111, T15].
+ *
+ * Modifier classes rather than a data- attribute, frozen as T15: the
+ * button already carries four modifiers and a fifth axis through a
+ * second mechanism would make it the one component mixing both styles.
+ *
+ * Three steps, each a knob over the scale rather than a literal
+ * [KT6]: the height derives from --kp-control-height, the padding from
+ * the spacing scale, and the type from the text scale. Retuning a scale
+ * moves all three; retuning one knob moves one step.
+ *
+ * The unmodified button is the middle step and keeps `font: inherit`,
+ * so a consumer who sets a type size on a region still gets a button
+ * that matches the text around it.
+ *
+ * The 1.75rem inside max() is a literal for the same reason
+ * css/_density.css writes one: 28px at a 16px root is above the 24px
+ * WCAG 2.5.8 asks of a pointer target, and the small button may not
+ * fall through that floor however the scale is tuned. Under compact
+ * density it sits ON the floor, which is the floor doing its job.
+ */
+    .kp-button--sm {
+        min-height: var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding: var(--kp-button-padding-block-sm, var(--kp-space-xs, 0.25rem)) var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
+    }
+
+    .kp-button--lg {
+        min-height: var(--kp-button-height-lg, calc(var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem)));
+        padding: var(--kp-button-padding-block-lg, var(--kp-space-sm, 0.5rem)) var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem));
+        font-size: var(--kp-button-text-lg, calc(var(--kp-text-md, 1rem) * 1.125));
     }
 
     /* --- Badge [TH2] ----------------------------------------------------- */
@@ -5290,19 +5375,16 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        /* A long value does not push the page sideways [DI11]. It was an
-     * inline-flex with nothing to stop it: a 44-character key measured
-     * 344px inside a 360px viewport and put the copy button at 421.
-     * Hidden until the documentation site stopped wrapping its examples
-     * in a scroll box, which is the kind of thing a scroll box hides. */
-        max-inline-size: 100%;
+        /* The 3.2.0 copy of the overflow floor -- `max-inline-size: 100%`
+     * here and `overflow-wrap: anywhere` on the value -- moved to the
+     * shared rule above the button [AR32]. It was found the same way the
+     * other four were: a 44-character key measured 344px inside a 360px
+     * viewport and put the copy button at 421, hidden until the
+     * documentation site stopped wrapping its examples in a scroll box. */
     }
 
     .kp-copyable__value {
         font-family: var(--font-mono, ui-monospace, monospace);
-        /* Break the value rather than the layout: a key, a hash or an id
-     * has no spaces to wrap at. */
-        overflow-wrap: anywhere;
         min-inline-size: 0;
     }
 
@@ -5913,14 +5995,29 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch, 0px)), calc(100% - var(--fx-notch, 0px)) 100%, 0 100%);
     }
 
-    [data-theme='cyberpunk'] [data-slot='button'] {
+    /* The square corner reaches this package's own button too [TH110].
+   Every button rule here selected [data-slot='button'] alone -- a shadcn
+   markup hook that css/components.css never writes -- so the register
+   reached no .kp-button at all. */
+    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-button {
         border-radius: 0;
+    }
+
+    /* The bevel does NOT [AR30]. clip-path clips the focus outline away
+   with the corner: measured in painted pixels, both browsers, green
+   784 -> 0 and red 912 -> 0. Hooking .kp-button here as TH110 was
+   drafted would have removed the last visible focus indicator from
+   every button under cyberpunk. The bevel stays on the elements that
+   already carried it, and .fx-notch is the way to ask for it. */
+    [data-theme='cyberpunk'] [data-slot='button'] {
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
     }
 
     /* CP-F2: button "charge" - a skewed light band sweeps through on
    hover. Background-position only; no stacking-context tricks. */
-    [data-theme='cyberpunk'] [data-slot='button'] {
+    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-button {
         background-image: linear-gradient(105deg, transparent 0 42%, hsl(from var(--accent) h s l / 0.22) 42% 58%, transparent 58% 100%);
         background-size: 280% 100%;
         background-position: 105% 0;
@@ -5928,12 +6025,14 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-slot='button'] {
+        [data-theme='cyberpunk'] [data-slot='button'],
+        [data-theme='cyberpunk'] .kp-button {
             transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
         }
     }
 
-    [data-theme='cyberpunk'] [data-slot='button']:hover {
+    [data-theme='cyberpunk'] [data-slot='button']:hover,
+    [data-theme='cyberpunk'] .kp-button:hover {
         background-position: -5% 0;
     }
 

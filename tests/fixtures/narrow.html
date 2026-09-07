@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The overflow floor — five components with one unbroken value</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- One 44-character value with nothing to wrap at, in each of the
+             five components AR32 puts on the shared rule. No stylesheet of
+             this page's own: the floor under test has to come from the
+             package (rule 7e, KT3).
+
+             Each case is removed independently by the suite, so a component
+             that still pushes the page sideways is named on its own rather
+             than taking the other four down with it. -->
+        <p data-case="button">
+            <button type="button" class="kp-button" data-test="button">AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE</button>
+        </p>
+
+        <p data-case="badge"><span class="kp-badge" data-test="badge">AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE</span></p>
+
+        <p data-case="tag">
+            <span class="kp-tag" data-test="tag"
+                >AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE
+                <button type="button" class="kp-tag__remove" aria-label="Remove">&times;</button>
+            </span>
+        </p>
+
+        <p data-case="health">
+            <span class="kp-health" data-state="ok" data-test="health">
+                <span class="kp-health__dot" aria-hidden="true"></span>
+                AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE
+            </span>
+        </p>
+
+        <p data-case="copyable">
+            <span class="kp-copyable" data-test="copyable">
+                <span class="kp-copyable__value">AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE</span>
+                <button type="button" class="kp-button kp-button--ghost kp-copyable__button">Copy</button>
+            </span>
+        </p>
+    </body>
+</html>

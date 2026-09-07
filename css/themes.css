@@ -2982,8 +2982,12 @@
     :focus-visible {
         /* The same token the components read; the global ring ignored it [KT6]. */
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 2px var(--focus-ring);
+        /* The offset is the width of the inner ring, so the two touch — one
+     * knob rather than two literals that can drift, and the same knob
+     * .kp-button's composed ring reads [AR30, KT6]. Default 2px, which is
+     * what both lines said before. */
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     /* DI6, actually reaching the browser.

@@ -1005,3 +1005,14 @@ generalizes to `~/Projects/dev-procedure/STANDING_RULES.md` is decided
 at the round's Phase 10 retrospective, together with KT7 and KT8 (field
 9). The measurement in field 7 stays open until kp-themes' next `v*` tag
 push.
+
+**Closed 2026-09-07.** That tag push was `v3.2.0`, and the measurement
+came out right: the release was built by `.github/workflows/release.yml`
+rather than by hand, and its draft carries exactly the six assets the
+workflow uploads — nothing hand-picked — with a `SHA256SUMS` of 34 lines
+covering every copyable file, against the ten of the release this
+correction is about. Recorded in `docs/MINI_ROUNDS.md` row KT9 and in
+commit `6f0f9a3`. This closing note is written here because the
+correction's own header says a correction is closed only when field 7 has
+happened, and until now that closure lived only in the queue document —
+found by the round-three retrospective's evidence pass on 2026-09-07.

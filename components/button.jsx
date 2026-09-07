@@ -30,6 +30,7 @@ import { useControllable } from '../hooks/use-controllable.js';
 /**
  * @typedef {object} ButtonProps
  * @property {'default'|'primary'|'destructive'|'ghost'} [variant]
+ * @property {'sm'|'md'|'lg'} [size]  The size scale [TH111]. Default 'md', the unmodified button.
  * @property {string} [confirm]  Phrase shown on the first click; the second click acts [DI10].
  * @property {() => void} [onUndo]  Offered instead of a confirmation — SC 3.3.4 accepts either. Called if the person takes the undo.
  * @property {number} [undoMs]  How long the undo is offered. Default UNDO_MS.
@@ -54,6 +55,7 @@ import { useControllable } from '../hooks/use-controllable.js';
 function ButtonInner(
     {
         variant = 'default',
+        size = 'md',
         confirm,
         onUndo,
         undoMs = UNDO_MS,
@@ -158,7 +160,11 @@ function ButtonInner(
         }
     };
 
-    const classes = ['kp-button', variant === 'default' ? '' : `kp-button--${variant}`, className].filter(Boolean).join(' ');
+    // 'md' is the unmodified button, so it adds no class: the middle
+    // step of the scale is what .kp-button already was [TH111].
+    const classes = ['kp-button', variant === 'default' ? '' : `kp-button--${variant}`, size === 'md' ? '' : `kp-button--${size}`, className]
+        .filter(Boolean)
+        .join(' ');
 
     return (
         <>
