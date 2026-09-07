@@ -136,6 +136,10 @@
             "types": "./js/diagnostics.d.ts",
             "default": "./js/diagnostics.js"
         },
+        "./js/effects": {
+            "types": "./js/effects.d.ts",
+            "default": "./js/effects.js"
+        },
         "./hooks/controllable": {
             "types": "./hooks/use-controllable.d.ts",
             "default": "./hooks/use-controllable.js"
@@ -170,7 +174,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:ids && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:ids && npm run check:hooks && npm run check:register-coverage && npm run check:fonts && npm run check:tear && npm run check:texture && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -204,7 +208,13 @@
         "check:package": "node gates/check-package.mjs",
         "check:manifest": "node gates/check-manifest.mjs",
         "generate:types": "node gates/check-types.mjs --write",
-        "check:types:consumer": "node gates/check-types.mjs"
+        "check:types:consumer": "node gates/check-types.mjs",
+        "check:hooks": "node gates/check-hooks.mjs",
+        "check:register-coverage": "node gates/check-register-coverage.mjs",
+        "check:fonts": "node gates/check-fonts.mjs",
+        "generate:tear": "node gates/generate-tear.mjs",
+        "check:tear": "node gates/generate-tear.mjs --check",
+        "check:texture": "node gates/check-texture.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",

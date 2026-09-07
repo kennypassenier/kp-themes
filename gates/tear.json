@@ -1,0 +1,12 @@
+{
+    "//": "The razor tear's generator parameters [TH121, AR41]. A contract value: changing any number here changes the shape of a released theme, which S20 forbids inside a version. The LCG constants are Numerical Recipes' (1664525, 1013904223 mod 2^32), chosen because s * 1664525 stays under 2^53 so the sequence is exact in every JavaScript engine. The two seeds are the two tears of the approved demo (S46); the run, cut and notch numbers were read from it.",
+    "viewBox": { "width": 1920, "height": 44 },
+    "seeds": { "tear": 7, "alt": 23 },
+    "lcg": { "a": 1664525, "c": 1013904223, "m": 4294967296 },
+    "ridge": { "yMin": 12, "yMax": 22, "depth": 26 },
+    "run": { "min": 40, "max": 180 },
+    "cuts": { "deep": 0.18, "notch": 0.32 },
+    "widths": { "deep": [14, 32], "notch": [6, 14], "step": [8, 18] },
+    "notchDrop": 8,
+    "line": { "opacity": 0.45, "offset": -3 }
+}

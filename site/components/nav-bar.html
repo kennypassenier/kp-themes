@@ -39,6 +39,7 @@
                         <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
                         <ul class="sc-nav__list">
                             <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -152,7 +153,9 @@
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-nav-side</code></td><td>written</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>

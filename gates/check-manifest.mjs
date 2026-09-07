@@ -83,8 +83,11 @@ export function copyableExports(pkg, { follow = true } = {}) {
         const target = typeof entry === 'string' ? entry : entry.default;
         if (typeof target !== 'string' || target.includes('*')) continue;
         const path = target.replace(/^\.\//, '');
-        if (!/^(css|js|dist)\//.test(path)) continue;
-        if (!/\.(css|js)$/.test(path)) continue;
+        // `fonts/` joined the rule at round six's C0 (AR39): a shipped face
+        // is a file a consumer copies exactly like a stylesheet, and the
+        // critic showed this gate REFUSED font files as written.
+        if (!/^(css|js|dist|fonts)\//.test(path)) continue;
+        if (!/\.(css|js|woff2)$/.test(path)) continue;
         found.add(path);
     }
     if (follow) for (const path of [...found]) reachableFrom(path, found);
@@ -110,13 +113,32 @@ function reachableFrom(entry, found) {
         return;
     }
     const dir = entry.slice(0, entry.lastIndexOf('/'));
-    for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) {
-        const target = normalise(`${dir}/${match[1]}`);
-        if (!/\.(css|js)$/.test(target)) continue;
+    for (const spec of references(source)) {
+        const target = normalise(`${dir}/${spec}`);
+        if (!/\.(css|js|woff2)$/.test(target)) continue;
         if (found.has(target)) continue;
         found.add(target);
         reachableFrom(target, found);
     }
+}
+
+/**
+ * The relative files a source refers to: `import`/`from` specifiers in a
+ * module, and `url(…)` references in a stylesheet — `url(../fonts/x.woff2)`
+ * in css/fonts.css is a file the consumer who copies the stylesheet has
+ * to copy with it (AR39). Only relative references count: a bare
+ * specifier is a dependency (this package has none at runtime) and a
+ * `data:` URI carries its bytes in the stylesheet.
+ *
+ * @param {string} source
+ * @returns {string[]}
+ */
+export function references(source) {
+    /** @type {string[]} */
+    const out = [];
+    for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) out.push(match[1]);
+    for (const match of source.matchAll(/url\(\s*['"]?(\.[^'")]+)['"]?\s*\)/g)) out.push(match[1]);
+    return out;
 }
 
 /**

@@ -70,6 +70,21 @@ node gates/generate-examples.mjs --check
 echo "→ one ID means one thing [KT10]"
 node gates/check-ids.mjs
 
+echo "→ every theme answers every hook (S45, AR36)"
+node gates/check-hooks.mjs
+
+echo "→ the register answers every component root (TH124, AR37)"
+node gates/check-register-coverage.mjs
+
+echo "→ the shipped fonts: licence, reserved names, budget (T19, AR39)"
+node gates/check-fonts.mjs
+
+echo "→ the tear matches its parameters (TH121, AR41)"
+node gates/generate-tear.mjs --check
+
+echo "→ the texture layer is felt, not seen (DI9, AR46)"
+node gates/check-texture.mjs
+
 echo "→ an example page carries the hooks its descriptor asks for"
 node gates/check-examples-wired.mjs
 

@@ -44,3 +44,26 @@ Rated Later by Kenny at round six's Phase 2, round two. `.fx-pulse` in
 `css/cyberpunk-register.css` runs `infinite`; the proposal is a knob
 `--fx-pulse-cycles` with default 3 and the pulse in TH129's DI5 report.
 Untouched until Kenny reopens it; TH129 reports its flash rate regardless.
+
+## MR-R6-COMPARE · The concept demo side by side, old against new (2026-09-07)
+
+Kenny, during C0: "Kunnen we de demopagina's net zoals de showcase pagina
+in de helft in twee kappen? Dan kunnen we de oude vs de nieuwe versie
+links vs rechts vergelijken." A request made in AFK mode, so it is
+recorded here and built at C5 rather than argued: the assembly milestone
+is the page Kenny opens to judge, and this is how he wants to judge it.
+
+**What it is.** A compare page beside the concept demo: two frames on
+one page, the left rendering the concept page under the 4.0.0
+stylesheets of the same theme, the right under the current ones,
+`?theme=<name>` selecting both. The 4.0.0 stylesheets are the release's
+own files, vendored under `showcase/baseline/4.0.0/` and verified by a
+gate against the committed copy of that release's `SHA256SUMS` — the
+package comparing itself to its own promise (S20). Same name on both
+sides, because the new cyberpunk replaces the old under its name (S39).
+
+**Where it lands.** TH126 grows by the compare page; C5's exit criterion
+gains "the compare page shows 4.0.0 on the left and the current build on
+the right for the theme in the query, and Kenny has opened it". The
+frozen list is amended by this note rather than reopened, because the
+request extends a feature it does not change.

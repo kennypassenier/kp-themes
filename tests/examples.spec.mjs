@@ -73,7 +73,7 @@ const shape = (page, root) =>
     }, root);
 
 test.describe('the ten example pages', () => {
-    test('the descriptor list holds exactly the ten pages TH98 names', () => {
+    test('the descriptor list holds the ten pages TH98 names and the concept demo', () => {
         expect(EXAMPLES.map((e) => e.id)).toEqual([
             'app-shell',
             'login',
@@ -85,6 +85,10 @@ test.describe('the ten example pages', () => {
             'pricing-and-testimonials',
             'article',
             'profile',
+            // The concept demo joined at round six's C0 [TH126, AR42]: the
+            // page every new theme is tried on, rendered under a theme by
+            // `?theme=<name>`.
+            'concept',
         ]);
     });
 

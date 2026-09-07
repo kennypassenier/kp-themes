@@ -7,6 +7,7 @@
 
 import { readdirSync, readFileSync } from 'node:fs';
 import process from 'node:process';
+import { TIMINGS } from '../js/effects.js';
 
 /**
  * WCAG 2.2 SC 2.3.1 Three Flashes or Below Threshold, Level A. Standards
@@ -189,6 +190,38 @@ export function unsubscribedPreferenceReads(dir) {
     return problems;
 }
 
+/**
+ * The table pass [TH129, AR40]: every keyframe a stylesheet declares has
+ * a row in TIMINGS, and where the row says "opacity" its steps are the
+ * keyframe's own stops, so the table the report is computed from cannot
+ * drift from the CSS it describes. Per S42 nothing is corrected here: a
+ * row over the threshold is a line in the report for Kenny, and what
+ * fails is a missing or mismatched row, because a table with a hole is
+ * not a report.
+ *
+ * @param {string} source a stylesheet
+ * @param {Readonly<Record<string, Readonly<{ property: string, luminanceSteps: readonly number[] }>>>} timings
+ * @returns {string[]} problems
+ */
+export function tableProblems(source, timings) {
+    /** @type {string[]} */
+    const problems = [];
+    const frames = parseOpacityKeyframes(source);
+    for (const m of source.matchAll(/@keyframes\s+([\w-]+)\s*\{/g)) {
+        const row = timings[m[1]];
+        if (!row) {
+            problems.push(`@keyframes ${m[1]} has no row in TIMINGS (js/effects.js) — the DI5 report cannot describe it.`);
+            continue;
+        }
+        if (row.property !== 'opacity') continue;
+        const expected = JSON.stringify(frames.get(m[1])?.map((s) => s.opacity) ?? []);
+        const declared = JSON.stringify(row.luminanceSteps);
+        if (expected !== declared)
+            problems.push(`@keyframes ${m[1]} steps opacity ${expected} but TIMINGS says ${declared} — the table drifted from the keyframe.`);
+    }
+    return problems;
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
     let failed = 0;
     let checked = 0;
@@ -251,6 +284,26 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         }
     }
 
+    // The table pass [TH129, AR40], per stylesheet.
+    for (const rel of CSS) {
+        const name = rel.replace('../', '');
+        for (const problem of tableProblems(readFileSync(new URL(rel, import.meta.url), 'utf8'), TIMINGS)) {
+            checked++;
+            failed++;
+            console.error(`${name}: ${problem}`);
+        }
+    }
+    /** @type {string[]} */
+    const report = [];
+    for (const [effect, row] of Object.entries(TIMINGS)) {
+        const stops = row.luminanceSteps.map((opacity, i) => ({ stop: i, opacity }));
+        const rate = row.property === 'opacity' ? flashesPerSecond(stops, row.durationMs) : 0;
+        const loop = row.cycles === Infinity ? 'loops' : `${row.cycles}×`;
+        report.push(
+            `  ${effect}: ${row.property}, ${row.durationMs}ms ${loop} → ${rate.toFixed(2)}/s${rate > MAX_FLASHES_PER_SECOND ? '  OVER THE THRESHOLD (reported, S42)' : ''}`,
+        );
+    }
+
     const fxDir = new URL('../fx/', import.meta.url).pathname.replace(/\/$/, '');
     for (const p of unsubscribedPreferenceReads(fxDir)) {
         checked++;
@@ -271,4 +324,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
     console.log(`Motion: ${checked} animation(s) under the flash threshold, none outside a reduced-motion guard.`);
     for (const s of skipped) console.log(`  out of scope: ${s}`);
+    console.log(`DI5 report, ${report.length} effect(s) from TIMINGS [TH129]:`);
+    for (const line of report) console.log(line);
 }

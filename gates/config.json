@@ -30,5 +30,9 @@
         "widthsWhy": "320 is the narrowest viewport WCAG SC 1.4.10 asks a page to reflow into, 768 is the tablet edge where a side column drops below, 1280 is the desktop width the rest of the browser suite already uses.",
         "minBlockGap": 2,
         "minBlockGapWhy": "The fault is two blocks TOUCHING — a gap of zero, which is what the chassis kit shipped. Two pixels is the floor that catches that without turning a deliberate 4px heading margin into a violation; it is not a claim that 2px is comfortable spacing."
+    },
+    "fontsBudgetBytes": {
+        "value": 1500000,
+        "why": "AR39: the shipped faces one theme names may weigh this much together. The critic measured 9-18 kB per latin woff2 face and priced the first draft's 3 MB as slack; nishiki and tazhib ship a script subset beside latin and are the themes this number is really about. An operational knob (standing rule 27), not a standard."
     }
 }

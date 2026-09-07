@@ -17,6 +17,7 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
+import { THEMES } from '../js/theme-registry.js';
 
 const OUT = new URL('../examples/', import.meta.url);
 
@@ -35,10 +36,13 @@ const SHEETS = ['themes.css', 'components.css', 'layout.css', 'utilities.css', '
  * @param {string} body
  * @returns {string}
  */
-function page(title, body) {
+function page(title, body, { themeFromQuery = false } = {}) {
     const links = SHEETS.map((sheet) => `        <link rel="stylesheet" href="../css/${sheet}" />`).join('\n');
+    // The concept demo opts in to `?theme=<name>` [AR42]; no other page
+    // does, so a query parameter never changes a page that did not ask.
+    const html = themeFromQuery ? '<html lang="en" data-kp-theme-from-query>' : '<html lang="en">';
     return `<!doctype html>
-<html lang="en">
+${html}
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -77,7 +81,7 @@ function index() {
                 el(
                     'ul',
                     { class: 'kp-stack' },
-                    EXAMPLES.map((example) =>
+                    EXAMPLES.filter((example) => example.id !== 'concept').map((example) =>
                         el(
                             'li',
                             {},
@@ -85,6 +89,27 @@ function index() {
                             el('p', { class: 'kp-text-muted kp-prose' }, example.note),
                         ),
                     ),
+                ),
+                // The concept demo, once per theme [TH126, S46, AR42]: one
+                // page, twenty-four URLs, so the approval form for a theme
+                // names a link Kenny opens rather than a file in git.
+                el('h2', {}, 'The concept demo, per theme'),
+                el(
+                    'p',
+                    { class: 'kp-prose kp-text-muted' },
+                    'The page every new theme is tried on before a token is written. The same file under every theme; ' +
+                        'a theme that has not been lifted yet answers the hooks quietly, and that is what quiet looks like.',
+                ),
+                el(
+                    'p',
+                    { class: 'kp-prose' },
+                    el('a', { href: 'concept.html' }, 'The concept demo'),
+                    ' under the theme this page is wearing, or under one of the twenty-four by name:',
+                ),
+                el(
+                    'ul',
+                    { class: 'kp-row' },
+                    THEMES.map((theme) => el('li', {}, el('a', { href: `concept.html?theme=${theme.name}` }, theme.label))),
                 ),
             ),
         ),
@@ -97,7 +122,7 @@ const pages = [
     ...EXAMPLES.map((example) => ({
         name: `examples/${example.id}.html`,
         file: `${example.id}.html`,
-        content: page(example.title, renderHTML(example.body, 8)),
+        content: page(example.title, renderHTML(example.body, 8), { themeFromQuery: example.id === 'concept' }),
     })),
 ];
 

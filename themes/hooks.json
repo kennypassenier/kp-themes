@@ -1,0 +1,43 @@
+{
+    "//": "The hook matrix [S45, AR36]. Every theme answers every hook: with a selector scoped to that theme (a rule containing [data-theme='<name>'] in the named stylesheet), or with the word quiet and a reason. The default row is the shared base answer; a theme row overrides one hook at a time. gates/check-hooks.mjs refuses a theme that leaves a hook unanswered, a non-quiet answer whose selector is not scoped to the theme, and a quiet answer without a reason.",
+    "hooks": {
+        "surface": "data-kp-surface: hero or app — which ground a section stands on [TH116]",
+        "emphasis": "<mark> — an emphasis the theme may reveal [TH120]",
+        "reveal": "data-kp-reveal: headline, emphasis or rule — something that arrives [TH119, TH122]",
+        "divider": "data-kp-divider — a section transition [TH121]",
+        "accent": "the heading accent: h1 and h2 inside a surface [TH122]"
+    },
+    "default": {
+        "surface": { "quiet": "one ground; both surfaces read the theme's own tokens (AR38 gives every theme the hero sources, C1)" },
+        "emphasis": { "css": "css/_rules.css", "selector": "mark" },
+        "reveal": { "quiet": "no reveal; the element stands in its rest state" },
+        "divider": { "quiet": "no divider; a plain section boundary" },
+        "accent": { "quiet": "no accent beyond the heading's own type" }
+    },
+    "themes": {
+        "formal": {},
+        "light": {},
+        "dark": {},
+        "cyberpunk": {},
+        "pastel": {},
+        "terminal": {},
+        "topo": {},
+        "high-contrast": {},
+        "sepia": {},
+        "blueprint": {},
+        "solstice": {},
+        "brutalism": {},
+        "deco": {},
+        "academia": {},
+        "phantom": {},
+        "ticker": {},
+        "nishiki": {},
+        "shade-light": {},
+        "shade-dark": {},
+        "mono": {},
+        "retro": {},
+        "grotesk": {},
+        "tazhib": {},
+        "nostromo": {}
+    }
+}

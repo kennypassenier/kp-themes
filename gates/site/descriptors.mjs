@@ -122,6 +122,54 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'effects',
+        title: 'Effects and surfaces',
+        group: 'Theming',
+        classes: [],
+        exports: [],
+        // The hook vocabulary of round six [S45, AR35]: a consumer marks
+        // what a passage IS and a theme decides what that looks like. The
+        // aliases claim the attributes js/effects.js writes and the one
+        // event it dispatches.
+        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider'],
+        intro: 'A small vocabulary of attributes that say what a passage is — a hero, an app surface, a divider, a phrase that should land — and leave what that looks like to the theme. A theme that has an answer paints it; a theme that has none stays quiet, and the page reads the same either way.',
+        whenToUse:
+            'Mark the structure of a page you want a theme to be able to dramatise: the opening surface, the working surface, the seam between them, the words that carry the point. Do not use the attributes to ask for a particular effect — there is no attribute for a glitch or a flicker, only for the thing a theme may glitch or flicker. A theme decides, and a reader who asked for reduced motion gets the words without the drama.',
+        examples: [
+            {
+                title: 'Two surfaces and the seam between them',
+                why: 'The hero and the app are two grounds in one page: a theme can give the hero its loud register and keep the app surface calm. The divider is the seam a theme may draw; the marked phrases are what a theme may reveal. The concept demo in the examples is this markup at full length, under every theme.',
+                markup: `
+<section data-kp-surface="hero">
+<h1 data-kp-reveal="headline">Signal in the noise</h1>
+<p>Every <mark>reading</mark> is time-stamped; every <mark>decision</mark> is logged.</p>
+</section>
+<div data-kp-divider></div>
+<section data-kp-surface="app">
+<p data-kp-reveal="emphasis">Dossier 7 — <mark>cleared</mark></p>
+<button type="button" class="kp-button" data-kp-reveal-trigger>Reveal</button>
+</section>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-surface="hero"', what: 'The opening surface: the one place a theme may be loud.' },
+            { name: 'data-kp-surface="app"', what: 'The working surface: forms, tables, cards. A theme keeps it readable before anything else.' },
+            { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
+            { name: 'data-kp-reveal', what: 'headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every="load" says otherwise.' },
+            { name: 'data-kp-reveal-trigger', what: 'A control that replays the reveals of the surface it sits in.' },
+            { name: '<mark>', what: 'Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.' },
+            { name: 'data-kp-effects', what: 'What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.' },
+            { name: 'kp-effect-unknown', what: 'The event the module dispatches on an element that names a surface or a reveal it does not know, so a typo is heard rather than silently quiet.' },
+        ],
+        accessibility: [
+            'Built in — every reveal keeps the words in the document from the start; an effect changes how they arrive, never whether they are there.',
+            'Built in — a reader who asked for reduced motion gets no reveal at all, and the marked phrases are shown at once.',
+            'Built in — a highlight on a marked phrase keeps the contrast of the text around it; the contrast gate measures the pair.',
+            'Yours — mark the structure, not the wish: the attributes name what a passage is, and a theme that has no answer leaves the page as it was.',
+        ],
+    },
+    {
         id: 'button',
         title: 'Button',
         group: 'Forms',

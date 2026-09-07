@@ -925,6 +925,97 @@ export const EXAMPLES = [
             ),
         ),
     },
+    {
+        // The concept demo [TH126, S46, AR42]: the standard page every new
+        // theme is tried on before a token is written. It carries no
+        // theme-specific markup — only the hooks of S45 — so the same
+        // descriptor is the demo for cyberpunk today and for synthwave
+        // next, and a theme that answers quietly shows exactly what quiet
+        // means. `?theme=<name>` picks the theme for one load (js/auto.js).
+        id: 'concept',
+        title: 'Concept demo',
+        note: 'The page every new theme is tried on: a navbar with a dropdown, a hero with a headline and an emphasised lede, a section rule, a form, a dossier card and a footer — written as meaning, answered by the theme.',
+        probes: ['[data-kp-surface="hero"]', '[data-kp-reveal="headline"]', '[data-kp-surface="app"]'],
+        body: shell(
+            {
+                links: [
+                    { href: '#main', label: 'Signal', current: true },
+                    { href: '#dossier', label: 'Dossier' },
+                    { href: '#contact', label: 'Contact' },
+                ],
+            },
+            el(
+                'section',
+                { class: 'kp-section kp-stack', 'data-kp-surface': 'hero', 'data-example': 'concept-hero' },
+                el('p', { class: 'kp-text-muted' }, 'Concept demo'),
+                el('h1', { class: 'kp-text-balance', 'data-kp-reveal': 'headline' }, 'Meaning in the markup, expression in the theme'),
+                el(
+                    'p',
+                    { class: 'kp-prose kp-text-muted' },
+                    'One page, twenty-four answers. The theme decides what a headline does when it arrives, what an emphasis ',
+                    el('mark', {}, 'looks like'),
+                    ' and how a section ',
+                    el('mark', {}, 'ends'),
+                    ' — and the HTML never changes.',
+                ),
+                el(
+                    'div',
+                    { class: 'kp-row' },
+                    el('Button', { variant: 'primary', 'data-kp-reveal': 'emphasis' }, 'Open the dossier'),
+                    el('Button', { variant: 'ghost' }, 'Read the guide'),
+                ),
+            ),
+            el('div', { 'data-kp-divider': '' }),
+            el(
+                'section',
+                { class: 'kp-section kp-stack', 'data-kp-surface': 'app', id: 'contact', 'data-example': 'concept-app' },
+                el('h2', {}, 'Leave a signal'),
+                el(
+                    'form',
+                    { class: 'kp-form kp-stack', 'data-kp-form': '' },
+                    el('Field', { id: 'concept-handle', label: 'Handle', name: 'handle', required: true, autocomplete: 'username' }),
+                    el('Field', { id: 'concept-freq', label: 'Frequency', name: 'frequency', help: 'In megahertz.', placeholder: '101.9' }),
+                    el(
+                        'div',
+                        { class: 'kp-row' },
+                        el('Button', { type: 'submit', variant: 'primary' }, 'Transmit'),
+                        el('Button', { variant: 'ghost', type: 'reset' }, 'Clear'),
+                    ),
+                ),
+                el(
+                    'div',
+                    { class: 'kp-autogrid', id: 'dossier' },
+                    el(
+                        'Card',
+                        { title: 'Dossier 07', 'data-kp-reveal': 'emphasis', 'data-example': 'concept-dossier' },
+                        el(
+                            'p',
+                            {},
+                            'Subject last seen at ',
+                            el('mark', {}, 'the Afterlife'),
+                            ', carrying a ',
+                            el('mark', {}, 'shard of unknown origin'),
+                            '. Status: ',
+                            el('mark', {}, 'active'),
+                            '.',
+                        ),
+                        el('Button', { variant: 'ghost', 'data-kp-reveal-trigger': '' }, 'Declassify'),
+                    ),
+                    el(
+                        'Card',
+                        { title: 'What this page proves' },
+                        el('p', {}, 'Every element here is a hook or a component. Nothing on it belongs to one theme.'),
+                    ),
+                ),
+            ),
+            el('div', { 'data-kp-divider': '' }),
+            el(
+                'footer',
+                { class: 'kp-footer' },
+                el('p', { class: 'kp-text-muted' }, 'kp-themes — the concept demo. The same page under every theme.'),
+            ),
+        ),
+    },
 ];
 
 /**

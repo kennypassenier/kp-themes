@@ -1,0 +1,7 @@
+/* @kp-soft/themes — css/fonts.css
+   The shipped faces [T19, AR39]. One @font-face per file under fonts/,
+   latin subsets for every family a theme names and a script subset for
+   nishiki (Japanese) and tazhib (Arabic). Opt-in like the registers:
+   import it after themes.css; without it a theme's fallback stack renders.
+   Written by C4; C0 ships the file empty so gates/check-fonts.mjs has a
+   subject to read — what this file declares is what fonts/ must carry. */

@@ -191,6 +191,134 @@ function getStrings() {
   return current;
 }
 
+// js/theme-core.js
+var THEME_EVENT = "kp-theme-change";
+var BEFORE_THEME_EVENT = "kp-theme-before-change";
+var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
+var config = { root: (
+  /** @type {Element | null} */
+  null
+), darkClass: (
+  /** @type {string | null} */
+  "dark"
+), storageKey: STORAGE_KEY };
+var rootOf = (root) => root ?? config.root ?? document.documentElement;
+var NAMES = (
+  /** @type {readonly string[]} */
+  THEMES.map((t) => t.name)
+);
+var DARK = new Set(THEMES.filter((t) => t.dark).map((t) => t.name));
+var isTheme = (value) => typeof value === "string" && NAMES.includes(value);
+var asTheme = (value) => isTheme(value) ? value : null;
+var REPORT_KEY = "kp-themes-unknown-reported";
+var reported = /* @__PURE__ */ new Set();
+function alreadyReported(name) {
+  if (reported.has(name)) return true;
+  try {
+    const raw = sessionStorage.getItem(REPORT_KEY);
+    if (raw !== null && raw.split(" ").includes(name)) {
+      reported.add(name);
+      return true;
+    }
+  } catch {
+  }
+  return false;
+}
+function remember(name) {
+  reported.add(name);
+  try {
+    const raw = sessionStorage.getItem(REPORT_KEY);
+    const names = raw === null || raw === "" ? [] : raw.split(" ");
+    if (!names.includes(name)) sessionStorage.setItem(REPORT_KEY, [...names, name].join(" "));
+  } catch {
+  }
+}
+function reportUnknown(requested, applied, source, root) {
+  const name = String(requested);
+  if (alreadyReported(name)) return false;
+  remember(name);
+  console.warn(getStrings().themeUnknown(name, applied));
+  if (typeof document === "undefined") return true;
+  const element = root ?? rootOf(void 0);
+  element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
+  return true;
+}
+var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
+function currentTheme({ root } = {}) {
+  if (typeof document === "undefined") return DEFAULT_THEME;
+  const element = rootOf(root);
+  const raw = element.getAttribute("data-theme");
+  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "current", element);
+  return asTheme(raw) ?? DEFAULT_THEME;
+}
+function applyTheme(theme, { root, darkClass, strict = false, announce = true } = {}) {
+  const known = asTheme(theme);
+  if (known === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
+  const next = known ?? DEFAULT_THEME;
+  const element = rootOf(root);
+  if (known === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next, "apply", element);
+  const previous = asTheme(element.getAttribute("data-theme"));
+  if (announce && previous !== next) {
+    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next, previous } });
+    if (!element.dispatchEvent(ask)) return previous ?? DEFAULT_THEME;
+  }
+  element.setAttribute("data-theme", next);
+  const cls = darkClass === void 0 ? config.darkClass : darkClass;
+  if (cls) element.classList.toggle(cls, DARK.has(next));
+  if (announce && previous !== next) {
+    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next, previous, root: element } }));
+  }
+  return next;
+}
+function storeTheme(theme, { key, storage } = {}) {
+  try {
+    (storage ?? localStorage).setItem(key ?? config.storageKey, theme);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function storedTheme({ key, storage } = {}) {
+  let raw = null;
+  try {
+    raw = (storage ?? localStorage).getItem(key ?? config.storageKey);
+  } catch {
+    return null;
+  }
+  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "stored");
+  return asTheme(raw);
+}
+function initializeTheme(fallback2 = DEFAULT_THEME, { root, key } = {}) {
+  return applyTheme(storedTheme({ key }) ?? fallback2, { root });
+}
+function onThemeChange(listener, { crossTab = true, root, key } = {}) {
+  if (typeof document === "undefined") return () => {
+  };
+  const target = root ?? document;
+  const onEvent = (e) => {
+    const detail = (
+      /** @type {CustomEvent} */
+      e.detail
+    );
+    listener(detail.theme, { previous: detail.previous, root: detail.root });
+  };
+  const onStorage = (e) => {
+    if (e.key !== (key ?? config.storageKey)) return;
+    if (isDropped(e.newValue)) {
+      reportUnknown(e.newValue, currentTheme({ root }), "cross-tab", rootOf(root));
+      return;
+    }
+    const next = asTheme(e.newValue);
+    if (next && next !== currentTheme({ root })) applyTheme(next, { root });
+  };
+  target.addEventListener(THEME_EVENT, onEvent);
+  if (crossTab) window.addEventListener("storage", onStorage);
+  return () => {
+    target.removeEventListener(THEME_EVENT, onEvent);
+    if (crossTab) window.removeEventListener("storage", onStorage);
+  };
+}
+
 // js/components.js
 var VIOLATION_EVENT = "kp-contract-violation";
 var CONFIRM_WINDOW_MS = 4e3;
@@ -613,134 +741,6 @@ function toast(content, { ms = TOAST_MS, region = null, live, className = "kp-to
   );
   if (ms > 0) timer = window.setTimeout(el.dismiss, ms);
   return el;
-}
-
-// js/theme-core.js
-var THEME_EVENT = "kp-theme-change";
-var BEFORE_THEME_EVENT = "kp-theme-before-change";
-var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
-var config = { root: (
-  /** @type {Element | null} */
-  null
-), darkClass: (
-  /** @type {string | null} */
-  "dark"
-), storageKey: STORAGE_KEY };
-var rootOf = (root) => root ?? config.root ?? document.documentElement;
-var NAMES = (
-  /** @type {readonly string[]} */
-  THEMES.map((t) => t.name)
-);
-var DARK = new Set(THEMES.filter((t) => t.dark).map((t) => t.name));
-var isTheme = (value) => typeof value === "string" && NAMES.includes(value);
-var asTheme = (value) => isTheme(value) ? value : null;
-var REPORT_KEY = "kp-themes-unknown-reported";
-var reported = /* @__PURE__ */ new Set();
-function alreadyReported(name) {
-  if (reported.has(name)) return true;
-  try {
-    const raw = sessionStorage.getItem(REPORT_KEY);
-    if (raw !== null && raw.split(" ").includes(name)) {
-      reported.add(name);
-      return true;
-    }
-  } catch {
-  }
-  return false;
-}
-function remember(name) {
-  reported.add(name);
-  try {
-    const raw = sessionStorage.getItem(REPORT_KEY);
-    const names = raw === null || raw === "" ? [] : raw.split(" ");
-    if (!names.includes(name)) sessionStorage.setItem(REPORT_KEY, [...names, name].join(" "));
-  } catch {
-  }
-}
-function reportUnknown(requested, applied, source, root) {
-  const name = String(requested);
-  if (alreadyReported(name)) return false;
-  remember(name);
-  console.warn(getStrings().themeUnknown(name, applied));
-  if (typeof document === "undefined") return true;
-  const element = root ?? rootOf(void 0);
-  element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
-  return true;
-}
-var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
-function currentTheme({ root } = {}) {
-  if (typeof document === "undefined") return DEFAULT_THEME;
-  const element = rootOf(root);
-  const raw = element.getAttribute("data-theme");
-  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "current", element);
-  return asTheme(raw) ?? DEFAULT_THEME;
-}
-function applyTheme(theme, { root, darkClass, strict = false, announce = true } = {}) {
-  const known = asTheme(theme);
-  if (known === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
-  const next = known ?? DEFAULT_THEME;
-  const element = rootOf(root);
-  if (known === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next, "apply", element);
-  const previous = asTheme(element.getAttribute("data-theme"));
-  if (announce && previous !== next) {
-    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next, previous } });
-    if (!element.dispatchEvent(ask)) return previous ?? DEFAULT_THEME;
-  }
-  element.setAttribute("data-theme", next);
-  const cls = darkClass === void 0 ? config.darkClass : darkClass;
-  if (cls) element.classList.toggle(cls, DARK.has(next));
-  if (announce && previous !== next) {
-    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next, previous, root: element } }));
-  }
-  return next;
-}
-function storeTheme(theme, { key, storage } = {}) {
-  try {
-    (storage ?? localStorage).setItem(key ?? config.storageKey, theme);
-    return true;
-  } catch {
-    return false;
-  }
-}
-function storedTheme({ key, storage } = {}) {
-  let raw = null;
-  try {
-    raw = (storage ?? localStorage).getItem(key ?? config.storageKey);
-  } catch {
-    return null;
-  }
-  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "stored");
-  return asTheme(raw);
-}
-function initializeTheme(fallback2 = DEFAULT_THEME, { root, key } = {}) {
-  return applyTheme(storedTheme({ key }) ?? fallback2, { root });
-}
-function onThemeChange(listener, { crossTab = true, root, key } = {}) {
-  if (typeof document === "undefined") return () => {
-  };
-  const target = root ?? document;
-  const onEvent = (e) => {
-    const detail = (
-      /** @type {CustomEvent} */
-      e.detail
-    );
-    listener(detail.theme, { previous: detail.previous, root: detail.root });
-  };
-  const onStorage = (e) => {
-    if (e.key !== (key ?? config.storageKey)) return;
-    if (isDropped(e.newValue)) {
-      reportUnknown(e.newValue, currentTheme({ root }), "cross-tab", rootOf(root));
-      return;
-    }
-    const next = asTheme(e.newValue);
-    if (next && next !== currentTheme({ root })) applyTheme(next, { root });
-  };
-  target.addEventListener(THEME_EVENT, onEvent);
-  if (crossTab) window.addEventListener("storage", onStorage);
-  return () => {
-    target.removeEventListener(THEME_EVENT, onEvent);
-    if (crossTab) window.removeEventListener("storage", onStorage);
-  };
 }
 
 // js/theme-picker.js
@@ -3768,6 +3768,85 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
   return Object.assign(detach, { handles: created });
 }
 
+// js/effects.js
+var HOOKS = Object.freeze({
+  /** `hero` or `app`: which ground a section stands on [TH116]. */
+  surface: "data-kp-surface",
+  /** `headline`, `emphasis` or `rule`: what a revealed element is. */
+  reveal: "data-kp-reveal",
+  /** The element a container's reveal listens to instead of the load. */
+  revealTrigger: "data-kp-reveal-trigger",
+  /** `load`: run this reveal on every load, not once per session [AR44]. */
+  revealEvery: "data-kp-reveal-every",
+  /** A section transition. Bare, or `section`. */
+  divider: "data-kp-divider",
+  /** The label a register may draw with `content: attr()` [KT5]. */
+  label: "data-kp-label",
+  /** `start` or `end`: which side of the screen the navbar sits on [TH117]. */
+  navSide: "data-kp-nav-side"
+});
+var SURFACES = Object.freeze(["hero", "app"]);
+var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
+var STATE = Object.freeze({
+  /** The element has entered the viewport (or the page has loaded). */
+  in: "is-in",
+  /** An emphasis has cleared its redaction. */
+  cleared: "is-cleared",
+  /** A headline has finished deciphering. */
+  deciphered: "is-deciphered",
+  /** A one-shot glitch is running. */
+  glitching: "is-glitching"
+});
+var UNKNOWN_EVENT = "kp-effect-unknown";
+var TIMINGS = Object.freeze({
+  // The register's own keyframes, as shipped in 4.0.0. Their opacity
+  // stops are the ones gates/check-motion.mjs already parses; listing
+  // them here is what lets the table pass and the keyframe parse agree.
+  "fx-flicker": { durationMs: 2200, cycles: 1, property: "opacity", luminanceSteps: [1, 0.35, 1, 0.6, 1, 0.93, 1, 1] },
+  "fx-pulse": { durationMs: 2600, cycles: Infinity, property: "opacity", luminanceSteps: [0.65] },
+  "fx-glitch-a": { durationMs: 340, cycles: 1, property: "transform", luminanceSteps: [] },
+  "fx-glitch-b": { durationMs: 340, cycles: 1, property: "transform", luminanceSteps: [] },
+  "fx-rgb-split": { durationMs: 170, cycles: 1, property: "filter", luminanceSteps: [] },
+  "fx-cellflash": { durationMs: 200, cycles: 1, property: "color", luminanceSteps: [] },
+  // The base layer's and the components' keyframes. Where a duration is
+  // a token (`var(--fx-duration)`), the row carries cyberpunk's 140ms,
+  // the shortest any theme declares, so the rate is the worst case.
+  "kp-slide-in": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-rule-in": { durationMs: 420, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-settle": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-blink": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
+  "kp-drift": { durationMs: 4e4, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+  "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
+  "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
+  "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] }
+});
+function attachEffects(root = document, options = {}) {
+  void options;
+  let detached = false;
+  const check = (element) => {
+    if (detached) return;
+    const pairs = [
+      [HOOKS.surface, SURFACES],
+      [HOOKS.reveal, REVEALS]
+    ];
+    for (const [hook, known] of pairs) {
+      const value = element.getAttribute(hook);
+      if (value === null || known.includes(value)) continue;
+      element.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value } }));
+    }
+  };
+  for (const element of root.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) check(element);
+  return {
+    detach() {
+      if (detached) return;
+      detached = true;
+    },
+    observe(element) {
+      check(element);
+    }
+  };
+}
+
 // js/auto.js
 function attachAll(root = document) {
   const detaches = [
@@ -3790,12 +3869,21 @@ function attachAll(root = document) {
     attachColorPickers(root),
     attachGrids(root)
   ];
+  const effects = attachEffects(root);
   return () => {
     for (const detach of detaches) if (typeof detach === "function") detach();
+    effects.detach();
   };
 }
 if (typeof document !== "undefined") {
   applyStoredTheme();
+  if (document.documentElement.hasAttribute("data-kp-theme-from-query")) {
+    try {
+      const wanted = new URLSearchParams(location.search).get("theme");
+      if (wanted !== null && THEMES.some((theme) => theme.name === wanted)) applyTheme(wanted);
+    } catch {
+    }
+  }
   const start = () => attachAll();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
   else start();

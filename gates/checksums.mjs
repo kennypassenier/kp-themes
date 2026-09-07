@@ -48,6 +48,7 @@ export const FILES = [
     'js/datatable.js',
     'js/datepicker.js',
     'js/diagnostics.js',
+    'js/effects.js',
     'js/forms.js',
     'js/gridlayout.js',
     'js/listbox.js',
