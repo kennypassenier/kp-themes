@@ -476,11 +476,11 @@ Seven milestones. What gets built was frozen in Phase 2 (TH115–TH136)
 and the architecture in Phase 4 (T17–T21, AR34–AR46). C5 is the
 **assembly milestone** the procedure requires: its exit criterion is
 that the concept demo, served at a URL Kenny opens, does what the
-approved demo did — not that the parts exist. **No tag closes this
-round**: S48 ships 5.0.0 only when every theme has been lifted, so the
-round ends on `main` with the site showing the new cyberpunk under a
-"next" banner, and the package version stays 4.0.0 until 5.0.0 (R1 at
-the gate).
+approved demo did — not that the parts exist. **Kenny chose an alpha tag at the gate (R1, 2026-09-07)** over the
+draft's "no tag": after C6, `v5.0.0-alpha.1` is tagged with a draft
+release, and whether it is published stays his own action; the tag is a
+promise under S20 for what it carries, and the package version moves to
+`5.0.0-alpha.1`. 5.0.0 itself still waits for every theme (S48).
 
 | ID | Milestone | Features and decisions | Exit criterion |
 | --- | --- | --- | --- |
@@ -524,3 +524,34 @@ the AFK report lists any that do not. S42 (DI5 reported, not corrected)
 is mechanical by construction — the gate cannot edit an effect. Rule 39
 (Kenny opens the live URL before the release-shaped go) is the C5 exit
 criterion itself.
+
+### Round six — the Phase 5 gate, 2026-09-07
+
+Kenny answered: C0–C6 Akkoord; H1 all six gates blocking in the hook,
+CI and the release workflow; S1 the forty standing rules as on disk
+(38–40 included); R1 an alpha tag after C6; A1 **AFK from C0 to C5**.
+Enforcement was installed in round one and has held every round since;
+the six new gates are C0's first work and each fires red once before it
+counts. The critic re-ran with the build phase as its lens before C0
+(L7); its report joins the ratification queue.
+
+### Round six — status
+
+| Milestone | Status | Ratification |
+| --- | --- | --- |
+| C0 | open | — |
+| C1 | — | — |
+| C2 | — | — |
+| C3 | — | — |
+| C4 | — | — |
+| C5 | — | waits for Kenny's look at the URL |
+| C6 | — | — |
+
+### Round six — the AFK queue
+
+Ratification rounds accumulate here (R6-1, R6-2, …) with a "deliberately
+not done" list; the whole queue is presented as one form at C5.
+
+**Deliberately not done, Kenny-only:** publishing the alpha release;
+anything that changes chassis-rs, kyu, almanac or JobTracker; the
+round-three Phase 10 form and the dev-procedure commit that waits on it.

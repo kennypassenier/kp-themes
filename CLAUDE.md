@@ -135,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                   |
-| ------------------- | ------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six: Phase 4 frozen 2026-09-07 (AR34–AR46 as revised after the critic); Phase 5 next              |
-| Last completed gate | Round six Phase 4 — thirteen decisions taken as revised after twenty critic objections, the list frozen |
-| Next gate           | Phase 5 (realization plan: milestones, enforcement, the AFK choice) of round six                        |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                      |
-| AFK mode            | off                                                                                                     |
+| Field               | Value                                                                                                                    |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Current phase       | Round six: Phase 6 — C0 (the skeleton and six gates), AFK from C0 to C5; the alpha tag after C6                          |
+| Last completed gate | Round six Phase 5 — seven milestones approved, six gates blocking, an alpha tag after C6, AFK from C0 to C5 (2026-09-07) |
+| Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                            |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                       |
+| AFK mode            | on, C0 to C5 (2026-09-07)                                                                                                |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
