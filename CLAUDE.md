@@ -106,15 +106,32 @@ milestones, a merge, 1302 browser tests and a combined report, because
 D3 meant `STRINGS_NL` in the feature list and something else in the
 architecture text. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Round six — the next cyberpunk (opened 2026-09-07)
+
+Kenny wants a cyberpunk that "spits off the screen": signal yellow with
+blood-red tints and a little neon, the cyberpunk.net navbar geometry,
+notched buttons with a slit, a razor tear between sections, decipher,
+one-shot glitch, redactions that clear. It replaces the current theme
+under the same name in a new major; 4.0.0 stays what it shipped (S20).
+Scope S38–S46 in `docs/SCOPE.md`; the measured references in
+`docs/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
+DI5 findings are reported, not silently corrected (S42); meaning lives in
+the HTML and expression in the theme, through a hook vocabulary every
+theme must answer (S45); and the concept demo, same structure and
+elements, is the gate every new theme passes before integration (S46).
+The demo lives at
+<https://claude.ai/code/artifact/f1cb3978-0bd7-4108-a329-971b0a2afe89>
+until it becomes a template in the repository.
+
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                  |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round five (4.0.0) delivered and tagged 2026-09-07; the draft release awaits Kenny's publish                                                                           |
-| Last completed gate | Round five, the AFK report plus three follow-ups: MR-NOTCH (the bevel, drawn from the inside), the site navigation, and the registers and the wizard on the demo pages |
-| Next gate           | The correction form for D3 (a frozen Essential feature that went unbuilt), and round three's Phase 10, whose form is open and unanswered                               |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                     |
-| AFK mode            | off                                                                                                                                                                    |
+| Field               | Value                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six (the next cyberpunk, a new major): Phase 0 closed 2026-09-07; Phase 1 next                                                                          |
+| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                |
+| Next gate           | Round six Phase 1 (inventory of what the new register touches), then the correction form for D3 and round three's Phase 10, whose form is open and unanswered |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                            |
+| AFK mode            | off                                                                                                                                                           |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

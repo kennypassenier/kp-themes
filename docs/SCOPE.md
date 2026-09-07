@@ -598,6 +598,11 @@ it reach consumers with 4.0.0 rather than cutting a 3.2.1 for it.
 
 ## Round six — a cyberpunk register that spits off the screen (2026-09-07)
 
+**Approved by Kenny at the Phase 0 gate on 2026-09-07**, in two forms:
+the demo and S38, S40–S44 in the first; S39 rewritten, N1 and R1
+resolved, then S45 and A1 in the follow-up. S46 was his own instruction
+during the gate.
+
 Draft for the Phase 0 gate. Every statement is an item in the form.
 
 **S38 · Why.** Kenny: the themes are fine, but not at the level of a
@@ -619,8 +624,9 @@ what 4.0.0 shipped, retrievable from its tag forever. What changes is
 what `data-theme="cyberpunk"` means from the next major on — so every
 consumer that names it (kp-soft, kyu, Almanac vendor the stylesheet)
 sees the new theme when it upgrades, and the migration note says so in
-its first line. Whether the old theme also survives inside the new major
-under another name is the open question A1 of the follow-up form.
+its first line. The old theme does not travel into the new major under another
+name (A1, Kenny, 2026-09-07: "Alleen in 4.x"): the new major carries
+twenty-four themes, and a consumer that wants the old look pins 4.x.
 
 **S40 · The palette.** Signal yellow as ground and primary
 (`#FCEE0A`, the frame colour read off cyberpunk.net), a void near-black
