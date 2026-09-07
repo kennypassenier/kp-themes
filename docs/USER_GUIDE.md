@@ -411,6 +411,64 @@ stopped counting: `min-inline-size: 100%` gives you the whole parent
 (measured: 800px in a flex row) and still zero as an inline-block, and
 `min-content` gives zero. Pick the floor you want to see.
 
+## What a scroll region clips [TH114]
+
+Three boxes in this package scroll sideways inside themselves rather than
+widening the page: `.kp-table-wrap` (`css/components.css:708`), `.kp-diff`
+(`css/components.css:1979`) and every `<pre>` (`css/_rules.css:459`). Each
+declares `overflow-x: auto` and says nothing about the other axis — and
+`overflow-y` then computes to `auto` rather than staying `visible`,
+because a box that scrolls in one axis is a clip in both. Each of the
+three is therefore a clip in the block axis too, which is not what
+"scrolls sideways" sounds like.
+
+What that means for something you place against one of them, measured in
+Chromium 151 and Firefox 153 (`tests/scroll-boundary.spec.mjs`):
+
+| Region | An absolutely positioned child | A popover |
+| --- | --- | --- |
+| `.kp-table-wrap` | clipped at the box edge | escapes, and is clickable outside |
+| `.kp-diff` | clipped at the box edge | escapes, and is clickable outside |
+| any `<pre>` | clipped at the box edge | escapes, and is clickable outside |
+
+**An absolutely positioned child is clipped.** Give one of these boxes
+`position: relative` — or anything inside it — and a menu, a tooltip or a
+row action positioned against it stops at the box's edge. Measured in all
+three regions and both browsers: the probe is laid out past the box's
+bottom, and a click at the probe's own centre reaches the page behind it
+instead of the probe.
+
+**A popover is not clipped.** An element with the `popover` attribute is
+painted in the top layer, where no ancestor's overflow applies. Measured
+in the same three regions and both browsers, with the same declarations
+on the same pixels: the probe is the element a click at its own centre
+reaches. So a menu that has to hang out of a scroll region is a popover,
+which is what this package's own menus already are — `.kp-popover`
+(`css/components.css:901`) is a `popover` element.
+
+Two things about that which surprise people, both measured rather than
+assumed:
+
+- **A popover does not sit relative to its DOM parent.** Its
+  `position: absolute` resolves against the initial containing block, so
+  the same `inset-block-start: 100%` that means "just under this box" for
+  an ordinary absolute child means "the bottom of the viewport" for a
+  popover — measured `top: 720px` in a 720px-tall viewport. Place it with
+  anchor positioning, the way `.kp-popover` does
+  (`position-area: block-end span-inline-end`, `css/components.css:917`),
+  not with insets.
+- **`container-type` does not make `.kp-table-wrap` a containing block.**
+  The wrapper carries `container: kp-table / inline-size`
+  (`css/components.css:726`) for the card breakpoint, and that does not
+  catch an absolutely positioned descendant: with no `position` on the
+  wrapper, such a child resolves against the initial containing block and
+  lands somewhere else entirely — measured, the wrapper spanning 0–114px
+  and the child at 580px.
+
+The clip is not a defect and there is no repair for it: `overflow-x: auto`
+is what keeps a wide table off the page's own scrollbar (SC 1.4.10, DI11).
+Use the top layer for the thing that has to escape.
+
 ## The page shell [TH36]
 
 ```html
