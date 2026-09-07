@@ -28,13 +28,14 @@
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import { rulesOf } from './selectors.mjs';
+import { stylesheets } from './stylesheets.mjs';
 
 const root = new URL('../', import.meta.url);
 const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 'utf8'));
 export const CEILING = Number(CONFIG.textureOpacityCeiling.value);
 
 /** The stylesheets that declare textures. */
-export const CSS = ['css/_rules.css', 'css/cyberpunk-register.css', 'css/retro-register.css'];
+export const CSS = stylesheets('texture');
 
 /**
  * The strongest alpha a texture value carries, or 1 when it declares none.

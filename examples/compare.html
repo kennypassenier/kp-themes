@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" data-kp-theme-from-query>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — old against new</title>
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem("theme");
+                    if (t) document.documentElement.setAttribute("data-theme", t);
+                    document.documentElement.setAttribute("data-kp-effects", '');
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
+    </head>
+    <body>
+        <main id="main" class="kp-page">
+            <div class="kp-stack">
+                <h1>Old against new</h1>
+                <p class="kp-prose kp-text-muted">The concept demo twice: on the left under the 4.0.0 release, on the right under the current build, the same theme in both. Pick a theme below; the choice lands in the address bar so a link carries it.</p>
+                <ul class="kp-row" id="compare-themes">
+                    <li>
+                        <a href="compare.html?theme=formal" data-theme-link="formal">Formal</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=light" data-theme-link="light">Light</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=dark" data-theme-link="dark">Dark</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=cyberpunk" data-theme-link="cyberpunk">Cyberpunk</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=pastel" data-theme-link="pastel">Pastel</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=terminal" data-theme-link="terminal">Terminal</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=topo" data-theme-link="topo">Topographic</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=high-contrast" data-theme-link="high-contrast">High contrast</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=sepia" data-theme-link="sepia">Sepia</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=blueprint" data-theme-link="blueprint">Blueprint</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=solstice" data-theme-link="solstice">Solstice</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=brutalism" data-theme-link="brutalism">Brutalism</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=deco" data-theme-link="deco">Art Deco</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=academia" data-theme-link="academia">Dark Academia</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=phantom" data-theme-link="phantom">Phantom</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=ticker" data-theme-link="ticker">Ticker</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=nishiki" data-theme-link="nishiki">Nishiki</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=shade-light" data-theme-link="shade-light">Shade (light)</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=shade-dark" data-theme-link="shade-dark">Shade (dark)</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=mono" data-theme-link="mono">Mono</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=retro" data-theme-link="retro">Retro</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=grotesk" data-theme-link="grotesk">Grotesk</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=tazhib" data-theme-link="tazhib">Tazhib</a>
+                    </li>
+                    <li>
+                        <a href="compare.html?theme=nostromo" data-theme-link="nostromo">Nostromo</a>
+                    </li>
+                </ul>
+                <div class="kp-autogrid" data-kp-compare>
+                    <section class="kp-stack" aria-labelledby="compare-old">
+                        <h2 id="compare-old">4.0.0</h2>
+                        <iframe src="concept-4.0.0.html" title="The concept demo under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                    </section>
+                    <section class="kp-stack" aria-labelledby="compare-new">
+                        <h2 id="compare-new">Current build</h2>
+                        <iframe src="concept.html" title="The concept demo under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                    </section>
+                </div>
+            </div>
+        </main>
+        <script type="module">
+            // The theme from the query on both frames, once each has loaded;
+            // the 4.0.0 script knows no query parameter, so the page sets the
+            // attribute itself. Same origin, so the documents are reachable.
+            const theme = new URLSearchParams(location.search).get('theme');
+            const frames = document.querySelectorAll('iframe[data-compare-side]');
+            const apply = (frame) => {
+                if (!theme) return;
+                try {
+                    frame.contentDocument?.documentElement.setAttribute('data-theme', theme);
+                } catch {
+                    // A frame not yet reachable applies on load below.
+                }
+            };
+            for (const frame of frames) {
+                frame.addEventListener('load', () => apply(frame));
+                apply(frame);
+            }
+            if (theme) document.documentElement.setAttribute('data-theme', theme);
+            for (const link of document.querySelectorAll('[data-theme-link]')) {
+                if (link.getAttribute('data-theme-link') === theme) link.setAttribute('aria-current', 'page');
+            }
+        </script>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

@@ -34,5 +34,20 @@
     "fontsBudgetBytes": {
         "value": 1500000,
         "why": "AR39: the shipped faces one theme names may weigh this much together. The critic measured 9-18 kB per latin woff2 face and priced the first draft's 3 MB as slack; nishiki and tazhib ship a script subset beside latin and are the themes this number is really about. An operational knob (standing rule 27), not a standard."
+    },
+    "stylesheets": {
+        "//": "The one stylesheet list every CSS gate reads [TH130]: a file and the roles it plays. authored: a human writes it and check-layers holds its colour discipline; generated: a generator writes it; bundled: dist/kp-themes.css concatenates it, in this order; classes: it declares class names (check-utilities, check-migration); motion: it may carry animations (check-motion); texture: it may declare --fx-texture (check-texture). gates.test.mjs refuses a css/ file in the manifest that has no entry here, so a new stylesheet cannot slip past a gate by being absent from its private list. Order matters for `bundled` only.",
+        "css/_header.css": ["authored"],
+        "css/_rules.css": ["authored", "motion", "texture"],
+        "css/_print.css": ["partial"],
+        "css/_density.css": ["partial"],
+        "css/themes.css": ["generated", "bundled", "classes"],
+        "css/components.css": ["authored", "bundled", "classes", "motion"],
+        "css/cyberpunk-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/retro-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/layout.css": ["authored", "bundled", "classes", "motion"],
+        "css/utilities.css": ["generated", "bundled", "classes"],
+        "css/tailwind-bridge.css": ["authored", "classes"],
+        "css/fonts.css": ["generated"]
     }
 }

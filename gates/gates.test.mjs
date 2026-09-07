@@ -10,7 +10,8 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
 import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
@@ -837,4 +838,19 @@ test('T19: the packed tarball carries css/fonts.css, fonts/families.json and a s
         !files.some((/** @type {string} */ f) => f.startsWith('fonts/sharetechmono/') && f.endsWith('.woff2')),
         'a reserved-name face travelled',
     );
+});
+
+// ── TH130: one stylesheet list for every CSS gate ────────────────────────────
+
+test('TH130: every stylesheet the manifest ships has an entry in the one list, and the bundle order is the list order', () => {
+    const shipped = FILES.filter((f) => f.startsWith('css/'));
+    assert.ok(shipped.length >= 9, `only ${shipped.length} stylesheets in the manifest`);
+    for (const file of shipped)
+        assert.ok(STYLESHEET_ROLES[file] !== undefined, `${file} is in the manifest and has no entry in gates/config.json stylesheets`);
+    for (const file of Object.keys(STYLESHEET_ROLES)) {
+        assert.ok(existsSync(new URL(`../${file}`, import.meta.url)), `${file} is listed and does not exist`);
+    }
+    assert.deepEqual(stylesheets('bundled')[0], 'css/themes.css', 'the tokens come first in the bundle');
+    // Drill [TH130]: `css/layout.css` deleted from the list → "is in the
+    // manifest and has no entry", red (2026-09-07).
 });

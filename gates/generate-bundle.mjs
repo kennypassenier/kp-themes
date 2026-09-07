@@ -28,19 +28,13 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import process from 'node:process';
 import * as esbuild from 'esbuild';
+import { stylesheets } from './stylesheets.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const OUT = join(ROOT, 'dist');
 
 /** In load order. See the header: this order decides which rule wins. */
-export const STYLESHEETS = [
-    'css/themes.css',
-    'css/components.css',
-    'css/cyberpunk-register.css',
-    'css/retro-register.css',
-    'css/layout.css',
-    'css/utilities.css',
-];
+export const STYLESHEETS = stylesheets('bundled');
 
 const version = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version;
 

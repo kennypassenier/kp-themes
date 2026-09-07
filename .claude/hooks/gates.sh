@@ -89,6 +89,8 @@ node gates/check-texture.mjs
 
 echo "→ an example page carries the hooks its descriptor asks for"
 node gates/check-examples-wired.mjs
+echo "→ the vendored 4.0.0 baseline matches the checksums the release published (MR-R6-COMPARE)"
+node gates/check-baseline.mjs
 
 echo "→ no inline styles on the example pages (TH109)"
 node gates/check-inline-styles.mjs

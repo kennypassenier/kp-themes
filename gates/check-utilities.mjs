@@ -21,6 +21,7 @@
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import { names } from './generate-utilities.mjs';
+import { stylesheets } from './stylesheets.mjs';
 
 /** @param {string} rel */
 const read = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8');
@@ -48,14 +49,9 @@ function declared(css) {
     return found;
 }
 
-const AUTHORED = [
-    '../css/themes.css',
-    '../css/components.css',
-    '../css/cyberpunk-register.css',
-    '../css/retro-register.css',
-    '../css/layout.css',
-    '../css/tailwind-bridge.css',
-];
+const AUTHORED = stylesheets('classes')
+    .filter((file) => file !== 'css/utilities.css')
+    .map((file) => `../${file}`);
 
 /** @type {string[]} */
 const generated = names();

@@ -18,6 +18,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { names } from './generate-utilities.mjs';
+import { stylesheets } from './stylesheets.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
@@ -39,14 +40,7 @@ function declared(css) {
     return found;
 }
 
-const STYLESHEETS = [
-    'css/themes.css',
-    'css/components.css',
-    'css/cyberpunk-register.css',
-    'css/retro-register.css',
-    'css/layout.css',
-    'css/utilities.css',
-];
+const STYLESHEETS = stylesheets('classes').filter((file) => file !== 'css/tailwind-bridge.css');
 
 /** @type {Set<string>} */
 const existing = new Set(names());

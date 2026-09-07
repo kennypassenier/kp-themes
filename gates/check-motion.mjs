@@ -8,6 +8,7 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { TIMINGS } from '../js/effects.js';
+import { stylesheets } from './stylesheets.mjs';
 
 /**
  * WCAG 2.2 SC 2.3.1 Three Flashes or Below Threshold, Level A. Standards
@@ -31,7 +32,7 @@ export const SHORTEST_THEME_DURATION_MS = Math.min(
 // components.css joined this list the moment it grew an animation. A
 // motion gate that reads two of three stylesheets reports green over the
 // one it does not read.
-const CSS = ['../css/cyberpunk-register.css', '../css/_rules.css', '../css/components.css'];
+const CSS = stylesheets('motion').map((file) => `../${file}`);
 
 /**
  * Animations the flash threshold does not reach, each with the reason.

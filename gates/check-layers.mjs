@@ -27,17 +27,10 @@
 
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
+import { stylesheets } from './stylesheets.mjs';
 
 /** The stylesheets a human writes. The generated one is not one of them. */
-const AUTHORED = [
-    '../css/_rules.css',
-    '../css/_header.css',
-    '../css/components.css',
-    '../css/cyberpunk-register.css',
-    '../css/retro-register.css',
-    '../css/layout.css',
-    '../css/tailwind-bridge.css',
-];
+const AUTHORED = stylesheets('authored').map((file) => `../${file}`);
 
 /**
  * Colours that are deliberately not theme colours, each with its reason.
