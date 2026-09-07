@@ -227,3 +227,42 @@ test('container-type does not change how .kp-table-wrap sizes in normal flow [TH
     expect(measured.type).toBe('inline-size');
     expect(measured.withContainer).toBe(measured.without);
 });
+
+// The floor a consumer can set when containment collapses the wrapper
+// [R3-CQ, KT6].
+//
+// `container-type: inline-size` means the wrapper no longer sizes to its
+// contents. Nothing this package draws moves — measured 500px before and
+// after, in both browsers — but a consumer who puts the wrapper in a box
+// that shrinks to fit sees it collapse: 300px becomes 0 in a flex row and
+// in an inline-block. Measured while deciding this, no CSS restores the
+// natural width: `min-inline-size: 100%` gives the whole parent (800px)
+// in a flex row and still 0 as an inline-block, and `min-content` is 0
+// because the contents are exactly what stopped counting. So the knob is
+// a floor, not a repair, and it says so.
+//
+// Drill: remove `min-inline-size` from .kp-table-wrap in
+// css/components.css and the knob does nothing, so the second width
+// reads 0 like the first.
+test('a consumer can set a floor under the collapsed wrapper [R3-CQ]', async ({ page }) => {
+    await page.goto('/tests/fixtures/components.html');
+    const widths = await page.evaluate(() => {
+        const host = document.createElement('div');
+        host.style.cssText = 'position:absolute; inset-inline-start:-9999px; inline-size:800px';
+        host.innerHTML =
+            '<div style="display:flex"><div class="kp-table-wrap" data-probe><table class="kp-table"><tbody><tr><td>Reference</td><td>A value that is fairly long</td></tr></tbody></table></div></div>';
+        document.body.append(host);
+        const wrap = host.querySelector('[data-probe]');
+        const bare = wrap.getBoundingClientRect().width;
+        wrap.style.setProperty('--kp-table-wrap-min', '20rem');
+        const floored = wrap.getBoundingClientRect().width;
+        host.remove();
+        return { bare, floored };
+    });
+
+    // The default is a true no-op: the wrapper collapses exactly as it did
+    // before this knob existed.
+    expect(widths.bare).toBeLessThan(1);
+    // And the floor is the floor, not the content width.
+    expect(widths.floored).toBeCloseTo(320, 0);
+});

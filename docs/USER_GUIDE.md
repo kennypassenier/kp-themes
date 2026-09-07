@@ -378,6 +378,22 @@ flex-row item 279/328px becomes 0, as an inline-block 207/244px becomes
 lives in one of those, give the wrapper a width, or a flex item around
 it that has one.
 
+There is also a floor: `--kp-table-wrap-min`. It defaults to `auto`, the
+initial value, so it does nothing at all until you set it. Set it and the
+wrapper cannot go below that width:
+
+```css
+.my-toolbar .kp-table-wrap {
+    --kp-table-wrap-min: 20rem;
+}
+```
+
+It is a floor and not a repair, and the difference matters. Nothing
+restores the natural width, because the contents are exactly what
+stopped counting: `min-inline-size: 100%` gives you the whole parent
+(measured: 800px in a flex row) and still zero as an inline-block, and
+`min-content` gives zero. Pick the floor you want to see.
+
 ## The page shell [TH36]
 
 ```html

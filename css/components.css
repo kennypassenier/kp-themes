@@ -724,6 +724,16 @@
      * says so, and `tests/tables.spec.mjs` holds the two shapes the
      * package draws itself. */
         container: kp-table / inline-size;
+        /* A floor for the consumer whose layout collapses the wrapper
+     * [R3-CQ, KT6]. Containment means this box no longer sizes to its
+     * contents, so in a shrink-to-fit parent — a flex row, an
+     * inline-block — it goes to zero. Measured while deciding this: no
+     * value restores the natural width, because the contents are
+     * precisely what stopped counting. `100%` gives the whole parent,
+     * `min-content` gives zero. So this is a floor and not a repair, and
+     * `auto` — the initial value in every context — makes the default a
+     * true no-op. */
+        min-inline-size: var(--kp-table-wrap-min, auto);
     }
 
     /* Two ways a cell can hold a value that does not fit [TH96].
@@ -1634,6 +1644,8 @@
      * wrapper is nearer and wins, and the two measure the same width in
      * the shape this package draws. */
         container: kp-table / inline-size;
+        /* The same floor as .kp-table-wrap; see there for why [R3-CQ]. */
+        min-inline-size: var(--kp-table-wrap-min, auto);
     }
 
     .kp-datatable__bar {
