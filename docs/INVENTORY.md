@@ -1401,3 +1401,150 @@ It works or fails only when a human looks at it.
 - INV-G18 — Dependabot's ability to follow a git tag is configured in
   JobTracker but has never produced a PR, because no tag has been cut
   since v0.1.1.
+
+## Round six — the next cyberpunk (2026-09-07), series INV-R
+
+Swept by the inventory-scout at `52bec11` after the Phase 0 gate, for
+everything the new register and the effects module touch or must answer.
+The document's series are per letter; this round opens `INV-R` (R for
+round six). Four claims were re-checked by hand in the same session:
+`fx-signal` already carries the yellow, `gates.test.mjs` pins the
+`fx-flicker` keyframe by name, `check-motion.mjs` reads three
+stylesheets, and `css/components.css` never writes `data-slot`.
+
+### 1 · The current cyberpunk theme
+
+- INV-R1 · Token source — 81 tokens under `[data-theme='cyberpunk']`: palette (`primary` magenta `themes/cyberpunk/tokens.json:35`, `accent` cyan `:59`, `destructive` `:67`), status plates `:176-229`, `color-scheme` `:233`, Chakra Petch body/display `:237,245`, `radius` 0.25rem `:241`, DI3 opt-out `stepL` 0.035 `:358-361` (`themes/cyberpunk/tokens.json:1-362`)
+- INV-R2 · Existing fx tokens in the same file — `fx-signal` is **already** cyberpunk.net's yellow `hsl(55,97%,52%)` `:251-256`, `fx-notch` 14px `:262`, `fx-duration` 140ms `:272`, `fx-ease` `:277`, `fx-overprint` `:281`, `fx-scanline` `:285`, `fx-lift` 1px `:289`, `fx-shadow-offset` 0 `:293` (`themes/cyberpunk/tokens.json:248-293`)
+- INV-R3 · Anatomy document — five pillars `:11-24`, load-bearing colours `:28-32`, DI3 opt-out `:41-47`, DI5 "nobody has computed" `:54-58` (stale, see INV-R32), DI6 ordering fault `:60-61`, prohibitions incl. "texture moves into the theme in L3 (TH13)" `:68-70` (not done, see INV-R5), "Open for L3" `:72-78` (stale) (`themes/cyberpunk/anatomy.md:1-78`)
+- INV-R4 · The fx series in the 81-token contract — nine `fx-*` tokens, all mandatory via `findAsymmetry` (`gates/check-tokens.mjs:39-53`); fill across 24 themes: `fx-notch` 0px in 21 themes (14/6/2px in three), `fx-shadow-offset` 4px only in brutalism, `fx-duration` 0ms in retro and ticker, `fx-ease` seven distinct curves; contrast gate pairs `fx-signal`/`fx-signal-foreground` and `background`/`fx-signal` (`gates/check-contrast.mjs:61,79`), `fx-overprint` and `fx-scanline` excused `:120-122`. `--fx-texture`, `-size`, `-opacity` are **not** tokens: per-theme declarations in `css/_rules.css:19-27` etc. and, for cyberpunk, only in the register (INV-R5)
+- INV-R5 · Register texture — scanlines (`--fx-scanline` at 4% alpha, 1px in 3px) plus vignette, `--fx-texture-opacity: 1`; the only place cyberpunk's texture is declared (no cyberpunk texture in `css/_rules.css`; TH13 sits unbuilt in the candidates table `docs/FEATURES.md:80`) (`css/cyberpunk-register.css:21-27`)
+- INV-R6 · `.microlabel` — uppercase mono with `// ` prefix; `font-family: var(--font-mono)` **without fallback**, and `--font-mono` is declared only in `css/tailwind-bridge.css:15` (TH14 `docs/FEATURES.md:81`, unbuilt; README.md:457 says the class hooks "work on any markup") (`css/cyberpunk-register.css:31-41`)
+- INV-R7 · Neon caret on input/textarea (`css/cyberpunk-register.css:44-47`)
+- INV-R8 · Card underglow — selects `[data-slot='card']`, which `components/card.jsx:34` and `showcase/examples.mjs:161` write and `css/components.css` never does (zero `data-slot`), so plain `.kp-card` markup gets nothing (`css/cyberpunk-register.css:51-74`)
+- INV-R9 · Clipped corner on cards and `.fx-notch` via `--fx-notch` (`css/cyberpunk-register.css:77-81`)
+- INV-R10 · `.kp-button` square corner `:87-90` and the bevel `clip-path` with knob `--kp-button-notch` default 7px `:113-116` — a separate knob from the card's `--fx-notch` 14px; AR30 amendment recorded in the comment `:92-112` (`css/cyberpunk-register.css:87-116`)
+- INV-R11 · Inset two-ring focus — `outline: none`, inset `--focus-ring` at `--kp-focus-ring-inner-width` (2px) and inset `--focus-ring-contrast` at twice that (`css/cyberpunk-register.css:118-124`)
+- INV-R12 · Button charge sweep — `background-image` gradient, `background-position` 105% → -5% on hover, transition guarded (`css/cyberpunk-register.css:128-146`)
+- INV-R13 · `.fx-brackets` corner marks (`css/cyberpunk-register.css:150-175`)
+- INV-R14 · `.fx-rule` hairline with diamond — static flex `::after`, no draw-in (`css/cyberpunk-register.css:179-199`)
+- INV-R15 · Themed scrollbar (`css/cyberpunk-register.css:202-223`)
+- INV-R16 · `.fx-signal-badge` — comment says "this selector is doubled below"; it occurs once (`css/cyberpunk-register.css:226-232`)
+- INV-R17 · Motion block under `prefers-reduced-motion: no-preference` — `.fx-flicker` 2.2s once `:238-242`, `.fx-pulse` **infinite** opacity on `::after`, knob `--fx-pulse-duration` `:246-258`, `.fx-glitch` hover-only RGB split needing `data-text` `:262-286`, `.fx-media` `:289-292`, `.fx-cellpop` `:295-297` (`css/cyberpunk-register.css:236-298`)
+- INV-R18 · Keyframes `fx-flicker` (retimed after check-motion measured 5.5/s, `:300-304`), `fx-pulse`, `fx-glitch-a/b`, `fx-rgb-split`, `fx-cellflash` (`css/cyberpunk-register.css:305-397`)
+- INV-R19 · Cyberpunk rules in the base layer — `::selection` `:296-299` (identical to the global one at `:427-430`), `.glow-primary/.glow-accent/.glow-card` `:301-325`, `.gradient-text` `:328-333`; cyberpunk deliberately absent from the per-theme signature block `:534-535` (`css/_rules.css`)
+- INV-R20 · Research document — T1 sections `:3-84`; round six section `:85-178`: cyberpunk.net navbar `clip-path` verbatim `:101-103`, buttons and `--rotated` notch `:107-114`, tear as SVG `:115-120`, dossiers `:121-126`, Dribbble `:129-145`, webflow glitch (4s infinite, rejected) `:146-157`, heading lines `:158-166`, libraries `:167-178` (`docs/CYBERPUNK_THEME_RESEARCH.md`)
+- INV-R21 · Gate code that names cyberpunk — `check-motion.mjs:33` (three-file CSS list), `compliance.mjs:42-45` (DI5 scope = themes the register selects) and `:49-65`, `gates.test.mjs:114-118` (pins `fx-flicker` **by name** at 2200ms; breaks when the keyframe is renamed), `gates.test.mjs:142` (KT2 opt-out pair), `check-invariants.mjs:114,188`, `colour.mjs:144,183`, `config.json` `stateVisibilityFloor.why`, `check-layers.mjs:36`, `checksums.mjs:35`, `check-migration.mjs:45`, `generate-bundle.mjs:39`, `check-utilities.mjs:54`, `generate-examples.mjs:31`, `generate-showcase.mjs:134,231`, `gates/site/chrome.mjs:64-65`
+- INV-R22 · Home Assistant output — `ha/kp-cyberpunk.yaml` generated from the tokens; `accent-color` ← `fx-signal` (`gates/generate-ha-themes.mjs:44`), card transition ← `fx-duration`/`fx-ease` (`:106`); a palette change regenerates it (`npm run check:ha`)
+
+### 2 · Components and base elements the register must answer
+
+- INV-R23 · Component roots — **64** `.kp-*` roots in `css/components.css`: accordion 1135, alert 557, badge 445, breadcrumb 1182, button 281, card 459, cell-break/-truncate 822, col-low 1920, colorpicker 2455, combobox 1459, confirm 987, copyable 261, datatable 800, datepicker 2256, dialog 965, diff 2098, empty 192, error 229, field 614, fieldset 740, footer 220, form 1939, grid 2520, grid-wrap 2514, health 257, icon-button 1327, id 151, masked 174, menu 1045, nav 895, nav-wrap 885, numeric 163, pagination 1183, palette 1584, popover 1025, progress 1210, reorder 2195, shortcuts 1595, skeleton 1223, skip-link 204, spinner 1263, split 2224, sr-only 2139, swatch 18, tab 1158, table 850, table-wrap 783, tabs 1152, tag 1545, tag-list 1536, theme-group 39, theme-menu 1351, theme-option 1404, timeline 2060, timestamp 164, toast 1102, toasts 1090, tooltip 1082, tree 2153, truncate 182, upload 2328, url 150, wizard 2390
+- INV-R24 · Button states — `:focus-visible` 319, `:hover:not(:disabled)` 341, `:active:not(:disabled)` 345, `:disabled` 349, `--primary` 357, `--destructive` 378, `--ghost` 399, `--sm` 431, `--lg` 437, `__undo`; busy is `[aria-busy='true']` in `css/layout.css:156` only (set by `js/forms.js`, `components/form.jsx`, `flow.jsx`, `datatable.jsx`) (`css/components.css:281-445`)
+- INV-R25 · Field states — `__label` 623, `__input` 628, `__help` 690, `__error` 697, `--invalid` 702/776, `__check` 758, `__required` 1976, fieldset 740/1928, form summary 1951 (`css/components.css`)
+- INV-R26 · Other stateful roots — badge `[data-status]`, health `[data-state]`, tab/datepicker `[aria-selected]`, nav `__link[aria-current='page']` 941, menu `__item:hover` / `--destructive`, toast `--success/--warning/--info/--error` 1113-1125, upload `[data-kp-dragging]`, diff `[data-kind]`, combobox/palette `__option[hidden]` (`css/components.css`, per INV-R23 lines)
+- INV-R27 · Base-element layer — `body` font 279, `h1-h3` display face 283-286, links 410-422, `::selection` 427, `code/kbd/samp/pre` 433-469, **`mark`** 471-475 (warning pair), `blockquote` 477, `hr` 488-493, `::marker`, `accent-color`/`caret-color` 501-503, `::placeholder`, `:disabled`, `:invalid` 515-518, two-ring `:focus-visible` 359-380, `color-scheme` 392; no `em`/`strong`/table rules (tables are `.kp-table` only) (`css/_rules.css`)
+- INV-R28 · Per-theme signature block (heading accents already exist) — formal `h1::after` rule 538-546, terminal field cursor 566-573, topo drift, blueprint `h1::after`, deco double rule, academia, nishiki `h1::after`, phantom badge, solstice `[data-slot='card']` ember, pastel settle (`css/_rules.css:536-717`)
+- INV-R29 · Register coverage today — cyberpunk register reaches `.kp-button` (INV-R10 to INV-R12), cards only via `data-slot` (INV-R8), inputs' caret, scrollbar: **2 of 64 roots**; retro register reaches button/card/popover/icon-button `:15-24`, their focus `:40-48` and active `:52-61`, field/datatable-search/combobox/palette inputs `:65-75`, scrollbar `:79-81`: **8 roots** (`css/retro-register.css`). No register rule anywhere for field label/help/error, nav, toast, dialog, menu, tabs, badge, alert, tag, table, headings, links, `mark`, `hr`, footer
+
+### 3 · Effects and JS infrastructure
+
+- INV-R30 · `js/auto.js` — the one side-effecting module (`package.json` `sideEffects`), `attachAll(root)` calling 18 attach functions `:37-57`, DOMContentLoaded boot `:63-68`; a new `attachEffects` would be added here to reach `dist/kp-themes.js` (`js/auto.js:14-68`)
+- INV-R31 · Attach convention — every module exports `attachX(root = document, options) → detach` (`js/combobox.js:96`, `colorpicker.js:64`, `datatable.js:142`, `components.js:273,403`, `palette.js:124`, `overlays.js:50,127`, `patterns.js:52`, `structure.js:96`, `forms.js:181`, `tables.js:70`, `datepicker.js:109`, `gridlayout.js:146`, `theme-picker.js:99`, `wizard.js:66`, `upload.js:86`); ~150 distinct `data-kp-*` descriptor names; **no** `data-kp-surface`, `-reveal`, `-accent`, `-divider`
+- INV-R32 · DI5 computation exists — `gates/check-motion.mjs`: constants 3/s and 10% `:18-19`, `parseOpacityKeyframes` `:56-89`, `flashesPerSecond` (worst-case opacity bound) `:102-116`, `animations()` `:131-140`, `unguardedMotion` (only `no-preference` blocks count) `:144-167`, `unsubscribedPreferenceReads` over `fx/*.jsx` only `:179-190`; reads three files `:33` (not `retro-register.css`, not `layout.css`, not any JS); `OUT_OF_SCOPE` by keyframe name `:41-53`. **Blind to** JS-driven effects (decipher, slice, redaction transitions), CSS `transition`s that change luminance, and `clip-path`/`transform` animations. `anatomy.md:54-58` and `docs/DESIGN_INVARIANTS.md:271-274` still say nobody computed it
+- INV-R33 · Reduced motion today — CSS guards `no-preference` (`cyberpunk-register.css:66,136,236`, `_rules.css:536`); React `useReducedMotion` subscribing store, SSR snapshot `true` (`fx/use-reduced-motion.js:16-37`); **no framework-free helper**: no `js/*.js` mentions `prefers-reduced-motion`
+- INV-R34 · React effects — barrel `fx/index.js:9-12` (DecipherText, DigitalRain, ScrambleNumber, useReducedMotion; BootSequence separate, needs `motion`); `effectActive(when, theme)` default `'cyberpunk'` (`fx/when.js:17-22`); `DecipherText` rAF, time-based `charsPerSecond` 30, `aria-label` + `aria-hidden` glyph span (`fx/decipher-text.jsx:31-98`); React-only (README.md:300-304)
+- INV-R35 · Theme detection for "only the active theme's answers" — `currentTheme()` reads `data-theme` on root (`js/theme-core.js:194-203`), `onThemeChange` `:307`, `kp-theme-change` event `:47`; React `useTheme` wraps the same store (`hooks/use-theme.js:114-115`)
+- INV-R36 · `js/contrast.js` exports — `parseHsl` 23, `formatHsl` 30, `hslToRgb` 37, `rgbToHsl` 55, `luminance` 76, `contrast` 87, `hsl` 93, `tokenColour` 106, `meets` 125; gate-side twin `gates/colour.mjs` (used by `tests/registers.spec.mjs:10`)
+- INV-R37 · Event vocabulary a new effect would extend — `kp-theme-*` (`theme-core.js:47-58`), `kp-form-valid/invalid/field-validity/done` (`forms.js:56-68`), `kp-toast-show/hide`, `kp-dialog-open`, `kp-tab-change` (`overlays.js:31-36`), `kp-action-commit/undo`, `kp-copy` (`patterns.js:37-43`); no `kp-effect-*`
+- INV-R38 · Site descriptors claim DI5 coverage for spinner and skeleton "the motion gate measures that" (`gates/site/descriptors.mjs:1302,1339`) — true only for opacity keyframes
+
+### 4 · Test infrastructure the round reuses
+
+- INV-R39 · `tests/ring.mjs` — `tabTo` 26-33, `wearTheme` 36, `shadowLayers` 45-61, `lengths` 64, `indicator` (clone baseline) 73-112, `bothHalves` (outer = outline ≥2px **or** inset contrast ring; `changed`) 125-148, `paintedFocusDelta` (both sides, best delta) 196-216, `paintedFocusPixels` 218+
+- INV-R40 · Fixtures — 15 HTML + 7 JSX bundled by esbuild (`tests/global-setup.mjs:12`); both registers loaded by `button.html:15-16`, `dashboard.html:15-16`, `bundle-loose.html:8-9`; `components.html` loads **no** register (`docs/FEATURES.md:285`); per-theme bare pages `showcase/themes/<name>.html` load both (`gates/generate-showcase.mjs:231-232`) and serve `fixtures.spec`, `registers.spec`, `promises.spec`
+- INV-R41 · Server and ports — `tests/fixtures/server.mjs` (`PORT`, default 4173), `playwright.config.mjs:20` `KP_TEST_PORT`, chromium + firefox `:35-38`, webServer `:39-44`; `.claude/launch.json` fixtures on 4300, scratchpad (the demo) on 4310
+- INV-R42 · Drill convention — 213 `test()` calls in 36 specs; "Drill [KT3]" comments name the removed rule and the red numbers (`tests/button.spec.mjs:62-67,97-100,120-121,132-134`; `registers.spec.mjs:39-43`; `bundle.spec.mjs:92`); MR-NOTCH difference-from-rest rule (`ring.mjs:176-189`)
+- INV-R43 · Flake knobs — `window.kpFormHold`, `kpFormSettle`, `kpFormSettleMs` (`tests/fixtures/components.html:492-495`, `react-components.jsx:153-154`, `tests/forms.spec.mjs:116-158`)
+- INV-R44 · Budgets — `CORPUS_BUDGET_MS = 10000 + DESCRIPTORS.length*1000` (`tests/site.spec.mjs:75,78,111`); `10000 + THEMES.length*1000` (`showcase.spec.mjs:151`); `examples.spec.mjs` on the 30s default; overflow widths 320/768/1280, `minBlockGap` 2 (`gates/config.json`)
+- INV-R45 · Register tests today — TH110 (`button.spec.mjs` ~105-115: `border-radius` 0, gradient), clip/ring delta (~120-140), dashboard second pass under cyberpunk (`dashboard.spec.mjs:99`), retro DI1 (`registers.spec.mjs:23-46`), fx inert/reduced/aria-label (`fx.spec.mjs:17-40`), print on the cyberpunk page (`promises.spec.mjs:11-13`), `gates.test.mjs:114`
+- INV-R46 · Accepted gaps — no BootSequence test, no screenshot comparison (`docs/TEST_PLAN.md:52-75`)
+- INV-R47 · Commit hook runs the `gates` chain but **not** the browser suite (`.githooks/pre-commit:7` → `.claude/hooks/gates.sh`; `test:browser` absent from `gates` in `package.json`)
+
+### 5 · The site and the examples
+
+- INV-R48 · `gates/generate-examples.mjs` — `SHEETS` six sheets incl. both registers `:31` (reason `:24-30`), `page()` with `js/auto.js` `:38-55`, output `examples/`, index `:62+`; "ten" hard-coded in prose (`:1,63,74`; `gates.sh` echo)
+- INV-R49 · `showcase/examples.mjs` — `el`/`renderHTML` `:39,283`, `EXAMPLES` `:354` with ten ids (app-shell, login, list-with-form, settings, wizard, empty-and-error, **hero** 692-729, pricing-and-testimonials, article, profile), `INLINE_STYLE_EXCEPTIONS` `:938`; rendered twice (`showcase/examples-react.jsx`, `tests/fixtures/examples.html`)
+- INV-R50 · Hero example — `section.kp-section.kp-stack.kp-text-center[data-example=hero]`, `h1.kp-text-balance`, `p.kp-prose.kp-text-muted`, `.kp-row` of primary + ghost Button, second section of Cards; probes `:697` — the nearest existing page to the demo (`showcase/examples.mjs:692-729`)
+- INV-R51 · `gates/check-examples-wired.mjs` — walks each descriptor for `data-kp-*` and demands them in the HTML (`:31-40+`); `check-inline-styles.mjs` refuses `style=` outside the exception list
+- INV-R52 · Site shell — `gates/site/chrome.mjs` `shell()` `:26+`, links four sheets + both registers (since 2026-09-07) + `site.css` `:54-66`; 42 descriptors (`gates/site/descriptors.mjs:61-2003`); `check-site.mjs` coverage/truth/one-source; output `site/`
+- INV-R53 · Showcase — `showcase/index.html:12-13` loads both registers; `showcase/specimens.mjs` has **zero** `fx-*`/`.microlabel` specimens; `showcase.css` guarded as scaffolding (`gates/check-layers.mjs:65`)
+- INV-R54 · Where a template page slots — an `EXAMPLES` entry → `examples/<id>.html`, React mount, index, `examples.spec.mjs` both channels, wiring and inline-style gates; nothing else generates a standalone page
+
+### 6 · Release and consumer surface
+
+- INV-R55 · chassis-rs closure — `VENDORED`: `js/no-flash.js`, `js/theme-registry.js`, `js/theme-core.js`, `js/theme-picker.js`, `js/strings.js`, `js/components.js` (`gates/check-closure.mjs:59-72`); a new effects module may not be imported by any of these
+- INV-R56 · Manifest — `FILES` 34 entries (`gates/checksums.mjs:33-66`) ↔ derived from `exports` under `css/`, `js/`, `dist/` plus import walk (`gates/check-manifest.mjs:1-60`); `SHA256SUMS` 34 lines; a new stylesheet or module export must join both
+- INV-R57 · Bundle — `STYLESHEETS` themes, components, cyberpunk-register, retro-register, layout, utilities → `dist/kp-themes.css` (`gates/generate-bundle.mjs:36-43`); `dist/kp-themes.js` = `js/auto.js` closure `:52-63`
+- INV-R58 · Release assets — `SHA256SUMS MIGRATION.md css/themes.css css/components.css dist/kp-themes.css dist/kp-themes.js` (`.github/workflows/release.yml:63-64`); registers are not separate assets
+- INV-R59 · `MIGRATION.md` conventions — newest `## Coming from X to Y` first (`:12`), `### Nothing to change` / `### What does change` / per-feature sections with IDs in brackets; `gates/check-migration.mjs` checks every backticked `.kp-*` against declared classes (`:26-47`)
+- INV-R60 · Export names — `./css/register` → `cyberpunk-register.css` (generic name, `package.json`), `./fx`, `./fx/*`, `./js/auto`, `./js/core`, `./js/picker`, `./js/registry`; `VERSION` `js/theme-registry.js:68`
+- INV-R61 · Theme union — `ThemeName` 24 literals incl. `'cyberpunk'` (`js/theme-registry.d.ts:1`, `index.d.ts:47`); unchanged by a same-name replacement; picker lists from `THEMES` (`js/theme-picker.js:31`)
+- INV-R62 · Ecosystem entry — `~/Projects/dev-procedure/ECOSYSTEM.md:410-490`: names cyberpunk among 24 `:440`, 81 properties `:436`, vendoring consumers kyu/almanac/chassis-rs `:422-425`; no statement about what any theme looks like, so S39's meaning change is a note in MIGRATION, not a contract edit; status lines `:412-413` say "3.2.0 tagged, 4.0.0 in development" while `v4.0.0` is tagged
+- INV-R63 · README claims — `:10` two registers, `:452-460` hook list "work on any markup" (see INV-R6), `:300-304` fx React-only, `:400-402` flicker literal pinned by DI5
+
+### 7 · Demo → package mapping (`signal-yellow.html`, 941 lines)
+
+- INV-R64 · Navbar with dropdown (`:662-689`, `ul.menu > li > a.menu-link + ul.sub`, hover/focus-within glitch `:187-192`) → `NavBar` `components/nav-bar.jsx` (flat `links`, trailing `children` `:53`; no sub-menu prop) + `.kp-nav` `css/components.css:895-960`; nearest dropdown is `DropdownMenu` (`components/overlays.jsx:156-274`, button-triggered `.kp-menu`/`.kp-popover`). **No unit** for a hover sub-list or nav-item glitch
+- INV-R65 · Hero surface `section.hero.on-yellow` (`:690`) → `.kp-section` `css/layout.css:96`; ground switch (`on-yellow`/`on-void` `:312-317`) — **no unit**; nearest mechanism is nested `data-theme` (ECOSYSTEM `:433-436`)
+- INV-R66 · Headline decipher + one-shot slice (`:700`, script `:849-886`, keyframes `:413-429`) → `DecipherText` (React only, INV-R34); `.fx-glitch` is hover-only (INV-R17). Framework-free decipher and load-triggered slice — **no unit**
+- INV-R67 · Lede with `<mark class="kp-classified">` (`:701`, CSS `:568-584`, script `:889-892`) → base `mark` `css/_rules.css:471-475`; no `.kp-lede`; classified/cleared — **no unit**
+- INV-R68 · Buttons solid/ghost/danger/mirror with slit and charge (`:704-705,756-757`, CSS `:236-319`) → `Button` `components/button.jsx` / `.kp-button` INV-R24 + register INV-R10 to INV-R12; mirrored notch and slit — **no unit** (`--kp-button-notch` is single-corner)
+- INV-R69 · Scroll-drawn rules (`.bracket h2 + span.rule` `:732,764`, IntersectionObserver script `:893-903`) → `.fx-rule` static (INV-R14); five themes draw `h1::after` on load (INV-R28); no `IntersectionObserver` anywhere in `js/`, `components/`, `fx/` — **no scroll unit**
+- INV-R70 · Form with validation toast (`:733-760`, script `:914-933`) → `Form`/`FormField` `components/form.jsx:249,485`, `attachForms` `js/forms.js:181` (`kp-field--invalid`, summary, events INV-R37), `toast()`/`toastRegion()` `js/overlays.js:255-281`, `Toasts` `components/overlays.jsx:444`, `.kp-toast` INV-R23; checkbox → `.kp-field--check`
+- INV-R71 · Dossier card with redactions (`:764-775`, `.redact` `:618-634`, script `:905-913`) → `Card` `components/card.jsx` / `.kp-card` 459; redaction that lifts — **no unit** (`.kp-masked` `css/components.css:174` is a mono muted style, not a mask)
+- INV-R72 · Razor tear (`:725,780`, generated SVG `:802-847`) → **no unit**; only `hr` `css/_rules.css:488` and `.kp-menu__separator` 1013 / `.kp-split__separator` 2241
+- INV-R73 · Static scanlines + vignette (`:50-60`) → register texture INV-R5 on the shared `body::after` layer (`css/_rules.css:11-21`); DI9 ceiling `textureOpacityCeiling` 0.06 (`gates/config.json`) — the register sets `--fx-texture-opacity: 1` and carries the 4% inside the gradient
+- INV-R74 · Footer with tear (`:779-797`) → `.kp-footer` `css/components.css:220`; tear — no unit
+- INV-R75 · Palette swatch `style="background:#7a2bff"` (`:717`) → `.kp-swatch` `css/components.css:18`; an inline style fails `check-inline-styles` if the page becomes an example
+- INV-R76 · Demo motion polarity — guards use `prefers-reduced-motion: reduce` with `!important` (`:649-658`) and a JS `reduce` flag (`:800`); `check-motion.mjs:145` recognises only `no-preference` blocks and would report every demo transition/animation as unguarded once authored
+- INV-R77 · Demo animation inventory for DI5 — `strip-in` 142, `slice-a/b` 195-203, `charge` 301, `slice-1/2` 413-429 (opacity 1→0 once), rule `scaleX` transition 509-518, mark clear 574-584, redact transitions 619-634 (staggered 160/320ms), toast opacity 554-562; all one-shot, none opacity-looping
+
+### 8 · Semantic hooks (S45) — what exists
+
+- INV-R78 · `data-kp-semantic` — the only meaning attribute: DI4 contract "must carry text or an accessible name" (`js/components.js:190-200`), emitted by `Alert` (`components/alert.jsx:44`) and badges in showcase/examples (`showcase/examples.mjs:146`, `specimens.mjs:124-134`); it asserts a property, it does not ask a theme for an expression
+- INV-R79 · Emphasis — `mark` has a themed base rule (warning pair, same rule for all 24) `css/_rules.css:471-475`; `em`/`strong` have no rule anywhere; `<em>` rendering in site markdown was the MR-R6-1 decision (`docs/MINI_ROUNDS.md:33`)
+- INV-R80 · Heading accent — already answered per theme in `_rules.css:536-717` (formal, blueprint, deco, academia, nishiki `h1::after`); cyberpunk answers nothing there `:534-535`
+- INV-R81 · Section divider — `hr` `:488-493` is the only shared divider; no `.kp-divider`
+- INV-R82 · Surface — `.kp-section` `css/layout.css:96-103`; `data-theme` on any element is the existing ground switch; no `data-kp-surface`
+- INV-R83 · Reveal — no CSS/JS unit; React-only `DecipherText`; no `data-kp-reveal`
+- INV-R84 · Eyebrow/lede — none; nearest `.kp-prose`, `.kp-text-muted` (`css/layout.css`) and the cyberpunk-scoped `.microlabel` (INV-R6)
+- INV-R85 · Parity-gate precedent — `findAsymmetry` over `tokens.json` (`gates/check-tokens.mjs:39-53`); the only selector parser in gates is `declared()` in `gates/check-migration.mjs:26-38`; no gate checks that every theme answers a selector
+
+### Gaps — needed by the round, no unit today
+
+1. A framework-free effects module with attach/detach, a reduced-motion subscription (INV-R33), theme gating (INV-R35), `data-kp-*` descriptors and `kp-*` events (INV-R31, INV-R37).
+2. The semantic hook vocabulary — surface, emphasis via `mark`, reveal, divider, heading accent — none exist (INV-R78 to INV-R84); no parity gate for selectors (INV-R85).
+3. Navbar strip geometry, dash-prefixed dropdown, hover slice glitch on nav items (INV-R64).
+4. Mirrored notch, slit flanks, one-shot charge on `.kp-button` (INV-R68).
+5. Load-triggered decipher and slice in the framework-free channel (INV-R66).
+6. Redaction that clears, dossier open/close (INV-R71); classified `mark` (INV-R67).
+7. Generated razor tear (INV-R72); scroll-drawn hairline (INV-R69).
+8. DI5 measurement for JS-driven effects, transitions and clip-path animations — `check-motion.mjs` cannot see them (INV-R32); `retro-register.css` and `layout.css` are outside its file list.
+9. Register coverage of the other 56 roots: field label/help/error, nav, toast, dialog, menu, tabs, badge, alert, tag, table, headings, links, `hr`, footer (INV-R29).
+10. A concept-demo template page (S46) — nothing generates a standalone page outside `EXAMPLES` (INV-R54); the demo's inline styles and `reduce`-polarity guards would fail existing gates (INV-R75, INV-R76).
+11. `.fx-*` and `.microlabel` showcase specimens (INV-R53) and a framework-free reduced-motion helper (INV-R33).
+
+### Surprises
+
+- `fx-signal` in cyberpunk is **already** the yellow the round adopts as ground (INV-R2) — it exists today as the "rare third signal".
+- `anatomy.md:54-58`, `DESIGN_INVARIANTS.md:271-274` and S42 say nobody computed the flash rate; `gates/check-motion.mjs` computes it for CSS opacity keyframes and retimed `fx-flicker` on 2026-09-04 (INV-R18, INV-R32). What is true: JS effects and transitions are uncomputed.
+- `anatomy.md:68-70` says the texture moved into the theme at L3 (TH13); it did not — the register still owns it (INV-R5).
+- `.microlabel` depends on `--font-mono` from the Tailwind bridge with no fallback (TH14 unbuilt, INV-R6), contradicting README.md:457.
+- `.fx-signal-badge` comment claims a doubled selector that does not exist (INV-R16).
+- Cyberpunk card rules select `[data-slot='card']`, so plain `.kp-card` markup gets no underglow or notch; only React and the generated pages do (INV-R8).
+- `.fx-pulse` runs `infinite` — the anatomy's prohibition ("never permanent") names glitch, not pulse, but S42's "flash count for anything that repeats" reaches it (INV-R17).
+- `gates.test.mjs:114-118` pins the old `fx-flicker` keyframe by name; replacing the register goes red there before any new test is written (INV-R21).
+- The ECOSYSTEM entry reports 3.2.0 as the tag and 4.0.0 in development; `v4.0.0` is tagged (INV-R62).
+- The commit hook and `npm run gates` never run the Playwright suite (INV-R47).
+- `compliance.mjs:73` checks DI9 over five files while `check-layers.mjs:30-38` checks seven (adds `retro-register.css`, `layout.css`) — two lists that can drift.
