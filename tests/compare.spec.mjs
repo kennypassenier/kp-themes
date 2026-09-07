@@ -95,11 +95,28 @@ test.describe('the compare page', () => {
         await expect.poll(() => opacity('new')).toBeLessThan(0.1);
     });
 
+    // Flake, named [8a]: CI run 34163234434 (chromium only, 2026-09-07) saw
+    // the right frame stay at 0. Two races, both closed: the page attached
+    // its sync on each frame's load event and missed a frame that had
+    // loaded before the script ran, and this test scrolled the left frame
+    // before that frame's own document was in place. Both documents are
+    // now awaited before the scroll.
     test('the frames of a pair scroll together', async ({ page }) => {
         await open(page, 'cyberpunk');
         const pair = page.locator('[data-compare-theme="cyberpunk"] [data-compare-pair=""]');
         const left = pair.locator('iframe[data-compare-side="old"]');
-        await expect(pair.frameLocator('iframe[data-compare-side="new"]').locator('[data-compare-cat="nav"]')).toBeVisible();
+        for (const side of ['old', 'new']) {
+            await expect(pair.frameLocator(`iframe[data-compare-side="${side}"]`).locator('[data-compare-cat="nav"]')).toBeVisible();
+        }
+        await expect
+            .poll(() =>
+                left.evaluate(
+                    (frame) =>
+                        frame.contentDocument.readyState === 'complete' &&
+                        frame.contentDocument.documentElement.scrollHeight > frame.contentWindow.innerHeight + 300,
+                ),
+            )
+            .toBe(true);
         await left.evaluate((frame) => frame.contentWindow.scrollTo(0, 300));
         await expect
             .poll(() => pair.locator('iframe[data-compare-side="new"]').evaluate((frame) => frame.contentWindow.scrollY), { timeout: 3000 })
