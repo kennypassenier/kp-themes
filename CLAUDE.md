@@ -135,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Current phase       | Round six: Phase 2 round one rated 2026-09-07 (TH115–TH128, all Essential); round two (Claude's proposals, mandatory items) next; research for 5.0.0 running (S48) |
-| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                     |
-| Next gate           | Phase 2 round two, then the tally and the freeze; the research findings of S48 go to Kenny before synthwave starts                                                 |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                 |
-| AFK mode            | off                                                                                                                                                                |
+| Field               | Value                                                                                                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six: Phase 2 round one rated 2026-09-07 (TH115–TH128, all Essential); round two (Claude's proposals, mandatory items) next; the 5.0.0 research is consolidated in `docs/RESEARCH_2026-09.md` (S48) |
+| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                                                           |
+| Next gate           | Phase 2 round two, then the tally and the freeze; the research findings of S48 go to Kenny before synthwave starts                                                                                       |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                                                       |
+| AFK mode            | off                                                                                                                                                                                                      |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
