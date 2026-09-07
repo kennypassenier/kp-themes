@@ -566,9 +566,12 @@
                     var frames = pair.querySelectorAll('iframe');
                     var lock = false;
                     frames.forEach(function (frame) {
-                        frame.addEventListener('load', function () {
+                        function attach() {
                             var win = frame.contentWindow;
-                            if (!win) return;
+                            // One listener per document: a load event and the
+                            // early attach below can both reach the same window.
+                            if (!win || win.kpCompareSynced) return;
+                            win.kpCompareSynced = true;
                             win.addEventListener('scroll', function () {
                                 if (lock) return;
                                 lock = true;
@@ -577,7 +580,18 @@
                                 });
                                 lock = false;
                             });
-                        });
+                        }
+                        frame.addEventListener('load', attach);
+                        // The frame may have loaded before this script ran: the
+                        // parser yields on a page with this many frames, and a
+                        // cached specimen fires its load first (CI run
+                        // 34163234434, chromium: the right frame never followed).
+                        try {
+                            var doc = frame.contentDocument;
+                            if (doc && doc.readyState === 'complete' && doc.location.href !== 'about:blank') attach();
+                        } catch (e) {
+                            /* a frame that is not ours yet */
+                        }
                     });
                 });
             })();
