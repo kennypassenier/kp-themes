@@ -135,13 +135,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six: Phase 2 round one rated 2026-09-07 (TH115–TH128, all Essential); round two (Claude's proposals, mandatory items) next; the 5.0.0 research is consolidated in `docs/RESEARCH_2026-09.md` (S48) |
-| Last completed gate | Round six Phase 0 — the concept demo approved, S38–S46 in `docs/SCOPE.md`, the theme keeps the name `cyberpunk`, the old one lives only in 4.x                                                           |
-| Next gate           | Phase 2 round two, then the tally and the freeze; the research findings of S48 go to Kenny before synthwave starts                                                                                       |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                                                       |
-| AFK mode            | off                                                                                                                                                                                                      |
+| Field               | Value                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six: Phase 2 frozen 2026-09-07 (TH115–TH136, 21 Essential, 1 Later); the research findings form (S48) is next, then Phase 3 |
+| Last completed gate | Round six Phase 2 — the tally 21/0/1/0, KT10's measurement made and accepted, the list frozen                                     |
+| Next gate           | The research findings form (per theme: adopt the direction or not), then Phase 3 (tech choice) of round six                       |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                |
+| AFK mode            | off                                                                                                                               |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

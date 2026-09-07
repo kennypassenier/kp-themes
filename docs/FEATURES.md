@@ -418,3 +418,9 @@ by TH127's migration note, not by the ecosystem decision.
 | **Rated** | **22** |
 
 Plus S47 and S48, two scope amendments made at the gate.
+
+**Frozen 2026-09-07.** Kenny confirmed the tally (F1: Akkoord), accepted
+KT10's measurement (K1: Akkoord) and froze the list (F2: Bevriezen).
+TH115–TH136 change through mini-rounds only. The research findings and
+the per-theme lists of 5.0.0 are deliberately outside this freeze: each
+theme gets its own short Phase 2 when its turn comes (TH134).
