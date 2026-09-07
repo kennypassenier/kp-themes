@@ -655,3 +655,19 @@ tokens, CSS and JS only. No change to the theme picker. No change to the
 token goes through the parity gate like every other. Nothing changes for
 the other twenty-three themes. Registers stay opt-in for a consumer; the
 documentation surfaces load them, as decided on 2026-09-07.
+
+**S45 · Meaning in the HTML, expression in the theme.** Kenny's question
+of 2026-09-07, after the demo: can the two-grounds idea and the effects
+carry over to other themes, while plain HTML keeps working on every
+theme? The answer is a small, shared vocabulary of semantic hooks that
+every theme must answer — a surface (`hero` or `app`), emphasis, a
+reveal, a section divider, a heading accent — the way every theme must
+declare the same 81 tokens. The consumer writes `<mark>` or
+`data-kp-surface="hero"` once; signal answers `<mark>` with
+classified-then-cleared on load, another theme with a seal, a highlighter
+stroke or plain bold, and the markup never changes. A theme's answer may
+be quiet, but it may not be missing: a parity gate holds every theme to
+every hook, and the effects module runs only the active theme's answers.
+Signal is the reference implementation of that vocabulary in this round;
+lifting other themes to the same level is a round per theme after it, each
+answering the same hooks in its own idiom.
