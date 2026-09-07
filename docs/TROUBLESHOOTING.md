@@ -44,12 +44,35 @@ saying the browser refused to store it — private mode, blocked storage, a
 full quota. The theme still applies; only the remembering failed. If the
 element is missing from your markup, the message has nowhere to go.
 
-### A button does nothing on the first click
+### A button opens a dialog instead of acting
 
-That is the confirmation, working. A destructive button with
-`data-kp-confirm` arms on the first click — it changes its label to your
-phrase and sets `data-kp-armed="true"` — and acts on the second. It
-disarms after a few seconds, or when it loses focus.
+That is the confirmation, working. Since 4.0.0 a destructive button with
+`data-kp-confirm` swallows the click and opens a modal `<dialog>` carrying
+your phrase. Escape and Cancel do nothing at all; Confirm re-fires the
+click on the button, so your own click handler runs — exactly once — and
+focus comes back to the button. If the button sat in an open menu, that
+menu is shown again before the focus moves.
+
+`data-kp-confirm-mode="inline"` (React: `confirmMode="inline"`) keeps the
+arm-then-act of 3.x, where the first click changes the label to your
+phrase and sets `data-kp-armed="true"`, the second acts, and the arming
+lapses after a few seconds or when the button loses focus.
+
+### The action runs twice, or not at all
+
+Both shapes are one cause: two channels on one button. `js/auto.js`
+attaches `attachConfirmations` over the whole document, and the React
+`Button` writes the same `data-kp-confirm`. Until 4.0.0 the two re-armed
+each other's button forever and the action never fired at any number of
+clicks. The React button now marks its element `data-kp-confirm-owner`
+and the module skips a marked element. If you want the module over a
+React button anyway, pass `attachConfirmations(root, { ownedBy: '' })`.
+
+### `kp-confirm-arm` and `kp-confirm-disarm` no longer fire
+
+They were removed in 4.0.0 together with arm-then-act as the default
+(D3). The dialog replaces what they announced: use the `onConfirmOpen`
+and `onConfirmCancel` props, or call `openConfirmation()` yourself.
 
 ### A destructive button is disabled and I did not disable it
 

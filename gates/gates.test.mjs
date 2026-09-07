@@ -18,6 +18,7 @@ import { checkSecondHalves, checkStateVisibility, themes } from './check-invaria
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { loosePhrases } from './check-strings.mjs';
 import { copyableExports } from './check-manifest.mjs';
+import { VENDORED, closure, specifiers } from './check-closure.mjs';
 import { FILES } from './checksums.mjs';
 import { compareVersions, diagnose } from '../js/diagnostics.js';
 import { DEFAULT_STRINGS } from '../js/strings.js';
@@ -316,6 +317,33 @@ test("TH86: mono's seven status plates are a lightness ladder, apart with hue re
             assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
         }
     }
+});
+
+test('AR28: the vendored modules import nothing outside themselves', () => {
+    // The gate's own subject, as a unit: the six files chassis-rs bakes
+    // in are closed under import. Drilled red twice against the real
+    // source before it was trusted — the comments in check-closure.mjs
+    // name both injected edges.
+    const read = (/** @type {string} */ file) => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+    const { reached, missing } = closure(VENDORED, read);
+    assert.deepEqual(missing, []);
+    assert.deepEqual(
+        [...reached.keys()].filter((file) => !VENDORED.includes(file)),
+        [],
+    );
+    assert.equal(VENDORED.length, 6);
+});
+
+test('AR28: the closure walk reads an import it must not miss', () => {
+    // A gate that finds nothing passes everything. These are the shapes
+    // the six actually use, plus the two that would slip past a naive
+    // scan: a multi-line import and a dynamic one.
+    assert.deepEqual(specifiers("import { a } from './b.js';"), ['./b.js']);
+    assert.deepEqual(specifiers("import {\n    a,\n    b,\n} from './c.js';"), ['./c.js']);
+    assert.deepEqual(specifiers("export { a } from './d.js';"), ['./d.js']);
+    assert.deepEqual(specifiers("const m = await import('./e.js');"), ['./e.js']);
+    // A comment is not an import, and neither is a string that looks like one.
+    assert.deepEqual(specifiers("// import { a } from './f.js';"), []);
 });
 
 test('KT7: every check script runs in the gates chain, in the hook, and CI runs the chain', () => {

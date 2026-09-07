@@ -7,15 +7,16 @@ export { default as Field } from './components/field.jsx';
 export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
 export {
-    ARM_EVENT as CONFIRM_ARM_EVENT,
+    CONFIRM_MODES,
+    CONFIRM_OWNED,
     CONFIRM_WINDOW_MS,
-    DISARM_EVENT as CONFIRM_DISARM_EVENT,
     EXEMPT as CONTRACT_EXEMPT,
     VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT,
     attachConfirmations,
     attachSkipLinks,
     enforceContracts,
     findViolations,
+    openConfirmation,
     skipTo,
 } from './js/components.js';
 export {

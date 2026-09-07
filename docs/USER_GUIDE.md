@@ -231,12 +231,29 @@ come from the dictionary. The rule is the same; the ownership moved:
 <button class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Zeker?">Verwijderen</button>
 ```
 
-The confirmation is a small obstacle rather than a dialog: the first click
-arms the button and changes its label to your phrase, the second acts, and
-the arming lapses after a few seconds. That shape is what the evidence
-supports — a plain "are you sure?" still works for at most a fifth of
-people after twenty exposures, one carrying a small obstacle for 44 to 74
-per cent.
+**The confirmation is a modal dialog** [TH107, since 4.0.0]. The click is
+swallowed, a native `<dialog>` opens with your phrase as its title, and
+the browser does the focus trap, the Escape close and the focus return.
+Escape and Cancel do nothing at all. Confirm re-fires the click on the
+button, so the handler you already had runs exactly once and you change
+no code; if the button sat in a menu on the popover layer, that menu is
+shown again before focus returns to it, because `showModal()` closes
+every open `popover="auto"`.
+
+Both labels and the description come from the dictionary
+(`confirmAccept`, `confirmCancel`, `confirmDescription`), so a consumer
+replaces them like every other string. `openConfirmation(button, …)` is
+exported if you want the same dialog somewhere else, and it hands you the
+`<dialog>` it made.
+
+The obstacle of 3.x is still there as a variant:
+`data-kp-confirm-mode="inline"`, or `confirmMode="inline"` on the React
+button. The first click arms the button and changes its label to your
+phrase, the second acts, and the arming lapses after a few seconds. That
+shape is what the evidence supports — a plain "are you sure?" still works
+for at most a fifth of people after twenty exposures, one carrying a small
+obstacle for 44 to 74 per cent — and the dialog is the same obstacle
+somewhere a screen reader and a keyboard both find it.
 
 **A badge whose colour means something must say what it means** [DI4].
 Seven pale plates are one plate to a reader who cannot tell those colours

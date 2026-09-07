@@ -145,6 +145,10 @@ var DEFAULT_STRINGS = Object.freeze({
   contrastPasses: "passes",
   contrastFails: "too little",
   confirm: "Confirm",
+  /** The confirmation dialog TH107 opens: its two buttons, its description, and what a screen reader hears when it opens. */
+  confirmAccept: "Yes, do it",
+  confirmCancel: "Cancel",
+  confirmDescription: "This cannot be undone. Cancel leaves everything as it is.",
   save: "Save",
   mainNavigation: "Main navigation",
   skipToContent: "Skip to the content",
@@ -253,6 +257,9 @@ var STRINGS_NL = Object.freeze({
   contrastPasses: "haalbaar",
   contrastFails: "te weinig",
   confirm: "Bevestigen",
+  confirmAccept: "Ja, doen",
+  confirmCancel: "Annuleren",
+  confirmDescription: "Dit kan niet ongedaan gemaakt worden. Annuleren laat alles zoals het is.",
   save: "Opslaan",
   mainNavigation: "Hoofdnavigatie",
   skipToContent: "Naar de inhoud",
@@ -288,9 +295,59 @@ function getStrings() {
 
 // js/components.js
 var VIOLATION_EVENT = "kp-contract-violation";
-var ARM_EVENT = "kp-confirm-arm";
-var DISARM_EVENT = "kp-confirm-disarm";
 var CONFIRM_WINDOW_MS = 4e3;
+var CONFIRM_OWNED = "[data-kp-confirm-owner]";
+var unlocked = null;
+var dialogSeq = 0;
+function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel" } = {}) {
+  const s = { ...getStrings(), ...strings };
+  const text = phrase ?? button.getAttribute("data-kp-confirm") ?? s.confirm;
+  const displaced = [...document.querySelectorAll("[popover]")].filter((el) => el.matches(":popover-open"));
+  const id = `kp-confirm-${++dialogSeq}`;
+  const dialog = document.createElement("dialog");
+  dialog.className = `kp-dialog kp-confirm ${className}`.trim();
+  dialog.setAttribute("data-kp-confirm-dialog", "");
+  dialog.setAttribute("aria-labelledby", `${id}-phrase`);
+  dialog.setAttribute("aria-describedby", `${id}-description`);
+  const title = document.createElement("h2");
+  title.className = "kp-dialog__title";
+  title.id = `${id}-phrase`;
+  title.textContent = text;
+  const description = document.createElement("p");
+  description.className = "kp-dialog__description";
+  description.id = `${id}-description`;
+  description.textContent = s.confirmDescription;
+  const cancel = document.createElement("button");
+  cancel.type = "button";
+  cancel.className = "kp-button";
+  cancel.setAttribute("data-kp-confirm-cancel", "");
+  cancel.textContent = s.confirmCancel;
+  cancel.addEventListener("click", () => dialog.close(""));
+  const accept = document.createElement("button");
+  accept.type = "button";
+  accept.className = "kp-button kp-button--destructive";
+  accept.setAttribute("data-kp-confirm-accept", "");
+  accept.textContent = s.confirmAccept;
+  accept.addEventListener("click", () => dialog.close("accept"));
+  const actions = document.createElement("div");
+  actions.className = "kp-dialog__actions";
+  actions.append(cancel, accept);
+  dialog.append(title, description, actions);
+  document.body.append(dialog);
+  dialog.addEventListener("close", () => {
+    const taken = dialog.returnValue === "accept";
+    dialog.remove();
+    for (const popover of displaced) {
+      if (popover.isConnected && !popover.matches(":popover-open")) popover.showPopover();
+    }
+    if (button.isConnected) button.focus();
+    if (taken) onAccept?.();
+    else onCancel?.();
+  });
+  dialog.showModal();
+  (initialFocus === "accept" ? accept : cancel).focus();
+  return dialog;
+}
 var EXEMPT = "[data-kp-contract-ignore]";
 function findViolations(root = document, { rules = ["DI10", "DI4"], exempt = EXEMPT } = {}) {
   const violations = [];
@@ -343,34 +400,53 @@ function restore(el) {
   changed.delete(el);
   el.removeAttribute("data-kp-contract-error");
 }
-function attachConfirmations(root = document, { windowMs = CONFIRM_WINDOW_MS, disarmOnBlur = true } = {}) {
+function attachConfirmations(root = document, { mode = "dialog", windowMs = CONFIRM_WINDOW_MS, disarmOnBlur = true, strings, ownedBy = CONFIRM_OWNED, dialogClassName = "" } = {}) {
   const cleanups = [];
   for (const el of root.querySelectorAll("[data-kp-confirm]")) {
     const button = (
       /** @type {HTMLButtonElement} */
       el
     );
+    if (ownedBy !== "" && button.matches(ownedBy)) continue;
     if (button.dataset.kpConfirmAttached === "1") continue;
     button.dataset.kpConfirmAttached = "1";
     const original = button.textContent ?? "";
     const phrase = button.dataset.kpConfirm || getStrings().confirm;
+    const elementMode = button.dataset.kpConfirmMode === "inline" || button.dataset.kpConfirmMode === "dialog" ? button.dataset.kpConfirmMode : mode;
     const window_ = Number(button.dataset.kpConfirmMs) || windowMs;
     let armed = false;
     let timer = 0;
-    const disarm = (announce = true) => {
-      const was = armed;
+    let open = null;
+    const disarm = () => {
       armed = false;
       button.textContent = original;
       button.removeAttribute("data-kp-armed");
       clearTimeout(timer);
-      if (was && announce) button.dispatchEvent(new CustomEvent(DISARM_EVENT, { bubbles: true }));
     };
     const onBlur = () => {
       if (disarmOnBlur) disarm();
     };
-    const onClick = (event) => {
+    const onDialogClick = (event) => {
+      if (unlocked === button) {
+        unlocked = null;
+        return;
+      }
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (open?.open) return;
+      open = openConfirmation(button, {
+        phrase,
+        strings,
+        className: dialogClassName,
+        onAccept: () => {
+          unlocked = button;
+          button.click();
+        }
+      });
+    };
+    const onInlineClick = (event) => {
       if (armed) {
-        disarm(false);
+        disarm();
         return;
       }
       event.preventDefault();
@@ -378,15 +454,17 @@ function attachConfirmations(root = document, { windowMs = CONFIRM_WINDOW_MS, di
       armed = true;
       button.textContent = phrase;
       button.setAttribute("data-kp-armed", "true");
-      button.dispatchEvent(new CustomEvent(ARM_EVENT, { bubbles: true, detail: { windowMs: window_ } }));
       timer = window.setTimeout(disarm, window_);
     };
+    const onClick = elementMode === "inline" ? onInlineClick : onDialogClick;
     button.addEventListener("click", onClick, { capture: true });
-    button.addEventListener("blur", onBlur);
+    if (elementMode === "inline") button.addEventListener("blur", onBlur);
     cleanups.push(() => {
       button.removeEventListener("click", onClick, { capture: true });
-      button.removeEventListener("blur", onBlur);
+      if (elementMode === "inline") button.removeEventListener("blur", onBlur);
       delete button.dataset.kpConfirmAttached;
+      if (unlocked === button) unlocked = null;
+      open?.close("");
       disarm();
     });
   }

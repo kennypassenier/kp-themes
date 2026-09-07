@@ -130,11 +130,13 @@
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A destructive button that confirms</figcaption>
-                        <p class="kp-text-muted">The first click arms the button and changes its label; a second click within the window acts, and moving away disarms it. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.</p>
+                        <p class="kp-text-muted">Since 4.0.0 the click opens a modal dialog carrying your phrase: Escape and Cancel do nothing, Confirm re-fires the click so your own handler runs exactly once, and focus comes back to the button. Add `data-kp-confirm-mode=&quot;inline&quot;` for the arm-then-act of 3.x, where the label changes and a second click acts. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete this application?">Delete</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete this application?" data-kp-confirm-mode="inline">Delete, the 3.x way</button>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete this application?&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete this application?&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete this application?&quot;</span> <span class="kp-code__keyword">data-kp-confirm-mode</span><span class="kp-code__string">=&quot;inline&quot;</span>&gt;Delete, the 3.x way&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A row action that acts at once and offers the way back</figcaption>
@@ -160,8 +162,13 @@
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-armed</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-confirm</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-confirm-accept</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-confirm-attached</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-confirm-cancel</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-confirm-dialog</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-confirm-mode</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-confirm-ms</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-confirm-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-contract-error</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-contract-ignore</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-destructive</code></td><td>selector</td></tr>
@@ -192,8 +199,12 @@
                             <tr><td><code>onUndo</code></td><td><code>() =&gt; void</code></td><td>optional</td><td>Offered instead of a confirmation — SC 3.3.4 accepts either. Called if the person takes the undo.</td></tr>
                             <tr><td><code>undoMs</code></td><td><code>number</code></td><td>optional</td><td>How long the undo is offered. Default UNDO_MS.</td></tr>
                             <tr><td><code>undoLabel</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>Default: the dictionary's `undo`.</td></tr>
-                            <tr><td><code>confirmWindowMs</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>armed</code></td><td><code>boolean</code></td><td>optional</td><td>Controlled armed state.</td></tr>
+                            <tr><td><code>confirmWindowMs</code></td><td><code>number</code></td><td>optional</td><td>How long `confirmMode=&quot;inline&quot;` stays armed.</td></tr>
+                            <tr><td><code>confirmMode</code></td><td><code>'dialog' | 'inline'</code></td><td>optional</td><td>Default 'dialog': a modal &lt;dialog&gt; [TH107]. 'inline' is 3.x's arm-then-act.</td></tr>
+                            <tr><td><code>onConfirmOpen</code></td><td><code>(dialog: HTMLDialogElement) =&gt; void</code></td><td>optional</td><td>Handed the dialog this opened, so the state has a way out [KT6].</td></tr>
+                            <tr><td><code>onConfirmCancel</code></td><td><code>() =&gt; void</code></td><td>optional</td><td>Escape or Cancel. The action does not run.</td></tr>
+                            <tr><td><code>confirmDialogClassName</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>armed</code></td><td><code>boolean</code></td><td>optional</td><td>Controlled armed state (`confirmMode=&quot;inline&quot;` only).</td></tr>
                             <tr><td><code>onArmedChange</code></td><td><code>(armed: boolean) =&gt; void</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>disarmOnBlur</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
                             <tr><td><code>onContractError</code></td><td><code>(rule: 'DI10', message: string) =&gt; void</code></td><td>optional</td><td>Default: console.error.</td></tr>
@@ -205,8 +216,6 @@
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-contract-violation</code></td><td>Dispatched on the offending element, bubbling, with the Violation as detail.</td></tr>
-                            <tr><td><code>kp-confirm-arm</code></td><td>Dispatched on a destructive button when its first click armed it.</td></tr>
-                            <tr><td><code>kp-confirm-disarm</code></td><td>Dispatched when an armed button disarms without acting: timeout, blur, or detach.</td></tr>
                             <tr><td><code>kp-action-commit</code></td><td>Fired on the row when an optimistic action commits — the undo window closed [TH26]. Detail: ActionDetail.</td></tr>
                             <tr><td><code>kp-action-undo</code></td><td>Fired on the row when it is undone instead. Detail: ActionDetail.</td></tr>
                     </tbody></table></div>
@@ -214,6 +223,7 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-confirm-max-width</code></td><td><code>min(26rem, calc(100vw - 2rem))</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code></code></td></tr>
@@ -238,9 +248,10 @@
                             <tr><td><code>.kp-button--destructive</code></td><td>Deletes and disconnections. It has to carry a confirmation or an undo as well.</td></tr>
                             <tr><td><code>.kp-button--ghost</code></td><td>No ground and no boundary until it is hovered, for actions that sit inside dense rows.</td></tr>
                             <tr><td><code>.kp-button__undo</code></td><td>The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.</td></tr>
+                            <tr><td><code>.kp-confirm</code></td><td>The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.</td></tr>
                             <tr><td><code>:hover / :active</code></td><td>Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.</td></tr>
                             <tr><td><code>:disabled</code></td><td>A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.</td></tr>
-                            <tr><td><code>armed</code></td><td>A confirming button between its first and second click. The module writes the state, the label changes, and a timeout disarms it.</td></tr>
+                            <tr><td><code>armed</code></td><td>A confirming button between its first and second click, in the `inline` variant only. The module writes the state, the label changes, and a timeout disarms it. The default variant opens a dialog instead and writes nothing on the button.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
