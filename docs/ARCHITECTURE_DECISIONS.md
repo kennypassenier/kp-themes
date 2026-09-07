@@ -1005,146 +1005,220 @@ site. One test loads the fixture the way chassis-rs does — no register,
 no effects module, no webfonts — and proves the page stays functional
 and readable (S45's quiet answers).
 
-## Round six — Phase 4 draft (2026-09-07, before the critic)
+## Round six — Phase 4, revised after the critic (2026-09-07)
 
-Eleven decisions for the effects module, the hooks, the register, the
-fonts and the demo template. Drafted from the frozen list (TH115–TH136),
-the Phase 3 choices (T17–T21) and the inventory (INV-R1–R85). The critic
-attacks this draft next; surviving objections go into the gate form.
+The first draft (AR34–AR44, commit `789f490`) went to the
+architecture-critic in a fresh context. Twenty objections came back,
+four blocking; five of its factual claims were re-checked in the code
+and all five held. The decisions below are the revised list; each names
+the objection it answers, and the gate form shows both sides. Kenny
+freezes the list at the gate.
 
-## AR34 · One effects module, one attach, one detach, no ambient work
+## AR34 · One effects module; the start state is armed by a root attribute before first paint
 
 `js/effects.js` exports `attachEffects(root = document, options) →
-detach`, the shape every module already has (INV-R31). Importing it does
-nothing; `js/auto.js` calls it like the other eighteen. Inside: one
-`IntersectionObserver` per root for the reveals (T17), one
-`matchMedia('(prefers-reduced-motion: reduce)')` subscription that
-resolves every running effect to its rest state mid-session (DI7), and
-one `onThemeChange` subscription (INV-R35) that re-reads which answers
-apply. React gets `<Effects>` and `useEffects()` wrapping the same
-function (AR29's pattern: the module owns behaviour, React owns
-lifecycle). `detach` removes every observer, listener and class the
-module added. No timers survive `detach`.
+{ detach, observe }`, importing does nothing, `js/auto.js` calls it.
+**Critic #2 (blocking):** end-state classes (`is-in`) make the no-class
+CSS the *start* state, so a page without the script shows undrawn lines
+— the opposite of T17's "drawn is the default" — and with the script,
+`auto.js` runs at `DOMContentLoaded` (`js/auto.js:66`), after first
+paint on a streamed page: firefox paints drawn, snaps to undrawn,
+redraws. **Revised:** the register keys every start state on a root
+attribute, `[data-kp-effects] [data-kp-reveal]:not(.is-in)`; that
+attribute is set synchronously by the head-script slot `js/no-flash.js`
+already owns, so the start state holds from first paint with the script
+and the rest state holds without it. `detach` removes the one attribute
+and nothing else. **Critic #7:** two roots on one page (React island plus
+server markup) and elements added later. **Revised:** a module-level
+`WeakSet` of started elements plus `data-kp-effects-done` guard a
+second attach; the handle exposes `observe(el)` for content rendered
+later; a `MutationObserver` is not built (priced: a subtree scan per
+mutation on a dashboard that repaints tables). The two subscriptions
+(`matchMedia` for DI7, `onThemeChange`) survived the critic unchanged.
 
-## AR35 · The hook vocabulary is five attributes and one element, read by the module and answered by CSS
+## AR35 · The hook values name the role, never the expression
 
-The contract of S45, concretely: `data-kp-surface="hero|app"` (TH116),
-`<mark>` for emphasis (TH120), `data-kp-reveal="decipher|classified|
-draw"` (TH119, TH120, TH122), `data-kp-divider="tear"` (TH121) and the
-heading accent, which needs no attribute — every `h1`/`h2` inside a
-`data-kp-surface` gets the theme's answer. The module only ever toggles
-state classes (`is-in`, `is-cleared`, `is-deciphered`, `is-glitching`);
-the register decides what those classes look like. A theme with no rule
-for a class has answered quietly. The dossier variant is the same hook on
-a container: `data-kp-reveal="classified"` on a card with a
-`data-kp-reveal-trigger` child.
+**Critic #1 (blocking):** `decipher`, `classified`, `tear` are cyberpunk
+expressions written into the consumer's HTML; under synthwave a
+"tear" is a horizon, and S20 makes the names permanent at 5.0.0.
+**Revised:** `data-kp-surface="hero|app"`; `<mark>` for emphasis;
+`data-kp-reveal="headline|emphasis|rule"` (what the element *is*);
+`data-kp-divider` bare, or `="section"`; the heading accent by position
+inside a surface. The module toggles state classes only (`is-in`,
+`is-cleared`, `is-deciphered`, `is-glitching` — pinned as contract
+values, consumers will select on them); the register decides the look;
+a theme without a rule has answered quietly. The dossier variant is
+`data-kp-reveal="emphasis"` on a container with a
+`data-kp-reveal-trigger` child. **Critic #12:** `content: 'CLASSIFIED'`
+in CSS is a user-visible string KT5's gate never reads. **Revised:** the
+register uses `content: attr(data-kp-label)`; the consumer writes the
+label from `js/strings.js`; punctuation-only prefixes (`/// `, `> `)
+are exempted in `check-strings.mjs` with a reason.
 
-## AR36 · The hook parity gate reads a per-theme manifest, not the CSS
+## AR36 · One hook matrix for all themes; a non-quiet answer names a selector scoped to that theme
 
-`gates/check-hooks.mjs` refuses a theme that does not answer every hook.
-"Answer" is declared, not inferred from selectors: each theme carries
-`themes/<name>/hooks.json` naming, per hook, either the register rule
-that answers it (`"emphasis": "css/cyberpunk-register.css#mark"`) or
-`"quiet"` with one line of reason. The gate checks the file exists, every
-hook has an entry, every referenced selector exists in the named
-stylesheet, and no entry is empty. Inferring from CSS was measured
-against: `declared()` in `check-migration.mjs` is the only selector
-parser the gates have and it cannot tell an answer from an accident.
-Drilled red at birth by removing one entry (rule 7d).
+**Critic #9:** 24 manifests where 23 carry no information, and "the
+selector exists in the named stylesheet" lets formal cite cyberpunk's
+rule. **Revised:** one file, `themes/hooks.json`, a matrix with a
+`default` row (the shared base answers, e.g. `mark` at
+`css/_rules.css#mark`) and a row per theme that overrides; a non-quiet
+entry must name a selector that contains `[data-theme='<that theme>']`,
+checked as written against the stylesheet; a quiet entry carries its
+reason. `gates/check-hooks.mjs` drilled red at birth by blanking one
+cell.
 
-## AR37 · The register coverage gate lists the 64 roots and demands a rule or a reason
+## AR37 · Register coverage is inferred with a non-empty-body check, one parser for both gates
 
-`gates/check-register-coverage.mjs` parses `css/components.css` for the
-`.kp-*` roots (the 64 of INV-R23, read at run time so the list cannot go
-stale), parses the register for the roots it touches, and fails on any
-root with neither a rule nor an entry in an exception list with its
-reason (KT10's `CROSS_REFERENCES` shape). TH124's bar. Drilled red by
-removing one root's rule.
+**Critic #10:** AR36 refused to infer while AR37 inferred, and "touches"
+would count an empty rule or a `:hover::after`. **Revised:** one selector
+parser (`gates/selectors.mjs`) serves `check-hooks.mjs` and
+`check-register-coverage.mjs`; a root counts as covered only by a rule
+whose selector names the root itself (not only a descendant or
+pseudo-element) and whose body is non-empty. The 64 roots are read from
+`css/components.css` at run time; utility-shaped roots (`sr-only`,
+`skip-link`, `swatch`, `grid-wrap`, `table-wrap`, `tag-list`,
+`theme-group`, `col-low`) start in the exception list with the reason
+"layout or accessibility helper, no visual identity" — eight entries,
+not fifteen.
 
-## AR38 · Two surfaces are twelve tokens, declared by all twenty-four themes
+## AR38 · The hero surface is a generated ground, states included, painted in `themes.css`
 
-TH116's surfaces are tokens under S47: `surface-hero-bg`,
-`surface-hero-fg`, `surface-hero-muted`, `surface-hero-border`,
-`surface-hero-primary`, `surface-hero-primary-fg`, and the same six for
-`app`. The contract grows from 81 to 93 and the parity gate holds every
-theme to it in the same change; a theme with one ground declares both
-sets equal. `[data-kp-surface="hero"]` remaps `--background`,
-`--foreground`, `--border`, `--primary` and `--primary-foreground` to the
-hero set, so every component underneath reads the surface without
-knowing it. Contrast pairs for both sets join `check-contrast.mjs`.
+**Critic #4 (blocking):** six tokens remap `--primary` but not its DI3
+states (`--primary-hover` is a per-theme literal from
+`gates/generate-themes.mjs:92-99`), so the hero's own button hovers with
+the app's colour; no gate measures focus on the hero; nothing paints the
+surface. **Revised:** a theme's `tokens.json` gains the hero *sources*
+(`surface-hero-bg`, `-fg`, `-fg-2`, `-muted`, `-border`, `-primary`,
+`-danger`) under S47 — every theme declares them, one-ground themes
+point them at the app values; the generator derives hover, active and
+disabled exactly as it does for the app ground and emits the whole set
+under `[data-theme='x'] [data-kp-surface="hero"]` in `css/themes.css`
+(layer `kp.base`, so components and registers layer above it as today).
+`check-contrast.mjs`, `check-invariants.mjs` (`FOCUS_SURFACES`) and the
+DI tables iterate surfaces. **Critic #19:** the demo's hero also reads a
+second foreground, red-on-yellow for the danger frame, and a display
+size no `--kp-text-*` step carries; the sources above include `-fg-2`
+and `-danger`, and a `--kp-text-display` step joins the scale.
 
-## AR39 · Fonts ship as latin woff2 subsets under `fonts/`, declared in `css/fonts.css`, gated on licence and size
+## AR39 · Fonts ship per family, subset per script, gated on licence, reserved names and a 1.5 MB budget
 
-T19's shape. Inventory, measured 2026-09-07 from the `theme-font-body`
-and `theme-font-display` tokens: 29 distinct first-choice families across
-the 24 themes (Instrument Sans in fourteen), plus cyberpunk's new Big
-Shoulders Display and Rajdhani and synthwave's candidates; all on Google
-Fonts. Layout: `fonts/<family-slug>/<weight>.woff2`, latin subset only,
-the weights a theme actually uses; `css/fonts.css` holds one
-`@font-face` per file with `font-display: swap`; a new export
-`./css/fonts`; every file joins the manifest and `SHA256SUMS`
-(`check-manifest.mjs` derives it). `gates/check-fonts.mjs` refuses a
-family without a recorded SIL OFL (or equivalent) licence file beside it,
-a face no theme names, and a total over the size budget knob
-`fontsBudgetBytes` in `gates/config.json` (proposed default 3 MB; the
-critic should question the number). Consumers keep the choice: the
-stylesheet is opt-in like the registers, and a theme's fallback stack
-still renders without it (T19's tested fallback stays).
+**Critic #3 (blocking):** `check-manifest.mjs:86-87` admits only
+`css|js|dist` and `.css|.js`, so font files are refused, and
+`release.yml` attaches no fonts. **Revised:** the gate grows a `url()`
+walk and a `fonts/` prefix (drilled red); the release gains a
+`fonts.tar` asset; `css/fonts.css` is listed as copyable only together
+with it. **Critic #13:** chassis-rs already ships 17 faces (latin +
+latin-ext, 215 kB, `crates/chassis/static/fonts.css`, from bunny.net)
+and will keep them — our relative `url(../fonts/…)` cannot resolve under
+their `/static/`; measured per latin face 9–18 kB, so 3 MB was slack.
+**Revised:** per-family subpath exports `./fonts/<family>` so JobTracker
+takes one family, not twenty-nine; budget knob `fontsBudgetBytes`
+default 1.5 MB; the migration note tells chassis-rs the file names so
+their `fonts.css` can point at the same faces. **Critic #13 also
+corrects T19's premise:** chassis-rs was never blind to typefaces — it
+self-hosts; the shipped fonts serve the consumers that vendor a
+stylesheet and nothing else (kyu, almanac) and the npm consumer.
+**Latin-only breaks two themes** (nishiki: Zen Kaku Gothic New, Shippori
+Mincho; tazhib: Vazirmatn, Markazi Text): those ship their script subset
+(`japanese`, `arabic`) beside latin, and the budget is per theme, not
+per package. **Critic #14:** subsetting is a Modified Version under the
+OFL; a family with a Reserved Font Name may not ship subset under it.
+**Revised:** `gates/check-fonts.mjs` records the RFN per family and
+refuses a subset under a reserved name; `fonts/LICENSES.md` lists every
+family with its licence; `package.json` notes the OFL tree beside MIT.
+`font-display: swap` stays (no invariant forbids it); tests await
+`document.fonts.ready` before any measurement (critic #18).
 
-## AR40 · The DI5 timing table is a JSON export of the module, checked by the gate and calibrated by one test
+## AR40 · The DI5 table lives in the module; three effects are calibrated; the block glyphs go
 
-`js/effects.js` exports `TIMINGS`: per effect `{ durationMs, cycles,
-property, luminanceSteps }`; the register's keyframes carry the same
-facts in a comment block the gate parses (`/* di5: opacity 1→0→1, 600ms,
-once */`). `check-motion.mjs` grows a second pass that reads both and
-writes `reports/di5.md` — every effect, its flash rate, pass or over. Per
-S42 the gate never edits an effect; it fails only when the table is
-missing or malformed. One Playwright test drives the slice glitch,
-samples luminance per frame and asserts within 10% of the table (T20).
+**Critic #8:** the draft's comment example did not describe the demo's
+slice; decipher swaps half the glyphs per frame between letters and
+solid blocks at 7.4 rem — a mean-luminance swing over a 341×256 px area,
+the DI5 case; a comment block drifts from its keyframes. **Revised:**
+`js/effects.js` exports `TIMINGS` per effect (`durationMs`, `cycles`,
+`property`, `luminanceSteps`); the register's keyframes carry no
+comment — `check-motion.mjs` reads the keyframe names from the register
+and fails when one has no table row, and reads the table's opacity
+steps against the keyframe's own stops. Three calibrations, not one:
+decipher, slice, and the classified wipe, each within 10% of the table.
+The decipher glyph set drops `▮▯` (React's `DECIPHER_GLYPHS` has none).
+The report is `reports/di5.md`; per S42 the gate corrects nothing.
+**Critic #17:** the module's own `matchMedia` read is allowlisted in the
+gate's scan, which grows from `fx/*.jsx` to `js/`.
 
-## AR41 · The tear generator pins its seed as a contract value
+## AR41 · The tear's whole parameter set is the contract; two seeds; the hairline is a layer
 
-`gates/generate-tear.mjs` builds the razor path from a seeded generator
-(the demo's algorithm: runs 40–180px, 18% deep cuts, 32% notches) and
-writes `css/cyberpunk-register.css`'s `--fx-tear` data URI. The seed is a
-pinned constant with a comment saying why: a changed seed changes a
-released theme's shape, which S20 forbids inside a version. A gate
-compares the generated URI with the committed one and fails on drift
-(T18).
+**Critic #15:** the approved demo uses seeds 7 and 23 — two tears on
+one page — and a cyan hairline a mask cannot carry; the seed alone is
+not the shape. **Revised:** `gates/tear.json` pins the generator's
+parameters (LCG constants, run 40–180, deep cut 18%, notch 32%, widths,
+ridge depth 26, viewBox 1920×44) as one contract value with its reason;
+the generator emits `--fx-tear` (seed 7) and `--fx-tear-alt` (seed 23);
+the hairline is a `::after` layer in the register, `--fx-tear-line`;
+`--kp-tear-height` scales the box with `preserveAspectRatio` so the cut
+angles hold. The drift gate compares both URIs.
 
-## AR42 · The concept demo is one template rendered per theme, in both channels, at `concept/<theme>.html`
+## AR42 · One `concept` example, rendered per theme by query, under the gates that exist
 
-TH126: `showcase/concept.mjs` renders the standard page (S46's element
-list) from the same `el`/`renderHTML` helpers as the examples; a React
-twin renders it through the components. `gates/generate-concept.mjs`
-writes `concept/<theme>.html` for every theme into the site output; the
-site navigation links them (the S46 requirement that Kenny opens a URL).
-The page is the fixture for TH117–TH122 and passes
-`check-examples-wired` and `check-inline-styles` like any example. It
-carries no theme-specific markup — only the hooks — so the same file is
-the demo for synthwave next.
+**Critic #11:** neither `check-examples-wired` nor `check-inline-styles`
+reads a `concept/` directory. **Revised:** one entry `concept` in
+`EXAMPLES` (so it lands in `examples/concept.html` under both gates and
+`examples.spec.mjs`, both channels), a theme picker on the page reading
+`?theme=<name>`, and a generated index page linking
+`concept.html?theme=<name>` for all twenty-four — S46's URL per theme,
+one file. Copy text comes from `js/strings.js` (KT5).
 
-## AR43 · The configuration surface of round six
+## AR43 · The configuration surface, aligned with the approved demo
 
-Knobs, all CSS custom properties with a default in the register or a
-`data-kp-*` attribute, per KT6 and standing rule 27: `--kp-button-notch`
-(7px), `--kp-button-slit` (10px), `.kp-button--mirror`; `--kp-nav-notch`
-(14px) and `data-kp-nav-side="start|end"` for TH117's dynamic notch;
-`--kp-decipher-cps` (30 characters per second) and `--kp-decipher-glyphs`;
-`--kp-reveal-stagger` (160ms); `--kp-reveal-threshold` (0.3, the
-IntersectionObserver ratio); `--kp-classified-delay` (1500ms);
-`--kp-tear-height` (44px); `--fx-pulse-cycles` stays queued (TH132).
-`attachEffects(root, { reduceMotion, theme })` overrides the two
-subscriptions for tests. Contract values, pinned with a comment: the tear
-seed (AR41), the DI5 thresholds 3/s and 10%, the hook names of AR35.
+**Critic's fixed check:** four values silently changed from the demo and
+fourteen bare numbers had no knob. **Revised, taking the demo's values
+as defaults (S46: the demo is the gate):** `--kp-button-notch` 14px,
+`--kp-button-slit` 10px, `.kp-button--mirror`; `--kp-nav-notch` 13px,
+`data-kp-nav-side="start|end"`, `--kp-nav-enter` 520ms/80ms;
+`--kp-decipher-cps` 26, `--kp-decipher-lead` 260ms, `--kp-decipher-swap`
+0.5; `--kp-reveal-threshold` 0.6; `--kp-reveal-stagger` 260ms (marks)
+and `--kp-redact-stagger` 160ms; `--kp-classified-delay` 1500ms,
+`--kp-wipe` 720ms; `--kp-rule-draw` 900ms, `--kp-rule-weight` 3px;
+`--kp-slice` 600ms (headline) and `--kp-slice-hover` 320ms;
+`--kp-charge` 520ms; `--fx-lift` (exists) for the hover lift;
+`--kp-tear-height` 44px; the four corner clips collapse onto `--fx-notch`
+with a `--fx-notch-sm` for controls; disabled opacity reads the
+`--*-disabled` tokens; the toast uses `js/overlays.js`, so its hold is
+that module's knob. `attachEffects(root, { reduceMotion, theme,
+threshold, cps, stagger, delay })` takes options; CSS custom properties
+are read once per attach, not per element. Contract values, pinned: the
+state class names, the `kp-effect-*` event names, the tear parameters,
+the DI5 thresholds, the hook names.
 
-## AR44 · No state, no transaction; an effect that has run leaves only a class
+## AR44 · Reveals run once per session by default; an unknown hook is reported, never thrown
 
-Standing rule 33 asked: the effects module stores nothing — not in
-`localStorage`, not in the theme store. "Already run" is a class on the
-element and dies with the page; navigating back runs it again, which is
-the intended behaviour of a load effect. The only persisted state in the
-package stays the theme key (M4). Error model: an effect never throws
-into the page — a missing target, an unknown hook value or a theme
-without an answer is a silent no-op, and `attachEffects` returns a
-`detach` that is safe to call twice.
+**Critic #5:** bfcache restores classes, so back does not re-run; a
+forward click on a server-rendered dashboard is a full load and does —
+every click deciphers the heading. **Revised:** a per-session memo like
+AR25's (`sessionStorage`, key per path and hook), reveals default to
+once per session, `data-kp-reveal-every="load"` opts back in; the memo
+is the module's only storage and is documented beside the theme key
+(M4). **Critic #6:** a silent no-op is the silence AR25 spent four sites
+breaking. **Revised:** the module never throws; an unknown value emits
+`kp-effect-unknown` once per page with the attribute and the accepted
+values, and `js/diagnostics.js` lists it. `detach` stays safe to call
+twice.
+
+## AR45 · One decipher engine; React wraps the module
+
+**Critic #16:** `fx/decipher-text.jsx` (rAF, 30 cps, its own glyphs,
+React-only) beside `js/effects.js` is two engines and two DI5 tables.
+**Revised:** `DecipherText` wraps `attachEffects` in 5.0.0 and is
+deprecated in `MIGRATION.md`; one suite drives both channels (rule 7g).
+
+## AR46 · The scanlines meet DI9's ceiling, or Kenny grants the exception at the gate
+
+**Critic #20:** the approved demo's scanlines are 0.13 alpha at 0.55
+opacity = 7.2%, over DI9's `textureOpacityCeiling` of 0.06
+(`gates/config.json:15`), and the current register hides its 4% inside
+a gradient with `--fx-texture-opacity: 1`, which the gate cannot see.
+**Revised:** the register declares the texture's effective opacity as
+one custom property the DI9 gate reads, the demo's scanlines come down
+to 6%, and the gate is drilled on the old hidden shape. The alternative
+is Kenny's override (DESIGN_INVARIANTS.md, "Kenny's override"): a
+recorded DI9 exception for cyberpunk at 7.2%.
