@@ -298,3 +298,98 @@ load is exactly what a file check reports as success.
 | L8        | **closed** 2026-09-04, signed off in the AFK report |
 | L9        | **closed** 2026-09-04, signed off in the AFK report |
 | L10       | **closed** 2026-09-04, signed off in the AFK report |
+
+## Round five — the dialog, the button and the grid (4.0.0)
+
+Six milestones. What gets built was frozen in Phase 2 (TH104, TH107,
+TH110-TH114, D3) and the architecture in Phase 4 (T14-T16, AR27-AR33).
+W4 is the **assembly milestone** the procedure requires: its exit
+criterion is that the whole does its own job, not that the parts exist.
+
+Four of the six carry a repair of something wrong in the released
+package today, found by the `architecture-critic` before the freeze
+rather than in the field. Each of those starts as a failing test on
+today's code (standing rule 8) before any fix is written.
+
+| ID | Milestone | Features | Exit criterion |
+| --- | --- | --- | --- |
+| W0 | The button | TH110, TH111, TH113, AR30, AR32 | Both halves of the two-part focus ring measure non-zero on a `.kp-button` in all 24 themes and under the cyberpunk register, the test having failed on today's code first; a `.kp-button` under cyberpunk measures differently from the same button under formal in both channels, with painted focus pixels above zero; three sizes differ measurably in height in all 24 themes and none renders under 24px; none of `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` pushes the page sideways at 320 and 360px, each test red when the shared rule is removed |
+| W1 | The confirmation dialog | TH107, D3, AR27, AR28, AR29 | In both channels and both browsers a click on a destructive button opens a `<dialog>` carrying the attribute's phrase, Escape and Cancel do nothing, Confirm acts **exactly once**, and focus returns to the button; two consecutive confirm cycles produce two actions, which is the measurement the unlocked design produced zero for; a destructive item inside an open popover leaves that menu re-shown and focused after the dialog closes; attaching the framework-free module over a React-rendered destructive button leaves it working, the rewritten test having gone red on today's code first; and a new gate holds the import closure of the six files chassis-rs bakes in at exactly those six |
+| W2 | The grid and the container queries | TH104, AR31 | The collapse-to-one-column test at 320px goes red on today's attached grid first and green after `js/gridlayout.js` writes custom properties instead of inline styles; one test per converted component places it in a narrow container while the viewport stays wide, and the old viewport media query is removed in the same commit so two mechanisms never coexist; the migration note carries the wrapper instruction, and a gate fails when one of this package's own example or showcase pages lacks a wrapper it needs |
+| W3 | The scroll boundary and the two documents | TH114, TH112, AR33 | Six assertions pin both halves in each of `.kp-table-wrap`, `.kp-diff` and the `<pre>` rule: an absolutely positioned child is clipped, a popover is not; the guide states that per region in words; and a reader of `README.md` and `docs/SCOPE.md` gets one answer about the git route rather than two, the scope statement carrying a dated correction rather than a quiet rewrite |
+| W4 | **Assembly: a dashboard that does its job** | all eight, T14-T16, AR27-AR33 | A page shaped like a real consumer's — a data table whose row menu carries a destructive item — is operable end to end **with the keyboard alone**, in all 24 themes, in both channels and both browsers: open the menu, reach the destructive item, get the dialog, cancel it and land back on the item, confirm it and see the row go exactly once. Not "the parts exist". All 42 site pages and 10 example pages regenerate from their sources, and the bundle matches |
+| W5 | The release | M1, TH103 | `MIGRATION.md` carries a 4.0.0 section naming every breaking change, with its gate green over every class it mentions; both workflows green on the tagged sha; the draft release carries the checksums over every copyable file. Publishing stays Kenny's own action |
+
+### How the six run in parallel
+
+Kenny asked for as much parallelism as the work allows. W3 shares no
+file with anything and starts immediately. W2 owns `js/gridlayout.js`
+and the grid and nav blocks of `css/components.css`. W0 and W1 both
+touch `components/button.jsx` — W1 rewrites its confirmation half, W0
+adds a size prop to its class half — so W1 merges first and W0 rebases
+onto it. W4 cannot start until the other four have merged, because
+assembly is the thing that is left over when the seams are cut.
+
+### Enforcement for this round
+
+Unchanged in shape: the commit hook runs the whole chain and blocks, CI
+runs the same chain, `main` is protected. Two gates join it, both
+blocking, and each has to be red once before it counts (rule 7d):
+
+- **The import-closure gate.** The set of files chassis-rs bakes in is
+  closed under import today, and AR28 turns on keeping it that way. The
+  gate walks the import graph from those entry points and fails when it
+  reaches a file outside the vendored set.
+- **The wrapper gate.** AR31 refuses a runtime warning, so the check
+  moves to this package's own pages: a component converted to a
+  container query must sit inside a wrapper that establishes one.
+
+### Round five — the Phase 5 gate, 2026-09-07
+
+Kenny approved all six milestones unchanged, and answered the four
+questions that were not about the milestones:
+
+- **H1 — both new gates block.** The import-closure gate and the wrapper
+  gate refuse a commit rather than reporting. Each has to be red once on
+  an injected violation before it counts (rule 7d).
+- **H2 — the release workflow joins the chain, and the test holds it.**
+  `.github/workflows/release.yml` runs `npm run gates` instead of the
+  hook script, and KT7's unit test lays all three lists side by side
+  instead of two. KT7 was written about exactly this shape one layer
+  down; the tag-building chain had been outside it.
+- **H3 — the whole chain blocks a commit, and that is now written down.**
+  The original Phase 5 decision H1 said the fast gates block a commit and
+  the browser tests block a merge. KT7's repair has since forced every
+  `check:` step into the hook, so the type check, the declaration gate and
+  the unit tests are in the commit path. The decision is rewritten to
+  match what actually runs.
+- **C1 — no correction form for the three defects.** Kenny's call: the
+  `architecture-critic` found them before the freeze, so the procedure
+  caught them and they are ordinary round work. Recorded here rather than
+  in `docs/CORRECTIONS.md` for that reason.
+- **S1 — rules 8, 7d, 7e and 35 shape this round**, confirmed unchanged.
+- **A1 — AFK mode from W0.** Milestone gates accumulate into one combined
+  report; a needed deviation from a frozen decision quarantines its area
+  and queues a mini-round immediately.
+
+**Rule 7h, discharged before the AFK run starts.** A discipline-only
+measure does not survive an unattended stretch, so each one this round
+will touch is decided now rather than hoped for:
+
+| Measure | Decision for this round |
+| --- | --- |
+| KT1 — every checkable claim in a form is verified in the same turn, naming file and line | **Stays discipline.** It binds forms, and in AFK the only forms are queued mini-rounds, written when Kenny is back. |
+| KT3 — a browser test asserting the package applies something is drilled red first, with the removed rule named in a comment | **Already mechanical.** `gates/check-layers.mjs` refuses a bare-element selector in the showcase stylesheet, and the drill-comment gate counts those comments against the number of such tests. |
+| KT6 — every state a component sets has a named way out | **Stays discipline**, and W0 and W1 both create state (a size class, an open dialog). Named as applying; the combined report says per milestone whether it was applied. |
+| Rule 7e — the scaffolding may not answer for the product | **Mechanical where checkable**, discipline for the rest. It was already broken once this round, by Claude, on the TH110 measurement. |
+
+### Round five — status
+
+| ID | Status |
+| --- | --- |
+| W0 | not started |
+| W1 | not started |
+| W2 | not started |
+| W3 | not started |
+| W4 | not started |
+| W5 | not started |

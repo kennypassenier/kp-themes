@@ -3,9 +3,17 @@
 # git-native pre-commit hook and the Claude Code PreToolUse hook.
 # Non-zero exit blocks the commit.
 #
-# Phase 5 decision H1: the FAST gates block a commit; the browser tests
-# block a merge instead, in CI. A gate slow enough to be worked around
-# is not a gate.
+# Phase 5 decision H1, as amended at round five's Phase 5 gate (H3,
+# 2026-09-07): the WHOLE chain blocks a commit; the browser tests block a
+# merge instead, in CI.
+#
+# The original decision said only the fast gates block, on the grounds
+# that a gate slow enough to be worked around is not a gate. KT7's repair
+# then required every `check:` script to appear here, which quietly moved
+# the type check, the declaration gate and the unit tests into the commit
+# path. The chain still finishes in seconds, so the reasoning holds and
+# the decision was rewritten to match reality rather than the reverse.
+# The browser tests stay out: those are minutes, not seconds.
 set -euo pipefail
 
 # Standing rule 7: a gate that does not predict the build is not a gate.

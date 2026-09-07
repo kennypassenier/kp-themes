@@ -5,13 +5,16 @@
 points at so his apps look like one family. Web today; GUI (Avalonia) and
 TUI (Ratatui) later.
 
-**State:** 3.1.1 is released (tag `v3.1.1` on `14c0697`, 2026-09-06,
-with `SHA256SUMS`) and live on GitHub Pages — twenty-four themes (thirteen new, chosen from
-twenty-one candidates in `docs/THEME_CANDIDATES.md`), two new knobs, a
-second register, and a showcase that compares two themes side by side.
-3.1.1 is a one-line patch on top: terminal's block cursor moved off
-every heading onto the focused field's label (TH89), outside a phase
-gate, on Kenny's direct request.
+**State:** 3.2.0 is tagged (`v3.2.0` on `77f8226`, 2026-09-07) with its
+draft release built by `.github/workflows/release.yml` — six assets and a
+34-line `SHA256SUMS` — **awaiting Kenny's own publish**. It carries round
+four: a layout layer, a 118-class utility API, cascade layers, a spacing
+and typography scale, the tables, a loud fallback, ten example pages, the
+documentation site at <https://kennypassenier.github.io/kp-themes/>, a
+dist bundle and a density mode. 3.1.1 before it took the themes to
+twenty-four (thirteen new, chosen from twenty-one candidates in
+`docs/THEME_CANDIDATES.md`), with two knobs, a second register and a
+side-by-side showcase.
 The package began as an extraction from kp-soft (commit `2983abb`,
 2026-09-02); Phase 0 approved that base for use but explicitly **not** the
 picker — see S17 in [docs/SCOPE.md](docs/SCOPE.md); the picker was
@@ -89,13 +92,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round five (4.0.0): Phase 0 scope approved 2026-09-07 (S32-S37), Phase 1 measured the four consumer reports         |
-| Last completed gate | Round five Phase 0, 2026-09-07 — six statements all "Klopt"; the site fixes ride along in 4.0.0 rather than a 3.2.1 |
-| Next gate           | Phase 2: rate TH104, TH107, D3 and P1-P4, then freeze; round three's Phase 10 (KT7, KT8, KT9) still owed            |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository)                                                    |
-| AFK mode            | off                                                                                                                 |
+| Field               | Value                                                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round five (4.0.0): Phases 0-4 closed 2026-09-07. Phase 5 gate open — six milestones W0-W5, two new gates, an AFK question                                                |
+| Last completed gate | Round five Phase 4, 2026-09-07 — all eight architecture decisions taken; the `architecture-critic` broke five of the seven drafts, four of them with browser measurements |
+| Next gate           | Phase 5, then Phase 6 builds W0-W5; round three's Phase 10 (KT7, KT8, KT9) is drafted and still owed                                                                      |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1 and MR-R6-2                                                                                     |
+| AFK mode            | off                                                                                                                                                                       |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

@@ -322,7 +322,7 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     // Two lists that promise the same thing and nothing that lays them
     // side by side: the hook script omitted check:strings and CI ran the
     // hook script, so a red gate shipped inside a green build. This test
-    // is the side-by-side. Drill: remove one `node gates/check-…` line
+    // is the side-by-side, over all three lists. Drill: remove one `node gates/check-…` line
     // from .claude/hooks/gates.sh and the hook assertion names it.
     /** @type {{scripts: Record<string, string>}} */
     const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
@@ -331,6 +331,7 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     const chain = pkg.scripts.gates;
     const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
     const ci = readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+    const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
     for (const name of checks) {
         assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
         // The hook runs the same file the script does; match on the
@@ -339,6 +340,10 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
         assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
     }
     assert.ok(/run:\s*npm run gates/.test(ci), 'ci.yml does not run `npm run gates`');
+    // The third list, added at round five's Phase 5 gate (H2). It builds
+    // the tag, and until then nothing held it: it ran the hook script,
+    // which is equivalent only for as long as nobody changes either.
+    assert.ok(/run:\s*npm run gates/.test(release), 'release.yml does not run `npm run gates`');
 });
 
 test('KT7: the strings gate does not flag code that only looks like text', () => {

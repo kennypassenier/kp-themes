@@ -37,8 +37,15 @@ jobs:
       - run: npm ci
       # The tag must pass the same gates as a commit. A release built from
       # a tree that does not pass is a release of something else.
+      #
+      # This runs `npm run gates` rather than the hook script, decided at
+      # round five's Phase 5 gate (H2). KT7 was about two lists of checks
+      # that promised the same thing with nothing laying them side by
+      # side; this workflow was a third such list, held by no test at all,
+      # and it was the one that builds a tag. The KT7 unit test now
+      # asserts all three.
       - name: Gates
-        run: ./.claude/hooks/gates.sh
+        run: npm run gates
       - name: Checksums
         run: npm run checksums
       # A draft, never a published release. Pushing a tag is a technical
