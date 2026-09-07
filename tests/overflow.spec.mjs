@@ -150,8 +150,15 @@ const audit = (page, { faults = ['page-scroll', 'overflow', 'rhythm'], ...rest }
 
             // (c) Two consecutive blocks may not touch.
             for (const container of on.has('rhythm') ? document.querySelectorAll(containers) : []) {
+                // Blocks only: two inline siblings that wrap onto consecutive
+                // lines (the concept lede's two marks, on CI's fonts at 320px)
+                // are the line box's business, not a rhythm fault.
                 const children = [...container.children].filter(
-                    (child) => !['SCRIPT', 'STYLE', 'TEMPLATE'].includes(child.tagName) && laidOut(child),
+                    (child) =>
+                        !['SCRIPT', 'STYLE', 'TEMPLATE'].includes(child.tagName) &&
+                        laidOut(child) &&
+                        !getComputedStyle(child).display.startsWith('inline') &&
+                        getComputedStyle(child).display !== 'contents',
                 );
                 for (let i = 1; i < children.length; i++) {
                     const above = children[i - 1].getBoundingClientRect();
@@ -203,6 +210,14 @@ test.describe('the overflow and rhythm gate', () => {
                     // swapping in after the measurement would make this
                     // flaky rather than wrong.
                     await page.waitForLoadState('load');
+                    // And every animation is finished first: the cyberpunk navbar
+                    // strip slides in over 520ms, and a transformed box mid-flight
+                    // extends the scrollable area — measured once as a 1280px
+                    // overflow in chromium that three reruns did not reproduce
+                    // (rule 8a: a flake is named, then removed).
+                    await page.evaluate(() => {
+                        for (const animation of document.getAnimations()) animation.finish();
+                    });
                     const found = await audit(page, { minGap: MIN_GAP, containers: BLOCK_CONTAINERS });
                     if (found.length > 0) problems.push(`at ${width}px:\n${report(found)}`);
                 }

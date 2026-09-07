@@ -98,7 +98,27 @@ const TO_MARKUP = {
                         el(
                             'li',
                             {},
-                            el('a', { class: 'kp-nav__link', href: link.href, 'aria-current': link.current ? 'page' : undefined }, link.label),
+                            el(
+                                'a',
+                                {
+                                    class: 'kp-nav__link',
+                                    href: link.href,
+                                    'aria-current': link.current ? 'page' : undefined,
+                                    // The register's hover glitch reads a copy of the label [TH117].
+                                    'data-kp-text': typeof link.label === 'string' ? link.label : undefined,
+                                    'aria-haspopup': Array.isArray(link.links) && link.links.length > 0 ? 'true' : undefined,
+                                },
+                                link.label,
+                            ),
+                            Array.isArray(link.links) && link.links.length > 0
+                                ? el(
+                                      'ul',
+                                      { class: 'kp-nav__menu' },
+                                      link.links.map((/** @type {Record<string, any>} */ child) =>
+                                          el('li', {}, el('a', { href: child.href }, child.label)),
+                                      ),
+                                  )
+                                : null,
                         ),
                     ),
                 ),
@@ -158,7 +178,13 @@ const TO_MARKUP = {
     Card: (p, kids) =>
         el(
             'div',
-            { class: cx('kp-card', p.class), 'data-slot': 'card', 'data-example': p['data-example'] },
+            {
+                class: cx('kp-card', p.class),
+                'data-slot': 'card',
+                // Every `data-` prop is forwarded, as the Button renderer does:
+                // the concept dossier carries data-kp-reveal and data-kp-label.
+                ...Object.fromEntries(Object.entries(p).filter(([key]) => key.startsWith('data-'))),
+            },
             p.title !== undefined || p.actions !== undefined
                 ? el(
                       'div',
@@ -940,7 +966,15 @@ export const EXAMPLES = [
             {
                 links: [
                     { href: '#main', label: 'Signal', current: true },
-                    { href: '#dossier', label: 'Dossier' },
+                    {
+                        href: '#dossier',
+                        label: 'Dossier',
+                        // A dropdown, so the navbar hook has something to open [TH117].
+                        links: [
+                            { href: '#dossier', label: 'Open files' },
+                            { href: '#contact', label: 'Request access' },
+                        ],
+                    },
                     { href: '#contact', label: 'Contact' },
                 ],
             },
@@ -969,7 +1003,7 @@ export const EXAMPLES = [
             el(
                 'section',
                 { class: 'kp-section kp-stack', 'data-kp-surface': 'app', id: 'contact', 'data-example': 'concept-app' },
-                el('h2', {}, 'Leave a signal'),
+                el('h2', { 'data-kp-reveal': 'rule' }, 'Leave a signal'),
                 el(
                     'form',
                     { class: 'kp-form kp-stack', 'data-kp-form': '' },
@@ -987,7 +1021,7 @@ export const EXAMPLES = [
                     { class: 'kp-autogrid', id: 'dossier' },
                     el(
                         'Card',
-                        { title: 'Dossier 07', 'data-kp-reveal': 'emphasis', 'data-example': 'concept-dossier' },
+                        { title: 'Dossier 07', 'data-kp-reveal': 'emphasis', 'data-kp-label': s.classified, 'data-example': 'concept-dossier' },
                         el(
                             'p',
                             {},

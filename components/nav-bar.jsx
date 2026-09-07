@@ -16,7 +16,7 @@ import { skipTo as jumpTo } from '../js/components.js';
 // so); every part is a prop; and a ref is forwarded.
 
 /**
- * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string }} NavLink
+ * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string, links?: NavLink[] }} NavLink
  */
 
 /**
@@ -47,7 +47,7 @@ import { skipTo as jumpTo } from '../js/components.js';
  * @property {boolean} [wrap]       Render the `.kp-nav-wrap` container the narrow rule needs. Default true.
  * @property {string} [wrapClassName]  Extra classes for that wrapper.
  * @property {string} [label]       The nav's accessible name. Default: the dictionary's.
- * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string }} [classNames]
+ * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').ReactNode} [children]  Trailing slot.
@@ -123,10 +123,15 @@ function NavBarInner(
                     <List className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
                         {links.map((l) => {
                             const current = l.current === true ? 'page' : l.current === false || l.current === undefined ? undefined : l.current;
+                            const sub = Array.isArray(l.links) && l.links.length > 0 ? l.links : null;
                             const props = {
                                 className: `kp-nav__link ${classNames.link ?? ''} ${l.className ?? ''}`.trim(),
                                 href: l.href,
                                 'aria-current': current,
+                                // A register may glitch the label as a copy of itself
+                                // [TH117]; a label that is not text has no copy.
+                                'data-kp-text': typeof l.label === 'string' ? l.label : undefined,
+                                'aria-haspopup': sub ? 'true' : undefined,
                             };
                             return (
                                 <Item key={l.href} className={classNames.item}>
@@ -137,6 +142,17 @@ function NavBarInner(
                                             {l.icon}
                                             {l.label}
                                         </Link>
+                                    )}
+                                    {sub && (
+                                        <ul className={`kp-nav__menu ${classNames.menu ?? ''}`.trim()}>
+                                            {sub.map((child) => (
+                                                <li key={child.href}>
+                                                    <Link className={classNames.menuLink} href={child.href}>
+                                                        {child.label}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     )}
                                 </Item>
                             );

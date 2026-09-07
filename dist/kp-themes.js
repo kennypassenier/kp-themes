@@ -152,6 +152,7 @@ var DEFAULT_STRINGS = Object.freeze({
   save: "Save",
   mainNavigation: "Main navigation",
   skipToContent: "Skip to the content",
+  classified: "Classified",
   breadcrumb: "Breadcrumb",
   pagination: "Pagination",
   themePicker: "Choose a theme",
@@ -3802,12 +3803,15 @@ var TIMINGS = Object.freeze({
   // The register's own keyframes, as shipped in 4.0.0. Their opacity
   // stops are the ones gates/check-motion.mjs already parses; listing
   // them here is what lets the table pass and the keyframe parse agree.
-  "fx-flicker": { durationMs: 2200, cycles: 1, property: "opacity", luminanceSteps: [1, 0.35, 1, 0.6, 1, 0.93, 1, 1] },
-  "fx-pulse": { durationMs: 2600, cycles: Infinity, property: "opacity", luminanceSteps: [0.65] },
-  "fx-glitch-a": { durationMs: 340, cycles: 1, property: "transform", luminanceSteps: [] },
-  "fx-glitch-b": { durationMs: 340, cycles: 1, property: "transform", luminanceSteps: [] },
-  "fx-rgb-split": { durationMs: 170, cycles: 1, property: "filter", luminanceSteps: [] },
-  "fx-cellflash": { durationMs: 200, cycles: 1, property: "color", luminanceSteps: [] },
+  // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
+  // glitch (two steps, once), the headline's slice burst (one burst of
+  // six bands, once) and the charge sweep (a transform, no luminance).
+  "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+  "kp-slice-1": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
+  "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
+  "kp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
   // The base layer's and the components' keyframes. Where a duration is
   // a token (`var(--fx-duration)`), the row carries cyberpunk's 140ms,
   // the shortest any theme declares, so the rate is the worst case.

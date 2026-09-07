@@ -5296,6 +5296,61 @@
         text-decoration-thickness: 2px;
     }
 
+    /* A dropdown under a link [TH117]: a nested list the link announces
+     * with aria-haspopup. It opens on hover and on focus within, so the
+     * keyboard reaches every item by Tab; the register decides its look. */
+    .kp-nav__links > li {
+        position: relative;
+    }
+
+    .kp-nav__menu {
+        position: absolute;
+        top: 100%;
+        inset-inline-start: 0;
+        z-index: var(--kp-z-popover, 20);
+        min-width: 12rem;
+        margin: 0;
+        padding: 0.25rem 0;
+        list-style: none;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        /* Closed is `display: none`, not hidden-but-laid-out: a laid-out
+         * panel 12rem wide inside a 56px item is scrollable overflow, and
+         * the overflow gate read it as such at 320px (TH99). The keyboard
+         * still gets in — focus on the trigger opens the panel through
+         * :focus-within, and the next Tab lands on its first link. */
+        display: none;
+        opacity: 0;
+    }
+
+    .kp-nav__links > li:hover > .kp-nav__menu,
+    .kp-nav__links > li:focus-within > .kp-nav__menu {
+        display: block;
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav__menu {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                display var(--fx-duration, 150ms) allow-discrete;
+        }
+
+        @starting-style {
+            .kp-nav__links > li:hover > .kp-nav__menu,
+            .kp-nav__links > li:focus-within > .kp-nav__menu {
+                opacity: 0;
+            }
+        }
+    }
+
+    .kp-nav__menu a {
+        display: block;
+        padding: 0.375rem 0.875rem;
+    }
+
     /* ====================================================================
  * The eleven overlays and their neighbours [L8, TH35].
  *
@@ -6940,209 +6995,976 @@
 
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css
-   The cyberpunk register (CP-*): HUD chrome and motion, scoped to
-   [data-theme='cyberpunk'] and inert elsewhere. Opt-in: import it after
-   themes.css. The [data-slot='card'] / [data-slot='button'] selectors
-   are shadcn markup hooks; map them to your own selectors if you do not
-   use shadcn. Extracted from kp-soft resources/css/app.css at commit
-   2983abb on 2026-09-02. */
+   The cyberpunk register, 5.0.0 [S39, S40, S41]: the signal-yellow
+   register that replaced the 4.x neon one under the same name. Scoped to
+   [data-theme='cyberpunk'] and inert elsewhere; opt-in, imported after
+   themes.css. The approved demo ("Signal Yellow", S46) is the reference
+   for every value here, and AR43 names the knobs.
 
-    /* ═══════════════════════════════════════════════════════════════════
-   Cyberpunk register (CP-*, chosen item by item on 2026-08-31; see
-   docs/FEATURES.md). Everything below is scoped to
-   [data-theme='cyberpunk'] and inert elsewhere. Guardrails: core text
-   passes AA without any glow, every animation sits inside
-   prefers-reduced-motion: no-preference, glow pulses animate opacity
-   on a pseudo-element only (never box-shadow directly).
-   ═══════════════════════════════════════════════════════════════════ */
+   What it does, in order: the knobs and the texture; the type; the two
+   surfaces' headings, marks and the divider (the hooks of S45); the
+   navbar; the buttons; the fields; and then one answer per component
+   root, because TH124 holds that the register answers every root or
+   says why not. The reveals (decipher, clearance, the drawn rule) have
+   their rest state here and their motion in js/effects.js (C3); without
+   the script every one of them stands at rest, readable.
 
-    /* CP-D1 + CP-D2: scanlines behind a CRT vignette, on the shared
-   texture layer (same machinery as the other registers). */
+   Colour discipline (DI9): nothing here names a colour. Every paint is a
+   token or a relative colour of one (`hsl(from var(--x) …)`), so the
+   register follows the hero remap of AR38 for free — inside
+   [data-kp-surface='hero'] `--primary` is ink and `--background` is
+   yellow, and the same rule paints the other way round. */
+
     [data-theme='cyberpunk'] {
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-button-notch: var(--fx-notch, 14px);
+        --kp-button-slit: 10px;
+        --kp-nav-notch: 13px;
+        --kp-nav-enter: 520ms;
+        --kp-nav-enter-delay: 80ms;
+        --kp-decipher-cps: 26;
+        --kp-decipher-lead: 260ms;
+        --kp-decipher-swap: 0.5;
+        --kp-reveal-threshold: 0.6;
+        --kp-reveal-stagger: 260ms;
+        --kp-redact-stagger: 160ms;
+        --kp-classified-delay: 1500ms;
+        --kp-wipe: 720ms;
+        --kp-rule-draw: 900ms;
+        --kp-rule-weight: 3px;
+        --kp-slice: 600ms;
+        --kp-slice-hover: 320ms;
+        --kp-charge: 520ms;
+        --kp-tear-height: 44px;
+        --fx-notch-sm: 8px;
+        /* The mono face for microlabels, identifiers and timestamps; C4
+           ships Share Tech Mono (R6-Q1 decides under which name). */
+        --kp-mono: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        /* A hairline of the primary at low alpha: the frame of a card, an
+           input, a panel. Not a boundary in DI1's sense — those read
+           --border-strong and --input, which the register leaves alone. */
+        --kp-hairline: hsl(from var(--primary) h s l / 0.22);
+
+        /* The texture [TH123, AR46]: static scanlines and a faint vignette,
+           both at DI9's ceiling and not a hair over — check-texture.mjs
+           multiplies the layer's opacity by the strongest alpha in here. */
         --fx-texture:
-            radial-gradient(ellipse 120% 90% at 50% 45%, transparent 60%, hsl(from var(--sidebar-background) h s l / 0.55) 100%),
-            repeating-linear-gradient(to bottom, hsl(from var(--fx-scanline) h s l / 0.04) 0 1px, transparent 1px 3px);
+            radial-gradient(ellipse 120% 90% at 50% 45%, transparent 60%, hsl(from var(--sidebar-background) h s l / 0.06) 100%),
+            repeating-linear-gradient(to bottom, hsl(from var(--fx-scanline) h s l / 0.06) 0 1px, transparent 1px 3px);
         --fx-texture-size: 100% 100%, auto;
         --fx-texture-opacity: 1;
     }
 
-    /* CP-A2: microlabels - uppercase mono with a diegetic prefix. The
-   class is a no-op in every other theme. */
-    [data-theme='cyberpunk'] .microlabel {
-        font-family: var(--font-mono);
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] h1,
+    [data-theme='cyberpunk'] h2,
+    [data-theme='cyberpunk'] h3 {
+        font-family: var(--theme-font-display);
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: var(--muted-foreground);
+        letter-spacing: 0.01em;
+        line-height: 0.95;
     }
 
-    [data-theme='cyberpunk'] .microlabel::before {
-        content: '// ';
+    /* Microlabels: uppercase mono with the diegetic prefix. The mono face
+       is the register's own knob, not the Tailwind bridge (TH133). */
+    [data-theme='cyberpunk'] .microlabel {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
         color: var(--accent);
     }
 
-    /* CP-A5: neon caret in every input. */
-    [data-theme='cyberpunk'] input,
-    [data-theme='cyberpunk'] textarea {
-        caret-color: var(--primary);
+    [data-theme='cyberpunk'] .microlabel::before {
+        content: '/// ';
+        opacity: 0.7;
     }
 
-    /* CP-B4: card underglow - a neon line drawing itself along the bottom
-   edge on hover, instead of the wider shadow other themes use. */
-    [data-theme='cyberpunk'] [data-slot='card'] {
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] .microlabel {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The hooks [S45]: the heading accent, the mark, the divider ───── */
+
+    /* The heading accent: a display headline on a surface, at the display
+       step of the scale (S47). The headline reveal (decipher and one slice
+       burst) is C3's; the slice keyframes below are its rest-to-burst. */
+    [data-theme='cyberpunk'] [data-kp-surface] h1 {
+        font-size: var(--kp-text-display);
+        font-weight: 900;
+        line-height: 0.88;
+        letter-spacing: 0.005em;
+        margin-block: 0 0.4em;
+        text-wrap: balance;
+    }
+
+    /* A section heading carries the bracket frame of the reference (⌜ ⌝),
+       drawn as two corner gradients so both pseudo-elements stay free. */
+    [data-theme='cyberpunk'] [data-kp-surface] h2 {
+        font-weight: 800;
+        position: relative;
+        padding-top: 0.9rem;
+        color: var(--primary);
+        background:
+            linear-gradient(var(--primary), var(--primary)) top left / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top left / 2px 0.8rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 2px 0.8rem no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] {
         position: relative;
     }
 
-    [data-theme='cyberpunk'] [data-slot='card']::after {
+    /* The slice burst: two copies of the headline, clipped into bands and
+       shoved sideways, once — after the decipher and on hover. The copies
+       read `data-kp-text`, which the effects module writes; without it the
+       pseudo-elements are empty and nothing paints. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::before,
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::after {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        white-space: pre-wrap;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::before {
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::after {
+        color: var(--chart-4);
+    }
+
+    /* The decipher's noise glyphs, while the module swaps them in. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] .is-noise {
+        color: var(--link);
+    }
+
+    /* The drawn rule under a section heading: a hairline that scales in
+       from the left when the heading enters the viewport (C3). Without the
+       script — no data-kp-effects on the root — it stands drawn. */
+    [data-theme='cyberpunk'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        height: var(--kp-rule-weight);
+        margin-top: 0.5rem;
+        background: linear-gradient(to right, var(--accent) 0 35%, hsl(from var(--accent) h s l / 0.35) 70%, transparent);
+        transform-origin: left center;
+    }
+
+    [data-theme='cyberpunk'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* The mark: emphasis is classified, then cleared. At rest the bar is
+       lifted and the phrase reads in the surface's link colour — red on
+       yellow, yellow on void. With the script armed the bar covers the
+       phrase until the module clears it, one after another. */
+    [data-theme='cyberpunk'] mark {
+        background: none;
+        color: var(--link);
+        font-weight: 700;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    [data-theme='cyberpunk'] mark::after {
         content: '';
         position: absolute;
-        left: 0;
-        bottom: 0;
-        height: 2px;
-        width: 0;
-        background: var(--primary);
-        box-shadow: 0 0 12px var(--primary);
+        inset: -0.05em -0.15em;
+        background: var(--surface-hero-fg);
+        outline: 1px solid hsl(from var(--primary) h s l / 0.35);
+        transform: scaleX(0);
+        transform-origin: right center;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-slot='card']::after {
-            transition: width var(--fx-duration, 200ms) var(--fx-ease, ease);
-        }
+    [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared) {
+        color: inherit;
+        font-weight: inherit;
     }
 
-    [data-theme='cyberpunk'] [data-slot='card']:hover::after {
-        width: 100%;
+    [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
     }
 
-    /* CP-C1: the single clipped corner, bottom-right, cards and buttons. */
-    [data-theme='cyberpunk'] [data-slot='card'],
-    [data-theme='cyberpunk'] .fx-notch {
+    /* Inside an emphasis reveal the marks lift one after another. */
+
+    /* The divider: the razor tear [TH121, AR41]. The element paints the
+       surface above; a masked layer paints the surface below through the
+       generated tear; the hairline rides the ridge. After a hero the tear
+       falls from yellow to void; after an app surface, from void to yellow.
+       `data-kp-divider="alt"` takes the second seed. */
+    [data-theme='cyberpunk'] [data-kp-divider] {
+        display: block;
+        position: relative;
+        block-size: var(--kp-tear-height);
+        background: var(--surface-hero-bg);
+        overflow: hidden;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::before,
+    [data-theme='cyberpunk'] [data-kp-divider]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        mask-size: 100% 100%;
+        mask-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::before {
+        background: var(--background);
+        mask-image: var(--fx-tear);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::after {
+        background: var(--accent);
+        mask-image: var(--fx-tear-line);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider='alt']::before {
+        mask-image: var(--fx-tear-alt);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider='alt']::after {
+        mask-image: var(--fx-tear-line-alt);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='app'] + [data-kp-divider] {
+        background: var(--background);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='app'] + [data-kp-divider]::before {
+        background: var(--surface-hero-bg);
+    }
+
+    /* ── The navbar [TH117] ───────────────────────────────────────────── */
+
+    /* The bar is yellow; the strip of links is a void panel with the cut
+       corner and the stepped notch read off the reference. The strip lives
+       on a pseudo-element, not on the list, because a clip-path clips
+       descendants and would clip every dropdown with it. */
+    [data-theme='cyberpunk'] .kp-nav-wrap {
+        background: var(--surface-hero-bg);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav {
+        background: var(--surface-hero-bg);
+        color: var(--surface-hero-fg);
+        border-bottom: 0;
+        padding-block: 1.2rem 0.4rem;
+        position: relative;
+        z-index: var(--kp-z-nav, 30);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-weight: 900;
+        font-size: 1.8rem;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links {
+        position: relative;
+        isolation: isolate;
+        gap: 0;
+        padding-left: 0.4rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--background);
+        clip-path: polygon(var(--kp-nav-notch) 0, 100% 0, 100% 62%, calc(100% - 15px) 100%, 0 100%, 0 var(--kp-nav-notch));
+    }
+
+    /* The notch follows the navbar's side of the screen [TH117]. */
+
+    [data-theme='cyberpunk'] .kp-nav[data-kp-nav-side='end'] .kp-nav__links::before {
+        clip-path: polygon(0 0, calc(100% - var(--kp-nav-notch)) 0, 100% var(--kp-nav-notch), 100% 100%, 15px 100%, 0 62%);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links > li {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link {
+        display: block;
+        padding: 0.7rem 1.1rem 0.8rem;
+        font-weight: 600;
+        font-size: 0.92rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--primary);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link[aria-current='page'] {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link,
+    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link[aria-haspopup]::after {
+        content: '';
+        display: inline-block;
+        margin-left: 0.4rem;
+        border: 5px solid transparent;
+        border-top-color: currentColor;
+        vertical-align: 0.1em;
+    }
+
+    /* The hover glitch: two offset copies in the accent colours, once.
+       The copies read `data-kp-text`, which both channels write. */
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text] > span,
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text] {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text]::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0.7rem 1.1rem 0.8rem;
+        opacity: 0;
+        pointer-events: none;
+        color: var(--accent);
+    }
+
+    /* The dropdown: a void panel with a dash before every item. */
+    [data-theme='cyberpunk'] .kp-nav__menu {
+        min-width: 13rem;
+        background: var(--background);
+        color: var(--foreground);
+        border: 0;
         border-radius: 0;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch, 0px)), calc(100% - var(--fx-notch, 0px)) 100%, 0 100%);
+        padding: 0.5rem 0;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        translate: 0 -6px;
     }
 
-    /* The square corner reaches this package's own button too [TH110].
-   Every button rule here selected [data-slot='button'] alone -- a shadcn
-   markup hook that css/components.css never writes -- so the register
-   reached no .kp-button at all. */
-    [data-theme='cyberpunk'] [data-slot='button'],
+    [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__menu,
+    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu {
+        translate: 0 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a {
+        display: block;
+        padding: 0.55rem 1rem 0.55rem 1.1rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a::before {
+        content: '— ';
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a:hover,
+    [data-theme='cyberpunk'] .kp-nav__menu a:focus-visible {
+        color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.08);
+    }
+
+    /* ── Buttons [TH118] ──────────────────────────────────────────────── */
+
+    /* The frame is the element's background colour; the face, the slit and
+       the frame line along the notch are background layers painted over
+       it (top to bottom: the slit, the notch line, the face). Nothing is a
+       pseudo-element, so the focus ring — an inset box-shadow, two
+       channels — paints above all of it, inside the clip (MR-NOTCH), and
+       the charge sweep has ::after to itself. The four looks set three
+       custom properties and nothing else. */
     [data-theme='cyberpunk'] .kp-button {
+        --kp-btn-fg: var(--primary);
+        --kp-btn-frame: var(--primary);
+        --kp-btn-ground: var(--background);
+        --kp-btn-face: var(--kp-btn-fill, var(--kp-btn-ground));
+        position: relative;
+        isolation: isolate;
+        border: 0;
         border-radius: 0;
+        padding-inline: 1.4rem;
+        font-weight: 700;
+        font-size: 0.9em;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-btn-fg);
+        background-color: var(--kp-btn-frame);
+        background-image:
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size:
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            0 50%,
+            right bottom,
+            2px 2px;
+        background-repeat: no-repeat;
+        box-shadow: none;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch)), calc(100% - var(--kp-button-notch)) 100%, 0 100%);
     }
 
-    /* AR30, AMENDED 2026-09-07 after Kenny asked where the bevel had gone
-   (mini-round MR-NOTCH). The bevel is back on .kp-button.
-
-   The original reasoning was right about the mechanism and wrong about
-   the conclusion. clip-path DOES clip the focus outline away with the
-   corner -- measured in painted pixels, both browsers, green 784 -> 0 and
-   red 912 -> 0. What it cannot clip is a ring drawn INSIDE the box, and
-   nothing had tried that. So under the bevel the indicator becomes two
-   inset rings rather than an outline plus a shadow.
-
-   That changes what the two halves contrast against: an inset ring reads
-   against the button's own fill rather than half against the page, which
-   is the promise DI2's two-part design makes. Measured over 24 themes x 4
-   button fills = 96 pairs before this shipped: in every pair at least one
-   half reaches 3.0 or better against the fill, always the
-   --focus-ring-contrast half, between 5.00 and 18.30.
-
-   The old rule selected [data-slot='button'] alone, which nothing in this
-   package writes on a button -- so the bevel reached zero elements, while
-   a comment here claimed it "stays on the elements that already carried
-   it". There were none. The notch size stays a knob [KT6]. */
-    [data-theme='cyberpunk'] [data-slot='button'],
-    [data-theme='cyberpunk'] .kp-button {
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch, 7px)), calc(100% - var(--kp-button-notch, 7px)) 100%, 0 100%);
+    [data-theme='cyberpunk'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset: -1rem -2rem;
+        z-index: -1;
+        background: linear-gradient(105deg, transparent 0 40%, hsl(from var(--primary) h 0% 100% / 0.5) 45% 55%, transparent 60% 100%);
+        transform: translateX(-120%);
+        mix-blend-mode: overlay;
+        pointer-events: none;
     }
 
-    [data-theme='cyberpunk'] [data-slot='button']:focus-visible,
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled) {
+        transform: translateY(calc(-1 * var(--fx-lift)));
+        background-color: var(--kp-btn-frame);
+    }
+
+    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
+        transform: translateY(var(--fx-lift));
+    }
+
+    /* The mirrored notch, bottom-left [AR43]. */
+    [data-theme='cyberpunk'] .kp-button--mirror {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, var(--kp-button-notch) 100%, 0 calc(100% - var(--kp-button-notch)));
+        background-image:
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(225deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-position:
+            0 50%,
+            left bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary {
+        --kp-btn-fill: var(--primary);
+        --kp-btn-fg: var(--primary-foreground);
+        --kp-btn-frame: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:hover:not(:disabled) {
+        --kp-btn-fill: var(--primary-hover);
+        --kp-btn-frame: var(--primary-hover);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:active:not(:disabled) {
+        --kp-btn-fill: var(--primary-active);
+        --kp-btn-frame: var(--primary-active);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive {
+        --kp-btn-fill: var(--destructive);
+        --kp-btn-fg: var(--destructive-foreground);
+        --kp-btn-frame: var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:hover:not(:disabled) {
+        --kp-btn-fill: var(--destructive-hover);
+        --kp-btn-frame: var(--destructive-hover);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:active:not(:disabled) {
+        --kp-btn-fill: var(--destructive-active);
+        --kp-btn-frame: var(--destructive-active);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--ghost {
+        --kp-btn-fg: var(--foreground);
+        --kp-btn-frame: transparent;
+        --kp-btn-ground: transparent;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--ghost:hover:not(:disabled) {
+        background-color: transparent;
+        --kp-btn-fill: hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    /* Disabled reads the derived tokens rather than an opacity [AR43]. */
+    [data-theme='cyberpunk'] .kp-button:disabled {
+        --kp-btn-fg: var(--muted-foreground);
+        --kp-btn-frame: var(--border-strong);
+        transform: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:disabled {
+        --kp-btn-fill: var(--primary-disabled);
+        --kp-btn-frame: var(--primary-disabled);
+        --kp-btn-fg: var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:disabled {
+        --kp-btn-fill: var(--destructive-disabled);
+        --kp-btn-frame: var(--destructive-disabled);
+        --kp-btn-fg: var(--destructive-foreground);
+    }
+
+    /* The focus ring lives on the face, inside the frame, where a clip-path
+       cannot reach it (MR-NOTCH): two channels, inset, DI2. */
     [data-theme='cyberpunk'] .kp-button:focus-visible {
         outline: none;
         box-shadow:
             inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) * 2) var(--focus-ring-contrast);
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
     }
 
-    /* CP-F2: button "charge" - a skewed light band sweeps through on
-   hover. Background-position only; no stacking-context tricks. */
-    [data-theme='cyberpunk'] [data-slot='button'],
-    [data-theme='cyberpunk'] .kp-button {
-        background-image: linear-gradient(105deg, transparent 0 42%, hsl(from var(--accent) h s l / 0.22) 42% 58%, transparent 58% 100%);
-        background-size: 280% 100%;
-        background-position: 105% 0;
-        background-repeat: no-repeat;
+    [data-theme='cyberpunk'] .kp-icon-button {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-slot='button'],
-        [data-theme='cyberpunk'] .kp-button {
-            transition: background-position var(--fx-duration, 140ms) var(--fx-ease, ease);
-        }
+    [data-theme='cyberpunk'] .kp-confirm {
+        border-radius: 0;
     }
 
-    [data-theme='cyberpunk'] [data-slot='button']:hover,
-    [data-theme='cyberpunk'] .kp-button:hover {
-        background-position: -5% 0;
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-form {
+        gap: 1.1rem;
     }
 
-    /* CP-C2: HUD corner brackets (target lock) - top-left + bottom-right,
-   asymmetric like the notch. Applied to the focused puzzle cell. */
-    [data-theme='cyberpunk'] .fx-brackets {
+    [data-theme='cyberpunk'] .kp-form__summary {
+        border-radius: 0;
+        border-left: 3px solid var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-field {
+        gap: 0.35rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__label {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] .kp-field__label {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__label::before {
+        content: '> ';
+        opacity: 0.6;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input {
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: none;
+        caret-color: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input:focus-visible {
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: inset 0 0 0 1px var(--ring);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input::placeholder {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__help {
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error {
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error::before {
+        content: '!! ';
+    }
+
+    [data-theme='cyberpunk'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check {
+        border-radius: 0;
+        accent-color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-fieldset {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-fieldset > legend {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    /* ── Cards, surfaces and containers ───────────────────────────────── */
+
+    /* The dossier: a bare .kp-card gets it, no data-slot needed (TH133). */
+    [data-theme='cyberpunk'] .kp-card {
+        border-radius: 0;
+        border: 1px solid var(--kp-hairline);
+        box-shadow: none;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
         position: relative;
     }
 
-    [data-theme='cyberpunk'] .fx-brackets::before,
-    [data-theme='cyberpunk'] .fx-brackets::after {
-        content: '';
+    [data-theme='cyberpunk'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 800;
+        font-size: 1.6rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    /* A card that carries an emphasis reveal wears the file stamp, with the
+       label the consumer wrote from js/strings.js [AR35, KT5]: no label, no
+       stamp — a word in CSS content is a user-visible string no gate reads. */
+    [data-theme='cyberpunk'] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
+        content: attr(data-kp-label);
         position: absolute;
-        width: 9px;
-        height: 9px;
-        pointer-events: none;
+        top: 0.9rem;
+        right: 1.4rem;
+        font-family: var(--kp-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        color: var(--link);
+        border: 1px solid var(--link);
+        padding: 0.15rem 0.5rem;
+        transform: rotate(-4deg);
     }
 
-    [data-theme='cyberpunk'] .fx-brackets::before {
-        top: -3px;
-        left: -3px;
-        border-top: 2px solid var(--accent);
-        border-left: 2px solid var(--accent);
+    [data-theme='cyberpunk'] .kp-popover,
+    [data-theme='cyberpunk'] .kp-dialog,
+    [data-theme='cyberpunk'] .kp-menu,
+    [data-theme='cyberpunk'] .kp-tooltip,
+    [data-theme='cyberpunk'] .kp-toast,
+    [data-theme='cyberpunk'] .kp-alert {
+        border-radius: 0;
     }
 
-    [data-theme='cyberpunk'] .fx-brackets::after {
-        bottom: -3px;
-        right: -3px;
-        border-bottom: 2px solid var(--accent);
-        border-right: 2px solid var(--accent);
+    [data-theme='cyberpunk'] .kp-popover {
+        border-color: var(--kp-hairline);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
     }
 
-    /* CP-C3: hairline connector after section headings, with a diamond
-   node at the joint - the HUD wireframe feel. */
-    [data-theme='cyberpunk'] .fx-rule {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+    [data-theme='cyberpunk'] .kp-dialog {
+        border: 1px solid var(--primary);
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
     }
 
-    [data-theme='cyberpunk'] .fx-rule::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(to right, var(--border), transparent);
+    [data-theme='cyberpunk'] .kp-dialog::backdrop {
+        background: hsl(from var(--sidebar-background) h s l / 0.75);
     }
 
-    [data-theme='cyberpunk'] .fx-rule::before {
-        content: '';
-        width: 7px;
-        height: 7px;
-        flex: none;
+    [data-theme='cyberpunk'] .kp-menu {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item::before {
+        content: '— ';
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-theme-menu {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-tooltip {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        border: 1px solid var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-toasts {
+        gap: 0.5rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-toast {
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+        border-left: 3px solid var(--accent);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-alert {
+        border-left: 3px solid currentColor;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-confirm-dialog,
+    [data-theme='cyberpunk'] .kp-empty {
+        border-radius: 0;
+        border-style: dashed;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-error {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-error h1 {
+        color: var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+        border-top: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-split {
+        gap: 3rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-grid {
+        gap: 2px;
+        background: var(--kp-hairline);
+    }
+
+    /* ── Badges, tags, status ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-badge,
+    [data-theme='cyberpunk'] .kp-tag,
+    [data-theme='cyberpunk'] .kp-health {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-badge {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-tag {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-health__dot {
+        border-radius: 0;
+        transform: rotate(45deg) scale(0.8);
+    }
+
+    [data-theme='cyberpunk'] .kp-progress {
+        border-radius: 0;
+        accent-color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-progress::-webkit-progress-bar {
+        border-radius: 0;
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-progress::-webkit-progress-value {
+        border-radius: 0;
         background: var(--primary);
-        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
     }
 
-    /* CP-F1: the scrollbar joins the theme. */
-    [data-theme='cyberpunk'] {
-        scrollbar-color: hsl(from var(--primary) h s l / 0.55) var(--card);
-        scrollbar-width: thin;
+    [data-theme='cyberpunk'] .kp-progress::-moz-progress-bar {
+        border-radius: 0;
+        background: var(--primary);
     }
+
+    [data-theme='cyberpunk'] .kp-skeleton {
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--card), var(--secondary), var(--card));
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner {
+        border-radius: 0;
+        border-color: var(--primary) transparent var(--accent) transparent;
+    }
+
+    /* ── Text shapes: identifiers as ornament ─────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-id,
+    [data-theme='cyberpunk'] .kp-url,
+    [data-theme='cyberpunk'] .kp-masked,
+    [data-theme='cyberpunk'] .kp-numeric,
+    [data-theme='cyberpunk'] .kp-timestamp,
+    [data-theme='cyberpunk'] .kp-truncate,
+    [data-theme='cyberpunk'] .kp-cell-break,
+    [data-theme='cyberpunk'] .kp-cell-truncate,
+    [data-theme='cyberpunk'] .kp-copyable,
+    [data-theme='cyberpunk'] .kp-shortcuts {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='cyberpunk'] .kp-copyable {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-timestamp {
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        font-size: 0.85em;
+    }
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-table {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-table th {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-table td {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-diff {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline {
+        border-left: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__marker {
+        border-radius: 0;
+        transform: rotate(45deg) scale(0.75);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__when {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-reorder {
+        border-radius: 0;
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-breadcrumb {
+        font-family: var(--kp-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-breadcrumb li + li::before {
+        content: '//';
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination a,
+    [data-theme='cyberpunk'] .kp-pagination button {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab[aria-selected='true'] {
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__step {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-combobox,
+    [data-theme='cyberpunk'] .kp-datepicker,
+    [data-theme='cyberpunk'] .kp-colorpicker,
+    [data-theme='cyberpunk'] .kp-palette {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-combobox__list,
+    [data-theme='cyberpunk'] .kp-palette__list {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-datepicker__day[aria-selected='true'] {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-colorpicker__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette {
+        font-family: var(--kp-mono);
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
 
     [data-theme='cyberpunk'] ::-webkit-scrollbar {
         width: 10px;
@@ -7150,189 +7972,285 @@
     }
 
     [data-theme='cyberpunk'] ::-webkit-scrollbar-track {
-        background: var(--card);
+        background: var(--background);
     }
 
     [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb {
-        background: hsl(from var(--primary) h s l / 0.5);
-        border: 2px solid var(--card);
+        background: var(--secondary);
+        border: 2px solid var(--background);
     }
 
     [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb:hover {
         background: var(--primary);
     }
 
-    /* CP-B1: signal-yellow badge for the rare thing that demands eyes. */
-    [data-theme='cyberpunk'] .fx-signal-badge {
-        /* Specificity instead of !important [KT6]: this selector is
-     * doubled below so it beats the button variants without a hammer. */
-        background: var(--fx-signal);
-        color: var(--fx-signal-foreground);
-        border-color: transparent;
+    /* ── Compatibility with the 4.x register ──────────────────────────── */
+
+    /* Three of the old opt-in classes keep a meaning: a glitch is the new
+       slice on hover, a rule is the drawn hairline, a bracket frame is the
+       heading's. The flicker, pulse, cell-pop and media classes are gone
+       with the theme they belonged to (S39, A1); MIGRATION.md lists them. */
+    [data-theme='cyberpunk'] .fx-glitch {
+        position: relative;
+        display: inline-block;
     }
 
-    /* ── Motion (all inside the reduced-motion guard) ─────────────────── */
+    [data-theme='cyberpunk'] .fx-glitch::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        color: var(--accent);
+    }
 
+    [data-theme='cyberpunk'] .fx-rule {
+        display: block;
+        height: var(--kp-rule-weight);
+        background: linear-gradient(to right, var(--accent) 0 35%, hsl(from var(--accent) h s l / 0.35) 70%, transparent);
+    }
+
+    [data-theme='cyberpunk'] .fx-brackets {
+        position: relative;
+        padding-top: 0.9rem;
+        background:
+            linear-gradient(var(--primary), var(--primary)) top left / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top left / 2px 0.8rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 2px 0.8rem no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .fx-notch {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch)), calc(100% - var(--fx-notch)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .fx-signal-badge {
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.15rem 0.5rem;
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. The
+       durations are literal because check-motion.mjs computes DI5's rate
+       from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
-        /* CP-B3: neon tube flicker - runs once when the class mounts. */
-        [data-theme='cyberpunk'] .fx-flicker {
-            /* A literal, not a knob: this animation changes luminance and DI5 pins
-         * it above the flash threshold. A consumer knob could go under it. */
-            animation: fx-flicker 2.2s linear 1 both;
+        [data-theme='cyberpunk'] [data-kp-reveal='headline'].is-glitching::before,
+        [data-theme='cyberpunk'] [data-kp-reveal='headline']:hover::before {
+            animation: kp-slice-1 600ms steps(1, end) 1;
         }
 
-        /* CP-B2: pulsing glow lives on a pseudo-element and animates ONLY
-       opacity (animated box-shadow re-blurs every frame). */
-        [data-theme='cyberpunk'] .fx-pulse {
-            position: relative;
+        [data-theme='cyberpunk'] [data-kp-reveal='headline'].is-glitching::after,
+        [data-theme='cyberpunk'] [data-kp-reveal='headline']:hover::after {
+            animation: kp-slice-2 600ms steps(1, end) 1;
         }
 
-        [data-theme='cyberpunk'] .fx-pulse::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            pointer-events: none;
-            box-shadow: 0 0 24px var(--primary);
-            opacity: 0.3;
-            animation: fx-pulse var(--fx-pulse-duration, 2.6s) ease-in-out infinite;
+        [data-theme='cyberpunk'] [data-kp-reveal='rule']::after {
+            transition: transform var(--kp-rule-draw) var(--fx-ease);
         }
 
-        /* CP-A4: chromatic-aberration glitch on headings, hover-triggered,
-       never permanent. Needs data-text mirroring the heading. */
-        [data-theme='cyberpunk'] .fx-glitch {
-            position: relative;
+        [data-theme='cyberpunk'] mark {
+            transition: color 300ms 400ms;
         }
 
-        [data-theme='cyberpunk'] .fx-glitch:hover::before,
-        [data-theme='cyberpunk'] .fx-glitch:hover::after {
-            content: attr(data-text);
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            mix-blend-mode: screen;
-            background: none;
-            -webkit-background-clip: initial;
-            background-clip: initial;
+        [data-theme='cyberpunk'] mark::after {
+            transition: transform var(--kp-wipe) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(4)::after {
+            transition-delay: calc(3 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__links {
+            animation: kp-strip-in 520ms var(--fx-ease) 80ms both;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav[data-kp-nav-side='end'] .kp-nav__links {
+            animation-name: kp-strip-in-end;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__link {
+            transition: background-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link[data-kp-text]::before,
+        [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link[data-kp-text]::before {
+            animation: kp-slice-a 320ms steps(2, end) 1;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__menu {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] .kp-button {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled)::after {
+            animation: kp-charge 520ms var(--fx-ease) 1;
+        }
+
+        [data-theme='cyberpunk'] .kp-field__input {
+            transition:
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
         }
 
         [data-theme='cyberpunk'] .fx-glitch:hover::before {
-            color: var(--primary);
-            animation: fx-glitch-a var(--fx-glitch-duration, 340ms) steps(2) 1 both;
-        }
-
-        [data-theme='cyberpunk'] .fx-glitch:hover::after {
-            color: var(--accent);
-            animation: fx-glitch-b var(--fx-glitch-duration, 340ms) steps(2) 1 both;
-        }
-
-        /* CP-F3: one short RGB split on image hover, then stillness. */
-        [data-theme='cyberpunk'] .fx-media:hover img,
-        [data-theme='cyberpunk'] .fx-media:hover iframe {
-            animation: fx-rgb-split var(--fx-split-duration, 170ms) steps(2) 1;
-        }
-
-        /* CP-F4: entering a puzzle value flashes cyan for one beat. */
-        [data-theme='cyberpunk'] .fx-cellpop {
-            animation: fx-cellflash var(--fx-cellflash-duration, 200ms) steps(2) 1;
+            animation: kp-slice-a 320ms steps(2, end) 1;
         }
     }
 
-    /* Measured 2026-09-04 by gates/check-motion.mjs: the previous timing made
-   5.5 opposing luminance changes per second, where WCAG 2.2 SC 2.3.1
-   (Level A) allows three. Two deep dips over a longer run come in at 1.8,
-   and the third dip is now shallower than the 10% that counts as a flash.
-   A failing tube reads better slow. */
-    @keyframes fx-flicker {
-        0%,
-        100% {
-            opacity: 1;
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has a row in TIMINGS (js/effects.js) with its
+       measured opacity stops; check-motion.mjs holds the two in step and
+       reports the rate of every one (S42: reported, never corrected). */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-strip-in {
+            0% {
+                transform: translateX(-24px);
+                opacity: 0;
+            }
+            100% {
+                transform: none;
+                opacity: 1;
+            }
         }
-        10% {
-            opacity: 0.35;
+
+        @keyframes kp-strip-in-end {
+            0% {
+                transform: translateX(24px);
+                opacity: 0;
+            }
+            100% {
+                transform: none;
+                opacity: 1;
+            }
         }
-        16% {
-            opacity: 1;
+
+        @keyframes kp-slice-a {
+            0% {
+                opacity: 1;
+                clip-path: inset(0 0 55% 0);
+                transform: translate(-3px, -1px);
+            }
+            50% {
+                opacity: 1;
+                clip-path: inset(40% 0 20% 0);
+                transform: translate(3px, 1px);
+            }
+            100% {
+                opacity: 0;
+                clip-path: inset(0 0 0 0);
+                transform: none;
+            }
         }
-        55% {
-            opacity: 0.6;
+
+        @keyframes kp-slice-1 {
+            0% {
+                opacity: 1;
+                clip-path: polygon(0 2%, 100% 2%, 100% 9%, 0 9%);
+                transform: translate(-6px, 0);
+            }
+            14% {
+                clip-path: polygon(0 31%, 100% 31%, 100% 36%, 0 36%);
+                transform: translate(5px, 0);
+            }
+            28% {
+                clip-path: polygon(0 58%, 100% 58%, 100% 63%, 0 63%);
+                transform: translate(-4px, 0);
+            }
+            42% {
+                clip-path: polygon(0 12%, 100% 12%, 100% 22%, 0 22%);
+                transform: translate(7px, 0);
+            }
+            56% {
+                clip-path: polygon(0 80%, 100% 80%, 100% 84%, 0 84%);
+                transform: translate(-5px, 0);
+            }
+            70% {
+                clip-path: polygon(0 44%, 100% 44%, 100% 47%, 0 47%);
+                transform: translate(3px, 0);
+            }
+            84%,
+            100% {
+                opacity: 0;
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+                transform: none;
+            }
         }
-        60% {
-            opacity: 1;
+
+        @keyframes kp-slice-2 {
+            0% {
+                opacity: 1;
+                clip-path: polygon(0 66%, 100% 66%, 100% 72%, 0 72%);
+                transform: translate(6px, 0);
+            }
+            14% {
+                clip-path: polygon(0 5%, 100% 5%, 100% 8%, 0 8%);
+                transform: translate(-5px, 0);
+            }
+            28% {
+                clip-path: polygon(0 40%, 100% 40%, 100% 49%, 0 49%);
+                transform: translate(4px, 0);
+            }
+            42% {
+                clip-path: polygon(0 88%, 100% 88%, 100% 93%, 0 93%);
+                transform: translate(-7px, 0);
+            }
+            56% {
+                clip-path: polygon(0 20%, 100% 20%, 100% 24%, 0 24%);
+                transform: translate(5px, 0);
+            }
+            70% {
+                clip-path: polygon(0 74%, 100% 74%, 100% 77%, 0 77%);
+                transform: translate(-3px, 0);
+            }
+            84%,
+            100% {
+                opacity: 0;
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+                transform: none;
+            }
         }
-        78% {
-            opacity: 0.93;
-        }
-        82% {
-            opacity: 1;
+
+        @keyframes kp-charge {
+            to {
+                transform: translateX(120%);
+            }
         }
     }
 
-    @keyframes fx-pulse {
-        50% {
-            opacity: 0.65;
+    /* Reduced motion: every effect resolves to its rest state at once
+       [DI7]. Nothing animates (see the guard above); what the script would
+       have revealed is shown: the marks are clear, the rule is drawn. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared) {
+            color: var(--link);
+            font-weight: 700;
         }
-    }
 
-    @keyframes fx-glitch-a {
-        0% {
-            transform: translate(-2px, -1px);
-            clip-path: inset(12% 0 58% 0);
-        }
-        40% {
-            transform: translate(2px, 1px);
-            clip-path: inset(62% 0 8% 0);
-        }
-        80% {
-            transform: translate(-1px, 0);
-            clip-path: inset(35% 0 42% 0);
-        }
-        100% {
+        [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared)::after,
+        [data-theme='cyberpunk'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
             transform: none;
-            clip-path: inset(0 0 100% 0);
-        }
-    }
-
-    @keyframes fx-glitch-b {
-        0% {
-            transform: translate(2px, 1px);
-            clip-path: inset(55% 0 15% 0);
-        }
-        40% {
-            transform: translate(-2px, -1px);
-            clip-path: inset(10% 0 70% 0);
-        }
-        80% {
-            transform: translate(1px, 0);
-            clip-path: inset(45% 0 30% 0);
-        }
-        100% {
-            transform: none;
-            clip-path: inset(100% 0 0 0);
-        }
-    }
-
-    @keyframes fx-rgb-split {
-        0% {
-            filter: drop-shadow(2px 0 0 hsl(from var(--primary) h s l / 0.8)) drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.8));
-            transform: translateX(1px);
-        }
-        50% {
-            filter: drop-shadow(-2px 0 0 hsl(from var(--primary) h s l / 0.8)) drop-shadow(2px 0 0 hsl(from var(--accent) h s l / 0.8));
-            transform: translateX(-1px);
-        }
-        100% {
-            filter: none;
-            transform: none;
-        }
-    }
-
-    @keyframes fx-cellflash {
-        0% {
-            color: var(--accent);
-            text-shadow: 0 0 14px var(--accent);
-        }
-        100% {
-            text-shadow: none;
         }
     }
 

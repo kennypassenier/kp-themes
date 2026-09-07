@@ -40,17 +40,14 @@ const CSS = ['../css/cyberpunk-register.css', '../css/_rules.css', '../css/compo
  */
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
-    'fx-glitch-a':
-        'transform and clip-path on a text pseudo-element — no luminance change, and far under the 341x256 px area the threshold applies to',
-    'fx-glitch-b': 'as fx-glitch-a',
-    'fx-rgb-split': 'drop-shadow offsets on a single text element; the colours do not change, only their position',
-    'fx-cellflash': 'text colour and shadow on one cell, one iteration of 200ms',
     'kp-spin': 'a rotation: no luminance change at all',
     'kp-rule-in': 'a horizontal scale on a 1px rule; no luminance change and nothing over 341x256 px',
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
     'kp-slide-in': 'a 6px translate on a badge, once; nothing changes luminance [TH70]',
     'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
+    'kp-charge':
+        'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */
@@ -100,7 +97,7 @@ export function parseOpacityKeyframes(source) {
  * @param {number} durationMs
  * @returns {number} opposing changes of >= 10% per second
  */
-export function flashesPerSecond(stops, durationMs) {
+export function flashesPerSecond(stops, durationMs, cycles = Infinity) {
     if (stops.length < 2) return 0;
     let opposing = 0;
     let lastDirection = 0;
@@ -113,7 +110,15 @@ export function flashesPerSecond(stops, durationMs) {
             lastDirection = direction;
         }
     }
-    return opposing / (durationMs / 1000);
+    // A run that plays once occupies at most one second of the reader's
+    // attention: its changes are counted over the second they happen in,
+    // never extrapolated as if it looped. The 4.x register set its hover
+    // glitch to 340ms to dodge that extrapolation (one change in 320ms
+    // read as 3.1 per second); the approved demo's 320ms is honest at
+    // 1 per second, and a burst of four changes in 320ms still reads 4.
+    // A looping run is extrapolated as before, because it does loop.
+    const windowMs = cycles === Infinity ? durationMs : Math.max(durationMs * cycles, 1000);
+    return opposing / (windowMs / 1000);
 }
 
 /**
@@ -126,13 +131,21 @@ export function flashesPerSecond(stops, durationMs) {
  * null, and the runner measures the worst case rather than ignoring it.
  *
  * @param {string} source
- * @returns {{name: string, durationMs: number | null, duration: string}[]}
+ * @returns {{name: string, durationMs: number | null, duration: string, cycles: number}[]}
  */
 /** @param {string} source */
 export function animations(source) {
     return [...source.matchAll(/animation:\s*([\w-]+)\s+([^;]+);/g)].map((m) => {
         const literal = m[2].match(/^\s*([\d.]+)(m?s)/);
+        // The iteration count: `infinite`, a bare number outside any
+        // parentheses (`steps(2, end)` carries one that is not a count), or
+        // the CSS default of one. A one-shot run is rated over the second
+        // it occupies; a loop is extrapolated.
+        const rest = m[2].replace(/\([^)]*\)/g, '');
+        const count = rest.match(/(?:^|\s)(\d+(?:\.\d+)?)(?=\s|$)/);
+        const cycles = /\binfinite\b/.test(rest) ? Infinity : count ? Number(count[1]) : 1;
         return {
+            cycles,
             name: m[1],
             durationMs: literal ? (literal[2] === 's' ? Number(literal[1]) * 1000 : Number(literal[1])) : null,
             duration: m[2].trim(),
@@ -267,7 +280,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             checked++;
             // Reached only when the duration is a literal: the computed
             // case is handled above and returns before here.
-            const rate = flashesPerSecond(stops, anim.durationMs ?? SHORTEST_THEME_DURATION_MS);
+            const rate = flashesPerSecond(stops, anim.durationMs ?? SHORTEST_THEME_DURATION_MS, anim.cycles);
             if (rate > MAX_FLASHES_PER_SECOND) {
                 failed++;
                 console.error(
@@ -297,7 +310,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const report = [];
     for (const [effect, row] of Object.entries(TIMINGS)) {
         const stops = row.luminanceSteps.map((opacity, i) => ({ stop: i, opacity }));
-        const rate = row.property === 'opacity' ? flashesPerSecond(stops, row.durationMs) : 0;
+        const rate = row.property === 'opacity' ? flashesPerSecond(stops, row.durationMs, row.cycles) : 0;
         const loop = row.cycles === Infinity ? 'loops' : `${row.cycles}×`;
         report.push(
             `  ${effect}: ${row.property}, ${row.durationMs}ms ${loop} → ${rate.toFixed(2)}/s${rate > MAX_FLASHES_PER_SECOND ? '  OVER THE THRESHOLD (reported, S42)' : ''}`,

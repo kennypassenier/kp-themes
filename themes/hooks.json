@@ -49,6 +49,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='cyberpunk'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/cyberpunk-register.css",
+                "selector": "[data-theme='cyberpunk'] mark"
+            },
+            "reveal": {
+                "css": "css/cyberpunk-register.css",
+                "selector": "[data-theme='cyberpunk'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/cyberpunk-register.css",
+                "selector": "[data-theme='cyberpunk'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/cyberpunk-register.css",
+                "selector": "[data-theme='cyberpunk'] [data-kp-surface] h1"
             }
         },
         "pastel": {

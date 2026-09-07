@@ -18,13 +18,21 @@
                 <span class="kp-nav__brand">Northwind</span>
                 <ul class="kp-nav__links">
                     <li>
-                        <a class="kp-nav__link" href="#main" aria-current="page">Signal</a>
+                        <a class="kp-nav__link" href="#main" aria-current="page" data-kp-text="Signal">Signal</a>
                     </li>
                     <li>
-                        <a class="kp-nav__link" href="#dossier">Dossier</a>
+                        <a class="kp-nav__link" href="#dossier" data-kp-text="Dossier" aria-haspopup="true">Dossier</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#dossier">Open files</a>
+                            </li>
+                            <li>
+                                <a href="#contact">Request access</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <a class="kp-nav__link" href="#contact">Contact</a>
+                        <a class="kp-nav__link" href="#contact" data-kp-text="Contact">Contact</a>
                     </li>
                 </ul>
             </nav>
@@ -48,7 +56,7 @@
                 </section>
                 <div data-kp-divider></div>
                 <section class="kp-section kp-stack" data-kp-surface="app" id="contact" data-example="concept-app">
-                    <h2>Leave a signal</h2>
+                    <h2 data-kp-reveal="rule">Leave a signal</h2>
                     <form class="kp-form kp-stack" data-kp-form>
                         <div class="kp-field">
                             <label class="kp-field__label" for="concept-handle">
@@ -68,7 +76,7 @@
                         </div>
                     </form>
                     <div class="kp-autogrid" id="dossier">
-                        <div class="kp-card" data-slot="card" data-example="concept-dossier">
+                        <div class="kp-card" data-slot="card" data-kp-reveal="emphasis" data-kp-label="Classified" data-example="concept-dossier">
                             <div class="kp-card__header">
                                 <h3 class="kp-card__title">Dossier 07</h3>
                             </div>

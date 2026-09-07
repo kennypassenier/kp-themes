@@ -75,6 +75,10 @@ export type Strings = {
     save: string;
     mainNavigation: string;
     skipToContent: string;
+    /**
+     * The stamp a register may print on an emphasis reveal (the dossier) [AR35]
+     */
+    classified: string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -178,6 +182,7 @@ export type Strings = {
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
+ * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker

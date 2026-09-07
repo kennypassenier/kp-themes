@@ -7,6 +7,7 @@ export type NavLink = {
     className?: string;
     target?: string;
     rel?: string;
+    links?: NavLink[];
 };
 export type NavBarProps = {
     brand?: import('react').ReactNode;
@@ -56,6 +57,8 @@ export type NavBarProps = {
         item?: string;
         link?: string;
         skip?: string;
+        menu?: string;
+        menuLink?: string;
     };
     strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;

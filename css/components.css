@@ -943,6 +943,61 @@
         text-decoration-thickness: 2px;
     }
 
+    /* A dropdown under a link [TH117]: a nested list the link announces
+     * with aria-haspopup. It opens on hover and on focus within, so the
+     * keyboard reaches every item by Tab; the register decides its look. */
+    .kp-nav__links > li {
+        position: relative;
+    }
+
+    .kp-nav__menu {
+        position: absolute;
+        top: 100%;
+        inset-inline-start: 0;
+        z-index: var(--kp-z-popover, 20);
+        min-width: 12rem;
+        margin: 0;
+        padding: 0.25rem 0;
+        list-style: none;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        /* Closed is `display: none`, not hidden-but-laid-out: a laid-out
+         * panel 12rem wide inside a 56px item is scrollable overflow, and
+         * the overflow gate read it as such at 320px (TH99). The keyboard
+         * still gets in — focus on the trigger opens the panel through
+         * :focus-within, and the next Tab lands on its first link. */
+        display: none;
+        opacity: 0;
+    }
+
+    .kp-nav__links > li:hover > .kp-nav__menu,
+    .kp-nav__links > li:focus-within > .kp-nav__menu {
+        display: block;
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav__menu {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                display var(--fx-duration, 150ms) allow-discrete;
+        }
+
+        @starting-style {
+            .kp-nav__links > li:hover > .kp-nav__menu,
+            .kp-nav__links > li:focus-within > .kp-nav__menu {
+                opacity: 0;
+            }
+        }
+    }
+
+    .kp-nav__menu a {
+        display: block;
+        padding: 0.375rem 0.875rem;
+    }
+
     /* ====================================================================
  * The eleven overlays and their neighbours [L8, TH35].
  *

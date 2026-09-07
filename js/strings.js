@@ -114,6 +114,7 @@
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
+ * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker
@@ -243,6 +244,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     save: 'Save',
     mainNavigation: 'Main navigation',
     skipToContent: 'Skip to the content',
+    classified: 'Classified',
     breadcrumb: 'Breadcrumb',
     pagination: 'Pagination',
     themePicker: 'Choose a theme',

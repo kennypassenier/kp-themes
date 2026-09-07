@@ -69,7 +69,11 @@ const GROUND = `(el) => {
     while (node) {
         const style = getComputedStyle(node);
         const image = style.backgroundImage;
-        if (image && image !== 'none') {
+        // A gradient counts as the ground only when it fills the box: a
+        // decoration sized to a band or a corner (a button's slit, a
+        // heading's bracket frame) is painted over the real ground.
+        const fills = /^(auto( auto)?|100% 100%|cover)$/.test(style.backgroundSize.split(',')[0].trim());
+        if (image && image !== 'none' && fills) {
             const stops = image.match(/rgba?\\([^)]*\\)/g) ?? [];
             const opaque = stops.filter((c) => !/rgba\\(\\d+, \\d+, \\d+, 0\\)/.test(c));
             if (opaque.length > 0) return opaque;

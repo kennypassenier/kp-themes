@@ -110,11 +110,49 @@ test('DI5: a swing under ten percent is not a flash', () => {
     assert.equal(flashesPerSecond(stops, 100), 0);
 });
 
-test('DI5: the shipped flicker stays under the threshold', () => {
+// TH131: the test reads the register's real keyframes rather than pinning
+// one by name — `fx-flicker` left with the 4.x register at C2, and a test
+// that named it would have gone red on the absence rather than on a flash.
+// Every opacity keyframe the register animates is rated with its own
+// duration and iteration count.
+test('DI5: every opacity keyframe the cyberpunk register animates stays under the threshold [TH131]', () => {
     const css = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
-    const stops = parseOpacityKeyframes(css).get('fx-flicker');
-    assert.ok(stops, 'fx-flicker keyframes must be readable');
-    assert.ok(flashesPerSecond(stops, 2200) <= 3);
+    const keyframes = parseOpacityKeyframes(css);
+    const rated = [];
+    for (const anim of animations(css)) {
+        const stops = keyframes.get(anim.name);
+        if (!stops) continue;
+        assert.ok(anim.durationMs !== null, `${anim.name}: a literal duration, so the rate can be computed`);
+        rated.push(`${anim.name}: ${flashesPerSecond(stops, anim.durationMs, anim.cycles).toFixed(2)}/s`);
+        assert.ok(flashesPerSecond(stops, anim.durationMs, anim.cycles) <= 3, `${anim.name} exceeds three opposing changes per second`);
+    }
+    assert.ok(rated.length >= 3, `only ${rated.length} opacity animations rated — the register ships more than that`);
+});
+
+// Drill [TH131]: a 5/s loop turns the same reading red.
+test('DI5: an injected five-per-second loop is refused by the same reading [TH131]', () => {
+    const css =
+        '@keyframes bad { 0% { opacity: 1; } 10% { opacity: 0; } 20% { opacity: 1; } 30% { opacity: 0; } 40% { opacity: 1; } 50% { opacity: 0; } 60% { opacity: 1; } 70% { opacity: 0; } 80% { opacity: 1; } 90% { opacity: 0; } 100% { opacity: 1; } }\n' +
+        '.x { animation: bad 2s linear infinite; }\n';
+    const stops = parseOpacityKeyframes(css).get('bad');
+    const [anim] = animations(css);
+    assert.ok(stops && anim);
+    assert.ok(flashesPerSecond(stops, anim.durationMs ?? 0, anim.cycles) > 3, 'five opposing changes per second must read over the threshold');
+    // And the same burst once, over two seconds, is rated over the two
+    // seconds it occupies — still over three, because it really is.
+    assert.ok(flashesPerSecond(stops, 2000, 1) > 3);
+    // A single fade once in 320ms is one change in the second it occupies.
+    assert.equal(
+        flashesPerSecond(
+            [
+                { stop: 0, opacity: 1 },
+                { stop: 100, opacity: 0 },
+            ],
+            320,
+            1,
+        ),
+        1,
+    );
 });
 
 test('DI7: a transition inside a no-preference guard is not reported', () => {
@@ -745,4 +783,40 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
     const excused = auditTexture(new Map([['x.css', css]]), { "[data-theme='a']": 0.0715, "[data-theme='b']": 0.05 }, 0.06);
     assert.deepEqual(excused.over, []);
     assert.deepEqual(excused.stale, ["[data-theme='b']"]);
+});
+
+// ── Round six, C2: the register's configuration surface [AR43] ─────────────
+
+test('AR43: every knob the architecture names has its default in the cyberpunk register', () => {
+    const register = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
+    // The demo's values, as AR43 lists them. A knob missing here, or with
+    // another default, is the register drifting from the decision.
+    const KNOBS = {
+        '--kp-button-notch': 'var(--fx-notch, 14px)',
+        '--kp-button-slit': '10px',
+        '--kp-nav-notch': '13px',
+        '--kp-nav-enter': '520ms',
+        '--kp-nav-enter-delay': '80ms',
+        '--kp-decipher-cps': '26',
+        '--kp-decipher-lead': '260ms',
+        '--kp-decipher-swap': '0.5',
+        '--kp-reveal-threshold': '0.6',
+        '--kp-reveal-stagger': '260ms',
+        '--kp-redact-stagger': '160ms',
+        '--kp-classified-delay': '1500ms',
+        '--kp-wipe': '720ms',
+        '--kp-rule-draw': '900ms',
+        '--kp-rule-weight': '3px',
+        '--kp-slice': '600ms',
+        '--kp-slice-hover': '320ms',
+        '--kp-charge': '520ms',
+        '--kp-tear-height': '44px',
+        '--fx-notch-sm': '8px',
+    };
+    const block = register.match(/\[data-theme='cyberpunk'\]\s*\{([^}]*)\}/)?.[1] ?? '';
+    for (const [knob, value] of Object.entries(KNOBS)) {
+        const m = block.match(new RegExp(`${knob.replace(/[-]/g, '\\-')}:\\s*([^;]+);`));
+        assert.ok(m, `${knob} is not declared in the register's theme block`);
+        assert.equal(m[1].trim(), value, `${knob} defaults to ${m[1].trim()}, AR43 says ${value}`);
+    }
 });
