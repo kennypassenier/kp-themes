@@ -408,13 +408,13 @@ will touch is decided now rather than hoped for:
 | W4 | **built** 2026-09-07 (AFK), in a parallel worktree. `tests/fixtures/dashboard.html` and `tests/fixtures/react-dashboard.jsx` are a page shaped like a consumer's — a data table, row actions in a menu on the popover layer, a destructive item in that menu — and `tests/dashboard.spec.mjs` drives the whole journey with the keyboard alone in both channels and both browsers: Tab to the trigger, Enter to open, Tab to the destructive item, Enter for the dialog, Escape and then Cancel each leaving the menu re-shown and the focus back on the item rather than on `<body>`, and a second Enter plus Confirm deleting the row exactly once. Behaviour runs in two themes rather than 24 — a theme is a token set and cannot change which element the keyboard reaches — and the focus indicator on the destructive item runs in all 24, twice: as the theme declares it and as the browser paints it, because `.kp-popover` is `overflow: auto` with 4px of padding and a ring is 4px wide. Six drills, all red: the `.kp-button:focus-visible` block (24 themes named declared, 20 painted 0), the `displaced` restore loop, the one-shot lock in both channels at once, AR32's shared overflow rule (the page stayed 320/320 — W3's wrapper absorbed it — and the wrapper read 354 against 304, which is where the assertion was moved to), and the `@container kp-table` block. `tests/ring.mjs` now holds the ring measurement that `tests/button.spec.mjs` had hand-rolled, because W4 measures the same ring on a different control. All 42 site pages, 10 example pages, the showcase, the bundle, the HA themes and the utilities regenerate byte-identical from their sources. Reading the pages as a reader found two things no gate looks at: the button page never learned about W0's size scale — no example, and `.kp-button--sm` / `.kp-button--lg` in no table — which is fixed here in `gates/site/descriptors.mjs`; and a status badge reading `Overdue` breaks mid-word on `examples/list-with-form.html`, which is AR32's `overflow-wrap: anywhere` doing what it was chosen to do, so it is queued as **MR-W4-1** rather than repaired. Suite: 1302 passed, 30 skipped, 0 failed. |
 | W5 | not started |
 
-### A third flake, named but not yet repaired
+### A third flake, named and repaired
 
 Standing rule 8a asks for a name rather than "it was load", and two of
 the three flakes this round produced now have one and are repaired
 (`tests/site.spec.mjs` and `tests/showcase.spec.mjs`, commit `aff22d1`).
-The third is named here and left standing until W4 merges, because its
-repair touches `tests/fixtures/components.html`, which W4 is working in.
+The third is named here, and repaired once W4 had merged and released
+`tests/fixtures/components.html`.
 
 **The fault.** Three assertions in `tests/forms.spec.mjs` (lines 117, 131
 and 142) wait for the submit button's busy state. That state is transient
@@ -435,11 +435,19 @@ eight pass in 4.5s.
 50 ms. It settles after 400. The number in the comment has been wrong
 since it was written.
 
-**The repair, after W4.** Not a longer budget, which makes the window
-harder to hit rather than easier: the fixture's settle becomes a promise
-the test resolves, so the busy state holds until the test has observed
-it, and the assertion stops depending on timing at all. That is also
-rule 27 — a timing value only the fixture's author can change.
+**The repair.** Not a longer budget, which makes the window harder to
+hit rather than easier. The fixture's settle is now a knob: with
+`window.kpFormHold` set, the busy state is held until the test resolves
+it through `window.kpFormSettle()`, in both channels. The assertions stop
+depending on timing at all. That is rule 27 as much as rule 8a — 400 was
+a value only the fixture could change.
+
+**Both halves drilled.** Closing the window to 0 ms, which reproduced the
+fault deterministically before, now leaves all eight tests green — the
+race is gone rather than widened. And removing the `DONE_EVENT` listener
+in `js/forms.js` still turns the KT6 test red on `toBeEnabled()`, so the
+test still catches the fault it exists for: a component that ignores the
+consumer's `done()` and leaves the button stuck.
 
 
 **Merged into `round-five` on 2026-09-07**, in the order the plan named:

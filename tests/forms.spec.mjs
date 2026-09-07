@@ -106,6 +106,15 @@ for (const channel of CHANNELS) {
 
         test('the submit button says it is working [TH38]', async ({ page }) => {
             await page.goto(URL);
+            // The busy state is held open until this test lets go, so the
+            // assertions below measure the state rather than racing it.
+            // Before this, the fixture settled after 400ms and a poll that
+            // landed late could never pass -- retrying cannot recover a
+            // state that is already gone. Named and proved on 2026-09-07:
+            // closing the window to 0ms reproduces it exactly.
+            await page.evaluate(() => {
+                window.kpFormHold = true;
+            });
             const form = page.locator(channel.form);
             await page.locator(channel.naam).fill('Kenny');
             await page.locator(channel.mail).fill('kenny@example.test');
@@ -123,23 +132,31 @@ for (const channel of CHANNELS) {
         // typo — with "element is not enabled".
         test('the busy state ends when the consumer says so, and a second submit lands [KT6]', async ({ page }) => {
             await page.goto(URL);
+            await page.evaluate(() => {
+                window.kpFormHold = true;
+            });
             await page.locator(channel.naam).fill('Kenny');
             await page.locator(channel.mail).fill('kenny@example.test');
             const submit = page.locator(channel.submit);
             const idle = await submit.textContent();
             await submit.click();
             await expect(submit).toBeDisabled();
-            // The fixture's handler settles after 50 ms the way a rendered
-            // "wrong password" does: resolved, not rejected. Drill: with
-            // `done` never wired (React: the then(done, done) removed;
-            // framework-free: the DONE_EVENT listener removed) this waits
-            // out the timeout on the next line.
+            // The fixture's handler settles the way a rendered "wrong
+            // password" does: resolved, not rejected. This test now says
+            // WHEN, rather than waiting 400ms and hoping a poll lands
+            // inside it. Drill: with `done` never wired (React: the
+            // then(done, done) removed; framework-free: the DONE_EVENT
+            // listener removed) this waits out the timeout on the next
+            // line.
+            await page.evaluate(() => window.kpFormSettle?.());
             await expect(submit).toBeEnabled();
             await expect(submit).not.toHaveAttribute('aria-busy', 'true');
             await expect(submit).toHaveText(idle ?? '');
             // The half that matters: the person tries again and it works.
             await submit.click();
             await expect(submit).toBeDisabled();
+            await page.evaluate(() => window.kpFormSettle?.());
+            await expect(submit).toBeEnabled();
         });
     });
 }

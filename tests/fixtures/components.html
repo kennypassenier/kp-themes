@@ -482,7 +482,18 @@
             // …and one whose save "fails" the way JobTracker's does: the
             // outcome is rendered, the request settles, and the consumer
             // says so through done().
-            plain.addEventListener('kp-form-valid', (event) => setTimeout(() => event.detail.done(), 400));
+            // The settle is a value, not a fact of nature: a test that wants
+            // to LOOK at the busy state holds it open and lets go itself.
+            // Without that, the state exists for 400ms and an assertion
+            // that polls can only pass by landing inside that window --
+            // and when it misses, retrying cannot help, because the state
+            // is already gone. That is the flake, and it is rule 27 as
+            // much as rule 8a: a timing value only this file could change.
+            window.kpFormSettleMs = 400;
+            plain.addEventListener('kp-form-valid', (event) => {
+                if (window.kpFormHold) window.kpFormSettle = () => event.detail.done();
+                else setTimeout(() => event.detail.done(), window.kpFormSettleMs);
+            });
         </script>
         <script type="module" src="/tests/fixtures/.build/react-components.js"></script>
     </body>

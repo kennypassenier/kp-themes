@@ -144,7 +144,17 @@ function Cases() {
                     is an outcome the screen renders, so the promise RESOLVES
                     after a wrong password rather than rejecting. Clearing
                     busy only on rejection would have left them stuck. */}
-                <Form onValid={() => new Promise((resolve) => setTimeout(resolve, 400))}>
+                <Form
+                    onValid={() =>
+                        new Promise((resolve) => {
+                            // Same knob as the framework-free half: a test that
+                            // wants to look at the busy state holds it open and
+                            // resolves this itself. See tests/fixtures/components.html.
+                            if (window.kpFormHold) window.kpFormSettle = resolve;
+                            else setTimeout(resolve, window.kpFormSettleMs ?? 400);
+                        })
+                    }
+                >
                     <FormField label="Naam" name="naam" required help="Zoals het op je pas staat." />
                     <FormField label="E-mail" name="mail" type="email" required />
                 </Form>
