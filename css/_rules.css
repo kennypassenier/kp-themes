@@ -1,4 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════════
+@layer kp.base {
+    /* ═══════════════════════════════════════════════════════════════════
    Theme registers (T5-T8): each theme borrows from a coherent world.
    The shared machinery is one full-viewport texture layer per theme -
    the "glass" the interface sits behind. It renders above the content
@@ -7,263 +8,263 @@
    Themes without --fx-texture render nothing (opacity 0).
    ═══════════════════════════════════════════════════════════════════ */
 
-body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    /* The layer scale [KT6]: texture 80, popover/menus 20, toasts 90,
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        /* The layer scale [KT6]: texture 80, popover/menus 20, toasts 90,
      * skip link 100 — each a --kp-z-* knob with this as its fallback. */
-    z-index: var(--kp-z-texture, 80);
-    pointer-events: none;
-    background-image: var(--fx-texture, none);
-    background-size: var(--fx-texture-size, auto);
-    opacity: var(--fx-texture-opacity, 0);
-}
+        z-index: var(--kp-z-texture, 80);
+        pointer-events: none;
+        background-image: var(--fx-texture, none);
+        background-size: var(--fx-texture-size, auto);
+        opacity: var(--fx-texture-opacity, 0);
+    }
 
-/* T5 · Formal = "Gravure": laid paper grain under editorial serif. */
-[data-theme='formal'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E");
-    --fx-texture-size: 240px 240px;
-    --fx-texture-opacity: 0.035;
-}
+    /* T5 · Formal = "Gravure": laid paper grain under editorial serif. */
+    [data-theme='formal'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E");
+        --fx-texture-size: 240px 240px;
+        --fx-texture-opacity: 0.035;
+    }
 
-/* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
-[data-theme='light'] {
-    --fx-texture:
-        linear-gradient(to right, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-        linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-        linear-gradient(to right, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px),
-        linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px);
-    --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
-    --fx-texture-opacity: 0.05;
-}
+    /* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
+    [data-theme='light'] {
+        --fx-texture:
+            linear-gradient(to right, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
+            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
+            linear-gradient(to right, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px),
+            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px);
+        --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+        --fx-texture-opacity: 0.05;
+    }
 
-/* T7 · Dark = "Observatorium": a faint starfield behind the glass. */
-[data-theme='dark'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='white'%3E%3Ccircle cx='24' cy='41' r='1'/%3E%3Ccircle cx='134' cy='17' r='0.6'/%3E%3Ccircle cx='201' cy='83' r='1.2'/%3E%3Ccircle cx='68' cy='129' r='0.7'/%3E%3Ccircle cx='249' cy='150' r='0.9'/%3E%3Ccircle cx='163' cy='196' r='0.6'/%3E%3Ccircle cx='41' cy='222' r='1.1'/%3E%3Ccircle cx='108' cy='257' r='0.7'/%3E%3Ccircle cx='226' cy='243' r='0.6'/%3E%3Ccircle cx='176' cy='115' r='0.5'/%3E%3Ccircle cx='95' cy='72' r='0.5'/%3E%3Ccircle cx='262' cy='38' r='0.7'/%3E%3C/g%3E%3C/svg%3E");
-    --fx-texture-size: 280px 280px;
-    --fx-texture-opacity: 0.5;
-}
+    /* T7 · Dark = "Observatorium": a faint starfield behind the glass. */
+    [data-theme='dark'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='white'%3E%3Ccircle cx='24' cy='41' r='1'/%3E%3Ccircle cx='134' cy='17' r='0.6'/%3E%3Ccircle cx='201' cy='83' r='1.2'/%3E%3Ccircle cx='68' cy='129' r='0.7'/%3E%3Ccircle cx='249' cy='150' r='0.9'/%3E%3Ccircle cx='163' cy='196' r='0.6'/%3E%3Ccircle cx='41' cy='222' r='1.1'/%3E%3Ccircle cx='108' cy='257' r='0.7'/%3E%3Ccircle cx='226' cy='243' r='0.6'/%3E%3Ccircle cx='176' cy='115' r='0.5'/%3E%3Ccircle cx='95' cy='72' r='0.5'/%3E%3Ccircle cx='262' cy='38' r='0.7'/%3E%3C/g%3E%3C/svg%3E");
+        --fx-texture-size: 280px 280px;
+        --fx-texture-opacity: 0.5;
+    }
 
-/* T8 · Pastel = "Riso": risograph grain and a misregistered second ink. */
-[data-theme='pastel'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
-    --fx-texture-size: 200px 200px;
-    --fx-texture-opacity: 0.05;
-}
+    /* T8 · Pastel = "Riso": risograph grain and a misregistered second ink. */
+    [data-theme='pastel'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+        --fx-texture-size: 200px 200px;
+        --fx-texture-opacity: 0.05;
+    }
 
-[data-theme='pastel'] h1,
-[data-theme='pastel'] h2 {
-    /* Overprint: the same title in a second ink, printed a hair off. */
-    text-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.4);
-}
+    [data-theme='pastel'] h1,
+    [data-theme='pastel'] h2 {
+        /* Overprint: the same title in a second ink, printed a hair off. */
+        text-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.4);
+    }
 
-/* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
-[data-theme='terminal'] {
-    --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 3px);
-    --fx-texture-opacity: 1;
-}
+    /* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
+    [data-theme='terminal'] {
+        --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 3px);
+        --fx-texture-opacity: 1;
+    }
 
-[data-theme='terminal'] h1,
-[data-theme='terminal'] h2 {
-    text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
-}
+    [data-theme='terminal'] h1,
+    [data-theme='terminal'] h2 {
+        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
+    }
 
-[data-theme='terminal'] ::selection {
-    background: var(--primary);
-    color: var(--primary-foreground);
-}
+    [data-theme='terminal'] ::selection {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
 
-/* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
-[data-theme='brutalism'] {
-    --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1px, transparent 1px);
-    --fx-texture-size: 16px 16px;
-    --fx-texture-opacity: 0.06;
-}
+    /* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
+    [data-theme='brutalism'] {
+        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1px, transparent 1px);
+        --fx-texture-size: 16px 16px;
+        --fx-texture-opacity: 0.06;
+    }
 
-/* The check and the radio dot: the ink is the primary here, so the browser
+    /* The check and the radio dot: the ink is the primary here, so the browser
  * would paint a checked box the colour of its own border [KT8]. */
-[data-theme='brutalism'] {
-    --kp-control-accent: var(--fx-signal);
-}
+    [data-theme='brutalism'] {
+        --kp-control-accent: var(--fx-signal);
+    }
 
-[data-theme='brutalism'] h1,
-[data-theme='brutalism'] h2 {
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-}
+    [data-theme='brutalism'] h1,
+    [data-theme='brutalism'] h2 {
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+    }
 
-/* Pressed: the box drops onto its own shadow. The colour still steps
+    /* Pressed: the box drops onto its own shadow. The colour still steps
  * (DI3, derived); the movement is the theme's opt-in on top of it. */
-[data-theme='brutalism'] .kp-button:active:not(:disabled) {
-    translate: var(--fx-shadow-offset) var(--fx-shadow-offset);
-    box-shadow: none;
-}
+    [data-theme='brutalism'] .kp-button:active:not(:disabled) {
+        translate: var(--fx-shadow-offset) var(--fx-shadow-offset);
+        box-shadow: none;
+    }
 
-/* Deco: a fine chevron, the geometry the style drew with rulers [TH65]. */
-[data-theme='deco'] {
-    --fx-texture:
-        repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px),
-        repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px);
-    --fx-texture-size: 24px 24px, 24px 24px;
-    --fx-texture-opacity: 0.05;
-}
+    /* Deco: a fine chevron, the geometry the style drew with rulers [TH65]. */
+    [data-theme='deco'] {
+        --fx-texture:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 12px);
+        --fx-texture-size: 24px 24px, 24px 24px;
+        --fx-texture-opacity: 0.05;
+    }
 
-[data-theme='deco'] h1,
-[data-theme='deco'] h2 {
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-}
+    [data-theme='deco'] h1,
+    [data-theme='deco'] h2 {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
 
-/* Academia: film grain over the ink, and the faint rules of a ledger [TH66]. */
-[data-theme='academia'] {
-    --fx-texture:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E"),
-        repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 32px);
-    --fx-texture-size: 240px 240px, 100% 32px;
-    --fx-texture-opacity: 0.04;
-}
+    /* Academia: film grain over the ink, and the faint rules of a ledger [TH66]. */
+    [data-theme='academia'] {
+        --fx-texture:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E"),
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 32px);
+        --fx-texture-size: 240px 240px, 100% 32px;
+        --fx-texture-opacity: 0.04;
+    }
 
-/* Phantom: a halftone screen, the print the menus were cut from [TH70]. */
-[data-theme='phantom'] {
-    --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1.2px, transparent 1.3px);
-    --fx-texture-size: 7px 7px;
-    --fx-texture-opacity: 0.05;
-}
+    /* Phantom: a halftone screen, the print the menus were cut from [TH70]. */
+    [data-theme='phantom'] {
+        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1.2px, transparent 1.3px);
+        --fx-texture-size: 7px 7px;
+        --fx-texture-opacity: 0.05;
+    }
 
-[data-theme='phantom'] h1,
-[data-theme='phantom'] h2 {
-    text-transform: uppercase;
-    font-style: italic;
-    letter-spacing: -0.01em;
-}
+    [data-theme='phantom'] h1,
+    [data-theme='phantom'] h2 {
+        text-transform: uppercase;
+        font-style: italic;
+        letter-spacing: -0.01em;
+    }
 
-/* Ticker: the faint rules of a ledger, and numerals that line up [TH68]. */
-[data-theme='ticker'] {
-    --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 24px);
-    --fx-texture-opacity: 0.04;
-    font-variant-numeric: tabular-nums;
-}
+    /* Ticker: the faint rules of a ledger, and numerals that line up [TH68]. */
+    [data-theme='ticker'] {
+        --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 24px);
+        --fx-texture-opacity: 0.04;
+        font-variant-numeric: tabular-nums;
+    }
 
-/* Reverse video on the panel titles: an amber bar with black text, the
+    /* Reverse video on the panel titles: an amber bar with black text, the
  * way a terminal names a screen. Static — this theme has no motion. */
-[data-theme='ticker'] h1,
-[data-theme='ticker'] h2 {
-    display: inline-block;
-    padding-inline: 0.35em;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
+    [data-theme='ticker'] h1,
+    [data-theme='ticker'] h2 {
+        display: inline-block;
+        padding-inline: 0.35em;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
 
-/* Nishiki: washi fibre, long and sparse [TH69]. */
-[data-theme='nishiki'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.3' numOctaves='3'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23w)'/%3E%3C/svg%3E");
-    --fx-texture-size: 320px 320px;
-    --fx-texture-opacity: 0.045;
-}
+    /* Nishiki: washi fibre, long and sparse [TH69]. */
+    [data-theme='nishiki'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.3' numOctaves='3'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23w)'/%3E%3C/svg%3E");
+        --fx-texture-size: 320px 320px;
+        --fx-texture-opacity: 0.045;
+    }
 
-/* Shade has no texture and no flourish, in both halves: the medium
+    /* Shade has no texture and no flourish, in both halves: the medium
  * contrast is the whole character, and anything drawn on top of it
  * would be the first thing anyone saw. */
 
-/* Mono: no texture. The absence is the register [TH72]. The check and the
+    /* Mono: no texture. The absence is the register [TH72]. The check and the
  * radio dot are a mid grey: the primary sits a step from the ink and a
  * checked box would look like an unchecked one [KT8]. */
-[data-theme='mono'] {
-    --kp-control-accent: var(--muted-foreground);
-}
+    [data-theme='mono'] {
+        --kp-control-accent: var(--muted-foreground);
+    }
 
-/* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
-[data-theme='retro'] {
-    --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
-    --fx-texture-size: 4px 4px;
-    --fx-texture-opacity: 0.04;
-}
+    /* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
+    [data-theme='retro'] {
+        --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
+        --fx-texture-size: 4px 4px;
+        --fx-texture-opacity: 0.04;
+    }
 
-/* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
+    /* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
  * Static; the theme has no motion. */
-[data-theme='retro'] h1 {
-    display: inline-block;
-    padding: 0.15em 0.6em;
-    background: linear-gradient(90deg, var(--primary), var(--info));
-    color: var(--primary-foreground);
-}
+    [data-theme='retro'] h1 {
+        display: inline-block;
+        padding: 0.15em 0.6em;
+        background: linear-gradient(90deg, var(--primary), var(--info));
+        color: var(--primary-foreground);
+    }
 
-/* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
+    /* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
  * Columns, not squares — that is what separates it from light's
  * millimetre grid. */
-[data-theme='grotesk'] {
-    --fx-texture: linear-gradient(to right, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px);
-    --fx-texture-size: calc(100% / 12) 100%;
-    --fx-texture-opacity: 0.05;
-}
+    [data-theme='grotesk'] {
+        --fx-texture: linear-gradient(to right, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px);
+        --fx-texture-size: calc(100% / 12) 100%;
+        --fx-texture-opacity: 0.05;
+    }
 
-[data-theme='grotesk'] h1,
-[data-theme='grotesk'] h2 {
-    font-weight: 800;
-    letter-spacing: -0.03em;
-}
+    [data-theme='grotesk'] h1,
+    [data-theme='grotesk'] h2 {
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
 
-/* The red square before a heading: Müller-Brockmann's mark, static. */
-[data-theme='grotesk'] h1::before,
-[data-theme='grotesk'] h2::before {
-    content: '';
-    display: inline-block;
-    inline-size: 0.5em;
-    block-size: 0.5em;
-    margin-inline-end: 0.3em;
-    background: var(--primary);
-}
+    /* The red square before a heading: Müller-Brockmann's mark, static. */
+    [data-theme='grotesk'] h1::before,
+    [data-theme='grotesk'] h2::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.3em;
+        background: var(--primary);
+    }
 
-/* Tazhib: an eight-fold girih star, tiled, in the ruling gold [TH74]. */
-[data-theme='tazhib'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d4a72c' stroke-width='1'%3E%3Cpath d='M32 4l6.5 21.5L60 32l-21.5 6.5L32 60l-6.5-21.5L4 32l21.5-6.5z'/%3E%3Cpath d='M12.2 12.2l19.8 8.2 19.8-8.2-8.2 19.8 8.2 19.8-19.8-8.2-19.8 8.2 8.2-19.8z'/%3E%3C/g%3E%3C/svg%3E");
-    --fx-texture-size: 64px 64px;
-    --fx-texture-opacity: 0.05;
-}
+    /* Tazhib: an eight-fold girih star, tiled, in the ruling gold [TH74]. */
+    [data-theme='tazhib'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d4a72c' stroke-width='1'%3E%3Cpath d='M32 4l6.5 21.5L60 32l-21.5 6.5L32 60l-6.5-21.5L4 32l21.5-6.5z'/%3E%3Cpath d='M12.2 12.2l19.8 8.2 19.8-8.2-8.2 19.8 8.2 19.8-19.8-8.2-19.8 8.2 8.2-19.8z'/%3E%3C/g%3E%3C/svg%3E");
+        --fx-texture-size: 64px 64px;
+        --fx-texture-opacity: 0.05;
+    }
 
-/* The ruling: a gold hairline inset from the card's edge, the frame an
+    /* The ruling: a gold hairline inset from the card's edge, the frame an
  * illuminated page was drawn inside. Static. */
-[data-theme='tazhib'] .kp-card {
-    outline: 1px solid var(--primary);
-    outline-offset: -5px;
-}
+    [data-theme='tazhib'] .kp-card {
+        outline: 1px solid var(--primary);
+        outline-offset: -5px;
+    }
 
-/* Nostromo: vent slots, the horizontal ribs of a moulded case [TH75]. */
-[data-theme='nostromo'] {
-    --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 6px);
-    --fx-texture-opacity: 0.05;
-}
+    /* Nostromo: vent slots, the horizontal ribs of a moulded case [TH75]. */
+    [data-theme='nostromo'] {
+        --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 6px);
+        --fx-texture-opacity: 0.05;
+    }
 
-[data-theme='nostromo'] h1,
-[data-theme='nostromo'] h2 {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
+    [data-theme='nostromo'] h1,
+    [data-theme='nostromo'] h2 {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
 
-/* The LED: the current page carries an orange indicator, lit by colour
+    /* The LED: the current page carries an orange indicator, lit by colour
  * AND by shape — a filled dot where the others have none (DI4). */
-[data-theme='nostromo'] nav [aria-current='page']::before {
-    content: '';
-    display: inline-block;
-    inline-size: 0.5em;
-    block-size: 0.5em;
-    margin-inline-end: 0.4em;
-    border-radius: 50%;
-    background: var(--sidebar-primary);
-    box-shadow: 0 0 0 1px var(--border-strong);
-}
+    [data-theme='nostromo'] nav [aria-current='page']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.4em;
+        border-radius: 50%;
+        background: var(--sidebar-primary);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
 
-/* T9 · Topo: contour lines wandering across the kraft paper. */
-[data-theme='topo'] {
-    --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%23335544' stroke-width='1'%3E%3Cpath d='M-20 60 Q 60 20 140 65 T 300 55 T 400 80'/%3E%3Cpath d='M-20 95 Q 70 55 150 100 T 305 90 T 400 115'/%3E%3Cpath d='M-20 130 Q 80 95 160 135 T 310 125 T 400 150'/%3E%3Cpath d='M-20 230 Q 50 195 130 235 T 290 225 T 400 250'/%3E%3Cpath d='M-20 265 Q 60 235 140 270 T 295 260 T 400 285'/%3E%3Cpath d='M-20 330 Q 70 300 150 335 T 305 325 T 400 350'/%3E%3C/g%3E%3C/svg%3E");
-    --fx-texture-size: 360px 360px;
-    --fx-texture-opacity: 0.06;
-}
+    /* T9 · Topo: contour lines wandering across the kraft paper. */
+    [data-theme='topo'] {
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%23335544' stroke-width='1'%3E%3Cpath d='M-20 60 Q 60 20 140 65 T 300 55 T 400 80'/%3E%3Cpath d='M-20 95 Q 70 55 150 100 T 305 90 T 400 115'/%3E%3Cpath d='M-20 130 Q 80 95 160 135 T 310 125 T 400 150'/%3E%3Cpath d='M-20 230 Q 50 195 130 235 T 290 225 T 400 250'/%3E%3Cpath d='M-20 265 Q 60 235 140 270 T 295 260 T 400 285'/%3E%3Cpath d='M-20 330 Q 70 300 150 335 T 305 325 T 400 350'/%3E%3C/g%3E%3C/svg%3E");
+        --fx-texture-size: 360px 360px;
+        --fx-texture-opacity: 0.06;
+    }
 
-/* The typefaces the theme declares [TH12].
+    /* The typefaces the theme declares [TH12].
  *
  * Every theme has declared --theme-font-body and --theme-font-display
  * since the extraction, and until now exactly one rule read either of
@@ -275,85 +276,85 @@ body::after {
  * The fallbacks matter as much as the tokens: a vendoring consumer may
  * not load the webfonts, and a theme should degrade to a sane stack
  * rather than to whatever the browser picked in 1996. */
-body {
-    font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
-}
+    body {
+        font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+    }
 
-h1,
-h2,
-h3 {
-    font-family: var(--theme-font-display, var(--theme-font-body, ui-sans-serif, system-ui, sans-serif));
-}
+    h1,
+    h2,
+    h3 {
+        font-family: var(--theme-font-display, var(--theme-font-body, ui-sans-serif, system-ui, sans-serif));
+    }
 
-/* ── Theme flourishes ─────────────────────────────────────────────── */
+    /* ── Theme flourishes ─────────────────────────────────────────────── */
 
-[data-theme='formal'] h1,
-[data-theme='formal'] h2 {
-    letter-spacing: -0.01em;
-}
+    [data-theme='formal'] h1,
+    [data-theme='formal'] h2 {
+        letter-spacing: -0.01em;
+    }
 
-[data-theme='cyberpunk'] ::selection {
-    background: var(--primary);
-    color: var(--primary-foreground);
-}
+    [data-theme='cyberpunk'] ::selection {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
 
-[data-theme='cyberpunk'] .glow-primary {
-    text-shadow:
-        0 0 6px hsl(from var(--primary) h s l / 0.9),
-        0 0 24px hsl(from var(--primary) h s l / 0.5),
-        0 0 64px hsl(from var(--primary) h s l / 0.3);
-}
+    [data-theme='cyberpunk'] .glow-primary {
+        text-shadow:
+            0 0 6px hsl(from var(--primary) h s l / 0.9),
+            0 0 24px hsl(from var(--primary) h s l / 0.5),
+            0 0 64px hsl(from var(--primary) h s l / 0.3);
+    }
 
-[data-theme='cyberpunk'] .glow-accent {
-    text-shadow:
-        0 0 6px hsl(from var(--accent) h s l / 0.9),
-        0 0 24px hsl(from var(--accent) h s l / 0.5);
-}
+    [data-theme='cyberpunk'] .glow-accent {
+        text-shadow:
+            0 0 6px hsl(from var(--accent) h s l / 0.9),
+            0 0 24px hsl(from var(--accent) h s l / 0.5);
+    }
 
-[data-theme='cyberpunk'] .glow-card {
-    box-shadow:
-        0 0 0 1px hsl(from var(--primary) h s l / 0.35),
-        0 0 24px hsl(from var(--primary) h s l / 0.15),
-        inset 0 0 32px hsl(from var(--sidebar-background) h s l / 0.6);
-}
+    [data-theme='cyberpunk'] .glow-card {
+        box-shadow:
+            0 0 0 1px hsl(from var(--primary) h s l / 0.35),
+            0 0 24px hsl(from var(--primary) h s l / 0.15),
+            inset 0 0 32px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
 
-.gradient-text {
-    background: linear-gradient(120deg, var(--primary), var(--ring) 60%, var(--primary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
+    .gradient-text {
+        background: linear-gradient(120deg, var(--primary), var(--ring) 60%, var(--primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
 
-[data-theme='cyberpunk'] .gradient-text {
-    background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
+    [data-theme='cyberpunk'] .gradient-text {
+        background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
 
-/* Plain-CSS equivalent of kp-soft's `@apply bg-background text-foreground`
+    /* Plain-CSS equivalent of kp-soft's `@apply bg-background text-foreground`
    on body (the Tailwind @apply lines themselves are not part of this
    package). */
-body {
-    background-color: var(--background);
-    color: var(--foreground);
-}
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+    }
 
-/* The cross-fade when a visitor switches theme. Guarded, because DI7 asks
+    /* The cross-fade when a visitor switches theme. Guarded, because DI7 asks
    for it and because a 400ms colour sweep across the whole page is exactly
    the kind of motion someone turns that setting on to avoid. */
-@media (prefers-reduced-motion: no-preference) {
-    body {
-        /* Twice the theme's own duration: a full-page sweep should be
+    @media (prefers-reduced-motion: no-preference) {
+        body {
+            /* Twice the theme's own duration: a full-page sweep should be
          * slower than a button, but it is still the incoming theme that
          * decides how it arrives. Terminal snaps, sepia drifts. */
-        transition:
-            background-color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease),
-            color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease);
+            transition:
+                background-color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease),
+                color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease);
+        }
     }
-}
 
-/* The two-channel focus ring [DI2].
+    /* The two-channel focus ring [DI2].
  *
  * Two rings, adjacent: the box-shadow is the inner ring (--focus-ring,
  * the theme's foreground), the outline the outer one
@@ -367,14 +368,14 @@ body {
  * :focus-visible rather than :focus, so a mouse click does not leave a
  * ring behind while the keyboard still gets one.
  */
-:focus-visible {
-    /* The same token the components read; the global ring ignored it [KT6]. */
-    outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px var(--focus-ring);
-}
+    :focus-visible {
+        /* The same token the components read; the global ring ignored it [KT6]. */
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
 
-/* DI6, actually reaching the browser.
+    /* DI6, actually reaching the browser.
  *
  * Every theme declares --color-scheme, the token gate has checked that
  * since L3, and the compliance table has read pass ever since. But a
@@ -384,11 +385,11 @@ body {
  * themes. Found on 2026-09-04 by the first test to open a fixture in a
  * real browser — which is the whole argument for AR14's bare pages.
  */
-:root {
-    color-scheme: var(--color-scheme);
-}
+    :root {
+        color-scheme: var(--color-scheme);
+    }
 
-/* ------------------------------------------------------------------
+    /* ------------------------------------------------------------------
    Element-level rules [L6].
 
    Everything below styles plain HTML, not classes. A theme that leaves
@@ -399,149 +400,121 @@ body {
    get a themed page, not a themed page with browser-default holes.
    ------------------------------------------------------------------ */
 
-/* Links [TH31]. Underlined, always: colour is never the only carrier
+    /* Links [TH31]. Underlined, always: colour is never the only carrier
    (DI4), and a link that is only a colour disappears for anyone who
    cannot see that colour. */
-a {
-    color: var(--link);
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-}
+    a {
+        color: var(--link);
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
 
-a:visited {
-    color: var(--link-visited);
-}
+    a:visited {
+        color: var(--link-visited);
+    }
 
-a:hover {
-    text-decoration-thickness: 2px;
-}
+    a:hover {
+        text-decoration-thickness: 2px;
+    }
 
-/* Text selection [TH31]. The primary pair, which the contrast gate
+    /* Text selection [TH31]. The primary pair, which the contrast gate
    already holds at AA — the browser's default highlight ignores the
    theme entirely and can land unreadably on a dark ground. */
-::selection {
-    background: var(--primary);
-    color: var(--primary-foreground);
-}
+    ::selection {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
 
-/* Ordinary text elements [TH32]. */
-code,
-kbd,
-samp,
-pre {
-    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
-}
+    /* Ordinary text elements [TH32]. */
+    code,
+    kbd,
+    samp,
+    pre {
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    }
 
-code,
-kbd,
-samp {
-    background: var(--muted);
-    color: var(--foreground);
-    padding: 0.1em 0.35em;
-    border-radius: calc(var(--radius, 0.5rem) / 2);
-    font-size: 0.9em;
-}
+    code,
+    kbd,
+    samp {
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.1em 0.35em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+        font-size: 0.9em;
+    }
 
-kbd {
-    border: 1px solid var(--border-strong);
-    /* A key looks pressable; a code span does not. */
-    box-shadow: 0 1px 0 var(--border-strong);
-}
+    kbd {
+        border: 1px solid var(--border-strong);
+        /* A key looks pressable; a code span does not. */
+        box-shadow: 0 1px 0 var(--border-strong);
+    }
 
-pre {
-    background: var(--muted);
-    color: var(--foreground);
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius, 0.5rem);
-    /* Long lines scroll inside the block instead of widening the page:
+    pre {
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius, 0.5rem);
+        /* Long lines scroll inside the block instead of widening the page:
        SC 1.4.10 asks for no two-dimensional scrolling of the document. */
-    overflow-x: auto;
-}
+        overflow-x: auto;
+    }
 
-pre code {
-    background: none;
-    padding: 0;
-}
+    pre code {
+        background: none;
+        padding: 0;
+    }
 
-mark {
-    background: var(--warning);
-    color: var(--warning-foreground);
-    padding: 0 0.15em;
-}
+    mark {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding: 0 0.15em;
+    }
 
-blockquote {
-    margin-inline-start: 0;
-    padding-inline-start: 1rem;
-    border-inline-start: 3px solid var(--border-strong);
-    color: var(--muted-foreground);
-}
+    blockquote {
+        margin-inline-start: 0;
+        padding-inline-start: 1rem;
+        border-inline-start: 3px solid var(--border-strong);
+        color: var(--muted-foreground);
+    }
 
-/* A rule between blocks. The browser draws <hr> in its own grey — colour
+    /* A rule between blocks. The browser draws <hr> in its own grey — colour
  * AND border, 128,128,128 in Chromium and Firefox alike — which the
  * foreign-colour test found on every fixture: the one element on the page
  * that wore no theme at all [KT8]. Both are the theme's now. */
-hr {
-    color: inherit;
-    border: 0;
-    border-block-start: 1px solid var(--border);
-    margin-block: 1rem;
-}
-
-::marker {
-    color: var(--muted-foreground);
-}
-
-/* The browser's own hooks [TH34]. These are the surfaces a stylesheet
-   cannot repaint — it can only tell the browser which colours to use. */
-:root {
-    accent-color: var(--primary);
-    caret-color: var(--foreground);
-}
-
-::placeholder {
-    color: var(--muted-foreground);
-    opacity: 1; /* Firefox dims placeholders by default, on top of the colour. */
-}
-
-:disabled {
-    cursor: not-allowed;
-}
-
-input:invalid,
-select:invalid,
-textarea:invalid {
-    border-color: var(--destructive);
-}
-
-/* Print [TH36]. Paper has no theme: ink is black, the ground is white,
-   and the decorative layers cost toner without carrying meaning. */
-@media print {
-    :root {
-        color-scheme: light;
-        --background: hsl(0, 0%, 100%);
-        --foreground: hsl(0, 0%, 0%);
-    }
-
-    /* The texture layer is body::after. The first version of this rule
-     * hid body::before, which carries nothing, so the texture printed
-     * for two versions while the guide promised otherwise [KT6]. */
-    body::after {
-        display: none;
-    }
-
-    a {
+    hr {
         color: inherit;
+        border: 0;
+        border-block-start: 1px solid var(--border);
+        margin-block: 1rem;
     }
 
-    /* A printed page cannot be clicked, so the address has to be on it. */
-    a[href^='http']::after {
-        content: ' (' attr(href) ')';
-        font-size: 0.85em;
-        word-break: break-all;
+    ::marker {
+        color: var(--muted-foreground);
     }
-}
 
-/* ------------------------------------------------------------------
+    /* The browser's own hooks [TH34]. These are the surfaces a stylesheet
+   cannot repaint — it can only tell the browser which colours to use. */
+    :root {
+        accent-color: var(--primary);
+        caret-color: var(--foreground);
+    }
+
+    ::placeholder {
+        color: var(--muted-foreground);
+        opacity: 1; /* Firefox dims placeholders by default, on top of the colour. */
+    }
+
+    :disabled {
+        cursor: not-allowed;
+    }
+
+    input:invalid,
+    select:invalid,
+    textarea:invalid {
+        border-color: var(--destructive);
+    }
+
+    /* ------------------------------------------------------------------
    One signature per theme [HA2].
 
    Kenny's brief: motion should give a theme extra flavour, and a formal
@@ -558,182 +531,183 @@ textarea:invalid {
    is its signature.
    ------------------------------------------------------------------ */
 
-@media (prefers-reduced-motion: no-preference) {
-    /* formal — an editorial rule that draws itself under a heading.
+    @media (prefers-reduced-motion: no-preference) {
+        /* formal — an editorial rule that draws itself under a heading.
        Nothing moves; a line arrives. */
-    [data-theme='formal'] h1::after,
-    [data-theme='formal'] h2::after {
-        content: '';
-        display: block;
-        block-size: 1px;
-        margin-block-start: 0.35rem;
-        background: var(--border-strong);
-        animation: kp-rule-in calc(var(--fx-duration) * 3) var(--fx-ease) both;
-    }
+        [data-theme='formal'] h1::after,
+        [data-theme='formal'] h2::after {
+            content: '';
+            display: block;
+            block-size: 1px;
+            margin-block-start: 0.35rem;
+            background: var(--border-strong);
+            animation: kp-rule-in calc(var(--fx-duration) * 3) var(--fx-ease) both;
+        }
 
-    /* light and dark — the restrained pair. Their signature is that a
+        /* light and dark — the restrained pair. Their signature is that a
        raised surface lifts under the cursor, which --fx-lift already
        carries; nothing is added here. */
 
-    /* pastel — the only theme that overshoots. A badge arrives with a
+        /* pastel — the only theme that overshoots. A badge arrives with a
        small bounce, which its easing does for free. */
-    [data-theme='pastel'] .kp-badge {
-        animation: kp-settle var(--fx-duration) var(--fx-ease) both;
-    }
+        [data-theme='pastel'] .kp-badge {
+            animation: kp-settle var(--fx-duration) var(--fx-ease) both;
+        }
 
-    /* terminal — since 3.1.1: the block cursor used to sit after every
+        /* terminal — since 3.1.1: the block cursor used to sit after every
        h1 and h2 on the page, which read as a screensaver rather than a
        flourish [Kenny, 2026-09-06]. It moves to the one place a
        terminal cursor actually means something: the label of the
        field a person is currently typing into. One opposing change
        per second: well under the three the flash threshold allows. */
-    [data-theme='terminal'] .kp-field:focus-within .kp-field__label::after {
-        content: '\2588';
-        margin-inline-start: 0.15em;
-        color: var(--primary);
-        /* A literal, not a knob: the cursor blink changes luminance and DI5
+        [data-theme='terminal'] .kp-field:focus-within .kp-field__label::after {
+            content: '\2588';
+            margin-inline-start: 0.15em;
+            color: var(--primary);
+            /* A literal, not a knob: the cursor blink changes luminance and DI5
          * pins it above the flash threshold [KT6]. */
-        animation: kp-blink 1000ms steps(1, end) infinite;
-    }
+            animation: kp-blink 1000ms steps(1, end) infinite;
+        }
 
-    /* topo — the contour layer drifts, slowly enough to read as weather
+        /* topo — the contour layer drifts, slowly enough to read as weather
        rather than as motion. 40 seconds for one pass. */
-    [data-theme='topo'] body::after {
-        /* ::after, where the texture actually is [KT6]. The duration reads
+        [data-theme='topo'] body::after {
+            /* ::after, where the texture actually is [KT6]. The duration reads
          * a knob with the old literal as its fallback. */
-        animation: kp-drift var(--kp-drift-duration, 40s) linear infinite;
-    }
+            animation: kp-drift var(--kp-drift-duration, 40s) linear infinite;
+        }
 
-    /* blueprint — a ruled line that extends across a heading, drawn at
+        /* blueprint — a ruled line that extends across a heading, drawn at
        constant speed because a tool does not ease. */
-    [data-theme='blueprint'] h1::after,
-    [data-theme='blueprint'] h2::after {
-        content: '';
-        display: block;
-        block-size: 1px;
-        margin-block-start: 0.4rem;
-        background: var(--primary);
-        animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
-    }
+        [data-theme='blueprint'] h1::after,
+        [data-theme='blueprint'] h2::after {
+            content: '';
+            display: block;
+            block-size: 1px;
+            margin-block-start: 0.4rem;
+            background: var(--primary);
+            animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
+        }
 
-    /* deco — a double gold rule that draws itself under a heading, the
+        /* deco — a double gold rule that draws itself under a heading, the
        way a Deco frontispiece is ruled. */
-    [data-theme='deco'] h1::after,
-    [data-theme='deco'] h2::after {
-        content: '';
-        display: block;
-        block-size: 3px;
-        margin-block-start: 0.4rem;
-        border-block: 1px solid var(--primary);
-        animation: kp-rule-in calc(var(--fx-duration) * 4) var(--fx-ease) both;
-    }
+        [data-theme='deco'] h1::after,
+        [data-theme='deco'] h2::after {
+            content: '';
+            display: block;
+            block-size: 3px;
+            margin-block-start: 0.4rem;
+            border-block: 1px solid var(--primary);
+            animation: kp-rule-in calc(var(--fx-duration) * 4) var(--fx-ease) both;
+        }
 
-    /* academia — the same rule in candle gold, slower: a library is not
+        /* academia — the same rule in candle gold, slower: a library is not
        in a hurry. */
-    [data-theme='academia'] h1::after,
-    [data-theme='academia'] h2::after {
-        content: '';
-        display: block;
-        block-size: 1px;
-        margin-block-start: 0.35rem;
-        background: var(--primary);
-        animation: kp-rule-in calc(var(--fx-duration) * 5) var(--fx-ease) both;
-    }
+        [data-theme='academia'] h1::after,
+        [data-theme='academia'] h2::after {
+            content: '';
+            display: block;
+            block-size: 1px;
+            margin-block-start: 0.35rem;
+            background: var(--primary);
+            animation: kp-rule-in calc(var(--fx-duration) * 5) var(--fx-ease) both;
+        }
 
-    /* phantom — a badge slides in from the left, once. A transform only:
+        /* phantom — a badge slides in from the left, once. A transform only:
        nothing changes luminance. */
-    [data-theme='phantom'] .kp-badge {
-        animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
-    }
+        [data-theme='phantom'] .kp-badge {
+            animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
+        }
 
-    /* nishiki — the hanko: a small red seal settles after a heading, the
+        /* nishiki — the hanko: a small red seal settles after a heading, the
        mark a printer put on a finished sheet. */
-    [data-theme='nishiki'] h1::after {
-        content: '';
-        display: inline-block;
-        inline-size: 0.45em;
-        block-size: 0.45em;
-        margin-inline-start: 0.35em;
-        vertical-align: baseline;
-        background: var(--accent);
-        animation: kp-settle calc(var(--fx-duration) * 2) var(--fx-ease) both;
-    }
+        [data-theme='nishiki'] h1::after {
+            content: '';
+            display: inline-block;
+            inline-size: 0.45em;
+            block-size: 0.45em;
+            margin-inline-start: 0.35em;
+            vertical-align: baseline;
+            background: var(--accent);
+            animation: kp-settle calc(var(--fx-duration) * 2) var(--fx-ease) both;
+        }
 
-    /* solstice — an ember: the primary colour warms and cools once when a
+        /* solstice — an ember: the primary colour warms and cools once when a
        card appears. Slow, small, and never repeated. */
-    [data-theme='solstice'] [data-slot='card'] {
-        animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
-    }
+        [data-theme='solstice'] [data-slot='card'] {
+            animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
+        }
 
-    /* sepia and high-contrast have no signature, deliberately. Sepia is
+        /* sepia and high-contrast have no signature, deliberately. Sepia is
        the restful theme and high-contrast is the accessible one; in both,
        a gesture would be working against the reason the theme exists. */
-}
-
-@keyframes kp-slide-in {
-    from {
-        translate: -6px 0;
     }
 
-    to {
-        translate: 0 0;
-    }
-}
+    @keyframes kp-slide-in {
+        from {
+            translate: -6px 0;
+        }
 
-@keyframes kp-rule-in {
-    from {
-        transform: scaleX(0);
-        transform-origin: left;
-    }
-
-    to {
-        transform: scaleX(1);
-        transform-origin: left;
-    }
-}
-
-@keyframes kp-settle {
-    from {
-        transform: scale(0.92);
+        to {
+            translate: 0 0;
+        }
     }
 
-    to {
-        transform: scale(1);
-    }
-}
+    @keyframes kp-rule-in {
+        from {
+            transform: scaleX(0);
+            transform-origin: left;
+        }
 
-@keyframes kp-blink {
-    0%,
-    49% {
-        opacity: 1;
-    }
-
-    50%,
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes kp-drift {
-    from {
-        background-position: 0 0;
+        to {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
     }
 
-    to {
-        background-position: 360px 360px;
-    }
-}
+    @keyframes kp-settle {
+        from {
+            transform: scale(0.92);
+        }
 
-@keyframes kp-ember {
-    0% {
-        box-shadow: 0 0 0 0 transparent;
-    }
-
-    40% {
-        box-shadow: 0 0 12px 0 var(--primary);
+        to {
+            transform: scale(1);
+        }
     }
 
-    100% {
-        box-shadow: 0 0 0 0 transparent;
+    @keyframes kp-blink {
+        0%,
+        49% {
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-drift {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 360px 360px;
+        }
+    }
+
+    @keyframes kp-ember {
+        0% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+
+        40% {
+            box-shadow: 0 0 12px 0 var(--primary);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 transparent;
+        }
     }
 }

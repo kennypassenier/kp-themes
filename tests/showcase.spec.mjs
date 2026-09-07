@@ -86,6 +86,12 @@ test('the two halves scroll as one and stay aligned specimen by specimen [TH88]'
     await page.evaluate(() => window.scrollTo(0, 400));
     await page.click('#pane-right .kp-icon-button');
     await page.click('#sc-menu-right [data-kp-theme="terminal"]');
+    // Terminal brings its own face (Share Tech Mono). Measuring before it
+    // lands reads the fallback's metrics on the right half only, and the
+    // two columns appear 3px apart against a 1px tolerance -- this test
+    // failed roughly one run in two under full-suite load until this
+    // wait. What it is about is the grid placement, not font timing.
+    await page.evaluate(() => document.fonts.ready);
 
     const tops = async (id) =>
         page.evaluate(

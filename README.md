@@ -133,6 +133,42 @@ Tokens can also be scoped to a subtree (`<section data-theme="pastel">`)
 — the bridge re-declares the Tailwind aliases on every `[data-theme]`
 element so they resolve per subtree.
 
+### When a name is not a theme
+
+A name this build does not know falls back to `formal`, and since 3.2.0
+it says so: one `console.warn` and one `kp-theme-unknown` event carrying
+`{ requested, applied, source }`, where `source` names which of the four
+paths dropped it — `stored`, `current`, `apply` or `cross-tab`. Once per
+session per name, remembered in `sessionStorage`, so a server-rendered
+page that reloads on every click does not repeat it. **Your stored
+choice is never overwritten**: it starts working again the moment the
+mismatched half is updated.
+
+That mismatch is what the warning is usually about, and it is
+diagnosable. `css/themes.css` declares its own version and theme list on
+`:root`:
+
+```css
+:root {
+    --kp-themes-version: '3.2.0';
+    --kp-themes-names: 'formal light dark …';
+}
+```
+
+`@kp-soft/themes/js/registry` exports the matching `VERSION`, and
+`@kp-soft/themes/js/diagnostics` compares the two on the page:
+
+```js
+import { diagnostics } from '@kp-soft/themes/js/diagnostics';
+
+const report = diagnostics();
+// report.status: 'match' | 'stylesheet-behind' | 'script-behind' | …
+// report.verdict: one sentence saying which half is behind
+```
+
+`renderDiagnostics(element)` draws the same thing as a table with the
+verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
+
 ## Every entry point
 
 | Import                                | What it is                                            |
@@ -143,13 +179,20 @@ element so they resolve per subtree.
 | `@kp-soft/themes/css/components`      | the component classes                                 |
 | `@kp-soft/themes/css/register`        | the cyberpunk HUD chrome, opt-in                      |
 | `@kp-soft/themes/css/retro-register`  | retro's raised and sunken bevels, opt-in              |
+| `@kp-soft/themes/css/layout`          | the sixteen layout classes                            |
+| `@kp-soft/themes/css/utilities`       | the 115 utility classes                               |
 | `@kp-soft/themes/css/tailwind-bridge` | for Tailwind v4 consumers                             |
+| `@kp-soft/themes/dist/css`            | all of the above in one stylesheet                    |
+| `@kp-soft/themes/dist/js`             | js/auto and everything it imports, in one module      |
 | `@kp-soft/themes/js/core`             | the theme state, framework-free                       |
 | `@kp-soft/themes/js/picker`           | the framework-free picker                             |
 | `@kp-soft/themes/js/components`       | the DI4 and DI10 contracts                            |
 | `@kp-soft/themes/js/overlays`         | dialogs, tabs, toasts                                 |
 | `@kp-soft/themes/js/registry`         | the generated theme list                              |
 | `@kp-soft/themes/js/no-flash`         | the first-paint snippet                               |
+| `@kp-soft/themes/js/strings`          | the dictionary and its defaults                       |
+| `@kp-soft/themes/js/tables`           | the keyboard-reachable table scroll region            |
+| `@kp-soft/themes/js/diagnostics`      | which half of a vendored pair is behind               |
 
 ## Consume the JavaScript
 

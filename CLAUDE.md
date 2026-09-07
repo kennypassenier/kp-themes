@@ -89,13 +89,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                        |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round four: Phase 4 frozen 2026-09-06 (T10-T13, AR17-AR26); Phase 5 next. Round three's Phase 10 retrospective is still open |
-| Last completed gate | Round four Phase 4 architecture freeze, 2026-09-06 (after the critic pass)                                                   |
-| Next gate           | Round four Phase 5 realization plan; Phase 10 for round three (KT7, KT8, KT9) still owed                                     |
-| Open queue items    | KT6-M1 (waits on JobTracker); D3 (STRINGS_NL, 4.0.0, next round); P1–P4 from kp-soft (next round)                            |
-| AFK mode            | off                                                                                                                          |
+| Field               | Value                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round four: nine milestones signed off and all six mini-rounds closed, 2026-09-07; only the release of 3.2.0 is left            |
+| Last completed gate | The six mini-rounds MR-R6-1, MR-R6-2, R5-BADGE, R0-TYPO, R3-CQ and R4-LOCALE, all executed and committed, 2026-09-07            |
+| Next gate           | The release of 3.2.0, on Kenny's go; round three's Phase 10 (KT7, KT8, KT9) still owed                                          |
+| Open queue items    | KT6-M1 (waits on JobTracker), TH47, KT9 (closes at the next `v*` tag), PROC-H1; D3 and TH104/TH107 in 4.0.0; P1-P4 from kp-soft |
+| AFK mode            | off since Kenny's return, 2026-09-07                                                                                            |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Layout layer</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- This fixture loads the package and adds no styling of its own
+             [KT3]: everything measured here has to come from css/layout.css
+             or the test is measuring its own scaffolding. -->
+        <main class="kp-page" data-test="page">
+            <div class="kp-stack" data-test="stack">
+                <div data-test="stack-a">one</div>
+                <div data-test="stack-b">two</div>
+            </div>
+
+            <form class="kp-row kp-row--end" data-test="row">
+                <label class="kp-field"><span class="kp-field__label">Name</span><input class="kp-field__input" /></label>
+                <label class="kp-field"><span class="kp-field__label">Kind</span><input class="kp-field__input" /></label>
+                <button type="button" class="kp-button kp-button--primary" data-test="row-button">Add</button>
+            </form>
+
+            <div class="kp-row kp-row--between" data-test="between"><span>left</span><span data-test="between-right">right</span></div>
+
+            <div class="kp-autogrid" data-test="autogrid">
+                <div class="kp-card" data-test="tile-a">a</div>
+                <div class="kp-card" data-test="tile-b">b</div>
+                <div class="kp-card" data-test="tile-c">c</div>
+            </div>
+
+            <div class="kp-sidebar" data-test="sidebar">
+                <div class="kp-sidebar__main" data-test="sidebar-main">main</div>
+                <div class="kp-sidebar__aside" data-test="sidebar-aside">aside</div>
+            </div>
+
+            <div data-test="sections">
+                <section class="kp-section" data-test="section-first">first</section>
+                <section class="kp-section" data-test="section-second">second</section>
+            </div>
+
+            <div class="kp-center" data-test="center">centred</div>
+
+            <p class="kp-prose" data-test="prose">
+                Running text that has to stop at a readable measure rather than spanning the whole page, which is the whole point of the class and
+                also needs to be long enough that the measure actually bites when the window is wide.
+            </p>
+
+            <p class="kp-text-muted" data-test="muted">muted</p>
+            <p class="kp-text-end" data-test="text-end">end</p>
+            <p class="kp-text-center" data-test="text-center">centre</p>
+            <span class="kp-mono" data-test="mono">identifier</span>
+            <pre class="kp-code-block" data-test="code">c_1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f</pre>
+
+            <button type="button" class="kp-button" data-test="idle">Save</button>
+            <button type="button" class="kp-button" aria-busy="true" data-test="busy">Saving</button>
+
+            <table class="kp-table" data-test="table">
+                <tbody>
+                    <tr>
+                        <td class="kp-text-end" data-test="cell-end">42</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </body>
+</html>

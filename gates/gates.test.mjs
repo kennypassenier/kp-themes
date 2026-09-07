@@ -11,12 +11,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { discoverThemesFromCss, EXPECTED_THEMES } from './check-contrast.mjs';
+import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { loosePhrases } from './check-strings.mjs';
+import { copyableExports } from './check-manifest.mjs';
+import { FILES } from './checksums.mjs';
+import { compareVersions, diagnose } from '../js/diagnostics.js';
+import { DEFAULT_STRINGS } from '../js/strings.js';
 import { subsequence } from '../js/listbox.js';
 import { parseDate, toDutch, toISO } from '../js/datepicker.js';
 import { datePattern, parseDate as parseLocaleDate, parseNumber, weekStartsOn } from '../js/locale.js';
@@ -389,4 +393,102 @@ test('D5: the date hint follows the locale, so it cannot lie about the format', 
     assert.equal(datePattern('nl-NL').parts.join(','), 'day,month,year');
     assert.equal(datePattern('en-US').parts.join(','), 'month,day,year');
     assert.match(datePattern('en-US').hint, /^mm.dd.yyyy$/);
+});
+
+// TH103: the manifest holds what the package offers, and the gate that
+// says so reads `exports` rather than the directory (AR26).
+test('TH103: a copyable export that is missing from the manifest is a difference', () => {
+    const pkg = {
+        exports: {
+            './css': './css/themes.css',
+            './js/strings': { types: './js/strings.d.ts', default: './js/strings.js' },
+        },
+    };
+    assert.deepEqual(copyableExports(pkg), ['css/themes.css', 'js/strings.js']);
+});
+
+test('TH103: patterns, declarations and the React channel are not vendored files', () => {
+    const pkg = {
+        exports: {
+            // A pattern names a directory, and reading a directory is the
+            // globbing AR26 forbids for this number.
+            './components/*': './components/*',
+            './themes/*': './themes/*',
+            // npm ships and verifies these; a person does not copy them.
+            '.': { types: './index.d.ts', default: './index.js' },
+            './hooks/theme': { types: './hooks/use-theme.d.ts', default: './hooks/use-theme.js' },
+            './fx/boot-sequence': { types: './fx/boot-sequence.d.ts', default: './fx/boot-sequence.jsx' },
+            './package.json': './package.json',
+        },
+    };
+    assert.deepEqual(copyableExports(pkg), []);
+});
+
+test('TH103: the two files 3.1.1 had missed are in the manifest', () => {
+    // Named in S31 because a consumer overriding the dictionary copies the
+    // first and a consumer loading the retro register copies the second.
+    assert.ok(FILES.includes('js/strings.js'));
+    assert.ok(FILES.includes('css/retro-register.css'));
+});
+
+// TH97: the verdict, measured on pairs that are wrong on purpose. The
+// browser test reads the same judgement off the real page; this one is
+// the cheap half, and it can build pairs the browser cannot.
+test('TH97: a stylesheet older than the JavaScript is named as the one behind', () => {
+    const report = diagnose({ version: '1.2.0', themes: ['formal', 'light'] }, { version: '3.2.0', themes: ['formal', 'light', 'mono'] });
+    assert.equal(report.status, 'stylesheet-behind');
+    assert.deepEqual(report.onlyInScript, ['mono']);
+    assert.deepEqual(report.onlyInStylesheet, []);
+    assert.ok(report.verdict.includes('1.2.0') && report.verdict.includes('3.2.0'));
+});
+
+test('TH97: a JavaScript older than the stylesheet is named as the one behind', () => {
+    const report = diagnose({ version: '3.2.0', themes: ['formal', 'mono'] }, { version: '1.2.0', themes: ['formal'] });
+    assert.equal(report.status, 'script-behind');
+    assert.deepEqual(report.onlyInStylesheet, ['mono']);
+});
+
+test('TH97: the same version with different themes is a hand-edited file', () => {
+    const report = diagnose({ version: '3.2.0', themes: ['formal'] }, { version: '3.2.0', themes: ['formal', 'mono'] });
+    assert.equal(report.status, 'themes-differ');
+    assert.ok(report.verdict.includes('3.2.0'));
+});
+
+test('TH97: a stylesheet that declares no version is older than any that can ask', () => {
+    const report = diagnose({ version: null, themes: [] }, { version: '3.2.0', themes: ['formal'] });
+    assert.equal(report.status, 'no-version');
+    assert.equal(report.verdict, DEFAULT_STRINGS.diagnosticsNoVersion);
+});
+
+test('TH97: a matching pair is a match, and 3.10.0 is newer than 3.9.0', () => {
+    assert.equal(diagnose({ version: '3.2.0', themes: ['formal'] }, { version: '3.2.0', themes: ['formal'] }).status, 'match');
+    // String comparison says the opposite, which is the whole reason this
+    // is a function and not a `<`.
+    assert.ok((compareVersions('3.10.0', '3.9.0') ?? 0) > 0);
+    assert.equal(compareVersions('3.2.0', '3.2'), 0);
+    assert.equal(compareVersions('3.2.0', 'nightly'), null);
+});
+
+test('R5-BADGE: every status has a badge rule, and every badge rule has a status', () => {
+    // The plate used to be an inline style, so a server-rendered page
+    // could not have a coloured badge without breaking TH109's bar. The
+    // rules in css/components.css carry it now, and this test is what
+    // keeps them tied to the one list that already exists -- the same
+    // STATUS_NAMES the contrast gate holds all 24 themes to. Drill:
+    // delete one rule and it names the status; add a rule for a name that
+    // is not a status and it names that.
+    const css = readFileSync(new URL('../css/components.css', import.meta.url), 'utf8');
+    const declared = [...css.matchAll(/\.kp-badge\[data-status='([a-z-]+)'\]/g)].map((m) => m[1]);
+    for (const name of STATUS_NAMES) {
+        assert.ok(declared.includes(name), `no .kp-badge[data-status='${name}'] rule in css/components.css`);
+        const rule = new RegExp(
+            `\\.kp-badge\\[data-status='${name}'\\]\\s*\\{[^}]*background:\\s*var\\(--status-${name}\\)[^}]*color:\\s*var\\(--status-${name}-foreground\\)`,
+            's',
+        );
+        assert.match(css, rule, `the ${name} rule does not paint both halves of its own token pair`);
+    }
+    for (const name of declared) {
+        assert.ok(STATUS_NAMES.includes(name), `.kp-badge[data-status='${name}'] is a rule for something that is not a status`);
+    }
+    assert.equal(declared.length, STATUS_NAMES.length);
 });

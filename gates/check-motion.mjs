@@ -55,10 +55,24 @@ const OUT_OF_SCOPE = {
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */
 export function parseOpacityKeyframes(source) {
     const out = new Map();
-    for (const m of source.matchAll(/@keyframes\s+([\w-]+)\s*\{([\s\S]*?)\n\}/g)) {
+    // Brace counting rather than a lazy regex: since AR17 the authored
+    // stylesheets sit inside an @layer block, so every keyframes body is
+    // indented and its steps close with braces of their own. A lazy match
+    // stopped at the first step and reported the whole file unreadable.
+    const head = /@keyframes\s+([\w-]+)\s*\{/g;
+    for (let m = head.exec(source); m !== null; m = head.exec(source)) {
+        let depth = 1;
+        let i = m.index + m[0].length;
+        const from = i;
+        while (i < source.length && depth > 0) {
+            if (source[i] === '{') depth += 1;
+            else if (source[i] === '}') depth -= 1;
+            i += 1;
+        }
+        const body = source.slice(from, i - 1);
         const stops = [];
         // A block is `0%, 100% { ... }` — several selectors, one body.
-        for (const b of m[2].matchAll(/([\d.%,\s]+)\{([^}]*)\}/g)) {
+        for (const b of body.matchAll(/([\d.%,\s]+)\{([^}]*)\}/g)) {
             const o = b[2].match(/opacity:\s*([\d.]+)/);
             if (!o) continue;
             for (const p of b[1].match(/[\d.]+(?=%)/g) ?? []) {

@@ -11,7 +11,13 @@
 
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+// The port the fixture server listens on. Overridable, because a second
+// checkout of this repository — a git worktree building another milestone
+// — runs the same suite at the same time, and `reuseExistingServer` then
+// hands one run the OTHER checkout's files: every fixture page 404s and
+// the whole suite fails for a reason that has nothing to do with the
+// code. `KP_TEST_PORT=4183 npx playwright test` keeps them apart.
+const PORT = Number(process.env.KP_TEST_PORT ?? 4173);
 
 export default defineConfig({
     testDir: './tests',

@@ -1,0 +1,27 @@
+/* @kp-soft/themes — css/_density.css
+   Concatenated into css/themes.css after the authored rules.
+
+   The compact density mode [TH105]. Set `data-density="compact"` on any
+   element and everything inside it tightens: the spacing scale drops one
+   step's worth and the control height comes down.
+
+   Unlayered and after the token blocks, for the same reason css/_print.css
+   is: AR17 left the theme token blocks unlayered, and unlayered CSS beats
+   layered CSS whatever the specificity, so a layered override of
+   --kp-space-md would lose to every theme's own declaration.
+
+   Every value is a knob with the compact value as its default, so a
+   consumer retunes the density without restating the whole block (KT6).
+   The floor is not negotiable: --kp-control-height stays at 1.75rem
+   (28px at a 16px root), above the 24px WCAG 2.5.8 asks of a pointer
+   target, and that is why it is not a knob. */
+
+[data-density='compact'] {
+    --kp-space-xs: var(--kp-compact-xs, 0.125rem);
+    --kp-space-sm: var(--kp-compact-sm, 0.25rem);
+    --kp-space-md: var(--kp-compact-md, 0.5rem);
+    --kp-space-lg: var(--kp-compact-lg, 0.75rem);
+    --kp-space-xl: var(--kp-compact-xl, 1rem);
+    --kp-space-2xl: var(--kp-compact-2xl, 1.5rem);
+    --kp-control-height: 1.75rem;
+}

@@ -25,11 +25,17 @@ import { useStrings } from '../hooks/use-strings.jsx';
  * @property {import('react').ReactNode} [children]
  */
 
+/** The token family css/components.css carries a rule for [R5-BADGE]. */
+const DEFAULT_TOKEN_PREFIX = '--status-';
+
 /**
  * @param {BadgeProps & import('react').HTMLAttributes<HTMLElement>} props
  * @param {import('react').ForwardedRef<HTMLElement>} ref
  */
-function BadgeInner({ status, tokenPrefix = '--status-', as: As = 'span', onContractError, strings, className = '', style, children, ...rest }, ref) {
+function BadgeInner(
+    { status, tokenPrefix = DEFAULT_TOKEN_PREFIX, as: As = 'span', onContractError, strings, className = '', style, children, ...rest },
+    ref,
+) {
     const s = useStrings(strings);
     const empty = typeof children === 'string' ? children.trim() === '' : children === undefined || children === null;
     const broken = status !== undefined && empty;
@@ -40,7 +46,13 @@ function BadgeInner({ status, tokenPrefix = '--status-', as: As = 'span', onCont
         else console.error(`[kp-themes DI4] ${s.contractSemantic}`);
     }, [broken, onContractError, s]);
 
-    const colours = status ? { background: `var(${tokenPrefix}${status})`, color: `var(${tokenPrefix}${status}-foreground)` } : {};
+    // The plate comes from css/components.css for the seven statuses the
+    // package ships, so nothing is written inline and both channels take
+    // it from the same rule [R5-BADGE]. A consumer pointing at their own
+    // token family keeps the inline style: those names have no rule, and
+    // dropping it would take their colours away without a word.
+    const ownFamily = tokenPrefix !== DEFAULT_TOKEN_PREFIX;
+    const colours = status && ownFamily ? { background: `var(${tokenPrefix}${status})`, color: `var(${tokenPrefix}${status}-foreground)` } : {};
 
     return (
         <As

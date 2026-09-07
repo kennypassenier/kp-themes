@@ -393,10 +393,29 @@ Measured across the 24 `themes/*/anatomy.md` documents: 323 bold spans,
 quotes, 26 links — and zero tables, zero fenced code blocks. Seven
 constructs, none of them the hard ones.
 
-So: an own renderer for exactly those seven, and it **refuses** anything
-else with the file and line rather than passing it through as literal
-characters. A renderer that silently emits unknown syntax is the same
-silent fallback AR25 exists to remove. T6 is untouched: no dependency.
+So: an own renderer for exactly those constructs, and it **refuses**
+anything else with the file and line rather than passing it through as
+literal characters. A renderer that silently emits unknown syntax is the
+same silent fallback AR25 exists to remove. T6 is untouched: no
+dependency.
+
+**Amended 2026-09-07 (MR-R6-1): eight constructs, not seven.** The count
+above was wrong in three of its eight figures. Re-measured over the same
+24 documents by the renderer's own census, and by an independent regex
+census that agrees with it: **327** bold spans (not 323), **193** inline
+code spans (not 189), and **9 underscore-emphasis spans** the count had
+missed entirely — `dark:32`, `dark:62`, `cyberpunk:22`, `cyberpunk:44`,
+`pastel:10`, `pastel:48`, `topo:12`, `nishiki:9`, `retro:14`. Headings,
+links, ordered items, bullets and quotes were correct.
+
+Kenny chose to correct the measurement rather than rewrite the nine
+spans as bold, because two of them are exactly what emphasis is for and
+bold is not: `_bero-ai_` is a foreign pigment name, and `_is_` in retro
+carries contrastive stress. Emphasis renders as `<em>`; there is no flag
+and no opt-in, because there is nothing left to choose. Asterisk
+emphasis stays refused — one spelling, not two — and the boundary this
+decision is actually about is unchanged: no tables, no fenced code, no
+raw HTML, and refuse rather than pass through.
 
 ## T11 · The documentation site extends the generators that exist
 

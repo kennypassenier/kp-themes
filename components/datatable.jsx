@@ -14,6 +14,10 @@ import { useControllable } from '../hooks/use-controllable.js';
 // Deliberately without virtualisation, in-cell editing or export (TH42):
 // that is a grid, a different product.
 //
+// Since 3.2.0: the scroll wrapper is a named region a keyboard can
+// reach [TH95], and the card layout is driven by the width of the
+// table's own container rather than by the viewport's [TH96, AR24].
+//
 // Since 3.0.0 [KT6]: query, sort, page and selection are controllable —
 // a table in the URL, a selection cleared after a bulk action, a server
 // that sorts and pages (`totalRows` tells the table it is not looking at
@@ -21,7 +25,7 @@ import { useControllable } from '../hooks/use-controllable.js';
 // in Dutch; a header sorts from the keyboard; cells render nodes; and
 // the search box, the pager and the card layout can each be off.
 
-/** @typedef {{ key: string, label: import('react').ReactNode, kind?: 'text' | 'number' | 'date', sortable?: boolean, align?: 'start' | 'center' | 'end', width?: string, className?: string, render?: (value: unknown, row: Record<string, unknown>, index: number) => import('react').ReactNode, compare?: (a: unknown, b: unknown) => number }} Column */
+/** @typedef {{ key: string, label: import('react').ReactNode, kind?: 'text' | 'number' | 'date', sortable?: boolean, align?: 'start' | 'center' | 'end', width?: string, className?: string, truncate?: boolean, render?: (value: unknown, row: Record<string, unknown>, index: number) => import('react').ReactNode, compare?: (a: unknown, b: unknown) => number }} Column */
 /** @typedef {{ key: string, direction: 'ascending' | 'descending' } | null} Sort */
 
 /**
@@ -37,6 +41,8 @@ import { useControllable } from '../hooks/use-controllable.js';
  * @property {boolean} [selectable]
  * @property {boolean} [cards]         The narrow layout. Default true.
  * @property {import('react').ReactNode} [caption]
+ * @property {boolean} [region]        The scroll wrapper as a keyboard-reachable region [TH95]. Default true.
+ * @property {string} [regionLabel]    Its accessible name. Default: the caption, else the dictionary's `tableRegion`.
  * @property {import('react').ReactNode} [empty]
  * @property {string} [query]          Controlled.
  * @property {string} [defaultQuery]
@@ -81,6 +87,8 @@ function DataTableInner(
         selectable = false,
         cards = true,
         caption,
+        region = true,
+        regionLabel,
         empty,
         query: queryProp,
         defaultQuery = '',
@@ -172,6 +180,9 @@ function DataTableInner(
     const allChecked = visibleKeys.length > 0 && visibleKeys.every((k) => chosen.includes(k));
     const someChecked = visibleKeys.some((k) => chosen.includes(k));
 
+    /** The class a column puts on its header and its cells [TH96]. @param {Column} column */
+    const cellClass = (column) => `${column.truncate ? 'kp-cell-truncate' : ''} ${column.className ?? ''}`.trim() || undefined;
+
     /** @param {Column} column */
     const toggleSort = (column) => {
         if (column.sortable === false) return;
@@ -205,7 +216,16 @@ function DataTableInner(
                 </div>
             )}
 
-            <div className="kp-table-wrap">
+            {/* The scroll box a keyboard can reach and a reader can be
+                told the name of [TH95]. Same three attributes, the same
+                order of names and the same dictionary fallback as
+                js/tables.js gives the framework-free channel. */}
+            <div
+                className="kp-table-wrap"
+                tabIndex={region ? 0 : undefined}
+                role={region ? 'region' : undefined}
+                aria-label={region ? (regionLabel ?? (typeof caption === 'string' ? caption : s.tableRegion)) : undefined}
+            >
                 <table className={`kp-table ${classNames.table ?? ''}`.trim()}>
                     {caption && <caption>{caption}</caption>}
                     <thead>
@@ -240,7 +260,7 @@ function DataTableInner(
                                     <th
                                         key={column.key}
                                         scope="col"
-                                        className={column.className}
+                                        className={cellClass(column)}
                                         style={{ textAlign: column.align, width: column.width }}
                                         data-kp-sort={sortable ? (column.kind ?? 'text') : undefined}
                                         // Only the sorted column carries a
@@ -297,7 +317,16 @@ function DataTableInner(
                                         <td
                                             key={column.key}
                                             data-label={typeof column.label === 'string' ? column.label : column.key}
-                                            className={column.className}
+                                            className={cellClass(column)}
+                                            // The whole value where the
+                                            // pointer can read it, since a
+                                            // truncated cell shows one
+                                            // clipped line of it [TH96].
+                                            title={
+                                                column.truncate && typeof row[column.key] === 'string'
+                                                    ? /** @type {string} */ (row[column.key])
+                                                    : undefined
+                                            }
                                             style={{ textAlign: column.align }}
                                         >
                                             {column.render

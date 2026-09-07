@@ -20,6 +20,15 @@ export type ThemeName = import('./theme-registry.js').ThemeName;
 export declare const THEME_EVENT = "kp-theme-change";
 /** Fired before a change, cancelable: `{ theme, previous }`. preventDefault() keeps the current theme. */
 export declare const BEFORE_THEME_EVENT = "kp-theme-before-change";
+/**
+ * Fired when a name was dropped: `{ requested, applied, source }` [TH97].
+ *
+ * `source` is one of `stored`, `current`, `apply` or `cross-tab` — the
+ * four places a name can be dropped (AR25). A consumer listening to this
+ * learns what its page asked for and what it got, which is the whole of
+ * what the silence used to cost.
+ */
+export declare const UNKNOWN_THEME_EVENT = "kp-theme-unknown";
 export type ThemeConfig = {
     root?: Element;
     darkClass?: string | null;

@@ -49,6 +49,7 @@ export { CommandPalette, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export { default as DataTable } from './components/datatable.jsx';
 export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
 export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
@@ -80,6 +81,17 @@ export {
     useAppearance,
     useTheme,
 } from './hooks/use-theme.js';
-export { BEFORE_THEME_EVENT, THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { BEFORE_THEME_EVENT, THEME_EVENT, UNKNOWN_THEME_EVENT, currentTheme, onThemeChange, storeTheme, storedTheme } from './js/theme-core.js';
+export { VERSION } from './js/theme-registry.js';
+export {
+    NAMES_PROPERTY,
+    VERSION_PROPERTY,
+    compareVersions,
+    diagnose,
+    diagnostics,
+    renderDiagnostics,
+    scriptSide,
+    stylesheetSide,
+} from './js/diagnostics.js';
 /** @typedef {import('./hooks/use-theme.js').Theme} Theme */
 /** @typedef {import('./hooks/use-theme.js').UseThemeOptions} UseThemeOptions */

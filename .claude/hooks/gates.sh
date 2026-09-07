@@ -38,14 +38,35 @@ node gates/check-motion.mjs
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
 
+echo "→ the utility API matches its source and its documented list (TH93)"
+node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
+
+echo "→ the dist bundle matches its sources (TH106)"
+node gates/generate-bundle.mjs --check
+
+echo "→ the migration note points at classes that exist (TH108)"
+node gates/check-migration.mjs
+
 echo "→ the showcase and its fixtures match their source"
 node gates/generate-showcase.mjs --check
+
+echo "→ the ten example pages match their source (TH98)"
+node gates/generate-examples.mjs --check
+
+echo "→ no inline styles on the example pages (TH109)"
+node gates/check-inline-styles.mjs
+
+echo "→ the documentation site matches its source and holds its promises (TH100, TH101)"
+node gates/generate-site.mjs --check && node gates/check-site.mjs
 
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 
 echo "→ everything the package exports is actually published"
 node gates/check-package.mjs
+
+echo "→ the checksum manifest holds every file a consumer can copy (TH103)"
+node gates/check-manifest.mjs
 
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check

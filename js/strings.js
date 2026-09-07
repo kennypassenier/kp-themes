@@ -66,6 +66,7 @@
  * @property {(n: number) => string} tableRows
  * @property {(shown: number, total: number) => string} tableRowsFiltered
  * @property {(at: number, of: number) => string} tablePage
+ * @property {string} tableRegion
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -119,6 +120,21 @@
  * @property {string} contractSemantic
  * @property {string} themeGroupLight
  * @property {string} themeGroupDark
+ * @property {(requested: string, applied: string) => string} themeUnknown
+ * @property {string} diagnosticsHeading
+ * @property {string} diagnosticsStylesheet
+ * @property {string} diagnosticsScript
+ * @property {string} diagnosticsVersion
+ * @property {string} diagnosticsThemes
+ * @property {string} diagnosticsVerdict
+ * @property {string} diagnosticsMatch
+ * @property {(stylesheet: string, script: string) => string} diagnosticsStylesheetBehind
+ * @property {(stylesheet: string, script: string) => string} diagnosticsScriptBehind
+ * @property {(version: string) => string} diagnosticsThemesDiffer
+ * @property {string} diagnosticsNoVersion
+ * @property {(names: string) => string} diagnosticsOnlyInStylesheet
+ * @property {(names: string) => string} diagnosticsOnlyInScript
+ * @property {string} diagnosticsUnknownVersion
  */
 
 /**
@@ -160,6 +176,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
     /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
     tablePage: (at, of) => `${at} / ${of}`,
+    /**
+     * The name of the scrolling region around a table [TH95], used only
+     * when the table has no caption and the consumer named nothing: a
+     * region with no name is announced as "region" and tells a reader
+     * nothing about what they just tabbed into.
+     */
+    tableRegion: 'Table',
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',
@@ -225,6 +248,33 @@ export const DEFAULT_STRINGS = Object.freeze({
     /** The two sections of a grouped theme picker [TH63]. */
     themeGroupLight: 'Light',
     themeGroupDark: 'Dark',
+    /**
+     * The loud fallback and the diagnostics page [TH97, AR25].
+     *
+     * The console warning is in here for the same reason the rest is: a
+     * consumer whose users are not English speakers should be able to
+     * replace it, and a message written into theme-core.js has no door.
+     */
+    themeUnknown: (requested, applied) =>
+        `kp-themes: "${requested}" is not a theme this build knows, so "${applied}" was applied instead. The stored choice was left alone; open the diagnostics page to see which half is behind.`,
+    diagnosticsHeading: 'Stylesheet and JavaScript, side by side',
+    diagnosticsStylesheet: 'Stylesheet (css/themes.css)',
+    diagnosticsScript: 'JavaScript (js/theme-registry.js)',
+    diagnosticsVersion: 'Version',
+    diagnosticsThemes: 'Themes',
+    diagnosticsVerdict: 'Verdict',
+    diagnosticsMatch: 'The stylesheet and the JavaScript come from the same version, and they know the same themes.',
+    diagnosticsStylesheetBehind: (stylesheet, script) =>
+        `The stylesheet is behind: it is version ${stylesheet} and the JavaScript is version ${script}. Copy a newer css/themes.css.`,
+    diagnosticsScriptBehind: (stylesheet, script) =>
+        `The JavaScript is behind: the stylesheet is version ${stylesheet} and the JavaScript is version ${script}. Copy newer files from js/.`,
+    diagnosticsThemesDiffer: (version) =>
+        `Both halves say version ${version} and yet they know different themes, so at least one of the two files has been edited by hand.`,
+    diagnosticsNoVersion:
+        'The stylesheet declares no version, so it was generated before 3.2.0 — older than the JavaScript beside it, whatever that one says.',
+    diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
+    diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
+    diagnosticsUnknownVersion: 'not declared',
 });
 
 /**
@@ -267,6 +317,7 @@ export const STRINGS_NL = Object.freeze({
     tableRows: (n) => `${n} rijen`,
     tableRowsFiltered: (shown, total) => `${shown} van ${total} rijen`,
     tablePage: (at, of) => `${at} / ${of}`,
+    tableRegion: 'Tabel',
     formRequired: 'verplicht',
     formInvalid: 'Dit veld is niet correct ingevuld.',
     formSummaryOne: 'Er is 1 veld niet correct ingevuld.',
@@ -321,6 +372,26 @@ export const STRINGS_NL = Object.freeze({
     contractSemantic: 'Een element met een semantische kleur moet ook in woorden zeggen wat het betekent: kleur is nooit de enige drager.',
     themeGroupLight: 'Licht',
     themeGroupDark: 'Donker',
+    themeUnknown: (requested, applied) =>
+        `kp-themes: "${requested}" is geen thema dat deze build kent, dus "${applied}" is toegepast. De opgeslagen keuze is niet aangeraakt; open de diagnosepagina om te zien welke helft achterloopt.`,
+    diagnosticsHeading: 'Stylesheet en JavaScript, naast elkaar',
+    diagnosticsStylesheet: 'Stylesheet (css/themes.css)',
+    diagnosticsScript: 'JavaScript (js/theme-registry.js)',
+    diagnosticsVersion: 'Versie',
+    diagnosticsThemes: "Thema's",
+    diagnosticsVerdict: 'Oordeel',
+    diagnosticsMatch: "De stylesheet en de JavaScript komen uit dezelfde versie en kennen dezelfde thema's.",
+    diagnosticsStylesheetBehind: (stylesheet, script) =>
+        `De stylesheet loopt achter: die is versie ${stylesheet} en de JavaScript is versie ${script}. Kopieer een nieuwere css/themes.css.`,
+    diagnosticsScriptBehind: (stylesheet, script) =>
+        `De JavaScript loopt achter: de stylesheet is versie ${stylesheet} en de JavaScript is versie ${script}. Kopieer nieuwere bestanden uit js/.`,
+    diagnosticsThemesDiffer: (version) =>
+        `Beide helften zeggen versie ${version} en kennen toch andere thema's, dus minstens een van de twee bestanden is met de hand aangepast.`,
+    diagnosticsNoVersion:
+        'De stylesheet declareert geen versie en is dus gegenereerd voor 3.2.0 — ouder dan de JavaScript ernaast, wat die ook zegt.',
+    diagnosticsOnlyInStylesheet: (names) => `Alleen de stylesheet heeft: ${names}`,
+    diagnosticsOnlyInScript: (names) => `Alleen de JavaScript heeft: ${names}`,
+    diagnosticsUnknownVersion: 'niet gedeclareerd',
 });
 
 /** @type {Strings} */

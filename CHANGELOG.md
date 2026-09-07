@@ -1,5 +1,88 @@
 # Changelog
 
+## 3.2.0 — 2026-09-07
+
+**The layout the package kept telling consumers to write themselves.** A
+consuming project shipped 71 lines of its own layout glue and 28 inline
+`style` attributes, and said so in its own stylesheet header. Round four
+is the answer: a layout layer, a utility API, ten example pages built out
+of nothing else, and a documentation site that shows all of it.
+
+Everything here is additive. Nothing that worked in 3.1.1 stops working.
+
+### Added
+
+- **A layout layer** (`css/layout.css`, exported as `./css/layout`):
+  sixteen classes for the shape of a page, each reading a knob that
+  defaults to the theme's own spacing scale.
+  [docs/LAYOUT.md](docs/LAYOUT.md).
+- **A utility API** (`css/utilities.css`, exported as `./css/utilities`):
+  118 single-purpose classes in six families, generated from one source
+  and documented by hand so the two can disagree.
+  [docs/UTILITIES.md](docs/UTILITIES.md).
+- **Cascade layers** — `kp.base`, `kp.components`, `kp.register`,
+  `kp.layout`, `kp.utilities`. A layout class or a utility now wins on a
+  component that sets the same property, without `!important`. Measured
+  first: 44 component rules had higher specificity than a utility, so
+  load order alone would not have been enough.
+- **A spacing scale as tokens** in all 24 themes, pinned to the values
+  the components already used, so nothing shifted.
+- **A compact density mode**: `data-density="compact"` on any element.
+  Pointer targets stay above 24px.
+- **A keyboard-reachable scroll region for wide tables** in both
+  channels, plus `.kp-cell-break`, `.kp-cell-truncate`, `.kp-col-low`,
+  container queries in place of media queries, and a card layout for the
+  plain table through `data-kp-cards`.
+- **A dist bundle**: `dist/kp-themes.css` and `dist/kp-themes.js`, one
+  tag each instead of eight. The loose files are unchanged.
+- **Ten example pages** in both channels, built out of the layout layer
+  and the utility API and nothing else — zero inline styles, with one
+  excused pair of properties a popover needs.
+- **A documentation site** with the story of every theme, taken from its
+  own anatomy document, and its live tokens beside it.
+- **A diagnostics page** that lays a vendored stylesheet and the
+  JavaScript beside it and says which half is behind.
+
+### Changed
+
+- **An unknown theme name is no longer silent.** It still falls back to
+  the default, but it warns once per session and dispatches a
+  `kp-theme-unknown` event carrying what was asked for, what was
+  applied, and which of the four paths dropped it. A page that has been
+  quietly showing the default theme will now say so.
+- **The stylesheet declares its own version** and the theme names it
+  knows, as custom properties, so JavaScript can read them.
+- **The checksum manifest** is derived from the package exports rather
+  than hand-picked, and from what those exports import, so a file a
+  consumer has to copy alongside them cannot fall outside it. That is how
+  `js/locale.js` — imported by the date picker, the data table and the
+  upload field, and exported by nothing — got in.
+- **The typography scale is a set of tokens.** `--kp-text-xs`, `--kp-text-sm`
+  and `--kp-text-md` are declared in all 24 themes. The six component rules
+  that wanted a size the scale name did not mean kept their own value under
+  their own knob, so no text moved anywhere.
+- **A floor under a collapsed table wrapper.** `--kp-table-wrap-min` does
+  nothing by default and gives a way out to a consumer who puts
+  `.kp-table-wrap` in a box that shrinks to fit, where inline-size
+  containment takes it to zero.
+
+### Fixed
+
+- **A status badge needed an inline style to be coloured.** `css/components.css`
+  carries a rule per status now, so `<span class="kp-badge" data-status="offer">`
+  gets its plate from the class. The React `Badge` stops writing the style for
+  the seven names the package ships and keeps writing it for a consumer's own
+  token family.
+- **The shortcut sheet ran off a phone.** It was content-box, so at a 360px
+  viewport it measured 373px and pushed the page sideways. It is border-box now,
+  with the default width raised by exactly what used to sit outside it, so a wide
+  screen sees the same 490px it always did.
+- **Printing dropped the theme again.** Between the cascade layers
+  landing and this release, the print override sat inside a layer while
+  the theme tokens did not, and unlayered CSS wins; a dark theme printed
+  dark in every theme and both browsers. The override is unlayered now.
+  This never reached a published version.
+
 ## 3.1.1 — 2026-09-06
 
 **Terminal's cursor moves off the headings.** The blinking block after

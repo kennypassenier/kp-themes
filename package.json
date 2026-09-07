@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "3.1.1",
+    "version": "3.2.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -124,15 +124,30 @@
             "types": "./js/gridlayout.d.ts",
             "default": "./js/gridlayout.js"
         },
+        "./js/tables": {
+            "types": "./js/tables.d.ts",
+            "default": "./js/tables.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"
+        },
+        "./js/diagnostics": {
+            "types": "./js/diagnostics.d.ts",
+            "default": "./js/diagnostics.js"
         },
         "./hooks/controllable": {
             "types": "./hooks/use-controllable.d.ts",
             "default": "./hooks/use-controllable.js"
         },
-        "./css/retro-register": "./css/retro-register.css"
+        "./css/retro-register": "./css/retro-register.css",
+        "./css/layout": "./css/layout.css",
+        "./css/utilities": "./css/utilities.css",
+        "./dist/css": "./dist/kp-themes.css",
+        "./dist/js": {
+            "types": "./js/auto.d.ts",
+            "default": "./dist/kp-themes.js"
+        }
     },
     "types": "./index.d.ts",
     "files": [
@@ -143,6 +158,7 @@
         "fx",
         "js",
         "css",
+        "dist",
         "themes",
         "gates",
         "ha",
@@ -154,7 +170,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:ha && npm run check:package && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:layers && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
@@ -163,8 +179,18 @@
         "check:motion": "node gates/check-motion.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
         "test:browser": "playwright test",
+        "generate:bundle": "node gates/generate-bundle.mjs",
+        "check:bundle": "node gates/generate-bundle.mjs --check",
+        "check:migration": "node gates/check-migration.mjs",
+        "generate:utilities": "node gates/generate-utilities.mjs",
+        "check:utilities": "node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs",
         "generate:showcase": "node gates/generate-showcase.mjs",
         "check:showcase": "node gates/generate-showcase.mjs --check",
+        "generate:examples": "node gates/generate-examples.mjs",
+        "check:examples": "node gates/generate-examples.mjs --check",
+        "check:inline-styles": "node gates/check-inline-styles.mjs",
+        "generate:site": "node gates/generate-site.mjs",
+        "check:site": "node gates/generate-site.mjs --check && node gates/check-site.mjs",
         "checksums": "node gates/checksums.mjs --write",
         "check:types": "tsc --noEmit -p jsconfig.json",
         "check:layers": "node gates/check-layers.mjs",
@@ -172,6 +198,7 @@
         "generate:ha": "node gates/generate-ha-themes.mjs",
         "check:ha": "node gates/generate-ha-themes.mjs --check",
         "check:package": "node gates/check-package.mjs",
+        "check:manifest": "node gates/check-manifest.mjs",
         "generate:types": "node gates/check-types.mjs --write",
         "check:types:consumer": "node gates/check-types.mjs"
     },

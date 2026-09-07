@@ -6,6 +6,7 @@ export type Column = {
     align?: 'start' | 'center' | 'end';
     width?: string;
     className?: string;
+    truncate?: boolean;
     render?: (value: unknown, row: Record<string, unknown>, index: number) => import('react').ReactNode;
     compare?: (a: unknown, b: unknown) => number;
 };
@@ -40,6 +41,14 @@ export type DataTableProps = {
      */
     cards?: boolean;
     caption?: import('react').ReactNode;
+    /**
+     * The scroll wrapper as a keyboard-reachable region [TH95]. Default true.
+     */
+    region?: boolean;
+    /**
+     * Its accessible name. Default: the caption, else the dictionary's `tableRegion`.
+     */
+    regionLabel?: string;
     empty?: import('react').ReactNode;
     /**
      * Controlled.

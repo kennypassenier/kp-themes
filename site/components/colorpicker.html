@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Colour picker — kp-themes</title>
+        <meta name="description" content="Three labelled sliders, a swatch, and the number that makes this one different: the WCAG contrast ratio of the chosen colour against the current theme’s own background, measured with the same function the contrast gate uses." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html" aria-current="page">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main kp-page" id="main">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Colour picker</h1>
+                    <p class="kp-prose">Three labelled sliders, a swatch, and the number that makes this one different: the WCAG contrast ratio of the chosen colour against the current theme’s own background, measured with the same function the contrast gate uses.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">Where somebody picks a colour that text or a boundary will later have to survive on — a status colour, a label, a theme of their own. Not as a general colour wheel: three sliders are exact and operable from the keyboard, but they are slower than a canvas for browsing. Not for choosing from a fixed set either; that is a row of swatch buttons.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A picker measured against the page background</figcaption>
+                        <p class="kp-text-muted">The verdict is a sentence in a live region, not a green tick: the colour is the second carrier, never the only one. Sliders rather than a canvas, because a canvas needs a pointer.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+
+<div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
+<label class="kp-field__label" for="doc-color-h">Hue</label>
+<input id="doc-color-h" type="range" data-kp-channel="h" min="0" max="360" value="220" />
+<label class="kp-field__label" for="doc-color-s">Saturation</label>
+<input id="doc-color-s" type="range" data-kp-channel="s" min="0" max="100" value="90" />
+<label class="kp-field__label" for="doc-color-l">Lightness</label>
+<input id="doc-color-l" type="range" data-kp-channel="l" min="0" max="100" value="56" />
+<span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+<output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+<p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+</div>
+
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker</span> <span class="kp-code__keyword">data-kp-against</span><span class="kp-code__string">=&quot;--background&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span>&gt;Hue&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-h&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;h&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;360&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;220&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span>&gt;Saturation&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-s&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;s&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;90&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span>&gt;Lightness&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-color-l&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;l&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;56&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__swatch&quot;</span> <span class="kp-code__keyword">data-kp-swatch</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">output</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__value&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-value</span>&gt;&lt;/<span class="kp-code__keyword">output</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-against</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-against-kind</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-channel</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-colorpicker</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-colorpicker-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-colorpicker-contrast</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-colorpicker-value</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-contrast-ok</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-follow-theme</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-swatch</code></td><td>selector</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { ColorPicker } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/canvas.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>ColorPicker</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="ColorPicker props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>against</code></td><td><code>string</code></td><td>optional</td><td>The token measured against. Default `--background`.</td></tr>
+                            <tr><td><code>kind</code></td><td><code>'text' | 'large' | 'non-text'</code></td><td>optional</td><td>Which WCAG threshold applies. Default text.</td></tr>
+                            <tr><td><code>value</code></td><td><code>Hsl | string</code></td><td>optional</td><td>Controlled colour, as an object or an hsl() string.</td></tr>
+                            <tr><td><code>defaultValue</code></td><td><code>Hsl | string</code></td><td>optional</td><td>Initial colour when uncontrolled.</td></tr>
+                            <tr><td><code>initial</code></td><td><code>Hsl</code></td><td>optional</td><td>Alias of defaultValue, kept from 1.x.</td></tr>
+                            <tr><td><code>onChange</code></td><td><code>(value: string, detail: { hsl: Hsl; ratio: number | null; ok: boolean | null; }) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>root</code></td><td><code>Element | Document</code></td><td>optional</td><td>Where the theme is measured. Default: the document.</td></tr>
+                            <tr><td><code>followTheme</code></td><td><code>boolean</code></td><td>optional</td><td>Re-measure on theme change. Default true.</td></tr>
+                            <tr><td><code>step</code></td><td><code>number</code></td><td>optional</td><td>Slider step. Default 1.</td></tr>
+                            <tr><td><code>showSwatch</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>showValue</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>showContrast</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>renderReport</code></td><td><code>(report: { ratio: number | null; ok: boolean | null; against: string; }) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ label?: string; slider?: string; swatch?: string; value?: string; contrast?: string; }</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-color-change</code></td><td>Fired when the colour changes. A contract value [TH26]. Detail: ColourDetail.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-colorpicker-max-width</code></td><td><code>22rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — three range inputs are operable from the keyboard, announced with their values, and give exact numbers back; a canvas gradient does none of that.</li>
+                        <li>Built in — the verdict is words in a live region, so it reaches someone who cannot compare the two colours by eye.</li>
+                        <li>Built in — the swatch is marked decorative, because the value beside it is the thing that carries the information.</li>
+                        <li>Yours — label each of the three sliders. They are hue, saturation and lightness only if something says so.</li>
+                        <li>Yours — decide what the ratio has to clear. The picker measures; it does not refuse.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-colorpicker__channel</code></td><td>One label and its slider. The wrapper contributes nothing to the box tree, so the three pairs line up as one grid.</td></tr>
+                            <tr><td><code>.kp-colorpicker__swatch</code></td><td>The chosen colour, with a boundary — a pale swatch on a pale card is otherwise an invisible square.</td></tr>
+                            <tr><td><code>.kp-colorpicker__value</code></td><td>The colour in numbers, in the mono face, so it can be read back and copied.</td></tr>
+                            <tr><td><code>.kp-colorpicker__contrast</code></td><td>The verdict. It takes the destructive colour while the ratio fails and the quiet one once it passes.</td></tr>
+                            <tr><td><code>measured against another token</code></td><td>The comparison surface is declared on the markup: a card, a primary plate, or the page itself.</td></tr>
+                            <tr><td><code>following the theme</code></td><td>The picker can re-measure when the page’s theme changes, so the same colour is judged again against the new background.</td></tr>
+                    </tbody></table></div>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

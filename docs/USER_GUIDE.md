@@ -284,6 +284,116 @@ rewrites badly:
 <div class="kp-empty">Nog geen sollicitaties.</div>
 ```
 
+## Tables that fit [TH95, TH96]
+
+A table is the widest thing on most pages, and everything below is about
+what happens when it does not fit.
+
+**The scroll box is a region, and the keyboard can reach it.** Wrap the
+table and the package does the rest:
+
+```html
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption>
+            Quarterly revenue
+        </caption>
+        …
+    </table>
+</div>
+```
+
+`attachTableRegions()` — which `js/auto.js` calls for you, and
+`attachDataTables()` calls for its own table — gives that box
+`tabindex="0"`, `role="region"` and a name, so someone without a mouse can
+tab to it and scroll it with the arrow keys. Up to 3.1.1 they could not:
+the columns past the edge were unreachable. React does the same from
+`<Table>` and `<DataTable>`, which render the wrapper themselves.
+
+The name is yours at every level, and the last one is the dictionary
+rather than a word written into the code:
+
+| What you write | The region is called |
+| --- | --- |
+| `data-kp-region-label="Orders"` on the wrapper | Orders |
+| `attachTableRegions(root, { label: (wrap, table) => … })` | what you return |
+| `<caption>Quarterly revenue</caption>` | Quarterly revenue |
+| nothing | `strings.tableRegion`, "Table" by default |
+
+React takes `regionLabel="Orders"`, falls back to a string `caption`, and
+then to the same dictionary entry. `region={false}` (or
+`data-kp-region="off"`, or `attachDataTables(root, { regions: false })`)
+leaves the wrapper alone; an `aria-labelledby` you put there yourself is
+never overwritten.
+
+**Two ways for a cell to hold what does not fit.**
+
+```html
+<td class="kp-cell-break">a3f92b71c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5…</td>
+<td class="kp-cell-truncate" title="the whole sentence">the whole sentence</td>
+```
+
+`.kp-cell-break` is for identifiers: a 70-character key with no space in
+it is one word, and one such word widens the whole table past its
+container. `.kp-cell-truncate` is for prose — one line and an ellipsis,
+with the value still whole in the cell for a screen reader, find-in-page
+and copy. Put it in the `title` as well, for the pointer;
+`{ key: 'note', truncate: true }` on a React column does that for you.
+`--kp-cell-truncate-max` (12rem by default) is how wide the column may
+get before it starts clipping.
+
+**A column that may go when it is tight.** `class="kp-col-low"` on the
+header and on its cells — both, always: a column of values with no header
+is worse than no column. Below 40rem of table width it disappears.
+
+**Narrow means the table's own container, not the window.** The card
+layout and `.kp-col-low` are container queries as of 3.2.0, so a table in
+a 400px column of a 1280px page gets the narrow form it needs. The
+threshold is **40rem**, and it is a contract value: CSS cannot read a
+custom property in a query, so this number is written here rather than
+exposed as a knob.
+
+```html
+<!-- Rows become cards, each cell carrying its column's name. -->
+<div class="kp-table-wrap">
+    <table class="kp-table" data-kp-cards>
+        …
+        <td data-label="Customer">Acme</td>
+    </table>
+</div>
+```
+
+`<Table cards />` writes both the attribute and every `data-label`;
+`<DataTable>` has done the card layout since 1.0.0 and now does it by
+container width. For a plain table it is opt-in, so no table that ships
+today changes shape.
+
+**What the container query costs.** `.kp-table-wrap` and `.kp-datatable`
+carry `container-type: inline-size`, which means they no longer size to
+their contents. Measured in Chromium 141 and Firefox 145: in normal block
+flow and inside `.kp-datatable` nothing moves (500px before, 500px
+after). A wrapper you put in a **shrink-to-fit** box does move — as a
+flex-row item 279/328px becomes 0, as an inline-block 207/244px becomes
+0, in an auto grid track 389/414px becomes 250px. If a table of yours
+lives in one of those, give the wrapper a width, or a flex item around
+it that has one.
+
+There is also a floor: `--kp-table-wrap-min`. It defaults to `auto`, the
+initial value, so it does nothing at all until you set it. Set it and the
+wrapper cannot go below that width:
+
+```css
+.my-toolbar .kp-table-wrap {
+    --kp-table-wrap-min: 20rem;
+}
+```
+
+It is a floor and not a repair, and the difference matters. Nothing
+restores the natural width, because the contents are exactly what
+stopped counting: `min-inline-size: 100%` gives you the whole parent
+(measured: 800px in a flex row) and still zero as an inline-block, and
+`min-content` gives zero. Pick the floor you want to see.
+
 ## The page shell [TH36]
 
 ```html

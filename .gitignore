@@ -4,3 +4,4 @@ test-results/
 playwright-report/
 SHA256SUMS
 *.tgz
+.claude/worktrees/
