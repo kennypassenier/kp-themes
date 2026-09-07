@@ -699,3 +699,184 @@ an export. The existing 22-check chain covers this work.
 
 Recorded as a decision rather than left implicit, so nobody adds tooling
 later on the grounds that the round never said not to.
+
+## AR27 · The confirmation is a dialog that re-fires the click behind a lock
+
+Approved by Kenny on 2026-09-07. TH107 replaces arm-then-act outright:
+the first click on a `[data-kp-confirm]` button is swallowed, a modal
+`<dialog>` opens carrying the attribute's phrase, and Confirm acts.
+
+**What happens after Confirm is the part that had to be measured.** The
+draft said "re-fire the click", and the `architecture-critic` built it
+and drove it with real clicks: `["open", "confirm", "open"] — posts: 0`.
+The re-fired click is caught by the same delegated listener that opened
+the dialog, so it opens it again and the action never runs. Re-firing
+synchronously is worse than a loop: the browser's in-flight-click flag
+turns it into a silent no-op, with no error and no clue.
+
+So the re-fire carries a one-shot lock: the handler sets a flag naming
+that element, the delegated listener sees the flag, clears it, and lets
+the click through untouched. Measured with the lock: two cycles clean,
+two posts.
+
+The lock clears on the same tick it is consumed, not on a timer. If a
+consumer's handler navigates or replaces the DOM, nothing is left armed
+— the flag dies with the element. This is written down because a lock
+that outlives its click would leave that button unguarded for the rest
+of the page, and that failure is invisible until someone deletes the
+wrong row.
+
+Re-firing rather than dispatching a new `kp-confirm-accepted` event is
+the choice that costs consumers nothing: chassis-rs, kyu and Almanac all
+listen for ordinary clicks, and a custom event would make every one of
+them change code to keep working. `ARM_EVENT` and `DISARM_EVENT`
+(`js/components.js:33-35`) are retired; D3 removes them.
+
+## AR28 · The dialog is built in `js/components.js`, and it restores the menu it displaced
+
+Approved by Kenny on 2026-09-07. Two decisions that both come from
+measurement rather than taste.
+
+**Where the code lives.** The obvious move is to import the dialog
+machinery from `js/overlays.js`. It is refused. chassis-rs bakes exactly
+six of this package's JavaScript files into its Rust binary, and the
+import closure of those six is exactly those six — `js/overlays.js` is
+not among them. One import edge and `/static/kp/overlays.js` is a 404,
+the module graph fails, and `chassis.js` dies whole: the theme picker,
+the contract enforcer, the confirmations and the skip links with it.
+Their own gate cannot see it, because it checks the eight files they
+copied rather than the closure those files need. That is R4-LOCALE one
+round later with an empty dashboard instead of hand-written CSS. The
+dialog is fifteen lines — create, `showModal()`, listen on two buttons —
+and it is written where the confirmation already lives.
+
+**The menu it displaces.** A row action lives in a menu, and this
+package renders that menu as a `popover` — `components/overlays.jsx`
+puts a destructive item in one. `showModal()` light-dismisses every open
+`popover="auto"`: measured `menu open before: true — after: false`, the
+button still connected but `checkVisibility()` false, and on close the
+focus lands on `<body>`. TH107 requires focus to return to the button,
+so the button has to exist. On close, the dialog re-shows the popover it
+displaced before restoring focus.
+
+## AR29 · The framework-free module skips what React already owns
+
+Approved by Kenny on 2026-09-07. This is not a risk being avoided; it is
+a defect shipped today.
+
+`components/button.jsx:124` writes `data-kp-confirm` on its element, and
+`attachConfirmations` (`js/components.js:156`) selects exactly that
+attribute across the whole document — including from `js/auto.js`, which
+kyu, Almanac and chassis all load. Measured on the existing fixture in
+both browsers, after attaching the module over the React part: click 1 →
+"Zeker?", click 2 → "Zeker?", and the action never fires at any number
+of clicks. The two channels re-arm each other's button forever.
+
+`tests/components.spec.mjs:60-68` asserts the opposite and is green,
+only because that fixture happens not to attach the module over the
+React part. AR8's point exactly: a gate that passes because it was
+pointed away from the thing.
+
+The React button marks its element as owned; the module skips a marked
+element. Both channels keep their own props and their own behaviour, and
+neither disappears from the markup a consumer can inspect.
+
+## AR30 · The register hooks on `.kp-button` without `clip-path`, and the ring is repaired
+
+Approved by Kenny on 2026-09-07. Two things, and the second is older
+than this round.
+
+**The ring, as it actually is.** The focus indicator is deliberately two
+parts (`css/_rules.css:371`): an `outline` in `--focus-ring-contrast`
+and a `box-shadow` in `--focus-ring`, so that whatever the element sits
+on, one of the two contrasts. It lives in `@layer kp.base`.
+`.kp-button` sets its own `box-shadow` in `@layer kp.components`
+(`css/components.css:274`) for the brutalist offset shadow, and a later
+layer wins: on every button in every theme, the inner half of the ring
+is replaced by `0px 0px 0px 0px`, which paints nothing. The outline
+survives, so this is half a ring rather than none — but half is exactly
+what DI2's two-part design exists to prevent.
+
+**What TH110 would have added.** The register's `clip-path`
+(`css/cyberpunk-register.css:80`) clips the outline too. Measured in
+painted pixels, both browsers: `green 784 → 0, red 912 → 0`. Hooking
+the register on `.kp-button` as drafted would have removed the last
+visible focus indicator from every button under cyberpunk.
+
+So the register gives `.kp-button` its radius, its gradient and its
+border treatment, and not the bevelled corner; and `.kp-button` composes
+the focus shadow with its own rather than replacing it, in every theme.
+The bevel stays available on the elements that already carry it.
+
+## AR31 · TH104 fixes the grid before it converts it, and warns nobody at runtime
+
+Approved by Kenny on 2026-09-07.
+
+**The rule TH104 would convert is already dead.** `js/gridlayout.js:91-92`
+writes `gridColumn` and `gridRow` as inline styles, which beat any rule
+in any layer. Measured at 320px: before attach `tile "1 / -1", width
+304`; after attach `"1 / span 3", width 268`. The collapse-to-one-column
+media query therefore stops working the moment the grid is attached, and
+attaching is the only way the grid is used. Converting it would produce
+a container query just as dead, plus a wrapper element three Rust
+projects must hand-write, for no change in behaviour. The module's own
+header already says the position belongs in data attributes rather than
+inline styles.
+
+So the module writes the position as custom properties the stylesheet
+derives the track from, and the narrow rule can win again. Then TH104
+converts it.
+
+**No runtime warning for a missing wrapper.** The draft borrowed AR25's
+once-per-session warning. It has nowhere to live and reaches nobody:
+`kp-nav` appears in zero JavaScript files — the navbar is CSS plus
+server-rendered markup, there is no attach function — and `chassis.js`
+calls four attach functions, of which `attachGrids` and `attachAll` are
+neither. The check would also be depth-blind: a container query binds to
+the nearest container at any depth, so a consumer who put
+`container-type` on `.kp-page` gets a correct layout *and* a warning, on
+every page load, forever.
+
+Instead: a migration note per consumer saying what markup to add, and a
+gate that fails if one of this package's own example or showcase pages
+is missing a wrapper it needs. The evidence sits where it can be
+measured.
+
+## AR32 · The overflow floor is one shared declaration, not four
+
+Approved by Kenny on 2026-09-07, unchanged by the critic pass — the only
+draft decision that survived it.
+
+TH113's four components get `max-inline-size: 100%` plus
+`overflow-wrap: anywhere` on the element that carries the text, written
+once as a rule the four selectors share rather than copied four times.
+`.kp-copyable` joins that rule rather than keeping the copy it grew in
+3.2.0.
+
+## AR33 · TH114 documents the boundary that exists, not the one that was assumed
+
+Approved by Kenny on 2026-09-07.
+
+The draft would have written into the guide that a popover belongs
+outside a scroll area because nothing escapes one. The critic measured
+the opposite: a popover lives in the top layer, where no ancestor's
+overflow applies. In `.kp-table-wrap`, both browsers: `box 30–92,
+popover 100–174, escapes: true`, and clickable outside the box. What is
+clipped is an absolutely positioned child.
+
+The boundary is therefore `position: absolute`, not "a popover", and
+writing the draft's sentence would have steered consumers away from the
+one construction that works — in a package that ships `popover` itself
+and established it as available in AR15.
+
+The guide gets the true statement per scroll area, and six assertions
+pin both halves: an absolutely positioned child is clipped, a popover is
+not.
+
+## Round five is frozen
+
+T14-T16 and AR27-AR33 are the architecture of 4.0.0. AR27, AR29, AR30
+and AR31 each correct something that is wrong in the released package
+today; they are round-five work rather than field-found faults, because
+the `architecture-critic` pass found them before the freeze, which is
+what that pass is for.
