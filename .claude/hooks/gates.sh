@@ -67,6 +67,9 @@ node gates/generate-showcase.mjs --check
 echo "→ the ten example pages match their source (TH98)"
 node gates/generate-examples.mjs --check
 
+echo "→ an example page carries the hooks its descriptor asks for"
+node gates/check-examples-wired.mjs
+
 echo "→ no inline styles on the example pages (TH109)"
 node gates/check-inline-styles.mjs
 

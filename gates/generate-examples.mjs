@@ -21,7 +21,14 @@ import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 const OUT = new URL('../examples/', import.meta.url);
 
 /** The stylesheets a page loads, in cascade order [AR17]. */
-const SHEETS = ['themes.css', 'components.css', 'layout.css', 'utilities.css'];
+// The two registers are opt-in for a consumer (README) and were left off
+// these pages by omission rather than by decision -- no generator said a
+// word about them either way. The consequence was that picking cyberpunk
+// or retro here showed a theme that was not that theme, which is KT8
+// verbatim. Kenny found it on the published site on 2026-09-07 and chose
+// to load them: a page that exists to show what a theme looks like shows
+// it whole.
+const SHEETS = ['themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
 
 /**
  * @param {string} title

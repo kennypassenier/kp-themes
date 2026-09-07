@@ -55,6 +55,14 @@ ${section.links
         <link rel="stylesheet" href="${up}css/components.css" />
         <link rel="stylesheet" href="${up}css/layout.css" />
         <link rel="stylesheet" href="${up}css/utilities.css" />
+        <!-- Both registers, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="${up}css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="${up}css/retro-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />
     </head>
     <body>

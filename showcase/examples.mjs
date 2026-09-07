@@ -108,15 +108,24 @@ const TO_MARKUP = {
     ],
 
     // components/button.jsx.
+    //
+    // Every `data-` prop is forwarded rather than listed. The list was an
+    // allowlist, and an allowlist drops in silence: the wizard example's
+    // Back and Next asked for `data-kp-wizard-back` and
+    // `data-kp-wizard-next`, neither was named here, and the buttons came
+    // out bare -- so the page carried the wizard's own hooks and its two
+    // controls carried nothing [2026-09-07]. `check-examples-wired.mjs`
+    // now compares what a descriptor asks for against what it produces,
+    // for every component, so the next allowlist says so instead.
     Button: (p, kids) =>
         el(
             'button',
             {
+                ...Object.fromEntries(Object.entries(p).filter(([key]) => key.startsWith('data-'))),
                 type: p.type ?? 'button',
                 class: cx('kp-button', p.variant && p.variant !== 'default' ? `kp-button--${p.variant}` : undefined, p.class),
                 'data-kp-destructive': p.variant === 'destructive' ? '' : undefined,
                 'data-kp-confirm': p.confirm,
-                'data-example': p['data-example'],
                 'aria-busy': p['aria-busy'],
             },
             kids,
@@ -588,32 +597,69 @@ export const EXAMPLES = [
         id: 'wizard',
         title: 'Wizard',
         note: 'Three steps, the current one named in words as well as in colour, and the two controls that move between them.',
-        probes: ['[data-example="steps"]', '[aria-current="step"]', 'form.kp-stack'],
+        // The probes name what must be IN the markup, so they name the
+        // hooks the module attaches to rather than `aria-current`, which
+        // js/wizard.js writes at runtime.
+        probes: ['[data-kp-wizard]', '[data-kp-step]', '[data-kp-wizard-next]'],
         body: shell(
             {},
             el('h1', {}, 'New project'),
+            // This page drew a wizard without being one until 2026-09-07:
+            // three badges, a form, and a `type="submit"` button labelled
+            // Next. Pressing it submitted the form and reloaded the page --
+            // a white flash and back to the start, which is what Kenny saw
+            // on the published site. `js/auto.js` imports attachWizards and
+            // there was nothing here for it to attach to. The markup below
+            // is the shape js/wizard.js documents, so the page now is the
+            // thing it shows.
             el(
                 'div',
-                { class: 'kp-row kp-gap-sm', 'data-example': 'steps' },
-                el('span', { class: 'kp-badge' }, '1. Basics'),
-                el('span', { class: 'kp-badge kp-fw-semibold', 'aria-current': 'step' }, '2. Team'),
-                el('span', { class: 'kp-badge kp-text-muted' }, '3. Review'),
-            ),
-            el(
-                'Card',
-                { title: 'Team' },
+                { class: 'kp-wizard', 'data-kp-wizard': '', 'data-example': 'steps' },
                 el(
-                    'form',
-                    { class: 'kp-stack' },
-                    el('p', { class: 'kp-text-muted kp-prose' }, 'Everyone here can see the project. You can change this afterwards.'),
-                    el('Field', { id: 'wizard-owner', label: 'Owner', value: 'Ada Lovelace' }),
-                    el('Field', { id: 'wizard-invite', label: 'Invite by email', type: 'email', help: 'One address per line.' }),
+                    'ol',
+                    { class: 'kp-wizard__steps', 'data-kp-wizard-steps': '' },
+                    el('li', { 'data-kp-step-label': '' }, 'Basics'),
+                    el('li', { 'data-kp-step-label': '' }, 'Team'),
+                    el('li', { 'data-kp-step-label': '' }, 'Review'),
+                ),
+                el(
+                    'section',
+                    { 'data-kp-step': '' },
                     el(
-                        'div',
-                        { class: 'kp-row kp-row--between' },
-                        el('Button', {}, 'Back'),
-                        el('Button', { variant: 'primary', type: 'submit' }, 'Next'),
+                        'Card',
+                        { title: 'Basics' },
+                        el('div', { class: 'kp-stack' }, el('Field', { id: 'wizard-name', label: 'Project name', value: 'Analytical Engine' })),
                     ),
+                ),
+                el(
+                    'section',
+                    { 'data-kp-step': '', hidden: true },
+                    el(
+                        'Card',
+                        { title: 'Team' },
+                        el(
+                            'div',
+                            { class: 'kp-stack' },
+                            el('p', { class: 'kp-text-muted kp-prose' }, 'Everyone here can see the project. You can change this afterwards.'),
+                            el('Field', { id: 'wizard-owner', label: 'Owner', value: 'Ada Lovelace' }),
+                            el('Field', { id: 'wizard-invite', label: 'Invite by email', type: 'email', help: 'One address per line.' }),
+                        ),
+                    ),
+                ),
+                el(
+                    'section',
+                    { 'data-kp-step': '', hidden: true },
+                    el(
+                        'Card',
+                        { title: 'Review' },
+                        el('p', { class: 'kp-text-muted kp-prose' }, 'Nothing is created until you press Finish on this step.'),
+                    ),
+                ),
+                el(
+                    'div',
+                    { class: 'kp-wizard__actions kp-row kp-row--between' },
+                    el('Button', { type: 'button', 'data-kp-wizard-back': '' }, 'Back'),
+                    el('Button', { variant: 'primary', type: 'button', 'data-kp-wizard-next': '' }, 'Next'),
                 ),
             ),
         ),

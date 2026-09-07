@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="../css/components.css" />
         <link rel="stylesheet" href="../css/layout.css" />
         <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
     </head>
     <body>
         <a class="kp-skip-link" href="#main">Skip to the content</a>
@@ -33,32 +35,61 @@
         <main id="main" class="kp-page" tabindex="-1">
             <div class="kp-stack">
                 <h1>New project</h1>
-                <div class="kp-row kp-gap-sm" data-example="steps">
-                    <span class="kp-badge">1. Basics</span>
-                    <span class="kp-badge kp-fw-semibold" aria-current="step">2. Team</span>
-                    <span class="kp-badge kp-text-muted">3. Review</span>
-                </div>
-                <div class="kp-card" data-slot="card">
-                    <div class="kp-card__header">
-                        <h3 class="kp-card__title">Team</h3>
-                    </div>
-                    <div class="kp-card__body">
-                        <form class="kp-stack">
-                            <p class="kp-text-muted kp-prose">Everyone here can see the project. You can change this afterwards.</p>
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="wizard-owner">Owner</label>
-                                <input id="wizard-owner" class="kp-field__input" type="text" value="Ada Lovelace">
+                <div class="kp-wizard" data-kp-wizard data-example="steps">
+                    <ol class="kp-wizard__steps" data-kp-wizard-steps>
+                        <li data-kp-step-label>Basics</li>
+                        <li data-kp-step-label>Team</li>
+                        <li data-kp-step-label>Review</li>
+                    </ol>
+                    <section data-kp-step>
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Basics</h3>
                             </div>
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="wizard-invite">Invite by email</label>
-                                <input id="wizard-invite" class="kp-field__input" type="email" aria-describedby="wizard-invite-help">
-                                <span class="kp-field__help" id="wizard-invite-help">One address per line.</span>
+                            <div class="kp-card__body">
+                                <div class="kp-stack">
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="wizard-name">Project name</label>
+                                        <input id="wizard-name" class="kp-field__input" type="text" value="Analytical Engine">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="kp-row kp-row--between">
-                                <button type="button" class="kp-button">Back</button>
-                                <button type="submit" class="kp-button kp-button--primary">Next</button>
+                        </div>
+                    </section>
+                    <section data-kp-step hidden="true">
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Team</h3>
                             </div>
-                        </form>
+                            <div class="kp-card__body">
+                                <div class="kp-stack">
+                                    <p class="kp-text-muted kp-prose">Everyone here can see the project. You can change this afterwards.</p>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="wizard-owner">Owner</label>
+                                        <input id="wizard-owner" class="kp-field__input" type="text" value="Ada Lovelace">
+                                    </div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="wizard-invite">Invite by email</label>
+                                        <input id="wizard-invite" class="kp-field__input" type="email" aria-describedby="wizard-invite-help">
+                                        <span class="kp-field__help" id="wizard-invite-help">One address per line.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section data-kp-step hidden="true">
+                        <div class="kp-card" data-slot="card">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Review</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <p class="kp-text-muted kp-prose">Nothing is created until you press Finish on this step.</p>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="kp-wizard__actions kp-row kp-row--between">
+                        <button data-kp-wizard-back type="button" class="kp-button">Back</button>
+                        <button data-kp-wizard-next type="button" class="kp-button kp-button--primary">Next</button>
                     </div>
                 </div>
             </div>

@@ -168,6 +168,35 @@ test.describe('the ten example pages', () => {
         }
     });
 
+    // Kenny pressed Next on the published wizard page on 2026-09-07 and
+    // got a white flash and the first step back. The page drew a wizard
+    // without being one: no [data-kp-wizard], no [data-kp-step], and a
+    // `type="submit"` button labelled Next, so pressing it submitted the
+    // form and reloaded the page. Eleven gates and the whole browser suite
+    // were green on it, because none of them pressed the button.
+    //
+    // Drill [KT3]: remove `data-kp-wizard` from the descriptor in
+    // showcase/examples.mjs and regenerate — js/auto.js then attaches
+    // nothing and the step never leaves 1.
+    test('the wizard example advances a step when Next is pressed [TH48, TH98]', async ({ page }) => {
+        await page.goto('/examples/wizard.html');
+        const steps = page.locator('[data-kp-step]');
+        await expect(steps).toHaveCount(3);
+
+        const visible = async () => steps.evaluateAll((els) => els.findIndex((el) => !el.hasAttribute('hidden')));
+        expect(await visible(), 'the wizard starts on the first step').toBe(0);
+
+        // A real press, not a dispatched event: the fault was that pressing
+        // it navigated, and only a press can show that it no longer does.
+        const before = page.url();
+        await page.locator('[data-kp-wizard-next]').click();
+        expect(await visible(), 'Next moved the wizard on').toBe(1);
+        expect(page.url(), 'Next navigated instead of changing step').toBe(before);
+
+        await page.locator('[data-kp-wizard-back]').click();
+        expect(await visible(), 'Back moved the wizard back').toBe(0);
+    });
+
     test('the inline-style exceptions name pages that exist [TH109]', () => {
         const ids = new Set(EXAMPLES.map((e) => e.id));
         for (const exception of INLINE_STYLE_EXCEPTIONS) {

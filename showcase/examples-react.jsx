@@ -124,14 +124,19 @@ const TO_REACT = {
             {kids(children)}
         </NavBar>
     ),
+    // Every `data-` prop is forwarded rather than listed, for the reason
+    // the framework-free renderer carries in full: an allowlist drops in
+    // silence, and AR20 then scores the two channels as different for a
+    // reason neither of them states. The wizard example's Back and Next
+    // are the case [2026-09-07].
     Button: (p, children, key) => (
         <Button
             key={key}
+            {...Object.fromEntries(Object.entries(p).filter(([name]) => name.startsWith('data-')))}
             variant={p.variant}
             type={p.type ?? 'button'}
             confirm={p.confirm}
             className={p.class}
-            data-example={p['data-example']}
             aria-busy={p['aria-busy']}
         >
             {kids(children)}
