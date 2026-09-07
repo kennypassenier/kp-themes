@@ -595,3 +595,63 @@ commit there and needs no tag. Three of them touch only the
 documentation site. The fourth is a package change, `.kp-copyable` no
 longer pushing a long value off a narrow screen, and Kenny chose to let
 it reach consumers with 4.0.0 rather than cutting a 3.2.1 for it.
+
+## Round six — a cyberpunk register that spits off the screen (2026-09-07)
+
+Draft for the Phase 0 gate. Every statement is an item in the form.
+
+**S38 · Why.** Kenny: the themes are fine, but not at the level of a
+next-level hand-made site, and some themes are to be lifted to that
+level — cyberpunk first. Not colours and a corner on the buttons: fully
+styled elements and interactivity, a super navbar, real glitch and
+decipher effects, "the full works". A demo of the elements (hero,
+navbar, buttons, form) came before the go, and it did: the artifact
+"Signal Yellow" is that demo.
+
+**S39 · A new theme, not an edit.** S20 says a released theme never
+changes, and cyberpunk's own anatomy says swapping its accents "changes
+the theme's personality entirely". So this is a new theme with its own
+name and its own register; `cyberpunk` stays exactly as shipped and is
+marked archived — still served, still in the registry, no longer
+counted among the themes this project curates.
+
+**S40 · The palette.** Signal yellow as ground and primary
+(`#FCEE0A`, the frame colour read off cyberpunk.net), a void near-black
+with a violet cast, blood red as alert and destructive and as the tint,
+cyan for what must be read (microlabels, form labels, hairlines), and
+violet only inside a glitch slice. Kenny's brief verbatim: "voornamelijk
+geel met rode tinten en wel nog wat neon blauwe/paarse accenten hier en
+daar".
+
+**S41 · The full works.** The register is CSS plus a JS effects module,
+every effect opt-in and reduced-motion safe, and every animation under
+DI5 computed rather than assumed: the navbar strip with the reference's
+clip-path geometry and dash-prefixed dropdowns; hover glitch as RGB
+slices that fire once; buttons with the notch, its mirrored variant, the
+slit in each flank and a one-shot charge sweep; the decipher of a
+headline on load; a dossier card whose redactions lift in steps; the
+razor tear between sections, generated; hairlines that draw in under
+headings on scroll; static scanlines. Behaviour lands in both channels,
+under one suite (rule 7g).
+
+**S42 · What is measured before it is trusted.** The demo becomes the
+round's first fixture and every effect gets the three drills this project
+already runs: red without its rule (KT3), difference-from-rest rather
+than a bare count (MR-NOTCH), and the flash number computed for anything
+that loops (DI5). The old register's known gaps travel with it — the
+anatomy's "DI5 … nobody has computed the luminance transitions" is
+closed for the new one on day one.
+
+**S43 · Synthwave after.** `docs/THEME_CANDIDATES.md` C1 scored
+synthwave "too close" to cyberpunk because both sat on magenta, cyan and
+violet over a void. Once cyberpunk moves to yellow that reasoning is
+gone: synthwave becomes a candidate again and is the next theme after
+this register lands — in this round only if the register is done, else
+first in the queue.
+
+**S44 · Out of scope.** No artwork or images ship with the theme —
+tokens, CSS and JS only. No change to the theme picker. No change to the
+81-token contract beyond what the fx series already allows; a new fx
+token goes through the parity gate like every other. Nothing changes for
+the other twenty-three themes. Registers stay opt-in for a consumer; the
+documentation surfaces load them, as decided on 2026-09-07.

@@ -6,6 +6,18 @@
             "runtimeExecutable": "sh",
             "runtimeArgs": ["-c", "PORT=4300 node tests/fixtures/server.mjs"],
             "port": 4300
+        },
+        {
+            "name": "scratch",
+            "runtimeExecutable": "python3",
+            "runtimeArgs": [
+                "-m",
+                "http.server",
+                "4310",
+                "--directory",
+                "/tmp/claude-1000/-home-kenny-Projects-kp-themes/0f370a8a-aa0a-4f17-8db1-4774735a6a56/scratchpad"
+            ],
+            "port": 4310
         }
     ]
 }
