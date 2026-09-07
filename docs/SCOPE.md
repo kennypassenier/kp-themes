@@ -323,6 +323,24 @@ The public names a consumer uses to address this package keep working.
 - ~~Consumers need `allow-git=all` in their `.npmrc`.~~ **Dropped by the
   mini-round of 2026-09-04**: nothing is fetched over npm any more, so the
   setting has nothing to permit.
+
+  **Corrected on 2026-09-07 [TH112].** That reasoning was wrong about the
+  facts and not only about the wording, and it left this document
+  contradicting `README.md`, which never stopped documenting the setting.
+  The git route was not removed with the build step: JobTracker fetches
+  this package as `github:kennypassenier/kp-themes#v0.1.1` in
+  `dashboard/packages/web/package.json` and carries `allow-git=all` in
+  `dashboard/.npmrc` (`docs/INVENTORY.md:1255`). `README.md:538-554`
+  documents that setting, says which value to use when, and scopes itself
+  to the git route in its opening sentence (`README.md:540`) — "Only if you take the
+  git-dependency route. A consumer that copies the files needs none of
+  this." That is the correct half, and the two documents now say the same
+  thing: **the setting is required of a consumer that takes the git route,
+  and of nobody else.** What is genuinely gone is the constraint's status
+  as a *hard* one on every consumer, which is what S19 replaced it with.
+  The struck text above is left standing rather than rewritten, because
+  S20's promise about released themes is the same honesty this record is
+  held to: it shows what was believed, and when it was corrected.
 - ~~Tailwind consumers must declare this package as a `@source`.~~
   **Dropped by the same mini-round**: that rule existed because Tailwind
   does not scan `node_modules`. A copy living inside the consumer's own
