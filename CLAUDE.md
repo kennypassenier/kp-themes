@@ -92,13 +92,13 @@ way to get one. Scope stays: define themes, build components on them.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                     |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round five (4.0.0): Phases 0-4 closed 2026-09-07. Phase 5 gate open — six milestones W0-W5, two new gates, an AFK question                                                |
-| Last completed gate | Round five Phase 4, 2026-09-07 — all eight architecture decisions taken; the `architecture-critic` broke five of the seven drafts, four of them with browser measurements |
-| Next gate           | Phase 5, then Phase 6 builds W0-W5; round three's Phase 10 (KT7, KT8, KT9) is drafted and still owed                                                                      |
-| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1 and MR-R6-2                                                                                     |
-| AFK mode            | off                                                                                                                                                                       |
+| Field               | Value                                                                                                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round five (4.0.0) delivered and tagged 2026-09-07; the draft release awaits Kenny's publish                                                                           |
+| Last completed gate | Round five, the AFK report plus three follow-ups: MR-NOTCH (the bevel, drawn from the inside), the site navigation, and the registers and the wizard on the demo pages |
+| Next gate           | The correction form for D3 (a frozen Essential feature that went unbuilt), and round three's Phase 10, whose form is open and unanswered                               |
+| Open queue items    | KT6-M1 (waits on JobTracker), PROC-H1 (the procedure repository), MR-R6-1, MR-R6-2                                                                                     |
+| AFK mode            | off                                                                                                                                                                    |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
