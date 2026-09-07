@@ -394,9 +394,27 @@ will touch is decided now rather than hoped for:
 
 | ID | Status |
 | --- | --- |
-| W0 | not started |
+| W0 | **built** 2026-09-07 (AFK), in a parallel worktree. The focus ring is repaired: `.kp-button:focus-visible` now composes the inner ring with the brutalist offset shadow instead of replacing it, and both `css/_rules.css` and the button read one knob so the two halves cannot drift again. The cyberpunk register reaches `.kp-button` for the square corner and the charge gradient, and deliberately **not** for the `clip-path` bevel — the drill that added it back reported `cyberpunk: the focus indicator painted 0 pixels`. Three button sizes as modifier classes (T15), ten new `--kp-*` knobs, and the small step floored so compact density cannot push it under 24px. One shared overflow rule for `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable`. Standing rule 8 held: 16 of 24 ring tests and 8 of 10 overflow tests were red on today's code first. Eight drills, all red, all restored — and drill 3 reshaped the measurement twice, because a focused-vs-unfocused pixel diff was measuring the theme-switch transition and a two-colour pixel count was scoring the page background. |
 | W1 | **built** 2026-09-07 (AFK), in a parallel worktree. The confirmation is a native `<dialog>` written in `js/components.js` itself — no import edge to `js/overlays.js`, which the new closure gate now holds — and both channels open the same one through the exported `openConfirmation()`. Confirm re-fires the click behind AR27's one-shot lock: measured `["open","confirm","closed"] x2, acts: 2`, against `["open","confirm","open"] x2, acts: 0` with the lock taken back out. The popover the dialog displaces is re-shown before focus returns. AR29 was drilled red first (standing rule 8): the rewritten test attaches the module over the React part, as `js/auto.js` does in the field, and the react channel failed `expected 1, received 0` in both browsers before the ownership mark went in. Arm-then-act survives as `data-kp-confirm-mode="inline"` / `confirmMode="inline"`. `ARM_EVENT` and `DISARM_EVENT` left the exports (D3). Four drills red, plus two on the new gate. |
 | W2 | not started |
-| W3 | not started |
+| W3 | **built** 2026-09-07 (AFK), in a parallel worktree. Six assertions in `tests/scroll-boundary.spec.mjs` pin both halves in `.kp-table-wrap`, `.kp-diff` and the `<pre>` rule: an absolutely positioned child is clipped, a popover is not. Measurement is a hit test rather than a rectangle, because `getBoundingClientRect` reports where a clipped element *would* be and would have scored both halves as escaping. Three are drillable and went red; three are not, and the attempt was made rather than assumed — with all three `overflow-x: auto` declarations removed at once the clipping cases went red and the popover cases stayed green, which is the top layer answering rather than this package. Two facts were measured that the draft had wrong: `container-type` does **not** make a wrapper a containing block, and a top-layer element's `position: absolute` resolves against the initial containing block in document coordinates. TH112's dated correction sits under the struck constraint in `docs/SCOPE.md`; the README was right and is untouched. |
 | W4 | not started |
 | W5 | not started |
+
+**Merged into `round-five` on 2026-09-07**, in the order the plan named:
+W1 first, then W0 rebased onto it, then W3. Two conflicts, both the same
+shape — two milestones raising the same counter — resolved as the sum and
+confirmed by the extractor rather than asserted: AR21's knob count is 74.
+`site/components/button.html` is generated, so the generator resolved it.
+On the merged tree: gates green, **1264 browser tests passed, 30 skipped,
+0 failed**.
+
+**A harness fault found while verifying, not a product one.** Four
+worktrees running the browser suite share port 4173, and
+`reuseExistingServer` then hands one run the other checkout's files, so
+every fixture 404s and a whole suite fails for a reason unrelated to the
+code. It cost two false readings before the config's own comment named
+it — W3 read as 12 of 12 failing and W1 as 26 of 50 passing, both green
+on a dedicated port. `playwright.config.mjs` already documents
+`KP_TEST_PORT`; what it does not do is default to something unique per
+checkout. Standing rule 32, met from the side it warns about.
