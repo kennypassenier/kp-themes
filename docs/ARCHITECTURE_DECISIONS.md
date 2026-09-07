@@ -936,3 +936,71 @@ and AR31 each correct something that is wrong in the released package
 today; they are round-five work rather than field-found faults, because
 the `architecture-critic` pass found them before the freeze, which is
 what that pass is for.
+
+## Round six — Phase 3, decided 2026-09-07
+
+Five choices and the two open questions, answered by Kenny at the gate.
+What was checkable was measured in the two Playwright browsers the same
+day (`CSS.supports`, chromium 151 and firefox 153).
+
+## T17 · The scroll trigger is IntersectionObserver, with `view()` as enhancement
+
+The effects module triggers reveals (TH119, TH120, TH122) with
+`IntersectionObserver`, which both browsers in the matrix support. Where
+`animation-timeline: view()` exists — chromium 151 yes, **firefox 153
+no**, measured — the register may also carry the drawing CSS-only under
+`@supports`, so a page without the script already moves in chromium. The
+rest state (drawn) is the default, never the fallback. One suite proves
+the behaviour in both browsers (rule 7g).
+
+## T18 · The tear is generated at build time
+
+`gates/generate-tear.mjs` writes the razor SVG as a data URI into the
+register stylesheet; `npm run gates` checks it is current. No JS in the
+browser for the rest state, no asset file (S44), the shape identical in
+every release; colour comes from the two surfaces through `mask`, so
+one SVG serves every transition.
+
+## T19 · Fonts ship with the package — S19 reversed
+
+Kenny's decision at this gate, against the recommendation: the package
+ships its font files. This reverses S19 (2026-09-03, "no font files in
+the package"), recorded as a dated amendment in `docs/SCOPE.md`. What it
+buys, measured: chassis-rs serves its dashboards under
+`font-src 'self'`, so a Google Fonts link never loads there — a shipped
+font is the only way a chassis-rs dashboard sees a theme's typeface.
+What it costs: licences checked per family (SIL OFL or equivalent only),
+the manifest and `SHA256SUMS` grow by one file per face, a `css/fonts.css`
+with `@font-face` rules, and a size budget. **The shape is a Phase 4
+decision** (AR), fed by the inventory below: which families the
+twenty-four themes name, which are on Google Fonts under the OFL, and
+what a latin woff2 subset weighs.
+
+## T20 · DI5 for JS effects: a timing table, calibrated by one browser measurement
+
+The effects module exports per effect its duration, repetitions and the
+property that moves; the register declares per keyframe its luminance
+steps; `gates/check-motion.mjs` computes the flash rate in Node and
+writes the report (TH129, reported never corrected — S42). One Playwright
+test counts luminance changes per frame on the slice glitch and must land
+within 10% of the table, so the table is proven rather than assumed.
+
+## T21 · No runtime dependencies for the effects
+
+T6 stands. `js/effects.js` is built on platform APIs
+(`IntersectionObserver`, `requestAnimationFrame`, CSS); `package.json`
+keeps zero runtime dependencies. Scroll-scrubbing and smooth scroll are
+outside the frozen list; if a feature ever asks for them, GSAP or Lenis
+come through a mini-round, not through the back door.
+
+## T8 and T9, re-put at round six
+
+**T8 (targets):** unchanged since round one, Kenny's answer. **T9 (the
+environments):** two additions. The concept demo lives as a Claude
+artifact until TH126 exists — its CSP admits Google Fonts and no other
+external source. chassis-rs is sharpened: `font-src 'self'` (why T19),
+and without the register and the effects module until it vendors them
+(M2) — the environment where the new cyberpunk differs most from the
+site. One test loads the fixture the way chassis-rs does — no register,
+no effects module, no webfonts — and proves the page stays functional
+and readable (S45's quiet answers).

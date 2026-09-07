@@ -759,3 +759,11 @@ names that URL — standing rule 39 applied to the demo. The round-six
 demo is at
 <https://claude.ai/code/artifact/f1cb3978-0bd7-4108-a329-971b0a2afe89>;
 from TH126 on, the site serves `concept/<theme>.html`.
+
+**S19, reversed 2026-09-07 (round six, Phase 3, T19).** The package
+ships its font files. Kenny's decision at the gate, against the
+recommendation to keep S19 with a tested fallback stack. The reason that
+makes it the right call for his consumers: chassis-rs serves dashboards
+under `font-src 'self'`, so a named-but-not-shipped face never renders
+there. Licences per family (SIL OFL or equivalent), the manifest,
+`SHA256SUMS`, a `css/fonts.css` and a size budget are Phase 4's to shape.
