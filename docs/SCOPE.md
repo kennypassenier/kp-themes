@@ -608,12 +608,19 @@ decipher effects, "the full works". A demo of the elements (hero,
 navbar, buttons, form) came before the go, and it did: the artifact
 "Signal Yellow" is that demo.
 
-**S39 · A new theme, not an edit.** S20 says a released theme never
-changes, and cyberpunk's own anatomy says swapping its accents "changes
-the theme's personality entirely". So this is a new theme with its own
-name and its own register; `cyberpunk` stays exactly as shipped and is
-marked archived — still served, still in the registry, no longer
-counted among the themes this project curates.
+**S39 · The same name, a new major.** The next cyberpunk replaces the
+current one under the name `cyberpunk`, in a new major version. Kenny's
+answer of 2026-09-07 to the first draft (which proposed a new name and an
+archived old theme): "dit nieuwe thema komt in de plaats van cyberpunk,
+dus het kan wel de naam houden. Dit verandert geen uitgebrachte versie
+van een thema want het is een nieuwe versie." That reading is S20's own:
+a released version never changes, and 4.0.0's cyberpunk stays exactly
+what 4.0.0 shipped, retrievable from its tag forever. What changes is
+what `data-theme="cyberpunk"` means from the next major on — so every
+consumer that names it (kp-soft, kyu, Almanac vendor the stylesheet)
+sees the new theme when it upgrades, and the migration note says so in
+its first line. Whether the old theme also survives inside the new major
+under another name is the open question A1 of the follow-up form.
 
 **S40 · The palette.** Signal yellow as ground and primary
 (`#FCEE0A`, the frame colour read off cyberpunk.net), a void near-black
@@ -635,12 +642,20 @@ headings on scroll; static scanlines. Behaviour lands in both channels,
 under one suite (rule 7g).
 
 **S42 · What is measured before it is trusted.** The demo becomes the
-round's first fixture and every effect gets the three drills this project
-already runs: red without its rule (KT3), difference-from-rest rather
-than a bare count (MR-NOTCH), and the flash number computed for anything
-that loops (DI5). The old register's known gaps travel with it — the
-anatomy's "DI5 … nobody has computed the luminance transitions" is
-closed for the new one on day one.
+round's first fixture, and every effect gets the three drills this
+project already runs: red without its rule (KT3), the difference from
+rest rather than a bare count (MR-NOTCH), and the flash count computed
+for anything that repeats. The old register's known gap travels with it —
+its anatomy says in so many words that nobody computed the luminance
+transitions per second. For the new register that is done on day one.
+**DI5 is reported, not silently corrected** (Kenny, 2026-09-07, on
+approving the demo): the flash computation runs and its findings are
+written down and shown, but no effect is changed on its account until
+Kenny orders it. He expects this theme may become an exception to the
+rule; Claude's note stands beside it — DI5 is the one invariant with a
+bodily consequence, and every effect in the demo is a one-shot event
+rather than a loop, so the computation is expected to pass without any
+change being needed.
 
 **S43 · Synthwave after.** `docs/THEME_CANDIDATES.md` C1 scored
 synthwave "too close" to cyberpunk because both sat on magenta, cyan and
@@ -671,3 +686,23 @@ every hook, and the effects module runs only the active theme's answers.
 Signal is the reference implementation of that vocabulary in this round;
 lifting other themes to the same level is a round per theme after it, each
 answering the same hooks in its own idiom.
+
+**Resolved at the Phase 0 gate, 2026-09-07.** The name question (N1)
+fell with S39: the theme is `cyberpunk`, a new major. The showcase
+question (R1) is closed: Kenny asked on 2026-09-07 whether a live site
+existed for the Dribbble design he remembered; none does — the search
+found the shot, the designer's two profiles and a Pinterest repin. The
+three CSS projects recorded in `docs/CYBERPUNK_THEME_RESEARCH.md` show
+the same button language and were consulted, not used.
+
+**S46 · The concept demo is the gate for every new theme.** Kenny,
+2026-09-07, while the Phase 0 follow-up was being written: the demo built
+for cyberpunk ("Signal Yellow") is from now on the standard demo for
+trying a new theme, or its concept, before it is integrated into the
+project — same structure, same elements. So every theme proposal after
+this one is first shown as that page: the navbar with a dropdown, the
+hero with a headline, a lede carrying emphasis, and two buttons, a
+section rule, a form, a dossier card, the tear, and the footer — and
+Kenny approves the concept there before a token is written. This round
+turns the demo into a template the next theme can be poured into; it
+lands in the repository as part of the work, not as a scratch file.
