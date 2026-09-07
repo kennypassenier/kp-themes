@@ -3,6 +3,9 @@ tests/fixtures/.build/
 test-results/
 playwright-report/
 SHA256SUMS
+# The vendored baseline keeps the checksum file its release published [MR-R6-COMPARE]:
+# the gate reads it, so it travels with the repository.
+!showcase/baseline/*/SHA256SUMS
 *.tgz
 .claude/worktrees/
 
