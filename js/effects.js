@@ -67,6 +67,39 @@ export const SURFACES = Object.freeze(['hero', 'app']);
 export const REVEALS = Object.freeze(['headline', 'emphasis', 'rule']);
 
 /**
+ * The routine names a theme may put in a reveal knob, and the arrival
+ * names it may put in `--kp-arrival` [G6, 2026-09-08]. A value outside
+ * these lists used to fall through the whole chain to the last branch —
+ * the glyph noise of cyberpunk — so one letter wrong in a register gave a
+ * theme the loudest effect in the package with no warning at all. It is
+ * reported as `kp-effect-unknown` now, exactly like an unknown surface,
+ * and the element rests instead.
+ */
+export const HEADLINE_ROUTINES = Object.freeze([
+    'decipher',
+    'type',
+    'dissolve',
+    'shout',
+    'slam',
+    'focus',
+    'resolve',
+    'blur',
+    'sharpen',
+    'clip',
+    'overprint',
+    'gild',
+    'wipe',
+    'calibrate',
+    'ink',
+    'arrive',
+    'draw',
+    'tracking',
+    'popdown',
+]);
+/** What a theme may ask of the page's arrival: synthwave's boot line, phantom's calling card. */
+export const ARRIVALS = Object.freeze(['boot', 'card']);
+
+/**
  * The state classes this module toggles, and nothing else. Contract
  * values: a consumer may select on them, a register does.
  */
@@ -365,6 +398,8 @@ export const TIMINGS = Object.freeze({
 
 /** Elements this module has started, so a second attach does not start them again [AR34]. */
 const started = new WeakSet();
+/** Fields whose caret listeners are already bound, so a second attach adds none [G16]. */
+const carets = new WeakSet();
 
 /** The unknown hook values reported on this page, `hook=value`, for the diagnostics [AR44]. */
 const unknownReported = new Set();
@@ -454,7 +489,26 @@ export function attachEffects(root = document, options = {}) {
      * @param {Element} el @param {string} reveal
      */
     const memoKey = (el, reveal) => {
-        const kind = reveal === 'emphasis' && el.matches('mark') ? 'loose' : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].indexOf(el);
+        // Identity, not position [G16, 2026-09-08]. The key used to be the
+        // element's index among its siblings of the same reveal, taken
+        // over the whole document — so a page that rendered a second
+        // headline above the first shifted every index and elements
+        // inherited each other's memo: one stopped playing, another played
+        // twice. The element's own id when it has one, else its text,
+        // which is what a reveal is about in the first place.
+        if (reveal === 'emphasis' && el.matches('mark')) return `${MEMO_PREFIX}${view?.location.pathname ?? ''}:${reveal}:loose`;
+        const id = el.getAttribute('id');
+        const own = id || (el.textContent ?? '').trim().slice(0, 64);
+        // Two elements of the same reveal can open with the same words —
+        // the concept page carries two dossiers whose first sixty-four
+        // characters match — so the ordinal among the ones sharing this
+        // key keeps them apart. It is not the element's position on the
+        // page, which was the fault: inserting a headline above another
+        // used to renumber every one of them.
+        const siblings = id
+            ? []
+            : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? '').trim().slice(0, 64) === own);
+        const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el)}` : own;
         return `${MEMO_PREFIX}${view?.location.pathname ?? ''}:${reveal}:${kind}`;
     };
     /** @param {Element} el @param {string} reveal @returns {boolean} true when this page already ran the reveal this session */
@@ -473,6 +527,25 @@ export function attachEffects(root = document, options = {}) {
     };
 
     // ── Unknown values [AR44] ─────────────────────────────────────────
+    /** @param {Element} el */
+    /**
+     * Report a routine name nothing answers to, once per name, and hand
+     * back the empty string so the element rests [G6, 2026-09-08]. Same
+     * event and same shape as an unknown surface or reveal: heard, never
+     * thrown [AR44].
+     *
+     * @param {Element} el @param {string} knob @param {string} value @param {readonly string[]} accepted
+     * @returns {string}
+     */
+    const reportUnknownRoutine = (el, knob, value, accepted) => {
+        const key = `${knob}=${value}`;
+        if (!unknownReported.has(key)) {
+            unknownReported.add(key);
+            el.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob, value, accepted: [...accepted] } }));
+        }
+        return '';
+    };
+
     /** @param {Element} el */
     const checkValues = (el) => {
         /** @type {[string, readonly string[]][]} */
@@ -496,7 +569,13 @@ export function attachEffects(root = document, options = {}) {
         const text = el.textContent ?? '';
         el.setAttribute(TEXT_ATTRIBUTE, text);
         if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);
-        const routine = routineOf(el, 'headline');
+        const asked = routineOf(el, 'headline');
+        // A name no routine answers to is reported and then treated as
+        // silence [G6]: the chain below ends at decipher, so a typo in a
+        // register used to give that theme glyph noise over its headline
+        // rather than the rest it asked for.
+        const routine =
+            asked === '' || HEADLINE_ROUTINES.includes(asked) ? asked : reportUnknownRoutine(el, ROUTINES.headline, asked, HEADLINE_ROUTINES);
         /** @param {boolean} skipped */
         const rest = (skipped) => {
             el.textContent = text;
@@ -1024,6 +1103,11 @@ export function attachEffects(root = document, options = {}) {
         // from here [S49, A11, retro]: the element's own text, copied to
         // the same attribute a headline carries, never authored copy.
         for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? '');
+        // The emphasis knob carries the register's own vocabulary — plate,
+        // wash, redact, ignite — because the module does the same thing
+        // whatever it is called: cover the marks, clear them on the
+        // trigger. Only a name the module branches on can be wrong, which
+        // is why the headline knob is checked and this one is not.
         const routine = routineOf(container, 'emphasis');
         const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
         // A container with nothing to clear (a button that carries the hook
@@ -1148,14 +1232,24 @@ export function attachEffects(root = document, options = {}) {
         frames.clear();
         io?.disconnect();
         io = null;
+        // Everything the module started, not only the rule's observer
+        // [G8, 2026-09-08]. The draw routine keeps its own observer, the
+        // marquee keeps one per band, and the caret and the measuring
+        // lines hold listeners; leaving those running meant a reveal
+        // still fired after somebody asked for the motion to stop, and
+        // the count went negative when it did.
+        ioHeadline?.disconnect();
+        ioHeadline = null;
+        for (const cleanup of cleanups.splice(0)) cleanup();
         for (const finish of finishers.splice(0)) finish();
         pending = 0;
         done();
     };
-    if (query) {
-        query.addEventListener('change', onPreference);
-        cleanups.push(() => query.removeEventListener('change', onPreference));
-    }
+    // The subscription to the preference is deliberately not in
+    // `cleanups`: onPreference empties that list to stop the observers and
+    // listeners the routines made, and it must not unsubscribe itself
+    // while doing so. detach() drops it explicitly [G8].
+    if (query) query.addEventListener('change', onPreference);
 
     scan(root);
 
@@ -1173,6 +1267,12 @@ export function attachEffects(root = document, options = {}) {
             /^(text|email|search|url|tel|password)?$/.test(el.getAttribute('type') ?? ''),
         );
         for (const input of inputs) {
+            // One set of listeners per field, however often the module is
+            // attached [G16]: a consumer that calls attachEffects twice —
+            // a framework remount, an explicit re-scan — used to give
+            // every field a second caret handler.
+            if (carets.has(input)) continue;
+            carets.add(input);
             const put = () => {
                 if (!view) return;
                 const cs = view.getComputedStyle(input);
@@ -1329,7 +1429,8 @@ export function attachEffects(root = document, options = {}) {
     // session, never under reduced motion, and every word from the
     // dictionary [KT5] — a theme's name is data, not copy.
     const arrival = () => {
-        const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
+        const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
+        const routine = asked === '' || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
         if ((routine !== 'boot' && routine !== 'card') || !doc.body) return;
         const card = routine === 'card';
         if (reduced() || seen(html, 'arrival')) {
@@ -1433,6 +1534,15 @@ export function attachEffects(root = document, options = {}) {
             ioHeadline?.disconnect();
             ioHeadline = null;
             for (const cleanup of cleanups.splice(0)) cleanup();
+            query?.removeEventListener('change', onPreference);
+            // Every reveal that was still running ends at its rest state
+            // [G7, 2026-09-08]. Without this a page that navigated away
+            // mid-decipher left the headline as a row of glyphs — and
+            // because `started` remembered it, re-attaching never fixed
+            // it. A consumer's route change is not a reason to leave
+            // somebody's words scrambled.
+            for (const finish of finishers.splice(0)) finish();
+            pending = 0;
             if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
         },
         observe(element) {

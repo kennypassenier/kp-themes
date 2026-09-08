@@ -18,6 +18,18 @@ export declare const SURFACES: readonly string[];
 /** What an element can be revealed as [TH119, TH120, TH122]. */
 export declare const REVEALS: readonly string[];
 /**
+ * The routine names a theme may put in a reveal knob, and the arrival
+ * names it may put in `--kp-arrival` [G6, 2026-09-08]. A value outside
+ * these lists used to fall through the whole chain to the last branch —
+ * the glyph noise of cyberpunk — so one letter wrong in a register gave a
+ * theme the loudest effect in the package with no warning at all. It is
+ * reported as `kp-effect-unknown` now, exactly like an unknown surface,
+ * and the element rests instead.
+ */
+export declare const HEADLINE_ROUTINES: readonly string[];
+/** What a theme may ask of the page's arrival: synthwave's boot line, phantom's calling card. */
+export declare const ARRIVALS: readonly string[];
+/**
  * The state classes this module toggles, and nothing else. Contract
  * values: a consumer may select on them, a register does.
  */

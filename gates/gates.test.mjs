@@ -10,12 +10,14 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
 import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
-import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
+import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { CONCEPT_COPY, DEFAULT_COPY_THEME } from '../showcase/concept-copy.mjs';
@@ -33,6 +35,26 @@ import { datePattern, parseDate as parseLocaleDate, parseNumber, weekStartsOn } 
 import { contrast, hsl } from './colour.mjs';
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
+
+test('DI7: the preference scan reads plain modules, not only React ones', () => {
+    // The audit of 2026-09-08 found this function filtering on `.jsx` and
+    // pointed at `js/`, which holds none — so it read zero files and
+    // passed forever while its own comment promised the opposite. This
+    // test fails the moment the filter narrows again.
+    const dir = mkdtempSync(join(tmpdir(), 'kp-di7-'));
+    writeFileSync(
+        join(dir, 'reads-and-listens.js'),
+        "const q = matchMedia('(prefers-reduced-motion: reduce)');\nq.addEventListener('change', () => {});\n",
+    );
+    writeFileSync(join(dir, 'reads-and-forgets.js'), "const q = matchMedia('(prefers-reduced-motion: reduce)');\nif (q.matches) stop();\n");
+    const found = unsubscribedPreferenceReads(dir);
+    assert.deepEqual(
+        found.map((p) => p.file),
+        ['reads-and-forgets.js'],
+        'a module that reads the preference and never listens is named; one that subscribes is not',
+    );
+    rmSync(dir, { recursive: true, force: true });
+});
 
 test('AR8-D1: theme discovery finds a name containing a hyphen', () => {
     const css = "[data-theme='high-contrast'] {\n    --background: hsl(0, 0%, 100%);\n}";

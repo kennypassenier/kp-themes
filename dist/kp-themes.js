@@ -3804,6 +3804,28 @@ var HOOKS = Object.freeze({
 });
 var SURFACES = Object.freeze(["hero", "app"]);
 var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
+var HEADLINE_ROUTINES = Object.freeze([
+  "decipher",
+  "type",
+  "dissolve",
+  "shout",
+  "slam",
+  "focus",
+  "resolve",
+  "blur",
+  "sharpen",
+  "clip",
+  "overprint",
+  "gild",
+  "wipe",
+  "calibrate",
+  "ink",
+  "arrive",
+  "draw",
+  "tracking",
+  "popdown"
+]);
+var ARRIVALS = Object.freeze(["boot", "card"]);
 var STATE = Object.freeze({
   // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
   // springs from a wide mis-registration into its rest position once.
@@ -4029,6 +4051,7 @@ var TIMINGS = Object.freeze({
   "kp-elev-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
 });
 var started = /* @__PURE__ */ new WeakSet();
+var carets = /* @__PURE__ */ new WeakSet();
 var unknownReported = /* @__PURE__ */ new Set();
 function attachEffects(root = document, options = {}) {
   const doc = root.ownerDocument ?? /** @type {Document} */
@@ -4080,7 +4103,11 @@ function attachEffects(root = document, options = {}) {
   };
   const routineOf = (el, reveal) => view ? view.getComputedStyle(el).getPropertyValue(ROUTINES[reveal]).trim() : "";
   const memoKey = (el, reveal) => {
-    const kind = reveal === "emphasis" && el.matches("mark") ? "loose" : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].indexOf(el);
+    if (reveal === "emphasis" && el.matches("mark")) return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:loose`;
+    const id = el.getAttribute("id");
+    const own = id || (el.textContent ?? "").trim().slice(0, 64);
+    const siblings = id ? [] : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? "").trim().slice(0, 64) === own);
+    const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el)}` : own;
     return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:${kind}`;
   };
   const seen = (el, reveal) => {
@@ -4095,6 +4122,14 @@ function attachEffects(root = document, options = {}) {
     } catch {
       return false;
     }
+  };
+  const reportUnknownRoutine = (el, knob2, value, accepted) => {
+    const key = `${knob2}=${value}`;
+    if (!unknownReported.has(key)) {
+      unknownReported.add(key);
+      el.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob2, value, accepted: [...accepted] } }));
+    }
+    return "";
   };
   const checkValues = (el) => {
     const pairs = [
@@ -4114,7 +4149,8 @@ function attachEffects(root = document, options = {}) {
     const text = el.textContent ?? "";
     el.setAttribute(TEXT_ATTRIBUTE, text);
     if (!el.hasAttribute("aria-label")) el.setAttribute("aria-label", text);
-    const routine = routineOf(el, "headline");
+    const asked = routineOf(el, "headline");
+    const routine = asked === "" || HEADLINE_ROUTINES.includes(asked) ? asked : reportUnknownRoutine(el, ROUTINES.headline, asked, HEADLINE_ROUTINES);
     const rest = (skipped) => {
       el.textContent = text;
       el.classList.add(STATE.deciphered);
@@ -4672,14 +4708,14 @@ function attachEffects(root = document, options = {}) {
     frames.clear();
     io?.disconnect();
     io = null;
+    ioHeadline?.disconnect();
+    ioHeadline = null;
+    for (const cleanup of cleanups.splice(0)) cleanup();
     for (const finish of finishers.splice(0)) finish();
     pending = 0;
     done();
   };
-  if (query) {
-    query.addEventListener("change", onPreference);
-    cleanups.push(() => query.removeEventListener("change", onPreference));
-  }
+  if (query) query.addEventListener("change", onPreference);
   scan(root);
   const caret = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
@@ -4691,6 +4727,8 @@ function attachEffects(root = document, options = {}) {
       )
     );
     for (const input of inputs) {
+      if (carets.has(input)) continue;
+      carets.add(input);
       const put = () => {
         if (!view) return;
         const cs = view.getComputedStyle(input);
@@ -4812,7 +4850,8 @@ function attachEffects(root = document, options = {}) {
   };
   marquee();
   const arrival = () => {
-    const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
+    const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
+    const routine = asked === "" || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
     if (routine !== "boot" && routine !== "card" || !doc.body) return;
     const card = routine === "card";
     if (reduced() || seen(html, "arrival")) {
@@ -4902,6 +4941,9 @@ function attachEffects(root = document, options = {}) {
       ioHeadline?.disconnect();
       ioHeadline = null;
       for (const cleanup of cleanups.splice(0)) cleanup();
+      query?.removeEventListener("change", onPreference);
+      for (const finish of finishers.splice(0)) finish();
+      pending = 0;
       if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
     },
     observe(element) {

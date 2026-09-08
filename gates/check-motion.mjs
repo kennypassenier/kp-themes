@@ -270,8 +270,19 @@ export function unguardedMotion(source) {
  */
 export function unsubscribedPreferenceReads(dir) {
     const problems = [];
-    for (const file of readdirSync(dir).filter((f) => f.endsWith('.jsx'))) {
+    // Every source in the directory, not only the React ones. Until
+    // 2026-09-08 this filtered on `.jsx`, and `js/` holds none — so the
+    // scan read zero files, passed every time, and its own comment said
+    // it would name a module that stopped listening. The audit found it
+    // by running the function rather than reading it.
+    for (const file of readdirSync(dir).filter((f) => /\.(js|jsx|mjs)$/.test(f))) {
         const source = readFileSync(new URL(file, `file://${dir}/`), 'utf8');
+        // A file may read the preference as long as it also subscribes to
+        // it: that is the whole rule. `js/effects.js` reads it once and
+        // adds a `change` listener, which is correct; a file that reads
+        // and never listens shows the state the page had at load forever.
+        const subscribes = /addEventListener\s*\(\s*['"`]change['"`]|addListener\s*\(|\.onchange\s*=/.test(source);
+        if (subscribes) continue;
         // The call, not the word: every one of these files mentions the
         // preference in its own doc comment, and prose is not a defect.
         for (const m of source.matchAll(/matchMedia\s*\(\s*['"`][^'"`]*prefers-reduced-motion/g)) {
