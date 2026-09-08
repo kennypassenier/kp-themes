@@ -138,6 +138,14 @@ export function diffs() {
     );
     const rules = read('css/_rules.css');
     const oldBlocks = themeBlocks(oldCss);
+    // Three themes changed name at their lift (Kenny, 2026-09-08): the
+    // 4.0.0 block to compare against still carries the old one, so the
+    // lookup is by the name the released stylesheet used. Without this a
+    // renamed theme reads as "new in 5.0.0" and its whole palette shows as
+    // a difference, which is exactly the wrong story.
+    /** @type {Record<string, string>} */
+    const RENAMED = { forest: 'topo', lapis: 'tazhib', woodblock: 'nishiki' };
+    const was = (/** @type {string} */ name) => RENAMED[name] ?? name;
     const newBlocks = themeBlocks(newThemes);
     /** @type {Record<string, any>} */
     const families = JSON.parse(read('fonts/families.json'));
@@ -148,7 +156,7 @@ export function diffs() {
             .map((f) => f.family),
     );
     return THEMES.map((theme) => {
-        const before = oldBlocks.get(theme.name) ?? new Map();
+        const before = oldBlocks.get(was(theme.name)) ?? new Map();
         const after = newBlocks.get(theme.name) ?? new Map();
         /** @type {TokenChange[]} */
         const changed = [];
@@ -178,14 +186,14 @@ export function diffs() {
         if (theme.name in newRegisters) {
             // The old bundle holds the base rules and the register in one file;
             // the new side is compared as the same union.
-            const oldRules = scopedRules(oldCss, theme.name);
+            const oldRules = scopedRules(oldCss, was(theme.name));
             const nowRules = scopedRules(
                 newThemes +
                     '\n' +
                     newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)],
                 theme.name,
             );
-            register = !oldBlocks.has(theme.name)
+            register = !oldBlocks.has(was(theme.name))
                 ? 'new'
                 : theme.name === 'cyberpunk'
                   ? 'rewritten'
@@ -194,7 +202,7 @@ export function diffs() {
                     : 'changed';
         }
         const texture = {
-            old: textureOf(oldCss, theme.name),
+            old: textureOf(oldCss, was(theme.name)),
             // The register wins where it declares one: it is loaded in the
             // frame, so it is what a reader of this page actually sees —
             // dark's starfield paints at its register's value, not at the
@@ -238,7 +246,7 @@ export function diffs() {
             const distinct = heroAdded.filter(
                 (a) => a.now !== after.get(a.token.replace('surface-hero-bg', 'background').replace('surface-hero-fg', 'foreground')),
             );
-            if (!oldBlocks.has(theme.name)) {
+            if (!oldBlocks.has(was(theme.name))) {
                 lines.length = 0;
                 lines.push(
                     `New in 5.0.0: this theme did not exist in 4.0.0 — every one of its ${after.size} tokens, its register and its fonts are new, so the left frame shows what a 4.0.0 page does with a theme it does not know (the loud fallback), and nothing is marked because everything differs.`,
@@ -298,11 +306,11 @@ const CURRENT = [
     'phantom-register.css',
     'terminal-register.css',
     'brutalism-register.css',
-    'nishiki-register.css',
+    'woodblock-register.css',
     'pastel-register.css',
     'shade-light-register.css',
     'ticker-register.css',
-    'topo-register.css',
+    'forest-register.css',
     'deco-register.css',
     'light-register.css',
     'grotesk-register.css',
@@ -315,7 +323,7 @@ const CURRENT = [
     'solstice-register.css',
     'mono-register.css',
     'high-contrast-register.css',
-    'tazhib-register.css',
+    'lapis-register.css',
     'shade-dark-register.css',
 ];
 
@@ -528,14 +536,21 @@ function foldLong(line) {
     return [el('details', {}, el('summary', {}, line.slice(0, at)), el('p', { class: 'kp-prose' }, line.slice(at + 3)))];
 }
 
+/** The name 4.0.0 knew a renamed theme by [Kenny, 2026-09-08]. */
+/** @type {Record<string, string>} */
+const WAS = { forest: 'topo', lapis: 'tazhib', woodblock: 'nishiki' };
+
 /** One theme's page: the statements, then the whole demo twice. @param {ThemeDiff} d */
 function themePage(d) {
     const marks = d.show.filter((cat) => cat !== 'texture' || d.texture.old !== d.texture.now).join(',');
     const q = `?theme=${d.name}${marks ? `&mark=${marks}` : ''}`;
+    // A renamed theme asks 4.0.0 for the name 4.0.0 knew; asking for the
+    // new one would paint the loud fallback and call a rename a redesign.
+    const oldQ = `?theme=${WAS[d.name] ?? d.name}${marks ? `&mark=${marks}` : ''}`;
     const pairs = [
         pair(
             '',
-            { src: `compare-frame-4.0.0.html${q}`, title: `${d.label} under 4.0.0` },
+            { src: `compare-frame-4.0.0.html${oldQ}`, title: `${d.label} under 4.0.0${WAS[d.name] ? ` (as ${WAS[d.name]})` : ''}` },
             { src: `compare-frame.html${q}`, title: `${d.label} under the current build` },
         ),
     ];

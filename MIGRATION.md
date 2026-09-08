@@ -9,6 +9,25 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Three themes changed name (5.0.0)
+
+`topo` is now **`forest`**, `tazhib` is now **`lapis`**, `nishiki` is now
+**`woodblock`** (Kenny, 2026-09-08, at their lift). The rename is total:
+the token block, the register, the export path, the Home Assistant theme
+file, the example pages and the `Theme` type all carry the new name, and
+the old one resolves to nothing.
+
+A consumer that stores a theme name — in `localStorage`, in a user
+profile, in a database column — maps the three old values once:
+
+```js
+const RENAMED = { topo: 'forest', tazhib: 'lapis', nishiki: 'woodblock' };
+const theme = RENAMED[stored] ?? stored;
+```
+
+Nothing else about the three themes changed in this step; each also has a
+register of its own now, which the section on the lifts describes.
+
 ## Coming from 4.0.0 to 5.0.0
 
 **`cyberpunk` means something else now, and it is the reason 5.0.0 is a
@@ -356,8 +375,8 @@ Nothing breaks. Thirteen themes, two knobs and a register arrived; every
 existing theme's values are what they were (S20).
 
 - **Thirteen new themes.** `brutalism`, `deco`, `academia`, `phantom`,
-  `ticker`, `nishiki`, `shade-light`, `shade-dark`, `mono`, `retro`,
-  `grotesk`, `tazhib`, `nostromo`. A vendored `css/themes.css` grows
+  `ticker`, `woodblock`, `shade-light`, `shade-dark`, `mono`, `retro`,
+  `grotesk`, `lapis`, `nostromo`. A vendored `css/themes.css` grows
   accordingly; the `Theme` union grows with it, so a switch over theme
   names that was exhaustive is now missing thirteen cases — TypeScript
   will say so.
@@ -431,7 +450,7 @@ markup is in the DOM.
         'high-contrast': 'Hoog contrast',
         blueprint: 'Blauwdruk',
         solstice: 'Zonnewende',
-        topo: 'Topografisch',
+        forest: 'Bos',
     }}
 />
 ```

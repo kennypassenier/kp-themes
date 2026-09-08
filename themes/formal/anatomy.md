@@ -255,5 +255,5 @@ gone, the way academia's went for the same reason at LIFT_PLAN row 10.
 The general lesson for the lifts still to come: a theme whose base-layer
 signature in `css/_rules.css` touches a pseudo-element the register also
 uses must have that block removed in the same change. Of the themes not
-yet lifted, `blueprint`, `deco`, `nishiki`, `topo` and `grotesk` still
+yet lifted, `blueprint`, `deco`, `woodblock`, `forest` and `grotesk` still
 carry such a block.

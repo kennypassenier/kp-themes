@@ -1,4 +1,4 @@
-# tazhib — anatomy
+# lapis — anatomy
 
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md).
@@ -137,7 +137,7 @@ its kin); nothing is a literal hex, not even in a comment.
   the Swiss grid belong to their own themes.
 - **No looping motion.** Every reveal in this register runs once and
   rests; nothing blinks, sweeps or drifts the way terminal's phosphor or
-  topo's contour layer do.
+  forest's contour layer do.
 
 ## What the demo showed and the package now renders exactly (S49)
 
@@ -190,7 +190,7 @@ Every mechanism the demo names traces onto the register:
   words, verbatim, in `showcase/concept-copy.mjs`.
 
 **Token measurement.** Every literal hex in the demo's palette section
-converts, HSL to hex, to exactly what `themes/tazhib/tokens.json`
+converts, HSL to hex, to exactly what `themes/lapis/tokens.json`
 already declares — `background` → `#1b2a6a` (the demo's lapis,
 `#1B2A6A`), `primary` → `#d5a52a` (gold, `#D5A52A`), `accent` →
 `#e24536` (vermilion, `#E24536`), `sidebar-background` → `#101c4c`

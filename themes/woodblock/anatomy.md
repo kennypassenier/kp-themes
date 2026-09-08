@@ -1,17 +1,17 @@
-# nishiki — anatomy
+# woodblock — anatomy
 
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Nishiki is
 > lifted in 5.0.0 (S48, LIFT_PLAN row 20) from its approved concept demo,
 > **"The Woodblock Pull" (v2, 2026-09-08)** —
-> `<scratchpad>/nishiki-demo-v2.html`. It replaces the round-one demo
+> `<scratchpad>/woodblock-demo-v2.html`. It replaces the round-one demo
 > "Beni & Bero" on Kenny's own note that the first pass "did not… read as
 > a woodblock print at all"; v2 keeps the round-one palette and adds the
 > physical vocabulary of a hand-pulled print. Note for the record: the
 > theme is renamed **woodblock** at this lift, but the rename touches
 > every generated file and document across the package and is done
 > centrally, not by this lift — this theme is built under the id
-> `nishiki` throughout.
+> `woodblock` throughout.
 
 ## The idea
 
@@ -135,7 +135,7 @@ not measured by `check-texture.mjs` and why that is the correct outcome.
 - **No gradient, no shadow.** A print has none; the key line does the
   work a shadow does elsewhere, and the "mirror" button carries a solid
   offset plate rather than a blurred one.
-- **No sage or terracotta.** The earth palette belongs to topo; this
+- **No sage or terracotta.** The earth palette belongs to forest; this
   theme is pigment on paper, not landscape.
 - **No pastel reading.** Beni and Prussian are strong; a softened
   version would be pastel with a different font.
@@ -159,7 +159,7 @@ against the demo's appearance:
   on v1 was about. CSS does not allow a third generated-content layer on
   one element, so the hanko is not reproduced as a mark after the
   headline. It follows that the pre-lift hanko this package already
-  shipped for nishiki (`css/_rules.css`, TH69, a settling accent square
+  shipped for woodblock (`css/_rules.css`, TH69, a settling accent square
   on every `h1`) is superseded wherever the register's own
   `[data-kp-surface] h1::after` rule reaches (later cascade layer, same
   pseudo-element) — not deleted, but with no visible effect under a
@@ -183,7 +183,7 @@ against the demo's appearance:
   standalone HTML draws its own full washi-fibre turbulence inside the
   hero (`.kp-washi-fibre`, 4.5%) because it has no knowledge of the
   package's own page-wide fibre texture. That page-wide texture already
-  exists for nishiki (TH69, also 4.5%, identical recipe) and already
+  exists for woodblock (TH69, also 4.5%, identical recipe) and already
   reaches the hero, since it is a fixed full-viewport layer. Painting a
   second, hero-local fibre layer on top would stack to roughly 9%
   locally for no reason the demo actually intends; only the demo's _new_
@@ -191,7 +191,7 @@ against the demo's appearance:
 
 One measured fact, carried over from the round-one anatomy and
 unchanged by v2: both shipped faces (Shippori Mincho, Zen Kaku Gothic
-New) ship **regular weight only** — with the bold faces nishiki weighed
+New) ship **regular weight only** — with the bold faces woodblock weighed
 2.37 MB against the 1.5 MB font budget (`fonts/families.json`, R6-Q6,
 still open in the queue). The demo's own Google-Fonts `<link>` loads
 weights 300–900; the package's shipped subset synthesises bold from the

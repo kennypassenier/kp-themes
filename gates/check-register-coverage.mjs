@@ -42,11 +42,11 @@ export const REGISTERS = [
     'css/retro-register.css',
     'css/terminal-register.css',
     'css/brutalism-register.css',
-    'css/nishiki-register.css',
+    'css/woodblock-register.css',
     'css/pastel-register.css',
     'css/shade-light-register.css',
     'css/ticker-register.css',
-    'css/topo-register.css',
+    'css/forest-register.css',
     'css/deco-register.css',
     'css/light-register.css',
     'css/grotesk-register.css',
@@ -59,7 +59,7 @@ export const REGISTERS = [
     'css/solstice-register.css',
     'css/mono-register.css',
     'css/high-contrast-register.css',
-    'css/tazhib-register.css',
+    'css/lapis-register.css',
     'css/shade-dark-register.css',
 ];
 /** The first register, kept for the callers that measure one. */

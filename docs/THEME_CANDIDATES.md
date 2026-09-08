@@ -23,7 +23,7 @@ exact values shown; a claim about the repository names its file and line.
 | cyberpunk | dark, void purple | neon magenta + cyan, yellow signal, Chakra Petch, notch 14px | scanlines, glows · digital rain, decipher |
 | pastel | light, lavender milk | rose + mint, radius 1rem | riso grain · overprint, bounce |
 | terminal | dark, CRT black | phosphor green, Share Tech Mono, radius 0 | scanlines · blinking cursor |
-| topo | light, kraft | forest ink, clay + lake (`themes/topo/tokens.json`: accent hsl(24,55%,86%), chart-2 hsl(24,70%,45%)) | drifting contour lines |
+| forest | light, kraft | forest ink, clay + lake (`themes/forest/tokens.json`: accent hsl(24,55%,86%), chart-2 hsl(24,70%,45%)) | drifting contour lines |
 | high-contrast | light, white | black, navy, one signal yellow, Atkinson Hyperlegible | none, deliberately |
 | sepia | light, parchment | brown ink, Instrument Serif | none, deliberately |
 | blueprint | dark, Prussian blue | cyan + amber, radius .125rem | ruled line under headings |
@@ -131,11 +131,11 @@ prefers-reduced-transparency.
 
 Sage `#9CAF88`, terracotta `#E2725B`, fern `#2f5d3a`, linen `#f2efe6`,
 bark text, a soft serif, big radius, leaf linework, linen grain.
-**vs topo: 3** — cream ground + forest primary + clay accent is topo's
-triad exactly (`themes/topo/tokens.json`: primary hsl(158,42%,24%),
+**vs forest: 3** — cream ground + forest primary + clay accent is forest's
+triad exactly (`themes/forest/tokens.json`: primary hsl(158,42%,24%),
 accent hsl(24,55%,86%) with ink hsl(20,55%,22%), chart-2
 hsl(24,70%,45%)). **vs sepia: 2** as parchment-with-serif. The one
-colour that would make it not-topo is the one the gates reject: sage
+colour that would make it not-forest is the one the gates reject: sage
 hsl(100,12%,63%) on linen hsl(45,35%,96%) measures 2.23 as a boundary,
 and it only clears 3:1 at 52% lightness, which is no longer sage. A dark
 moss-and-sage reading has no sibling, but nobody would call it botanical.
@@ -248,7 +248,7 @@ session.
 | I1 | Shade | Solarized-style medium-contrast pair, light and dark as one scheme | dusk, both | sepia (1), dark (1) |
 | I2 | Ticker | Bloomberg amber-on-black, tabular numerals, zero decoration | dark | terminal (1) |
 | I3 | Grotesk | Swiss / International Typographic Style: white, black, one red, grid | light | light (1), high-contrast (1) |
-| I4 | Nishiki | ukiyo-e: washi, Prussian blue, beni red, black key-block outline | light | sepia (1), topo (1) |
+| I4 | Nishiki | ukiyo-e: washi, Prussian blue, beni red, black key-block outline | light | sepia (1), forest (1) |
 | I5 | Tazhib | Persian illumination: lapis ground, ivory, gold rules, girih tile | dark, pigment | formal (1), blueprint (1) |
 | I6 | Nostromo | cassette futurism: beige plastic, orange LEDs, vent slots | medium-light | terminal (1), solstice (1) |
 | I7 | Phantom | Persona 5 menus: black, white, one violent red, cut-paper, halftone | dark | cyberpunk (1) |
@@ -363,7 +363,7 @@ value.
 | --- | --- |
 | cyberpunk's anatomy says all-neon reads as vaporwave | `grep -n vaporwave themes/cyberpunk/anatomy.md` → line 17 |
 | dark's starfield is named Observatorium | `css/_rules.css:41` |
-| topo's clay accent and chart-2 | `themes/topo/tokens.json` (jq) |
+| forest's clay accent and chart-2 | `themes/forest/tokens.json` (jq) |
 | every ratio in this file | `node -e` WCAG luminance script, this session |
 
 ## Decisions
@@ -379,7 +379,7 @@ Kenny answered the form on 2026-09-05. Every item, in his words' order:
 | C3 | Art Deco (dark) | Essential |
 | C4 | Neumorphism | Later |
 | C5 | Glassmorphism | Later |
-| C6 | Botanical / Earth | Don't do — too close to topo |
+| C6 | Botanical / Earth | Don't do — too close to forest |
 | C7 | Retro Web (Windows 95, tamed) | Desired |
 | C8 | Steampunk | Don't do — too close to solstice |
 | C9 | Monochrome | Desired |

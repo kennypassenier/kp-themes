@@ -60,7 +60,7 @@ test('T12: the markup escapes the snippet', () => {
 
 test('KT8: the highlighter brings no colour of its own', () => {
     // Every colour comes from a theme token, so a snippet is green in
-    // terminal and gold in tazhib like everything else on the page.
+    // terminal and gold in lapis like everything else on the page.
     const css = highlightCss();
     assert.equal(/#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(/i.test(css), false, css);
     for (const [kind, token] of Object.entries(TOKEN_TOKENS))

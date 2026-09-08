@@ -107,7 +107,7 @@ export const STATE = Object.freeze({
     // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // across the whole, unsplit line once.
     revealed: 'is-revealed',
-    // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
+    // The lapis headline [S48, LIFT_PLAN row 6]: a single wipe over the
     // whole clause, once — the gilder's burnishing pass, not a per-word or
     // per-glyph reveal, so it earns its own routine rather than reusing
     // `dissolve` or `type` [S49].
@@ -256,7 +256,7 @@ export const TIMINGS = Object.freeze({
     // No luminance step: the mask moves, the content under it does not
     // change colour.
     'kp-wipe': { durationMs: 600, cycles: 1, property: 'mask-position', luminanceSteps: [] },
-    // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
+    // The lapis register [S48, LIFT_PLAN row 6]: the burnish, a single
     // clip-path wipe over the headline once, no loop.
     'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
@@ -298,9 +298,9 @@ export const TIMINGS = Object.freeze({
     // change), and the dialog rising into place.
     'kp-word-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-mark-in': { durationMs: 300, cycles: 1, property: 'background-size', luminanceSteps: [] },
-    // The topo register [S48, LIFT_PLAN topo row]: the headline's own
+    // The forest register [S48, LIFT_PLAN forest row]: the headline's own
     // fade-in and the contour trace that draws beside it, both CSS-only
-    // (no routine — see css/topo-register.css's type section).
+    // (no routine — see css/forest-register.css's type section).
     'kp-headline-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-trace': { durationMs: 1800, cycles: 1, property: 'stroke-dashoffset', luminanceSteps: [] },
     // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
@@ -708,7 +708,7 @@ export function attachEffects(root = document, options = {}) {
             return;
         }
         if (routine === 'gild') {
-            // The tazhib headline [S48, LIFT_PLAN row 6]: the text is whole
+            // The lapis headline [S48, LIFT_PLAN row 6]: the text is whole
             // and already gold; the class runs one clip-path wipe left to
             // right (the register's `kp-burnish` keyframe), then the
             // element rests. Without an animation the class comes off by

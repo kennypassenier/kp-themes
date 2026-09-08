@@ -12,7 +12,7 @@
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'topo' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'nishiki' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'tazhib' | 'nostromo'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'woodblock' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'lapis' | 'nostromo'} ThemeName
  */
 
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
@@ -26,7 +26,7 @@ export const THEMES = Object.freeze([
     { name: 'synthwave', label: 'Synthwave', dark: true },
     { name: 'pastel', label: 'Pastel', dark: false },
     { name: 'terminal', label: 'Terminal', dark: true },
-    { name: 'topo', label: 'Topographic', dark: false },
+    { name: 'forest', label: 'Topographic', dark: false },
     { name: 'high-contrast', label: 'High contrast', dark: false },
     { name: 'sepia', label: 'Sepia', dark: false },
     { name: 'blueprint', label: 'Blueprint', dark: true },
@@ -36,13 +36,13 @@ export const THEMES = Object.freeze([
     { name: 'academia', label: 'Dark Academia', dark: true },
     { name: 'phantom', label: 'Phantom', dark: true },
     { name: 'ticker', label: 'Ticker', dark: true },
-    { name: 'nishiki', label: 'Nishiki', dark: false },
+    { name: 'woodblock', label: 'Nishiki', dark: false },
     { name: 'shade-light', label: 'Shade (light)', dark: false },
     { name: 'shade-dark', label: 'Shade (dark)', dark: true },
     { name: 'mono', label: 'Mono', dark: false },
     { name: 'retro', label: 'Retro', dark: false },
     { name: 'grotesk', label: 'Grotesk', dark: false },
-    { name: 'tazhib', label: 'Tazhib', dark: true },
+    { name: 'lapis', label: 'Tazhib', dark: true },
     { name: 'nostromo', label: 'Nostromo', dark: false },
 ]);
 

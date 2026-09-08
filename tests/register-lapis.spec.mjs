@@ -1,6 +1,6 @@
-// The tazhib register [S48, LIFT_PLAN row 6]: the approved concept demo
+// The lapis register [S48, LIFT_PLAN row 6]: the approved concept demo
 // "Lapis and Leaf" (2026-09-08) reproduced by the package, measured on the
-// concept page under tazhib in both channels.
+// concept page under lapis in both channels.
 //
 // What the demo showed and this suite holds: the headline burnishing in
 // with one gold clip-path wipe and landing flat gold, the lede's marks
@@ -36,8 +36,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept-tazhib.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept&copy=tazhib'],
+    ['framework-free', '/examples/concept-lapis.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=lapis'],
 ];
 
 /**
@@ -49,14 +49,14 @@ async function open(page, url, { reduced = false } = {}) {
     await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
     await page.addInitScript(() => {
         try {
-            localStorage.setItem('theme', 'tazhib');
+            localStorage.setItem('theme', 'lapis');
         } catch {
             // no storage: the page keeps its served theme
         }
     });
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(url);
-    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'tazhib');
+    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'lapis');
     await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
 }
 
@@ -93,7 +93,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the tazhib register, ${channel}`, () => {
+    test.describe(`the lapis register, ${channel}`, () => {
         test('under reduced motion there is no wipe, no page-wide texture, and every reveal is at rest', async ({ page }) => {
             await open(page, url, { reduced: true });
             await expect(page.locator('[data-kp-reveal="headline"]').first()).toHaveClass(/is-deciphered/);

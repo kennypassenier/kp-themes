@@ -587,7 +587,7 @@ export const CONCEPT_COPY = {
         arrivalLine: '',
         arrivalReady: '',
     },
-    tazhib: {
+    lapis: {
         brand: 'Lapis & Leaf',
         brandTag: 'MS//07',
         navThemes: 'Folios',
@@ -1820,7 +1820,7 @@ export const CONCEPT_COPY = {
         arrivalLine: '',
         arrivalReady: '',
     },
-    topo: {
+    forest: {
         brand: 'kp-themes',
         // invented: the demo's brand carries no file code; RDG//12 fits its side note's "RIDGE-12".
         brandTag: 'RDG//12',
@@ -2203,7 +2203,7 @@ export const CONCEPT_COPY = {
         arrivalLine: '',
         arrivalReady: '',
     },
-    nishiki: {
+    woodblock: {
         brand: 'kp-themes',
         brandTag: '',
         navThemes: 'Themes',
@@ -2268,7 +2268,7 @@ export const CONCEPT_COPY = {
         btnSubmit: 'Send request',
         btnWipe: 'Wipe form',
         wipeConfirm: 'Wipe the form',
-        microlabelDossier: 'dossier.kp-nishiki-07',
+        microlabelDossier: 'dossier.kp-woodblock-07',
         h2Dossier: 'The plate, on record',
         cardTitle: 'Nishiki',
         stampLabel: 'Sealed',

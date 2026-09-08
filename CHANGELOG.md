@@ -2,6 +2,13 @@
 
 ## 5.0.0 — in progress
 
+**Three themes changed name.** `topo` is now `forest`, `tazhib` is now
+`lapis`, `nishiki` is now `woodblock` (Kenny, 2026-09-08, at their lift).
+The rename is total — tokens, register, export path, Home Assistant
+theme, example pages, the `Theme` type — and `MIGRATION.md` carries the
+one-line map a consumer needs. The compare pages ask 4.0.0 for the name
+4.0.0 knew, so a rename reads as a rename and not as a redesign.
+
 **The next cyberpunk, and the first theme lifted after it.** Cyberpunk is
 rebuilt on signal yellow under the same name (S39); `synthwave` is the
 twenty-fifth theme, built from the approved concept demo "Outrun
@@ -306,16 +313,16 @@ terminal cursor actually marks something.
 
 **Thirteen more themes.** Round three researched eleven candidates and
 ten further ideas against the existing set, dropped everything that sat
-on a theme already here (vaporwave on cyberpunk, botanical on topo,
+on a theme already here (vaporwave on cyberpunk, botanical on forest,
 steampunk on solstice, cosmic on dark), and built the rest —
 `docs/THEME_CANDIDATES.md` is the research, `themes/*/anatomy.md` the
 result. Nothing existing changed (S20).
 
 ### Added
 
-- **Themes:** brutalism, deco, academia, phantom, ticker, nishiki,
+- **Themes:** brutalism, deco, academia, phantom, ticker, woodblock,
   shade-light and shade-dark (one scheme, two halves), mono, retro,
-  grotesk, tazhib, nostromo. Thirteen light, eleven dark in total.
+  grotesk, lapis, nostromo. Thirteen light, eleven dark in total.
 - **`--fx-shadow-offset`** — a hard offset shadow on buttons, cards and
   inputs; brutalism's signature, `0px` everywhere else (TH85).
 - **`--chart-pattern-1` … `-5`** — an image over each chart colour so a
@@ -415,7 +422,7 @@ knob" has the five rules; the per-component list is in the sweep record.
 
 `onUndo` on `Button` is invoked at last (it was declared and dead for two
 versions). Contract enforcement is recoverable (D7). The skip link moves
-focus (`skipTo`, `attachSkipLinks`). The print rule and the topo drift
+focus (`skipTo`, `attachSkipLinks`). The print rule and the forest drift
 addressed the wrong pseudo-element. Toasts sat under the texture layer.
 `attachDialogs` and `attachTabs` double-bound on a second call. DataTable's
 detach left the rows sorted. `no-flash.js` mutated the document on import.
@@ -720,7 +727,7 @@ one.
 ### Eleven themes
 
 The seven that came from kp-soft — formal, light, dark, cyberpunk,
-pastel, terminal, topo — and four that fill gaps the set had:
+pastel, terminal, forest — and four that fill gaps the set had:
 
 - **high-contrast** — black on white with one signal yellow. The only
   theme here whose reason is not taste.

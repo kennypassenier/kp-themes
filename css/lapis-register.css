@@ -1,7 +1,7 @@
 @layer kp.register {
-    /* @kp-soft/themes — css/tazhib-register.css
-   The tazhib register, 5.0.0 [S48, LIFT_PLAN row 6]: Persian illumination.
-   Scoped to [data-theme='tazhib'] and inert elsewhere; opt-in, imported
+    /* @kp-soft/themes — css/lapis-register.css
+   The lapis register, 5.0.0 [S48, LIFT_PLAN row 6]: Persian illumination.
+   Scoped to [data-theme='lapis'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Lapis and Leaf",
    2026-09-08) is the reference for every value here.
 
@@ -39,7 +39,7 @@
    research file, and anatomy.md's pre-round-six answer was already "no
    animation; the ruling is static." */
 
-    [data-theme='tazhib'] {
+    [data-theme='lapis'] {
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 300ms;
@@ -97,16 +97,16 @@
 
     /* ── Type ──────────────────────────────────────────────────────────── */
 
-    [data-theme='tazhib'] h1,
-    [data-theme='tazhib'] h2,
-    [data-theme='tazhib'] h3 {
+    [data-theme='lapis'] h1,
+    [data-theme='lapis'] h2,
+    [data-theme='lapis'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
         line-height: 1.1;
         letter-spacing: 0.01em;
     }
 
-    [data-theme='tazhib'] [data-kp-surface] h1 {
+    [data-theme='lapis'] [data-kp-surface] h1 {
         font-size: var(--kp-text-display);
         line-height: 1.1;
         margin-block: 0 0.35em;
@@ -114,7 +114,7 @@
     }
 
     /* Microlabels: the mono voice, in gold, the small print of a colophon. */
-    [data-theme='tazhib'] .microlabel {
+    [data-theme='lapis'] .microlabel {
         font-family: var(--theme-font-mono);
         font-size: 0.78rem;
         letter-spacing: 0.12em;
@@ -130,12 +130,12 @@
        brief brightness/saturation lift that settles as it lands — the
        gilder's burnishing pass. Without the script it stands fully
        revealed, flat gold. */
-    [data-theme='tazhib'] [data-kp-reveal='headline'] {
+    [data-theme='lapis'] [data-kp-reveal='headline'] {
         color: var(--primary);
         display: inline-block;
     }
 
-    [data-theme='tazhib'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered) {
+    [data-theme='lapis'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered) {
         clip-path: inset(0 100% 0 0);
         filter: brightness(1.7) saturate(0.7);
     }
@@ -143,7 +143,7 @@
     /* The rule [§ template]: a gold hairline draws in under a heading, left
        to right, when it enters the viewport — the ruling of a page drawn
        once, at rest. */
-    [data-theme='tazhib'] [data-kp-reveal='rule']::after {
+    [data-theme='lapis'] [data-kp-reveal='rule']::after {
         content: '';
         display: block;
         block-size: 1px;
@@ -153,7 +153,7 @@
         transform-origin: left center;
     }
 
-    [data-theme='tazhib'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+    [data-theme='lapis'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
         transform: scaleX(0);
     }
 
@@ -163,14 +163,14 @@
        a rubric after the black text is already laid. Loose marks (the
        lede) get this; a mark inside the dossier is overridden below to the
        seal instead. */
-    [data-theme='tazhib'] mark {
+    [data-theme='lapis'] mark {
         background: transparent;
         color: var(--foreground);
         padding: 0 0.05em;
         border-bottom: 2px solid transparent;
     }
 
-    [data-theme='tazhib'] mark.is-cleared {
+    [data-theme='lapis'] mark.is-cleared {
         color: var(--primary);
         border-bottom-color: var(--primary);
     }
@@ -178,7 +178,7 @@
     /* The divider: the wide ruled one carries the four-ring frame, the gold
        hatch and a small teal dot at centre; the narrow one is a plain
        hatch, no ring. */
-    [data-theme='tazhib'] [data-kp-divider] {
+    [data-theme='lapis'] [data-kp-divider] {
         block-size: 34px;
         background-color: var(--background);
         border-block: 1px solid var(--border);
@@ -188,7 +188,7 @@
         background-repeat: no-repeat, no-repeat;
     }
 
-    [data-theme='tazhib'] [data-kp-divider='alt'] {
+    [data-theme='lapis'] [data-kp-divider='alt'] {
         block-size: 16px;
         box-shadow: none;
         border-block-start: none;
@@ -197,30 +197,30 @@
 
     /* ── The hero: the girih tile, the side note ──────────────────────── */
 
-    [data-theme='tazhib'] [data-kp-surface='hero'],
-    [data-theme='tazhib'] [data-kp-surface='app'] {
+    [data-theme='lapis'] [data-kp-surface='hero'],
+    [data-theme='lapis'] [data-kp-surface='app'] {
         position: relative;
         background-image: var(--kp-girih-tile);
         background-size: var(--kp-girih-size);
     }
 
-    [data-theme='tazhib'] [data-kp-surface='hero'] {
+    [data-theme='lapis'] [data-kp-surface='hero'] {
         padding-block: 2.4rem 3.2rem;
     }
 
-    [data-theme='tazhib'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+    [data-theme='lapis'] [data-kp-surface='hero'] [data-kp-hero-grid] {
         grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
         gap: 2.5rem;
         align-items: start;
     }
 
     @container (max-width: 60rem) {
-        [data-theme='tazhib'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        [data-theme='lapis'] [data-kp-surface='hero'] [data-kp-hero-grid] {
             grid-template-columns: 1fr;
         }
     }
 
-    [data-theme='tazhib'] .kp-side-note {
+    [data-theme='lapis'] .kp-side-note {
         font-family: var(--theme-font-mono);
         font-size: 0.75rem;
         letter-spacing: 0.18em;
@@ -230,7 +230,7 @@
     }
 
     @media (min-width: 64rem) {
-        [data-theme='tazhib'] .kp-side-note {
+        [data-theme='lapis'] .kp-side-note {
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             position: absolute;
@@ -247,19 +247,19 @@
     /* girih.js's engraved strapwork line [§(1)]: a wide gold-line hairline
        under a narrow, offset hairline the same colour, so the boundary
        reads as ruled rather than flat. */
-    [data-theme='tazhib'] .kp-nav-wrap {
+    [data-theme='lapis'] .kp-nav-wrap {
         background: var(--sidebar-background);
         border-block-end: 2px solid var(--border-strong);
         box-shadow: 0 3px 0 -2px var(--border);
     }
 
-    [data-theme='tazhib'] .kp-nav {
+    [data-theme='lapis'] .kp-nav {
         background: var(--sidebar-background);
         position: relative;
         z-index: var(--kp-z-nav, 30);
     }
 
-    [data-theme='tazhib'] .kp-nav__brand {
+    [data-theme='lapis'] .kp-nav__brand {
         font-family: var(--theme-font-display);
         font-weight: 600;
         font-size: 1.375rem;
@@ -267,23 +267,23 @@
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-nav__link {
+    [data-theme='lapis'] .kp-nav__link {
         color: var(--foreground);
         border-radius: 0;
         border-block-end: 1px solid transparent;
         background: none;
     }
 
-    [data-theme='tazhib'] .kp-nav__link:hover,
-    [data-theme='tazhib'] .kp-nav__link:focus-visible,
-    [data-theme='tazhib'] .kp-nav__link[aria-current],
-    [data-theme='tazhib'] .kp-nav__links > li:focus-within > .kp-nav__link {
+    [data-theme='lapis'] .kp-nav__link:hover,
+    [data-theme='lapis'] .kp-nav__link:focus-visible,
+    [data-theme='lapis'] .kp-nav__link[aria-current],
+    [data-theme='lapis'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--primary);
         border-color: var(--primary);
         background: none;
     }
 
-    [data-theme='tazhib'] .kp-nav__link--lang {
+    [data-theme='lapis'] .kp-nav__link--lang {
         text-transform: uppercase;
         font-family: var(--theme-font-mono);
         font-size: 0.85em;
@@ -291,22 +291,22 @@
 
     /* The call to action is a filled gold plate, the way a rubric is
        filled solid rather than only ruled. */
-    [data-theme='tazhib'] .kp-nav__link--cta {
+    [data-theme='lapis'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
     }
 
-    [data-theme='tazhib'] .kp-nav__link--cta:hover,
-    [data-theme='tazhib'] .kp-nav__link--cta:focus-visible {
+    [data-theme='lapis'] .kp-nav__link--cta:hover,
+    [data-theme='lapis'] .kp-nav__link--cta:focus-visible {
         background: var(--foreground);
         color: var(--background);
         border-color: transparent;
     }
 
     /* The dropdown: a popover carrying the four-ring frame, KT14's part. */
-    [data-theme='tazhib'] .kp-nav__menu {
+    [data-theme='lapis'] .kp-nav__menu {
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -316,20 +316,20 @@
         min-width: 180px;
     }
 
-    [data-theme='tazhib'] .kp-nav__menu a {
+    [data-theme='lapis'] .kp-nav__menu a {
         color: var(--popover-foreground);
         border-radius: calc(var(--radius) - 2px);
     }
 
-    [data-theme='tazhib'] .kp-nav__menu a:hover,
-    [data-theme='tazhib'] .kp-nav__menu a:focus-visible {
+    [data-theme='lapis'] .kp-nav__menu a:hover,
+    [data-theme='lapis'] .kp-nav__menu a:focus-visible {
         background: var(--card);
         color: var(--primary);
     }
 
     /* ── Buttons: a ruled frame, or a filled gold plate ───────────────── */
 
-    [data-theme='tazhib'] .kp-button {
+    [data-theme='lapis'] .kp-button {
         font-family: var(--theme-font-body);
         font-weight: 600;
         border: 1px solid var(--border-strong);
@@ -338,130 +338,130 @@
         color: var(--foreground);
     }
 
-    [data-theme='tazhib'] .kp-button:hover {
+    [data-theme='lapis'] .kp-button:hover {
         border-color: var(--primary);
         color: var(--primary);
     }
 
     /* The mirror modifier: a burnished-metal gloss on the gold plate — a
        pale highlight along the top edge, a deep shadow along the bottom. */
-    [data-theme='tazhib'] .kp-button--mirror {
+    [data-theme='lapis'] .kp-button--mirror {
         box-shadow:
             inset 0 1px 0 hsl(from var(--card-foreground) h s l / 0.45),
             inset 0 -8px 12px -8px hsl(from var(--primary-foreground) h s l / 0.55);
     }
 
-    [data-theme='tazhib'] .kp-button--primary {
+    [data-theme='lapis'] .kp-button--primary {
         background: var(--primary);
         color: var(--primary-foreground);
         border-color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-button--primary:hover,
-    [data-theme='tazhib'] .kp-button--primary:focus-visible {
+    [data-theme='lapis'] .kp-button--primary:hover,
+    [data-theme='lapis'] .kp-button--primary:focus-visible {
         background: var(--foreground);
         color: var(--background);
         border-color: var(--foreground);
     }
 
-    [data-theme='tazhib'] .kp-button--destructive {
+    [data-theme='lapis'] .kp-button--destructive {
         background: transparent;
         border-color: var(--destructive);
         color: var(--destructive);
     }
 
-    [data-theme='tazhib'] .kp-button--destructive:hover,
-    [data-theme='tazhib'] .kp-button--destructive:focus-visible {
+    [data-theme='lapis'] .kp-button--destructive:hover,
+    [data-theme='lapis'] .kp-button--destructive:focus-visible {
         background: var(--destructive);
         color: var(--destructive-foreground);
     }
 
-    [data-theme='tazhib'] .kp-button--ghost {
+    [data-theme='lapis'] .kp-button--ghost {
         border-color: transparent;
         background: transparent;
     }
 
-    [data-theme='tazhib'] .kp-button--ghost:hover,
-    [data-theme='tazhib'] .kp-button--ghost:focus-visible {
+    [data-theme='lapis'] .kp-button--ghost:hover,
+    [data-theme='lapis'] .kp-button--ghost:focus-visible {
         border-color: var(--border);
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-icon-button {
+    [data-theme='lapis'] .kp-icon-button {
         border: 1px solid var(--border-strong);
         background: transparent;
         color: var(--foreground);
     }
 
-    [data-theme='tazhib'] .kp-icon-button:hover {
+    [data-theme='lapis'] .kp-icon-button:hover {
         border-color: var(--primary);
         color: var(--primary);
     }
 
     /* ── Fields ────────────────────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-field__label {
+    [data-theme='lapis'] .kp-field__label {
         font-weight: 600;
         color: var(--foreground);
     }
 
-    [data-theme='tazhib'] .kp-field__required {
+    [data-theme='lapis'] .kp-field__required {
         color: var(--primary);
         font-weight: 400;
         font-size: 0.8em;
         margin-inline-start: 0.3em;
     }
 
-    [data-theme='tazhib'] .kp-field__input,
-    [data-theme='tazhib'] .kp-datatable__search,
-    [data-theme='tazhib'] .kp-combobox__input,
-    [data-theme='tazhib'] .kp-palette__input {
+    [data-theme='lapis'] .kp-field__input,
+    [data-theme='lapis'] .kp-datatable__search,
+    [data-theme='lapis'] .kp-combobox__input,
+    [data-theme='lapis'] .kp-palette__input {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         caret-color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-field__input:focus-visible,
-    [data-theme='tazhib'] .kp-datatable__search:focus-visible,
-    [data-theme='tazhib'] .kp-combobox__input:focus-visible,
-    [data-theme='tazhib'] .kp-palette__input:focus-visible {
+    [data-theme='lapis'] .kp-field__input:focus-visible,
+    [data-theme='lapis'] .kp-datatable__search:focus-visible,
+    [data-theme='lapis'] .kp-combobox__input:focus-visible,
+    [data-theme='lapis'] .kp-palette__input:focus-visible {
         border-color: var(--primary);
     }
 
-    [data-theme='tazhib'] select.kp-field__input::picker-icon {
+    [data-theme='lapis'] select.kp-field__input::picker-icon {
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-field__check {
+    [data-theme='lapis'] .kp-field__check {
         accent-color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-fieldset {
+    [data-theme='lapis'] .kp-fieldset {
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-form__summary {
+    [data-theme='lapis'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
     /* ── Cards and the dossier: the four-ring frame, the seal ─────────── */
 
-    [data-theme='tazhib'] .kp-card {
+    [data-theme='lapis'] .kp-card {
         background: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-ring-on-card);
     }
 
-    [data-theme='tazhib'] .kp-card__title {
+    [data-theme='lapis'] .kp-card__title {
         font-size: 1.3rem;
     }
 
     /* The stamp: a vermilion plate — the boundary DI1 asks for stays
        intact, and vermilion is never used as text (anatomy.md's own rule),
        only as this filled chip. */
-    [data-theme='tazhib'] .kp-card[data-kp-label]::before {
+    [data-theme='lapis'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
         position: absolute;
         inset-block-start: 0.9rem;
@@ -479,7 +479,7 @@
         box-shadow: 0 3px 8px hsl(from var(--sidebar-background) h s l / 0.45);
     }
 
-    [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] {
+    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
@@ -487,7 +487,7 @@
        phrase; the trigger clears each plate on a stagger, once, never
        autoplaying — the same double-stroke-adjacent idea as the ring
        frame, a plate rather than a fade. */
-    [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] mark {
+    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
         background: var(--sidebar-background);
         color: transparent;
         padding: 0 0.25em;
@@ -495,74 +495,74 @@
         border-bottom: 0;
     }
 
-    [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
         background: transparent;
         color: inherit;
     }
 
-    [data-theme='tazhib'] .kp-dialog,
-    [data-theme='tazhib'] .kp-popover,
-    [data-theme='tazhib'] .kp-menu,
-    [data-theme='tazhib'] .kp-toast,
-    [data-theme='tazhib'] .kp-tooltip,
-    [data-theme='tazhib'] .kp-confirm,
-    [data-theme='tazhib'] .kp-datepicker__panel,
-    [data-theme='tazhib'] .kp-combobox__list,
-    [data-theme='tazhib'] .kp-palette,
-    [data-theme='tazhib'] .kp-theme-menu {
+    [data-theme='lapis'] .kp-dialog,
+    [data-theme='lapis'] .kp-popover,
+    [data-theme='lapis'] .kp-menu,
+    [data-theme='lapis'] .kp-toast,
+    [data-theme='lapis'] .kp-tooltip,
+    [data-theme='lapis'] .kp-confirm,
+    [data-theme='lapis'] .kp-datepicker__panel,
+    [data-theme='lapis'] .kp-combobox__list,
+    [data-theme='lapis'] .kp-palette,
+    [data-theme='lapis'] .kp-theme-menu {
         background: var(--popover);
         color: var(--popover-foreground);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-ring-on-popover);
     }
 
-    [data-theme='tazhib'] .kp-menu__item:hover {
+    [data-theme='lapis'] .kp-menu__item:hover {
         background: var(--card);
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-alert {
+    [data-theme='lapis'] .kp-alert {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-alert__label {
+    [data-theme='lapis'] .kp-alert__label {
         font-family: var(--theme-font-display);
         font-weight: 600;
     }
 
-    [data-theme='tazhib'] .kp-grid__tile,
-    [data-theme='tazhib'] .kp-split__pane {
+    [data-theme='lapis'] .kp-grid__tile,
+    [data-theme='lapis'] .kp-split__pane {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-split__separator {
+    [data-theme='lapis'] .kp-split__separator {
         background: var(--border-strong);
     }
 
     /* The footer: one step down, the void. */
-    [data-theme='tazhib'] .kp-footer {
+    [data-theme='lapis'] .kp-footer {
         background: var(--sidebar-background);
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-footer h4 {
+    [data-theme='lapis'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 600;
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-footer a {
+    [data-theme='lapis'] .kp-footer a {
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-footer a:hover,
-    [data-theme='tazhib'] .kp-footer a:focus-visible {
+    [data-theme='lapis'] .kp-footer a:hover,
+    [data-theme='lapis'] .kp-footer a:focus-visible {
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-footer .microlabel {
+    [data-theme='lapis'] .kp-footer .microlabel {
         color: var(--muted-foreground);
         border-block-start: 1px solid var(--border);
         padding-block-start: 1rem;
@@ -570,68 +570,68 @@
 
     /* ── Badges, tags, status ──────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-badge,
-    [data-theme='tazhib'] .kp-tag {
+    [data-theme='lapis'] .kp-badge,
+    [data-theme='lapis'] .kp-tag {
         border: 1px solid var(--border-strong);
         font-family: var(--theme-font-mono);
         letter-spacing: 0.04em;
     }
 
-    [data-theme='tazhib'] .kp-skeleton {
+    [data-theme='lapis'] .kp-skeleton {
         background: var(--card);
     }
 
-    [data-theme='tazhib'] .kp-progress {
+    [data-theme='lapis'] .kp-progress {
         background: var(--background);
         border: 1px solid var(--border-strong);
         padding: 1px;
     }
 
-    [data-theme='tazhib'] .kp-progress__value {
+    [data-theme='lapis'] .kp-progress__value {
         background: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-spinner {
+    [data-theme='lapis'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-empty {
+    [data-theme='lapis'] .kp-empty {
         border: 1px dashed var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-error {
+    [data-theme='lapis'] .kp-error {
         color: var(--destructive);
     }
 
     /* ── Text shapes ──────────────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-id,
-    [data-theme='tazhib'] .kp-url,
-    [data-theme='tazhib'] .kp-numeric,
-    [data-theme='tazhib'] .kp-timestamp,
-    [data-theme='tazhib'] .kp-masked,
-    [data-theme='tazhib'] .kp-copyable,
-    [data-theme='tazhib'] .kp-truncate,
-    [data-theme='tazhib'] .kp-cell-break,
-    [data-theme='tazhib'] .kp-cell-truncate {
+    [data-theme='lapis'] .kp-id,
+    [data-theme='lapis'] .kp-url,
+    [data-theme='lapis'] .kp-numeric,
+    [data-theme='lapis'] .kp-timestamp,
+    [data-theme='lapis'] .kp-masked,
+    [data-theme='lapis'] .kp-copyable,
+    [data-theme='lapis'] .kp-truncate,
+    [data-theme='lapis'] .kp-cell-break,
+    [data-theme='lapis'] .kp-cell-truncate {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.02em;
     }
 
-    [data-theme='tazhib'] .kp-timestamp,
-    [data-theme='tazhib'] .kp-id {
+    [data-theme='lapis'] .kp-timestamp,
+    [data-theme='lapis'] .kp-id {
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-copyable__button {
+    [data-theme='lapis'] .kp-copyable__button {
         border: 1px solid var(--border-strong);
         background: transparent;
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-table th {
+    [data-theme='lapis'] .kp-table th {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -639,89 +639,89 @@
         border-bottom: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-table td {
+    [data-theme='lapis'] .kp-table td {
         border-bottom: 1px solid var(--border);
     }
 
-    [data-theme='tazhib'] .kp-table tbody tr:hover {
+    [data-theme='lapis'] .kp-table tbody tr:hover {
         background: var(--card);
     }
 
-    [data-theme='tazhib'] .kp-datatable {
+    [data-theme='lapis'] .kp-datatable {
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-datatable__bar {
+    [data-theme='lapis'] .kp-datatable__bar {
         border-bottom: 1px solid var(--border);
     }
 
-    [data-theme='tazhib'] .kp-datatable__sort[aria-sort] {
+    [data-theme='lapis'] .kp-datatable__sort[aria-sort] {
         color: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-diff {
+    [data-theme='lapis'] .kp-diff {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-timeline {
+    [data-theme='lapis'] .kp-timeline {
         border-inline-start: 1px dashed var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-timeline__marker {
+    [data-theme='lapis'] .kp-timeline__marker {
         background: var(--primary);
     }
 
-    [data-theme='tazhib'] .kp-timeline__when {
+    [data-theme='lapis'] .kp-timeline__when {
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-tree {
+    [data-theme='lapis'] .kp-tree {
         font-family: var(--theme-font-mono);
     }
 
-    [data-theme='tazhib'] .kp-reorder {
+    [data-theme='lapis'] .kp-reorder {
         border: 1px solid var(--border-strong);
     }
 
     /* ── Navigation and steps ─────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-tab {
+    [data-theme='lapis'] .kp-tab {
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-tab[aria-selected='true'] {
+    [data-theme='lapis'] .kp-tab[aria-selected='true'] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='tazhib'] .kp-tabs__list {
+    [data-theme='lapis'] .kp-tabs__list {
         border-bottom: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-pagination a[aria-current],
-    [data-theme='tazhib'] .kp-pagination [aria-current] {
+    [data-theme='lapis'] .kp-pagination a[aria-current],
+    [data-theme='lapis'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='tazhib'] .kp-wizard {
+    [data-theme='lapis'] .kp-wizard {
         border: 1px solid var(--border-strong);
         background: var(--card);
     }
 
     /* ── Pickers and palettes ─────────────────────────────────────────── */
 
-    [data-theme='tazhib'] .kp-datepicker__day[aria-selected='true'] {
+    [data-theme='lapis'] .kp-datepicker__day[aria-selected='true'] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='tazhib'] .kp-colorpicker__swatch {
+    [data-theme='lapis'] .kp-colorpicker__swatch {
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='tazhib'] .kp-shortcuts__row kbd {
+    [data-theme='lapis'] .kp-shortcuts__row kbd {
         border: 1px solid var(--border-strong);
         background: transparent;
     }
@@ -729,19 +729,19 @@
     /* ── The demo's own pieces [S46] ──────────────────────────────────── */
 
     /* The laurels: three small plates of the workshop's own record. */
-    [data-theme='tazhib'] .kp-laurels {
+    [data-theme='lapis'] .kp-laurels {
         gap: 1rem;
         font-size: 0.85rem;
         color: var(--muted-foreground);
     }
 
-    [data-theme='tazhib'] .kp-laurels b {
+    [data-theme='lapis'] .kp-laurels b {
         color: var(--primary);
         font-family: var(--theme-font-display);
         font-size: 1.05rem;
     }
 
-    [data-theme='tazhib'] .kp-platforms {
+    [data-theme='lapis'] .kp-platforms {
         font-family: var(--theme-font-mono);
         font-size: 0.78rem;
         letter-spacing: 0.06em;
@@ -750,7 +750,7 @@
     }
 
     /* The spec sheet: the four-ring frame, the mono values. */
-    [data-theme='tazhib'] .kp-spec {
+    [data-theme='lapis'] .kp-spec {
         background: var(--card);
         color: var(--card-foreground);
         border: 1px solid var(--border-strong);
@@ -762,70 +762,70 @@
         line-height: 1.7;
     }
 
-    [data-theme='tazhib'] .kp-spec dt {
+    [data-theme='lapis'] .kp-spec dt {
         color: var(--muted-foreground);
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
 
-    [data-theme='tazhib'] .kp-spec__swatch {
+    [data-theme='lapis'] .kp-spec__swatch {
         border: 1px solid var(--border-strong);
         border-radius: 4px;
     }
 
-    [data-theme='tazhib'] .kp-spec__font {
+    [data-theme='lapis'] .kp-spec__font {
         font-family: var(--theme-font-display);
         color: var(--primary);
     }
 
     /* ── The roots the rules above reach only by their parts ──────────── */
 
-    [data-theme='tazhib'] .kp-field {
+    [data-theme='lapis'] .kp-field {
         gap: 4px;
     }
 
-    [data-theme='tazhib'] .kp-form {
+    [data-theme='lapis'] .kp-form {
         gap: 1rem;
     }
 
-    [data-theme='tazhib'] .kp-table {
+    [data-theme='lapis'] .kp-table {
         border-collapse: separate;
         border-spacing: 0;
     }
 
-    [data-theme='tazhib'] .kp-grid {
+    [data-theme='lapis'] .kp-grid {
         gap: 1rem;
     }
 
-    [data-theme='tazhib'] .kp-split {
+    [data-theme='lapis'] .kp-split {
         gap: 0;
     }
 
-    [data-theme='tazhib'] .kp-toasts {
+    [data-theme='lapis'] .kp-toasts {
         gap: 0.6rem;
     }
 
-    [data-theme='tazhib'] .kp-health {
+    [data-theme='lapis'] .kp-health {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.04em;
     }
 
-    [data-theme='tazhib'] .kp-breadcrumb,
-    [data-theme='tazhib'] .kp-pagination {
+    [data-theme='lapis'] .kp-breadcrumb,
+    [data-theme='lapis'] .kp-pagination {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.02em;
     }
 
-    [data-theme='tazhib'] .kp-combobox,
-    [data-theme='tazhib'] .kp-datepicker,
-    [data-theme='tazhib'] .kp-colorpicker,
-    [data-theme='tazhib'] .kp-shortcuts {
+    [data-theme='lapis'] .kp-combobox,
+    [data-theme='lapis'] .kp-datepicker,
+    [data-theme='lapis'] .kp-colorpicker,
+    [data-theme='lapis'] .kp-shortcuts {
         border-radius: var(--radius);
     }
 
     /* ── The scrollbar joins the theme ────────────────────────────────── */
 
-    [data-theme='tazhib'] {
+    [data-theme='lapis'] {
         scrollbar-color: var(--border-strong) var(--background);
     }
 
@@ -837,35 +837,35 @@
        durations are literal because check-motion.mjs computes DI5's rate
        from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='tazhib'] [data-kp-reveal='headline'].is-gilding {
+        [data-theme='lapis'] [data-kp-reveal='headline'].is-gilding {
             animation: kp-burnish var(--kp-burnish) var(--fx-ease) 1 both;
         }
 
-        [data-theme='tazhib'] [data-kp-reveal='rule'].is-in::after {
+        [data-theme='lapis'] [data-kp-reveal='rule'].is-in::after {
             animation: kp-rule-in var(--kp-rule) var(--fx-ease) 1 both;
         }
 
-        [data-theme='tazhib'] mark {
+        [data-theme='lapis'] mark {
             transition:
                 color var(--kp-inscribe) var(--fx-ease),
                 border-bottom-color var(--kp-inscribe) var(--fx-ease);
         }
 
-        [data-theme='tazhib'] mark.is-cleared:nth-of-type(2) {
+        [data-theme='lapis'] mark.is-cleared:nth-of-type(2) {
             transition-delay: var(--kp-inscribe-lead);
         }
 
-        [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] mark {
+        [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
                 background var(--kp-seal) var(--fx-ease),
                 color var(--kp-seal) var(--fx-ease);
         }
 
-        [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+        [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='tazhib'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+        [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
     }

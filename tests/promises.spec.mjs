@@ -65,8 +65,8 @@ test('a choice made in another tab is followed [AR5]', async ({ page }) => {
     // bus translates it into the same announcement a local change makes,
     // so a subscriber never has to know which tab a change came from.
     await page.evaluate(() => {
-        window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: 'topo', oldValue: 'formal' }));
+        window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: 'forest', oldValue: 'formal' }));
     });
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'topo');
-    await expect(page.locator('#plain [data-selected="true"]')).toHaveAttribute('data-kp-theme', 'topo');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'forest');
+    await expect(page.locator('#plain [data-selected="true"]')).toHaveAttribute('data-kp-theme', 'forest');
 });

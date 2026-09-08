@@ -190,22 +190,22 @@
                 "selector": "[data-theme='terminal'] .kp-boot"
             }
         },
-        "topo": {
+        "forest": {
             "surface": {
                 "css": "css/themes.css",
-                "selector": "[data-theme='topo'] [data-kp-surface='hero']"
+                "selector": "[data-theme='forest'] [data-kp-surface='hero']"
             },
             "emphasis": {
-                "css": "css/topo-register.css",
-                "selector": "[data-theme='topo'] [data-kp-reveal='emphasis'] mark"
+                "css": "css/forest-register.css",
+                "selector": "[data-theme='forest'] [data-kp-reveal='emphasis'] mark"
             },
             "reveal": {
-                "css": "css/topo-register.css",
-                "selector": "[data-theme='topo'] [data-kp-reveal='rule']::before"
+                "css": "css/forest-register.css",
+                "selector": "[data-theme='forest'] [data-kp-reveal='rule']::before"
             },
             "divider": {
-                "css": "css/topo-register.css",
-                "selector": "[data-theme='topo'] [data-kp-divider]"
+                "css": "css/forest-register.css",
+                "selector": "[data-theme='forest'] [data-kp-divider]"
             }
         },
         "high-contrast": {
@@ -411,22 +411,22 @@
                 "selector": "[data-theme='ticker'] [data-kp-surface] h1"
             }
         },
-        "nishiki": {
+        "woodblock": {
             "surface": {
                 "css": "css/themes.css",
-                "selector": "[data-theme='nishiki'] [data-kp-surface='hero']"
+                "selector": "[data-theme='woodblock'] [data-kp-surface='hero']"
             },
             "emphasis": {
-                "css": "css/nishiki-register.css",
-                "selector": "[data-theme='nishiki'] mark"
+                "css": "css/woodblock-register.css",
+                "selector": "[data-theme='woodblock'] mark"
             },
             "reveal": {
-                "css": "css/nishiki-register.css",
-                "selector": "[data-theme='nishiki'] [data-kp-reveal='headline']::before"
+                "css": "css/woodblock-register.css",
+                "selector": "[data-theme='woodblock'] [data-kp-reveal='headline']::before"
             },
             "divider": {
-                "css": "css/nishiki-register.css",
-                "selector": "[data-theme='nishiki'] [data-kp-divider]"
+                "css": "css/woodblock-register.css",
+                "selector": "[data-theme='woodblock'] [data-kp-divider]"
             },
             "accent": {
                 "quiet": "the print's flat graphic language is the accent; h1 and h2 carry no shadow, gradient or colour change of their own beyond the kentō headline reveal and the carved rule, which answer the reveal hook instead [anatomy.md, \"no gradient, no shadow\"]"
@@ -538,26 +538,26 @@
                 "selector": "[data-theme='grotesk'] [data-kp-divider]"
             }
         },
-        "tazhib": {
+        "lapis": {
             "surface": {
                 "css": "css/themes.css",
-                "selector": "[data-theme='tazhib'] [data-kp-surface='hero']"
+                "selector": "[data-theme='lapis'] [data-kp-surface='hero']"
             },
             "emphasis": {
-                "css": "css/tazhib-register.css",
-                "selector": "[data-theme='tazhib'] mark"
+                "css": "css/lapis-register.css",
+                "selector": "[data-theme='lapis'] mark"
             },
             "reveal": {
-                "css": "css/tazhib-register.css",
-                "selector": "[data-theme='tazhib'] [data-kp-reveal='headline']"
+                "css": "css/lapis-register.css",
+                "selector": "[data-theme='lapis'] [data-kp-reveal='headline']"
             },
             "divider": {
-                "css": "css/tazhib-register.css",
-                "selector": "[data-theme='tazhib'] [data-kp-divider]"
+                "css": "css/lapis-register.css",
+                "selector": "[data-theme='lapis'] [data-kp-divider]"
             },
             "accent": {
-                "css": "css/tazhib-register.css",
-                "selector": "[data-theme='tazhib'] [data-kp-surface] h1"
+                "css": "css/lapis-register.css",
+                "selector": "[data-theme='lapis'] [data-kp-surface] h1"
             }
         },
         "nostromo": {

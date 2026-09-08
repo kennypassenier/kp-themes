@@ -48,11 +48,11 @@ const SHEETS = [
     'phantom-register.css',
     'terminal-register.css',
     'brutalism-register.css',
-    'nishiki-register.css',
+    'woodblock-register.css',
     'pastel-register.css',
     'shade-light-register.css',
     'ticker-register.css',
-    'topo-register.css',
+    'forest-register.css',
     'deco-register.css',
     'light-register.css',
     'grotesk-register.css',
@@ -65,7 +65,7 @@ const SHEETS = [
     'solstice-register.css',
     'mono-register.css',
     'high-contrast-register.css',
-    'tazhib-register.css',
+    'lapis-register.css',
     'shade-dark-register.css',
 ];
 

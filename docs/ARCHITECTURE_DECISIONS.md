@@ -405,7 +405,7 @@ above was wrong in three of its eight figures. Re-measured over the same
 census that agrees with it: **327** bold spans (not 323), **193** inline
 code spans (not 189), and **9 underscore-emphasis spans** the count had
 missed entirely — `dark:32`, `dark:62`, `cyberpunk:22`, `cyberpunk:44`,
-`pastel:10`, `pastel:48`, `topo:12`, `nishiki:9`, `retro:14`. Headings,
+`pastel:10`, `pastel:48`, `forest:12`, `woodblock:9`, `retro:14`. Headings,
 links, ordered items, bullets and quotes were correct.
 
 Kenny chose to correct the measurement rather than rewrite the nine
@@ -434,7 +434,7 @@ test (KT8) that fails a page painting a colour that is not the theme's —
 so any library would need remapping onto tokens anyway, and the library
 would then be the smaller half of the work. Instead: a small tokenizer
 for the level a snippet needs, colouring from `--chart-1`, `--chart-2`
-and `--muted-foreground`, so code is green in terminal and gold in tazhib
+and `--muted-foreground`, so code is green in terminal and gold in lapis
 like everything else on the page.
 
 ## T13 · The targets stand; GitHub Pages becomes a named environment
@@ -1123,8 +1123,8 @@ their `fonts.css` can point at the same faces. **Critic #13 also
 corrects T19's premise:** chassis-rs was never blind to typefaces — it
 self-hosts; the shipped fonts serve the consumers that vendor a
 stylesheet and nothing else (kyu, almanac) and the npm consumer.
-**Latin-only breaks two themes** (nishiki: Zen Kaku Gothic New, Shippori
-Mincho; tazhib: Vazirmatn, Markazi Text): those ship their script subset
+**Latin-only breaks two themes** (woodblock: Zen Kaku Gothic New, Shippori
+Mincho; lapis: Vazirmatn, Markazi Text): those ship their script subset
 (`japanese`, `arabic`) beside latin, and the budget is per theme, not
 per package. **Critic #14:** subsetting is a Modified Version under the
 OFL; a family with a Reserved Font Name may not ship subset under it.

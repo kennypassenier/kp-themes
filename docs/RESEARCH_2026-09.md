@@ -134,14 +134,14 @@ eighteen themes with an anatomy); sweep C covered synthwave only.
 - Hazards: `flicker .15s infinite` (Neo Tokyo, HairyDuck, Lownes) — over DI5; PX PUSH raster jitter `steps(60)` per second and noise `steps(1)` at .5 s (A reports the figures without a DI5 verdict); MUTHUR `scanlines .1s` (see oscillating patterns).
 - Verdict: **next level found** (A: PX PUSH; B: block-cursor sweep, Neo Tokyo; D: ekeijl's sweep band and bezel; D adds that the references are libraries and articles — "the site is ours to make").
 
-### 7. topo
+### 7. forest
 
-- **Adam Culpepper, "How I built this site's hero animation with GSAP"** <https://adamculpepper.net/blog/gsap-hero-animation> — **measured** (the article's own code) [D topo R1]
+- **Adam Culpepper, "How I built this site's hero animation with GSAP"** <https://adamculpepper.net/blog/gsap-hero-animation> — **measured** (the article's own code) [D forest R1]
   - Contours are procedural SVG paths: a circle perturbed by `sin(angle*3+seed)*r*0.055 + sin(angle*7+seed*2.7)*r*0.028 + sin(angle*13+seed*4.1)*r*0.012`, 180 segments, `stroke: currentColor`.
   - Draw-in `gsap.to('.contour',{drawSVG:'100%',duration:1.8,ease:'power2.inOut',stagger:{each:0.12,from:'start'}})` — DOM order = elevation order; author: 0.3 s felt like waiting, 0 was a wipe, 0.12 is the feel. Needs-JS.
   - Ambient drift `x: ±9px, y: 6px, duration 14, ease sine.inOut, yoyo`, paused off-viewport and on `visibilitychange`; scroll parallax `yPercent: -7 * (index+1)`, `scrub: true`. Needs-JS.
   - Reduced motion: the stylesheet shows the finished map; `drawSVG:'0%'` is set by JS only — no-JS and reduced-motion both get the complete drawing. CSS-only static field via `stroke-dasharray`.
-- **cssShowcase "Topographic Lines"** <https://www.cssshowcase.com/snippets/color/topographic-lines> — **measured** [D topo R2]: `repeating-radial-gradient(circle at 50% 50%, oklch(0.98 0 0) 0 10%, oklch(0.5 0.1 140) 10% 11%)` — rings, not terrain; a zero-asset fallback. CSS-only.
+- **cssShowcase "Topographic Lines"** <https://www.cssshowcase.com/snippets/color/topographic-lines> — **measured** [D forest R2]: `repeating-radial-gradient(circle at 50% 50%, oklch(0.98 0 0) 0 10%, oklch(0.5 0.1 140) 10% 11%)` — rings, not terrain; a zero-asset fallback. CSS-only.
 - Also seen: Topo Designs <https://www.topodesigns.com/> — **measured** [D]: IBM Plex Sans, `--animation-order: 1..12`, radius 0, no contour motif — "noted so nobody looks again". Codrops "Building Ridgeline: real-time terrain in Webflow" (2026-07-22, R3F) and
   scroll-driven SVG map path drawing (05-21) — **observed** [B]. A: none found (Behance "topographic website" returns generic sites); B: Webflow `topographic` tag empty, nothing on Awwwards.
 - Hazards: none flagged.
@@ -297,12 +297,12 @@ eighteen themes with an anatomy); sweep C covered synthwave only.
 - Hazards: none flagged (D: anatomy already refuses the flash on update).
 - Verdict: **nothing found** for the idiom — D: "the idiom's canonical instance is proprietary"; A: mockups only; B supplies a generic marquee primitive.
 
-### 17. nishiki
+### 17. woodblock
 
 - **The World of Yokai** <https://yokaiworld.tilda.ws/en> — Behance 199884395, Anastasia Liechtenstein, 2024-05-30 (Tilda) — **measured** from the page HTML (2.2 MB) [A R37]: `'DelaGothicOne'` (32 uses) + `'Manrope'`; `#1f1c1d` (143), `#d52a17` (86, vermilion), `#7f7368`, `#fff705` (61), `#c8b6a4` (paper), `#e9840a`;
   125 `data-animate-sbs-event="scroll"`, 34 `="hover"`, 27 `="blockintoview"`, 35 looped — most illustration parts move on scroll (builder JS). Next-level choreography, ordinary CSS.
 - **HIFUMIKAN** — hifumikan.webflow.io (2022, tag japanese) — **measured** [B §5]: `Alegreya`/`Alegreya Sans` + `source-han-sans-japanese`/`Noto Sans JP`; `mix-blend-mode:multiply`; hairline rhythm `border-top:1px solid var(--grey)` ×10; #041b20 #3f3e46 #dab77f #ffa26c #83aecb #ccb283. Ordinary-plus, CSS-only.
-- **css-pattern.com "Waves"** <https://css-pattern.com/> — Temani Afif — **measured** [D nishiki R3]: a seigaiha-class scallop from eight `radial-gradient(37.5% 12.5% at 62.5% …)` tiles over `repeating-linear-gradient`, `background-size: calc(4*30px) calc(12*30px)`, two colours, zero assets. CSS-only — the one transferable item.
+- **css-pattern.com "Waves"** <https://css-pattern.com/> — Temani Afif — **measured** [D woodblock R3]: a seigaiha-class scallop from eight `radial-gradient(37.5% 12.5% at 62.5% …)` tiles over `repeating-linear-gradient`, `background-size: calc(4*30px) calc(12*30px)`, two colours, zero assets. CSS-only — the one transferable item.
 - Also seen: Adachi Institute of Woodcut Prints <https://www.adachi-hanga.com/en/> — **measured** [D]: `'Noto Serif JP'`, `'Noto Sans JP'`, `'Playfair Display'`; `a, a img{transition:all .7s ease}`; hamburger `#000` 26×2 px; `hr{border-top:1px solid #ccc}`; no pattern, no keyframes. Ukiyoe Immersive Art Exhibition <https://www.ukiyoeimmersiveart.com/tokyo/en> — **measured** [D]: Montserrat + Noto Sans JP, gold `#b6a66d` on `#010101`, decorative images at `opacity:.3–.6` — builder template.
   Experience Japan experience-japan.webflow.io (2020) — **measured** [B]: `Bison`, `Droid Serif`; `linear-gradient(#0000,#a7abaf),url(…Fuji.png)`; vermilion #bf3030/#992e2e on #fffdf8; `text-shadow:0 1px 1px var(--brown)` — ordinary. IZANAMI (baqemono, SOTD+DEV 2026-07-18, #0A0801/#D9D7D4, WebGL/GSAP, "spirit of Wa") and Treasures of Japan (Mirror, SOTD 2024-10-05, #EBAFBE, game mechanics) — **observed** [B]; nothing on brocade or pattern in the listings.
 - Hazards: none flagged.
@@ -369,11 +369,11 @@ eighteen themes with an anatomy); sweep C covered synthwave only.
 - Hazards: none flagged.
 - Verdict: **next level found** (D: Grilli grid and two-speed link; B: Hiroto Sato's blur+brightness transition).
 
-### 23. tazhib
+### 23. lapis
 
-- **Curio, "Islamic Girih Tiles"** <https://designbycurio.com/islamic-girih-tile-geometry> — **observed** (WebFetch) [D tazhib R1]: lapis `#0E3A5C`/`#0A2540`, gold `#C9A227`, turquoise `rgba(43,183,176,.22)`, cream `rgba(242,239,230,.6)`; the ruling `border:2px solid #C9A227; box-shadow: inset 0 0 0 1px #0E3A5C, inset 0 0 0 3px rgba(242,239,230,.6), inset 0 0 0 4px #C9A227` — four rings in one declaration;
+- **Curio, "Islamic Girih Tiles"** <https://designbycurio.com/islamic-girih-tile-geometry> — **observed** (WebFetch) [D lapis R1]: lapis `#0E3A5C`/`#0A2540`, gold `#C9A227`, turquoise `rgba(43,183,176,.22)`, cream `rgba(242,239,230,.6)`; the ruling `border:2px solid #C9A227; box-shadow: inset 0 0 0 1px #0E3A5C, inset 0 0 0 3px rgba(242,239,230,.6), inset 0 0 0 4px #C9A227` — four rings in one declaration;
   a 96 px star tile from `repeating-conic-gradient`; sheen `linear-gradient(135deg, rgba(242,239,230,.10), transparent)`; durations 120/250/400/600 ms; Reem Kufi, Noto Naskh Arabic. "Next level as a recipe", CSS-only — better than our single inset hairline.
-- **IGPA (Islamic Geometric Patterns Archive)** — Behance 222189509, Arash Hosseini, 2025-03-24 — **observed** [A R38]: "morphing geometric patterns that transition between content categories", a central "spin wheel" per category and region, "only black and two shades of gray", logo from chalipa and shamseh motifs. Next-level concept, no code. Behance `tazhib` (90+ results) is illumination artwork; Siraa Crafts' frames (178882963) are ornament reference only.
+- **IGPA (Islamic Geometric Patterns Archive)** — Behance 222189509, Arash Hosseini, 2025-03-24 — **observed** [A R38]: "morphing geometric patterns that transition between content categories", a central "spin wheel" per category and region, "only black and two shades of gray", logo from chalipa and shamseh motifs. Next-level concept, no code. Behance `lapis` (90+ results) is illumination artwork; Siraa Crafts' frames (178882963) are ornament reference only.
 - Also seen: Girih Tiles Explorer <https://girih.app/> — Cormorant Garamond + Inter **measured**, the pattern is canvas (observed) [D]. Fitzwilliam Shahnameh <https://shahnameh.fitzmuseum.cam.ac.uk/> — **measured** [D]: Bootstrap 4, Crimson Text, `#bc1a3a`, `#731200`, `#0f7290`; nothing idiomatic. B: no Awwwards match — the UAE listing (30 sites) is tech/real-estate; Dubai Always (#ff6e00, game) and Tamannaah (quiet luxury, #F7F7F7) carry no ornament (observed).
 - Hazards: none flagged.
 - Verdict: **nothing found** at the bar (D: "recipes and a canvas toy, no site"; B: "none found"; A: an observed concept). The four-ring ruling is the one take.
@@ -535,7 +535,7 @@ Grouped under the five semantic hooks (S45) plus buttons, navbars, texture, typo
 
 **Loading sequences.**
 - In the theme's own voice: BEIGE FORCE `.loader-percent { text-shadow:-3px 3px #000; font:36px Kongtext }`, dots by `width: 0→3.2ch` [A]; Gateway Galaxy `boltApp__loadingBreathe { 50% { opacity:1; transform:scale(1.2) } }` on a radial occluder [A]; Phantom.Land `Loader_skew-left` / `Loader_move-out-left` [B]; retronovaworld's diegetic boot text with SKIP LOADING [C]; the CRT turn-on 4s / turn-off 0.55s [C]; MUTHUR `bootLine` from `translateY(2px)` [D]; 2bit.chat `receipt-print` [A]. CSS-only; skip controls and typed text need JS.
-- Codrops 2026 tutorial stream (tympanus.net/codrops/category/tutorials) — **observed** [B §7]: shape-aware ASCII renderer (09-04), real-time datamosh (09-02), square lens with RGB shift (08-25), depth-map relighting (08-19), GSAP testimonial hero from Webflow CMS (08-18), infinite GSAP gallery with Flip (07-30), Ridgeline terrain (07-22), wave-propagation cube grid (07-09), persistent WebGPU page transitions (06-30), MotionPath thumbnail flow (06-04), infinite scroll GSAP+Lenis (05-28), scroll-driven SVG map path drawing (05-21) — almost all Three.js/WebGPU, outside a CSS package except the SVG map draw (topo) and the Flip gallery. On-scroll sliced text (github SlicedTextEffect/js/index.js) — **measured** [B]: `ScrollTrigger{start:'top bottom',end:'top top+=10%',scrub:true}`, `ease:'power1'`, reunite `ease:'power2.inOut'` with `stagger`; needs-JS.
+- Codrops 2026 tutorial stream (tympanus.net/codrops/category/tutorials) — **observed** [B §7]: shape-aware ASCII renderer (09-04), real-time datamosh (09-02), square lens with RGB shift (08-25), depth-map relighting (08-19), GSAP testimonial hero from Webflow CMS (08-18), infinite GSAP gallery with Flip (07-30), Ridgeline terrain (07-22), wave-propagation cube grid (07-09), persistent WebGPU page transitions (06-30), MotionPath thumbnail flow (06-04), infinite scroll GSAP+Lenis (05-28), scroll-driven SVG map path drawing (05-21) — almost all Three.js/WebGPU, outside a CSS package except the SVG map draw (forest) and the Flip gallery. On-scroll sliced text (github SlicedTextEffect/js/index.js) — **measured** [B]: `ScrollTrigger{start:'top bottom',end:'top top+=10%',scrub:true}`, `ease:'power1'`, reunite `ease:'power2.inOut'` with `stagger`; needs-JS.
 - Page transitions: Hiroto Sato `filter:blur(var(--transition-content-blur)) brightness(var(--transition-content-brightness))` [B]; Maximilian Kaspar four columns `calc(25% ± 2.5px)` [B]; NW pixel-grid dissolve (needs-JS) [B]; synthwave-mix `.nav__transition-block{background-color:#df0edb}` [B].
 
 ---

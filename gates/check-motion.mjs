@@ -89,7 +89,7 @@ const OUT_OF_SCOPE = {
     // once across a headline or a redaction bar (mask-position).
     'kp-wipe':
         'a hard-edge mask sweeping once across a headline (the whole line, unsplit) or a redaction bar (mark::after); the content under the mask keeps its own colours, only the reveal edge moves',
-    // The tazhib register [S48, LIFT_PLAN row 6].
+    // The lapis register [S48, LIFT_PLAN row 6].
     'kp-burnish':
         'a clip-path wipe over the headline once (the burnish); the text is gold from the first frame of the wipe and stays gold, only the reveal boundary moves',
     // The blueprint register [S48, LIFT_PLAN row 6]: the two dimension
@@ -107,7 +107,7 @@ const OUT_OF_SCOPE = {
     // matches the shape of the retro selection bar's kp-drag-select below;
     // under 341x256 px.
     'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
-    // The topo register [TP1]: the contour trace beside the headline.
+    // The forest register [TP1]: the contour trace beside the headline.
     'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
     // The shade-light register [SL2]: the lede mark's ink-fill is a
     // background-size change, not a luminance one — the fill colour and
@@ -116,7 +116,7 @@ const OUT_OF_SCOPE = {
     // The pastel register [S48, LIFT_PLAN row 6].
     'kp-fill': "a mark's background-size growing from 0% to 100% once; the ink colour itself never changes, only how much of the word it covers",
     'kp-draw': "a rule's width growing from 0% to 100% once; no luminance change and the rule is a few px tall",
-    // The nishiki register [S48].
+    // The woodblock register [S48].
     'kp-kento-blue':
         'a translate of a ghost plate converging to its final offset, once; no luminance change (mix-blend-mode multiply, no opacity or colour-stop keyframe)',
     'kp-kento-red':

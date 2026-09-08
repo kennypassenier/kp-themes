@@ -1,13 +1,13 @@
 @layer kp.register {
-    /* @kp-soft/themes — css/nishiki-register.css
-   The nishiki register, 5.0.0 [S48, LIFT_PLAN row 20]: the woodblock pull.
-   Scoped to [data-theme='nishiki'] and inert elsewhere; opt-in, imported
+    /* @kp-soft/themes — css/woodblock-register.css
+   The woodblock register, 5.0.0 [S48, LIFT_PLAN row 20]: the woodblock pull.
+   Scoped to [data-theme='woodblock'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo is "The Woodblock Pull"
-   (v2, 2026-09-08) — <scratchpad>/nishiki-demo-v2.html — reworked from
+   (v2, 2026-09-08) — <scratchpad>/woodblock-demo-v2.html — reworked from
    "Beni & Bero" on Kenny's own note that the first pass "did not... read
    as a woodblock print at all"; v2 adds the physical vocabulary of a
    hand-pulled print rather than only its palette. <scratchpad>/
-   nishiki-research.md holds the round-one measurements; the v2 sources —
+   woodblock-research.md holds the round-one measurements; the v2 sources —
    Encyclopedia of Woodblock Printmaking's "Kento Stains"/"Kento
    Registration", Wikipedia's "Baren (printing tool)", Jackson's Art Blog
    and Linda Germain's printmaking notes — are cited in the demo's own
@@ -45,7 +45,7 @@
    the seigaiha wave are static — a print is pulled once, it does not
    move again. */
 
-    [data-theme='nishiki'] {
+    [data-theme='woodblock'] {
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 140ms;
@@ -104,16 +104,16 @@
 
     /* ── Type ──────────────────────────────────────────────────────────── */
 
-    [data-theme='nishiki'] h1,
-    [data-theme='nishiki'] h2,
-    [data-theme='nishiki'] h3,
-    [data-theme='nishiki'] h4 {
+    [data-theme='woodblock'] h1,
+    [data-theme='woodblock'] h2,
+    [data-theme='woodblock'] h3,
+    [data-theme='woodblock'] h4 {
         font-family: var(--theme-font-display);
         font-weight: 700;
         line-height: 1.2;
     }
 
-    [data-theme='nishiki'] [data-kp-surface] h1 {
+    [data-theme='woodblock'] [data-kp-surface] h1 {
         font-size: var(--kp-text-display);
         font-weight: 700;
         line-height: 1.06;
@@ -124,7 +124,7 @@
     /* Microlabels: the shop's own hand, no glyph of its own — the demo's
        microlabel carries no prefix, unlike phantom's tick or terminal's
        prompt. */
-    [data-theme='nishiki'] .microlabel {
+    [data-theme='woodblock'] .microlabel {
         font-family: var(--kp-mono);
         font-size: 0.75rem;
         letter-spacing: 0.08em;
@@ -139,7 +139,7 @@
        the module armed it stands undrawn until the loose-mark stagger
        clears it (js/effects.js's clearInSteps, unrelated to the routine
        name). */
-    [data-theme='nishiki'] mark {
+    [data-theme='woodblock'] mark {
         background: transparent;
         color: inherit;
         position: relative;
@@ -147,7 +147,7 @@
         z-index: 0;
     }
 
-    [data-theme='nishiki'] mark::after {
+    [data-theme='woodblock'] mark::after {
         content: '';
         position: absolute;
         inset: -0.02em -0.05em 0.08em;
@@ -157,7 +157,7 @@
         transform: scaleX(1);
     }
 
-    [data-theme='nishiki'][data-kp-effects] mark:not(.is-cleared)::after {
+    [data-theme='woodblock'][data-kp-effects] mark:not(.is-cleared)::after {
         transform: scaleX(0);
     }
 
@@ -165,7 +165,7 @@
        drawn left to right once when the heading it sits under enters the
        viewport (js/effects.js's IntersectionObserver, any non-quiet
        routine). Reuses the base layer's own kp-rule-in keyframe. */
-    [data-theme='nishiki'] [data-kp-reveal='rule']::after {
+    [data-theme='woodblock'] [data-kp-reveal='rule']::after {
         content: '';
         display: block;
         inline-size: 100%;
@@ -177,7 +177,7 @@
         transform: scaleX(1);
     }
 
-    [data-theme='nishiki'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+    [data-theme='woodblock'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
         transform: scaleX(0);
     }
 
@@ -185,7 +185,7 @@
        offset zig-zag tooth layers so the tear reads as uneven rather than
        a printed chevron, plus a fibre wisp confined to the strip itself
        (DI9: local to one element, not a page texture). */
-    [data-theme='nishiki'] [data-kp-divider] {
+    [data-theme='woodblock'] [data-kp-divider] {
         position: relative;
         display: block;
         block-size: 16px;
@@ -207,7 +207,7 @@
         opacity: 0.9;
     }
 
-    [data-theme='nishiki'] [data-kp-divider]::after {
+    [data-theme='woodblock'] [data-kp-divider]::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -219,7 +219,7 @@
 
     /* The toji tear: the stab-binding stitch of a Japanese book, the second
        divider, in beni. */
-    [data-theme='nishiki'] [data-kp-divider='alt'] {
+    [data-theme='woodblock'] [data-kp-divider='alt'] {
         block-size: 16px;
         background-image: repeating-linear-gradient(115deg, var(--accent) 0 6px, transparent 6px 15px);
         background-color: transparent;
@@ -228,7 +228,7 @@
 
     /* ── The hero: the seigaiha wave and the kentō corner marks ────────── */
 
-    [data-theme='nishiki'] [data-kp-surface='hero'] {
+    [data-theme='woodblock'] [data-kp-surface='hero'] {
         position: relative;
         overflow: hidden;
         isolation: isolate;
@@ -242,7 +242,7 @@
        already reaches the hero since it is a fixed full-viewport layer —
        see the anatomy's closing section for why the demo's own separate
        hero fibre layer is not duplicated here). */
-    [data-theme='nishiki'] [data-kp-surface='hero']::before {
+    [data-theme='woodblock'] [data-kp-surface='hero']::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -268,7 +268,7 @@
        mark, bottom-right). Page furniture, static, two solid ink bars
        each, drawn as flat-colour gradient layers rather than borders so
        they sit as one paint operation. */
-    [data-theme='nishiki'] [data-kp-surface='hero']::after {
+    [data-theme='woodblock'] [data-kp-surface='hero']::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -288,27 +288,27 @@
             right 10px bottom 10px;
     }
 
-    [data-theme='nishiki'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+    [data-theme='woodblock'] [data-kp-surface='hero'] [data-kp-hero-grid] {
         grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
         gap: 2.5rem;
         align-items: start;
     }
 
     @container (max-width: 55rem) {
-        [data-theme='nishiki'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        [data-theme='woodblock'] [data-kp-surface='hero'] [data-kp-hero-grid] {
             grid-template-columns: 1fr;
         }
     }
 
     /* ── The headline: kentō, two ghost plates converging, once ────────── */
 
-    [data-theme='nishiki'] [data-kp-reveal='headline'] {
+    [data-theme='woodblock'] [data-kp-reveal='headline'] {
         position: relative;
         isolation: isolate;
     }
 
-    [data-theme='nishiki'] [data-kp-reveal='headline']::before,
-    [data-theme='nishiki'] [data-kp-reveal='headline']::after {
+    [data-theme='woodblock'] [data-kp-reveal='headline']::before,
+    [data-theme='woodblock'] [data-kp-reveal='headline']::after {
         content: attr(data-kp-text);
         position: absolute;
         inset: 0;
@@ -317,11 +317,11 @@
         mix-blend-mode: multiply;
     }
 
-    [data-theme='nishiki'] [data-kp-reveal='headline']::before {
+    [data-theme='woodblock'] [data-kp-reveal='headline']::before {
         color: var(--primary);
     }
 
-    [data-theme='nishiki'] [data-kp-reveal='headline']::after {
+    [data-theme='woodblock'] [data-kp-reveal='headline']::after {
         color: var(--accent);
     }
 
@@ -332,21 +332,21 @@
        [Kenny, 2026-09-08: the mechanism needed to read as kentō rather
        than a generic wipe]. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nishiki'] [data-kp-reveal='headline']::before {
+        [data-theme='woodblock'] [data-kp-reveal='headline']::before {
             animation: kp-kento-blue var(--kp-reveal-duration) var(--kp-reveal-ease) both;
         }
 
-        [data-theme='nishiki'] [data-kp-reveal='headline']::after {
+        [data-theme='woodblock'] [data-kp-reveal='headline']::after {
             animation: kp-kento-red var(--kp-reveal-duration) var(--kp-reveal-ease) both;
         }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-theme='nishiki'] [data-kp-reveal='headline']::before {
+        [data-theme='woodblock'] [data-kp-reveal='headline']::before {
             translate: -1.5px -1px;
         }
 
-        [data-theme='nishiki'] [data-kp-reveal='headline']::after {
+        [data-theme='woodblock'] [data-kp-reveal='headline']::after {
             translate: 1.5px 1px;
         }
     }
@@ -373,13 +373,13 @@
 
     /* ── The navbar: the printed strip, its carved bottom edge ─────────── */
 
-    [data-theme='nishiki'] .kp-nav-wrap {
+    [data-theme='woodblock'] .kp-nav-wrap {
         position: relative;
         background: var(--card);
         padding-block-end: 4px;
     }
 
-    [data-theme='nishiki'] .kp-nav-wrap::after {
+    [data-theme='woodblock'] .kp-nav-wrap::after {
         content: '';
         position: absolute;
         inset-inline: 0;
@@ -391,13 +391,13 @@
         pointer-events: none;
     }
 
-    [data-theme='nishiki'] .kp-nav {
+    [data-theme='woodblock'] .kp-nav {
         background: var(--card);
         position: relative;
         z-index: var(--kp-z-nav, 30);
     }
 
-    [data-theme='nishiki'] .kp-nav__brand {
+    [data-theme='woodblock'] .kp-nav__brand {
         font-family: var(--theme-font-display);
         font-weight: 700;
         font-size: 1.1rem;
@@ -406,47 +406,47 @@
         text-decoration: none;
     }
 
-    [data-theme='nishiki'] .kp-nav__link {
+    [data-theme='woodblock'] .kp-nav__link {
         color: var(--foreground);
         background: none;
         text-decoration: none;
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-nav__link:hover,
-    [data-theme='nishiki'] .kp-nav__link:focus-visible,
-    [data-theme='nishiki'] .kp-nav__link[aria-current],
-    [data-theme='nishiki'] .kp-nav__links > li:focus-within > .kp-nav__link {
+    [data-theme='woodblock'] .kp-nav__link:hover,
+    [data-theme='woodblock'] .kp-nav__link:focus-visible,
+    [data-theme='woodblock'] .kp-nav__link[aria-current],
+    [data-theme='woodblock'] .kp-nav__links > li:focus-within > .kp-nav__link {
         background: var(--muted);
     }
 
-    [data-theme='nishiki'] .kp-nav__link[aria-haspopup]::after {
+    [data-theme='woodblock'] .kp-nav__link[aria-haspopup]::after {
         content: ' ▾';
         font-size: 0.65em;
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-nav__link--lang {
+    [data-theme='woodblock'] .kp-nav__link--lang {
         font-family: var(--kp-mono);
         letter-spacing: 0.05em;
     }
 
     /* The call to action: a beni plate with the baren mottle, the ink key
        line as its border. */
-    [data-theme='nishiki'] .kp-nav__link--cta {
+    [data-theme='woodblock'] .kp-nav__link--cta {
         background: var(--kp-baren), var(--accent);
         color: var(--accent-foreground);
         border: 1px solid var(--foreground);
     }
 
-    [data-theme='nishiki'] .kp-nav__link--cta:hover,
-    [data-theme='nishiki'] .kp-nav__link--cta:focus-visible {
+    [data-theme='woodblock'] .kp-nav__link--cta:hover,
+    [data-theme='woodblock'] .kp-nav__link--cta:focus-visible {
         background: var(--kp-baren), var(--accent-hover, var(--accent));
     }
 
     /* The dropdown: a printed panel — the existing ink border is its key
        line, and its own kentō is a kagi mark in the corner (KT14). */
-    [data-theme='nishiki'] .kp-nav__menu {
+    [data-theme='woodblock'] .kp-nav__menu {
         position: relative;
         background: var(--popover);
         border: 1px solid var(--foreground);
@@ -454,7 +454,7 @@
         box-shadow: none;
     }
 
-    [data-theme='nishiki'] .kp-nav__menu::before {
+    [data-theme='woodblock'] .kp-nav__menu::before {
         content: '';
         position: absolute;
         inset-block-start: 3px;
@@ -472,20 +472,20 @@
         pointer-events: none;
     }
 
-    [data-theme='nishiki'] .kp-nav__menu a {
+    [data-theme='woodblock'] .kp-nav__menu a {
         color: var(--foreground);
         text-decoration: none;
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-nav__menu a:hover,
-    [data-theme='nishiki'] .kp-nav__menu a:focus-visible {
+    [data-theme='woodblock'] .kp-nav__menu a:hover,
+    [data-theme='woodblock'] .kp-nav__menu a:focus-visible {
         background: var(--muted);
     }
 
     /* ── Buttons: baren-burnished plates, the mirrored impression ──────── */
 
-    [data-theme='nishiki'] .kp-button {
+    [data-theme='woodblock'] .kp-button {
         position: relative;
         font-weight: 600;
         background: var(--secondary);
@@ -494,53 +494,53 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-button:hover:not(:disabled) {
+    [data-theme='woodblock'] .kp-button:hover:not(:disabled) {
         background: var(--muted);
     }
 
-    [data-theme='nishiki'] .kp-button--primary {
+    [data-theme='woodblock'] .kp-button--primary {
         background: var(--kp-baren), var(--primary);
         color: var(--primary-foreground);
         border-color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-button--primary:hover:not(:disabled),
-    [data-theme='nishiki'] .kp-button--primary:focus-visible {
+    [data-theme='woodblock'] .kp-button--primary:hover:not(:disabled),
+    [data-theme='woodblock'] .kp-button--primary:focus-visible {
         background: var(--kp-baren), var(--primary-hover, var(--primary));
         border-color: var(--primary-hover, var(--primary));
     }
 
-    [data-theme='nishiki'] .kp-button--destructive {
+    [data-theme='woodblock'] .kp-button--destructive {
         background: var(--kp-baren), var(--destructive);
         color: var(--destructive-foreground);
         border-color: var(--destructive);
     }
 
-    [data-theme='nishiki'] .kp-button--destructive:hover:not(:disabled),
-    [data-theme='nishiki'] .kp-button--destructive:focus-visible {
+    [data-theme='woodblock'] .kp-button--destructive:hover:not(:disabled),
+    [data-theme='woodblock'] .kp-button--destructive:focus-visible {
         background: var(--kp-baren), var(--destructive-hover, var(--destructive));
         border-color: var(--destructive-hover, var(--destructive));
     }
 
-    [data-theme='nishiki'] .kp-button--ghost {
+    [data-theme='woodblock'] .kp-button--ghost {
         background: transparent;
         border-color: var(--border);
         color: var(--foreground);
     }
 
-    [data-theme='nishiki'] .kp-button--ghost:hover:not(:disabled) {
+    [data-theme='woodblock'] .kp-button--ghost:hover:not(:disabled) {
         border-color: var(--foreground);
     }
 
     /* "mirror" — a second, offset impression printed behind the button, the
        way a misregistered pull leaves a ghost plate; a solid fill, never a
        blurred shadow (the anatomy's own rule: "a print has none"). */
-    [data-theme='nishiki'] .kp-button--mirror {
+    [data-theme='woodblock'] .kp-button--mirror {
         margin-inline-end: 4px;
         margin-block-start: 4px;
     }
 
-    [data-theme='nishiki'] .kp-button--mirror::before {
+    [data-theme='woodblock'] .kp-button--mirror::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -550,26 +550,26 @@
         border-radius: inherit;
     }
 
-    [data-theme='nishiki'] .kp-icon-button {
+    [data-theme='woodblock'] .kp-icon-button {
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         background: var(--secondary);
     }
 
-    [data-theme='nishiki'] .kp-icon-button:hover {
+    [data-theme='woodblock'] .kp-icon-button:hover {
         background: var(--muted);
     }
 
     /* ── Fields: ink-bordered wells on washi ───────────────────────────── */
 
-    [data-theme='nishiki'] .kp-field__label {
+    [data-theme='woodblock'] .kp-field__label {
         font-weight: 600;
     }
 
-    [data-theme='nishiki'] .kp-field__input,
-    [data-theme='nishiki'] .kp-datatable__search,
-    [data-theme='nishiki'] .kp-combobox__input,
-    [data-theme='nishiki'] .kp-palette__input {
+    [data-theme='woodblock'] .kp-field__input,
+    [data-theme='woodblock'] .kp-datatable__search,
+    [data-theme='woodblock'] .kp-combobox__input,
+    [data-theme='woodblock'] .kp-palette__input {
         background: var(--background);
         color: var(--foreground);
         border: 1px solid var(--foreground);
@@ -577,39 +577,39 @@
         caret-color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-field__input:focus-visible,
-    [data-theme='nishiki'] .kp-datatable__search:focus-visible,
-    [data-theme='nishiki'] .kp-combobox__input:focus-visible,
-    [data-theme='nishiki'] .kp-palette__input:focus-visible {
+    [data-theme='woodblock'] .kp-field__input:focus-visible,
+    [data-theme='woodblock'] .kp-datatable__search:focus-visible,
+    [data-theme='woodblock'] .kp-combobox__input:focus-visible,
+    [data-theme='woodblock'] .kp-palette__input:focus-visible {
         border-color: var(--primary);
     }
 
-    [data-theme='nishiki'] select.kp-field__input::picker-icon {
+    [data-theme='woodblock'] select.kp-field__input::picker-icon {
         color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-field__help {
+    [data-theme='woodblock'] .kp-field__help {
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-field--invalid .kp-field__input {
+    [data-theme='woodblock'] .kp-field--invalid .kp-field__input {
         border-color: var(--destructive);
     }
 
-    [data-theme='nishiki'] .kp-field__error {
+    [data-theme='woodblock'] .kp-field__error {
         color: var(--destructive);
     }
 
-    [data-theme='nishiki'] .kp-field__check {
+    [data-theme='woodblock'] .kp-field__check {
         accent-color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-fieldset {
+    [data-theme='woodblock'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-form__summary {
+    [data-theme='woodblock'] .kp-form__summary {
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         background: var(--card);
@@ -617,19 +617,19 @@
 
     /* ── Cards, surfaces and the dossier ───────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-card {
+    [data-theme='woodblock'] .kp-card {
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         background: var(--background);
         box-shadow: none;
     }
 
-    [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] {
+    [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
     /* The stamp: the hand-cut key line as a four-corner-nicked chip. */
-    [data-theme='nishiki'] .kp-card[data-kp-label]::before {
+    [data-theme='woodblock'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
         position: absolute;
         inset-block-start: -1px;
@@ -647,7 +647,7 @@
 
     /* The stamp changes when the file opens, as the demo's redactions do
        [S49, A11]. */
-    [data-theme='nishiki'] .kp-card[data-kp-open][data-kp-label-open]::before {
+    [data-theme='woodblock'] .kp-card[data-kp-open][data-kp-label-open]::before {
         content: attr(data-kp-label-open);
         background: var(--kp-baren), var(--primary);
         color: var(--primary-foreground);
@@ -656,7 +656,7 @@
 
     /* The dossier's own kentō — top-left, since the stamp already owns the
        top-right corner. */
-    [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis']::after {
+    [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis']::after {
         content: '';
         position: absolute;
         inset-block-start: 6px;
@@ -679,7 +679,7 @@
        each, staggered. At rest (no script) the bar stands undrawn — AR34's
        "clear marks" — and shows drawn (covering the phrase) only while the
        module has armed it and the file has not yet been opened. */
-    [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] mark {
+    [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         background: none;
         color: var(--card-foreground);
@@ -687,7 +687,7 @@
         z-index: 0;
     }
 
-    [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] mark::before {
+    [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] mark::before {
         content: '';
         position: absolute;
         inset: -0.05em -0.15em;
@@ -697,93 +697,93 @@
         z-index: 1;
     }
 
-    [data-theme='nishiki'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+    [data-theme='woodblock'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: var(--primary-foreground);
     }
 
-    [data-theme='nishiki'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::before {
+    [data-theme='woodblock'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::before {
         transform: scaleX(1);
     }
 
-    [data-theme='nishiki'] .kp-dialog,
-    [data-theme='nishiki'] .kp-popover,
-    [data-theme='nishiki'] .kp-menu,
-    [data-theme='nishiki'] .kp-toast,
-    [data-theme='nishiki'] .kp-tooltip,
-    [data-theme='nishiki'] .kp-confirm,
-    [data-theme='nishiki'] .kp-datepicker__panel,
-    [data-theme='nishiki'] .kp-combobox__list,
-    [data-theme='nishiki'] .kp-palette,
-    [data-theme='nishiki'] .kp-theme-menu {
+    [data-theme='woodblock'] .kp-dialog,
+    [data-theme='woodblock'] .kp-popover,
+    [data-theme='woodblock'] .kp-menu,
+    [data-theme='woodblock'] .kp-toast,
+    [data-theme='woodblock'] .kp-tooltip,
+    [data-theme='woodblock'] .kp-confirm,
+    [data-theme='woodblock'] .kp-datepicker__panel,
+    [data-theme='woodblock'] .kp-combobox__list,
+    [data-theme='woodblock'] .kp-palette,
+    [data-theme='woodblock'] .kp-theme-menu {
         background: var(--card);
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         box-shadow: none;
     }
 
-    [data-theme='nishiki'] .kp-menu__item:hover,
-    [data-theme='nishiki'] .kp-combobox__option[aria-selected='true'],
-    [data-theme='nishiki'] .kp-palette__option[aria-selected='true'] {
+    [data-theme='woodblock'] .kp-menu__item:hover,
+    [data-theme='woodblock'] .kp-combobox__option[aria-selected='true'],
+    [data-theme='woodblock'] .kp-palette__option[aria-selected='true'] {
         background: var(--muted);
     }
 
-    [data-theme='nishiki'] .kp-alert {
+    [data-theme='woodblock'] .kp-alert {
         background: var(--card);
         border: 1px solid var(--border);
         border-inline-start: 4px solid var(--accent);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-alert--destructive {
+    [data-theme='woodblock'] .kp-alert--destructive {
         border-inline-start-color: var(--destructive);
     }
 
-    [data-theme='nishiki'] .kp-alert--warning {
+    [data-theme='woodblock'] .kp-alert--warning {
         border-inline-start-color: var(--warning);
     }
 
-    [data-theme='nishiki'] .kp-alert--success {
+    [data-theme='woodblock'] .kp-alert--success {
         border-inline-start-color: var(--success);
     }
 
-    [data-theme='nishiki'] .kp-grid__tile,
-    [data-theme='nishiki'] .kp-split__pane {
+    [data-theme='woodblock'] .kp-grid__tile,
+    [data-theme='woodblock'] .kp-split__pane {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-split__separator {
+    [data-theme='woodblock'] .kp-split__separator {
         background: var(--foreground);
     }
 
     /* ── The footer: the ink ground, the cream ink ─────────────────────── */
 
-    [data-theme='nishiki'] .kp-footer {
+    [data-theme='woodblock'] .kp-footer {
         background: var(--foreground);
         color: var(--primary-foreground);
     }
 
-    [data-theme='nishiki'] .kp-footer h4 {
+    [data-theme='woodblock'] .kp-footer h4 {
         color: var(--primary-foreground);
     }
 
-    [data-theme='nishiki'] .kp-footer p {
+    [data-theme='woodblock'] .kp-footer p {
         color: hsl(from var(--primary-foreground) h s calc(l - 15%));
     }
 
-    [data-theme='nishiki'] .kp-footer a {
+    [data-theme='woodblock'] .kp-footer a {
         color: hsl(from var(--primary-foreground) h s calc(l - 10%));
         text-decoration: none;
     }
 
-    [data-theme='nishiki'] .kp-footer a:hover {
+    [data-theme='woodblock'] .kp-footer a:hover {
         color: var(--primary-foreground);
         text-decoration: underline;
     }
 
     /* The footer's fine print: the demo's own microlabel, dimmer, ruled off. */
-    [data-theme='nishiki'] .kp-footer .microlabel {
+    [data-theme='woodblock'] .kp-footer .microlabel {
         color: hsl(from var(--primary-foreground) h s calc(l - 25%));
         border-block-start: 1px solid hsl(from var(--primary-foreground) h s l / 0.18);
         padding-block-start: 0.6rem;
@@ -792,142 +792,142 @@
 
     /* ── Badges, tags, status ──────────────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-badge,
-    [data-theme='nishiki'] .kp-tag {
+    [data-theme='woodblock'] .kp-badge,
+    [data-theme='woodblock'] .kp-tag {
         border-radius: var(--radius);
         font-family: var(--kp-mono);
         letter-spacing: 0.04em;
     }
 
-    [data-theme='nishiki'] .kp-skeleton {
+    [data-theme='woodblock'] .kp-skeleton {
         background: repeating-linear-gradient(-16deg, var(--muted) 0 8px, var(--card) 8px 16px);
     }
 
-    [data-theme='nishiki'] .kp-progress {
+    [data-theme='woodblock'] .kp-progress {
         background: var(--muted);
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-progress__value {
+    [data-theme='woodblock'] .kp-progress__value {
         background: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-spinner {
+    [data-theme='woodblock'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-empty {
+    [data-theme='woodblock'] .kp-empty {
         border: 1px dashed var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-error {
+    [data-theme='woodblock'] .kp-error {
         color: var(--destructive);
     }
 
     /* ── Text shapes ──────────────────────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-id,
-    [data-theme='nishiki'] .kp-url,
-    [data-theme='nishiki'] .kp-numeric,
-    [data-theme='nishiki'] .kp-timestamp,
-    [data-theme='nishiki'] .kp-masked,
-    [data-theme='nishiki'] .kp-copyable,
-    [data-theme='nishiki'] .kp-truncate,
-    [data-theme='nishiki'] .kp-cell-break,
-    [data-theme='nishiki'] .kp-cell-truncate {
+    [data-theme='woodblock'] .kp-id,
+    [data-theme='woodblock'] .kp-url,
+    [data-theme='woodblock'] .kp-numeric,
+    [data-theme='woodblock'] .kp-timestamp,
+    [data-theme='woodblock'] .kp-masked,
+    [data-theme='woodblock'] .kp-copyable,
+    [data-theme='woodblock'] .kp-truncate,
+    [data-theme='woodblock'] .kp-cell-break,
+    [data-theme='woodblock'] .kp-cell-truncate {
         font-family: var(--kp-mono);
     }
 
-    [data-theme='nishiki'] .kp-timestamp,
-    [data-theme='nishiki'] .kp-id {
+    [data-theme='woodblock'] .kp-timestamp,
+    [data-theme='woodblock'] .kp-id {
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-copyable__button {
+    [data-theme='woodblock'] .kp-copyable__button {
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-table th {
+    [data-theme='woodblock'] .kp-table th {
         border-block-end: 2px solid var(--foreground);
     }
 
-    [data-theme='nishiki'] .kp-table td {
+    [data-theme='woodblock'] .kp-table td {
         border-block-end: 1px solid var(--border);
     }
 
-    [data-theme='nishiki'] .kp-table tbody tr:hover {
+    [data-theme='woodblock'] .kp-table tbody tr:hover {
         background: var(--muted);
     }
 
-    [data-theme='nishiki'] .kp-datatable {
+    [data-theme='woodblock'] .kp-datatable {
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-datatable__sort[aria-sort] {
+    [data-theme='woodblock'] .kp-datatable__sort[aria-sort] {
         color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-diff {
+    [data-theme='woodblock'] .kp-diff {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-diff__line {
+    [data-theme='woodblock'] .kp-diff__line {
         font-family: var(--kp-mono);
     }
 
-    [data-theme='nishiki'] .kp-timeline {
+    [data-theme='woodblock'] .kp-timeline {
         border-inline-start: 2px solid var(--foreground);
     }
 
-    [data-theme='nishiki'] .kp-timeline__marker {
+    [data-theme='woodblock'] .kp-timeline__marker {
         background: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-timeline__when {
+    [data-theme='woodblock'] .kp-timeline__when {
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-tree {
+    [data-theme='woodblock'] .kp-tree {
         font-family: var(--kp-mono);
     }
 
-    [data-theme='nishiki'] .kp-reorder {
+    [data-theme='woodblock'] .kp-reorder {
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
     /* ── Navigation and steps ─────────────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-tab {
+    [data-theme='woodblock'] .kp-tab {
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-tab[aria-selected='true'] {
+    [data-theme='woodblock'] .kp-tab[aria-selected='true'] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='nishiki'] .kp-tabs__list {
+    [data-theme='woodblock'] .kp-tabs__list {
         border-block-end: 1px solid var(--border);
     }
 
-    [data-theme='nishiki'] .kp-pagination a[aria-current],
-    [data-theme='nishiki'] .kp-pagination [aria-current] {
+    [data-theme='woodblock'] .kp-pagination a[aria-current],
+    [data-theme='woodblock'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-wizard {
+    [data-theme='woodblock'] .kp-wizard {
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         background: var(--card);
@@ -935,31 +935,31 @@
 
     /* ── Pickers and palettes ─────────────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-combobox__input,
-    [data-theme='nishiki'] .kp-palette__input,
-    [data-theme='nishiki'] .kp-datatable__search {
+    [data-theme='woodblock'] .kp-combobox__input,
+    [data-theme='woodblock'] .kp-palette__input,
+    [data-theme='woodblock'] .kp-datatable__search {
         background: var(--background);
         border: 1px solid var(--foreground);
         border-radius: var(--radius);
         caret-color: var(--primary);
     }
 
-    [data-theme='nishiki'] .kp-datepicker__day[aria-selected='true'] {
+    [data-theme='woodblock'] .kp-datepicker__day[aria-selected='true'] {
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-colorpicker__swatch {
+    [data-theme='woodblock'] .kp-colorpicker__swatch {
         border: 1px solid var(--border);
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-colorpicker__value {
+    [data-theme='woodblock'] .kp-colorpicker__value {
         font-family: var(--kp-mono);
     }
 
-    [data-theme='nishiki'] .kp-shortcuts__row kbd {
+    [data-theme='woodblock'] .kp-shortcuts__row kbd {
         font-family: var(--kp-mono);
         border: 1px solid var(--border);
         border-radius: var(--radius);
@@ -967,61 +967,61 @@
 
     /* ── The roots the rules above reach only by their parts ──────────── */
 
-    [data-theme='nishiki'] .kp-combobox,
-    [data-theme='nishiki'] .kp-datepicker,
-    [data-theme='nishiki'] .kp-colorpicker,
-    [data-theme='nishiki'] .kp-shortcuts,
-    [data-theme='nishiki'] .kp-tabs {
+    [data-theme='woodblock'] .kp-combobox,
+    [data-theme='woodblock'] .kp-datepicker,
+    [data-theme='woodblock'] .kp-colorpicker,
+    [data-theme='woodblock'] .kp-shortcuts,
+    [data-theme='woodblock'] .kp-tabs {
         border-radius: var(--radius);
     }
 
-    [data-theme='nishiki'] .kp-field,
-    [data-theme='nishiki'] .kp-form {
+    [data-theme='woodblock'] .kp-field,
+    [data-theme='woodblock'] .kp-form {
         gap: var(--kp-space-sm);
     }
 
-    [data-theme='nishiki'] .kp-form {
+    [data-theme='woodblock'] .kp-form {
         gap: var(--kp-space-lg);
     }
 
-    [data-theme='nishiki'] .kp-grid,
-    [data-theme='nishiki'] .kp-split {
+    [data-theme='woodblock'] .kp-grid,
+    [data-theme='woodblock'] .kp-split {
         gap: var(--kp-space-lg);
     }
 
-    [data-theme='nishiki'] .kp-toasts {
+    [data-theme='woodblock'] .kp-toasts {
         gap: var(--kp-space-sm);
     }
 
-    [data-theme='nishiki'] .kp-table {
+    [data-theme='woodblock'] .kp-table {
         border-collapse: separate;
         border-spacing: 0;
     }
 
-    [data-theme='nishiki'] .kp-breadcrumb,
-    [data-theme='nishiki'] .kp-pagination {
+    [data-theme='woodblock'] .kp-breadcrumb,
+    [data-theme='woodblock'] .kp-pagination {
         font-family: var(--kp-mono);
         letter-spacing: 0.02em;
     }
 
-    [data-theme='nishiki'] .kp-health {
+    [data-theme='woodblock'] .kp-health {
         font-family: var(--kp-mono);
         letter-spacing: 0.02em;
     }
 
-    [data-theme='nishiki'] .kp-datatable__bar {
+    [data-theme='woodblock'] .kp-datatable__bar {
         border-block-end: 1px solid var(--border);
     }
 
     /* ── The scrollbar joins the theme ────────────────────────────────── */
 
-    [data-theme='nishiki'] {
+    [data-theme='woodblock'] {
         scrollbar-color: var(--foreground) var(--background);
     }
 
     /* ── The demo's own pieces [S46] ──────────────────────────────────── */
 
-    [data-theme='nishiki'] .kp-side-note {
+    [data-theme='woodblock'] .kp-side-note {
         position: absolute;
         inset-inline-end: 0.5rem;
         inset-block-start: 1.4rem;
@@ -1032,21 +1032,21 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-laurels {
+    [data-theme='woodblock'] .kp-laurels {
         color: var(--muted-foreground);
     }
 
-    [data-theme='nishiki'] .kp-laurels b {
+    [data-theme='woodblock'] .kp-laurels b {
         color: var(--foreground);
         font-family: var(--kp-mono);
     }
 
-    [data-theme='nishiki'] .kp-lede {
+    [data-theme='woodblock'] .kp-lede {
         max-width: 36rem;
         font-size: 1.05rem;
     }
 
-    [data-theme='nishiki'] .kp-platforms {
+    [data-theme='woodblock'] .kp-platforms {
         font-family: var(--kp-mono);
         color: var(--muted-foreground);
     }
@@ -1059,7 +1059,7 @@
        rather than a --fx-texture declaration — see the anatomy's closing
        section for why this is not measured by check-texture.mjs, and why
        that is the right outcome rather than an evasion of it. */
-    [data-theme='nishiki'] .kp-spec {
+    [data-theme='woodblock'] .kp-spec {
         position: relative;
         border: 1px solid var(--foreground);
         background:
@@ -1085,7 +1085,7 @@
         overflow: hidden;
     }
 
-    [data-theme='nishiki'] .kp-spec::before {
+    [data-theme='woodblock'] .kp-spec::before {
         content: '';
         position: absolute;
         inset-block-start: 6px;
@@ -1103,26 +1103,26 @@
         pointer-events: none;
     }
 
-    [data-theme='nishiki'] .kp-spec dt {
+    [data-theme='woodblock'] .kp-spec dt {
         color: var(--muted-foreground);
         font-family: var(--kp-mono);
         text-transform: uppercase;
     }
 
-    [data-theme='nishiki'] .kp-spec__swatch {
+    [data-theme='woodblock'] .kp-spec__swatch {
         border: 1px solid var(--foreground);
         border-radius: 2px;
     }
 
-    [data-theme='nishiki'] .kp-spec__font {
+    [data-theme='woodblock'] .kp-spec__font {
         font-family: var(--theme-font-body);
     }
 
-    [data-theme='nishiki'] .kp-spec__font[data-font='display'] {
+    [data-theme='woodblock'] .kp-spec__font[data-font='display'] {
         font-family: var(--theme-font-display);
     }
 
-    [data-theme='nishiki'] .kp-spec__font[data-font='mono'] {
+    [data-theme='woodblock'] .kp-spec__font[data-font='mono'] {
         font-family: var(--kp-mono);
     }
 
@@ -1135,27 +1135,27 @@
        lives here, so a reader who asked for reduced motion never receives
        one: the rest states above are what they get. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nishiki'] [data-kp-reveal='rule'].is-in::after {
+        [data-theme='woodblock'] [data-kp-reveal='rule'].is-in::after {
             animation: kp-rule-in var(--kp-reveal-duration) var(--kp-reveal-ease) both;
         }
 
-        [data-theme='nishiki'] mark::after {
+        [data-theme='woodblock'] mark::after {
             transition: transform var(--kp-reveal-duration) var(--kp-reveal-ease);
         }
 
-        [data-theme='nishiki'] mark:nth-of-type(2)::after {
+        [data-theme='woodblock'] mark:nth-of-type(2)::after {
             transition-delay: var(--kp-reveal-stagger);
         }
 
-        [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] mark::before {
+        [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] mark::before {
             transition: transform 460ms var(--kp-reveal-ease);
         }
 
-        [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::before {
+        [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::before {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='nishiki'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::before {
+        [data-theme='woodblock'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::before {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
     }

@@ -5,7 +5,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["formal", "light", "dark", "pastel", "topo", "sepia", "blueprint", "solstice", "retro"],
+        "themes": ["formal", "light", "dark", "pastel", "forest", "sepia", "blueprint", "solstice", "retro"],
         "scripts": ["latin"],
         "upstream": "ofl/instrumentsans",
         "faces": [
@@ -494,7 +494,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["nishiki"],
+        "themes": ["woodblock"],
         "scripts": ["latin", "japanese"],
         "upstream": "ofl/zenkakugothicnew",
         "faces": [
@@ -506,14 +506,14 @@
                 "scripts": ["latin", "japanese"]
             }
         ],
-        "why": "Regular only: with the bold faces nishiki weighed 2.37 MB against the 1.5 MB budget (measured 2026-09-07); the browser synthesises the bold until Kenny raises the budget or drops a family (R6-Q6)."
+        "why": "Regular only: with the bold faces woodblock weighed 2.37 MB against the 1.5 MB budget (measured 2026-09-07); the browser synthesises the bold until Kenny raises the budget or drops a family (R6-Q6)."
     },
     "shipporimincho": {
         "family": "Shippori Mincho",
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["nishiki"],
+        "themes": ["woodblock"],
         "scripts": ["latin", "japanese"],
         "upstream": "ofl/shipporimincho",
         "faces": [
@@ -525,7 +525,7 @@
                 "scripts": ["latin", "japanese"]
             }
         ],
-        "why": "Regular only: with the bold faces nishiki weighed 2.37 MB against the 1.5 MB budget (measured 2026-09-07); the browser synthesises the bold until Kenny raises the budget or drops a family (R6-Q6)."
+        "why": "Regular only: with the bold faces woodblock weighed 2.37 MB against the 1.5 MB budget (measured 2026-09-07); the browser synthesises the bold until Kenny raises the budget or drops a family (R6-Q6)."
     },
     "sourcesans3": {
         "family": "Source Sans 3",
@@ -696,7 +696,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["tazhib"],
+        "themes": ["lapis"],
         "scripts": ["latin", "arabic"],
         "upstream": "ofl/vazirmatn",
         "faces": [
@@ -714,7 +714,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["tazhib"],
+        "themes": ["lapis"],
         "scripts": ["latin", "arabic"],
         "upstream": "ofl/markazitext",
         "faces": [

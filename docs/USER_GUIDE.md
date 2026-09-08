@@ -55,7 +55,7 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `synthwave` | Synthwave | yes |
 | `pastel` | Pastel | no |
 | `terminal` | Terminal | yes |
-| `topo` | Topographic | no |
+| `forest` | Forest | no |
 | `high-contrast` | High contrast | no |
 | `sepia` | Sepia | no |
 | `blueprint` | Blueprint | yes |
@@ -65,13 +65,13 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `academia` | Dark Academia | yes |
 | `phantom` | Phantom | yes |
 | `ticker` | Ticker | yes |
-| `nishiki` | Nishiki | no |
+| `woodblock` | Woodblock | no |
 | `shade-light` | Shade (light) | no |
 | `shade-dark` | Shade (dark) | yes |
 | `mono` | Mono | no |
 | `retro` | Retro | no |
 | `grotesk` | Grotesk | no |
-| `tazhib` | Tazhib | yes |
+| `lapis` | Lapis | yes |
 | `nostromo` | Nostromo | no |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
@@ -598,14 +598,14 @@ A native `<select>`'s open list wears the theme only where the browser lets a pa
 Each theme also has at most one gesture of its own: a rule that draws
 itself under a heading in formal, a blinking block cursor after the label
 of the field a person is typing into in terminal (3.1.1), a
-badge that settles in pastel, a drifting contour layer in topo, a ruled
+badge that settles in pastel, a drifting contour layer in forest, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
 brutalism, a double gold rule in deco, a slower gold rule in academia, a
 badge that slides in in phantom (and since 5.0.0 its cut-paper register:
 the plate under a `<mark>`, the rail under a heading, the torn-paper
 divider, the calling card on arrival), a hanko seal after a heading in
-nishiki,
+woodblock,
 the bevel register in retro (and since 5.0.0 the whole desktop: the
 dither a headline clears out of, the selection bar under a `<mark>`, the
 groove under a heading and as divider, the POST on arrival), and since

@@ -1,6 +1,6 @@
-// The topo register [S48, LIFT_PLAN topo row]: the approved concept demo
+// The forest register [S48, LIFT_PLAN forest row]: the approved concept demo
 // "Contour Register" (2026-09-08) reproduced by the package, measured on
-// the concept page under topo in both channels.
+// the concept page under forest in both channels.
 //
 // What the demo showed and this suite holds: the plain lede highlight
 // (always visible, no reveal), the dossier's redactions covered while
@@ -10,7 +10,7 @@
 // divider, the headline settled with no routine (its fade and contour
 // trace are CSS-only per the demo's own verdict, so this suite checks
 // the fade the shared page can show — the trace SVG has no home on the
-// generated page, recorded as a finding in themes/topo/anatomy.md), the
+// generated page, recorded as a finding in themes/forest/anatomy.md), the
 // nav dropdown [KT14], the mirror button's sheen, the stamp, and the
 // whole approved inventory.
 //
@@ -31,8 +31,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept-topo.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept&copy=topo'],
+    ['framework-free', '/examples/concept-forest.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=forest'],
 ];
 
 /**
@@ -44,14 +44,14 @@ async function open(page, url, { reduced = false, height = 900 } = {}) {
     await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
     await page.addInitScript(() => {
         try {
-            localStorage.setItem('theme', 'topo');
+            localStorage.setItem('theme', 'forest');
         } catch {
             // no storage: the page keeps its served theme
         }
     });
     await page.setViewportSize({ width: 1280, height });
     await page.goto(url);
-    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'topo');
+    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'forest');
     await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
 }
 
@@ -88,10 +88,10 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the topo register, ${channel}`, () => {
+    test.describe(`the forest register, ${channel}`, () => {
         test('the headline settles at rest, no boot overlay and no reveal routine armed', async ({ page }) => {
             await open(page, url);
-            expect(await page.locator('.kp-boot').count(), 'topo declares no --kp-arrival').toBe(0);
+            expect(await page.locator('.kp-boot').count(), 'forest declares no --kp-arrival').toBe(0);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             await settled(page);
             expect(await h1.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');

@@ -38,7 +38,7 @@ for (const theme of ['cyberpunk', 'formal']) {
     test(`bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`, async ({ page }) => {
         const blocked = [];
         await page.route(
-            /(cyberpunk-register|retro-register|synthwave-register|phantom-register|terminal-register|brutalism-register|nishiki-register|pastel-register|shade-light-register|ticker-register|topo-register|deco-register|light-register|grotesk-register|blueprint-register|nostromo-register|academia-register|formal-register|sepia-register|solstice-register|mono-register|high-contrast-register|tazhib-register|shade-dark-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/,
+            /(cyberpunk-register|retro-register|synthwave-register|phantom-register|terminal-register|brutalism-register|woodblock-register|pastel-register|shade-light-register|ticker-register|forest-register|deco-register|light-register|grotesk-register|blueprint-register|nostromo-register|academia-register|formal-register|sepia-register|solstice-register|mono-register|high-contrast-register|lapis-register|shade-dark-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/,
             (route) => {
                 blocked.push(route.request().url());
                 route.abort();

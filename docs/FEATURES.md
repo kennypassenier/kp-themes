@@ -187,19 +187,19 @@ built first.
 | TH66 | Theme `academia` — dark academia, dark variant | Essential | ink/mahogany ground, oxblood + forest, candle gold, Garamond display; the parchment version is not built (sepia) |
 | TH67 | Themes `shade-light` and `shade-dark` — a medium-contrast pair | Essential | Solarized-derived, one scheme, two themes; light foreground is base01 (4.99), accents are plates |
 | TH68 | Theme `ticker` — amber on black, data-dense | Essential | IBM Plex Mono numerals, ledger rules, no motion; the theme JobTracker's tables want |
-| TH69 | Theme `nishiki` — ukiyo-e, light | Essential | washi, Prussian blue, beni red, 2px black key-block outline as `--border-strong` |
+| TH69 | Theme `woodblock` — ukiyo-e, light | Essential | washi, Prussian blue, beni red, 2px black key-block outline as `--border-strong` |
 | TH70 | Theme `phantom` — playful dark, Persona 5 | Essential | black, white, one red (plate with white ink), halftone, condensed italic display |
 | TH71 | Theme `retro` — Windows 95 chrome, light, tamed | Desired | gated boundary under the bevel, pixel face for headings only, no dotted focus; needs TH87 |
 | TH72 | Theme `mono` — greyscale, light | Desired | status plates as a lightness ladder + outline/dash; chart pattern fills; needs TH86 |
 | TH73 | Theme `grotesk` — Swiss typographic, light | Desired | white, black, one red, 12-column grid texture, red square before headings |
-| TH74 | Theme `tazhib` — Persian illumination, dark | Desired | lapis ground, ivory, gold, girih tile; vermilion is plate-only (3.20) |
+| TH74 | Theme `lapis` — Persian illumination, dark | Desired | lapis ground, ivory, gold, girih tile; vermilion is plate-only (3.20) |
 | TH75 | Theme `nostromo` — cassette futurism, medium-light | Desired | beige plastic, orange LED plates (never text), vent-slot texture |
 | TH76 | Theme neumorphism | Later | fights DI1 by definition; a tamed version is `light` with shadows |
 | TH77 | Theme glassmorphism | Later | needs a glass register (blur on card/popover only) and a non-indigo ground |
 | TH78 | Theme pea soup (Game Boy) | Later | four shades; depends on TH86's pattern fills |
 | TH79 | Theme atomic (mid-century) | Later | cream, teal, mustard, coral; next round |
 | TH80 | Theme vaporwave / synthwave | Don't do | synthwave scores 3 against cyberpunk, vaporwave 2 against pastel |
-| TH81 | Theme botanical / earth | Don't do | scores 3 against topo; sage fails DI1 as a boundary (2.23) |
+| TH81 | Theme botanical / earth | Don't do | scores 3 against forest; sage fails DI1 as a boundary (2.23) |
 | TH82 | Theme steampunk | Don't do | scores 3 against solstice, 2–3 against sepia |
 | TH83 | Theme cosmic / space | Don't do | scores 3 against dark, which already carries the starfield |
 | TH84 | Theme reader (e-paper) | Don't do | duplicates TH72 |

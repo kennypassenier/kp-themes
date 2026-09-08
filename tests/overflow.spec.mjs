@@ -220,7 +220,7 @@ test.describe('the overflow and rhythm gate', () => {
                     // overflow in chromium that three reruns did not reproduce
                     // (rule 8a: a flake is named, then removed).
                     // A loop cannot be finished (the terminal register's sweep,
-                    // brutalism's marquee, topo's drift): a finite animation is
+                    // brutalism's marquee, forest's drift): a finite animation is
                     // finished, an infinite one is left where it is — it moves a
                     // pattern or a band and never the layout.
                     await page.evaluate(() => {

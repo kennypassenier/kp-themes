@@ -110,7 +110,7 @@ checked whether the text on such a state still reads. It never asked the
 other question: whether the state is distinguishable from the colour it
 came from. Measured 2026-09-04, the distance between a base colour and its
 pressed state, on the OKLab scale where roughly 10 means "you can see that
-it changed": formal 12.1, light 10.6, dark 10.7, pastel 11.4, topo 11.3 —
+it changed": formal 12.1, light 10.6, dark 10.7, pastel 11.4, forest 11.3 —
 and cyberpunk 2.6 to 7.1, terminal 4.5 to 8.4. In those two themes,
 pressing a control changed nothing anyone could see.
 
@@ -832,7 +832,7 @@ Seven hover/highlight rules read `--accent` / `--accent-foreground` — the
 theme picker's options, ghost and icon buttons, menu items, the combobox
 and palette highlights — which is shadcn's convention for a quiet tint,
 and in every theme whose accent is a colour (brutalism's lavender, deco's
-emerald, nishiki's beni, cyberpunk's cyan) a highlighted row turned that
+emerald, woodblock's beni, cyberpunk's cyan) a highlighted row turned that
 colour. The hover step: `gates/config.json` derives hover as half a
 lightness step (0.03 in OKLCh L); measured over all 24 themes,
 secondary→hover and primary→hover sit 1.4 to 3.6 apart on the same scale

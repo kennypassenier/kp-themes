@@ -1,10 +1,10 @@
 # @kp-soft/themes
 
 The house themes as a shared package: twenty-five `data-theme` palettes
-— thirteen light (formal, light, pastel, topo, high-contrast, sepia,
-brutalism, nishiki, shade-light, mono, retro, grotesk, nostromo) and
+— thirteen light (formal, light, pastel, forest, high-contrast, sepia,
+brutalism, woodblock, shade-light, mono, retro, grotesk, nostromo) and
 twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
-deco, academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
+deco, academia, phantom, ticker, shade-dark, lapis) — as plain CSS custom
 properties, the element-level rules that make a theme complete (links,
 code, selection, form fields, print), eighteen components, a theme
 picker, and five opt-in registers: cyberpunk's effects, synthwave's
@@ -679,7 +679,7 @@ The labels are English in the token source since 3.0.0 — "Formal",
 "Light", "Dark", "High contrast", "Blueprint", "Solstice", "Topographic",
 and the rest are names; the thirteen themes of 3.1.0 arrived with English
 labels ("Art Deco", "Shade (light)", "Shade (dark)"). The interface names
-(`formal`, `topo`, `shade-light`) did not change. Override any label in
+(`formal`, `forest`, `shade-light`) did not change. Override any label in
 either channel:
 
 ```jsx

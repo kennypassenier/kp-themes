@@ -186,11 +186,11 @@ test('a name that is a theme, and no name at all, say nothing [TH97]', async ({ 
         // preference to write; it is not a fault.
         document.documentElement.setAttribute('data-theme', '');
         core.currentTheme();
-        core.applyTheme('nishiki');
+        core.applyTheme('woodblock');
         core.storedTheme();
         return { warnings: window.__warnings, events: window.__unknown, worn: document.documentElement.getAttribute('data-theme') };
     });
     expect(result.warnings).toHaveLength(0);
     expect(result.events).toHaveLength(0);
-    expect(result.worn).toBe('nishiki');
+    expect(result.worn).toBe('woodblock');
 });

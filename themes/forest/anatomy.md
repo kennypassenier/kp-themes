@@ -1,15 +1,15 @@
-# topo — anatomy
+# forest — anatomy
 
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Topo is lifted
-> in 5.0.0 (S48, LIFT_PLAN topo row). The concept demo Kenny approved on
+> in 5.0.0 (S48, LIFT_PLAN forest row). The concept demo Kenny approved on
 > 2026-09-08 is "Contour Register"; its own header comment cites
 > docs/RESEARCH_2026-09.md §7 (the perturbed-circle contour field and the
 > headline's trace) and §2 (the razor tear and the concentric-ring
 > divider). Kenny is renaming this theme to **forest** at its lift; the
 > rename touches every generated file and document and is done centrally,
 > after every theme is lifted — this anatomy, the register and the
-> tokens are still built under the id `topo`.
+> tokens are still built under the id `forest`.
 
 ## The idea
 
@@ -36,7 +36,7 @@ outdoors.
 
 ## The register (5.0.0)
 
-`css/topo-register.css` is the theme's answer to the hook vocabulary
+`css/forest-register.css` is the theme's answer to the hook vocabulary
 (S45):
 
 - **Surface.** The hero is transparent enough for the contour field to
@@ -80,7 +80,7 @@ lift's own reading, done the same way.
 
 - **The tokens matched exactly.** Every literal hex the demo's header
   comment lists converts to the HSL already declared in
-  `themes/topo/tokens.json` — background, foreground, card, primary,
+  `themes/forest/tokens.json` — background, foreground, card, primary,
   secondary, muted, accent, destructive, success, warning, info, border,
   border-strong, the sidebar family, `--fx-signal`, `--radius`,
   `--fx-duration`, `--fx-ease`, `--fx-lift`, and both font stacks. No
@@ -93,7 +93,7 @@ lift's own reading, done the same way.
   the five swatches to `--surface-hero-bg`, `--background`,
   `--destructive`, `--accent`, `--chart-4` — a different set of tokens,
   chosen once for cyberpunk and reused unchanged since. The hero-ground
-  token and `--background` happen to be the same value for topo (a
+  token and `--background` happen to be the same value for forest (a
   one-ground theme), so the labels "ground" and "kraft" are given to two
   identical swatches; "clay" survives verbatim (both point at `--accent`);
   the other two ("alert" for `--destructive`, "moss" reused for
@@ -111,7 +111,7 @@ lift's own reading, done the same way.
   any theme. The register's CSS for `.kp-contour-trace` is written and
   correct (it was checked against the demo's own markup and the
   `pathLength`/`stroke-dasharray`/`stroke-dashoffset` mechanism), but it
-  never matches anything on `examples/concept-topo.html` today, so the
+  never matches anything on `examples/concept-forest.html` today, so the
   trace does not appear. Adding the element would mean editing the same
   shared, all-theme descriptor as the spec-sheet finding above.
 - **The demo's own CSS sets a `pathLength` declaration on the trace
@@ -146,7 +146,7 @@ lift's own reading, done the same way.
   mechanism already builds; no register change was needed beyond styling
   `.kp-dialog`/`.kp-confirm` and its `::backdrop`.
 - **The words on the concept page are the demo's own**, entered in
-  `showcase/concept-copy.mjs` and rendered at `examples/concept-topo.html`
+  `showcase/concept-copy.mjs` and rendered at `examples/concept-forest.html`
   — verbatim where the demo has an equivalent slot, written in the
   demo's own voice for the two slots it has none for (`brandTag`, since
   the demo's brand carries no file code; `handleHelp`, since the demo's
@@ -210,7 +210,7 @@ field, at 0.05, under the 0.06 ceiling.
 - Let the contour field become legible as a picture. It is terrain, not
   illustration, and sits at 0.05 for that reason.
 - Use clay (`--accent`) for a control. It is decoration only, per its own
-  token comment in `themes/topo/tokens.json`.
+  token comment in `themes/forest/tokens.json`.
 - Lose the warmth of the ground; a neutral grey turns it into a generic
   light theme with a green accent.
 - Animate anything outside the no-preference guard, or let the redaction

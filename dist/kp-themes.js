@@ -11,7 +11,7 @@ var THEMES = Object.freeze([
   { name: "synthwave", label: "Synthwave", dark: true },
   { name: "pastel", label: "Pastel", dark: false },
   { name: "terminal", label: "Terminal", dark: true },
-  { name: "topo", label: "Topographic", dark: false },
+  { name: "forest", label: "Topographic", dark: false },
   { name: "high-contrast", label: "High contrast", dark: false },
   { name: "sepia", label: "Sepia", dark: false },
   { name: "blueprint", label: "Blueprint", dark: true },
@@ -21,13 +21,13 @@ var THEMES = Object.freeze([
   { name: "academia", label: "Dark Academia", dark: true },
   { name: "phantom", label: "Phantom", dark: true },
   { name: "ticker", label: "Ticker", dark: true },
-  { name: "nishiki", label: "Nishiki", dark: false },
+  { name: "woodblock", label: "Nishiki", dark: false },
   { name: "shade-light", label: "Shade (light)", dark: false },
   { name: "shade-dark", label: "Shade (dark)", dark: true },
   { name: "mono", label: "Mono", dark: false },
   { name: "retro", label: "Retro", dark: false },
   { name: "grotesk", label: "Grotesk", dark: false },
-  { name: "tazhib", label: "Tazhib", dark: true },
+  { name: "lapis", label: "Tazhib", dark: true },
   { name: "nostromo", label: "Nostromo", dark: false }
 ]);
 var DEFAULT_THEME = "formal";
@@ -3841,7 +3841,7 @@ var STATE = Object.freeze({
   // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
   // across the whole, unsplit line once.
   revealed: "is-revealed",
-  // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
+  // The lapis headline [S48, LIFT_PLAN row 6]: a single wipe over the
   // whole clause, once — the gilder's burnishing pass, not a per-word or
   // per-glyph reveal, so it earns its own routine rather than reusing
   // `dissolve` or `type` [S49].
@@ -3942,7 +3942,7 @@ var TIMINGS = Object.freeze({
   // No luminance step: the mask moves, the content under it does not
   // change colour.
   "kp-wipe": { durationMs: 600, cycles: 1, property: "mask-position", luminanceSteps: [] },
-  // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
+  // The lapis register [S48, LIFT_PLAN row 6]: the burnish, a single
   // clip-path wipe over the headline once, no loop.
   "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
   // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
@@ -3984,9 +3984,9 @@ var TIMINGS = Object.freeze({
   // change), and the dialog rising into place.
   "kp-word-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-mark-in": { durationMs: 300, cycles: 1, property: "background-size", luminanceSteps: [] },
-  // The topo register [S48, LIFT_PLAN topo row]: the headline's own
+  // The forest register [S48, LIFT_PLAN forest row]: the headline's own
   // fade-in and the contour trace that draws beside it, both CSS-only
-  // (no routine — see css/topo-register.css's type section).
+  // (no routine — see css/forest-register.css's type section).
   "kp-headline-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-trace": { durationMs: 1800, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
   // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame

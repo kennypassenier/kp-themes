@@ -20,7 +20,7 @@ like one family. Today that means web pages; GUIs (Avalonia) and TUIs
 question: does this make our apps more uniform across channels?
 
 **S1 · kp-themes is the single home of the house theme system.** The
-seven themes (formal, light, dark, cyberpunk, pastel, terminal, topo)
+seven themes (formal, light, dark, cyberpunk, pastel, terminal, forest)
 live here as design tokens, published as `@kp-soft/themes`, consumable by
 any surface — React apps, framework-free server-rendered HTML, and later a
 TUI or GUI — without each consumer re-deriving the same behaviour.
@@ -139,7 +139,7 @@ motion, and explicitly what is not allowed.
 Measured in this repository: of the seven themes exactly one has such a
 document (`docs/CYBERPUNK_THEME_RESEARCH.md`, with its "five pillars"
 section). `docs/THEMING.md` explains the system, not the individual
-themes. Six themes have none: formal, light, dark, pastel, terminal, topo.
+themes. Six themes have none: formal, light, dark, pastel, terminal, forest.
 
 These documents are written channel-neutrally — they describe character,
 not CSS — so a later TUI or GUI round can build the same theme without
@@ -399,8 +399,8 @@ overlaps too much with an existing theme is not built — and asked for
 further ideas that are distinct from everything here. The research and
 the decision per candidate are in `docs/THEME_CANDIDATES.md`; the rated
 features are TH64–TH87 in `docs/FEATURES.md`. Eight themes are Essential
-(brutalism, art deco, dark academia, the shade pair, ticker, nishiki,
-phantom), five Desired (retro web, monochrome, grotesk, tazhib,
+(brutalism, art deco, dark academia, the shade pair, ticker, woodblock,
+phantom), five Desired (retro web, monochrome, grotesk, lapis,
 nostromo), four Later, five dropped with their reason.
 
 What stays out of this round, by Kenny's instruction on the same form:
@@ -748,8 +748,8 @@ notch sits on the other side too. The geometry follows the placement.
 
 **The findings form, answered 2026-09-07.** Kenny adopted all
 twenty-four directions from `docs/RESEARCH_2026-09.md` — including the
-five where the recommendation was to hold back (light, ticker, nishiki,
-shade-dark, tazhib), which now carry a second research pass before their
+five where the recommendation was to hold back (light, ticker, woodblock,
+shade-dark, lapis), which now carry a second research pass before their
 concept demo — and chose the order **by finding quality**. The order
 and the directions live in `docs/LIFT_PLAN.md` (TH134).
 

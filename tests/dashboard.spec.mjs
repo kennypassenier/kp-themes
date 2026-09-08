@@ -272,7 +272,7 @@ for (const channel of CHANNELS) {
     // of it, because it is the weaker of the two in one direction:
     // drilling the ring away leaves 4 of the 24 themes still painting
     // something --focus-ring-coloured next to the item — high-contrast,
-    // brutalism, grotesk and nishiki, whose `--border-strong` equals
+    // brutalism, grotesk and woodblock, whose `--border-strong` equals
     // their `--focus-ring`, so the popover's own 1px border is counted.
     // Neither measurement alone would have caught both faults.
     test(`the focus indicator PAINTS on the destructive item inside the menu, all 24 themes — ${channel.name} [W4, AR30]`, async ({ page }) => {

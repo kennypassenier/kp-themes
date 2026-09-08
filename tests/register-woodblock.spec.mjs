@@ -1,6 +1,6 @@
-// The nishiki register [S48, LIFT_PLAN row 20]: the approved concept demo
+// The woodblock register [S48, LIFT_PLAN row 20]: the approved concept demo
 // "The Woodblock Pull" (v2, 2026-09-08) reproduced by the package, measured
-// on the concept page under nishiki in both channels.
+// on the concept page under woodblock in both channels.
 //
 // What the demo showed and this suite holds: the kentō headline whose two
 // ghost plates (Prussian blue, beni red, mix-blend-mode multiply) converge
@@ -32,8 +32,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept-nishiki.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept&copy=nishiki'],
+    ['framework-free', '/examples/concept-woodblock.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=woodblock'],
 ];
 
 /**
@@ -45,14 +45,14 @@ async function open(page, url, { reduced = false } = {}) {
     await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
     await page.addInitScript(() => {
         try {
-            localStorage.setItem('theme', 'nishiki');
+            localStorage.setItem('theme', 'woodblock');
         } catch {
             // no storage: the page keeps its served theme
         }
     });
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(url);
-    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'nishiki');
+    await page.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'woodblock');
     await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
 }
 
@@ -89,7 +89,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the nishiki register, ${channel}`, () => {
+    test.describe(`the woodblock register, ${channel}`, () => {
         test('the headline is kentō: two ghost plates in Prussian blue and beni, multiplied, converging once', async ({ page }) => {
             await open(page, url);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();

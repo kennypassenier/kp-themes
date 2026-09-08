@@ -804,11 +804,11 @@ here.
     informational doc table) is green, and `reports/di5.md` rates all
     three of solstice's keyframes at 0.00/s.
 
-## tazhib
+## lapis
 
 - **Tokens matched the demo exactly, no changes needed.** I converted
   every one of the demo's twelve literal-hex palette values (HSL → hex)
-  and compared against `themes/tazhib/tokens.json`: `background` →
+  and compared against `themes/lapis/tokens.json`: `background` →
   `#1b2a6a` (demo `#1B2A6A`), `primary` → `#d5a52a` (`#D5A52A`), `accent`
   → `#e24536` (`#E24536`), `sidebar-background` → `#101c4c` (`#101C4C`),
   `card` → `#22347c` (`#22347C`), `popover` → `#2a3e8d` (`#2A3E8D`),
@@ -831,7 +831,7 @@ here.
   `[data-kp-surface='hero']`/`['app']`, at the demo's own 5%. I did not
   edit `css/_rules.css` itself — the override is entirely inside my own
   file, using layer order (`kp.base, kp.components, kp.register, ...`).
-  This is a real behavioural change to what tazhib looked like before
+  This is a real behavioural change to what lapis looked like before
   round six; drilled and covered by two spec tests.
 - **The demo's `<span class="kp-redaction">` and `<dialog>` don't exist
   in the package's markup, and I mapped them onto the established
@@ -948,7 +948,7 @@ there, and matching the token names the test suite's `bothHalves()`
 helper is actually calibrated to check turned out to matter more than I
 first assumed (see the retry in §5).
 
-## topo
+## forest
 
 Its agent was killed by a rate limit before it wrote a report. What the
 integration found, in place of one:
@@ -982,12 +982,12 @@ found:
 - One KT3 drill performed here: the word animation removed, both channels
   red on the headline test, restored, green.
 
-## nishiki
+## woodblock
 
 Its agent was killed before it could run anything, and its work arrived
 green in both browsers and both channels anyway.
 
-- `css/_rules.css` still carried nishiki's pre-register hanko, animating
+- `css/_rules.css` still carried woodblock's pre-register hanko, animating
   the same `h1::after` the register's rule hook uses. Retired with the
   lift, the fifth theme in this round to need that.
 - One KT3 drill performed here: the blue ghost plate's animation removed,

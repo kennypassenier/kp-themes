@@ -203,8 +203,8 @@ test('two pickers on one page stay in step', async ({ page }) => {
     await CHANNELS['framework-free'].choose(page, 'cyberpunk');
     expect(await CHANNELS.react.selection(page)).toBe('cyberpunk');
 
-    await CHANNELS.react.choose(page, 'topo');
-    expect(await CHANNELS['framework-free'].selection(page)).toBe('topo');
+    await CHANNELS.react.choose(page, 'forest');
+    expect(await CHANNELS['framework-free'].selection(page)).toBe('forest');
 });
 
 test('the focus ring is two visible channels [DI2]', async ({ page }) => {

@@ -137,11 +137,11 @@ function showcase() {
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
-        <link rel="stylesheet" href="../css/nishiki-register.css" />
+        <link rel="stylesheet" href="../css/woodblock-register.css" />
         <link rel="stylesheet" href="../css/pastel-register.css" />
         <link rel="stylesheet" href="../css/shade-light-register.css" />
         <link rel="stylesheet" href="../css/ticker-register.css" />
-        <link rel="stylesheet" href="../css/topo-register.css" />
+        <link rel="stylesheet" href="../css/forest-register.css" />
         <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
         <link rel="stylesheet" href="../css/grotesk-register.css" />
@@ -153,7 +153,7 @@ function showcase() {
         <link rel="stylesheet" href="../css/solstice-register.css" />
         <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../css/tazhib-register.css" />
+        <link rel="stylesheet" href="../css/lapis-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <style>
 ${STYLE}        </style>
@@ -256,11 +256,11 @@ function fixture(theme) {
         <link rel="stylesheet" href="../../css/phantom-register.css" />
         <link rel="stylesheet" href="../../css/terminal-register.css" />
         <link rel="stylesheet" href="../../css/brutalism-register.css" />
-        <link rel="stylesheet" href="../../css/nishiki-register.css" />
+        <link rel="stylesheet" href="../../css/woodblock-register.css" />
         <link rel="stylesheet" href="../../css/pastel-register.css" />
         <link rel="stylesheet" href="../../css/shade-light-register.css" />
         <link rel="stylesheet" href="../../css/ticker-register.css" />
-        <link rel="stylesheet" href="../../css/topo-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
         <link rel="stylesheet" href="../../css/deco-register.css" />
         <link rel="stylesheet" href="../../css/light-register.css" />
         <link rel="stylesheet" href="../../css/grotesk-register.css" />
@@ -272,7 +272,7 @@ function fixture(theme) {
         <link rel="stylesheet" href="../../css/solstice-register.css" />
         <link rel="stylesheet" href="../../css/mono-register.css" />
         <link rel="stylesheet" href="../../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../../css/tazhib-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
         <link rel="stylesheet" href="../../css/shade-dark-register.css" />
         <style>
 ${STYLE}        </style>

@@ -151,12 +151,12 @@ verbatim by kyu and Almanac (see "Consumers" below).
 Seven CSS blocks, one per theme, each a flat list of custom properties:
 formal at lines 15-68 (selector `:root, [data-theme='formal']`), light
 70-121, dark 123-174, cyberpunk 176-237, pastel 239-290, terminal
-292-345, topo 347-398. Every block is self-contained; no block inherits
+292-345, forest 347-398. Every block is self-contained; no block inherits
 from another, so a token exists in a theme only if that block spells it
 out.
 
 Measured token counts per block: formal 48, light 47, dark 47, cyberpunk
-53, pastel 47, terminal 49, topo 47. Forty-seven token names are common
+53, pastel 47, terminal 49, forest 47. Forty-seven token names are common
 to all seven (INV-T3 + INV-T4 + INV-T5 + INV-T6 + INV-T7). Seven names appear in fewer than
 seven blocks and are the entire asymmetry of the file:
 
@@ -211,7 +211,7 @@ markup in this package uses them.
 Seven `--status-<name>` / `--status-<name>-foreground` pairs per theme:
 draft, sent, screening, interview, offer, rejected, withdrawn. Formal
 52-65, light 106-119, dark 159-172, cyberpunk 212-225, pastel 275-288,
-terminal 328-341, topo 383-396. These are the only tokens added in this
+terminal 328-341, forest 383-396. These are the only tokens added in this
 package rather than extracted from kp-soft (`css/themes.css:7`). They
 encode JobTracker's application-pipeline semantics, not a general
 severity scale.
@@ -224,7 +224,7 @@ reads them directly as `var(--status-${phase})`.
 
 One value per theme: formal `0.375rem` (:66), light `0.5rem` (:120), dark
 `0.5rem` (:173), cyberpunk `0.25rem` (:226), pastel `1rem` (:289),
-terminal `0rem` (:342), topo `0.625rem` (:397). Nothing in this package's
+terminal `0rem` (:342), forest `0.625rem` (:397). Nothing in this package's
 plain CSS applies it; it reaches a page only through the Tailwind radius
 scale (INV-B4). Note that INV-F5 sets `border-radius: 0` on cyberpunk cards and
 buttons, overriding the theme's own `0.25rem`.
@@ -317,7 +317,7 @@ grain at 3.5 % (:421-425); light, a two-scale millimetre grid at 5 %
 (:428-436); dark, a twelve-star SVG starfield at 50 % opacity of an
 already faint image (:439-443); pastel, SVG risograph grain at 5 %
 (:446-450); terminal, a repeating scanline gradient at opacity 1, the
-gradient itself being 6 % alpha (:459-462); topo, an SVG contour drawing
+gradient itself being 6 % alpha (:459-462); forest, an SVG contour drawing
 at 6 % (:475-479).
 
 The seventh theme, cyberpunk, has no texture in this file. Its texture
@@ -1444,7 +1444,7 @@ stylesheets, and `css/components.css` never writes `data-slot`.
 - INV-R25 · Field states — `__label` 623, `__input` 628, `__help` 690, `__error` 697, `--invalid` 702/776, `__check` 758, `__required` 1976, fieldset 740/1928, form summary 1951 (`css/components.css`)
 - INV-R26 · Other stateful roots — badge `[data-status]`, health `[data-state]`, tab/datepicker `[aria-selected]`, nav `__link[aria-current='page']` 941, menu `__item:hover` / `--destructive`, toast `--success/--warning/--info/--error` 1113-1125, upload `[data-kp-dragging]`, diff `[data-kind]`, combobox/palette `__option[hidden]` (`css/components.css`, per INV-R23 lines)
 - INV-R27 · Base-element layer — `body` font 279, `h1-h3` display face 283-286, links 410-422, `::selection` 427, `code/kbd/samp/pre` 433-469, **`mark`** 471-475 (warning pair), `blockquote` 477, `hr` 488-493, `::marker`, `accent-color`/`caret-color` 501-503, `::placeholder`, `:disabled`, `:invalid` 515-518, two-ring `:focus-visible` 359-380, `color-scheme` 392; no `em`/`strong`/table rules (tables are `.kp-table` only) (`css/_rules.css`)
-- INV-R28 · Per-theme signature block (heading accents already exist) — formal `h1::after` rule 538-546, terminal field cursor 566-573, topo drift, blueprint `h1::after`, deco double rule, academia, nishiki `h1::after`, phantom badge, solstice `[data-slot='card']` ember, pastel settle (`css/_rules.css:536-717`)
+- INV-R28 · Per-theme signature block (heading accents already exist) — formal `h1::after` rule 538-546, terminal field cursor 566-573, forest drift, blueprint `h1::after`, deco double rule, academia, woodblock `h1::after`, phantom badge, solstice `[data-slot='card']` ember, pastel settle (`css/_rules.css:536-717`)
 - INV-R29 · Register coverage today — cyberpunk register reaches `.kp-button` (INV-R10 to INV-R12), cards only via `data-slot` (INV-R8), inputs' caret, scrollbar: **2 of 64 roots**; retro register reaches button/card/popover/icon-button `:15-24`, their focus `:40-48` and active `:52-61`, field/datatable-search/combobox/palette inputs `:65-75`, scrollbar `:79-81`: **8 roots** (`css/retro-register.css`). No register rule anywhere for field label/help/error, nav, toast, dialog, menu, tabs, badge, alert, tag, table, headings, links, `mark`, `hr`, footer
 
 ### 3 · Effects and JS infrastructure
@@ -1514,7 +1514,7 @@ stylesheets, and `css/components.css` never writes `data-slot`.
 
 - INV-R78 · `data-kp-semantic` — the only meaning attribute: DI4 contract "must carry text or an accessible name" (`js/components.js:190-200`), emitted by `Alert` (`components/alert.jsx:44`) and badges in showcase/examples (`showcase/examples.mjs:146`, `specimens.mjs:124-134`); it asserts a property, it does not ask a theme for an expression
 - INV-R79 · Emphasis — `mark` has a themed base rule (warning pair, same rule for all 24) `css/_rules.css:471-475`; `em`/`strong` have no rule anywhere; `<em>` rendering in site markdown was the MR-R6-1 decision (`docs/MINI_ROUNDS.md:33`)
-- INV-R80 · Heading accent — already answered per theme in `_rules.css:536-717` (formal, blueprint, deco, academia, nishiki `h1::after`); cyberpunk answers nothing there `:534-535`
+- INV-R80 · Heading accent — already answered per theme in `_rules.css:536-717` (formal, blueprint, deco, academia, woodblock `h1::after`); cyberpunk answers nothing there `:534-535`
 - INV-R81 · Section divider — `hr` `:488-493` is the only shared divider; no `.kp-divider`
 - INV-R82 · Surface — `.kp-section` `css/layout.css:96-103`; `data-theme` on any element is the existing ground switch; no `data-kp-surface`
 - INV-R83 · Reveal — no CSS/JS unit; React-only `DecipherText`; no `data-kp-reveal`
