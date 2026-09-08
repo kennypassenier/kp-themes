@@ -78,7 +78,9 @@ Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
 on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
 `synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
 research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
-second, rebuilt from its approved demo "Calling Card" (row 2).
+second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
+is the third, its 3.1.0 bevel register grown into the whole desktop from
+"Bevel 95" (row 3).
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -548,16 +550,16 @@ prop.
 
 Since 5.0.0 `DecipherText` is a wrapper around `attachEffects()` from
 `js/effects.js`: it renders the headline reveal the current theme
-declares (cyberpunk deciphers, synthwave tracks, phantom shouts, formal
-stays still), and
+declares (cyberpunk deciphers, synthwave tracks, phantom shouts, retro
+dissolves, formal stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
 ## The hook vocabulary [S45]
 
 Since 5.0.0 a page marks what a passage *is* and every theme answers in
-its own way — loudly in cyberpunk, synthwave and phantom, quietly in the
-rest. Six
+its own way — loudly in cyberpunk, synthwave, phantom and retro, quietly in
+the rest. Six
 hooks: `data-kp-surface="hero|app"` on a section, a `<mark>` for an
 emphasis, `data-kp-reveal="headline|emphasis|rule"` on something that
 arrives, `data-kp-divider` between sections, the heading accent (an
@@ -603,7 +605,10 @@ badge that slides in in phantom (and since 5.0.0 its cut-paper register:
 the plate under a `<mark>`, the rail under a heading, the torn-paper
 divider, the calling card on arrival), a hanko seal after a heading in
 nishiki,
-the bevel register in retro, and since 5.0.0 the horizon register in
+the bevel register in retro (and since 5.0.0 the whole desktop: the
+dither a headline clears out of, the selection bar under a `<mark>`, the
+groove under a heading and as divider, the POST on arrival), and since
+5.0.0 the horizon register in
 synthwave — a striped sun and a drifting floor on the hero, a neon tube
 that a `<mark>` switches on, a laser line under a heading, a boot line
 with a Skip once per session. Sepia, high-contrast, ticker, mono and

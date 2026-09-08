@@ -41,7 +41,12 @@ const NOT_GATED = {};
 /** A theme is in DI5's scope when the register actually targets it. */
 function motionScope() {
     const names = [];
-    for (const rel of ['../css/cyberpunk-register.css', '../css/synthwave-register.css', '../css/phantom-register.css']) {
+    for (const rel of [
+        '../css/cyberpunk-register.css',
+        '../css/synthwave-register.css',
+        '../css/phantom-register.css',
+        '../css/retro-register.css',
+    ]) {
         const css = readFileSync(new URL(rel, import.meta.url), 'utf8');
         names.push(...[...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
     }
@@ -52,7 +57,13 @@ function motionScope() {
 function motionVerdicts() {
     const flash = [];
     const guard = [];
-    for (const rel of ['../css/cyberpunk-register.css', '../css/synthwave-register.css', '../css/phantom-register.css', '../css/_rules.css']) {
+    for (const rel of [
+        '../css/cyberpunk-register.css',
+        '../css/synthwave-register.css',
+        '../css/phantom-register.css',
+        '../css/retro-register.css',
+        '../css/_rules.css',
+    ]) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
         const frames = parseOpacityKeyframes(source);
         for (const a of animations(source)) {
@@ -81,6 +92,7 @@ function layersClean() {
         '../css/cyberpunk-register.css',
         '../css/synthwave-register.css',
         '../css/phantom-register.css',
+        '../css/retro-register.css',
         '../css/tailwind-bridge.css',
     ].every((rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0);
 }

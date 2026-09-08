@@ -30,6 +30,25 @@ register is `css/phantom-register.css`; the effects module gained the
 word routines (`shout`, `slam`), `dissolve` and `type` for the lifts
 that follow.
 
+**The third lift: retro.** Built from the approved concept demo "Bevel
+95" (2026-09-08) on the §21 research (98.css, Win95 SGJ, 2bit.chat, the
+NW pixel dissolve). The 3.1.0 bevel register grew into the whole 1995
+desktop: the headline clears out of a dither in four discrete densities
+(`--kp-reveal-headline: dissolve`), a `<mark>` is the selection bar that
+drags across the words in eight steps (`select`), the groove under a
+heading rules itself in, in twelve (`groove`), the dividers are the
+shell groove — dithered band first, plain two-line second — the brand is
+the title-bar ramp, every hover the selection bar, the default button
+carries the navy bevel and the mirror modifier the one-pixel ink ring,
+the selected tab lifts, the dossier is a Notepad window whose redactions
+are the 50% dither brush lifting off, the scrollbar track the 2×2
+checkerboard, and the page arrives through the POST (`--kp-arrival:
+boot`) and leaves it through the pixel dissolve. VT323 is retro's DOS
+voice for labels, help and status. Nothing eases, loops or blinks: every
+step is discrete and every effect goes one way. The register stays
+`css/retro-register.css`; on a surface the register sets the h1 in ink
+with a hard white shadow where the 3.x theme painted a title bar.
+
 ## 4.0.0 — 2026-09-07
 
 **A destructive button asks before it acts, and four things that were

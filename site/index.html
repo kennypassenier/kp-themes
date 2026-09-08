@@ -888,26 +888,32 @@ boundary DI1 asks for, and the dotted focus rectangle is forbidden by
 DI2. So the boundary is a gated 38% grey and the bevel sits inside it
 (<code>css/retro-register.css</code>), and the focus ring is the system's.</p>
 <ol>
-<li><strong>The chrome is 75%, not the original's 75% either.</strong> <code>hsl(0, 0%, 75%)</code>
-is the classic surface; the card at 84% and the popover at 90% are
-the &quot;button face&quot; and the &quot;window&quot; of the original, ordered so a
-raised surface is lighter (DI6 read for a light theme).</li>
+<li><strong>The chrome is 75%.</strong> <code>hsl(0, 0%, 75%)</code> is the classic surface; the
+card at 84% and the popover at 90% are the &quot;button face&quot; and the
+&quot;window&quot; of the original, ordered so a raised surface is lighter
+(DI6 read for a light theme).</li>
 <li><strong>Navy acts, teal signals.</strong> <code>--primary</code> is the title-bar navy
 <code>hsl(240, 100%, 25%)</code> — 8.8:1 on the chrome — and the sidebar is
 navy too, with white text. Teal <code>hsl(180, 100%, 20%)</code> is the accent
 and the signal: the desktop colour, deepened until it clears 3:1 on
-the chrome (25% measured 2.62 as a chart series).</li>
+the chrome (25% measured 2.62 as a chart series). As a label's ink
+the register deepens it once more, to 15% (5.32 on the chrome),
+because the plate colour measured 3.69 as text.</li>
 <li><strong>The register carries the bevel.</strong> <code>css/retro-register.css</code> paints
 the raised and sunken edges as inset shadows in the theme's own
 tokens — popover as highlight, foreground as the deep edge, border as
 the mid edge — on buttons, cards, popovers and fields, and inverts
-them on press. Scoped to <code>[data-theme='retro']</code>, inert elsewhere,
-loaded by the showcase and the fixtures. A browser test holds the
-painted boundary at 3:1 with the register on.</li>
-<li><strong>No motion.</strong> <code>--fx-duration: 0ms</code>: the original snapped, and so
-does this. Pixelify Sans on headings only; the body is Instrument
-Sans, because pixel body text under 16px is the readability risk
-every retro guide names.</li>
+them on press with the label stepping one pixel. Scoped to
+<code>[data-theme='retro']</code>, inert elsewhere, loaded by the showcase and
+the fixtures. A browser test holds the painted boundary at 3:1 with
+the register on.</li>
+<li><strong>No easing.</strong> <code>--fx-duration: 0ms</code>: the original snapped, and so
+does this. Every reveal of the register runs in discrete steps — a
+dither in four densities, a selection in eight, a groove in twelve —
+and every one only ever goes one way. Pixelify Sans on headings only;
+the body is Instrument Sans, because pixel body text under 16px is
+the readability risk every retro guide names; VT323 is the DOS voice
+for labels, help and status.</li>
 </ol>
                         </div>
                     </article>

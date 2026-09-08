@@ -1,7 +1,10 @@
 # retro — anatomy
 
 > How this theme answers the questions in
-> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md).
+> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Retro is the
+> third theme lifted in 5.0.0 (S48, LIFT_PLAN row 3). The research behind
+> it is §21 of [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the
+> concept demo Kenny approved on 2026-09-08 is "Bevel 95".
 
 ## The idea
 
@@ -18,26 +21,81 @@ DI2. So the boundary is a gated 38% grey and the bevel sits inside it
 
 ## What is load-bearing
 
-1. **The chrome is 75%, not the original's 75% either.** `hsl(0, 0%, 75%)`
-   is the classic surface; the card at 84% and the popover at 90% are
-   the "button face" and the "window" of the original, ordered so a
-   raised surface is lighter (DI6 read for a light theme).
+1. **The chrome is 75%.** `hsl(0, 0%, 75%)` is the classic surface; the
+   card at 84% and the popover at 90% are the "button face" and the
+   "window" of the original, ordered so a raised surface is lighter
+   (DI6 read for a light theme).
 2. **Navy acts, teal signals.** `--primary` is the title-bar navy
    `hsl(240, 100%, 25%)` — 8.8:1 on the chrome — and the sidebar is
    navy too, with white text. Teal `hsl(180, 100%, 20%)` is the accent
    and the signal: the desktop colour, deepened until it clears 3:1 on
-   the chrome (25% measured 2.62 as a chart series).
+   the chrome (25% measured 2.62 as a chart series). As a label's ink
+   the register deepens it once more, to 15% (5.32 on the chrome),
+   because the plate colour measured 3.69 as text.
 3. **The register carries the bevel.** `css/retro-register.css` paints
    the raised and sunken edges as inset shadows in the theme's own
    tokens — popover as highlight, foreground as the deep edge, border as
    the mid edge — on buttons, cards, popovers and fields, and inverts
-   them on press. Scoped to `[data-theme='retro']`, inert elsewhere,
-   loaded by the showcase and the fixtures. A browser test holds the
-   painted boundary at 3:1 with the register on.
-4. **No motion.** `--fx-duration: 0ms`: the original snapped, and so
-   does this. Pixelify Sans on headings only; the body is Instrument
-   Sans, because pixel body text under 16px is the readability risk
-   every retro guide names.
+   them on press with the label stepping one pixel. Scoped to
+   `[data-theme='retro']`, inert elsewhere, loaded by the showcase and
+   the fixtures. A browser test holds the painted boundary at 3:1 with
+   the register on.
+4. **No easing.** `--fx-duration: 0ms`: the original snapped, and so
+   does this. Every reveal of the register runs in discrete steps — a
+   dither in four densities, a selection in eight, a groove in twelve —
+   and every one only ever goes one way. Pixelify Sans on headings only;
+   the body is Instrument Sans, because pixel body text under 16px is
+   the readability risk every retro guide names; VT323 is the DOS voice
+   for labels, help and status.
+
+## The register (5.0.0)
+
+`css/retro-register.css` is the theme's answer to the hook vocabulary
+(S45), every mechanism measured in the research:
+
+- **Surface.** The hero is the window's client area: the chrome, the
+  heading in ink with a hard white shadow, the laurels as three sunken
+  status panels, the spec sheet as a Display Properties window with the
+  ramp as its title bar.
+- **Emphasis.** A `<mark>` is the selection — the navy bar with white
+  text. With the script armed the words stand in ink until the bar
+  drags across them in eight steps (`select`). A dossier's redactions
+  are the 50% dither brush of a disabled control, lifted left to right
+  in eight steps when the file is opened.
+- **Reveal.** The headline clears out of a dither in four densities
+  (`dissolve`); the groove under a heading rules itself in, left to
+  right, in twelve steps when the heading enters the viewport
+  (`groove`).
+- **Divider.** The shell groove of 2bit.chat: the first is the wide
+  groove with the dithered band between its two lines, the second the
+  plain two-line groove.
+- **Accent.** The hard white shadow on every surface heading; the
+  title-bar ramp — navy to the sidebar's lit navy — on the brand, the
+  dossier's header, a dialog's title and the spec sheet. The reference
+  ramp ended on a blue where white measured 4.01 (S42: reported, and
+  answered with a token white clears).
+- **Arrival.** `boot`: the POST — the dictionary's boot line counting up
+  in the DOS face on the deep ground, a raised Skip button, and the
+  screen leaving through the pixel dissolve. Once per session,
+  skippable, never under reduced motion.
+
+Every hover is the selection bar, instantly; the default button carries
+the navy bevel and the mirror modifier the one-pixel ink ring 1995 drew
+around whatever Enter would press; the selected tab lifts two pixels
+and overhangs three; the scrollbar track is the 2×2 checkerboard; every
+window and menu has the hard drop shadow. One answer per component root
+(56 of 64, the eight helpers excused).
+
+**What the demo showed and the package renders differently, on purpose:**
+the demo's menu bar was a second row under a full title bar, where the
+package's navbar is one row with the brand as the title bar; the demo's
+boot screen counted a memory test with a segmented bar, where the
+module's boot line is the dictionary's (KT5: a theme names data, never
+copy); the demo's selection dragged white text in with the bar, where
+the package drags the bar over the ink and turns the words white in the
+same instant the bar completes (the text has no copy to drag); the
+fieldset groove is the CSS `groove` rather than an SVG border-image
+(the image would have to name colours, which DI9 forbids).
 
 ## Answers to the invariant questions
 
@@ -45,26 +103,33 @@ DI2. So the boundary is a gated 38% grey and the bevel sits inside it
 and the popover; the bevel is decoration inside it.
 
 **DI2 — the focus ring.** Navy over chrome, the ink as the second
-channel. No dotted rectangle.
+channel, composed in front of the bevel — never instead of it, which
+was the 3.1.0 fault this file records. No dotted rectangle.
 
 **DI3 — states you can see.** Derived by lightness; the register adds
-the inverted bevel on top, an opt-in, not a replacement.
+the inverted bevel on press and the embossed grey label on a disabled
+control, an opt-in, not a replacement.
 
 **DI4 — colour is never the only carrier.** Green offer against red
 rejected: 22.3 apart under deuteranopia with green at 26% and red at
 24%, measured before the tokens were written.
 
-**DI5 — the flash threshold.** Nothing animates.
+**DI5 — the flash threshold.** Nothing loops and nothing blinks; every
+effect runs once and every step is monotone, so the count of opposing
+luminance changes is zero. The four keyframes of the register are rated
+in `reports/di5.md`.
 
 **DI6 — light or dark.** `color-scheme: light`; chrome 75%, card 84%,
 popover 90%.
 
-**DI7 — reduced motion.** Nothing to reduce.
+**DI7 — reduced motion.** Every animation of the register lives inside
+the no-preference guard; the rest states are what a reader who asked
+for reduced motion gets, and the boot screen is not built at all.
 
 **DI9 — theme colour stays in the token layer.** One texture — a
 two-pixel checkerboard at 4%, the dither every gradient was — and the
-title bar behind h1, which reads tokens. The register reads tokens
-only; `gates/check-layers.mjs` holds it there.
+register reads tokens only, with relative colours for the navy bevel
+and the label's teal; `gates/check-layers.mjs` holds it there.
 
 ## What it deliberately does not do
 
@@ -72,3 +137,5 @@ only; `gates/check-layers.mjs` holds it there.
 - **No pixel body text.** Headings only.
 - **No blink, no marquee, no hit counter.** The original had them; the
   flash threshold and taste both say no.
+- **No dotted focus rectangle, no smoothing switched off at 11px.** Both
+  measured in the reference, both refused (DI2, readability).

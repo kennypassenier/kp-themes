@@ -218,6 +218,26 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='retro'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/retro-register.css",
+                "selector": "[data-theme='retro'] mark"
+            },
+            "reveal": {
+                "css": "css/retro-register.css",
+                "selector": "[data-theme='retro'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/retro-register.css",
+                "selector": "[data-theme='retro'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/retro-register.css",
+                "selector": "[data-theme='retro'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "css": "css/retro-register.css",
+                "selector": "[data-theme='retro'] .kp-boot"
             }
         },
         "grotesk": {

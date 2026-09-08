@@ -8,7 +8,7 @@ deco, academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
 properties, the element-level rules that make a theme complete (links,
 code, selection, form fields, print), eighteen components, a theme
 picker, and four opt-in registers: cyberpunk's effects, synthwave's
-horizon, phantom's cut paper and retro's bevels.
+horizon, phantom's cut paper and retro's desktop.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -79,7 +79,7 @@ Plain CSS (any stack):
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
 @import '@kp-soft/themes/css/synthwave-register'; /* optional: synthwave's sun, floor and neon */
 @import '@kp-soft/themes/css/phantom-register'; /* optional: phantom's cut paper, plates and tears */
-@import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels */
+@import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels, grooves, dither and POST */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -209,7 +209,7 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                      |
 | `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in      |
 | `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in  |
-| `@kp-soft/themes/css/retro-register`     | retro's raised and sunken bevels, opt-in              |
+| `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in      |
 | `@kp-soft/themes/css/layout`             | the sixteen layout classes                            |
 | `@kp-soft/themes/css/utilities`          | the 115 utility classes                               |
 | `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                             |

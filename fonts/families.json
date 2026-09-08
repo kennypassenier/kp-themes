@@ -796,7 +796,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["synthwave"],
+        "themes": ["synthwave", "retro"],
         "scripts": ["latin"],
         "upstream": "ofl/vt323",
         "faces": [
