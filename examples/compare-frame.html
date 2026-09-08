@@ -285,7 +285,16 @@
             (function () {
                 var params = new URLSearchParams(location.search);
                 var theme = params.get('theme');
-                if (theme) document.documentElement.setAttribute('data-theme', theme);
+                if (theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                    // The 4.0.0 module knows no query opt-in: it applies the
+                    // visitor's stored theme after this script and the frame
+                    // wore that theme instead (Kenny saw dark's left frame as
+                    // formal, 2026-09-08). Hold the query's theme against it.
+                    new MutationObserver(function () {
+                        if (document.documentElement.getAttribute('data-theme') !== theme) document.documentElement.setAttribute('data-theme', theme);
+                    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+                }
                 var factor = parseFloat(params.get('texture') || '');
                 if (factor > 0) {
                     var current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity')) || 0;

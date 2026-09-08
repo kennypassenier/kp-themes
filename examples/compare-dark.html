@@ -113,26 +113,16 @@
                     <li>Typography: Instrument Sans now ships with the package and loads here; 4.0.0 shipped no font file, so the browser drew the system fallback.</li>
                     <li>Typography, still the fallback: ui-monospace carries a Reserved Font Name and waits on R6-Q1 — no visible change yet.</li>
                     <li>New in 5.0.0: 11 hero tokens and the display text step, all pointing at values this theme already had — the hero paints the same ground as the app, so nothing visible changed.</li>
-                    <li>Texture, a proposal for R6-Q2: this theme paints its texture at 0.5, over the DI9 ceiling of 0.06; the right frame below shows it at 0.06, the left as it is today.</li>
+                    <li>Texture: the layer painted at 0.5 in 4.0.0 and paints at 0.06 now (DI9 ceiling 0.06).</li>
                 </ul>
                 <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
                     <section class="kp-stack" aria-label="Dark under 4.0.0">
                         <h3>Dark under 4.0.0</h3>
-                        <iframe src="compare-frame-4.0.0.html?theme=dark&amp;mark=type" title="Dark under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                        <iframe src="compare-frame-4.0.0.html?theme=dark&amp;mark=type,texture" title="Dark under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
                     </section>
                     <section class="kp-stack" aria-label="Dark under the current build">
                         <h3>Dark under the current build</h3>
-                        <iframe src="compare-frame.html?theme=dark&amp;mark=type" title="Dark under the current build" width="100%" height="900" data-compare-side="new"></iframe>
-                    </section>
-                </div>
-                <div class="kp-autogrid kp-autogrid--tight" data-compare-pair="texture">
-                    <section class="kp-stack" aria-label="Texture today (0.5)">
-                        <h3>Texture today (0.5)</h3>
-                        <iframe src="compare-frame.html?theme=dark&amp;mark=texture" title="Texture today (0.5)" width="100%" height="900" data-compare-side="old"></iframe>
-                    </section>
-                    <section class="kp-stack" aria-label="Proposal (0.06)">
-                        <h3>Proposal (0.06)</h3>
-                        <iframe src="compare-frame.html?theme=dark&amp;mark=texture&amp;texture=0.120" title="Proposal (0.06)" width="100%" height="900" data-compare-side="new"></iframe>
+                        <iframe src="compare-frame.html?theme=dark&amp;mark=type,texture" title="Dark under the current build" width="100%" height="900" data-compare-side="new"></iframe>
                     </section>
                 </div>
                 <p class="kp-prose">

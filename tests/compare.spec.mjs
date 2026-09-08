@@ -132,11 +132,16 @@ test.describe('the compare pages', () => {
         expect(await loaded(old)).toBe(false);
     });
 
-    test('dark: the R6-Q2 proposal pair paints the texture lower on the right', async ({ page }) => {
-        await open(page, 'dark');
+    // R6-Q2 was decided on this page (Kenny, 2026-09-08, "Naar 0,06"): dark
+    // now paints at the ceiling, so the proposal pair is gone and the
+    // statement names the change 4.0.0 → now.
+    test('dark: the texture statement names 0.5 → 0.06, the texture is marked, and no proposal pair remains', async ({ page }) => {
+        const pair = await open(page, 'dark');
         const lines = await page.locator('[data-compare-lines] li').allTextContents();
-        expect(lines.join(' ')).toMatch(/proposal for R6-Q2/);
-        const pair = page.locator('[data-compare-pair="texture"]');
+        expect(lines.join(' ')).toMatch(/Texture: the layer painted at 0\.5 in 4\.0\.0 and paints at 0\.06 now/);
+        expect(await page.locator('[data-compare-pair="texture"]').count(), 'no proposal pair: the decision is taken').toBe(0);
+        const current = pair.frameLocator('iframe[data-compare-side="new"]');
+        expect(new Set((await marks(current)).map((m) => m.label))).toEqual(expect.objectContaining(new Set(['Texture', 'Typography'])));
         const opacity = (side) =>
             pair
                 .frameLocator(`iframe[data-compare-side="${side}"]`)
@@ -144,6 +149,12 @@ test.describe('the compare pages', () => {
                 .evaluate((html) => parseFloat(getComputedStyle(html).getPropertyValue('--fx-texture-opacity')));
         await expect.poll(() => opacity('old')).toBeGreaterThan(0.4);
         await expect.poll(() => opacity('new')).toBeLessThan(0.1);
+        // The left frame wears dark, not the visitor's stored theme: the 4.0.0
+        // module applies the stored one after the frame script (Kenny saw formal).
+        await page.evaluate(() => localStorage.setItem('theme', 'formal'));
+        await page.reload();
+        await expect(pair.frameLocator('iframe[data-compare-side="old"]').locator('[data-kp-surface="app"]')).toBeVisible();
+        await expect.poll(() => pair.frameLocator('iframe[data-compare-side="old"]').locator('html').getAttribute('data-theme')).toBe('dark');
     });
 
     test('the frames of a pair scroll together', async ({ page }) => {
