@@ -1376,7 +1376,7 @@ en dergelijke dat ze moeten aangepast worden, mag je dat enkel doen als
 je mijn expliciete goedkeuring hebt." Recorded as S49. **Put to Kenny in
 the deviation form of 2026-09-08; awaiting his answer.**
 
-**Approved by Kenny on 2026-09-08 (Klopt), all nine rows unchanged.** His
+**Approved by Kenny on 2026-09-08 (Klopt), all nine rows unchanged, and the work it produced was ratified the same evening** (R1–R8 all "Akkoord"; the deviations that could not be built are named in each theme's anatomy). His
 answers to the twelve deviation groups in the same form: **Demo exact for
 eleven of them** (A1 copy, A2 retro's window, A3 the small elements, A4
 the button height with TH111's mini-round, A5 the ring order, A6 the

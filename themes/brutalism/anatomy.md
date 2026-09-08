@@ -98,8 +98,9 @@ What is left is named here, with its reason.
   white plate, and its markup gives every button it actually renders a
   modifier — the one in the concept page's slot is the yellow. The
   package's plain button is that yellow, so the page looks like the demo;
-  the white default is a rule the demo never paints. Reported rather than
-  changed.
+  the white default is a rule the demo never paints. Put to Kenny at the
+  ratification of 2026-09-08 and answered there: **the yellow stays**, so
+  the page keeps the appearance he approved.
 
 ## Answers to the invariant questions
 
