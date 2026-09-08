@@ -86,6 +86,20 @@ effective value is measured by `check-texture`, and the 4.x texture's
 0.55 sits in the pending list until C2 replaces it (R6-Q2 for the
 ceiling itself).
 
+## The band, and the pair Kenny approved (2026-09-08)
+
+The marquee this theme draws is signal yellow with the ink in blood red,
+and every corner cut by the same amount so the two ends match — both are
+Kenny's own corrections to the first version, which cut only the bottom
+two corners and put white on the yellow, where it could not be read.
+
+Red on yellow measures **3.21** against the package's 4.5 floor for
+ordinary text. It was reported to him with that number rather than
+quietly darkened, and he approved it on 2026-09-08. It stands as an
+approved exception, not as an oversight: the two colours are the theme's
+own `--primary` and `--destructive`, and a red that reached 4.5 would no
+longer be this theme's red.
+
 ## What this theme may not do
 
 - Use pure black, or white on the void.

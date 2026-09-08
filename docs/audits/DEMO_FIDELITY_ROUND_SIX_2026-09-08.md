@@ -994,3 +994,23 @@ green in both browsers and both channels anyway.
   both channels red on the kentō headline test, restored, green.
 - The theme's rename to **woodblock** is still open, together with the
   name itself.
+
+## The band and the menu caption (added after the lifts, 2026-09-08)
+
+Two things the lifts had reported as not built came back as work: the
+running band ticker's demo showed, and the caption blueprint's dropdown
+carried. Kenny asked for both, as shared elements every theme can use,
+and then judged a page that showed all twenty-five side by side. He chose
+the theme's own version for every one of them.
+
+One deviation is approved rather than merely reported. Cyberpunk's band
+is signal yellow with the ink in blood red — his own instruction, after
+white on that yellow proved unreadable — and that pair measures 3.21
+against the 4.5 floor for ordinary text. He was given the number and
+approved it on 2026-09-08. `themes/cyberpunk/anatomy.md` carries it as an
+approved exception.
+
+Nothing else from this round is outstanding: the band's off-screen rest
+is built with a way out, the caption draws nothing where nobody asked for
+one, and both are held by `tests/marquee.spec.mjs` in both channels and
+both browsers, with three drills performed.
