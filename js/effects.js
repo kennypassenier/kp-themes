@@ -280,6 +280,11 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The shade-light register [SL2]: the headline's words resolving out
+    // of a blur, the lede's marks filling in (a size, not a luminance
+    // change), and the dialog rising into place.
+    'kp-word-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-mark-in': { durationMs: 300, cycles: 1, property: 'background-size', luminanceSteps: [] },
     // The topo register [S48, LIFT_PLAN topo row]: the headline's own
     // fade-in and the contour trace that draws beside it, both CSS-only
     // (no routine — see css/topo-register.css's type section).
@@ -775,12 +780,14 @@ export function attachEffects(root = document, options = {}) {
             return;
         }
 
-        if (routine === 'shout' || routine === 'slam' || routine === 'focus' || routine === 'resolve') {
+        if (routine === 'shout' || routine === 'slam' || routine === 'focus' || routine === 'resolve' || routine === 'blur') {
             // A word routine [PH2, BR2, S48 shade-dark and dark]: every word in its own span with its
             // index, the register animates them one after another by
             // `--kp-i`; the element ends as its own text. The keyframe is
             // `kp-<routine>` and its row in TIMINGS says how long one word
-            // takes; the stagger is the theme's knob.
+            // takes; the stagger is the theme's knob. One routine names its
+            // keyframe otherwise: shade-light's `blur` runs `kp-word-in`,
+            // the name its own approved demo used [SL2, S49].
             pending++;
             const parts = text.split(/(\s+)/);
             let index = 0;
@@ -806,7 +813,8 @@ export function attachEffects(root = document, options = {}) {
                 done();
             };
             finishers.push(finish);
-            later(finish, TIMINGS[`kp-${routine}`].durationMs + index * cfg.wordStagger + 50);
+            const keyframe = routine === 'blur' ? 'kp-word-in' : `kp-${routine}`;
+            later(finish, TIMINGS[keyframe].durationMs + index * cfg.wordStagger + 50);
             return;
         }
         if (routine === 'dissolve') {

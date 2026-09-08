@@ -405,6 +405,18 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='shade-light'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/shade-light-register.css",
+                "selector": "[data-theme='shade-light'] mark"
+            },
+            "reveal": {
+                "css": "css/shade-light-register.css",
+                "selector": "[data-theme='shade-light'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/shade-light-register.css",
+                "selector": "[data-theme='shade-light'] [data-kp-divider]"
             }
         },
         "shade-dark": {

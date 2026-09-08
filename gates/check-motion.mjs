@@ -109,6 +109,10 @@ const OUT_OF_SCOPE = {
     'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
     // The topo register [TP1]: the contour trace beside the headline.
     'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
+    // The shade-light register [SL2]: the lede mark's ink-fill is a
+    // background-size change, not a luminance one — the fill colour and
+    // its alpha are constant throughout, only the covered area grows.
+    'kp-mark-in': 'a background-size widening over a mark once, 0% to 100%; the fill colour and alpha never change, only the area',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/shade-light-register.css" />
         <link rel="stylesheet" href="../css/ticker-register.css" />
         <link rel="stylesheet" href="../css/topo-register.css" />
         <link rel="stylesheet" href="../css/deco-register.css" />
@@ -907,11 +908,25 @@ contrast is the brush, the Gothic is the print shop.</li>
                         </ul>
                         <div class="kp-prose">
 <p>Reading a book in the shade, not in the sun. The only theme in the set
-built on medium contrast: warm off-white paper and a blue-grey ink
-that stops well short of black, so a long text is restful rather than
-sharp. Derived from Solarized, whose sixteen values were designed for
-exactly this, and shipped as a pair — <code>shade-light</code> and <code>shade-dark</code>
-share one scheme with the lightness steps mirrored.</p>
+built on medium contrast: warm off-white paper and a blue-grey ink that
+stops well short of black, so a long text is restful rather than sharp.
+Derived from Solarized, whose sixteen values were designed for exactly
+this, and shipped as a pair — <code>shade-light</code> and <code>shade-dark</code> share one
+scheme with the lightness steps mirrored.</p>
+<p>The lift adds one idea on top of the base tokens: <strong>soft elevation,
+layered surfaces, shadow doing the work colour usually does</strong> — the
+direction the round's own plan names for this theme. A floating surface
+(a dropdown, a popover, a toast, a dialog) lifts off the page on a
+shadow in the theme's own ink, at low opacity; a flat surface (a card,
+an alert, the dossier, the spec sheet) stays exactly that, a border and
+nothing else, because the demo itself is this restrained — only the
+nav's dropdown and the wipe-confirmation dialog carry a shadow at all.
+The register generalises that restraint to every floating surface the
+package has (the popover, the toast, the tooltip, the confirm dialog,
+the datepicker panel, the combobox list, the command palette, the
+shortcut sheet, the theme menu) rather than leaving them plain, the same
+way retro generalised its bevel from the two controls the 3.1.0 base
+already carried to the whole desktop.</p>
 <ol>
 <li><strong>The ink is base01, not base00.</strong> Solarized's own light-mode text
 colour <code>#657b83</code> measures 4.13:1 on <code>#fdf6e3</code> and fails AA; the
@@ -922,14 +937,25 @@ AA allows, and not lower.</li>
 magenta and red were drawn for syntax highlighting, where 3:1 is
 normal. As text they fail, so each is deepened where it carries text
 (<code>--primary</code> blue at 38% instead of 49%) and otherwise used as a
-plate with paper ink.</li>
+plate with paper ink. The demo states this rule in its own words, in
+its own lede — &quot;accents that stay plates, never words&quot; — and the
+register holds it: <code>--accent</code> never sets <code>color</code> on real text
+anywhere in <code>css/shade-light-register.css</code>, only <code>background</code>,
+<code>border</code> or a small dot.</li>
 <li><strong>The card is lighter than the paper.</strong> Solarized puts base2 below
-base3; the DI6 gate, which holds a raised surface above the one
-below it in every theme, sent the card the other way. The base2
-value survives as <code>--secondary</code> and the borders.</li>
-<li><strong>Source Serif 4 for headings, Source Sans 3 for the body</strong>, the
-pair Adobe drew to sit together — this is a text theme and its type
-should say so.</li>
+base3; the DI6 gate, which holds a raised surface above the one below
+it in every theme, sent the card the other way. The base2 value
+survives as <code>--secondary</code> and the borders.</li>
+<li><strong>Source Serif 4 for headings, Source Sans 3 for the body</strong>, the pair
+Adobe drew to sit together — this is a text theme and its type should
+say so. Both are shipped (C4); the body face is renamed &quot;KP Shade
+Sans&quot; at build, because its OFL carries a Reserved Font Name clause
+(<code>fonts/families.json</code>) and a subset is a Modified Version that may
+not keep the original name.</li>
+<li><strong>The shadow is one token, three depths.</strong> <code>--kp-shadow-1/2/3</code> in
+<code>css/shade-light-register.css</code> are all <code>hsl(from var(--foreground) h s l / a)</code>
+at increasing blur and decreasing alpha — never a colour of the
+register's own, and never applied to a flat surface.</li>
 </ol>
                         </div>
                     </article>
