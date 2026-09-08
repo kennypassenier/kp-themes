@@ -1171,7 +1171,15 @@ reads a `concept/` directory. **Revised:** one entry `concept` in
 `examples.spec.mjs`, both channels), a theme picker on the page reading
 `?theme=<name>`, and a generated index page linking
 `concept.html?theme=<name>` for all twenty-four — S46's URL per theme,
-one file. Copy text comes from `js/strings.js` (KT5).
+one file. ~~Copy text comes from `js/strings.js` (KT5).~~
+
+**Amended 2026-09-08 (R6-Q3, Kenny: "clausule schrappen").** The copy
+clause is struck. The concept page is built with literal copy like its
+ten siblings: the strings gate scopes to `js/` and `components/`, and a
+generated example page has never spoken through the dictionary — KT5 is
+about the strings a *component* renders on a consumer's behalf, not the
+prose of an example. The deviation was recorded at C0 rather than fixed
+silently (S42's spirit), and this is the answer.
 
 ## AR43 · The configuration surface, aligned with the approved demo
 

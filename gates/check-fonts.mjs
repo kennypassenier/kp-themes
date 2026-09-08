@@ -35,6 +35,7 @@
 // Usage: node gates/check-fonts.mjs
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { nameRecords } from './woff2-names.mjs';
 import process from 'node:process';
 
 const root = new URL('../', import.meta.url);
@@ -44,7 +45,7 @@ const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 
 export const REDISTRIBUTABLE = ['OFL-1.1', 'Apache-2.0', 'UFL-1.0'];
 
 /**
- * @typedef {{ family: string, licence: string, reservedFontName: boolean, subset: boolean, themes: string[], scripts: string[], why?: string }} Family
+ * @typedef {{ family: string, licence: string, reservedFontName: boolean, renamed?: string, reservedWord?: string, subset: boolean, themes: string[], scripts: string[], why?: string }} Family
  */
 
 /**
@@ -80,16 +81,45 @@ export function audit(families, readDir, themeFamilies, budgetBytes, onDisk) {
         if (!dir.licence) problems.push(`${entry.family}: fonts/${slug}/LICENSE is missing (licence)`);
         if (!REDISTRIBUTABLE.includes(entry.licence))
             problems.push(`${entry.family}: licence ${entry.licence} is not one the package may redistribute (licence)`);
-        if (entry.reservedFontName && entry.subset)
-            problems.push(
-                `${entry.family}: declares a Reserved Font Name and ships a subset — a subset is a Modified Version under the OFL and may not carry the reserved name (reserved)`,
-            );
-        if (!named.has(entry.family)) problems.push(`${entry.family}: no theme names it in its theme-font-* tokens (orphan)`);
+        if (entry.reservedFontName && entry.subset) {
+            // A renamed delivery (R6-Q1): the file itself must carry the new
+            // family and none of the reserved word, measured on its name
+            // table — the plan saying so is not the measurement.
+            if (!entry.renamed || !entry.reservedWord)
+                problems.push(
+                    `${entry.family}: declares a Reserved Font Name and ships a subset without a renamed family and the reserved word to keep out of it (reserved)`,
+                );
+            else
+                for (const file of dir.files) {
+                    /** @type {{ id: number, text: string }[]} */
+                    let records = [];
+                    try {
+                        records = nameRecords(readFileSync(new URL(`fonts/${slug}/${file}`, root)));
+                    } catch (error) {
+                        problems.push(
+                            `${entry.family}: fonts/${slug}/${file} cannot be read as woff2 — ${/** @type {Error} */ (error).message} (reserved)`,
+                        );
+                        continue;
+                    }
+                    const family = records.filter((r) => r.id === 1 || r.id === 16).map((r) => r.text);
+                    if (!family.some((t) => t === entry.renamed))
+                        problems.push(
+                            `${entry.family}: fonts/${slug}/${file} does not carry the renamed family '${entry.renamed}' in its name table (reserved)`,
+                        );
+                    const leaked = records.filter((r) => ![0, 7, 8, 9, 11, 13, 14].includes(r.id) && r.text.includes(entry.reservedWord ?? ''));
+                    if (leaked.length > 0)
+                        problems.push(
+                            `${entry.family}: fonts/${slug}/${file} still carries the reserved word '${entry.reservedWord}' in name record(s) ${[...new Set(leaked.map((r) => r.id))].join(', ')} (reserved)`,
+                        );
+                }
+        }
+        if (!named.has(entry.renamed ?? entry.family))
+            problems.push(`${entry.renamed ?? entry.family}: no theme names it in its theme-font-* tokens (orphan)`);
         bytesBySlug.set(slug, dir.bytes);
     }
     for (const [theme, names] of themeFamilies) {
         let total = 0;
-        for (const [slug, entry] of Object.entries(families)) if (names.includes(entry.family)) total += bytesBySlug.get(slug) ?? 0;
+        for (const [slug, entry] of Object.entries(families)) if (names.includes(entry.renamed ?? entry.family)) total += bytesBySlug.get(slug) ?? 0;
         if (total > budgetBytes) problems.push(`${theme}: its families weigh ${total} bytes, over the budget of ${budgetBytes} (budget)`);
     }
     return problems;
@@ -182,7 +212,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // file nobody can load.
     const listed = Object.values(families)
         .filter((f) => !(f.reservedFontName && !f.subset))
-        .map((f) => f.family);
+        .map((f) => f.renamed ?? f.family);
     for (const family of declared)
         if (!listed.includes(family)) problems.push(`${family}: declared in css/fonts.css and not listed in fonts/families.json`);
     for (const family of listed)

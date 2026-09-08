@@ -545,6 +545,30 @@ barrel: import it from `@kp-soft/themes/fx/boot-sequence`. The other three
 need nothing, and every glyph set, speed, density and colour they use is a
 prop.
 
+Since 5.0.0 `DecipherText` is a wrapper around `attachEffects()` from
+`js/effects.js`: it renders the headline reveal the current theme
+declares (cyberpunk deciphers, synthwave tracks, formal stays still), and
+its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
+`charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
+
+## The hook vocabulary [S45]
+
+Since 5.0.0 a page marks what a passage *is* and every theme answers in
+its own way — loudly in cyberpunk and synthwave, quietly in the rest. Six
+hooks: `data-kp-surface="hero|app"` on a section, a `<mark>` for an
+emphasis, `data-kp-reveal="headline|emphasis|rule"` on something that
+arrives, `data-kp-divider` between sections, the heading accent (an
+`h1` or `h2` inside a surface), and `--kp-arrival` on the root for how a
+page comes on. The reveals need `js/effects.js`, which `js/auto.js`
+attaches: `attachEffects(root, { threshold, cps, stagger, delay,
+reduceMotion })` returns `{ detach, observe }`. They run once per session
+per page (`data-kp-reveal-every="load"` opts back in), announce
+`kp-reveal` with `{ reveal, routine, skipped }`, report an unknown value
+once as `kp-effect-unknown`, and resolve to their rest state under
+reduced motion — a page without the script shows the rest states.
+`README.md` has the table of what each theme answers;
+`themes/hooks.json` is the matrix the gate reads.
+
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package

@@ -24,6 +24,7 @@ import { VENDORED, closure, specifiers } from './check-closure.mjs';
 import { drawn, establishers, queried, REQUIRED } from './check-wrappers.mjs';
 import { FILES } from './checksums.mjs';
 import { compareVersions, diagnose } from '../js/diagnostics.js';
+import { nameRecords } from './woff2-names.mjs';
 import { DEFAULT_STRINGS } from '../js/strings.js';
 import { subsequence } from '../js/listbox.js';
 import { parseDate, toDutch, toISO } from '../js/datepicker.js';
@@ -612,6 +613,12 @@ test('TH97: a matching pair is a match, and 3.10.0 is newer than 3.9.0', () => {
     assert.ok((compareVersions('3.10.0', '3.9.0') ?? 0) > 0);
     assert.equal(compareVersions('3.2.0', '3.2'), 0);
     assert.equal(compareVersions('3.2.0', 'nightly'), null);
+    // A pre-release sorts below its release and above the one before [C6].
+    assert.ok((compareVersions('5.0.0-alpha.1', '4.0.0') ?? 0) > 0);
+    assert.ok((compareVersions('5.0.0-alpha.1', '5.0.0') ?? 0) < 0);
+    assert.ok((compareVersions('5.0.0-alpha.2', '5.0.0-alpha.1') ?? 0) > 0);
+    assert.ok((compareVersions('5.0.0-beta.1', '5.0.0-alpha.9') ?? 0) > 0);
+    assert.equal(compareVersions('5.0.0-alpha.1', '5.0.0-alpha.1'), 0);
 });
 
 test('R5-BADGE: every status has a badge rule, and every badge rule has a status', () => {
@@ -834,10 +841,16 @@ test('T19: the packed tarball carries css/fonts.css, fonts/families.json and a s
         assert.ok(files.includes(expected), `${expected} is not in the tarball`);
     }
     // And nothing from a family with a Reserved Font Name.
+    // A reserved-name family travels renamed (R6-Q1): the face is in the
+    // tarball under its slug, and the file itself carries the new family
+    // and none of the reserved word.
+    assert.ok(files.includes('fonts/sharetechmono/sharetechmono-regular.woff2'), 'the renamed face did not travel');
+    const names = nameRecords(readFileSync(new URL('../fonts/sharetechmono/sharetechmono-regular.woff2', import.meta.url)));
     assert.ok(
-        !files.some((/** @type {string} */ f) => f.startsWith('fonts/sharetechmono/') && f.endsWith('.woff2')),
-        'a reserved-name face travelled',
+        names.some((r) => r.id === 1 && r.text === 'KP Tech Mono'),
+        'the shipped face is not renamed',
     );
+    assert.ok(!names.some((r) => ![0, 7, 8, 9, 11, 13, 14].includes(r.id) && r.text.includes('Share')), 'the reserved word travelled');
 });
 
 // ── TH130: one stylesheet list for every CSS gate ────────────────────────────

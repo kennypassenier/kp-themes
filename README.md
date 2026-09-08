@@ -98,29 +98,55 @@ shadcn.
 
 ### Fonts
 
-Every theme names its faces in `--theme-font-body` and
-`--theme-font-display`, and the package loads none of them — a consumer
-does, for the themes it offers. All of them are on Google Fonts (and most
-on Bunny Fonts): Instrument Sans and Instrument Serif, Fraunces, Share
-Tech Mono, Chakra Petch, Atkinson Hyperlegible, Space Grotesk, Archivo
-Black, Josefin Sans, Poiret One, Lora, Cormorant Garamond, Barlow and
-Barlow Condensed, IBM Plex Sans and IBM Plex Mono, Zen Kaku Gothic New,
-Shippori Mincho, Source Sans 3, Source Serif 4, Inter Tight, Geist Mono,
-Pixelify Sans, Inter, Archivo, Vazirmatn, Markazi Text, Titillium Web,
-Michroma. The showcase and the fixtures read the token values and load
-exactly the faces of the themes on the page, which is the pattern to
-copy. kp-soft loads its four from Bunny Fonts; put this in your `<head>`:
+Since 5.0.0 the package ships the faces its themes name [T19]: load
+`css/fonts.css` beside `themes.css` and every `--theme-font-body`,
+`--theme-font-display` and `--theme-font-mono` resolves to a woff2 subset
+under `fonts/` (latin for every family, Arabic and Japanese where a theme
+needs them), each with its licence beside it. Without that file the
+stacks fall back to a system face and the page still reads.
 
-```html
-<link rel="preconnect" href="https://fonts.bunny.net" />
-<link
-    href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|fraunces:600,700|share-tech-mono:400|chakra-petch:500,600,700"
-    rel="stylesheet"
-/>
-```
+Seven families carry a Reserved Font Name under the OFL, and a subset is
+a Modified Version that may not carry that name — not even as part of a
+new one. They ship renamed, and the tokens name the renamed family first
+and the original after it, for a reader who has the original installed:
 
-JetBrains Mono (`--font-mono`) is expected to be present locally or loaded
-by the app; every stack has a fallback.
+| Shipped as          | Renamed from    | Named by                |
+| ------------------- | --------------- | ----------------------- |
+| `KP Tech Mono`      | Share Tech Mono | terminal, the registers |
+| `KP Deco Sans`      | Josefin Sans    | deco                    |
+| `KP Academia Serif` | Lora            | academia                |
+| `KP Ticker Sans`    | IBM Plex Sans   | ticker                  |
+| `KP Ticker Mono`    | IBM Plex Mono   | ticker                  |
+| `KP Shade Sans`     | Source Sans 3   | shade-light, shade-dark |
+| `KP Outrun Display` | Orbitron        | synthwave               |
+
+`gates/check-fonts.mjs` reads every shipped file's name table and refuses
+one that carries a reserved word. Nishiki ships its two Japanese families
+in the regular weight only, inside the 1.5 MB per-theme budget; the
+browser synthesises the bold (a known limitation, R6-Q6). A consumer that
+prefers a font service can still load the originals itself: the stacks
+name them.
+
+### The hook vocabulary [S45]
+
+Meaning lives in the HTML, expression in the theme. A page marks what a
+passage _is_, and every theme answers — some loudly, most quietly:
+
+| Hook                                        | Meaning                          | cyberpunk                         | synthwave                           |
+| ------------------------------------------- | -------------------------------- | --------------------------------- | ----------------------------------- |
+| `data-kp-surface="hero\|app"`               | which ground a section stands on | signal yellow / the void          | the night sky / the void            |
+| `<mark>`                                    | an emphasis the theme may reveal | a redaction that lifts            | a neon tube that switches on        |
+| `data-kp-reveal="headline\|emphasis\|rule"` | something that arrives           | decipher, clearance, a drawn rule | tracking and shine, the tube, laser |
+| `data-kp-divider`                           | a section transition             | the razor tear                    | the horizon                         |
+| `h1`/`h2` inside a surface                  | the heading accent               | brackets, display type            | chrome type, a cyan tube            |
+| `--kp-arrival` (on the root)                | how the page comes on            | quiet                             | `boot`: a boot line with a Skip     |
+
+The reveals run through `js/effects.js` (`attachEffects()`, which
+`js/auto.js` attaches); once per session per page by default,
+`data-kp-reveal-every="load"` opts back in, reduced motion resolves every
+one to its rest state, and a page without the script shows the rest
+states. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
+refuses a theme that leaves a hook unanswered.
 
 ### `data-theme` and the `.dark` class
 

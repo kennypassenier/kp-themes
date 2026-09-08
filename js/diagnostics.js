@@ -69,13 +69,31 @@ function unquote(raw) {
  * @returns {number | null} negative when a is older, 0 when equal, positive when a is newer; null when either is not a version
  */
 export function compareVersions(a, b) {
-    const parse = /** @param {string} v @returns {number[] | null} */ (v) =>
-        /^\d+(\.\d+)*$/.test(v.trim()) ? v.trim().split('.').map(Number) : null;
+    // `5.0.0-alpha.1` is older than `5.0.0` and newer than `4.0.0`: a
+    // pre-release tag sorts below the release it precedes, and its own
+    // identifiers compare numerically where both are numbers and by text
+    // otherwise (the semver rule) [C6].
+    const parse = /** @param {string} v @returns {{ numbers: number[], pre: string[] | null } | null} */ (v) => {
+        const m = /^(\d+(?:\.\d+)*)(?:-([0-9A-Za-z.-]+))?$/.exec(v.trim());
+        return m ? { numbers: m[1].split('.').map(Number), pre: m[2] === undefined ? null : m[2].split('.') } : null;
+    };
     const left = parse(a);
     const right = parse(b);
     if (left === null || right === null) return null;
-    for (let i = 0; i < Math.max(left.length, right.length); i++) {
-        const diff = (left[i] ?? 0) - (right[i] ?? 0);
+    for (let i = 0; i < Math.max(left.numbers.length, right.numbers.length); i++) {
+        const diff = (left.numbers[i] ?? 0) - (right.numbers[i] ?? 0);
+        if (diff !== 0) return diff;
+    }
+    if (left.pre === null && right.pre === null) return 0;
+    if (left.pre === null) return 1;
+    if (right.pre === null) return -1;
+    for (let i = 0; i < Math.max(left.pre.length, right.pre.length); i++) {
+        const l = left.pre[i];
+        const r = right.pre[i];
+        if (l === undefined) return -1;
+        if (r === undefined) return 1;
+        const both = /^\d+$/.test(l) && /^\d+$/.test(r);
+        const diff = both ? Number(l) - Number(r) : l < r ? -1 : l > r ? 1 : 0;
         if (diff !== 0) return diff;
     }
     return 0;

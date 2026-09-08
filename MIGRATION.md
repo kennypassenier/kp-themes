@@ -9,6 +9,63 @@ error and no failing gate.
 Five things changed. Each one is a search-and-replace, and each is here
 with what it becomes.
 
+## Coming from 4.0.0 to 5.0.0
+
+**`cyberpunk` means something else now, and it is the reason 5.0.0 is a
+major** [S39, S40]. The 4.x neon-on-violet theme is replaced under the
+same name by the signal-yellow register of the approved demo; 4.0.0
+stays what it shipped (S20 — pin the tag if you want the old one). The
+rest of 5.0.0 adds: a twenty-fifth theme, shipped fonts, a hook
+vocabulary, a base-layer rule and one token.
+
+### If you use `cyberpunk`
+
+| Was (4.0.0)                                                                              | Is (5.0.0)                                                                          |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| violet night, magenta primary                                                            | signal yellow hero, the void with a violet cast as the app ground, blood red alerts |
+| `.fx-flicker`, `.fx-pulse`, `.fx-cellpop`, `.fx-media`, `[data-slot='…']`                | removed — nothing flickers or pulses in the new register [DI5]                      |
+| `.fx-glitch`, `.fx-rule`, `.fx-brackets`, `.fx-notch`, `.fx-signal-badge`, `.microlabel` | kept, with the new register's meaning                                               |
+| `DecipherText` props `delay`, `direction`, `preserve`, `glyphs`                          | gone — it wraps `attachEffects()`; use `data-kp-reveal="headline"` and the knobs    |
+| the texture at 0.55                                                                      | scanlines and a vignette at exactly DI9's ceiling, 0.06                             |
+
+### New: the hook vocabulary [S45]
+
+Meaning lives in the HTML, expression in the theme. Six hooks, every
+theme answers each (quietly where it has nothing to say):
+`data-kp-surface="hero|app"`, `<mark>` (emphasis),
+`data-kp-reveal="headline|emphasis|rule"`, `data-kp-divider`, the
+heading accent (an `h1`/`h2` inside a surface), and `--kp-arrival` on
+the root (how a page comes on; synthwave answers `boot`). The reveals
+need `js/effects.js` (`attachEffects()`, attached by `js/auto.js`); every
+reveal has a rest state that holds without the script.
+
+### New: `synthwave`, the twenty-fifth theme, and a third register
+
+`css/synthwave-register.css` is opt-in like the other two. `Theme` is
+the union of twenty-five names; a switch over it gains a case.
+
+### New: the fonts ship [T19]
+
+`css/fonts.css` beside `themes.css` loads every face the themes name,
+as woff2 subsets under `fonts/`. Seven families carry a Reserved Font
+Name under the OFL and ship **renamed** (a subset is a Modified Version
+and may not carry the reserved word, not even as part of a new name):
+`KP Tech Mono` (Share Tech Mono), `KP Deco Sans` (Josefin Sans),
+`KP Academia Serif` (Lora), `KP Ticker Sans` and `KP Ticker Mono` (IBM
+Plex), `KP Shade Sans` (Source Sans 3), `KP Outrun Display` (Orbitron).
+The tokens name the renamed family first and the original after it, so a
+reader who has the original installed sees it. Nishiki ships its two
+Japanese families in the regular weight only (the 1.5 MB budget); the
+browser synthesises the bold — a known limitation [R6-Q6].
+
+### One base-layer rule, one token
+
+`[hidden] { display: none !important }` is in the base layer now [KT13]:
+a layout class no longer beats the attribute. If you overrode `[hidden]`
+to show something anyway, that override loses. And every theme declares
+`theme-font-mono` (the contract is 94 tokens, S47); a theme without a
+mono face of its own carries a generic stack, so nothing visible moves.
+
 ## Coming from 3.2.0 to 4.0.0
 
 **The confirmation is a dialog now** [TH107, AR27, AR28, AR29, D4]. This

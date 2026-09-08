@@ -110,17 +110,23 @@
                 </ul>
                 <h2>What is different</h2>
                 <ul class="kp-stack" data-compare-lines>
-                    <li>Typography, still the fallback: IBM Plex Sans and IBM Plex Mono carry a Reserved Font Name and wait on R6-Q1 — no visible change yet.</li>
+                    <li>Typography, still the fallback: KP Ticker Sans and KP Ticker Mono carry a Reserved Font Name and wait on R6-Q1 — no visible change yet.</li>
+                    <li>
+                        <details>
+                            <summary>Palette: 2 tokens changed value</summary>
+                            <p class="kp-prose">--theme-font-body 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif → 'KP Ticker Sans', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; --theme-font-display 'IBM Plex Mono', ui-monospace, monospace → 'KP Ticker Mono', 'IBM Plex Mono', ui-monospace, monospace.</p>
+                        </details>
+                    </li>
                     <li>New in 5.0.0: 11 hero tokens and the display text step, all pointing at values this theme already had — the hero paints the same ground as the app, so nothing visible changed.</li>
                 </ul>
                 <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
                     <section class="kp-stack" aria-label="Ticker under 4.0.0">
                         <h3>Ticker under 4.0.0</h3>
-                        <iframe src="compare-frame-4.0.0.html?theme=ticker" title="Ticker under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                        <iframe src="compare-frame-4.0.0.html?theme=ticker&amp;mark=palette" title="Ticker under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
                     </section>
                     <section class="kp-stack" aria-label="Ticker under the current build">
                         <h3>Ticker under the current build</h3>
-                        <iframe src="compare-frame.html?theme=ticker" title="Ticker under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                        <iframe src="compare-frame.html?theme=ticker&amp;mark=palette" title="Ticker under the current build" width="100%" height="900" data-compare-side="new"></iframe>
                     </section>
                 </div>
                 <p class="kp-prose">

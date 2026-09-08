@@ -54,7 +54,7 @@
            mono token (VT323); the data face is Share Tech Mono, under Q1's
            name. */
         --kp-osd: var(--theme-font-mono);
-        --kp-mono: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        --kp-mono: 'KP Tech Mono', 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
         /* The pink that reads as text: the hero's second ink, 8.9:1 on the
            void and 6.9:1 on the tape (the reference pink fails at 4.34). */
         --kp-pink-text: var(--surface-hero-fg-2);

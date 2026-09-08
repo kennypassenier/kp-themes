@@ -111,12 +111,22 @@
         "family": "Share Tech Mono",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["terminal"],
         "scripts": ["latin"],
         "upstream": "ofl/sharetechmono",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Share': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "sharetechmono-regular",
+                "source": "ShareTechMono-Regular.ttf",
+                "weight": "400",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Share': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Tech Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Tech Mono",
+        "reservedWord": "Share"
     },
     "atkinsonhyperlegible": {
         "family": "Atkinson Hyperlegible",
@@ -222,12 +232,29 @@
         "family": "Josefin Sans",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["deco"],
         "scripts": ["latin"],
         "upstream": "ofl/josefinsans",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Josefin Sans': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "josefinsans-variable",
+                "source": "JosefinSans[wght].ttf",
+                "weight": "100 700",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "josefinsans-italic-variable",
+                "source": "JosefinSans-Italic[wght].ttf",
+                "weight": "100 700",
+                "style": "italic",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Josefin Sans': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Deco Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Deco Sans",
+        "reservedWord": "Josefin Sans"
     },
     "poiretone": {
         "family": "Poiret One",
@@ -251,12 +278,29 @@
         "family": "Lora",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["academia"],
         "scripts": ["latin"],
         "upstream": "ofl/lora",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Lora': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "lora-variable",
+                "source": "Lora[wght].ttf",
+                "weight": "400 700",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "lora-italic-variable",
+                "source": "Lora-Italic[wght].ttf",
+                "weight": "400 700",
+                "style": "italic",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Lora': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Academia Serif' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Academia Serif",
+        "reservedWord": "Lora"
     },
     "cormorantgaramond": {
         "family": "Cormorant Garamond",
@@ -365,23 +409,71 @@
         "family": "IBM Plex Sans",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["ticker"],
         "scripts": ["latin"],
         "upstream": "ofl/ibmplexsans",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Plex': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "ibmplexsans-variable",
+                "source": "IBMPlexSans[wdth,wght].ttf",
+                "weight": "100 700",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "ibmplexsans-italic-variable",
+                "source": "IBMPlexSans-Italic[wdth,wght].ttf",
+                "weight": "100 700",
+                "style": "italic",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Ticker Sans",
+        "reservedWord": "Plex"
     },
     "ibmplexmono": {
         "family": "IBM Plex Mono",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["ticker"],
         "scripts": ["latin"],
         "upstream": "ofl/ibmplexmono",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Plex': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "ibmplexmono-regular",
+                "source": "IBMPlexMono-Regular.ttf",
+                "weight": "400",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "ibmplexmono-italic",
+                "source": "IBMPlexMono-Italic.ttf",
+                "weight": "400",
+                "style": "italic",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "ibmplexmono-medium",
+                "source": "IBMPlexMono-Medium.ttf",
+                "weight": "500",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "ibmplexmono-bold",
+                "source": "IBMPlexMono-Bold.ttf",
+                "weight": "700",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Ticker Mono",
+        "reservedWord": "Plex"
     },
     "zenkakugothicnew": {
         "family": "Zen Kaku Gothic New",
@@ -425,12 +517,29 @@
         "family": "Source Sans 3",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["shade-light", "shade-dark"],
         "scripts": ["latin"],
         "upstream": "ofl/sourcesans3",
-        "faces": [],
-        "why": "OFL with Reserved Font Name 'Source': a subset may not carry the name, so nothing ships until R6-Q1 is decided."
+        "faces": [
+            {
+                "file": "sourcesans3-variable",
+                "source": "SourceSans3[wght].ttf",
+                "weight": "200 900",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "sourcesans3-italic-variable",
+                "source": "SourceSans3-Italic[wght].ttf",
+                "weight": "200 900",
+                "style": "italic",
+                "scripts": ["latin"]
+            }
+        ],
+        "why": "OFL with Reserved Font Name 'Source': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Shade Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "renamed": "KP Shade Sans",
+        "reservedWord": "Source"
     },
     "sourceserif4": {
         "family": "Source Serif 4",
@@ -665,12 +774,22 @@
         "family": "Orbitron",
         "licence": "OFL-1.1",
         "reservedFontName": true,
-        "subset": false,
+        "subset": true,
         "themes": ["synthwave"],
         "scripts": ["latin"],
         "upstream": "ofl/orbitron",
-        "why": "OFL with Reserved Font Name 'Orbitron': a subset may not carry the name; ships under Q1's renamed delivery (SW3).",
-        "faces": []
+        "why": "OFL with Reserved Font Name 'Orbitron': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Outrun Display' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
+        "faces": [
+            {
+                "file": "orbitron-variable",
+                "source": "Orbitron[wght].ttf",
+                "weight": "400 900",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ],
+        "renamed": "KP Outrun Display",
+        "reservedWord": "Orbitron"
     },
     "vt323": {
         "family": "VT323",

@@ -43,7 +43,7 @@ export const SCRIPTS = {
 
 /**
  * @typedef {{ file: string, source: string, weight: string, style: 'normal' | 'italic', scripts: string[] }} Face
- * @typedef {{ family: string, licence: string, reservedFontName: boolean, subset: boolean, themes: string[], scripts: string[], upstream: string, faces: Face[] }} Family
+ * @typedef {{ family: string, licence: string, reservedFontName: boolean, renamed?: string, reservedWord?: string, subset: boolean, themes: string[], scripts: string[], upstream: string, faces: Face[] }} Family
  */
 
 /**
@@ -57,8 +57,13 @@ export function subsetAll(from, only) {
     const made = [];
     for (const [slug, family] of Object.entries(families)) {
         if (only && slug !== only) continue;
-        if (family.reservedFontName) {
-            console.log(`${slug}: Reserved Font Name — not subset (R6-Q1)`);
+        // A family with a Reserved Font Name ships as a renamed subset
+        // (R6-Q1, Kenny 2026-09-07): the OFL lets a Modified Version exist
+        // under another name, and gates/rename-font.py rewrites the name
+        // records after the subset so the reserved word is gone from the
+        // file. A reserved entry without a renamed name ships nothing.
+        if (family.reservedFontName && !family.renamed) {
+            console.log(`${slug}: Reserved Font Name and no renamed delivery — not subset`);
             continue;
         }
         const dir = new URL(`${slug}/`, FONTS);
@@ -82,6 +87,15 @@ export function subsetAll(from, only) {
                     '--desubroutinize',
                     `--output-file=${target.pathname}`,
                 ]);
+                if (family.renamed) {
+                    execFileSync('python3', [
+                        new URL('rename-font.py', import.meta.url).pathname,
+                        target.pathname,
+                        family.family,
+                        family.renamed,
+                        family.reservedWord ?? family.family,
+                    ]);
+                }
                 made.push(`${slug}/${target.pathname.split('/').pop()} ${statSync(target).size}`);
             }
         }

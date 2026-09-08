@@ -49,7 +49,7 @@
         --kp-reveal-rule: draw;
         /* The mono face for microlabels, identifiers and timestamps; C4
            ships Share Tech Mono (R6-Q1 decides under which name). */
-        --kp-mono: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        --kp-mono: 'KP Tech Mono', 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
         /* A hairline of the primary at low alpha: the frame of a card, an
            input, a panel. Not a boundary in DI1's sense — those read
            --border-strong and --input, which the register leaves alone. */

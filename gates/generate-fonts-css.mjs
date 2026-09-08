@@ -44,19 +44,22 @@ export function fontsCss(families) {
         '   themes.css; the theme tokens name these families first and a system',
         '   face after them, so a page without this file (chassis-rs before it',
         '   vendors the fonts, or a consumer that chose not to) still reads.',
-        '   The six families whose licence declares a Reserved Font Name are not',
-        '   here (R6-Q1). */',
+        '   A family whose licence declares a Reserved Font Name is here under',
+        '   the renamed family the build gave it (R6-Q1): the tokens name that',
+        '   family first and the original after it, for a reader who has it. */',
         '',
     ];
     let faces = 0;
     for (const [slug, family] of Object.entries(families)) {
         if (family.reservedFontName && !family.subset) continue;
-        lines.push(`/* ${family.family} — ${family.licence}, fonts/${slug}/LICENSE; named by ${family.themes.join(', ')} */`);
+        lines.push(
+            `/* ${family.renamed ? `${family.renamed} (renamed from ${family.family}, Reserved Font Name '${family.reservedWord}')` : family.family} — ${family.licence}, fonts/${slug}/LICENSE; named by ${family.themes.join(', ')} */`,
+        );
         for (const face of family.faces) {
             for (const script of face.scripts) {
                 const file = `${face.file}${face.scripts.length > 1 ? `-${script}` : ''}.woff2`;
                 lines.push('@font-face {');
-                lines.push(`    font-family: '${family.family}';`);
+                lines.push(`    font-family: '${family.renamed ?? family.family}';`);
                 lines.push(`    font-style: ${face.style};`);
                 lines.push(`    font-weight: ${face.weight};`);
                 lines.push('    font-display: swap;');
