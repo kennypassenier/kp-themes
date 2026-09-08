@@ -35,7 +35,7 @@ import { declaredRoots, rulesOf, subjectRoots } from './selectors.mjs';
 const root = new URL('../', import.meta.url);
 
 /** The registers this gate measures, one theme each [TH124]. */
-export const REGISTERS = ['css/cyberpunk-register.css', 'css/synthwave-register.css'];
+export const REGISTERS = ['css/cyberpunk-register.css', 'css/synthwave-register.css', 'css/phantom-register.css'];
 /** The first register, kept for the callers that measure one. */
 export const REGISTER = REGISTERS[0];
 

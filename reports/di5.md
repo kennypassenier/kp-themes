@@ -16,6 +16,18 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-bar-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-floor-drift` | background-position | 6000 ms | loops | — | 0.00/s | under |
 | `kp-crt-off` | opacity | 550 ms | 1× | 1 → 0 | 1.00/s | under |
+| `kp-shout` | opacity | 620 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-cut-in` | opacity | 180 ms | 1× | 0 → 0.6 → 1 | 1.00/s | under |
+| `kp-bar-run` | transform | 900 ms | 1× | — | 0.00/s | under |
+| `kp-load-out` | transform | 640 ms | 1× | — | 0.00/s | under |
+| `kp-dither-clear` | opacity | 640 ms | 1× | 1 → 1 → 1 → 1 → 0 | 1.00/s | under |
+| `kp-dither-out` | opacity | 520 ms | 1× | 1 → 1 → 1 → 1 → 0 | 1.00/s | under |
+| `kp-drag-select` | clip-path | 360 ms | 1× | — | 0.00/s | under |
+| `kp-redact-lift` | clip-path | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sweep` | transform | 10000 ms | loops | — | 0.00/s | under |
+| `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-slam` | transform | 260 ms | 1× | — | 0.00/s | under |
+| `kp-marquee` | transform | 42000 ms | loops | — | 0.00/s | under |
 | `kp-strip-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-strip-in-end` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-slice-a` | opacity | 320 ms | 1× | 1 → 1 → 0 | 1.00/s | under |

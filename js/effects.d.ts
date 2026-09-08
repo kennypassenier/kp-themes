@@ -24,6 +24,9 @@ export declare const STATE: Readonly<{
     tracking: "is-tracking";
     shine: "is-shine";
     off: "is-off";
+    words: "is-words";
+    dissolving: "is-dissolving";
+    typing: "is-typing";
 }>;
 /**
  * The custom properties a theme declares to say which reveals it performs

@@ -16,6 +16,20 @@ fonts ship with the package; the two registers became three
 (`css/synthwave-register.css`). `MIGRATION.md` has the consumer-facing
 detail at C6.
 
+**The second lift: phantom.** Built from the approved concept demo
+"Calling Card" (2026-09-08) on the §15 research: black, white and one
+red that is always a plate, never a word. The headline's words shout in
+one after another (`--kp-reveal-headline: shout`), a `<mark>` is a plate
+of cut paper shoved under the word (`slab`), the rail under a heading
+sweeps from grey to red (`rail`), the divider is torn paper, every hover
+is Omicron69's skewed bar, every button a key cap, every popover cut
+paper arriving on a three-step film cut, and the page arrives as a
+calling card — the theme's name, a red bar, the whole card shoved off to
+the left (`--kp-arrival: card`, the second arrival routine). The
+register is `css/phantom-register.css`; the effects module gained the
+word routines (`shout`, `slam`), `dissolve` and `type` for the lifts
+that follow.
+
 ## 4.0.0 — 2026-09-07
 
 **A destructive button asks before it acts, and four things that were

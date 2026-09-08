@@ -3801,7 +3801,13 @@ var STATE = Object.freeze({
   // headline, and the boot overlay switching off.
   tracking: "is-tracking",
   shine: "is-shine",
-  off: "is-off"
+  off: "is-off",
+  // The lift routines [S48, LIFT_PLAN rows 2–5]: a headline whose words
+  // arrive one after another (phantom's shout, brutalism's slam), one that
+  // clears out of a dither (retro), one that types itself (terminal).
+  words: "is-words",
+  dissolving: "is-dissolving",
+  typing: "is-typing"
 });
 var ROUTINES = Object.freeze({
   headline: "--kp-reveal-headline",
@@ -3835,6 +3841,27 @@ var TIMINGS = Object.freeze({
   "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
   "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+  // The phantom register [PH1]: the words of a headline shouting in, the
+  // film cut of a toast, the loader's bar and its shove out to the left.
+  "kp-shout": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-cut-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 1] },
+  "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
+  // The retro register [RT1]: the dither clearing off a headline and off
+  // the boot screen (four densities, one direction), the selection bar
+  // dragging across a mark, the redaction brush lifting.
+  "kp-dither-clear": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
+  "kp-dither-out": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
+  "kp-drag-select": { durationMs: 360, cycles: 1, property: "clip-path", luminanceSteps: [] },
+  "kp-redact-lift": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+  // The terminal register [TM1]: the sweep band that rests eight of ten
+  // seconds and the tube collapsing the boot screen.
+  "kp-sweep": { durationMs: 1e4, cycles: Infinity, property: "transform", luminanceSteps: [] },
+  "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+  // The brutalism register [BR1]: the words dropping onto their offset and
+  // the seamless marquee.
+  "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-marquee": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
@@ -3871,7 +3898,11 @@ function attachEffects(root = document, options = {}) {
     lead: knob("--kp-decipher-lead", 260),
     swap: knob("--kp-decipher-swap", 0.5),
     stagger: options.stagger ?? knob("--kp-reveal-stagger", 260),
-    delay: options.delay ?? knob("--kp-classified-delay", 1500)
+    delay: options.delay ?? knob("--kp-classified-delay", 1500),
+    // The word routines: ms between one word arriving and the next.
+    wordStagger: knob("--kp-word-stagger", 60),
+    // The card arrival: how long the word holds after its bar has run.
+    cardHold: knob("--kp-card-hold", 300)
   };
   if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
   let detached = false;
@@ -3968,6 +3999,93 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "shout" || routine === "slam") {
+      pending++;
+      const parts = text.split(/(\s+)/);
+      let index = 0;
+      const nodes = parts.map((part) => {
+        if (part === "") return null;
+        if (/^\s+$/.test(part)) return doc.createTextNode(part);
+        const span = doc.createElement("span");
+        span.setAttribute("data-word", "");
+        span.setAttribute("aria-hidden", "true");
+        span.style.setProperty("--kp-i", String(index++));
+        span.textContent = part;
+        return span;
+      });
+      el.replaceChildren(...nodes.filter((n) => n !== null));
+      el.classList.add(STATE.words);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.words);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      later(finish2, TIMINGS[`kp-${routine}`].durationMs + index * cfg.wordStagger + 50);
+      return;
+    }
+    if (routine === "dissolve") {
+      pending++;
+      el.classList.add(STATE.dissolving);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.dissolving);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-dither-clear"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-dither-clear"].durationMs + 50);
+      return;
+    }
+    if (routine === "type") {
+      pending++;
+      const chars2 = [...text];
+      const caret = doc.createElement("span");
+      caret.setAttribute("data-caret", "");
+      caret.setAttribute("aria-hidden", "true");
+      el.classList.add(STATE.typing);
+      el.textContent = "";
+      el.append(caret);
+      let typed = 0;
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.typing);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const perChar2 = 1e3 / Math.max(1, cfg.cps);
+      const step = () => {
+        if (ended) return;
+        typed++;
+        el.textContent = chars2.slice(0, typed).join("");
+        if (typed < chars2.length) {
+          el.append(caret);
+          later(step, perChar2);
+        } else finish2();
+      };
+      later(step, cfg.lead);
       return;
     }
     pending++;
@@ -4163,7 +4281,8 @@ function attachEffects(root = document, options = {}) {
   scan(root);
   const arrival = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
-    if (routine !== "boot" || !doc.body) return;
+    if (routine !== "boot" && routine !== "card" || !doc.body) return;
+    const card = routine === "card";
     if (reduced() || seen(html, "arrival")) {
       announce(html, "arrival", routine, true);
       return;
@@ -4198,7 +4317,7 @@ function attachEffects(root = document, options = {}) {
       }
       overlay.classList.add(STATE.off);
       overlay.addEventListener("animationend", remove, { once: true });
-      later(remove, TIMINGS["kp-crt-off"].durationMs + 50);
+      later(remove, TIMINGS[card ? "kp-load-out" : "kp-crt-off"].durationMs + 50);
     };
     const step = () => {
       if (ended) return;
@@ -4210,7 +4329,10 @@ function attachEffects(root = document, options = {}) {
     skip.addEventListener("click", end);
     finishers.push(end);
     cleanups.push(() => overlay.remove());
-    step();
+    if (card) {
+      line.textContent = html.getAttribute("data-theme") ?? "";
+      later(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);
+    } else step();
   };
   arrival();
   return {

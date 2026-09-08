@@ -41,6 +41,17 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
  */
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
+    // The phantom register [PH1]: the loader's bar and its shove out, both
+    // transforms; the retro register [RT1]: the selection bar and the
+    // redaction brush, both clip-paths; the terminal register [TM1]: the
+    // sweep band; the brutalism register [BR1]: the slam and the marquee.
+    'kp-bar-run': 'a horizontal scale on a 3px bar, once; no luminance change and nothing over 341x256 px',
+    'kp-load-out': 'the arrival overlay skewing and translating off the viewport once; the overlay keeps its colours, only its position moves',
+    'kp-drag-select': 'a clip-path widening over a phrase once (the selection bar); under 341x256 px',
+    'kp-redact-lift': 'a clip-path narrowing over a phrase once (the redaction brush); under 341x256 px',
+    'kp-sweep': 'a band translating down the viewport once per ten seconds, resting eight of them; a transform, and the band is a 9% tint',
+    'kp-slam': 'a word translating onto its text-shadow once; a transform on a word, under 341x256 px',
+    'kp-marquee': 'a strip translating -50% over 42 seconds; the strip keeps its colours, only its position moves',
     // The synthwave register [SW1].
     'kp-shine':
         'a highlight band sliding across clipped text once (background-position); the text keeps its colours and the band is under 341x256 px',

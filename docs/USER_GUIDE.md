@@ -77,7 +77,8 @@ picker is attached; `initializeTheme(fallback)` names another, and
 Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
 on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
 `synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
-research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1).
+research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
+second, rebuilt from its approved demo "Calling Card" (row 2).
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -547,14 +548,16 @@ prop.
 
 Since 5.0.0 `DecipherText` is a wrapper around `attachEffects()` from
 `js/effects.js`: it renders the headline reveal the current theme
-declares (cyberpunk deciphers, synthwave tracks, formal stays still), and
+declares (cyberpunk deciphers, synthwave tracks, phantom shouts, formal
+stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
 ## The hook vocabulary [S45]
 
 Since 5.0.0 a page marks what a passage *is* and every theme answers in
-its own way — loudly in cyberpunk and synthwave, quietly in the rest. Six
+its own way — loudly in cyberpunk, synthwave and phantom, quietly in the
+rest. Six
 hooks: `data-kp-surface="hero|app"` on a section, a `<mark>` for an
 emphasis, `data-kp-reveal="headline|emphasis|rule"` on something that
 arrives, `data-kp-divider` between sections, the heading accent (an
@@ -596,7 +599,10 @@ badge that settles in pastel, a drifting contour layer in topo, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
 brutalism, a double gold rule in deco, a slower gold rule in academia, a
-badge that slides in in phantom, a hanko seal after a heading in nishiki,
+badge that slides in in phantom (and since 5.0.0 its cut-paper register:
+the plate under a `<mark>`, the rail under a heading, the torn-paper
+divider, the calling card on arrival), a hanko seal after a heading in
+nishiki,
 the bevel register in retro, and since 5.0.0 the horizon register in
 synthwave — a striped sun and a drifting floor on the hero, a neon tube
 that a `<mark>` switches on, a laser line under a heading, a boot line

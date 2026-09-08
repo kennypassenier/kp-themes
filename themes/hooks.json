@@ -162,6 +162,26 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='phantom'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/phantom-register.css",
+                "selector": "[data-theme='phantom'] mark"
+            },
+            "reveal": {
+                "css": "css/phantom-register.css",
+                "selector": "[data-theme='phantom'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/phantom-register.css",
+                "selector": "[data-theme='phantom'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/phantom-register.css",
+                "selector": "[data-theme='phantom'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "css": "css/phantom-register.css",
+                "selector": "[data-theme='phantom'] .kp-boot"
             }
         },
         "ticker": {

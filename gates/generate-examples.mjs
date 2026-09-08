@@ -44,6 +44,7 @@ const SHEETS = [
     'cyberpunk-register.css',
     'retro-register.css',
     'synthwave-register.css',
+    'phantom-register.css',
 ];
 
 /**
