@@ -601,17 +601,11 @@
        here animated the same `h2::after` the hook uses, which is how it
        outranked formal's armed start state; removed with the lift. */
 
-        /* deco — a double gold rule that draws itself under a heading, the
-       way a Deco frontispiece is ruled. */
-        [data-theme='deco'] h1::after,
-        [data-theme='deco'] h2::after {
-            content: '';
-            display: block;
-            block-size: 3px;
-            margin-block-start: 0.4rem;
-            border-block: 1px solid var(--primary);
-            animation: kp-rule-in calc(var(--fx-duration) * 4) var(--fx-ease) both;
-        }
+        /* deco — lifted to a register [S48, LIFT_PLAN row 8]: the double
+       gold rule under a heading is now the register's own `rule` hook,
+       drawn when the heading enters the viewport. The block that stood
+       here animated the same `h2::after` the hook uses, the conflict
+       formal's lift measured; removed with the lift. */
 
         /* academia — lifted to a register [S48, LIFT_PLAN row 10]: the
        gesture is now the register's own headline and rule draw, gated on

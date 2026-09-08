@@ -137,6 +137,7 @@ function showcase() {
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
         <link rel="stylesheet" href="../css/grotesk-register.css" />
         <link rel="stylesheet" href="../css/blueprint-register.css" />
@@ -250,6 +251,7 @@ function fixture(theme) {
         <link rel="stylesheet" href="../../css/phantom-register.css" />
         <link rel="stylesheet" href="../../css/terminal-register.css" />
         <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
         <link rel="stylesheet" href="../../css/light-register.css" />
         <link rel="stylesheet" href="../../css/grotesk-register.css" />
         <link rel="stylesheet" href="../../css/blueprint-register.css" />

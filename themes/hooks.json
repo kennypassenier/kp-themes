@@ -292,6 +292,25 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='deco'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/deco-register.css",
+                "selector": "[data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/deco-register.css",
+                "selector": "[data-theme='deco'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/deco-register.css",
+                "selector": "[data-theme='deco'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/deco-register.css",
+                "selector": "[data-theme='deco'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "quiet": "no boot overlay; the cartouche's own on-load scale is scoped to the headline, not the page, and the demo's script never touches --kp-arrival"
             }
         },
         "academia": {

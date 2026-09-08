@@ -3966,6 +3966,11 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
+  // scaling in once with the headline, and the dossier's jewel plates
+  // clearing on the "Open the file" trigger, staggered 140ms apart.
+  "kp-cartouche-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-redaction-clear": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   // The light register [S48, LIFT_PLAN, A1]: the headline's rounded clip
   // window opening once (a shape and a fade, never a loop), and the lede
   // marks' background-size sweep with its one colour swap — a highlighter

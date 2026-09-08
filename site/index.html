@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
         <link rel="stylesheet" href="../css/grotesk-register.css" />
         <link rel="stylesheet" href="../css/blueprint-register.css" />
@@ -684,9 +685,13 @@ theme is for.</li>
                         <div class="kp-prose">
 <p>Art Deco, the dark reading: gold on a near-black ground, jewel tones for
 the accents — emerald, sapphire, ruby — and geometry drawn with a ruler
-and a compass: chevrons, double rules, a display face built from
-circles and straight lines. Paris 1925 and the skyscraper lobby, not the
-gilt of a palace.</p>
+and a compass: chevrons, double rules, a display face built from circles
+and straight lines. Paris 1925 and the skyscraper lobby, not the gilt of
+a palace. The approved concept demo, &quot;The Gilded Ascent&quot; (2026-09-08,
+Kenny), is the reference this register is built from exactly (S49); the
+measured references are Le Bathyscaphe's concentric inset-shadow frame
+and its <code>border-style: double</code> divider, and the Empire State Building's
+chevron corner cut — both in <code>docs/RESEARCH_2026-09.md</code> §13.</p>
 <p>The light ivory-and-gold Deco exists too and is not built: on paper it
 sits within a step of formal and sepia. The dark one has no sibling.</p>
 <ol>
@@ -699,14 +704,19 @@ a button are not the same thing.</li>
 trace of blue under the gold is what makes the gold look warm. Pure
 black would make this phantom's ground with a different accent.</li>
 <li><strong>Jewels as accents, never as text.</strong> Emerald is <code>--accent</code> with a
-dark ink of its own family (the base pair is a large-text pair at 3:1;
-the derived hover and active states were what forced the dark ink —
-a light ink dropped to 2.6:1 on the lighter active plate). Ruby is
-<code>--destructive</code> and <code>--fx-signal</code>, lifted to 58% so it reads as text.
-Sapphire is <code>--info</code>.</li>
-<li><strong>Poiret One for headings, Josefin Sans for everything else.</strong>
-Poiret One is hairline-thin and lives only on h1–h3, uppercase with
-wide tracking; a control label in it would vanish at 14px.</li>
+dark ink of its own family. Ruby is <code>--destructive</code> and the dossier
+stamp's plate. Sapphire is <code>--info</code>.</li>
+<li><strong>Poiret One for headings, Josefin Sans for everything else.</strong> Poiret
+One is hairline-thin and lives only on h1–h3, uppercase with wide
+tracking; a control label in it would vanish at 14px.</li>
+<li><strong>No metallic gradient (anatomy, verbatim from the demo's own
+comment).</strong> &quot;Gold as a flat colour reads as Deco; gold as a gradient
+reads as a casino.&quot; The one gradient in the register — the mirror
+flourish under a primary button — fades to transparent, not to a
+second hue, and never sits on the gold fill itself.</li>
+<li><strong>Radius 0, and corners cut on purpose.</strong> <code>0rem</code> everywhere. Where the
+demo wants a corner removed rather than rounded, it is cut with
+<code>clip-path</code> (the cartouche's chevron bite), never rounded.</li>
 </ol>
                         </div>
                     </article>
