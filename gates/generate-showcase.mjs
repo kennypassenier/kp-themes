@@ -137,6 +137,7 @@ function showcase() {
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../css/tazhib-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <style>
@@ -240,6 +241,7 @@ function fixture(theme) {
         <link rel="stylesheet" href="../../css/phantom-register.css" />
         <link rel="stylesheet" href="../../css/terminal-register.css" />
         <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../../css/tazhib-register.css" />
         <link rel="stylesheet" href="../../css/shade-dark-register.css" />
         <style>

@@ -140,6 +140,21 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='high-contrast'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/high-contrast-register.css",
+                "selector": "[data-theme='high-contrast'] .kp-card[data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/high-contrast-register.css",
+                "selector": "[data-theme='high-contrast'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/high-contrast-register.css",
+                "selector": "[data-theme='high-contrast'] [data-kp-divider]"
+            },
+            "accent": {
+                "quiet": "the heading carries no accent beyond its own type; the demo's headline is styled by clamp() size and weight alone, no colour or rule on the letters themselves"
             }
         },
         "sepia": {

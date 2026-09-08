@@ -67,6 +67,7 @@ ${section.links
         <link rel="stylesheet" href="${up}css/phantom-register.css" />
         <link rel="stylesheet" href="${up}css/terminal-register.css" />
         <link rel="stylesheet" href="${up}css/brutalism-register.css" />
+        <link rel="stylesheet" href="${up}css/high-contrast-register.css" />
         <link rel="stylesheet" href="${up}css/tazhib-register.css" />
         <link rel="stylesheet" href="${up}css/shade-dark-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />

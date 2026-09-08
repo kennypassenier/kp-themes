@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../css/tazhib-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
@@ -413,31 +414,44 @@ never acts.</li>
                         </ul>
                         <div class="kp-prose">
 <p>Black on white, one signal yellow, and nothing in between. This is the
-theme for someone who finds the other seven too soft — low vision, a
-screen in daylight, tired eyes at the end of a shift — and it is the only
-one here whose reason for existing is not taste.</p>
+theme for someone who finds the other twenty-four too soft — low vision,
+a screen in daylight, tired eyes at the end of a shift — and it is the
+only one here whose reason for existing is not taste. The approved
+concept demo, &quot;Ink &amp; Signal&quot; (2026-09-08), names its own promise: 21:1,
+every time, and one accent colour with a job, never a decoration.</p>
 <p>It is deliberately loud. A high-contrast theme that has been softened to
-look nice has stopped being a high-contrast theme.</p>
+look nice has stopped being a high-contrast theme. Where every other
+lifted theme in round six adds a mechanism — a decipher, a dither, a
+CRT switch — this one adds a border. The register's whole vocabulary is
+line weight: 1px hairlines for what is merely decorative, 2px for every
+control edge, 3px for the two structural rules (the nav's base and the
+footer's), and one flat, unblurred shadow reserved for the single button
+the demo marks <code>--mirror</code>.</p>
 <ol>
 <li><strong>Pure black on pure white.</strong> 21:1, the highest a screen offers. Any
-grey in the body text is a concession, and there is none.</li>
+grey in the body text is a concession, and there is none: the demo's
+own contrast table computes it before use (see below) and this
+register never disagrees with it.</li>
 <li><strong>The signal yellow.</strong> <code>--accent</code> is <code>hsl(48, 100%, 50%)</code> with black
 ink — the colour every accessibility convention reaches for, because
 it is the one hue that stays distinct for nearly every kind of colour
-vision. It is the only decoration this theme has.</li>
-<li><strong>Status plates are deep, not pale.</strong> The other six light themes tint
-their badges. Pale tints are exactly what this theme exists to avoid,
-so every plate is a saturated colour carrying white ink — except the
-offer badge, which is bright lime with black ink, because it has to
-stay far from the rejection badge for someone with the commonest
-colour deficiency. Measured: 49.5 apart under deuteranopia, where the
-floor is 12 and the other themes sit at 13.</li>
+vision. It is the only decoration this theme has, and the demo's own
+contrast table refuses it as a foreground on the page ground (1.51:1)
+by construction: it appears only as a flat fill with black ink on top,
+never as text colour.</li>
 <li><strong><code>--radius: 0.25rem</code>.</strong> Nearly square. A soft corner blurs the edge
 of a control, and an edge is information here.</li>
 <li><strong>Atkinson Hyperlegible first.</strong> A typeface drawn by the Braille
 Institute specifically to keep letterforms apart at low acuity — b/d,
-i/l, 0/O. It falls back to the house sans if the face is not
-installed, so nothing breaks; it simply gets better when it is there.</li>
+i/l, 0/O — SIL OFL-1.1, no Reserved Font Name
+(<code>fonts/families.json</code>: <code>&quot;atkinsonhyperlegible&quot;</code> →
+<code>&quot;reservedFontName&quot;: false</code>). It falls back to the house sans if the
+face is not installed, so nothing breaks; it simply gets better when
+it is there.</li>
+<li><strong>No animation loops, ever.</strong> Every motion the demo draws is a single
+load- or click-triggered transition that starts and stops once; the
+register carries no <code>@keyframes</code> that repeats and no <code>animation</code> with
+<code>infinite</code>.</li>
 </ol>
                         </div>
                     </article>

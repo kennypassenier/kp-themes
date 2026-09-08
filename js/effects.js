@@ -207,6 +207,12 @@ export const TIMINGS = Object.freeze({
     // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
     // clip-path wipe over the headline once, no loop.
     'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
+    // ellipse wipe and the rule's horizontal scale, both plain CSS with no
+    // [data-kp-effects] gate — they run once on every load, not once per
+    // session (a deliberate divergence, recorded in that theme's anatomy).
+    'kp-hc-headline-wipe': { durationMs: 550, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-hc-rule-wipe': { durationMs: 400, cycles: 1, property: 'transform', luminanceSteps: [] },
     // The brutalism register [BR1]: the words dropping onto their offset and
     // the seamless marquee.
     'kp-slam': { durationMs: 260, cycles: 1, property: 'transform', luminanceSteps: [] },
