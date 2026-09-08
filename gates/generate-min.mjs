@@ -19,7 +19,11 @@
 // the documentation.
 //
 // The sizes are written to docs/MINIFIED.md by this same script, so the
-// table cannot drift from what the files actually weigh.
+// table cannot drift from what the files actually weigh. Only the sizes
+// that are the same on every machine go in that file: the gzipped size
+// depends on the zlib the machine carries, and CI proved it — the table
+// was byte-identical here and different there, which is a generated file
+// no gate can hold. It is printed to stdout instead.
 //
 // Usage:
 //   node gates/generate-min.mjs           write dist/ and the table
@@ -132,14 +136,20 @@ numbers. It changes nothing about which rule wins: the cascade layers,
 the selectors and their order are identical, which is what
 \`npm run check:min\` proves by regenerating both and comparing.
 
-| File | Authored | Minified | Saved | Gzipped |
-| ---- | -------: | -------: | ----: | ------: |
-${rows.map((r) => `| \`${r.file}\` | ${kb(r.raw)} kB | ${kb(r.min)} kB | ${saved(r)} | ${kb(r.gzip)} kB |`).join('\n')}
+| File | Authored | Minified | Saved |
+| ---- | -------: | -------: | ----: |
+${rows.map((r) => `| \`${r.file}\` | ${kb(r.raw)} kB | ${kb(r.min)} kB | ${saved(r)} |`).join('\n')}
 
 The loose stylesheets together weigh **${kb(total.raw)} kB** authored and
-**${kb(total.min)} kB** minified (${saved(total)} less), **${kb(total.gzip)} kB** over the
-wire with gzip. A page loading one theme's register rather than the whole
-bundle carries only that register's row.
+**${kb(total.min)} kB** minified, ${saved(total)} less. A page loading one theme's
+register rather than the whole bundle carries only that register's row.
+
+The wire is smaller again: gzip takes the minified bundle to roughly a
+seventh of its size. That number is not in this table on purpose — it
+depends on the server's compression level and on the zlib the machine
+carries, and a generated file that a gate compares must read the same on
+every machine. \`npm run generate:min\` prints it for the machine it runs
+on.
 
 Version ${version}.
 `;
@@ -159,9 +169,7 @@ if (process.argv.includes('--check')) {
         console.error('Run `npm run generate:min` and commit the result.');
         process.exit(1);
     }
-    console.log(
-        `Minified: ${SHEETS.length} stylesheets plus the bundle match their sources (${saved(total)} smaller, ${kb(total.gzip)} kB gzipped).`,
-    );
+    console.log(`Minified: ${SHEETS.length} stylesheets plus the bundle match their sources (${saved(total)} smaller).`);
     process.exit(0);
 }
 
