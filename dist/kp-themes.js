@@ -3899,6 +3899,14 @@ var TIMINGS = Object.freeze({
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  // The dark register [S48, LIFT_PLAN row 15]: the headline's word-by-word
+  // resolve out of a blur, and the mark's ignite and the rule's sweep —
+  // both scroll-bound (animation-timeline: view()), not time-based, so
+  // their duration is the demo's own measured pace across the range
+  // rather than a clock the browser runs.
+  "kp-resolve": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-ignite": { durationMs: 600, cycles: 1, property: "color", luminanceSteps: [0, 1] },
+  "kp-sweep-in": { durationMs: 600, cycles: 1, property: "background-position", luminanceSteps: [] },
   // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
   // backdrop fade — a keyframe rather than a transition, because a
   // ::backdrop needs @starting-style to transition on its own appearance
@@ -4213,7 +4221,7 @@ function attachEffects(root = document, options = {}) {
       later(finish2, TIMINGS["kp-burnish"].durationMs + 50);
       return;
     }
-    if (routine === "shout" || routine === "slam" || routine === "focus") {
+    if (routine === "shout" || routine === "slam" || routine === "focus" || routine === "resolve") {
       pending++;
       const parts = text.split(/(\s+)/);
       let index = 0;

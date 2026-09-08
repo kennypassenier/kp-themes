@@ -48,6 +48,7 @@ const SHEETS = [
     'phantom-register.css',
     'terminal-register.css',
     'brutalism-register.css',
+    'dark-register.css',
     'academia-register.css',
     'formal-register.css',
     'sepia-register.css',

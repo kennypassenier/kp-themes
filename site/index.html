@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/dark-register.css" />
         <link rel="stylesheet" href="../css/academia-register.css" />
         <link rel="stylesheet" href="../css/formal-register.css" />
         <link rel="stylesheet" href="../css/sepia-register.css" />
@@ -222,9 +223,14 @@ is defined by its restraint, so additions cost more here than anywhere.</li>
                         <div class="kp-prose">
 <p>The ordinary dark theme, done properly. A deep slate ground with a blue
 cast (<code>hsl(226, 22%, 8%)</code> — not black), soft off-white text, and a
-luminous violet that lifts off the ground without glaring.</p>
-<p>Where <code>light</code> disappears, this one is meant to be comfortable at night.
-Its whole job is to be the theme someone can read in for two hours.</p>
+luminous, unsaturated violet that lifts off the ground without glaring.
+The whole job of this theme is to be the one someone reads in for two
+hours.</p>
+<p>The one ornament is a starfield of 112 irregular, once-generated points —
+&quot;a starfield you cannot quite see&quot; resolved, on Kenny's second reading, to
+one you <strong>can</strong>: still faint at this theme's own scale, but no longer
+invisible, with ten of the brightest points carrying a soft JWST-style
+diffraction shimmer.</p>
 <ol>
 <li><strong>Not black, not white.</strong> The ground is 8% lightness and the text is
 93%, giving 14.85:1 rather than the 21:1 of pure black on pure white.
@@ -235,8 +241,10 @@ dark ground because it is bright; a dark saturated violet would vibrate
 against it.</li>
 <li><strong>A blue cast throughout.</strong> Ground, border and muted text all carry the
 same hue family. A neutral grey would read as cheap.</li>
-<li><strong>A starfield you cannot quite see.</strong> The texture is the only ornament
-and it lives near the threshold of visibility.</li>
+<li><strong>The starfield is static.</strong> No <code>@keyframes</code>, no opacity cycling,
+nothing that could ever oppose luminance — a still photograph, painted
+once, of 112 literal positions from a seeded PRNG run once at build
+time (seed 20260908; nothing here is randomised in the browser).</li>
 </ol>
                         </div>
                     </article>

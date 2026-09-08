@@ -67,6 +67,7 @@ ${section.links
         <link rel="stylesheet" href="${up}css/phantom-register.css" />
         <link rel="stylesheet" href="${up}css/terminal-register.css" />
         <link rel="stylesheet" href="${up}css/brutalism-register.css" />
+        <link rel="stylesheet" href="${up}css/dark-register.css" />
         <link rel="stylesheet" href="${up}css/academia-register.css" />
         <link rel="stylesheet" href="${up}css/formal-register.css" />
         <link rel="stylesheet" href="${up}css/sepia-register.css" />

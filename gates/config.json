@@ -17,7 +17,8 @@
         "value": 0.06,
         "perTheme": {
             "//": "A theme whose approved concept demo measured a stronger texture carries its own ceiling [S49, A8 of 2026-09-08]: the demo is the specification, and the overrun is reported rather than silently corrected [S42]. Every entry names the demo that measured it.",
-            "phantom": 0.14
+            "phantom": 0.14,
+            "dark": 0.35
         }
     },
     "stateVisibilityFloor": {
@@ -53,6 +54,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/dark-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/academia-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/formal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/sepia-register.css": ["authored", "bundled", "classes", "motion", "texture"],

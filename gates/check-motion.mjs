@@ -67,6 +67,14 @@ const OUT_OF_SCOPE = {
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
     'kp-charge':
         'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',
+    // The dark register [S48, LIFT_PLAN row 15]: the mark's ignite and the
+    // rule's sweep are both bound to `animation-timeline: view()` — the
+    // reader's own scroll position, not a clock — so neither can free-run
+    // or loop; each is one monotonic change across its range.
+    'kp-ignite':
+        'a mark’s ink and underline colour resolving once as the reader scrolls past it; a colour property this gate cannot parse from opacity stops, and it cannot oscillate because it is scroll-bound, not timed',
+    'kp-sweep-in':
+        'a rule sweeping in under a heading once as it enters the viewport (background-position); the rule keeps its colours, only its position moves, and it is scroll-bound so it cannot loop',
     // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
     // ellipse wipe (a clip-path reveal, once, on load) and the rule's
     // horizontal scale (a transform on a 3px bar, once, under 341x256 px).
