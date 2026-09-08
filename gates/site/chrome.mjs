@@ -65,6 +65,7 @@ ${section.links
         <link rel="stylesheet" href="${up}css/retro-register.css" />
         <link rel="stylesheet" href="${up}css/synthwave-register.css" />
         <link rel="stylesheet" href="${up}css/phantom-register.css" />
+        <link rel="stylesheet" href="${up}css/terminal-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />
     </head>
     <body>

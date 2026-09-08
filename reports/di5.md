@@ -26,6 +26,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-redact-lift` | clip-path | 400 ms | 1× | — | 0.00/s | under |
 | `kp-sweep` | transform | 10000 ms | loops | — | 0.00/s | under |
 | `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-caret` | background-size | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
 | `kp-slam` | transform | 260 ms | 1× | — | 0.00/s | under |
 | `kp-marquee` | transform | 42000 ms | loops | — | 0.00/s | under |
 | `kp-strip-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |

@@ -1301,9 +1301,10 @@ drill, the project rule here goes.
 
 ## KT14 · Nineteen demos styled the bar and left the dropdown alone, and no gate looked inside it
 
-Found by Kenny on 2026-09-08 on the nineteen-demo approval form; the
-correction form is queued with the names of nishiki and tazhib and the
-moment of topo's rename.
+Found by Kenny on 2026-09-08 on the nineteen-demo approval form.
+**Approved by Kenny the same day (Klopt), all nine fields unchanged**; the
+measurement of field 7 happened at TM1's commit, whose hook ran the gate
+green on the terminal register.
 
 **1 · What went wrong.** Every one of the nineteen concept demos built
 by the Sonnet agents on 2026-09-08 left the nav dropdown in its plain,

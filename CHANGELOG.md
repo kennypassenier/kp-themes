@@ -49,6 +49,25 @@ step is discrete and every effect goes one way. The register stays
 `css/retro-register.css`; on a surface the register sets the h1 in ink
 with a hard white shadow where the 3.x theme painted a title bar.
 
+**The fourth lift: terminal.** Built from the approved concept demo
+"Green Phosphor" (2026-09-08) on the §6 research (PX PUSH, ekeijl,
+dottxt.ai). The headline types itself one glyph at a time with a block
+caret riding the last one (`--kp-reveal-headline: type`), a `<mark>` is
+inverse video (`inverse`), the dashed rule under a heading types itself
+out in twelve steps (`dashes`), the dividers are dashes with a plus at
+each end, every hover is inverse video, the cta and the ghost button are
+bracketed, the checkbox is `[ ]` and `[x]`, the dossier's redactions are
+runs of character cells repainting left to right, the glass carries
+ekeijl's bezel and the sweep band that crosses once every ten seconds,
+and the page arrives through the POST and leaves it as the tube
+collapses (`--kp-arrival: boot`). **The cursor moved (R6-Q7):** since
+3.1.1 a blinking block sat after the label of the field being typed
+into; it is gone from the base layer, and the register paints a block of
+one character cell inside the focused text field at the caret — the
+effects module writes the column (`--kp-caret: block` on the root,
+`--kp-col` on the field), the register paints and blinks it. The
+register is `css/terminal-register.css`.
+
 ## 4.0.0 — 2026-09-07
 
 **A destructive button asks before it acts, and four things that were

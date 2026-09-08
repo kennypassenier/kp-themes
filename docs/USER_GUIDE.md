@@ -80,7 +80,8 @@ on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
 research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
 second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
 is the third, its 3.1.0 bevel register grown into the whole desktop from
-"Bevel 95" (row 3).
+"Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
+(row 4).
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -551,15 +552,15 @@ prop.
 Since 5.0.0 `DecipherText` is a wrapper around `attachEffects()` from
 `js/effects.js`: it renders the headline reveal the current theme
 declares (cyberpunk deciphers, synthwave tracks, phantom shouts, retro
-dissolves, formal stays still), and
+dissolves, terminal types, formal stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
 ## The hook vocabulary [S45]
 
 Since 5.0.0 a page marks what a passage *is* and every theme answers in
-its own way — loudly in cyberpunk, synthwave, phantom and retro, quietly in
-the rest. Six
+its own way — loudly in cyberpunk, synthwave, phantom, retro and terminal, quietly
+in the rest. Six
 hooks: `data-kp-surface="hero|app"` on a section, a `<mark>` for an
 emphasis, `data-kp-reveal="headline|emphasis|rule"` on something that
 arrives, `data-kp-divider` between sections, the heading accent (an

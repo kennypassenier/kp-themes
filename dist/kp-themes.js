@@ -3818,6 +3818,7 @@ var ROUTINES = Object.freeze({
   arrival: "--kp-arrival"
 });
 var ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip" });
+var CARET_KNOB = "--kp-caret";
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var TEXT_ATTRIBUTE = "data-kp-text";
@@ -3858,6 +3859,8 @@ var TIMINGS = Object.freeze({
   // seconds and the tube collapsing the boot screen.
   "kp-sweep": { durationMs: 1e4, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+  // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
+  "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
   // The brutalism register [BR1]: the words dropping onto their offset and
   // the seamless marquee.
   "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -4058,12 +4061,12 @@ function attachEffects(root = document, options = {}) {
     if (routine === "type") {
       pending++;
       const chars2 = [...text];
-      const caret = doc.createElement("span");
-      caret.setAttribute("data-caret", "");
-      caret.setAttribute("aria-hidden", "true");
+      const caret2 = doc.createElement("span");
+      caret2.setAttribute("data-caret", "");
+      caret2.setAttribute("aria-hidden", "true");
       el.classList.add(STATE.typing);
       el.textContent = "";
-      el.append(caret);
+      el.append(caret2);
       let typed = 0;
       let ended = false;
       const finish2 = () => {
@@ -4081,7 +4084,7 @@ function attachEffects(root = document, options = {}) {
         typed++;
         el.textContent = chars2.slice(0, typed).join("");
         if (typed < chars2.length) {
-          el.append(caret);
+          el.append(caret2);
           later(step, perChar2);
         } else finish2();
       };
@@ -4279,6 +4282,43 @@ function attachEffects(root = document, options = {}) {
     cleanups.push(() => query.removeEventListener("change", onPreference));
   }
   scan(root);
+  const caret = () => {
+    const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
+    if (routine !== "block" || !view) return;
+    const inputs = (
+      /** @type {HTMLInputElement[]} */
+      [...root.querySelectorAll("input.kp-field__input")].filter(
+        (el) => /^(text|email|search|url|tel|password)?$/.test(el.getAttribute("type") ?? "")
+      )
+    );
+    for (const input of inputs) {
+      const put = () => {
+        if (!view) return;
+        const cs = view.getComputedStyle(input);
+        const probe = doc.createElement("span");
+        probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;";
+        probe.style.font = cs.font || `${cs.fontSize} ${cs.fontFamily}`;
+        probe.textContent = "0".repeat(20);
+        doc.body?.append(probe);
+        const ch = probe.getBoundingClientRect().width / 20 || 8;
+        probe.remove();
+        const room = input.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const max = Math.max(0, Math.floor(room / ch) - 1);
+        const col = Math.min(input.selectionStart ?? input.value.length, max);
+        input.style.setProperty("--kp-col", String(col));
+      };
+      const clear = () => input.style.removeProperty("--kp-col");
+      const events = ["input", "keyup", "click", "focus", "select"];
+      for (const ev of events) input.addEventListener(ev, put);
+      input.addEventListener("blur", clear);
+      cleanups.push(() => {
+        for (const ev of events) input.removeEventListener(ev, put);
+        input.removeEventListener("blur", clear);
+        clear();
+      });
+    }
+  };
+  caret();
   const arrival = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
     if (routine !== "boot" && routine !== "card" || !doc.body) return;

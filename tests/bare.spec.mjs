@@ -37,10 +37,13 @@ const ratio = (a, b) => {
 for (const theme of ['cyberpunk', 'formal']) {
     test(`bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`, async ({ page }) => {
         const blocked = [];
-        await page.route(/(cyberpunk-register|retro-register|synthwave-register|phantom-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/, (route) => {
-            blocked.push(route.request().url());
-            route.abort();
-        });
+        await page.route(
+            /(cyberpunk-register|retro-register|synthwave-register|phantom-register|terminal-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/,
+            (route) => {
+                blocked.push(route.request().url());
+                route.abort();
+            },
+        );
         await page.addInitScript((name) => localStorage.setItem('theme', name), theme);
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto('/examples/concept.html');

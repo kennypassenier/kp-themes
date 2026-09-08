@@ -50,6 +50,7 @@ const OUT_OF_SCOPE = {
     'kp-drag-select': 'a clip-path widening over a phrase once (the selection bar); under 341x256 px',
     'kp-redact-lift': 'a clip-path narrowing over a phrase once (the redaction brush); under 341x256 px',
     'kp-sweep': 'a band translating down the viewport once per ten seconds, resting eight of them; a transform, and the band is a 9% tint',
+    'kp-caret': 'a background layer of one character cell appearing and disappearing once a second; rated in TIMINGS at 1/s and under 341x256 px',
     'kp-slam': 'a word translating onto its text-shadow once; a transform on a word, under 341x256 px',
     'kp-marquee': 'a strip translating -50% over 42 seconds; the strip keeps its colours, only its position moves',
     // The synthwave register [SW1].

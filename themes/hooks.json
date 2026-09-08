@@ -108,6 +108,26 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='terminal'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/terminal-register.css",
+                "selector": "[data-theme='terminal'] mark"
+            },
+            "reveal": {
+                "css": "css/terminal-register.css",
+                "selector": "[data-theme='terminal'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/terminal-register.css",
+                "selector": "[data-theme='terminal'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/terminal-register.css",
+                "selector": "[data-theme='terminal'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "css": "css/terminal-register.css",
+                "selector": "[data-theme='terminal'] .kp-boot"
             }
         },
         "topo": {

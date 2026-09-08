@@ -147,6 +147,7 @@
         "./css/retro-register": "./css/retro-register.css",
         "./css/synthwave-register": "./css/synthwave-register.css",
         "./css/phantom-register": "./css/phantom-register.css",
+        "./css/terminal-register": "./css/terminal-register.css",
         "./css/layout": "./css/layout.css",
         "./css/utilities": "./css/utilities.css",
         "./dist/css": "./dist/kp-themes.css",

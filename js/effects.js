@@ -98,6 +98,8 @@ export const ROUTINES = Object.freeze({
 });
 /** The class names of the arrival overlay the module builds. */
 export const ARRIVAL = Object.freeze({ root: 'kp-boot', line: 'kp-boot__line', skip: 'kp-boot__skip' });
+/** The knob a theme sets to put a block cursor inside its fields [TM2, R6-Q7]: `--kp-caret: block`. */
+export const CARET_KNOB = '--kp-caret';
 
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
@@ -174,6 +176,8 @@ export const TIMINGS = Object.freeze({
     // seconds and the tube collapsing the boot screen.
     'kp-sweep': { durationMs: 10000, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-tube-off': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
+    // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
+    'kp-caret': { durationMs: 1000, cycles: Infinity, property: 'background-size', luminanceSteps: [1, 1, 0, 0] },
     // The brutalism register [BR1]: the words dropping onto their offset and
     // the seamless marquee.
     'kp-slam': { durationMs: 260, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -691,6 +695,48 @@ export function attachEffects(root = document, options = {}) {
     }
 
     scan(root);
+
+    // ── The caret [TM2, R6-Q7]: a block cursor inside the focused field ─
+    // A theme answers `--kp-caret: block` on the root; the module only
+    // writes the column (`--kp-col`, in the field's own ch, clamped to the
+    // field's width) that the register paints the block at, so the cursor
+    // lives in the box at the caret and never after the label — Kenny's
+    // reading of 2026-09-08. Text-like inputs only; a textarea keeps the
+    // browser's own caret.
+    const caret = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : '';
+        if (routine !== 'block' || !view) return;
+        const inputs = /** @type {HTMLInputElement[]} */ ([...root.querySelectorAll('input.kp-field__input')]).filter((el) =>
+            /^(text|email|search|url|tel|password)?$/.test(el.getAttribute('type') ?? ''),
+        );
+        for (const input of inputs) {
+            const put = () => {
+                if (!view) return;
+                const cs = view.getComputedStyle(input);
+                const probe = doc.createElement('span');
+                probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;';
+                probe.style.font = cs.font || `${cs.fontSize} ${cs.fontFamily}`;
+                probe.textContent = '0'.repeat(20);
+                doc.body?.append(probe);
+                const ch = probe.getBoundingClientRect().width / 20 || 8;
+                probe.remove();
+                const room = input.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+                const max = Math.max(0, Math.floor(room / ch) - 1);
+                const col = Math.min(input.selectionStart ?? input.value.length, max);
+                input.style.setProperty('--kp-col', String(col));
+            };
+            const clear = () => input.style.removeProperty('--kp-col');
+            const events = ['input', 'keyup', 'click', 'focus', 'select'];
+            for (const ev of events) input.addEventListener(ev, put);
+            input.addEventListener('blur', clear);
+            cleanups.push(() => {
+                for (const ev of events) input.removeEventListener(ev, put);
+                input.removeEventListener('blur', clear);
+                clear();
+            });
+        }
+    };
+    caret();
 
     // ── The arrival [SW2]: how the page comes on ───────────────────────
     // A theme answers `--kp-arrival` on the root; `boot` is synthwave's:

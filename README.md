@@ -7,8 +7,8 @@ twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
 deco, academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
 properties, the element-level rules that make a theme complete (links,
 code, selection, form fields, print), eighteen components, a theme
-picker, and four opt-in registers: cyberpunk's effects, synthwave's
-horizon, phantom's cut paper and retro's desktop.
+picker, and five opt-in registers: cyberpunk's effects, synthwave's
+horizon, phantom's cut paper, retro's desktop and terminal's phosphor.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -80,6 +80,7 @@ Plain CSS (any stack):
 @import '@kp-soft/themes/css/synthwave-register'; /* optional: synthwave's sun, floor and neon */
 @import '@kp-soft/themes/css/phantom-register'; /* optional: phantom's cut paper, plates and tears */
 @import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels, grooves, dither and POST */
+@import '@kp-soft/themes/css/terminal-register'; /* optional: terminal's glass, cursor, inverse video and POST */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -200,30 +201,31 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Every entry point
 
-| Import                                   | What it is                                            |
-| ---------------------------------------- | ----------------------------------------------------- |
-| `@kp-soft/themes`                        | React: components, hooks, the switcher                |
-| `@kp-soft/themes/fx`                     | React: the cyberpunk effects                          |
-| `@kp-soft/themes/css`                    | the palette — the one file a vendoring consumer needs |
-| `@kp-soft/themes/css/components`         | the component classes                                 |
-| `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                      |
-| `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in      |
-| `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in  |
-| `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in      |
-| `@kp-soft/themes/css/layout`             | the sixteen layout classes                            |
-| `@kp-soft/themes/css/utilities`          | the 115 utility classes                               |
-| `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                             |
-| `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                    |
-| `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module      |
-| `@kp-soft/themes/js/core`                | the theme state, framework-free                       |
-| `@kp-soft/themes/js/picker`              | the framework-free picker                             |
-| `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                            |
-| `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                 |
-| `@kp-soft/themes/js/registry`            | the generated theme list                              |
-| `@kp-soft/themes/js/no-flash`            | the first-paint snippet                               |
-| `@kp-soft/themes/js/strings`             | the dictionary and its defaults                       |
-| `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region            |
-| `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind               |
+| Import                                   | What it is                                               |
+| ---------------------------------------- | -------------------------------------------------------- |
+| `@kp-soft/themes`                        | React: components, hooks, the switcher                   |
+| `@kp-soft/themes/fx`                     | React: the cyberpunk effects                             |
+| `@kp-soft/themes/css`                    | the palette — the one file a vendoring consumer needs    |
+| `@kp-soft/themes/css/components`         | the component classes                                    |
+| `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                         |
+| `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in         |
+| `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in     |
+| `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in         |
+| `@kp-soft/themes/css/terminal-register`  | terminal's glass, cursor, inverse video and POST, opt-in |
+| `@kp-soft/themes/css/layout`             | the sixteen layout classes                               |
+| `@kp-soft/themes/css/utilities`          | the 115 utility classes                                  |
+| `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                                |
+| `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                       |
+| `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module         |
+| `@kp-soft/themes/js/core`                | the theme state, framework-free                          |
+| `@kp-soft/themes/js/picker`              | the framework-free picker                                |
+| `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                               |
+| `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                    |
+| `@kp-soft/themes/js/registry`            | the generated theme list                                 |
+| `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                  |
+| `@kp-soft/themes/js/strings`             | the dictionary and its defaults                          |
+| `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region               |
+| `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                  |
 
 ## Consume the JavaScript
 

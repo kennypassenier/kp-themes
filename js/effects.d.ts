@@ -45,6 +45,8 @@ export declare const ARRIVAL: Readonly<{
     line: "kp-boot__line";
     skip: "kp-boot__skip";
 }>;
+/** The knob a theme sets to put a block cursor inside its fields [TM2, R6-Q7]: `--kp-caret: block`. */
+export declare const CARET_KNOB = "--kp-caret";
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

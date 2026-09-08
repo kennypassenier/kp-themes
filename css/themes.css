@@ -4302,20 +4302,9 @@
             animation: kp-settle var(--fx-duration) var(--fx-ease) both;
         }
 
-        /* terminal — since 3.1.1: the block cursor used to sit after every
-       h1 and h2 on the page, which read as a screensaver rather than a
-       flourish [Kenny, 2026-09-06]. It moves to the one place a
-       terminal cursor actually means something: the label of the
-       field a person is currently typing into. One opposing change
-       per second: well under the three the flash threshold allows. */
-        [data-theme='terminal'] .kp-field:focus-within .kp-field__label::after {
-            content: '\2588';
-            margin-inline-start: 0.15em;
-            color: var(--primary);
-            /* A literal, not a knob: the cursor blink changes luminance and DI5
-         * pins it above the flash threshold [KT6]. */
-            animation: kp-blink 1000ms steps(1, end) infinite;
-        }
+        /* terminal — the cursor after a field's label is gone (5.0.0, R6-Q7):
+       the terminal register puts a block cursor inside the focused field,
+       at the caret, where a terminal's cursor actually is. */
 
         /* topo — the contour layer drifts, slowly enough to read as weather
        rather than as motion. 40 seconds for one pass. */
