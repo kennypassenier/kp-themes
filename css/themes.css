@@ -1230,7 +1230,7 @@
     --fx-signal: hsl(24, 60%, 40%);
     --fx-signal-foreground: hsl(38, 55%, 97%);
     --fx-notch: 0px;
-    --fx-duration: 240ms;
+    --fx-duration: 220ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Instrument Serif', ui-serif, Georgia, serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;

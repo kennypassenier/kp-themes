@@ -286,6 +286,7 @@ const CURRENT = [
     'phantom-register.css',
     'terminal-register.css',
     'brutalism-register.css',
+    'sepia-register.css',
     'solstice-register.css',
     'mono-register.css',
     'high-contrast-register.css',

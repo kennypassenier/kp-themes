@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/sepia-register.css" />
         <link rel="stylesheet" href="../css/solstice-register.css" />
         <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
@@ -120,16 +121,17 @@
                 <ul class="kp-stack" data-compare-lines>
                     <li>Typography: Instrument Sans and Instrument Serif now ship with the package and load here; 4.0.0 shipped no font file, so the browser drew the system fallback.</li>
                     <li>Typography, still the fallback: ui-monospace carries a Reserved Font Name and waits on R6-Q1 — no visible change yet.</li>
+                    <li>Palette: 1 token changed value — --fx-duration 240ms → 220ms.</li>
                     <li>New in 5.0.0: 11 hero tokens and the display text step, all pointing at values this theme already had — the hero paints the same ground as the app, so nothing visible changed.</li>
                 </ul>
                 <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
                     <section class="kp-stack" aria-label="Sepia under 4.0.0">
                         <h3>Sepia under 4.0.0</h3>
-                        <iframe src="compare-frame-4.0.0.html?theme=sepia&amp;mark=type" title="Sepia under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                        <iframe src="compare-frame-4.0.0.html?theme=sepia&amp;mark=type,palette" title="Sepia under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
                     </section>
                     <section class="kp-stack" aria-label="Sepia under the current build">
                         <h3>Sepia under the current build</h3>
-                        <iframe src="compare-frame.html?theme=sepia&amp;mark=type" title="Sepia under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                        <iframe src="compare-frame.html?theme=sepia&amp;mark=type,palette" title="Sepia under the current build" width="100%" height="900" data-compare-side="new"></iframe>
                     </section>
                 </div>
                 <p class="kp-prose">

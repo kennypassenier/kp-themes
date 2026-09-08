@@ -85,6 +85,9 @@ export const STATE = Object.freeze({
     words: 'is-words',
     dissolving: 'is-dissolving',
     typing: 'is-typing',
+    // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+    // ink-in settle, on only while the transition runs.
+    settling: 'is-settling',
     // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
     // bands wiping away once over text that never moves.
     calibrating: 'is-calibrating',
@@ -210,6 +213,11 @@ export const TIMINGS = Object.freeze({
     'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-backdrop-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
+    // backdrop fade — a keyframe rather than a transition, because a
+    // ::backdrop needs @starting-style to transition on its own appearance
+    // and this theme does not use it.
+    'kp-confirm-in': { durationMs: 160, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
     // over the headline, the rule draw, and the dossier's redaction lift.
     'kp-cal-slide': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
@@ -431,6 +439,48 @@ export function attachEffects(root = document, options = {}) {
             };
             el.addEventListener('animationend', onEnd);
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
+            return;
+        }
+        if (routine === 'ink') {
+            // The sepia headline [S48, LIFT_PLAN row 9]: no per-word
+            // stagger — the whole line is one CSS transition, a faint
+            // ghost of the ink colour settling to the full one, because
+            // this theme (anatomy.md) is "unhurried on purpose". `settling`
+            // is transient like `dissolving`/`typing`: added, then removed
+            // once the transition has run, so a quiet theme or reduced
+            // motion — which skip straight to `rest(true)` above and never
+            // add it — render the plain, already-settled headline rather
+            // than a permanent ghost. A transition, not a keyframe
+            // animation (css/sepia-register.css carries no `@keyframes`
+            // for it, so it has no TIMINGS row).
+            pending++;
+            el.classList.add(STATE.settling);
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.settling);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {TransitionEvent} */ (e).propertyName !== 'filter' || e.target !== el) return;
+                el.removeEventListener('transitionend', onEnd);
+                finish();
+            };
+            el.addEventListener('transitionend', onEnd);
+            // One frame at the ghost values, painted with `settling` on,
+            // before the class comes off and the transition it guards
+            // carries the properties back to their plain, settled values
+            // over the next 1050ms — the demo's own requestAnimationFrame,
+            // not a synchronous removal a browser could coalesce into the
+            // first paint and skip the transition for.
+            const off = () => el.classList.remove(STATE.settling);
+            if (view) view.requestAnimationFrame(off);
+            else off();
+            later(finish, 1050 + 50);
             return;
         }
         if (routine === 'calibrate') {

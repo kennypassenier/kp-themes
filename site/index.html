@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/sepia-register.css" />
         <link rel="stylesheet" href="../css/solstice-register.css" />
         <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
@@ -483,10 +484,17 @@ on warm paper reads as a hole punched in the page.</li>
 <li><strong>A serif for display.</strong> The only theme besides terminal that changes
 a typeface, and it changes only the display face — body text stays in
 the house sans, because a serif body at screen sizes costs more than
-it gives.</li>
+it gives. The register keeps this distinction exactly: h1 is the serif
+roman, h2 and every card/dialog title is the serif italic — the face
+is the theme's whole accent, not a shadow or an offset.</li>
 <li><strong>The surfaces rise by warmth, not by grey.</strong> Page 94%, card 97%,
 popover 98% lightness, each a little more saturated than the last. A
 raised surface here looks like a fresher sheet, not a lighter one.</li>
+<li><strong>Unhurried on purpose.</strong> <code>--fx-duration</code> moved from 240ms to 220ms at
+this lift (X0 below) to match the demo's own <code>--dur</code> exactly — among
+the slower durations in the set, not the fastest. Every reveal is a
+single settle: nothing loops, nothing stutters, nothing asks to be
+watched twice.</li>
 </ol>
                         </div>
                     </article>

@@ -3816,6 +3816,9 @@ var STATE = Object.freeze({
   words: "is-words",
   dissolving: "is-dissolving",
   typing: "is-typing",
+  // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+  // ink-in settle, on only while the transition runs.
+  settling: "is-settling",
   // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
   // bands wiping away once over text that never moves.
   calibrating: "is-calibrating",
@@ -3895,6 +3898,11 @@ var TIMINGS = Object.freeze({
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
+  // backdrop fade — a keyframe rather than a transition, because a
+  // ::backdrop needs @starting-style to transition on its own appearance
+  // and this theme does not use it.
+  "kp-confirm-in": { durationMs: 160, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
   // over the headline, the rule draw, and the dossier's redaction lift.
   "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
@@ -4055,6 +4063,34 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "ink") {
+      pending++;
+      el.classList.add(STATE.settling);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.settling);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {TransitionEvent} */
+          e.propertyName !== "filter" || e.target !== el
+        ) return;
+        el.removeEventListener("transitionend", onEnd);
+        finish2();
+      };
+      el.addEventListener("transitionend", onEnd);
+      const off = () => el.classList.remove(STATE.settling);
+      if (view) view.requestAnimationFrame(off);
+      else off();
+      later(finish2, 1050 + 50);
       return;
     }
     if (routine === "calibrate") {

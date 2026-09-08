@@ -161,6 +161,25 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='sepia'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/sepia-register.css",
+                "selector": "[data-theme='sepia'] mark"
+            },
+            "reveal": {
+                "css": "css/sepia-register.css",
+                "selector": "[data-theme='sepia'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/sepia-register.css",
+                "selector": "[data-theme='sepia'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/sepia-register.css",
+                "selector": "[data-theme='sepia'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "quiet": "no full-page overlay; the headline's own ink-in is the reveal hook's answer and this theme (anatomy.md) ships no boot sequence at all"
             }
         },
         "blueprint": {
