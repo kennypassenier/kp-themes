@@ -31,6 +31,7 @@ export declare const STATE: Readonly<{
     words: "is-words";
     dissolving: "is-dissolving";
     typing: "is-typing";
+    popping: "is-popping";
     settling: "is-settling";
     calibrating: "is-calibrating";
     revealed: "is-revealed";

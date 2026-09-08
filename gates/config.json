@@ -54,6 +54,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/nostromo-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/dark-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/academia-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/formal-register.css": ["authored", "bundled", "classes", "motion", "texture"],

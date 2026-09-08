@@ -85,6 +85,9 @@ export const STATE = Object.freeze({
     words: 'is-words',
     dissolving: 'is-dissolving',
     typing: 'is-typing',
+    // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
+    // down under a clip-path, its text never touched.
+    popping: 'is-popping',
     // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
     // ink-in settle, on only while the transition runs.
     settling: 'is-settling',
@@ -214,6 +217,9 @@ export const TIMINGS = Object.freeze({
     'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-backdrop-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // The nostromo register [S48, LIFT_PLAN row 19]: the headline and the
+    // dossier stamp popping down under a clip-path, once, on load.
+    'kp-popdown': { durationMs: 340, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     // The dark register [S48, LIFT_PLAN row 15]: the headline's word-by-word
     // resolve out of a blur, and the mark's ignite and the rule's sweep —
     // both scroll-bound (animation-timeline: view()), not time-based, so
@@ -454,6 +460,33 @@ export function attachEffects(root = document, options = {}) {
             };
             el.addEventListener('animationend', onEnd);
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
+            return;
+        }
+        if (routine === 'popdown') {
+            // The nostromo headline [S48, LIFT_PLAN nostromo row]: the text
+            // stays whole throughout — no glyph or word is ever touched —
+            // under a clip-path the register sweeps open top-down; the
+            // class runs it, then the element rests. Without an animation
+            // the class comes off by the table's duration.
+            pending++;
+            el.classList.add(STATE.popping);
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.popping);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-popdown') return;
+                el.removeEventListener('animationend', onEnd);
+                finish();
+            };
+            el.addEventListener('animationend', onEnd);
+            later(finish, TIMINGS['kp-popdown'].durationMs + 50);
             return;
         }
         if (routine === 'draw') {

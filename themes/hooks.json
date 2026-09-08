@@ -434,6 +434,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='nostromo'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/nostromo-register.css",
+                "selector": "[data-theme='nostromo'] mark"
+            },
+            "reveal": {
+                "css": "css/nostromo-register.css",
+                "selector": "[data-theme='nostromo'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/nostromo-register.css",
+                "selector": "[data-theme='nostromo'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/nostromo-register.css",
+                "selector": "[data-theme='nostromo'] [data-kp-surface] h1"
             }
         }
     }

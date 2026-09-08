@@ -31,6 +31,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-focus-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-dialog-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-backdrop-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-popdown` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-resolve` | opacity | 640 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-ignite` | color | 600 ms | 1× | 0 → 1 | 0.00/s | under |
 | `kp-sweep-in` | background-position | 600 ms | 1× | — | 0.00/s | under |
