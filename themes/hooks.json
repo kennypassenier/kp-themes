@@ -415,6 +415,21 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='nishiki'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/nishiki-register.css",
+                "selector": "[data-theme='nishiki'] mark"
+            },
+            "reveal": {
+                "css": "css/nishiki-register.css",
+                "selector": "[data-theme='nishiki'] [data-kp-reveal='headline']::before"
+            },
+            "divider": {
+                "css": "css/nishiki-register.css",
+                "selector": "[data-theme='nishiki'] [data-kp-divider]"
+            },
+            "accent": {
+                "quiet": "the print's flat graphic language is the accent; h1 and h2 carry no shadow, gradient or colour change of their own beyond the kentō headline reveal and the carved rule, which answer the reveal hook instead [anatomy.md, \"no gradient, no shadow\"]"
             }
         },
         "shade-light": {

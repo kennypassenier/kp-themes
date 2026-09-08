@@ -3969,6 +3969,9 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // offset — a translate only, no luminance change.
+  "kp-kento-blue": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-kento-red": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
   // The pastel register [S48, LIFT_PLAN row 6]: the overprint layer's
   // spring-in (opacity, matched against its own keyframe below) and the
   // mark fill and the rule draw, both transform-free size changes with

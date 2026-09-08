@@ -55,6 +55,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/nishiki-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/pastel-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/shade-light-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/ticker-register.css": ["authored", "bundled", "classes", "motion", "texture"],

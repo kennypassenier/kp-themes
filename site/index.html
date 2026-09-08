@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/nishiki-register.css" />
         <link rel="stylesheet" href="../css/pastel-register.css" />
         <link rel="stylesheet" href="../css/shade-light-register.css" />
         <link rel="stylesheet" href="../css/ticker-register.css" />
@@ -891,22 +892,41 @@ ground, Prussian blue — <em>bero-ai</em>, the imported pigment Hokusai's wave
 is printed in — for the water, safflower red for the seal, and the
 black key-block line that gives every shape its edge. A non-Western
 print tradition, the first in the set, and a flat, outlined, graphic
-one: nothing soft, nothing organic.</p>
+one: nothing soft, nothing organic. v2 adds the vocabulary of the
+<strong>pull itself</strong> — the carved registration marks a printer squints at to
+line up six blocks, the uneven density a hand-rubbed baren leaves on
+every plate, the hand-cut edge of a knife rather than a ruler — so the
+page reads as a specific physical object, not only a palette.</p>
 <ol>
-<li><strong>The key-block line.</strong> <code>--border-strong</code> and <code>--input</code> are the ink
-itself, <code>hsl(36, 10%, 10%)</code>. In a woodblock print the black block is
-printed first and every colour sits inside its lines; here every
-control has the same edge, and DI1 is free instead of hard.</li>
+<li><strong>The key-block line.</strong> <code>--border-strong</code>/<code>--input</code>/<code>--foreground</code>
+are the ink itself, <code>hsl(36, 10%, 10%)</code>. In a woodblock print the
+black block is printed first and every colour sits inside its lines;
+here every control shares the same edge, and DI1 is free instead of
+hard.</li>
 <li><strong>Prussian blue acts, beni marks.</strong> <code>--primary</code> at <code>hsl(215, 51%, 25%)</code>
-measures 10.01:1 on washi; <code>--accent</code> and the signal are beni red
-<code>hsl(1, 58%, 46%)</code> at 5.18:1, used as a plate with washi ink and as
-the hanko seal after a heading.</li>
+measures 9.99:1 on washi; <code>--accent</code> and the signal are beni red
+<code>hsl(1, 58%, 46%)</code> at 5.09:1, used as a plate with washi ink and as
+the hanko seal.</li>
 <li><strong>Washi, not white.</strong> The ground is <code>hsl(42, 52%, 92%)</code>, the card a
 step lighter, the popover lighter still (DI6 read the other way: the
 paper gets whiter as it rises).</li>
 <li><strong>Shippori Mincho for headings, Zen Kaku Gothic New for the body.</strong>
 Both carry Latin well and both are drawn for Japanese; the Mincho's
-contrast is the brush, the Gothic is the print shop.</li>
+contrast is the brush, the Gothic is the print shop. Both ship as the
+package's own subset (<code>fonts/shipporimincho</code>, <code>fonts/zenkakugothicnew</code>),
+regular weight only — see &quot;What the demo showed&quot; below.</li>
+<li><strong>kentō (見当), v2's own addition.</strong> The registration marks a real
+block carries — a kagi corner notch and a hikitsuke edge mark — appear
+as page furniture on the hero, the spec sheet, the dossier and the
+nav dropdown, and the headline's own reveal is named for the same
+mechanism: two ghost plates that converge and settle a pixel or two
+out of true, because a real pull is never perfectly registered.</li>
+<li><strong>The baren burnish, v2's second addition.</strong> A baren is rubbed by
+hand, not pressed by a machine, so every plate it pulls — every
+filled button, the hanko-adjacent stamp — carries a soft, uneven
+density: two low-alpha ink radials over the flat fill, always
+darkening, never lightening, so no baren-mottled pair can measure
+under its own flat figure.</li>
 </ol>
                         </div>
                     </article>

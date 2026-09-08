@@ -618,18 +618,10 @@
             animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
         }
 
-        /* nishiki — the hanko: a small red seal settles after a heading, the
-       mark a printer put on a finished sheet. */
-        [data-theme='nishiki'] h1::after {
-            content: '';
-            display: inline-block;
-            inline-size: 0.45em;
-            block-size: 0.45em;
-            margin-inline-start: 0.35em;
-            vertical-align: baseline;
-            background: var(--accent);
-            animation: kp-settle calc(var(--fx-duration) * 2) var(--fx-ease) both;
-        }
+        /* nishiki — lifted to a register [S48]: the hanko after a heading
+       is the register's own, and this block animated the same `h1::after`
+       the `rule` hook uses, the conflict formal's lift measured.
+       Removed with the lift. */
 
         /* solstice — an ember: the primary colour warms and cools once when a
        card appears. Slow, small, and never repeated. */

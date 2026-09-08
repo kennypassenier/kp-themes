@@ -116,6 +116,11 @@ const OUT_OF_SCOPE = {
     // The pastel register [S48, LIFT_PLAN row 6].
     'kp-fill': "a mark's background-size growing from 0% to 100% once; the ink colour itself never changes, only how much of the word it covers",
     'kp-draw': "a rule's width growing from 0% to 100% once; no luminance change and the rule is a few px tall",
+    // The nishiki register [S48].
+    'kp-kento-blue':
+        'a translate of a ghost plate converging to its final offset, once; no luminance change (mix-blend-mode multiply, no opacity or colour-stop keyframe)',
+    'kp-kento-red':
+        'a translate of a ghost plate converging to its final offset, once; no luminance change (mix-blend-mode multiply, no opacity or colour-stop keyframe)',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */
