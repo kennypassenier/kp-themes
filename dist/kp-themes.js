@@ -165,6 +165,9 @@ var DEFAULT_STRINGS = Object.freeze({
   arrivalProgress: "Progress",
   arrivalReady: "OK",
   arrivalSkip: "Skip",
+  measureLoading: "measuring\u2026",
+  measureWidth: (px) => `${px}px measured \xB7 live`,
+  measureHeight: (px) => `${px}px`,
   breadcrumb: "Breadcrumb",
   pagination: "Pagination",
   themePicker: "Choose a theme",
@@ -3851,6 +3854,7 @@ var KNOBS = Object.freeze({
   arrivalCount: "--kp-arrival-count"
 });
 var BOOT_PROGRESS = "--kp-boot-progress";
+var MEASURE_KNOB = "--kp-measure";
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var TEXT_ATTRIBUTE = "data-kp-text";
@@ -3954,7 +3958,18 @@ var TIMINGS = Object.freeze({
   "kp-drift": { durationMs: 4e4, cycles: Infinity, property: "background-position", luminanceSteps: [] },
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
-  "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] }
+  "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
+  // in, and the two dimension lines extending like a tape measure (a
+  // transform each, no luminance change) with their labels fading in.
+  // The lede's marks and the dossier's redactions are plain transitions
+  // on a later class toggle, not keyframes, so they carry no row here —
+  // the same choice terminal's own redaction made [TM1].
+  "kp-headline-fade": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-dim-draw": { durationMs: 500, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-dim-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-elev-draw": { durationMs: 500, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-elev-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
 });
 var started = /* @__PURE__ */ new WeakSet();
 var unknownReported = /* @__PURE__ */ new Set();
@@ -4570,6 +4585,67 @@ function attachEffects(root = document, options = {}) {
     }
   };
   caret();
+  const measure = () => {
+    const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
+    if (routine !== "live" || !view) return;
+    const words = getStrings();
+    const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h) => !h.closest("[data-kp-measured]"));
+    for (const h1 of headlines) {
+      const wrap = doc.createElement("span");
+      wrap.setAttribute("data-kp-measured", "");
+      h1.replaceWith(wrap);
+      const elevLine = doc.createElement("span");
+      elevLine.setAttribute("data-kp-elev-line", "");
+      elevLine.setAttribute("aria-hidden", "true");
+      const elevStart = doc.createElement("span");
+      elevStart.setAttribute("data-kp-elev-tick", "");
+      const elevEnd = doc.createElement("span");
+      elevEnd.setAttribute("data-kp-elev-tick", "");
+      const elevLabel = doc.createElement("span");
+      elevLabel.setAttribute("data-kp-elev-measure", "");
+      elevLabel.textContent = words.measureLoading;
+      elevLine.append(elevStart, elevEnd, elevLabel);
+      wrap.append(elevLine, h1);
+      const dim = doc.createElement("span");
+      dim.setAttribute("data-kp-dim", "");
+      dim.setAttribute("aria-hidden", "true");
+      const dimLine = doc.createElement("span");
+      dimLine.setAttribute("data-kp-dim-line", "");
+      const dimStart = doc.createElement("span");
+      dimStart.setAttribute("data-kp-dim-tick", "");
+      const dimEnd = doc.createElement("span");
+      dimEnd.setAttribute("data-kp-dim-tick", "");
+      dimLine.append(dimStart, dimEnd);
+      const dimLabel = doc.createElement("span");
+      dimLabel.setAttribute("data-kp-measure", "");
+      dimLabel.textContent = words.measureLoading;
+      dim.append(dimLine, dimLabel);
+      wrap.after(dim);
+      let timer;
+      const update = () => {
+        const w = Math.round(h1.getBoundingClientRect().width);
+        dimLine.style.width = `${w}px`;
+        dimLabel.textContent = words.measureWidth(w);
+        const h = Math.round(wrap.getBoundingClientRect().height);
+        elevLabel.textContent = words.measureHeight(h);
+      };
+      update();
+      const schedule = () => {
+        clearTimeout(timer);
+        timer = setTimeout(update, 100);
+      };
+      view.addEventListener("resize", schedule);
+      cleanups.push(() => {
+        clearTimeout(timer);
+        view?.removeEventListener("resize", schedule);
+      });
+      try {
+        if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(update);
+      } catch {
+      }
+    }
+  };
+  measure();
   const arrival = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
     if (routine !== "boot" && routine !== "card" || !doc.body) return;

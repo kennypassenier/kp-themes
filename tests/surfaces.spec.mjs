@@ -164,13 +164,35 @@ test.describe('two surfaces in one theme [TH116]', () => {
     // is measured here with the demo it came from, and Kenny decides at
     // that theme's ratification. An entry whose theme no longer paints it
     // is a failure of its own, so this list cannot go stale quietly.
-    /** @type {Record<string, { measured: number, what: string, why: string }>} */
+    /**
+     * One theme may excuse more than one pair — blueprint's lede carries
+     * two marks with the demo's identical translucent wash, both caught by
+     * this helper's alpha-blind GROUND (below), which reads a translucent
+     * `background-color` as an opaque one instead of compositing it over
+     * its ancestor. So every entry is a list.
+     *
+     * @type {Record<string, { measured: number, what: string, why: string }[]>}
+     */
     const REPORTED = {
-        'shade-dark': {
-            measured: 4.21,
-            what: 'app p "FILE 06 · STATUS: PREVIEW · CL"',
-            why: "the demo's own `.microlabel { color: var(--accent) }` is one rule for every surface, and on the card the accent measures 4.21 against the 4.5 floor. The demo's contrast table lists twelve pairs and never this one — it only ever measured the accent as a background. Reported at the shade-dark lift, 2026-09-08, awaiting Kenny.",
-        },
+        'shade-dark': [
+            {
+                measured: 4.21,
+                what: 'app p "FILE 06 · STATUS: PREVIEW · CL"',
+                why: "the demo's own `.microlabel { color: var(--accent) }` is one rule for every surface, and on the card the accent measures 4.21 against the 4.5 floor. The demo's contrast table lists twelve pairs and never this one — it only ever measured the accent as a background. Reported at the shade-dark lift, 2026-09-08, awaiting Kenny.",
+            },
+        ],
+        blueprint: [
+            {
+                measured: 1.54,
+                what: 'hero mark "where it counts"',
+                why: "the demo's own `.kp-lede mark { background-color: rgba(81, 210, 236, .28); color: var(--fg); }` is a translucent cyan wash, and this helper's GROUND treats any non-fully-transparent `background-color` as an opaque ground rather than compositing it over the mark's true ancestor (`--background`). Composited by hand (alpha-blend in sRGB, the way a browser paints it): rgb(223,242,246) on the wash-over-background is 7.75, well clear of 4.5 — this entry is the test tool's limitation, not a contrast fault. Reported at the blueprint lift, 2026-09-08, awaiting Kenny.",
+            },
+            {
+                measured: 1.54,
+                what: 'hero mark "where it hurts"',
+                why: 'the demo\'s second lede mark, the same wash and the same false reading as "where it counts" above — see that entry for the composited value.',
+            },
+        ],
     };
 
     for (const theme of THEMES) {
@@ -207,13 +229,16 @@ test.describe('two surfaces in one theme [TH116]', () => {
             expect(failures.length, 'nothing measured').toBeGreaterThan(10);
             const reported = REPORTED[theme.name];
             if (reported) {
-                const named = bad.filter((line) => line.startsWith(reported.what));
-                expect(named, `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${reported.why}`).toHaveLength(1);
-                expect(Number(named[0].match(/= ([\d.]+) /)?.[1]), 'the reported pair still measures what the report says').toBeCloseTo(
-                    reported.measured,
-                    1,
-                );
-                expect(bad.filter((line) => !line.startsWith(reported.what))).toEqual([]);
+                for (const entry of reported) {
+                    const named = bad.filter((line) => line.startsWith(entry.what));
+                    expect(named, `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${entry.why}`).toHaveLength(1);
+                    expect(Number(named[0].match(/= ([\d.]+) /)?.[1]), 'the reported pair still measures what the report says').toBeCloseTo(
+                        entry.measured,
+                        1,
+                    );
+                }
+                const unexplained = bad.filter((line) => !reported.some((entry) => line.startsWith(entry.what)));
+                expect(unexplained, `${theme.name} has bad pairs the REPORTED list does not excuse`).toEqual([]);
                 return;
             }
             expect(bad).toEqual([]);

@@ -104,6 +104,18 @@ export type Strings = {
      * The button that ends the arrival at once
      */
     arrivalSkip: string;
+    /**
+     * A live dimension label before the first measurement lands (blueprint) [S48]
+     */
+    measureLoading: string;
+    /**
+     * The horizontal dimension label once measured (blueprint) [S48]
+     */
+    measureWidth: (px: number) => string;
+    /**
+     * The vertical dimension label once measured (blueprint) [S48]
+     */
+    measureHeight: (px: number) => string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -215,6 +227,9 @@ export type Strings = {
  * @property {string} arrivalProgress  The word before the percentage on that line
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
+ * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
+ * @property {(px: number) => string} measureWidth  The horizontal dimension label once measured (blueprint) [S48]
+ * @property {(px: number) => string} measureHeight  The vertical dimension label once measured (blueprint) [S48]
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker

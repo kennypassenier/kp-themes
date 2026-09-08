@@ -122,6 +122,9 @@
  * @property {string} arrivalProgress  The word before the percentage on that line
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
+ * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
+ * @property {(px: number) => string} measureWidth  The horizontal dimension label once measured (blueprint) [S48]
+ * @property {(px: number) => string} measureHeight  The vertical dimension label once measured (blueprint) [S48]
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker
@@ -260,6 +263,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     arrivalProgress: 'Progress',
     arrivalReady: 'OK',
     arrivalSkip: 'Skip',
+    measureLoading: 'measuring…',
+    measureWidth: (px) => `${px}px measured · live`,
+    measureHeight: (px) => `${px}px`,
     breadcrumb: 'Breadcrumb',
     pagination: 'Pagination',
     themePicker: 'Choose a theme',

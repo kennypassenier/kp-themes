@@ -66,6 +66,8 @@ export declare const KNOBS: Readonly<{
 }>;
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export declare const BOOT_PROGRESS = "--kp-boot-progress";
+/** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
+export declare const MEASURE_KNOB = "--kp-measure";
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

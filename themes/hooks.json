@@ -218,6 +218,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='blueprint'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/blueprint-register.css",
+                "selector": "[data-theme='blueprint'] mark"
+            },
+            "reveal": {
+                "css": "css/blueprint-register.css",
+                "selector": "[data-theme='blueprint'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/blueprint-register.css",
+                "selector": "[data-theme='blueprint'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/blueprint-register.css",
+                "selector": "[data-theme='blueprint'] [data-kp-surface] h1"
             }
         },
         "solstice": {

@@ -131,7 +131,7 @@ export const DESCRIPTORS = [
         // what a passage IS and a theme decides what that looks like. The
         // aliases claim the attributes js/effects.js writes and the one
         // event it dispatches.
-        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text', 'open'],
+        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text', 'open', 'measure', 'measured', 'dim', 'elev'],
         intro: 'A small vocabulary of attributes that say what a passage is — a hero, an app surface, a divider, a phrase that should land — and leave what that looks like to the theme. A theme that has an answer paints it; a theme that has none stays quiet, and the page reads the same either way.',
         whenToUse:
             'Mark the structure of a page you want a theme to be able to dramatise: the opening surface, the working surface, the seam between them, the words that carry the point. Do not use the attributes to ask for a particular effect — there is no attribute for a glitch or a flicker, only for the thing a theme may glitch or flicker. A theme decides, and a reader who asked for reduced motion gets the words without the drama.',
@@ -181,6 +181,10 @@ export const DESCRIPTORS = [
             { name: 'data-kp-text', what: 'The copy of a headline or a navigation label that a register\u2019s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.' },
             { name: 'data-kp-effects', what: 'What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.' },
             { name: 'kp-effect-unknown', what: 'The event the module dispatches on an element that names a surface or a reveal it does not know, so a typo is heard rather than silently quiet.' },
+            {
+                name: '--kp-measure: live',
+                what: "Blueprint's own device, outside the six-hook vocabulary [S48]: on the root, the module wraps every `data-kp-reveal=\"headline\"` element in `[data-kp-measured]` and builds two dimension lines beside it — never a fixed width. The horizontal one (`[data-kp-dim]`, `[data-kp-dim-line]`, two `[data-kp-dim-tick]` and a `[data-kp-measure]` label) reads the headline's own `getBoundingClientRect().width`, on load, on resize and once the page's fonts are ready, and writes the same rounded number to the line's `style.width` and the label in one breath. The vertical one (`[data-kp-elev-line]`, two `[data-kp-elev-tick]` and `[data-kp-elev-measure]`) needs no measurement of its own width to size itself — CSS containment does that — only a read to print the wrap's own height into its label.",
+            },
         ],
         accessibility: [
             'Built in — every reveal keeps the words in the document from the start; an effect changes how they arrive, never whether they are there.',

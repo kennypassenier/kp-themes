@@ -1359,7 +1359,7 @@
     --fx-duration: 160ms;
     --fx-ease: linear;
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --theme-font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(190, 60%, 40%);
     --fx-scanline: hsl(190, 70%, 70%);
     --fx-lift: 0px;
@@ -4361,17 +4361,11 @@
             animation: kp-drift var(--kp-drift-duration, 40s) linear infinite;
         }
 
-        /* blueprint — a ruled line that extends across a heading, drawn at
-       constant speed because a tool does not ease. */
-        [data-theme='blueprint'] h1::after,
-        [data-theme='blueprint'] h2::after {
-            content: '';
-            display: block;
-            block-size: 1px;
-            margin-block-start: 0.4rem;
-            background: var(--primary);
-            animation: kp-rule-in calc(var(--fx-duration) * 4) linear both;
-        }
+        /* blueprint — lifted to a register [S48, LIFT_PLAN row 6]: the
+       ruled line under a heading is now the register's own `rule` hook,
+       drawn when the heading enters the viewport. The block that stood
+       here animated the same `h2::after` the hook uses, which is how it
+       outranked formal's armed start state; removed with the lift. */
 
         /* deco — a double gold rule that draws itself under a heading, the
        way a Deco frontispiece is ruled. */

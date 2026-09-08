@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/blueprint-register.css" />
         <link rel="stylesheet" href="../css/nostromo-register.css" />
         <link rel="stylesheet" href="../css/dark-register.css" />
         <link rel="stylesheet" href="../css/academia-register.css" />
@@ -534,16 +535,38 @@ elevation; this is the other half of that pair: the drawing of a thing
 that does not exist yet.</p>
 <p>Where cyberpunk is a dark blue theme that glows, this one is a dark blue
 theme that measures.</p>
+<p>Round four settled what &quot;measures&quot; means after three rejected drafts. v1
+and v2 drew a full rectangular frame around the headline; Kenny's v2
+verdict called the background and the frame &quot;far too bulky&quot; for a theme
+that should think in &quot;fine lines&quot;. v3 redrew the frame as four
+corner-bracket construction marks — still a frame, in spirit — and Kenny
+rejected it outright: &quot;I just don't like the frame. Can we replace it
+entirely with our measurement lines? One vertical and one horizontal.&quot;
+v4 is that replacement, and it is this theme's signature.</p>
 <ol>
 <li><strong>The Prussian ground.</strong> <code>hsl(215, 65%, 12%)</code> — a blue dark enough to
 read as ink rather than as a dark grey with a tint. Lighten it and the
 theme becomes &quot;dark blue interface&quot;; deepen it and it becomes black.</li>
 <li><strong>Cyan as the drawing line.</strong> <code>--primary</code> is <code>hsl(190, 80%, 62%)</code>,
 which is the colour a blueprint's line actually is. It carries links,
-focus and the first chart series.</li>
+focus, the rule reveal and the first chart series.</li>
 <li><strong>Amber for annotation.</strong> The one warm colour, used where a drawing
-would use a red pencil: <code>--accent</code>, and the second chart series. It is
-the only hue in the theme that is not blue or cyan.</li>
+would use a red pencil: <code>--accent</code>, the second chart series and the
+dossier's stamp. It is the only hue in the theme that is not blue or
+cyan.</li>
+<li><strong>The two dimension lines.</strong> A hairline under the headline and a
+hairline beside it, each printing the true rendered size of the box it
+measures — never a fixed width. The horizontal one is a plain
+measurement: <code>js/effects.js</code> reads the headline's own
+<code>getBoundingClientRect().width</code> and writes the same rounded pixel
+number to both the line's <code>style.width</code> and its label in one function,
+so the two can never drift apart. The vertical one needs no
+measurement at all: <code>top: 0; bottom: 0</code> inside a <code>position: relative</code>
+wrap sizes it to the wrap's own content height by CSS containment,
+which is a more direct version of the same guarantee. This is outside
+the six-hook vocabulary of S45 — it is this theme's own mechanism, the
+way terminal's caret column and retro's dither are theirs — gated by
+its own knob, <code>--kp-measure: live</code>.</li>
 <li><strong><code>--radius: 0.125rem</code>.</strong> Nearly square, because a drawn line does not
 have rounded ends. This is the second-sharpest theme after
 high-contrast.</li>

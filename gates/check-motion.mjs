@@ -92,6 +92,10 @@ const OUT_OF_SCOPE = {
     // The tazhib register [S48, LIFT_PLAN row 6].
     'kp-burnish':
         'a clip-path wipe over the headline once (the burnish); the text is gold from the first frame of the wipe and stays gold, only the reveal boundary moves',
+    // The blueprint register [S48, LIFT_PLAN row 6]: the two dimension
+    // lines extending like a tape measure, one transform each.
+    'kp-dim-draw': 'a horizontal scale on a hairline under the headline, once; no luminance change and nothing over 341x256 px',
+    'kp-elev-draw': 'a vertical scale on a hairline beside the headline, once; no luminance change and nothing over 341x256 px',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

@@ -131,6 +131,9 @@ export const KNOBS = Object.freeze({
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export const BOOT_PROGRESS = '--kp-boot-progress';
 
+/** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
+export const MEASURE_KNOB = '--kp-measure';
+
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -270,6 +273,17 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
+    // in, and the two dimension lines extending like a tape measure (a
+    // transform each, no luminance change) with their labels fading in.
+    // The lede's marks and the dossier's redactions are plain transitions
+    // on a later class toggle, not keyframes, so they carry no row here —
+    // the same choice terminal's own redaction made [TM1].
+    'kp-headline-fade': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-dim-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
+    'kp-dim-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-elev-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
+    'kp-elev-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
 });
 
 /**
@@ -1037,6 +1051,84 @@ export function attachEffects(root = document, options = {}) {
         }
     };
     caret();
+
+    // ── The measurement lines [S48, LIFT_PLAN row 6]: blueprint's own ──
+    // A theme answers `--kp-measure: live` on the root. The module wraps
+    // its headline in a span it can measure and builds the two dimension
+    // lines beside it: the vertical one is sized by CSS containment alone
+    // (`top: 0; bottom: 0` inside the wrap the register gives a definite
+    // height), the horizontal one by a live pixel read set as the line's
+    // own `style.width` and printed into its label in the same breath —
+    // one measurement, two readouts, so the line is never a fixed width.
+    // Runs once, after scan() has already put the headline at its rest
+    // text, so nothing here fights the decipher/type/word routines for
+    // the same child nodes.
+    const measure = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
+        if (routine !== 'live' || !view) return;
+        const words = getStrings();
+        const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h) => !h.closest('[data-kp-measured]'));
+        for (const h1 of headlines) {
+            const wrap = doc.createElement('span');
+            wrap.setAttribute('data-kp-measured', '');
+            h1.replaceWith(wrap);
+
+            const elevLine = doc.createElement('span');
+            elevLine.setAttribute('data-kp-elev-line', '');
+            elevLine.setAttribute('aria-hidden', 'true');
+            const elevStart = doc.createElement('span');
+            elevStart.setAttribute('data-kp-elev-tick', '');
+            const elevEnd = doc.createElement('span');
+            elevEnd.setAttribute('data-kp-elev-tick', '');
+            const elevLabel = doc.createElement('span');
+            elevLabel.setAttribute('data-kp-elev-measure', '');
+            elevLabel.textContent = words.measureLoading;
+            elevLine.append(elevStart, elevEnd, elevLabel);
+            wrap.append(elevLine, h1);
+
+            const dim = doc.createElement('span');
+            dim.setAttribute('data-kp-dim', '');
+            dim.setAttribute('aria-hidden', 'true');
+            const dimLine = doc.createElement('span');
+            dimLine.setAttribute('data-kp-dim-line', '');
+            const dimStart = doc.createElement('span');
+            dimStart.setAttribute('data-kp-dim-tick', '');
+            const dimEnd = doc.createElement('span');
+            dimEnd.setAttribute('data-kp-dim-tick', '');
+            dimLine.append(dimStart, dimEnd);
+            const dimLabel = doc.createElement('span');
+            dimLabel.setAttribute('data-kp-measure', '');
+            dimLabel.textContent = words.measureLoading;
+            dim.append(dimLine, dimLabel);
+            wrap.after(dim);
+
+            /** @type {ReturnType<typeof setTimeout>} */
+            let timer;
+            const update = () => {
+                const w = Math.round(h1.getBoundingClientRect().width);
+                dimLine.style.width = `${w}px`;
+                dimLabel.textContent = words.measureWidth(w);
+                const h = Math.round(wrap.getBoundingClientRect().height);
+                elevLabel.textContent = words.measureHeight(h);
+            };
+            update();
+            const schedule = () => {
+                clearTimeout(timer);
+                timer = setTimeout(update, 100);
+            };
+            view.addEventListener('resize', schedule);
+            cleanups.push(() => {
+                clearTimeout(timer);
+                view?.removeEventListener('resize', schedule);
+            });
+            try {
+                if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(update);
+            } catch {
+                // no font-loading API: the load-time measurement stands
+            }
+        }
+    };
+    measure();
 
     // ── The arrival [SW2]: how the page comes on ───────────────────────
     // A theme answers `--kp-arrival` on the root; `boot` is synthwave's:

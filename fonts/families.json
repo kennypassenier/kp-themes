@@ -610,7 +610,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["mono"],
+        "themes": ["mono", "blueprint"],
         "scripts": ["latin"],
         "upstream": "ofl/geistmono",
         "faces": [
