@@ -6,6 +6,7 @@ export { default as Alert } from './components/alert.jsx';
 export { default as Field } from './components/field.jsx';
 export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
+export { default as Marquee } from './components/marquee.jsx';
 export {
     CONFIRM_MODES,
     CONFIRM_OWNED,

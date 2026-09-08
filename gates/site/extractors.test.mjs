@@ -137,7 +137,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.deepEqual(height?.defaults, ['2.25rem']);
     assert.ok(height?.families.includes('button') && height.families.includes('field'));
 
-    assert.equal(result.expected, 84, 'AR21 counted 84 --kp-* properties in css/components.css');
+    // M1 (2026-09-08) added two: the marquee's duration and the gap
+    // between its items, both declared on the row itself so a consumer
+    // overrides one and keeps the theme's value for the other. Its third
+    // knob, the rest-while-off-screen answer, is read by js/effects.js
+    // rather than by any rule, so it is not declared here.
+    assert.equal(result.expected, 86, 'AR21 counted 86 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -169,7 +174,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    assert.equal(result.readCount, 84);
+    assert.equal(result.readCount, 86);
     assert.deepEqual(result.unread, []);
 });
 

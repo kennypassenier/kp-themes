@@ -50,6 +50,8 @@ export const HOOKS = Object.freeze({
     revealTrigger: 'data-kp-reveal-trigger',
     revealEvery: 'data-kp-reveal-every',
     divider: 'data-kp-divider',
+    /** A row of items a theme may run [M1, 2026-09-08]. */
+    marquee: 'data-kp-marquee',
     label: 'data-kp-label',
     /** The label a stamp takes once the file is open [S49, A11]. */
     labelOpen: 'data-kp-label-open',
@@ -140,6 +142,11 @@ export const KNOBS = Object.freeze({
 });
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export const BOOT_PROGRESS = '--kp-boot-progress';
+
+/** How long one full pass of a marquee takes [M1, 2026-09-08]. */
+export const MARQUEE_KNOB = '--kp-marquee';
+/** Whether a marquee rests while it is off screen: `offscreen` (default) or `never` [M2]. */
+export const MARQUEE_PAUSE_KNOB = '--kp-marquee-pause';
 
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export const MEASURE_KNOB = '--kp-measure';
@@ -283,6 +290,11 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The shared marquee [M1, 2026-09-08]: one transform across a doubled
+    // row, no luminance change of its own, and the only loop besides
+    // brutalism's hatch. The duration is a knob, so this row carries the
+    // package default the base layer declares.
+    'kp-marquee-pass': { durationMs: 42000, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     // offset — a translate only, no luminance change.
     'kp-kento-blue': { durationMs: 700, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-kento-red': { durationMs: 700, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -1266,6 +1278,47 @@ export function attachEffects(root = document, options = {}) {
         }
     };
     measure();
+
+    // ── The marquee [M1, M2]: a row that runs ──────────────────────────
+    // The consumer writes the items once; a seamless loop needs the row
+    // twice, so the module builds the track, moves the items into the
+    // first run and clones it into a second the screen reader skips. The
+    // attributes it writes are what the base layer keys on, so a page
+    // without this module shows the items standing still rather than a
+    // half-built band [T17, AR34].
+    const marquee = () => {
+        for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
+            if (band.hasAttribute('data-kp-marquee-ready')) continue;
+            const items = [...band.childNodes];
+            if (items.length === 0) continue;
+            const track = doc.createElement('div');
+            track.setAttribute('data-kp-marquee-track', '');
+            const run = doc.createElement('div');
+            run.setAttribute('data-kp-marquee-run', '');
+            run.append(...items);
+            const copy = /** @type {HTMLElement} */ (run.cloneNode(true));
+            copy.setAttribute('aria-hidden', 'true');
+            track.append(run, copy);
+            band.append(track);
+            band.setAttribute('data-kp-marquee-ready', '');
+            // Two runs, so the -50% pass lands exactly where it started.
+            band.setAttribute('data-kp-marquee-runs', '2');
+
+            const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : '') || 'offscreen';
+            if (pause !== 'offscreen' || !view || !('IntersectionObserver' in view)) continue;
+            // Paused, not stopped: the animation keeps its position and
+            // carries on from it when the band comes back into view.
+            const observer = new view.IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) entry.target.toggleAttribute('data-kp-paused', !entry.isIntersecting);
+                },
+                { threshold: 0 },
+            );
+            observer.observe(band);
+            cleanups.push(() => observer.disconnect());
+        }
+    };
+    marquee();
 
     // ── The arrival [SW2]: how the page comes on ───────────────────────
     // A theme answers `--kp-arrival` on the root; `boot` is synthwave's:

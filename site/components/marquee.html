@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Toast — kp-themes</title>
-        <meta name="description" content="A short message in a stack at the corner of the window that removes itself after a while. Errors go to a second, assertive stack, because those are the ones that must interrupt." />
+        <title>Marquee — kp-themes</title>
+        <meta name="description" content="A row of short items that a theme may run across the page — a tape of figures, a strip of headlines, a band of names. The consumer writes the items once; the theme decides whether they move at all." />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
         <link rel="stylesheet" href="../../css/layout.css" />
@@ -99,8 +99,8 @@
                         <ul class="sc-nav__list">
                             <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
-                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
-                            <li><a class="sc-nav__link" href="../../site/components/toast.html" aria-current="page">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html" aria-current="page">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -137,97 +137,126 @@
             <main class="kp-sidebar__main" id="main">
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
-                    <h1 class="kp-fw-bold">Toast</h1>
-                    <p class="kp-prose">A short message in a stack at the corner of the window that removes itself after a while. Errors go to a second, assertive stack, because those are the ones that must interrupt.</p>
+                    <h1 class="kp-fw-bold">Marquee</h1>
+                    <p class="kp-prose">A row of short items that a theme may run across the page — a tape of figures, a strip of headlines, a band of names. The consumer writes the items once; the theme decides whether they move at all.</p>
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>
-                    <p class="kp-prose">For confirming something the reader just did, when the result is elsewhere on the page or not visible at all. Not for anything they have to act on — a toast that disappears is not a place for a decision — and not for errors that block progress, which belong beside the thing that failed.</p>
+                    <p class="kp-prose">For a row of small, equal things nobody has to read in order: prices, statuses, credits. Not for anything a reader must act on or find again — a moving target is the hardest thing on a page to click — and not as a substitute for a heading. A theme that has no answer leaves the row standing still, which must still make sense.</p>
                 </section>
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">The four flavours, at rest</figcaption>
-                        <p class="kp-text-muted">Printed here on the page so the variants can be seen; in an application the module puts them into the fixed stack at the corner of the window. The flavour is a rule down the leading edge and the message says it too.</p>
+                        <figcaption class="kp-fw-semibold">A row a theme may run</figcaption>
+                        <p class="kp-text-muted">The consumer writes the items once. The effects module builds the track, doubles the row so the pass is seamless and hides the copy from a screen reader; a page without the module shows the row standing still.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-toast kp-toast--success">Saved: the application was sent.</div>
-<div class="kp-toast kp-toast--warning">Two files were skipped.</div>
-<div class="kp-toast kp-toast--info">Your session ends in five minutes.</div>
-<div class="kp-toast kp-toast--error">The server refused the file.<button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
+<div class="kp-marquee" data-kp-marquee>
+    <span>KP 412.75 +1.9%</span>
+    <span>THEME 98.20 -0.4%</span>
+    <span>REG25 1 240.00 +3.2%</span>
+</div>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--success&quot;</span>&gt;Saved: the application was sent.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--warning&quot;</span>&gt;Two files were skipped.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--info&quot;</span>&gt;Your session ends in five minutes.&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--error&quot;</span>&gt;The server refused the file.&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-toast__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span> <span class="kp-code__keyword">data-kp-marquee</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;KP 412.75 +1.9%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;THEME 98.20 -0.4%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;REG25 1 240.00 +3.2%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">The region a consumer writes once</figcaption>
-                        <p class="kp-text-muted">One polite region for ordinary messages; the module makes a second assertive one for errors when it needs it. The stack is fixed to the corner of the window and sits above the texture layer, because a toast under an overlay is a toast nobody can read.</p>
+                        <figcaption class="kp-fw-semibold">What the module builds from it</figcaption>
+                        <p class="kp-text-muted">Written out so a consumer who renders it server-side, or who does not load the module at all, can produce the same thing by hand. The second run is the copy; it carries aria-hidden so the items are announced once.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-toasts" role="status" aria-live="polite"></div>
+<div class="kp-marquee" data-kp-marquee data-kp-marquee-ready data-kp-marquee-runs="2">
+    <div data-kp-marquee-track>
+        <div data-kp-marquee-run><span>KP 412.75 +1.9%</span></div>
+        <div data-kp-marquee-run aria-hidden="true"><span>KP 412.75 +1.9%</span></div>
+    </div>
+</div>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toasts&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span> <span class="kp-code__keyword">data-kp-marquee</span> <span class="kp-code__keyword">data-kp-marquee-ready</span> <span class="kp-code__keyword">data-kp-marquee-runs</span><span class="kp-code__string">=&quot;2&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-marquee-track</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-marquee-run</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;KP 412.75 +1.9%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-marquee-run</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;KP 412.75 +1.9%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A consumer overriding the speed</figcaption>
+                        <p class="kp-text-muted">The two knobs ride as custom properties, so overriding one leaves the theme’s value for the other: one is the time a full pass takes, the other is whether the row rests while it is off screen.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-marquee" data-kp-marquee style="--kp-marquee: 20000ms">
+    <span>Slower or faster, without leaving the theme</span>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span> <span class="kp-code__keyword">data-kp-marquee</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-marquee: 20000ms&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Slower or faster, without leaving the theme&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-marquee</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-marquee-ready</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-marquee-run</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-marquee-runs</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-marquee-track</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-paused</code></td><td>written</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
-                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Toasts } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
-                    <p class="kp-text-muted">Declared in <code>components/overlays.jsx</code>; the package re-exports every component from its root.</p>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Marquee } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/marquee.jsx</code>; the package re-exports every component from its root.</p>
                 </section>
                 <section class="kp-section" data-sc-section="props" id="props">
                     <h2 class="kp-fw-semibold">Props</h2>
-                    <h3 class="kp-fw-semibold"><code>Toasts</code></h3>
-                    <div class="kp-table-wrap" data-kp-region-label="Toasts props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>messages</code></td><td><code>ToastMessage[]</code></td><td>required</td><td></td></tr>
-                            <tr><td><code>onDismiss</code></td><td><code>(id: string | number) =&gt; void</code></td><td>optional</td><td>Called when a toast times out or is dismissed. Without it nothing auto-dismisses, as in 1.x.</td></tr>
-                            <tr><td><code>ms</code></td><td><code>number</code></td><td>optional</td><td>Default TOAST_MS; 0 never dismisses.</td></tr>
-                            <tr><td><code>max</code></td><td><code>number</code></td><td>optional</td><td>Show at most this many, newest last.</td></tr>
-                            <tr><td><code>dismissible</code></td><td><code>boolean</code></td><td>optional</td><td>A close button per toast. Default false.</td></tr>
-                            <tr><td><code>live</code></td><td><code>'polite' | 'assertive'</code></td><td>optional</td><td>Default polite; error toasts are announced assertively regardless.</td></tr>
-                            <tr><td><code>renderToast</code></td><td><code>(message: ToastMessage, dismiss: () =&gt; void) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                    <h3 class="kp-fw-semibold"><code>Marquee</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Marquee props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>items</code></td><td><code>import('react').ReactNode[]</code></td><td>optional</td><td>Each item becomes one cell of the row.</td></tr>
+                            <tr><td><code>duration</code></td><td><code>string</code></td><td>optional</td><td>One pass, e.g. '42000ms'. Default: the theme's own.</td></tr>
+                            <tr><td><code>pause</code></td><td><code>'offscreen' | 'never'</code></td><td>optional</td><td>Rest while off screen. Default 'offscreen'.</td></tr>
+                            <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The accessible name of the band. Default: none, so it is unlabelled scenery.</td></tr>
+                            <tr><td><code>as</code></td><td><code>import('react').ElementType</code></td><td>optional</td><td>Default 'div'.</td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
-                            <tr><td><code>kp-toast-show</code></td><td>Dispatched on the toast region when a toast was shown / removed: `{ toast, text }`.</td></tr>
-                            <tr><td><code>kp-toast-hide</code></td><td></td></tr>
-                    </tbody></table></div>
+                    <p class="kp-text-muted">This unit fires no events.</p>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
-                            <tr><td><code>--kp-z-toast</code></td><td><code>90</code></td></tr>
+                            <tr><td><code>--kp-marquee</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-marquee-gap</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
                     <h2 class="kp-fw-semibold">Accessibility</h2>
                     <ul class="kp-stack">
-                        <li>Built in — the polite region announces without interrupting, and errors get the assertive one; that split is the whole reason there are two.</li>
-                        <li>Built in — a toast is not focused when it appears, so it does not steal the keyboard from what the reader was doing.</li>
-                        <li>Built in — the stack sits above the other layers, so nothing draws over it.</li>
-                        <li>Yours — put the region in the document once, at the end, and leave it there. A region added at the same moment as its message is not announced.</li>
-                        <li>Yours — leave a toast long enough to read, and give anything actionable a home that does not expire.</li>
-                        <li>Yours — repeat the information somewhere permanent if the reader may need it later.</li>
+                        <li>Built in — the copy of the row is aria-hidden, so a screen reader announces the items once, not twice.</li>
+                        <li>Built in — the whole band stands still under `prefers-reduced-motion: reduce`, in every theme.</li>
+                        <li>Built in — the loop rests while the band is off screen, unless the theme asks it never to.</li>
+                        <li>Yours — keep the items short and repeat nothing a reader must act on. A moving row is scenery, not navigation.</li>
+                        <li>Yours — give the band a label only if it means something on its own; unlabelled scenery is better than a landmark nobody wants.</li>
                     </ul>
                 </section>
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
-                            <tr><td><code>.kp-toasts</code></td><td>The stack: fixed at the trailing bottom corner, newest last, above every other layer.</td></tr>
-                            <tr><td><code>assertive stack</code></td><td>A second region for errors, which interrupts rather than waiting for a pause.</td></tr>
-                            <tr><td><code>.kp-toast--success / --warning / --info / --error</code></td><td>A rule down the leading edge in the status colour. The words say it as well.</td></tr>
-                            <tr><td><code>.kp-toast__close</code></td><td>A dismiss control pushed to the trailing edge, for a toast that does not go by itself.</td></tr>
-                            <tr><td><code>with an action</code></td><td>A toast can carry one control — an undo — and then it should stay long enough to be used.</td></tr>
+                            <tr><td><code>data-kp-marquee</code></td><td>The row itself. Everything else is written by the module, or by a consumer who renders the same markup server-side.</td></tr>
+                            <tr><td><code>data-kp-marquee-track</code></td><td>The element that moves: both runs sit inside it, so one -50% pass lands exactly where it started.</td></tr>
+                            <tr><td><code>data-kp-marquee-run</code></td><td>One run of the items. There are two; the second carries aria-hidden.</td></tr>
+                            <tr><td><code>data-kp-marquee-ready</code></td><td>Written on the row once the module has built it. A theme keys its animation on this, so a page without the module never shows a half-built band.</td></tr>
+                            <tr><td><code>data-kp-marquee-runs</code></td><td>How many runs the track holds. Two today; a theme that needs a different pass distance can read it.</td></tr>
+                            <tr><td><code>data-kp-paused</code></td><td>Written while the row sits outside the viewport, so the animation rests and resumes where it stood. A theme that asks never to rest never sees it.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

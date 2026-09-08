@@ -8,6 +8,7 @@ export type NavLink = {
     target?: string;
     rel?: string;
     links?: NavLink[];
+    menuLabel?: string;
 };
 export type NavBarProps = {
     brand?: import('react').ReactNode;

@@ -16,7 +16,7 @@ import { skipTo as jumpTo } from '../js/components.js';
 // so); every part is a prop; and a ref is forwarded.
 
 /**
- * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string, links?: NavLink[] }} NavLink
+ * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string, links?: NavLink[], menuLabel?: string }} NavLink
  */
 
 /**
@@ -144,7 +144,13 @@ function NavBarInner(
                                         </Link>
                                     )}
                                     {sub && (
-                                        <ul className={`kp-nav__menu ${classNames.menu ?? ''}`.trim()}>
+                                        <ul
+                                            className={`kp-nav__menu ${classNames.menu ?? ''}`.trim()}
+                                            // The menu's own caption [M3]: content, so the
+                                            // consumer supplies it; a menu without one draws
+                                            // no line, in every theme.
+                                            data-kp-menu-label={l.menuLabel}
+                                        >
                                             {sub.map((child) => (
                                                 <li key={child.href}>
                                                     <Link className={classNames.menuLink} href={child.href}>

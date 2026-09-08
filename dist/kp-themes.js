@@ -3793,6 +3793,8 @@ var HOOKS = Object.freeze({
   revealTrigger: "data-kp-reveal-trigger",
   revealEvery: "data-kp-reveal-every",
   divider: "data-kp-divider",
+  /** A row of items a theme may run [M1, 2026-09-08]. */
+  marquee: "data-kp-marquee",
   label: "data-kp-label",
   /** The label a stamp takes once the file is open [S49, A11]. */
   labelOpen: "data-kp-label-open",
@@ -3864,6 +3866,7 @@ var KNOBS = Object.freeze({
   arrivalCount: "--kp-arrival-count"
 });
 var BOOT_PROGRESS = "--kp-boot-progress";
+var MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 var MEASURE_KNOB = "--kp-measure";
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
@@ -3969,6 +3972,11 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The shared marquee [M1, 2026-09-08]: one transform across a doubled
+  // row, no luminance change of its own, and the only loop besides
+  // brutalism's hatch. The duration is a knob, so this row carries the
+  // package default the base layer declares.
+  "kp-marquee-pass": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
   // offset — a translate only, no luminance change.
   "kp-kento-blue": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-kento-red": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -4771,6 +4779,38 @@ function attachEffects(root = document, options = {}) {
     }
   };
   measure();
+  const marquee = () => {
+    for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
+      if (band.hasAttribute("data-kp-marquee-ready")) continue;
+      const items = [...band.childNodes];
+      if (items.length === 0) continue;
+      const track = doc.createElement("div");
+      track.setAttribute("data-kp-marquee-track", "");
+      const run = doc.createElement("div");
+      run.setAttribute("data-kp-marquee-run", "");
+      run.append(...items);
+      const copy = (
+        /** @type {HTMLElement} */
+        run.cloneNode(true)
+      );
+      copy.setAttribute("aria-hidden", "true");
+      track.append(run, copy);
+      band.append(track);
+      band.setAttribute("data-kp-marquee-ready", "");
+      band.setAttribute("data-kp-marquee-runs", "2");
+      const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : "") || "offscreen";
+      if (pause !== "offscreen" || !view || !("IntersectionObserver" in view)) continue;
+      const observer = new view.IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) entry.target.toggleAttribute("data-kp-paused", !entry.isIntersecting);
+        },
+        { threshold: 0 }
+      );
+      observer.observe(band);
+      cleanups.push(() => observer.disconnect());
+    }
+  };
+  marquee();
   const arrival = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
     if (routine !== "boot" && routine !== "card" || !doc.body) return;

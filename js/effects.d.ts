@@ -4,6 +4,8 @@ export declare const HOOKS: Readonly<{
     revealTrigger: "data-kp-reveal-trigger";
     revealEvery: "data-kp-reveal-every";
     divider: "data-kp-divider";
+    /** A row of items a theme may run [M1, 2026-09-08]. */
+    marquee: "data-kp-marquee";
     label: "data-kp-label";
     /** The label a stamp takes once the file is open [S49, A11]. */
     labelOpen: "data-kp-label-open";
@@ -69,6 +71,10 @@ export declare const KNOBS: Readonly<{
 }>;
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export declare const BOOT_PROGRESS = "--kp-boot-progress";
+/** How long one full pass of a marquee takes [M1, 2026-09-08]. */
+export declare const MARQUEE_KNOB = "--kp-marquee";
+/** Whether a marquee rests while it is off screen: `offscreen` (default) or `never` [M2]. */
+export declare const MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export declare const MEASURE_KNOB = "--kp-measure";
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */

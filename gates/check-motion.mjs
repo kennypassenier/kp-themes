@@ -121,6 +121,11 @@ const OUT_OF_SCOPE = {
         'a translate of a ghost plate converging to its final offset, once; no luminance change (mix-blend-mode multiply, no opacity or colour-stop keyframe)',
     'kp-kento-red':
         'a translate of a ghost plate converging to its final offset, once; no luminance change (mix-blend-mode multiply, no opacity or colour-stop keyframe)',
+    // The shared marquee [M1, 2026-09-08]: one transform across a doubled
+    // row, at whatever speed the theme names. No luminance change of its
+    // own, and it rests while it is off screen unless a theme says never.
+    'kp-marquee-pass':
+        'a row of items translated -50% and back to its start, seamlessly; a transform only, no opacity or colour stop, and paused whenever the band is outside the viewport',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

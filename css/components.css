@@ -1127,6 +1127,82 @@
         position: relative;
     }
 
+    /* A marquee [S45, M1 of 2026-09-08]: a row that runs, and the first
+       shared element whose content a consumer supplies. The quiet answer
+       is a row that does not move at all — every theme gets the items,
+       laid out — and a theme that wants them to run says how fast with
+       `--kp-marquee`. The module doubles the row so the pass is seamless
+       and marks the copy `aria-hidden`; without the module the row is
+       simply a row, which is the no-script answer [T17, AR34].
+
+       The knobs a stylesheet reads are declared here: how long one full
+       pass takes, and the gap between the items. The third — whether the
+       row rests while it is off screen — is read by js/effects.js alone
+       and so is not declared in this file (AR21); unset means it rests,
+       and a theme that wants it running on says so in its own register,
+       which is where the module looks. */
+    .kp-marquee,
+    [data-kp-marquee] {
+        --kp-marquee: 42000ms;
+        --kp-marquee-gap: var(--kp-space-lg);
+        display: block;
+        overflow: hidden;
+    }
+
+    [data-kp-marquee-track] {
+        display: flex;
+        inline-size: max-content;
+    }
+
+    [data-kp-marquee-run] {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: var(--kp-marquee-gap);
+        padding-inline: calc(var(--kp-marquee-gap) / 2);
+        padding-block: var(--kp-space-xs);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-marquee-ready][data-kp-marquee-runs] [data-kp-marquee-track] {
+            animation: kp-marquee-pass var(--kp-marquee) linear infinite;
+        }
+
+        /* The module writes this attribute while the band sits outside the
+           viewport; the animation keeps its position and resumes from it. */
+        [data-kp-marquee-ready][data-kp-paused] [data-kp-marquee-track] {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes kp-marquee-pass {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* The menu's own caption [M3 of 2026-09-08]: a line above the items
+       saying what this menu is — blueprint's title block reads "Detail ·
+       scale 4:1" there. The consumer supplies it (a `menuLabel` on the
+       NavBar's link, or the attribute by hand); a menu without one has no
+       line at all, so nothing appears where nothing was asked for. Every
+       register may draw it its own way. */
+    .kp-nav__menu[data-kp-menu-label]::before {
+        content: attr(data-kp-menu-label);
+        display: block;
+        padding: var(--kp-space-xs) 0.75rem;
+        margin-block-end: 0.25rem;
+        font-size: var(--kp-text-xs);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border);
+    }
+
     .kp-nav__menu {
         position: absolute;
         top: 100%;

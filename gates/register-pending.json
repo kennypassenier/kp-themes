@@ -1,3 +1,4 @@
 {
-    "//": "Roots css/cyberpunk-register.css does not reach yet [TH124, AR37]. C2 empties this file; the gate refuses an entry the register already covers."
+    "//": "Roots css/cyberpunk-register.css does not reach yet [TH124, AR37]. C2 empties this file; the gate refuses an entry the register already covers.",
+    "marquee": "M4, 2026-09-08: the base layer draws every theme's marquee for now. Kenny evaluates a per-theme proposal against that default and picks per theme; the entry goes when his answers land, and the registers he chooses carry their own rule."
 }
