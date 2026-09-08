@@ -55,6 +55,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/ticker-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/topo-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/deco-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/light-register.css": ["authored", "bundled", "classes", "motion", "texture"],

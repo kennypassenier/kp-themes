@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/ticker-register.css" />
         <link rel="stylesheet" href="../css/topo-register.css" />
         <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
@@ -825,26 +826,37 @@ would make this a dark grey theme with a red button.</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>Amber fields on black, numerals that line up, panel titles in reverse
-video, nothing that moves. The trading terminal as it is used today —
-data-dense, professional, present tense — rather than the arcade
-nostalgia terminal already owns. This is the theme a table wants:
-JobTracker's pipeline, a ledger, a log.</p>
+<p>The trading screen — tabular figures, a running band, green and red that
+mean something, density as a virtue. Amber fields on black, numerals that
+line up every time, panel titles in reverse video. The temptation this
+theme invites is a flashing cell when a value changes, and it is refused:
+&quot;cuts, not dissolves&quot; is the demo's own thesis (Curio's Bloomberg
+Terminal style guide, quoted in the demo's header note) — every one-time
+reveal swaps state with no transition property at all, gated by an
+IntersectionObserver so it fires once, the instant the element scrolls
+into view. This is the theme a table wants: JobTracker's pipeline, a
+ledger, a log.</p>
 <ol>
-<li><strong>Amber acts, yellow labels.</strong> <code>--primary</code> is amber
-<code>hsl(36, 91%, 55%)</code> — 9.71:1 on black — and <code>--accent</code> is the paler
-label yellow. Two hues twenty degrees apart, both with black ink,
-and every other colour on the page is a grey.</li>
-<li><strong>No motion at all.</strong> <code>--fx-duration: 0ms</code>, <code>--fx-lift: 0px</code>, no
-texture that drifts, no flourish under the reduced-motion guard. The
-temptation this theme invites — flash a cell when its value changes
-— is exactly what DI5 counts, and it is refused here.</li>
-<li><strong>Tabular numerals, mono display.</strong> The theme sets
-<code>font-variant-numeric: tabular-nums</code> on its root so columns of
-figures align, and headings are IBM Plex Mono in capitals on an amber
-bar — reverse video, the way a terminal names a screen.</li>
-<li><strong>Radius 0, hairlines at 18%.</strong> A rounded corner or a soft divider
-would say &quot;dashboard product&quot;; this says &quot;screen&quot;.</li>
+<li><strong>Amber acts, yellow labels.</strong> <code>--primary</code> is amber, <code>--accent</code> the
+paler label yellow; every other colour on the page is a grey, and the
+reverse-video treatment (amber field, black ink) is reserved for the
+controls that act — the primary button, the nav's call to action, the
+dossier's panel header — never for a whole surface.</li>
+<li><strong>No motion at all.</strong> <code>--fx-duration: 0ms</code> already makes every hover,
+focus and state transition in the whole base layer instantaneous for
+this theme, without a line of register code (<code>css/_rules.css</code> and
+<code>css/components.css</code> read the token generically). The register itself
+declares no <code>transition</code> or <code>animation</code> property anywhere: every
+reveal is a bare class swap the browser resolves in one frame, which
+is what &quot;cuts, not dissolves&quot; means mechanically, not just visually.</li>
+<li><strong>Tabular numerals, mono display.</strong>
+<code>font-variant-numeric: tabular-nums</code> on every identifier, timestamp, spec value and field —
+the theme's whole thesis is that a column of figures never reflows —
+and headings are the mono face in capitals.</li>
+<li><strong>Radius 0, hairlines at 100%.</strong> A rounded corner or a soft divider
+would say &quot;dashboard product&quot;; this says &quot;screen.&quot; Every divider is
+one flat pixel, dim, no blur, no torn edge — a printed rule, this
+theme's own refusal of the round's razor tear.</li>
 </ol>
                         </div>
                     </article>

@@ -193,6 +193,33 @@ test.describe('two surfaces in one theme [TH116]', () => {
                 why: 'the demo\'s second lede mark, the same wash and the same false reading as "where it counts" above — see that entry for the composited value.',
             },
         ],
+        ticker: [
+            {
+                measured: 1.7,
+                what: 'hero mark "where it counts"',
+                why: "the demo's own `.kp-lede mark.kp-revealed { background: rgba(245, 161, 36, 0.18); color: var(--fg); }` — one rule for every mark — measures 1.70 here because this suite reads the mark's own declared colour pair without compositing the 18% wash over the black it actually sits on; the demo's own contrast table (scratchpad/ticker-demo.html) never scores this pair either, only the solid ones. The rendered pixel is not this number: 18% amber over #0A0A0A composites to roughly rgb(52,37,15), which clears the floor by a wide margin against near-white ink. Reported at the ticker lift, 2026-09-08, awaiting Kenny.",
+            },
+            {
+                measured: 1.7,
+                what: 'hero mark "where it hurts"',
+                why: "the same rule, the lede's second mark.",
+            },
+            {
+                measured: 1.7,
+                what: 'app mark "violet night and magenta"',
+                why: "the dossier's marks read the same rule at 22% (`.kp-card[data-kp-reveal='emphasis'] mark.is-cleared`), the demo's own `.kp-card[data-kp-revealed] mark { background: rgba(245, 161, 36, 0.22); }` — same finding, same composited pixel is fine.",
+            },
+            {
+                measured: 1.7,
+                what: 'app mark "signal yellow and blood red"',
+                why: "the dossier's second mark, same rule.",
+            },
+            {
+                measured: 1.7,
+                what: 'app mark "opt-in and reduced-motion safe"',
+                why: "the dossier's third mark, same rule.",
+            },
+        ],
     };
 
     for (const theme of THEMES) {
