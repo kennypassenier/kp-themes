@@ -140,17 +140,21 @@ not a config edit.
 | `transition sits outside a prefers-reduced-motion guard (DI7)` | it moves for someone who asked for stillness | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `hsl(…) is a colour written outside the token layer` | a colour is spelled out where a token should be | `var(--token)`, or `hsl(from var(--token) h s l / alpha)` if it needs transparency |
 | `css/themes.css does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
-| `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `node gates/compliance.mjs` |
+| `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `npm run generate:all` (or `node gates/compliance.mjs` alone) |
+| `<anything> does not match its source` | a generator ran and its neighbours did not | `npm run generate:all` — one command settles every generated file |
 | `theme discovery broke: expected 7, found 6` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
 
 ## Working on the package itself
 
 ```bash
 npm ci                    # a fresh clone needs nothing else
-npm run generate          # rewrite the generated files from the sources
+npm run generate:all      # every generator, in order, then prettier — the one
+                          # to reach for after a change to a source: a single
+                          # generator run leaves another one's output stale and
+                          # the gates then fail one at a time (2026-09-08)
+npm run generate          # only the token stylesheets, when that is all you touched
 npm run gates             # everything that blocks a commit, under a second
 npm run test:browser      # Chromium and Firefox; blocks a merge, not a commit
-node gates/compliance.mjs # rewrite the table in DESIGN_INVARIANTS.md
 ```
 
 The git hooks are local config a clone cannot carry. Activate them once:

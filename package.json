@@ -183,6 +183,7 @@
         "format": "prettier --write .",
         "gates": "npm run check:generated && npm run check:tokens && npm run check:invariants && npm run check:contrast && npm run check:motion && npm run check:di5-report && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:baseline && npm run check:ids && npm run check:hooks && npm run check:register-coverage && npm run check:fonts && npm run check:fonts-css && npm run check:tear && npm run check:texture && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
+        "generate:all": "npm run generate && npm run generate:fonts-css && npm run generate:utilities && npm run generate:tear && npm run generate:bundle && npm run generate:examples && npm run generate:showcase && npm run generate:site && npm run generate:ha && node gates/generate-compare.mjs && npm run report:di5 && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
         "check:generated": "node gates/generate-themes.mjs --check",
         "check:tokens": "node gates/check-tokens.mjs",
         "test": "node --test gates/",
