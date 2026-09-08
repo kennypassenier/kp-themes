@@ -490,11 +490,20 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     // from .claude/hooks/gates.sh and the hook assertion names it.
     /** @type {{scripts: Record<string, string>}} */
     const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-    const checks = Object.keys(pkg.scripts).filter((name) => name.startsWith('check:'));
+    // Kenny, 2026-09-09: the checks that exist for people with
+    // disabilities — the contrast floors, the flash threshold, the
+    // reduced-motion guards, the texture ceiling and the invariant sweep
+    // — are advice rather than a gate. They still have to run somewhere,
+    // and `npm run advice` is where; this test holds that list the same
+    // way it holds the blocking one, so an advisory check cannot quietly
+    // stop being run at all.
+    const advice = pkg.scripts.advice ?? '';
+    const advisory = Object.keys(pkg.scripts).filter((name) => name.startsWith('check:') && advice.includes(`npm run ${name}`));
+    assert.ok(advisory.length >= 4, `expected the advisory checks in \`npm run advice\`, found ${advisory.length}`);
+    const checks = Object.keys(pkg.scripts).filter((name) => name.startsWith('check:') && !advisory.includes(name));
     assert.ok(checks.length >= 10, `expected the check scripts, found ${checks.length}`);
     const chain = pkg.scripts.gates;
     const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
-    const ci = readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
     const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
     for (const name of checks) {
         assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
@@ -503,7 +512,15 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
         const command = pkg.scripts[name].replace(/^node /, '');
         assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
     }
-    assert.ok(/run:\s*npm run gates/.test(ci), 'ci.yml does not run `npm run gates`');
+    // The CI list is gone [Kenny, 2026-09-09]: there is no CI. He runs the
+    // suite himself with `npm run verify`, which is the fourth list this
+    // test now holds — gates, the whole browser suite, then the advisory
+    // reading. A check that is in neither `gates` nor `advice` runs
+    // nowhere, and that is what the two assertions above and this one
+    // together refuse.
+    assert.ok(/npm run gates/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the gates');
+    assert.ok(/npm run test:browser/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the browser suite');
+    assert.ok(/npm run advice/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the advisory checks');
     // The third list, added at round five's Phase 5 gate (H2). It builds
     // the tag, and until then nothing held it: it ran the hook script,
     // which is equivalent only for as long as nobody changes either.
@@ -821,12 +838,14 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
     const found = textures(css);
     assert.equal(found[0].effective, 0.0715);
     assert.equal(found[1].effective, 0.05);
-    const { over, stale } = auditTexture(new Map([['x.css', css]]), {}, 0.06);
+    // Kenny, 2026-09-09: no excuse list any more. Everything over the
+    // ceiling is named, and nothing can be written down to make it stop
+    // being named — `a` paints at 0.0715 and is reported, `b` at 0.05
+    // and is not.
+    const { over, checked } = auditTexture(new Map([['x.css', css]]), 0.06);
+    assert.equal(checked, 2);
     assert.equal(over.length, 1);
-    assert.deepEqual(stale, []);
-    const excused = auditTexture(new Map([['x.css', css]]), { "[data-theme='a']": 0.0715, "[data-theme='b']": 0.05 }, 0.06);
-    assert.deepEqual(excused.over, []);
-    assert.deepEqual(excused.stale, ["[data-theme='b']"]);
+    assert.match(over[0], /\[data-theme='a'\].*0\.0715/);
 });
 
 // ── Round six, C2: the register's configuration surface [AR43] ─────────────

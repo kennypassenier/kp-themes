@@ -15,10 +15,21 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Nine gates run in under a second and refuse a commit that breaks them:
-contrast, the design invariants, the flash threshold, reduced-motion
-guards, token parity, layer discipline, and whether the generated files
-still match their sources. A behaviour suite runs in Chromium and Firefox.
+Thirty gates run in seconds and refuse a commit that breaks them: token
+parity, layer discipline, the hook vocabulary, the register coverage, the
+shipped fonts, the strings dictionary, the types, and whether every
+generated file still matches its source. A behaviour suite of some 2500
+tests runs in Chromium and Firefox on demand (`npm run test:browser`).
+
+Five checks are **advice, not gates** [Kenny, 2026-09-09]: contrast, the
+design invariants, the flash threshold and reduced-motion guards, and the
+texture ceiling. They are the accessibility floors, and they are still
+written down, still measured and still shipped — `npm run advice` prints
+what they find — but they no longer refuse a commit, and no theme carries
+a recorded exemption from one any more. If you consume this package and
+need those floors held, run `npm run advice` yourself and read it: the
+package tells you what it measures, and does not promise to have obeyed
+it.
 
 Consumers: JobTracker and kp-soft (React, git dependency), kyu and almanac
 (framework-free — they copy the stylesheet).
@@ -481,8 +492,11 @@ at 4.5:1, non-text things like chart series and the focus ring at 3:1,
 and the pairs that must stay far apart rather than readable — a visited
 link against an unvisited one, a pressed state against its base. It
 prints the counts itself; they are not repeated here, because a number
-typed into prose goes stale and a gate's own output does not. Run `npm
-run gates` before every commit.
+typed into prose goes stale and a gate's own output does not.
+
+Since 2026-09-09 this is advice rather than a gate: it runs in `npm run
+advice`, not in `npm run gates`, and a failing pair is a reading for
+whoever asked for it, not a refused commit.
 
 ## Cyberpunk register: shadcn markup hooks
 

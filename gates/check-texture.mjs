@@ -15,13 +15,13 @@
 // `stroke-opacity`, and 1 when the value declares no alpha (a white star
 // is fully white). A texture is one number, not two places to hide one.
 //
-// Today's offenders live in gates/texture-pending.json with their
-// measured value and the milestone that resolves them — a ratchet with
-// the same two-way stale check as the coverage gate: an entry the
-// stylesheet no longer exceeds is itself a failure. C2 empties the
-// cyberpunk entry (AR46); the others are a finding for Kenny in the AFK
-// queue, because a ceiling that was never enforced is a decision to
-// re-take, not a fault to fix silently.
+// It reports rather than refuses [Kenny, 2026-09-09]. It ran as a gate
+// until then, with two lists beside it — a per-theme ceiling for a theme
+// whose approved demo measured stronger, and a `texture-pending.json`
+// ratchet for the rest — and both were the same thing: a place to write
+// down that the rule does not apply here. The rule is advice now, so
+// there is nothing to be excused from and neither list exists. Every
+// declaration over DI9's number is simply named in the output.
 //
 // Usage: node gates/check-texture.mjs
 
@@ -34,15 +34,13 @@ const root = new URL('../', import.meta.url);
 const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 'utf8'));
 export const CEILING = Number(CONFIG.textureOpacityCeiling.value);
 
-/** Per-theme ceilings [S49]: a theme's approved demo may measure stronger. */
-export const PER_THEME = Object.fromEntries(
-    Object.entries(CONFIG.textureOpacityCeiling.perTheme ?? {})
-        .filter(([name]) => name !== '//')
-        .map(([name, value]) => [name, Number(value)]),
-);
+// The per-theme ceiling list is gone [Kenny, 2026-09-09]. It existed
+// because this was a gate and an approved demo had to be exempt from it;
+// it is advice now, so a theme that paints stronger than DI9's number
+// reads as exactly that in the output and needs no entry anywhere.
 
 /**
- * The ceiling a declaration is held to: its theme's own, or DI9's.
+ * The ceiling a declaration is held to, and the theme it belongs to.
  *
  * @param {string} selector
  * @param {number} fallback
@@ -50,8 +48,7 @@ export const PER_THEME = Object.fromEntries(
  */
 export function ceilingFor(selector, fallback) {
     const theme = selector.match(/\[data-theme='([a-z-]+)'\]/);
-    const name = theme ? theme[1] : null;
-    return { ceiling: name && name in PER_THEME ? PER_THEME[name] : fallback, theme: name };
+    return { ceiling: fallback, theme: theme ? theme[1] : null };
 }
 
 /** The stylesheets that declare textures. */
@@ -119,72 +116,44 @@ export function textures(source) {
 
 /**
  * @param {Map<string, string>} sources file → css
- * @param {Record<string, number>} pending selector → the measured effective value, per gates/texture-pending.json
  * @param {number} ceiling
- * @returns {{ checked: number, over: string[], stale: string[] }}
+ * @returns {{ checked: number, over: string[] }}
  */
-export function audit(sources, pending, ceiling) {
+export function audit(sources, ceiling) {
     let checked = 0;
     /** @type {string[]} */
     const over = [];
-    /** @type {Set<string>} */
-    const seen = new Set();
     for (const [file, source] of sources) {
         for (const t of textures(source)) {
             checked++;
-            seen.add(t.selector);
-            const { ceiling: bar, theme } = ceilingFor(t.selector, ceiling);
+            const { ceiling: bar } = ceilingFor(t.selector, ceiling);
             if (t.effective <= bar) continue;
-            const excused = pending[t.selector];
-            if (excused === undefined)
-                over.push(
-                    `${file}:${t.line} ${t.selector}: texture paints at ${t.effective} (layer ${t.opacity} × alpha ${t.alpha}), over ${theme && theme in PER_THEME ? `${theme}'s ceiling of ${bar}` : `DI9's ceiling of ${ceiling}`}`,
-                );
-            else if (Math.abs(excused - t.effective) > 0.005)
-                over.push(`${file}:${t.line} ${t.selector}: pending at ${excused} but paints at ${t.effective} — update the entry or the stylesheet`);
+            over.push(
+                `${file}:${t.line} ${t.selector}: texture paints at ${t.effective} (layer ${t.opacity} × alpha ${t.alpha}), over DI9's ceiling of ${ceiling}`,
+            );
         }
     }
-    const stale = Object.keys(pending).filter((selector) => {
-        if (!seen.has(selector)) return true;
-        for (const source of sources.values())
-            for (const t of textures(source)) if (t.selector === selector && t.effective > ceilingFor(t.selector, ceiling).ceiling) return false;
-        return true;
-    });
-    return { checked, over, stale };
+    return { checked, over };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
     /** @type {Map<string, string>} */
     const sources = new Map(CSS.map((file) => [file, readFileSync(new URL(file, root), 'utf8')]));
-    /** @type {Record<string, number>} */
-    const pending = JSON.parse(readFileSync(new URL('texture-pending.json', import.meta.url), 'utf8'));
-    delete (/** @type {Record<string, unknown>} */ (pending)['//']);
     if (process.argv.includes('--measure')) {
         for (const [file, source] of sources)
             for (const t of textures(source)) console.log(`${file}:${t.line} ${t.selector} → ${t.effective} (${t.opacity} × ${t.alpha})`);
         process.exit(0);
     }
-    const { checked, over, stale } = audit(sources, pending, CEILING);
-    let failed = 0;
-    for (const line of over) {
-        failed++;
-        console.error(line);
-    }
-    for (const selector of stale) {
-        failed++;
-        console.error(
-            `${selector} is in gates/texture-pending.json and no longer exceeds the ceiling, or no longer declares a texture — remove the entry.`,
-        );
-    }
+    const { checked, over } = audit(sources, CEILING);
+    // A broken measurement is still a failure: reporting "nothing over
+    // the ceiling" because nothing was read is the one outcome this
+    // cannot be allowed to print.
     if (checked === 0) {
-        console.error('gate broke: found no texture declarations, which cannot be right while the themes ship textures.');
+        console.error('the texture reading broke: found no texture declarations, which cannot be right while the themes ship textures.');
         process.exit(1);
     }
-    if (failed > 0) {
-        console.error(`\n${failed} texture fault(s) against DI9.`);
-        process.exit(1);
-    }
+    for (const line of over) console.log(line);
     console.log(
-        `Texture: ${checked} declarations measured against DI9's ceiling of ${CEILING} (${Object.keys(PER_THEME).length} theme(s) with their own, from their approved demo); ${Object.keys(pending).length} pending with their measured value.`,
+        `Texture: ${checked} declarations measured against DI9's ceiling of ${CEILING}; ${over.length} over it. Advice, not a verdict [Kenny, 2026-09-09].`,
     );
 }

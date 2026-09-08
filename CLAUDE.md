@@ -146,13 +146,37 @@ inventory changes in the same commit. Code-enforced for presence;
 discipline-enforced for appearance, through Kenny's own look at the URL.
 Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
-## Project rule from correction KT12 (2026-09-08)
+## Project rule from Kenny's decision of 2026-09-09 (no CI)
 
-The push chain reads `gh run view --json conclusion,jobs` for the exact
-sha and moves `main` only when every job says success; an empty run id or
-a watch exit code never counts. `main` requires both CI jobs (`gates` and
-`browser`) as status checks since 2026-09-08, so GitHub refuses what the
-chain would miss. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+There is no CI. `.github/workflows/ci.yml` is deleted, `main` requires no
+status check, and nothing runs on a server — 254 runs in five days and
+35.9 hours of waiting, on a project whose every change Kenny approves
+himself. Four commands replace it, and three of them are his to give:
+
+| Command                 | What                                     | When                             |
+| ----------------------- | ---------------------------------------- | -------------------------------- |
+| `npm run gates`         | the thirty blocking checks, seconds      | every commit, by the hook        |
+| `npm run test:affected` | the specs a change touches, Firefox only | during work                      |
+| `npm run test:browser`  | the whole suite, both engines            | when Kenny asks                  |
+| `npm run advice`        | contrast, invariants, motion, texture    | when Kenny wants the reading     |
+| `npm run verify`        | all three in order                       | before a release, on his command |
+
+The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
+contrast, the design invariants, the flash threshold, the reduced-motion
+guards and the texture ceiling are measured and printed, never refused,
+and no list of per-theme exceptions is kept any more —
+`gates/texture-pending.json` and `textureOpacityCeiling.perTheme` are
+gone. README.md and `docs/DESIGN_INVARIANTS.md` say plainly what that
+costs, so the package does not claim to enforce what it does not.
+
+Two rules keep the smaller runs honest: `retries` is 0 and stays 0 (a
+test that needs a retry is not a test — Kenny, 2026-09-09), and
+`forbidOnly` is on always, because nothing downstream is left to catch a
+stray `.only`.
+
+This retires correction KT12's measure together with the CI it guarded;
+the record and the reasoning are in
+[docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
 ## Project rule from correction KT13 (2026-09-08)
 

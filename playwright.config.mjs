@@ -1,8 +1,9 @@
 // Browser tests [H1, AR7].
 //
-// Phase 5 decision H1: the fast gates block a commit, the browser tests
-// block a merge. So these do not run in the pre-commit hook — they run in
-// CI, and `npm run test:browser` runs them on demand.
+// Phase 5 decision H1, as Kenny rewrote it on 2026-09-09: the fast gates
+// block a commit and the browser tests run when he runs them. There is no
+// CI to block a merge with — `npm run test:affected` covers a change,
+// `npm run verify` covers a release, and both are commands he gives.
 //
 // AR7: one behaviour suite, run twice in the same browser — once against
 // the React mount, once against the script-attached mount. A structural
@@ -23,9 +24,14 @@ export default defineConfig({
     testDir: './tests',
     globalSetup: './tests/global-setup.mjs',
     fullyParallel: true,
-    forbidOnly: !!process.env.CI,
+    // Always, not only under a CI variable that no longer exists: a
+    // stray `.only` silently reduces the suite to one test, and nothing
+    // downstream is left to catch that.
+    forbidOnly: true,
+    // Never. A test that passes on a retry is a test that failed
+    // [Kenny, 2026-09-09].
     retries: 0,
-    reporter: process.env.CI ? 'list' : 'line',
+    reporter: 'line',
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,
         trace: 'retain-on-failure',
@@ -39,7 +45,7 @@ export default defineConfig({
     webServer: {
         command: `node tests/fixtures/server.mjs`,
         url: `http://127.0.0.1:${PORT}/tests/fixtures/picker.html`,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: true,
         env: { PORT: String(PORT) },
     },
 });

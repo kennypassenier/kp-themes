@@ -13,14 +13,8 @@
         "value": 12
     },
     "textureOpacityCeiling": {
-        "//": "DI9, from THEMING.md: the register layer must be felt, not seen. Kenny closed R6-Q6's sibling question on 2026-09-08: the number stays 0.06 and the themes that go over it are named here one by one, rather than raising the ceiling until nobody meets it. A named exception is a decision; a loose ceiling is an absence of one.",
-        "value": 0.06,
-        "perTheme": {
-            "//": "A theme whose approved concept demo measured a stronger texture carries its own ceiling [S49, A8 of 2026-09-08]: the demo is the specification, and the overrun is reported rather than silently corrected [S42]. Every entry names the demo that measured it.",
-            "phantom": 0.14,
-            "dark": 0.35,
-            "blueprint": 0.18
-        }
+        "//": "DI9, from THEMING.md: the register layer must be felt, not seen. Advice rather than a gate since 2026-09-09 [Kenny]: `npm run advice` measures every theme against this one number and prints what it finds. The per-theme exception list that used to sit here is gone with the gate \u2014 a theme whose approved demo measured a stronger texture (phantom 0.14, dark 0.35, blueprint 0.18 at the time this was removed) now simply reads as over the ceiling in the advice, which is what it always was.",
+        "value": 0.06
     },
     "stateVisibilityFloor": {
         "value": 10,

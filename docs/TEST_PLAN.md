@@ -9,12 +9,43 @@ of each one whether its assertion could ever fail.
 | Suite | Runs in | Reads | Covers |
 | --- | --- | --- | --- |
 | `gates/gates.test.mjs` | Node's built-in runner | the token source and the authored stylesheets | the gate functions themselves: theme discovery, token parity, the flash threshold, reduced-motion guards, state visibility, badge plates, layer discipline |
-| `gates/check-*.mjs` | Node, on every commit and in CI | both the token source and the generated stylesheet | contrast, the design invariants, motion, layers, and whether the generated files still match their source |
-| `tests/*.spec.mjs` | Chromium **and** Firefox, in CI | a real browser | behaviour: the picker in both channels, the component contracts, keyboard operation of the overlays, reflow and text spacing, the printed page, the effects |
+| `gates/check-*.mjs` | Node, on every commit | both the token source and the generated stylesheet | contrast, the design invariants, motion, layers, and whether the generated files still match their source |
+| `tests/*.spec.mjs` | Chromium **and** Firefox, when Kenny runs them | a real browser | behaviour: the picker in both channels, the component contracts, keyboard operation of the overlays, reflow and text spacing, the printed page, the effects |
 
 The split is Kenny's decision H1: the fast gates block a commit, the
-browser tests block a merge. A gate slow enough to be worked around is not
+browser tests block nothing. A gate slow enough to be worked around is not
 a gate.
+
+## How the suite is run [Kenny, 2026-09-09]
+
+Round six ended with the suite at some 2500 tests, run in full on every
+push by a GitHub Actions workflow: 254 runs in five days, 35.9 hours of
+waiting, on a project whose every change Kenny approves himself before it
+lands. He removed the CI entirely. Nothing runs on a server any more, and
+`main` requires no status check.
+
+| Command | What it runs | When |
+| --- | --- | --- |
+| `npm run gates` | the thirty blocking checks, seconds | every commit, by the hook |
+| `npm run test:affected` | the specs a change actually touches, Firefox only | during work, when there is something to see |
+| `npm run test:browser` | the whole suite, Chromium and Firefox | when Kenny asks for it |
+| `npm run advice` | contrast, invariants, motion, texture — a reading, never a verdict | when Kenny wants the reading |
+| `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
+
+Three rules hold this together, and they are the reason it is safe to run
+less rather than the reason it is faster:
+
+1. **A test that needs a retry is not a test.** `retries` is 0 in
+   `playwright.config.mjs` and stays 0. A test whose result depends on
+   load, on timing or on which worker picked it up is a defect in the
+   test, and is fixed as one — not tolerated with a wider assertion.
+2. **`forbidOnly` is always on.** With no CI behind it, a stray `.only`
+   would quietly reduce the suite to a single test and still print green.
+3. **What a change touches is computed, not guessed.**
+   `gates/affected.mjs` reads `git diff` and answers `none`, `all`, or a
+   list. It says `all` for anything it cannot prove narrow — a change to
+   `js/effects.js` reaches 71% of the suite, and a map clever enough to
+   split that would be wrong exactly where nobody looks.
 
 ## What a gate must be able to do
 
@@ -74,9 +105,11 @@ a reason, written down; a silent hole is neither.
 
   Accepted rather than closed because screenshot baselines are brittle
   across machines — fonts rasterise differently on Kenny's screen and on
-  the Linux runner — so the honest version runs in CI only, and a gate
-  that cries wolf is worse than no gate. Kenny watches the showcase; the
-  numbers watch the colour.
+  the Linux runner — so the honest version needed a fixed machine, and a
+  gate that cries wolf is worse than no gate. Since 2026-09-09 there is no
+  fixed machine at all: the CI is gone, and this gap is now closed for
+  good rather than deferred. Kenny watches the showcase; the numbers watch
+  the colour.
 
 - **`/security-review` was not run, because there is nothing for it to
   review.** Measured 2026-09-04 across `js/`, `components/`, `fx/`,

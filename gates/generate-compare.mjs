@@ -35,7 +35,7 @@ import { createHash } from 'node:crypto';
 import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 import { THEMES } from '../js/theme-registry.js';
 import { noFlashSnippet } from '../js/no-flash.js';
-import { CEILING, PER_THEME, strongestAlpha } from './check-texture.mjs';
+import { CEILING, strongestAlpha } from './check-texture.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = (/** @type {string} */ path) => readFileSync(new URL(path, root), 'utf8');
@@ -209,13 +209,13 @@ export function diffs() {
             // base layer's.
             now: textureOf(newRegisters[/** @type {keyof typeof newRegisters} */ (theme.name)] ?? '', theme.name) ?? textureOf(rules, theme.name),
             // R6-Q2 asked whether dark's starfield should come down to
-            // the ceiling, and this page is where Kenny decided it. The
-            // question is closed twice over now: he took it to 0.06 on
-            // 2026-09-08, and then chose the second starfield demo, whose
-            // 0.35 is the theme's own ceiling and a reported overrun (S42,
-            // S49). A theme with a ceiling of its own has nothing left to
-            // propose, so the pair is gone for good.
-            proposal: theme.name === 'dark' && !(theme.name in PER_THEME) ? CEILING : null,
+            // the ceiling, and this page is where Kenny decided it: he
+            // took it to 0.06 on 2026-09-08 and then chose the second
+            // starfield demo, whose 0.35 stands. Nothing is proposed any
+            // more — the demo is the specification [S49], and DI9 is
+            // advice [Kenny, 2026-09-09], so the page reports the
+            // measurement and proposes no change to it.
+            proposal: null,
         };
         // The story, and the sections the pair must show.
         /** @type {string[]} */
@@ -274,10 +274,9 @@ export function diffs() {
         } else if (register === 'changed') lines.push('The register changed (rule for rule, the retro rules differ from 4.0.0).');
         else if (register === 'unchanged') lines.push('The register is unchanged, rule for rule.');
         if (texture.old !== null && texture.now !== null && texture.old !== texture.now) {
-            const ceiling = PER_THEME[theme.name] ?? CEILING;
             lines.push(
                 `Texture: the layer painted at ${texture.old} in 4.0.0 and paints at ${texture.now} now (DI9 ceiling ${CEILING}` +
-                    (ceiling === CEILING ? '' : `, this theme's own ${ceiling} from its approved demo, the overrun reported`) +
+                    (texture.now > CEILING ? ', over it, as the approved demo measured it' : '') +
                     ').',
             );
             show.add('texture');

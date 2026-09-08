@@ -1231,6 +1231,20 @@ GitHub refuses it.
 branch protection requiring both jobs, the shell rule has become
 redundant and may go.
 
+**Reviewed early, 2026-09-09 — the measure is retired with what it
+guarded.** Kenny removed CI from this project: `.github/workflows/ci.yml`
+is deleted and `main` requires no status check. There is no run to read a
+conclusion from, so KT12's measure has nothing left to do and is retired
+rather than kept as a rule nobody can follow. What replaces it is not
+another automatic check but Kenny's own: `npm run gates` still refuses a
+commit, `npm run test:affected` runs what a change touches, and `npm run
+verify` runs everything on the command he gives before a release. The
+fault KT12 recorded — reading an exit code instead of a verdict — cannot
+recur in that shape, because nothing reads an exit code any more; the
+shape it can recur in is a release tagged on a sha whose suite nobody
+ran, and standing rule 36 (a publish chain verifies every step) is what
+holds that.
+
 ## KT13 · A layout class beat the `hidden` attribute, and the test read the attribute
 
 Approved by Kenny on 2026-09-08, all nine fields unchanged. His remark on

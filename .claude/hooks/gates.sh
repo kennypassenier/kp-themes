@@ -4,8 +4,8 @@
 # Non-zero exit blocks the commit.
 #
 # Phase 5 decision H1, as amended at round five's Phase 5 gate (H3,
-# 2026-09-07): the WHOLE chain blocks a commit; the browser tests block a
-# merge instead, in CI.
+# 2026-09-07) and again by Kenny on 2026-09-09: the WHOLE chain blocks a
+# commit, and the browser tests run when Kenny runs them.
 #
 # The original decision said only the fast gates block, on the grounds
 # that a gate slow enough to be worked around is not a gate. KT7's repair
@@ -14,6 +14,12 @@
 # path. The chain still finishes in seconds, so the reasoning holds and
 # the decision was rewritten to match reality rather than the reverse.
 # The browser tests stay out: those are minutes, not seconds.
+#
+# There is no longer a CI to catch what this chain does not. Kenny
+# removed it on 2026-09-09 — 254 runs in five days, 35.9 hours of
+# waiting, for a verdict he gives himself. `npm run test:affected` runs
+# what a change touches, in Firefox; `npm run verify` runs everything,
+# and he gives that command before a release.
 set -euo pipefail
 
 # Standing rule 7: a gate that does not predict the build is not a gate.
@@ -34,15 +40,13 @@ npx prettier --check .
 echo "→ token parity across the seven themes (TH22)"
 node gates/check-tokens.mjs
 
-echo "→ design invariants over the token source (DI1, DI2, DI3, DI4, DI6)"
-node gates/check-invariants.mjs
-
-echo "→ contrast (WCAG AA over every declared pair)"
-node gates/check-contrast.mjs
-
-echo "→ motion: flash threshold and reduced-motion guards (DI5, DI7)"
-node gates/check-motion.mjs
-node gates/check-motion.mjs --report --check
+# Kenny, 2026-09-09: the checks that exist for people with disabilities —
+# the contrast floors, the flash threshold, the reduced-motion guards, the
+# texture ceiling and the invariant sweep — are no longer here. They are
+# advice now (`npm run advice`), a reading rather than a verdict, and the
+# list of per-theme exceptions they used to need is gone with them. What
+# that costs is stated where the package makes its promises, so it no
+# longer claims to enforce what it does not.
 
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
@@ -87,9 +91,6 @@ node gates/generate-fonts-css.mjs --check
 echo "→ the tear matches its parameters (TH121, AR41)"
 node gates/generate-tear.mjs --check
 
-echo "→ the texture layer is felt, not seen (DI9, AR46)"
-node gates/check-texture.mjs
-
 echo "→ an example page carries the hooks its descriptor asks for"
 node gates/check-examples-wired.mjs
 echo "→ the vendored 4.0.0 baseline matches the checksums the release published (MR-R6-COMPARE)"
@@ -126,7 +127,9 @@ echo "→ tests"
 node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:
-#   L5  the browser checks — but in CI, not here (decision H1)
+#   L5  the browser checks — but by hand, not here (decision H1):
+#       `npm run test:affected` for a change, `npm run verify` for a
+#       release [Kenny, 2026-09-09]
 
 gate_tree_after=$(gate_tree_fingerprint)
 if [ "$gate_tree_before" != "$gate_tree_after" ]; then
