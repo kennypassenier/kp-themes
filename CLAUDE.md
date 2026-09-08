@@ -135,6 +135,16 @@ a watch exit code never counts. `main` requires both CI jobs (`gates` and
 `browser`) as status checks since 2026-09-08, so GitHub refuses what the
 chain would miss. Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction KT13 (2026-09-08)
+
+A browser test reads the paint, not the attribute: what the browser draws
+(computed display, a bounding box, a pixel), never the DOM state the code
+under test wrote itself. The package carries `[hidden] { display: none
+!important }` in its base layer so a layout class never beats the
+attribute; `tests/hidden.spec.mjs` holds it. Discipline-enforced for the
+test habit, code-enforced for the rule. Full record:
+[docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Round six — the next cyberpunk (opened 2026-09-07)
 
 Kenny wants a cyberpunk that "spits off the screen": signal yellow with
@@ -156,7 +166,7 @@ until it becomes a template in the repository.
 
 | Field               | Value                                                                                                                                                                                                                                                                                                                                   |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (5.0.0), Phase 6: C0–C5 built and ratified 2026-09-07 except C5, redone on Kenny's reading (the demo exact, compare as a measured diff); C6 next with Q1, Q3, Q6 answered                                                                                                                                                     |
+| Current phase       | Round six (5.0.0), Phase 6: C0–C5 built and ratified (the compare page signed off in its third version, 2026-09-08); the synthwave concept demo "Outrun Horizon" approved; **SW0–SW4 (synthwave into the package) building AFK** on Kenny's P1 answer; C6 after synthwave with Q1, Q3, Q6 answered                                      |
 | Last completed gate | Round six Phase 5 (2026-09-07): C0–C6 agreed, all six gates blocking, an alpha tag after C6, AFK from C0 to C5 with one ratification report                                                                                                                                                                                             |
 | Next gate           | C5 — the combined AFK ratification form plus the concept demo URL Kenny opens                                                                                                                                                                                                                                                           |
 | Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, reopened 2026-09-08 on Kenny's second reading — one page per theme, pending his V1 answer), R6-Q6 (nishiki over the font budget); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2. Closed: R6-Q5 (KT12, measured on a02d31f) |

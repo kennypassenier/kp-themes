@@ -1231,3 +1231,70 @@ GitHub refuses it.
 branch protection requiring both jobs, the shell rule has become
 redundant and may go.
 
+## KT13 · A layout class beat the `hidden` attribute, and the test read the attribute
+
+Approved by Kenny on 2026-09-08, all nine fields unchanged. His remark on
+the form itself — nine items is too long to read — changed FORM_PROTOCOL
+§8 the same day: a correction is one compact item from now on.
+
+**1 · What went wrong.** The second compare page showed all 24 theme
+sections at once: the script set the `hidden` attribute on 23 of them, but
+the layout class `.kp-stack` sets `display: flex` and beats the browser's
+`[hidden]` rule. Kenny found it on the live page ("I have to scroll all the
+way down to find the theme"); the same reading found that a theme whose
+only difference is typography got a near-empty frame — a design fault,
+not a bug, resolved with his V1 answer. Evidence: measured in the browser
+on the live page, 2026-09-08 — visibleCount 24, the sections' display
+"flex"; `tests/compare.spec.mjs` (second version) counted
+`[data-compare-theme]:not([hidden])`, the attribute, not the paint.
+
+**2 · Which gate let it through.** The page's own browser test: it read
+the attribute the script set instead of what the browser drew, and was
+green on a page that was wrong. KT3's family — a test that could not go
+red — in a new shape: the test looked at DOM state the code itself wrote.
+Its three drills touched other assertions; this one was never drilled, and
+a drill would not have found it either (the attribute really was there).
+
+**3 · Where else the same fault sits — measured 2026-09-08.** One other
+bare `hidden` in the generators: the theme picker's status line on the
+concept page, a `<p>` without a layout class, where the browser rule
+holds. Two explicit `[hidden]` rules in the component CSS (combobox
+option, palette option). No other spec reads visibility off the
+attribute. The third compare page has no hidden sections: one theme per
+page. Found once more the same evening in the synthwave concept demo: its
+button frame (`display: inline-flex`) beat `hidden` on the close button.
+
+**4 · The measure.** Two parts. Code: `css/_rules.css` carries
+`[hidden] { display: none !important }` in the base layer — the rule every
+reset stylesheet has and this package did not, so a layout class never
+beats the attribute again, for any consumer. Test: the compare spec asks
+for what is painted (computed display, height), not what the attribute
+says; the "one theme per page" test counts visible frames on the paint.
+
+**5 · What it costs.** One CSS rule in the base layer (and a line in the
+migration note: a consumer who overrode `[hidden]` to show something
+anyway will notice), plus the habit of reading the paint in a browser
+test. No new rule for Kenny.
+
+**6 · Who enforces it.** Code for the CSS rule: a browser test
+(`tests/hidden.spec.mjs`) puts an element with `hidden` and a layout class
+on the page and measures that it does not paint — drilled red by removing
+the rule. Discipline for the test habit: "a browser test reads the paint,
+not the attribute" is a project rule in CLAUDE.md beside KT3.
+
+**7 · How and when it is measured.** At the building of the measure,
+right after the form — the test red without the rule and green with it,
+in both browsers. Second measurement: the next page with hidden parts this
+project builds (the synthwave demo or C6's documentation pages): the
+rhythm and overflow gates already run over it, and the new test stays in
+the suite.
+
+**8 · The fallback.** If a layout class ever beats a `hidden` anyway (a
+higher layer, a consumer stylesheet with `!important`), hiding in this
+package moves from the attribute to its own class `.kp-hidden` in the
+utility layer, the package's highest.
+
+**9 · When the measure is reviewed.** At this round's Phase 10: if "read
+the paint" becomes a standing rule of the dev procedure beside the KT3
+drill, the project rule here goes.
+

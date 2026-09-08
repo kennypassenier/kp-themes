@@ -480,6 +480,14 @@
        the remap changes every colour but the ground, which is what the
        critic's blocking objection to AR38 was about. The app surface paints
        the theme's own background, so a page with both is two grounds. */
+    /* The hidden attribute wins over every display rule in the package
+       [KT13]: a layout class (`.kp-stack`, `display: flex`) beat it on the
+       compare page and a button frame beat it in the synthwave demo. The
+       rule every reset carries, and this package did not. */
+    [hidden] {
+        display: none !important;
+    }
+
     [data-kp-surface] {
         background-color: var(--background);
         color: var(--foreground);
