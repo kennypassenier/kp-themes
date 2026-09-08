@@ -86,21 +86,33 @@ and overhangs three; the scrollbar track is the 2×2 checkerboard; every
 window and menu has the hard drop shadow. One answer per component root
 (56 of 64, the eight helpers excused).
 
-**What the demo showed and the package renders differently, on purpose:**
-the demo's menu bar was a second row under a full title bar, where the
-package's navbar is one row with the brand as the title bar; the demo's
-boot screen counted a memory test with a segmented bar, where the
-module's boot line is the dictionary's (KT5: a theme names data, never
-copy); the demo's selection dragged white text in with the bar, where
-the package drags the bar over the ink and turns the words white in the
-same instant the bar completes (the text has no copy to drag); the
-fieldset groove is the CSS `groove` rather than an SVG border-image
-(the image would have to name colours, which DI9 forbids); the select
-keeps the base layer's customisable picker with an ink arrow rather than
-the demo's painted combo button (that button needs `appearance: none`,
-which takes the themeable list away — KT8's own test on this theme); and
-the combobox's keyboard highlight stays the wash of the ink, not the
-selection bar (KT8's review finding, held by the fixture test).
+**What the demo showed and the package now renders exactly (S49, 2026-09-08).**
+Kenny's rule of 2026-09-08 is that an approved demo is implemented
+exactly, and that a test or a gate which disagrees produces a finding for
+him rather than a quiet change. The audit of this theme against its demo
+is `docs/audits/DEMO_FIDELITY_RETRO_2026-09-08.md`; every deviation it
+found was put to him, and every one he answered "Demo exact" is built.
+What is left is named here, with its reason.
+
+- The page is the demo's own words at `examples/concept-retro.html`; the
+  whole page sits in one application window on the teal desktop (the root
+  is the desktop, the body is the window); the title bar row ends on the
+  three window controls, drawn in gradients because a glyph in `content`
+  is copy (KT5); the status bar has its resize grip and the spec sheet
+  its groove well; the title-bar ramp ends on the measured lit navy; the
+  POST is the demo's BIOS banner and memory test from the dictionary,
+  counting along a segmented bar; the fieldset's groove is the demo's two
+  hairlines as four inset shadows; the selection drags its own white
+  words in with the bar; the select is the demo's painted combo button
+  and the keyboard highlight is the selection bar (KT8 yields for this
+  theme, per Kenny, with the exception recorded in the fixture suite);
+  the ring is stacked the demo's way, ink outside.
+- **Not reproducible without markup, and reported as such:** the demo's
+  spec sheet carries three tabs and a fieldset legend, and its status bar
+  a second NUM panel. The concept page's structure is the same for every
+  theme (S46), so a theme may not add elements to it, and a word in CSS
+  `content` is copy (KT5). The window, the controls, the grip and the
+  groove well are all there; those three are not.
 
 ## Answers to the invariant questions
 

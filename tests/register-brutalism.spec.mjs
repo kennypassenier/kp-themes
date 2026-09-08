@@ -230,7 +230,9 @@ for (const [channel, url] of CHANNELS) {
             // → the stamp keeps saying "Sealed", red here.
             await expect(dossier).toHaveAttribute('data-kp-open', '');
             const opened = await pseudo(dossier, '::before', ['content']);
-            expect(opened.content.replace(/^"|"$/g, '')).toBe(await dossier.getAttribute('data-kp-label-open'));
+            // Firefox reports `content` with its attr() unresolved, which
+            // is why the sealed stamp above is read the same way.
+            expect([await dossier.getAttribute('data-kp-label-open'), 'attr(data-kp-label-open)']).toContain(opened.content.replace(/^"|"$/g, ''));
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['transform'])).transform, 'the bar slid off').toMatch(/^matrix\(0,/);
         });

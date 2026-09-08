@@ -491,13 +491,24 @@
         box-shadow: none;
     }
 
+    /* The demo skews the button itself — border, plate and the box a
+       click lands in — and sets the label upright again [S49, A7, Kenny
+       2026-09-08, on the comparison page that measured both hit areas].
+       The plate no longer skews on its own: it inherits the element's. */
+    [data-theme='phantom'] .kp-button {
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-button__label {
+        transform: skewX(calc(-1 * var(--kp-skew)));
+    }
+
     [data-theme='phantom'] .kp-button::before {
         content: '';
         position: absolute;
         inset: 0;
         background: var(--kp-plate-fill);
         border: 2px solid var(--kp-plate-frame);
-        transform: skewX(var(--kp-skew));
         z-index: -2;
     }
 

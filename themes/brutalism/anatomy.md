@@ -78,11 +78,28 @@ the stamp is a signal plate with the pixel outline, tilted; every panel is
 white with the line and the shadow. One answer per component root (56 of
 64, the eight helpers excused).
 
-**What the demo showed and the package renders differently, on purpose:**
-the marquee's words became a hatch (KT5); the hover step is
-`hsl(from …)` rather than `oklch(from …)` (the layers gate reads hsl);
-the demo's stamp changed its text when the file opened, which the
-package's stamp reads from `data-kp-label` and does not.
+**What the demo showed and the package now renders exactly (S49, 2026-09-08).**
+Kenny's rule of 2026-09-08 is that an approved demo is implemented
+exactly, and that a test or a gate which disagrees produces a finding for
+him rather than a quiet change. The audit of this theme against its demo
+is `docs/audits/DEMO_FIDELITY_BRUTALISM_2026-09-08.md`; every deviation it
+found was put to him, and every one he answered "Demo exact" is built.
+What is left is named here, with its reason.
+
+- The page is the demo's own words at `examples/concept-brutalism.html`;
+  the dot grid is the demo's 1.6px dot on a 20px pitch; the hover step is
+  the demo's `oklch(from …)` and the primary darkens with every other
+  plate; a hover moves the lift, the shadow and the plate colour together
+  (KT8's one-step rule yields for this theme, per Kenny); the ring is
+  stacked the demo's way, ink outside and paper against the element;
+  every button carries the demo's 3rem; the stamp changes to the demo's
+  second word when the file opens; the fallback stacks are the demo's.
+- **One thing the demo says twice:** its stylesheet gives a bare button a
+  white plate, and its markup gives every button it actually renders a
+  modifier — the one in the concept page's slot is the yellow. The
+  package's plain button is that yellow, so the page looks like the demo;
+  the white default is a rule the demo never paints. Reported rather than
+  changed.
 
 ## Answers to the invariant questions
 

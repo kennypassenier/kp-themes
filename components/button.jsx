@@ -190,7 +190,11 @@ function ButtonInner(
                 }}
                 onClick={handle}
             >
-                {armed && confirmMode === 'inline' ? confirm : children}
+                {/* The label in its own element [S49, A7]: phantom's approved
+                    demo skews the button itself and skews the label back,
+                    which needs something around the words to skew. Inert
+                    in every other theme. */}
+                <span className="kp-button__label">{armed && confirmMode === 'inline' ? confirm : children}</span>
             </As>
             {undoOpen && (
                 <span className="kp-button__undo" role="status" data-kp-undo-offer>

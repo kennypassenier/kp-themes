@@ -10,7 +10,7 @@ drifting floor on the hero, the horizon as divider, chrome type with one
 tracking wipe and one shine, the neon tube a `<mark>` switches on, the
 laser line under a heading, a boot line with a Skip once per session
 (`--kp-arrival: boot`, the sixth hook), VT323 as its mono face. Every
-theme gained `theme-font-mono` (the contract is 94 tokens, S47) and the
+theme gained `theme-font-mono` (the contract is 96 tokens, S47) and the
 base layer carries `[hidden] { display: none !important }` (KT13). The
 fonts ship with the package; the two registers became three
 (`css/synthwave-register.css`). `MIGRATION.md` has the consumer-facing
@@ -67,6 +67,39 @@ one character cell inside the focused text field at the caret — the
 effects module writes the column (`--kp-caret: block` on the root,
 `--kp-col` on the field), the register paints and blinks it. The
 register is `css/terminal-register.css`.
+
+**The demos, exactly (S49).** Kenny's rule of 2026-09-08: an approved
+concept demo is implemented exactly, every token and every element, and a
+test or a gate that disagrees produces a finding for him rather than a
+quiet change. Four read-only audits (`docs/audits/`) measured the four
+registers built since C5 against their demos and found fifty deviations;
+he answered eleven of the twelve groups "Demo exact". What that changed:
+
+- **The words.** `examples/concept-<theme>.html` is one page per theme
+  with an approved demo — the same structure and the same markers (S46),
+  the theme's own words, its own theme in the markup. Until now every
+  theme's concept page carried cyberpunk's copy. `showcase/concept-copy.mjs`
+  holds the ninety slots per theme and a unit test refuses a page that
+  says another theme's headline; the React channel takes `?copy=<theme>`.
+- **The chrome.** Retro is an application window on the teal desktop
+  again, with its window controls, its resize grip, its groove well and
+  the segmented bar its POST counts along; the arrival routine learns a
+  lines mode fed by the dictionary (`arrivalLinesByTheme`), so a theme's
+  boot is its own five POST lines rather than one percentage counter.
+- **The values.** Retro's title-bar ramp, terminal's panel, well, footer
+  ground and typing speed, brutalism's dot grid and its `oklch` hover
+  step are the demos' own. Two tokens join the contract, `--fx-hot` and
+  `--fx-hot-alarm` (96 tokens, S47), and phantom ships Barlow Condensed's
+  real Black Italic and ExtraBold Italic.
+- **The rules that yielded.** TH111 is amended: the three button sizes
+  must be told apart, and where a demo pins one height they separate in
+  type and padding. AR30's reader accepts a ring stacked either way.
+  KT8's one-step hover yields for brutalism, and its themeable select and
+  ink-wash highlight yield for retro and terminal — per theme, with the
+  reason recorded beside each exception and the exception itself
+  measured.
+- **Still with Kenny:** phantom's skewed button, where the demo skews the
+  element and the package skews the plate (R6-Q8).
 
 **The fifth lift: brutalism.** Built from the approved concept demo
 "Hard Copy" (2026-09-08) on the §7 research (Gumroad, BEIGE FORCE,

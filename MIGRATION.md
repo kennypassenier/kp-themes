@@ -63,7 +63,7 @@ browser synthesises the bold — a known limitation [R6-Q6].
 `[hidden] { display: none !important }` is in the base layer now [KT13]:
 a layout class no longer beats the attribute. If you overrode `[hidden]`
 to show something anyway, that override loses. And every theme declares
-`theme-font-mono` (the contract is 94 tokens, S47); a theme without a
+`theme-font-mono` (the contract is 96 tokens, S47); a theme without a
 mono face of its own carries a generic stack, so nothing visible moves.
 
 ## Coming from 3.2.0 to 4.0.0

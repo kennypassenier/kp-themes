@@ -77,14 +77,26 @@ ghost's brackets appear under the pointer); the checkbox is `[ ]` and
 the progress bar and the skeleton are runs of cells. One answer per
 component root (56 of 64, the eight helpers excused).
 
-**What the demo showed and the package renders differently, on purpose:**
-the demo's `>` prompt inside the input is not painted (a glyph in a
-background needs a colour the layer may not name, DI9) — the prompt is
-the microlabel's `$` and the caret block; the demo's man page had a
-`NAME` heading in CSS content, which is copy (KT5) and is not carried;
-the demo's boot lines were its own five POST lines, where the module's
-line is the dictionary's; the bezel and the sweep assume the theme on the
-document root, which is how the package applies it.
+**What the demo showed and the package now renders exactly (S49, 2026-09-08).**
+Kenny's rule of 2026-09-08 is that an approved demo is implemented
+exactly, and that a test or a gate which disagrees produces a finding for
+him rather than a quiet change. The audit of this theme against its demo
+is `docs/audits/DEMO_FIDELITY_TERMINAL_2026-09-08.md`; every deviation it
+found was put to him, and every one he answered "Demo exact" is built.
+What is left is named here, with its reason.
+
+- The page is the demo's own words at `examples/concept-terminal.html`;
+  the boot is the demo's five POST lines from the dictionary, one after
+  another at its own 190ms, rather than a percentage counter; the panel,
+  the well, the footer ground and the two hot colours are the demo's
+  measured values, the hot pair carried by the token contract as
+  `--fx-hot` and `--fx-hot-alarm`; the headline types at the demo's 34ms
+  with no lead-in; every button carries the demo's height, with the three
+  sizes told apart by type and padding (TH111, amended the same day); the
+  select is the demo's own drawn arrow (KT8 yields for this theme).
+- **Still as the package renders it:** the `>` prompt inside the input is
+  the microlabel's `$` and the caret block, because a glyph painted in a
+  background layer needs a colour that layer may not name (DI9).
 
 ## Answers to the invariant questions
 

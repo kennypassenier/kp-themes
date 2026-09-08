@@ -62,6 +62,31 @@ button is a key cap — a skewed plate behind a straight label; every
 popover is cut paper with the red edge, arriving on a three-step film
 cut.
 
+**What the demo showed and the package now renders exactly (S49, 2026-09-08).**
+Kenny's rule of 2026-09-08 is that an approved demo is implemented
+exactly, and that a test or a gate which disagrees produces a finding for
+him rather than a quiet change. The audit of this theme against its demo
+is `docs/audits/DEMO_FIDELITY_PHANTOM_2026-09-08.md`; every deviation it
+found was put to him, and every one he answered "Demo exact" is built.
+What is left is named here, with its reason.
+
+- The words on the concept page are the demo's own, at
+  `examples/concept-phantom.html`; the headings are Barlow Condensed's
+  real Black Italic and ExtraBold Italic, subset and shipped, rather than
+  a browser's synthetic oblique; the texture is the demo's three layers
+  (0.14 page, 0.1 grain, 0.121 hero) with phantom's own ceiling in
+  `gates/config.json` and the overrun against DI9's 0.06 reported, not
+  corrected (S42); the brand carries its file code; the field's focus
+  ring has both channels again, and the generic ring is stacked the
+  demo's way — paper outside, void against the element.
+- **The button is the parallelogram.** The demo skews the button itself —
+  border, plate and the box a click lands in — and sets the label upright
+  again; the package used to skew only the plate, so a click landed in a
+  rectangle that did not follow it. Kenny decided this on the comparison
+  page that measured both hit areas (2026-09-08): the demo's way. The
+  label has its own element for it, `.kp-button__label`, written by both
+  channels and inert in every other theme.
+
 ## Answers to the invariant questions
 
 **DI1 — boundaries at 3:1.** A 60% grey on black, card and popover.

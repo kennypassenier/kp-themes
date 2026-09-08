@@ -295,7 +295,11 @@ for (const [channel, url] of CHANNELS) {
             // it. Drill [KT3]: `content: attr(data-kp-text)` back to '' →
             // the plate is empty and this reads "none".
             const plate = await pseudo(mark, '::before', ['content', 'color']);
-            expect(plate.content.replace(/^"|"$/g, '')).toBe((await mark.textContent())?.trim());
+            // Firefox reports `content` with its attr() unresolved; both
+            // channels are accepted, and the attribute itself is read
+            // below so the words are still checked in either browser.
+            expect([(await mark.textContent())?.trim(), 'attr(data-kp-text)']).toContain(plate.content.replace(/^"|"$/g, ''));
+            expect(await mark.getAttribute('data-kp-text'), 'the plate reads the element\u2019s own words').toBe((await mark.textContent())?.trim());
             expect(plate.color).toBe(await paint(page, '--primary-foreground'));
 
             // And the fieldset's groove is the demo's two hairlines: four

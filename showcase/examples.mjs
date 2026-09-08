@@ -150,7 +150,9 @@ const TO_MARKUP = {
                 'data-kp-confirm': p.confirm,
                 'aria-busy': p['aria-busy'],
             },
-            kids,
+            // The label in its own element, as components/button.jsx
+            // writes it [S49, A7].
+            el('span', { class: 'kp-button__label' }, kids),
         ),
 
     // components/badge.jsx. No `status`: a coloured plate is written as an

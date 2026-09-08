@@ -459,6 +459,15 @@
         box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
+    /* The button's own label, in its own element [S49, A7]: a theme that
+       skews the button (phantom's demo does) sets the label upright
+       again on this, and every other theme never notices it is there. */
+    .kp-button__label {
+        display: inline-flex;
+        align-items: center;
+        gap: inherit;
+    }
+
     /* The focus ring composed with the offset shadow, not instead of it
  * [AR30, DI2].
  *
