@@ -537,11 +537,6 @@
         box-shadow: var(--kp-raised);
     }
 
-    [data-theme='retro'] .kp-button--sm {
-        min-width: 0;
-        min-height: 0;
-    }
-
     /* ── Fields: wells cut into the chrome ─────────────────────────────── */
 
     [data-theme='retro'] .kp-field__label {
@@ -569,24 +564,12 @@
             var(--kp-sunken);
     }
 
-    /* The combo button, painted as background layers so the well's inset
-       bevel never covers the arrow: the two arrow halves, then the plate
-       with its dark separator and white highlight. */
-    [data-theme='retro'] select.kp-field__input {
-        appearance: none;
-        padding-inline-end: 2.1rem;
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--foreground) 50%), linear-gradient(135deg, var(--foreground) 50%, transparent 50%),
-            linear-gradient(to right, var(--border-strong) 0 1px, var(--popover) 1px 2px, var(--card) 2px);
-        background-position:
-            calc(100% - 18px) 56%,
-            calc(100% - 13px) 56%,
-            right 3px center;
-        background-size:
-            6px 6px,
-            6px 6px,
-            1.8rem calc(100% - 8px);
-        background-repeat: no-repeat;
+    /* The select keeps the base layer's customisable picker (KT8: the list
+       wears the theme where the browser allows it); only the arrow is the
+       ink. The demo's painted combo button would need `appearance: none`,
+       which takes that picker away. */
+    [data-theme='retro'] select.kp-field__input::picker-icon {
+        color: var(--foreground);
     }
 
     [data-theme='retro'] .kp-field__help {
@@ -795,12 +778,14 @@
     /* The keyboard highlight is the selection bar with its own ink (KT8:
        the text keeps its colour where a bar is a wash; here the bar carries
        the ink). */
-    [data-theme='retro'] .kp-menu__item:hover,
-    [data-theme='retro'] .kp-combobox__option[aria-selected='true'],
-    [data-theme='retro'] .kp-palette__option[aria-selected='true'] {
+    [data-theme='retro'] .kp-menu__item:hover {
         background: var(--primary);
         color: var(--primary-foreground);
     }
+
+    /* The list highlight of a combobox or a palette stays the base layer's
+       wash of the ink: KT8's review finding on this very theme (a highlight
+       is not a plate, the text keeps its colour), held by the fixture test. */
 
     [data-theme='retro'] .kp-alert {
         background: var(--popover);

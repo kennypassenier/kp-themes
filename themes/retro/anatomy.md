@@ -95,7 +95,12 @@ copy); the demo's selection dragged white text in with the bar, where
 the package drags the bar over the ink and turns the words white in the
 same instant the bar completes (the text has no copy to drag); the
 fieldset groove is the CSS `groove` rather than an SVG border-image
-(the image would have to name colours, which DI9 forbids).
+(the image would have to name colours, which DI9 forbids); the select
+keeps the base layer's customisable picker with an ink arrow rather than
+the demo's painted combo button (that button needs `appearance: none`,
+which takes the themeable list away — KT8's own test on this theme); and
+the combobox's keyboard highlight stays the wash of the ink, not the
+selection bar (KT8's review finding, held by the fixture test).
 
 ## Answers to the invariant questions
 

@@ -1298,3 +1298,70 @@ utility layer, the package's highest.
 the paint" becomes a standing rule of the dev procedure beside the KT3
 drill, the project rule here goes.
 
+
+## KT14 · Nineteen demos styled the bar and left the dropdown alone, and no gate looked inside it
+
+Found by Kenny on 2026-09-08 on the nineteen-demo approval form; the
+correction form is queued with the names of nishiki and tazhib and the
+moment of topo's rename.
+
+**1 · What went wrong.** Every one of the nineteen concept demos built
+by the Sonnet agents on 2026-09-08 left the nav dropdown in its plain,
+unthemed state — a white or grey panel with default links — while the
+bar around it, the buttons, the fields and the dossier all wore the
+theme. Kenny: opening the menu "pulled me out of the theme's feeling
+entirely". The earlier demos (brutalism, synthwave) had styled theirs.
+Evidence: his remark on the form, and the nineteen files in the session's
+scratchpad — a `.kp-nav__menu` rule with the theme's own colours exists
+in none of them beyond a border and a background.
+
+**2 · Which gate let it through.** The brief. The agents were briefed
+from the inventory of thirty elements (`showcase/concept-demo.json`),
+which names the dropdown as a marker (`class="kp-nav__menu"`) and asks
+that it exist, not that it be styled. The register coverage gate
+(`gates/check-register-coverage.mjs`) audits roots, and the menu is a
+part of the nav root: a register that styles `.kp-nav` and never
+`.kp-nav__menu` passes. Claude read every file before publishing and
+did not see it either — the menus are closed on a screenshot.
+
+**3 · Where else the same fault sits — measured 2026-09-08.** The four
+built registers all style the menu (cyberpunk's dash-prefixed panel,
+synthwave's, phantom's cut paper, retro's raised panel) — measured by the
+new check, green on all four. The same shape exists for every other
+part that only shows on interaction: the combobox list, the date
+picker's panel, the palette, the tooltip, the toast — all parts, none a
+root; today every register answers them by hand, and nothing measures
+it.
+
+**4 · The measure.** Code: `REQUIRED_PARTS` in
+`gates/check-register-coverage.mjs` — parts a register must answer
+besides the roots, each with its reason; the dropdown is the first
+entry, and a register without a rule for it is refused in `npm run
+gates` and the commit hook. Brief: the agent brief for a concept demo
+names the dropdown as a thing to style in the theme's own language
+(this session's two follow-up briefs already do). The approved demos
+pass as they are (Kenny: "die dat goedgekeurd zijn mogen door"); every
+register built from them styles the menu.
+
+**5 · What it costs.** One list in a gate that already exists, one line
+in every future brief. Nothing for Kenny.
+
+**6 · Who enforces it.** Code for the registers: the gate, drilled red
+by removing retro's menu rules (2026-09-08) and pinned by a unit test
+with a synthetic register. Discipline for the briefs.
+
+**7 · How and when it is measured.** At the next register built from a
+concept demo (terminal, TM1): the gate runs in its commit hook. At the
+next batch of concept demos (blueprint v2 and dark-with-stars, in
+progress): the brief names the dropdown, and Claude opens the menu
+before publishing.
+
+**8 · The fallback.** If a register answers the menu with a rule that
+changes nothing visible (a gate can be satisfied by an empty gesture),
+the coverage gate's next step is to measure a computed difference in the
+browser, the way the KT8 fixture tests do for the combobox highlight.
+
+**9 · When the measure is reviewed.** At this round's Phase 10: whether
+`REQUIRED_PARTS` should grow to every interaction-only part (the list in
+field 3), or whether the concept demo's inventory should carry a
+"styled" flag per element instead.

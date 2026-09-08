@@ -52,6 +52,36 @@ export const HELPERS = {
 };
 
 /**
+ * Parts a register must answer besides the roots, each with the reason
+ * [KT14]. The dropdown is a part of the nav root, so a register that
+ * styled the bar and left the menu alone passed the root audit — and
+ * every one of the nineteen concept demos of 2026-09-08 did exactly
+ * that; opening the menu pulled Kenny out of the theme.
+ *
+ * @type {Record<string, string>}
+ */
+export const REQUIRED_PARTS = {
+    nav__menu: 'the dropdown: a theme that styles the bar and not the menu loses the reader the moment it opens (Kenny, 2026-09-08)',
+};
+
+/**
+ * The required parts a register leaves unanswered.
+ *
+ * @param {string} registerCss
+ * @param {Record<string, string>} parts
+ * @returns {string[]}
+ */
+export function missingParts(registerCss, parts) {
+    /** @type {Set<string>} */
+    const answered = new Set();
+    for (const [selector, rules] of rulesOf(registerCss)) {
+        if (!rules.some((rule) => rule.body.trim() !== '')) continue;
+        for (const name of Object.keys(parts)) if (new RegExp(`\\.kp-${name}(?![\\w-])`).test(selector)) answered.add(name);
+    }
+    return Object.keys(parts).filter((name) => !answered.has(name));
+}
+
+/**
  * Roots the register does not reach yet, each naming the milestone that
  * empties the entry. C0 measured them on the 4.0.0 register.
  *
@@ -102,14 +132,19 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 `.kp-${name} is listed as an exception but ${REGISTER} covers it or css/components.css does not declare it — remove the entry.`,
             );
         }
+        const missing = missingParts(register, REQUIRED_PARTS);
+        for (const name of missing) {
+            failed++;
+            console.error(`.kp-${name} has no rule in ${REGISTER} — ${REQUIRED_PARTS[name]} [KT14].`);
+        }
         if (declared.length === 0) {
             console.error('gate broke: css/components.css declares no roots, which cannot be right.');
             process.exit(1);
         }
-        if (uncovered.length === 0 && stale.length === 0) {
+        if (uncovered.length === 0 && stale.length === 0 && missing.length === 0) {
             const pendingCount = Object.keys(PENDING).length;
             console.log(
-                `Register coverage: ${covered.length} of ${declared.length} roots answered by ${REGISTER}, ${Object.keys(HELPERS).length} helpers excused, ${pendingCount} pending.`,
+                `Register coverage: ${covered.length} of ${declared.length} roots answered by ${REGISTER}, ${Object.keys(HELPERS).length} helpers excused, ${pendingCount} pending; ${Object.keys(REQUIRED_PARTS).length} required part(s) answered.`,
             );
         }
     }

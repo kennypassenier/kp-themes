@@ -649,7 +649,7 @@ test('R5-BADGE: every status has a badge rule, and every badge rule has a status
 // before its on-disk drill [rule 7d, AR36, AR37, AR39, AR40, AR41, AR46].
 
 import { audit as auditHooks } from './check-hooks.mjs';
-import { audit as auditCoverage } from './check-register-coverage.mjs';
+import { audit as auditCoverage, missingParts } from './check-register-coverage.mjs';
 import { audit as auditFonts, declaredFamilies } from './check-fonts.mjs';
 import { block as tearBlock, ridge, withBlock } from './generate-tear.mjs';
 import { references } from './check-manifest.mjs';
@@ -667,6 +667,18 @@ test('selectors: a rule inside @layer is found as written, keyframes are not rul
     assert.deepEqual(subjectRoots("[data-theme='x'] .kp-card__title"), []);
     // `c` only ever appears as an ancestor; it is still a root the register must answer.
     assert.deepEqual([...declaredRoots('.kp-a {} .kp-a__b {} .kp-b--x {} .kp-c .kp-d {}')].sort(), ['a', 'c', 'd']);
+});
+
+test('KT14: a register that styles the bar and not the dropdown is refused; one that styles the menu passes', () => {
+    const parts = { nav__menu: 'the dropdown' };
+    const bar =
+        "@layer kp.register {\n  [data-theme='x'] .kp-nav { background: red; }\n  [data-theme='x'] .kp-nav__link { color: red; }\n  [data-theme='x'] .kp-nav__menu { }\n}";
+    assert.deepEqual(missingParts(bar, parts), ['nav__menu'], 'an empty rule is no answer');
+    const menu = bar + "\n@layer kp.register { [data-theme='x'] .kp-nav__menu a:hover { background: red; } }";
+    assert.deepEqual(missingParts(menu, parts), []);
+    // A different part with the same prefix does not count for the menu.
+    const other = "@layer kp.register { [data-theme='x'] .kp-nav__menu-status { color: red; } }";
+    assert.deepEqual(missingParts(other, parts), ['nav__menu']);
 });
 
 test('AR36: a hook nobody answers, a quiet answer without a reason, and an unscoped theme answer all fail', () => {
