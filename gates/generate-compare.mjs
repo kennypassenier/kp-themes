@@ -30,12 +30,12 @@
 // texture layer's opacity for the R6-Q2 proposal. TH109 holds: no
 // inline style anywhere, the frames are sized by attribute and class.
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
 import { THEMES } from '../js/theme-registry.js';
 import { noFlashSnippet } from '../js/no-flash.js';
-import { CEILING, strongestAlpha } from './check-texture.mjs';
+import { CEILING, PER_THEME, strongestAlpha } from './check-texture.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = (/** @type {string} */ path) => readFileSync(new URL(path, root), 'utf8');
@@ -127,14 +127,15 @@ export function textureOf(css, theme) {
 export function diffs() {
     const oldCss = read('showcase/baseline/4.0.0/kp-themes.css');
     const newThemes = read('css/themes.css');
-    const newRegisters = {
-        cyberpunk: read('css/cyberpunk-register.css'),
-        retro: read('css/retro-register.css'),
-        synthwave: read('css/synthwave-register.css'),
-        phantom: read('css/phantom-register.css'),
-        terminal: read('css/terminal-register.css'),
-        brutalism: read('css/brutalism-register.css'),
-    };
+    // Every register that exists, found rather than listed: nineteen more
+    // themes are being lifted for 5.0.0 (S48) and a hand-kept list here
+    // would go stale at every one of them.
+    /** @type {Record<string, string>} */
+    const newRegisters = Object.fromEntries(
+        THEMES.map((theme) => [theme.name, `css/${theme.name}-register.css`])
+            .filter(([, path]) => existsSync(new URL(`../${path}`, import.meta.url)))
+            .map(([name, path]) => [name, read(path)]),
+    );
     const rules = read('css/_rules.css');
     const oldBlocks = themeBlocks(oldCss);
     const newBlocks = themeBlocks(newThemes);
@@ -194,13 +195,19 @@ export function diffs() {
         }
         const texture = {
             old: textureOf(oldCss, theme.name),
-            now:
-                textureOf(rules, theme.name) ??
-                textureOf(
-                    newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)] ?? '',
-                    theme.name,
-                ),
-            proposal: theme.name === 'dark' ? CEILING : null,
+            // The register wins where it declares one: it is loaded in the
+            // frame, so it is what a reader of this page actually sees —
+            // dark's starfield paints at its register's value, not at the
+            // base layer's.
+            now: textureOf(newRegisters[/** @type {keyof typeof newRegisters} */ (theme.name)] ?? '', theme.name) ?? textureOf(rules, theme.name),
+            // R6-Q2 asked whether dark's starfield should come down to
+            // the ceiling, and this page is where Kenny decided it. The
+            // question is closed twice over now: he took it to 0.06 on
+            // 2026-09-08, and then chose the second starfield demo, whose
+            // 0.35 is the theme's own ceiling and a reported overrun (S42,
+            // S49). A theme with a ceiling of its own has nothing left to
+            // propose, so the pair is gone for good.
+            proposal: theme.name === 'dark' && !(theme.name in PER_THEME) ? CEILING : null,
         };
         // The story, and the sections the pair must show.
         /** @type {string[]} */
@@ -259,7 +266,12 @@ export function diffs() {
         } else if (register === 'changed') lines.push('The register changed (rule for rule, the retro rules differ from 4.0.0).');
         else if (register === 'unchanged') lines.push('The register is unchanged, rule for rule.');
         if (texture.old !== null && texture.now !== null && texture.old !== texture.now) {
-            lines.push(`Texture: the layer painted at ${texture.old} in 4.0.0 and paints at ${texture.now} now (DI9 ceiling ${CEILING}).`);
+            const ceiling = PER_THEME[theme.name] ?? CEILING;
+            lines.push(
+                `Texture: the layer painted at ${texture.old} in 4.0.0 and paints at ${texture.now} now (DI9 ceiling ${CEILING}` +
+                    (ceiling === CEILING ? '' : `, this theme's own ${ceiling} from its approved demo, the overrun reported`) +
+                    ').',
+            );
             show.add('texture');
         }
         if (texture.proposal !== null && texture.now !== null && texture.now > CEILING) {

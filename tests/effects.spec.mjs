@@ -191,6 +191,27 @@ test.describe('the effects module, the page', () => {
     });
 
     test('under a quiet theme the reveals are at rest and the text is the text [S45]', async ({ page }) => {
+        // A quiet theme is one that declares no routine — not a particular
+        // theme's name. Every theme is being lifted for 5.0.0 (S48), so
+        // naming one here is a test that expires: formal was quiet until
+        // its own register landed, and the last lift will leave no quiet
+        // theme at all. The page is made quiet instead, by taking the four
+        // hook knobs back to their initial value before the module reads
+        // them, which is exactly the state S45 describes.
+        await page.addInitScript(() => {
+            // An init script runs before the document exists, so the knobs
+            // are taken back as soon as there is a root to set them on and
+            // in any case before the module attaches on DOMContentLoaded.
+            const quiet = () => {
+                const root = document.documentElement;
+                if (!root) return;
+                for (const knob of ['--kp-reveal-headline', '--kp-reveal-emphasis', '--kp-reveal-rule', '--kp-arrival'])
+                    root.style.setProperty(knob, 'initial');
+            };
+            document.addEventListener('readystatechange', quiet);
+            document.addEventListener('DOMContentLoaded', quiet, { once: true });
+            quiet();
+        });
         await open(page, '/examples/concept.html', { theme: 'formal' });
         const h1 = page.locator('[data-kp-reveal="headline"]').first();
         await expect(h1).toHaveClass(/is-deciphered/);

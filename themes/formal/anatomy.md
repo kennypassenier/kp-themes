@@ -239,3 +239,21 @@ literal hover values.
   "does this theme perform its reveals or commit to them".
 - Loop a reveal, or bring back the blanket per-heading rule this lift
   retired from `css/_rules.css`.
+
+## Correction after the lift (2026-09-08)
+
+The line above ("bring back the blanket per-heading rule this lift
+retired from `css/_rules.css`") described an intent, not the state of the
+file. The base layer still ran the `kp-rule-in` keyframe on this theme's
+own `h1::after` and `h2::after` — the very pseudo-element the `rule` hook
+uses. A CSS animation outranks a normal declaration, so the register's
+armed `scaleX(0)` never showed: the rule painted itself drawn on load,
+before the heading was ever seen. CI caught it on `468c875`, in the test
+that holds TH122, in both browsers and both channels. The block is now
+gone, the way academia's went for the same reason at LIFT_PLAN row 10.
+
+The general lesson for the lifts still to come: a theme whose base-layer
+signature in `css/_rules.css` touches a pseudo-element the register also
+uses must have that block removed in the same change. Of the themes not
+yet lifted, `blueprint`, `deco`, `nishiki`, `topo` and `grotesk` still
+carry such a block.

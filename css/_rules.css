@@ -565,17 +565,13 @@
    ------------------------------------------------------------------ */
 
     @media (prefers-reduced-motion: no-preference) {
-        /* formal — an editorial rule that draws itself under a heading.
-       Nothing moves; a line arrives. */
-        [data-theme='formal'] h1::after,
-        [data-theme='formal'] h2::after {
-            content: '';
-            display: block;
-            block-size: 1px;
-            margin-block-start: 0.35rem;
-            background: var(--border-strong);
-            animation: kp-rule-in calc(var(--fx-duration) * 3) var(--fx-ease) both;
-        }
+        /* formal — lifted to a register [S48, LIFT_PLAN row 16]: the rule
+       under a heading is now the register's own `rule` hook, drawn when
+       the heading scrolls into view instead of firing on every load.
+       The block that stood here animated the very same `h2::after` the
+       register uses, and an animation outranks the register's armed
+       `scaleX(0)`, so the rule painted itself drawn before it was ever
+       seen. Removed, as academia's was for the same reason. */
 
         /* light and dark — the restrained pair. Their signature is that a
        raised surface lifts under the cursor, which --fx-lift already

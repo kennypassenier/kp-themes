@@ -132,13 +132,19 @@ test.describe('the compare pages', () => {
         expect(await loaded(old)).toBe(false);
     });
 
-    // R6-Q2 was decided on this page (Kenny, 2026-09-08, "Naar 0,06"): dark
-    // now paints at the ceiling, so the proposal pair is gone and the
-    // statement names the change 4.0.0 → now.
-    test('dark: the texture statement names 0.5 → 0.06, the texture is marked, and no proposal pair remains', async ({ page }) => {
+    // R6-Q2 was decided on this page (Kenny, 2026-09-08, "Naar 0,06") and
+    // then overtaken the same evening: he chose the second starfield demo,
+    // and S49 makes an approved demo the specification. So dark paints at
+    // its register's own value, over DI9's ceiling, with a ceiling of its
+    // own in the texture gate and the overrun reported (S42). The proposal
+    // pair is gone either way — there is nothing left to propose.
+    test('dark: the texture statement names what the register paints, the texture is marked, and no proposal pair remains', async ({ page }) => {
         const pair = await open(page, 'dark');
         const lines = await page.locator('[data-compare-lines] li').allTextContents();
-        expect(lines.join(' ')).toMatch(/Texture: the layer painted at 0\.5 in 4\.0\.0 and paints at 0\.06 now/);
+        expect(lines.join(' ')).toMatch(/Texture: the layer painted at 0\.5 in 4\.0\.0 and paints at 0\.238 now/);
+        expect(lines.join(' '), "the statement names the theme's own ceiling and says the overrun is reported").toMatch(
+            /this theme's own 0\.35 from its approved demo, the overrun reported/,
+        );
         expect(await page.locator('[data-compare-pair="texture"]').count(), 'no proposal pair: the decision is taken').toBe(0);
         const current = pair.frameLocator('iframe[data-compare-side="new"]');
         expect(new Set((await marks(current)).map((m) => m.label))).toEqual(expect.objectContaining(new Set(['Texture', 'Typography'])));
@@ -148,7 +154,10 @@ test.describe('the compare pages', () => {
                 .locator('html')
                 .evaluate((html) => parseFloat(getComputedStyle(html).getPropertyValue('--fx-texture-opacity')));
         await expect.poll(() => opacity('old')).toBeGreaterThan(0.4);
-        await expect.poll(() => opacity('new')).toBeLessThan(0.1);
+        // The right frame paints the register's own 0.35 layer, not the
+        // base layer's 0.06: that is what a reader of this page sees, and
+        // what the demo Kenny chose asks for.
+        await expect.poll(() => opacity('new')).toBeCloseTo(0.35, 2);
         // The left frame wears dark, not the visitor's stored theme: the 4.0.0
         // module applies the stored one after the frame script (Kenny saw formal).
         await page.evaluate(() => localStorage.setItem('theme', 'formal'));
