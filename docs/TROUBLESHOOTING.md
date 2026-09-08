@@ -23,11 +23,11 @@ first section.
 Check `document.documentElement.dataset.theme` in the console. If it is
 empty, nothing is applying the theme: either the snippet is absent or the
 picker module never loaded. If it says `formal` while `localStorage` says
-something else, the stored value is not one of the seven names — the
+something else, the stored value is not one of the twenty-five names — the
 picker corrects an unknown value rather than putting it on the document.
 
 ```js
-localStorage.getItem('theme'); // must be one of the seven
+localStorage.getItem('theme'); // must be one of the twenty-five
 ```
 
 ### One picker updates, another does not
@@ -130,6 +130,13 @@ are quoted from the code, so you can search for them. Fix the token, not
 the gate. If you are convinced the gate is wrong, that is a mini-round,
 not a config edit.
 
+The first six rows are **advice**, not gates [Kenny, 2026-09-09]: contrast,
+the design invariants, the flash threshold, the reduced-motion guards and
+the texture ceiling print their findings in `npm run advice` and refuse
+nothing. They read exactly as below; what differs is that seeing one does
+not stop a commit. The rows from `hsl(…) is a colour written outside the
+token layer` down are gates and do.
+
 | It says | It means | Where to look |
 | --- | --- | --- |
 | `foreground on background = 3.42 (need >= 4.5)` | text on a surface is not readable | the two tokens it names, in that theme's `tokens.json` |
@@ -142,7 +149,7 @@ not a config edit.
 | `css/themes.css does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
 | `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `npm run generate:all` (or `node gates/compliance.mjs` alone) |
 | `<anything> does not match its source` | a generator ran and its neighbours did not | `npm run generate:all` — one command settles every generated file |
-| `theme discovery broke: expected 7, found 6` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
+| `theme discovery broke: expected 25, found 24` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
 
 ## Working on the package itself
 
@@ -153,8 +160,11 @@ npm run generate:all      # every generator, in order, then prettier — the one
                           # generator run leaves another one's output stale and
                           # the gates then fail one at a time (2026-09-08)
 npm run generate          # only the token stylesheets, when that is all you touched
-npm run gates             # everything that blocks a commit, under a second
-npm run test:browser      # Chromium and Firefox; blocks a merge, not a commit
+npm run gates             # everything that blocks a commit, in seconds
+npm run test:affected     # only the specs your change touches, Firefox
+npm run test:browser      # Chromium and Firefox, all of it — when you ask for it
+npm run advice            # contrast, invariants, motion, texture: a reading
+npm run verify            # gates, then the whole suite, then the advice
 ```
 
 The git hooks are local config a clone cannot carry. Activate them once:

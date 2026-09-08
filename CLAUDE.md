@@ -7,8 +7,8 @@ TUI (Ratatui) later.
 
 **State:** 4.0.0 is released (2026-09-07). `v5.0.0-alpha.1` is tagged on
 `ab8187b` (2026-09-08) with its draft release built by
-`.github/workflows/release.yml` — eight assets including `fonts.tar` and a
-137-line `SHA256SUMS` — **awaiting Kenny's own publish**. Round six
+`.github/workflows/release.yml` — eight assets including `fonts.tar` and its
+`SHA256SUMS` — **awaiting Kenny's own publish**. Round six
 rebuilt cyberpunk on signal yellow, added synthwave as the twenty-fifth
 theme with its own register, ships the fonts (seven renamed under the
 OFL), the six-hook vocabulary and the `theme-font-mono` token; every
@@ -31,9 +31,10 @@ approved at L4.
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21).
 
-**Enforcement:** `npm run gates` (contrast + prettier) before every
-commit; git hooks and CI to be installed in this project's Phase 5. Node
-26 (`.nvmrc`). All artefact text in English.
+**Enforcement:** `npm run gates` — thirty checks — before every commit,
+run by the git hook in `.claude/hooks/gates.sh`. No CI: Kenny runs the
+browser suite himself (see the rule of 2026-09-09 below). Node 26
+(`.nvmrc`). All artefact text in English.
 
 This project follows the dev procedure in `~/Projects/dev-procedure/`
 (`/project-flow`); standing rules in
@@ -151,7 +152,7 @@ Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 There is no CI. `.github/workflows/ci.yml` is deleted, `main` requires no
 status check, and nothing runs on a server — 254 runs in five days and
 35.9 hours of waiting, on a project whose every change Kenny approves
-himself. Four commands replace it, and three of them are his to give:
+himself. Five commands replace it, and three of them are his to give:
 
 | Command                 | What                                     | When                             |
 | ----------------------- | ---------------------------------------- | -------------------------------- |
@@ -223,13 +224,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (5.0.0), Phase 6: **all twenty-five themes carry a register**. cyberpunk (C0–C6), synthwave (SW0–SW4), phantom, retro, terminal and brutalism were ratified 2026-09-08 with the S49 pass; the remaining nineteen were built by Sonnet agents in their own worktrees and integrated here on 2026-09-08, each with its gates and its own suite green at the commit. Three of those agents were killed by a rate limit before running anything (forest, shade-light, woodblock): their work was integrated, repaired and verified here, with a KT3 drill performed for each rather than inherited on trust. `main` stands at 022def1, moved with Kenny's explicit permission after both CI jobs said success |
-| Last completed gate | The band and the menu caption (2026-09-08): M1/M3/M5 built as shared elements, M2 answered (unlimited, resting off screen), M4 answered per theme — Kenny picked every theme's own version, and approved cyberpunk's yellow-on-red band with its measured 3.21                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| Next gate           | Kenny's own look at the page of twenty-five, then the release: `main` forward to the verified head, `v5.0.0-alpha.2` and its draft — on his word, since the tag waits until the version pleases him                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, reopened 2026-09-08 on Kenny's second reading — one page per theme, pending his V1 answer), R6-Q6 (woodblock over the font budget); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2. Closed: R6-Q5 (KT12, measured on a02d31f); KT15-M1 (the next lift's audit finds zero unasked deviations) ; R6-Q8 (the concept pages' footer still counts "three/six/seven registers" and one says twenty-four themes — stale demo copy, S49 says Kenny decides)                                                                                                                                                     |
-| AFK mode            | on; the nineteen lifts are done, and what is left is Kenny's own decisions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | Round six (5.0.0), Phase 6: **all twenty-five themes carry a register**. cyberpunk (C0–C6), synthwave (SW0–SW4), phantom, retro, terminal and brutalism were ratified 2026-09-08 with the S49 pass; the remaining nineteen were built by Sonnet agents in their own worktrees and integrated here on 2026-09-08, each with its gates and its own suite green at the commit. Three of those agents were killed by a rate limit before running anything (forest, shade-light, woodblock): their work was integrated, repaired and verified here, with a KT3 drill performed for each rather than inherited on trust. `main` stands at 48a8391, moved with Kenny's explicit permission. Phase 7's sixteen gaps are closed; the documentation pass ran on 2026-09-09 against an audit of every present-tense claim in the documents |
+| Last completed gate | The test strategy and the documentation pass (2026-09-09): CI deleted, the accessibility floors made advice, both override lists removed, and every present-tense claim in the documents measured against the code and corrected                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Next gate           | The field test (the third of the three steps Kenny set at V1), then the release: `main` forward to the verified head, `v5.0.0` and its draft — on his word, since the tag waits until the version pleases him. `npm run verify` is the command that precedes it                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Open queue items    | R6-Q1 (Reserved Font Names), R6-Q2 (DI9's ceiling), R6-Q3 (AR42's copy clause), R6-Q4 / MR-R6-COMPARE (the compare page, reopened 2026-09-08 on Kenny's second reading — one page per theme, pending his V1 answer), R6-Q6 (woodblock over the font budget); KT6-M1, PROC-H1, MR-R6-1, MR-R6-2. Closed: R6-Q5 (KT12, measured on a02d31f); KT15-M1 (the next lift's audit finds zero unasked deviations) ; R6-Q8 (the concept pages' footer still counts "three/six/seven registers" and one says twenty-four themes — stale demo copy, S49 says Kenny decides)                                                                                                                                                                                                                                                                 |
+| AFK mode            | on; the nineteen lifts are done, and what is left is Kenny's own decisions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
@@ -243,7 +244,7 @@ answer is 2.0.0. Every user-visible string was written into the component
 that renders it, in Dutch, with no way for a consumer to pass a different
 one — the fault is not the language but the missing door, and JobTracker
 had adopted only the components that carry no text at all. `js/strings.js`
-now holds all 72 with English defaults, reachable through a `strings`
+now holds them all with English defaults, reachable through a `strings`
 prop, a `StringsProvider` or `setStrings()`; `STRINGS_NL` keeps the old
 words as one import. `gates/check-strings.mjs` refuses a literal outside
 the dictionary and was drilled red in all four shapes — it passed the
@@ -315,4 +316,15 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | docs/MINI_ROUNDS.md              | open measurements and mini-rounds                         |
 | docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                  |
 | docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
+| docs/USER_GUIDE.md               | how a consumer builds a page with this                    |
+| docs/TROUBLESHOOTING.md          | when it looks wrong, or a check says no                   |
+| docs/ARCHITECTURE_REFERENCE.md   | the system as built, as opposed to as decided             |
+| docs/TEST_PLAN.md                | what is tested, where, and what deliberately is not       |
+| docs/LAYOUT.md                   | the nineteen layout classes and their eighteen knobs      |
+| docs/UTILITIES.md                | the 118 generated utility classes                         |
+| docs/MINIFIED.md                 | the minified build and its per-file sizes (generated)     |
+| docs/GENERIC_SWEEP.md            | the KT6 audit: every feature configurable                 |
+| docs/LIFT_PLAN.md                | the nineteen lifts of round six, one row each             |
+| docs/RESEARCH_2026-09.md         | the measured references the lifts were built from         |
+| docs/THEME_CANDIDATES.md         | the twenty-one candidates thirteen themes came from       |
 | docs/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |

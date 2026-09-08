@@ -98,7 +98,7 @@ a reason, written down; a silent hole is neither.
 - **Nothing compares how the page looks.** Every check here is a number —
   contrast, distance, flashes per second, whether an element exists — and
   there are no screenshot comparisons. A theme can therefore look wrong
-  while all 138 tests pass. The cost is real and was paid once already: at
+  while every one of the 2500-odd tests passes. The cost is real and was paid once already: at
   L3-EXIT, 42 colours were converted to tokens and the proof that nothing
   changed on screen had to be computed by hand, because no test could see
   it.

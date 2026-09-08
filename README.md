@@ -7,8 +7,9 @@ twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
 deco, academia, phantom, ticker, shade-dark, lapis) — as plain CSS custom
 properties, the element-level rules that make a theme complete (links,
 code, selection, form fields, print), eighteen components, a theme
-picker, and five opt-in registers: cyberpunk's effects, synthwave's
-horizon, phantom's cut paper, retro's desktop and terminal's phosphor.
+picker, and a register for every one of the twenty-five themes — the
+opt-in stylesheet that carries a theme's own expression, from cyberpunk's
+notches and razor tear to academia's marginalia.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -49,7 +50,8 @@ correction is a new version. Pin one and you can stop thinking about it.
 
 What comes with every release, and it is the whole of what you can rely on
 mechanically: a version number (the first line of each stylesheet), a
-provenance line, and `SHA256SUMS` over the ten files a consumer copies.
+provenance line, and `SHA256SUMS` over every file a consumer can copy
+(231 of them today; `npm run check:manifest` counts them, not this line).
 
 **How you take it in is your business** [S19]. A copy, a git dependency,
 something else — that decision belongs in your project, and there is no
@@ -88,11 +90,7 @@ Plain CSS (any stack):
 ```css
 @import '@kp-soft/themes/css'; /* the twenty-five themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
-@import '@kp-soft/themes/css/synthwave-register'; /* optional: synthwave's sun, floor and neon */
-@import '@kp-soft/themes/css/phantom-register'; /* optional: phantom's cut paper, plates and tears */
-@import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels, grooves, dither and POST */
-@import '@kp-soft/themes/css/terminal-register'; /* optional: terminal's glass, cursor, inverse video and POST */
-@import '@kp-soft/themes/css/brutalism-register'; /* optional: brutalism's plates, slam, bars and marquee */
+@import '@kp-soft/themes/css/academia-register'; /* optional: and one like it for each of the other 24 */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -135,9 +133,11 @@ and the original after it, for a reader who has the original installed:
 | `KP Outrun Display` | Orbitron        | synthwave               |
 
 `gates/check-fonts.mjs` reads every shipped file's name table and refuses
-one that carries a reserved word. Woodblock ships its two Japanese families
-in the regular weight only, inside the 1.5 MB per-theme budget; the
-browser synthesises the bold (a known limitation, R6-Q6). A consumer that
+one that carries a reserved word. Woodblock ships a real bold face for
+each of its two Japanese families rather than letting the browser
+synthesise one — a synthesised bold thickens a Japanese stroke where a
+real face redraws it — and that is why it alone carries a 2.5 MB budget
+instead of the shared 1.5 MB (Kenny, R6-Q6, `gates/config.json`). A consumer that
 prefers a font service can still load the originals itself: the stacks
 name them.
 
@@ -165,8 +165,10 @@ refuses a theme that leaves a hook unanswered.
 ### `data-theme` and the `.dark` class
 
 A theme is active when `<html data-theme="…">` carries its name; without
-the attribute the `:root` fallback is `formal`. The dark-ish themes
-(`dark`, `cyberpunk`, `terminal`) additionally need the `.dark` class on
+the attribute the `:root` fallback is `formal`. The twelve dark themes
+(`dark`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`, `solstice`,
+`deco`, `academia`, `phantom`, `ticker`, `shade-dark`, `lapis`)
+additionally need the `.dark` class on
 `<html>` so existing `dark:` variants keep working — `applyTheme()` sets
 both. To avoid a flash before React mounts, call `initializeTheme()`
 from an inline script or the top of your entry file.
@@ -192,7 +194,7 @@ diagnosable. `css/themes.css` declares its own version and theme list on
 
 ```css
 :root {
-    --kp-themes-version: '3.2.0';
+    --kp-themes-version: '5.0.0';
     --kp-themes-names: 'formal light dark …';
 }
 ```
@@ -211,7 +213,13 @@ const report = diagnostics();
 `renderDiagnostics(element)` draws the same thing as a table with the
 verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
-## Every entry point
+## The entry points worth naming
+
+Not all of them: `package.json` exports 181 paths, because every register,
+every theme directory, every font and a `/min` twin of each stylesheet is
+reachable on its own. `node gates/check-package.mjs` prints the count and
+proves every one of them is published. What follows is the set you reach
+for.
 
 | Import                                   | What it is                                               |
 | ---------------------------------------- | -------------------------------------------------------- |
@@ -225,8 +233,8 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in         |
 | `@kp-soft/themes/css/terminal-register`  | terminal's glass, cursor, inverse video and POST, opt-in |
 | `@kp-soft/themes/css/brutalism-register` | brutalism's plates, slam, bars and marquee, opt-in       |
-| `@kp-soft/themes/css/layout`             | the sixteen layout classes                               |
-| `@kp-soft/themes/css/utilities`          | the 115 utility classes                                  |
+| `@kp-soft/themes/css/layout`             | the nineteen layout classes                              |
+| `@kp-soft/themes/css/utilities`          | the 118 utility classes                                  |
 | `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                                |
 | `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                       |
 | `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module         |
@@ -239,6 +247,9 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/js/strings`             | the dictionary and its defaults                          |
 | `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region               |
 | `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                  |
+| `@kp-soft/themes/css/<theme>-register`   | one theme's own expression, opt-in, 25 of them           |
+| `@kp-soft/themes/css/fonts`              | the `@font-face` block for the shipped families          |
+| `@kp-soft/themes/dist/css/min`           | the minified bundle (`docs/MINIFIED.md` has the sizes)   |
 
 ## Consume the JavaScript
 
@@ -483,7 +494,7 @@ your own `@theme` aliases.
 ```sh
 npm run check:contrast            # css/themes.css
 node gates/check-contrast.mjs path/to/other.css
-npm run gates                     # contrast + prettier --check
+npm run advice                    # contrast, and the other four readings
 ```
 
 The script discovers every `[data-theme='…']` block that declares
@@ -525,7 +536,7 @@ Three of Home Assistant's variables are ink rather than plate —
 `warning-color`, `success-color`, `info-color` — and which half of our
 pair that is depends on the theme, so the generator picks whichever is
 readable on that theme's card. A test asserts all four ink colours clear
-3:1 in all twenty-four.
+3:1 in all twenty-five.
 
 ## Documentation
 
@@ -684,7 +695,7 @@ setStrings({
 });
 ```
 
-`js/strings.js` is the full list — 72 keys, each with its English default
+`js/strings.js` is the full list — 111 keys, each with its English default
 beside it.
 
 ### Theme names

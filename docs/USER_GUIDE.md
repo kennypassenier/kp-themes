@@ -60,7 +60,7 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `sepia` | Sepia | no |
 | `blueprint` | Blueprint | yes |
 | `solstice` | Solstice | yes |
-| `brutalism` | Brutalism | yes |
+| `brutalism` | Brutalism | no |
 | `deco` | Art Deco | yes |
 | `academia` | Dark Academia | yes |
 | `phantom` | Phantom | yes |
@@ -74,14 +74,16 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `lapis` | Lapis | yes |
 | `nostromo` | Nostromo | no |
 
-Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
+Eleven of these are the set 3.0.0 shipped; the thirteen from `solstice`
 on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
 `synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
 research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
 second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
 is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
-(row 4); `brutalism` is the fifth, from "Hard Copy" (row 5).
+(row 4); `brutalism` is the fifth, from "Hard Copy" (row 5); and the
+remaining nineteen were lifted the same way over 2026-09-08, each from
+its own approved demo, so all twenty-five now carry a register.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -292,7 +294,7 @@ focus trap is how focus traps break, so there is none here.
 
 ## Showing data [TH33]
 
-Six patterns that are not components but that every data-heavy page
+Seven patterns that are not components but that every data-heavy page
 rewrites badly:
 
 ```html
@@ -421,8 +423,8 @@ stopped counting: `min-inline-size: 100%` gives you the whole parent
 ## What a scroll region clips [TH114]
 
 Three boxes in this package scroll sideways inside themselves rather than
-widening the page: `.kp-table-wrap` (`css/components.css:708`), `.kp-diff`
-(`css/components.css:1979`) and every `<pre>` (`css/_rules.css:459`). Each
+widening the page: `.kp-table-wrap` (`css/components.css:950`), `.kp-diff`
+(`css/components.css:2406`) and every `<pre>` (`css/_rules.css:464`). Each
 declares `overflow-x: auto` and says nothing about the other axis — and
 `overflow-y` then computes to `auto` rather than staying `visible`,
 because a box that scrolls in one axis is a clip in both. Each of the
@@ -451,7 +453,7 @@ in the same three regions and both browsers, with the same declarations
 on the same pixels: the probe is the element a click at its own centre
 reaches. So a menu that has to hang out of a scroll region is a popover,
 which is what this package's own menus already are — `.kp-popover`
-(`css/components.css:901`) is a `popover` element.
+(`css/components.css:1333`) is a `popover` element.
 
 Two things about that which surprise people, both measured rather than
 assumed:
@@ -462,11 +464,11 @@ assumed:
   an ordinary absolute child means "the bottom of the viewport" for a
   popover — measured `top: 720px` in a 720px-tall viewport. Place it with
   anchor positioning, the way `.kp-popover` does
-  (`position-area: block-end span-inline-end`, `css/components.css:917`),
+  (`position-area: block-end span-inline-end`, `css/components.css:1349`),
   not with insets.
 - **`container-type` does not make `.kp-table-wrap` a containing block.**
   The wrapper carries `container: kp-table / inline-size`
-  (`css/components.css:726`) for the card breakpoint, and that does not
+  (`css/components.css:974`) for the card breakpoint, and that does not
   catch an absolutely positioned descendant: with no `position` on the
   wrapper, such a child resolves against the initial containing block and
   lands somewhere else entirely — measured, the wrapper spanning 0–114px
@@ -556,6 +558,41 @@ dissolves, terminal types, formal stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
+## The marquee, and the menu's caption [M1, M3]
+
+Two shared elements round six added. Both are meaning in your HTML and
+expression in the theme: you say what the thing is, the register says what
+it looks like.
+
+**A marquee** is one row of items that passes. `js/effects.js` builds the
+track, doubles the row so the pass is seamless and hides the copy from a
+screen reader, so both channels produce the same DOM — and a page that
+never loads the module shows the items standing still rather than broken.
+
+```html
+<div data-kp-marquee>
+    <span>EUR 1.0842</span><span>GBP 0.8531</span><span>JPY 156.20</span>
+</div>
+```
+
+```jsx
+<Marquee items={rates} duration="42000ms" pause="never" label="Exchange rates" />
+```
+
+Two knobs, both settable inline and both answerable by a theme:
+`--kp-marquee` (how long one pass takes) and `--kp-marquee-pause`
+(`offscreen`, the default, or `never`). Resting off screen is the default
+because a band nobody is looking at should not keep a compositor awake.
+Give it a `label` only when the content is information; scenery is better
+left unlabelled.
+
+**A menu caption** is a line above a nav dropdown's items saying what the
+menu is — blueprint's title block reads "Detail · scale 4:1" there. Set
+`menuLabel` on the NavBar's link, or `data-kp-menu-label` on the
+`.kp-nav__menu` by hand. A menu without one has no line at all, so nothing
+appears where nothing was asked for, and every register draws it its own
+way.
+
 ## The hook vocabulary [S45]
 
 Since 5.0.0 a page marks what a passage *is* and every theme answers in
@@ -585,9 +622,9 @@ the flash threshold, so they are literals rather than knobs:
 
 | Token | What it decides |
 | --- | --- |
-| `--fx-duration` | how long anything takes — 90 ms in terminal, 240 ms in sepia and solstice |
+| `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in sepia, 240 ms in solstice |
 | `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Formal, sepia and high-contrast answer `0px`, which is a character rather than an omission |
+| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-five answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
@@ -612,10 +649,12 @@ groove under a heading and as divider, the POST on arrival), and since
 5.0.0 the horizon register in
 synthwave — a striped sun and a drifting floor on the hero, a neon tube
 that a `<mark>` switches on, a laser line under a heading, a boot line
-with a Skip once per session. Sepia, high-contrast, ticker, mono and
-both halves of shade have none on purpose — in the restful theme, the
-accessible one, the data-dense one and the medium-contrast pair, a
-gesture works against the reason the theme exists.
+with a Skip once per session. Every theme has one now: the nineteen lifts
+of 2026-09-08 gave sepia, high-contrast, ticker, mono and both halves of
+shade a register of their own. What differs is how far it goes — the
+restful theme, the accessible one, the data-dense one and the
+medium-contrast pair each answer the six hooks quietly, because a loud
+gesture there works against the reason the theme exists.
 
 All of it sits inside `prefers-reduced-motion: no-preference`, and the
 flash threshold is measured rather than assumed.

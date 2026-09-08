@@ -126,6 +126,19 @@ browser CI uses, so "green here" and "green there" mean the same thing.
 Provenance: standing rule 35, added after JobTracker went red in CI three
 times on things that were green on the PC.
 
+> **Amended 2026-09-09 — there is no CI runner.** Kenny deleted
+> `.github/workflows/ci.yml` and `main` requires no status check: 254 runs
+> in five days for a verdict he gives himself. The rule that survives is
+> the half that was ever about correctness — a gate may not depend on a
+> path to a sibling project, because kyu and almanac have none either. The
+> half about two environments agreeing is moot: there is one environment,
+> Kenny's PC, and "green here" is the only green there is. The entries
+> below that reason from a clean CI checkout are the record of a decision
+> taken when there was one; they are not rewritten. Where a decision's
+> mechanism depended on CI, the mechanism is now a command in
+> `package.json` — `npm run gates`, `test:affected`, `test:browser`,
+> `advice`, `verify`.
+
 ---
 
 # Phase 4 · Architecture

@@ -20,7 +20,8 @@ laser line under a heading, a boot line with a Skip once per session
 theme gained `theme-font-mono` (the contract is 96 tokens, S47) and the
 base layer carries `[hidden] { display: none !important }` (KT13). The
 fonts ship with the package; the two registers became three
-(`css/synthwave-register.css`). `MIGRATION.md` has the consumer-facing
+(`css/synthwave-register.css`), and by the end of round six every one of
+the twenty-five themes carried its own. `MIGRATION.md` has the consumer-facing
 detail at C6.
 
 **The second lift: phantom.** Built from the approved concept demo

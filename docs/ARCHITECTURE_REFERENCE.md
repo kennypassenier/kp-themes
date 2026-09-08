@@ -11,18 +11,22 @@ themes/<name>/tokens.json   authored: the colours, one file per theme
         ├─ gates/generate-themes.mjs ──→ css/themes.css        (the palette)
         │                            └─→ js/theme-registry.js  (name, label, dark)
         │
-        └─ gates/generate-showcase.mjs ─→ showcase/index.html  (seven blocks)
+        └─ gates/generate-showcase.mjs ─→ showcase/index.html  (25 blocks)
                                       └─→ showcase/themes/*.html (one each, bare)
 
 css/_header.css  ─┐
 css/_rules.css   ─┴─ concatenated verbatim into css/themes.css
 css/components.css   separate: only for consumers who take the components
-css/cyberpunk-register.css   opt-in HUD chrome
+css/layout.css       separate: nineteen classes for the shape of a page
+css/utilities.css    separate: 118 generated one-property classes
+css/fonts.css        separate: the @font-face block for the shipped faces
+css/<name>-register.css      opt-in, one per theme, 25 of them
 
 js/theme-core.js     the state, in the document
-js/theme-picker.js   framework-free picker    ─┐ both attach on import
-js/components.js     the DI4 and DI10 contracts │
-js/overlays.js       dialogs, tabs, toasts     ─┘
+js/theme-picker.js   framework-free picker    ─┐ pure: importing one
+js/components.js     the DI4 and DI10 contracts │ attaches nothing. Only
+js/overlays.js       dialogs, tabs, toasts      │ js/auto.js has a side
+js/effects.js        the hooks, the marquee    ─┘ effect, by design
 
 hooks/use-theme.js   React, sitting on theme-core
 components/*.jsx     React, rendering the same classes as the CSS above
@@ -89,7 +93,8 @@ ceiling, the state-visibility floor, the badge-plate floor.
 
 ### Derived tokens
 
-A theme authors 65 tokens. The generator adds more, and a theme may
+A theme authors 96 tokens (the contract `gates/check-tokens.mjs` holds,
+widened by S47 as themes needed more). The generator adds more, and a theme may
 override any of them by declaring it itself:
 
 | Derived | From | Rule |
@@ -103,22 +108,36 @@ The pressed state gives up chroma when lightness cannot move far enough.
 That is not a flourish: cyberpunk and terminal sit near the top of the
 colour space, and lightness alone left their pressed state invisible.
 
-## The gates
+## The gates, and the advice beside them
 
-Nine checks, all in Node, all under a second, all run by
-`.claude/hooks/gates.sh` before every commit and again in CI.
+Thirty checks, all in Node, the whole chain in seconds, all run by
+`.claude/hooks/gates.sh` before every commit. Nothing runs on a server:
+Kenny deleted the CI on 2026-09-09 and runs the browser suite himself.
+`package.json`'s `gates` script is the authoritative list; the table below
+is the shape of it rather than the whole.
 
 | Gate | Reads | Answers |
 | --- | --- | --- |
 | `generate-themes --check` | source + artefact | has the generated output drifted |
-| `check-tokens` | token sources | do all seven declare the same names |
-| `check-invariants` | token sources | boundaries, focus ring, colour vision, state contrast, state visibility, badge plates |
-| `check-contrast` | the generated stylesheet | every colour pair, and every token accounted for |
-| `check-motion` | the authored stylesheets | flashes per second, reduced-motion guards |
+| `check-tokens` | token sources | do all twenty-five declare the same 96 names |
 | `check-layers` | the authored stylesheets | does any colour live outside the token layer |
+| `check-hooks` | the registers | does every theme answer all six hooks |
+| `check-register-coverage` | the registers | does a register answer every component root, and the nav dropdown [KT14] |
+| `check-fonts` | `fonts/`, the name tables | licence, reserved names, per-theme budget |
+| `check-strings` | the source | does every user-visible string come from the dictionary [KT5] |
 | `generate-showcase --check` | source + artefact | has the showcase drifted |
+| `generate-min --check` | source + artefact | does the minified build match, and its size table |
 | `compliance --check` | the other gates | does the published table match what they measure |
-| `tsc --noEmit` | everything | the type check `jsconfig.json` always declared |
+| `tsc --noEmit`, `check-types` | everything | the type check, and the shipped declarations [KT4] |
+
+Five more checks are **advice, not gates** [Kenny, 2026-09-09]. They run
+in `npm run advice` and print rather than refuse: `check-contrast` (every
+colour pair and every token accounted for), `check-invariants`
+(boundaries, focus ring, colour vision, state contrast, state visibility,
+badge plates), `check-motion` (flashes per second, reduced-motion guards),
+its DI5 report, and `check-texture` (DI9's ceiling). The package measures
+those floors and does not promise to have met them; `README.md` says so
+in the same words.
 
 Two properties matter more than the list.
 
@@ -137,7 +156,10 @@ no theme declares. That is why the drill is not optional.
 
 ## The browser tests
 
-Playwright, Chromium and Firefox, against a twenty-line static server.
+Playwright, Chromium and Firefox, against a small static server
+(`tests/global-setup.mjs`). Some 2500 tests over 70 spec files, run when
+Kenny runs them — `npm run test:affected` for what a change touches,
+`npm run test:browser` for all of it.
 They cover what Node cannot see: whether the browser received a
 `color-scheme`, whether a page reflows at 320 px, whether forced text
 spacing clips a badge, whether focus returns to the button that opened a

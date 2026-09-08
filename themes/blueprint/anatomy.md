@@ -9,7 +9,7 @@
 ## The idea
 
 A technical drawing. Cyan-white lines on deep Prussian blue, with amber
-where something needs attention. Topo is a map — contour lines, land,
+where something needs attention. Forest is a map — contour lines, land,
 elevation; this is the other half of that pair: the drawing of a thing
 that does not exist yet.
 

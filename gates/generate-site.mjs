@@ -317,7 +317,7 @@ ${ex.markup}
         section(
             'markup',
             'Framework-free markup',
-            `                    <p class="kp-prose">Server-rendered markup with the behaviour attached on import. The snippets above are that markup, printed from the same string the example renders.</p>
+            `                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
 ${table(
     'Attributes',

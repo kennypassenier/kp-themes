@@ -44,13 +44,18 @@ const version = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).ver
  * Read from the export map rather than listed here: a stylesheet the
  * package promises and this build forgets is exactly the drift TH130
  * removed from the CSS gates, and check-package would only find it after
- * the fact. `css/tailwind-bridge.css` is the one exception — it is a
- * source a consumer's own build reads, not a stylesheet a page loads. */
+ * the fact. Two exceptions: `css/tailwind-bridge.css` is a source a
+ * consumer's own build reads rather than a stylesheet a page loads, and
+ * `dist/kp-themes.css` is the bundle, minified explicitly below. Leaving
+ * the bundle in this list minified it twice — a second identical row in
+ * the size table, and a stray copy written to `dist/css/dist/`, because
+ * the loop only strips a leading `css/` from the path it writes. */
 export const SHEETS = [
     ...new Set(
         Object.values(JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).exports)
             .filter(
-                (/** @type {unknown} */ v) => typeof v === 'string' && v.endsWith('.css') && !v.includes('tailwind-bridge') && !v.includes('.min.'),
+                (/** @type {unknown} */ v) =>
+                    typeof v === 'string' && v.endsWith('.css') && !v.includes('tailwind-bridge') && !v.includes('.min.') && !v.startsWith('./dist/'),
             )
             .map((/** @type {string} */ v) => v.replace(/^\.\//, '')),
     ),

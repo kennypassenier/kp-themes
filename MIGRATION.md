@@ -34,8 +34,10 @@ register of its own now, which the section on the lifts describes.
 major** [S39, S40]. The 4.x neon-on-violet theme is replaced under the
 same name by the signal-yellow register of the approved demo; 4.0.0
 stays what it shipped (S20 — pin the tag if you want the old one). The
-rest of 5.0.0 adds: a twenty-fifth theme, shipped fonts, a hook
-vocabulary, a base-layer rule and one token.
+rest of 5.0.0 adds: a twenty-fifth theme (`synthwave`), a register for
+every one of the twenty-five, shipped fonts, a six-hook vocabulary, a
+marquee primitive (`data-kp-marquee`), a minified build under `dist/css/`
+with its sizes in `docs/MINIFIED.md`, a base-layer rule and one token.
 
 ### If you use `cyberpunk`
 
@@ -60,8 +62,10 @@ reveal has a rest state that holds without the script.
 
 ### New: `synthwave`, the twenty-fifth theme, and a third register
 
-`css/synthwave-register.css` is opt-in like the other two. `Theme` is
-the union of twenty-five names; a switch over it gains a case.
+`css/synthwave-register.css` is opt-in, as every register is — there are
+twenty-five of them now, one per theme, and you import only the ones you
+use. `Theme` is the union of twenty-five names; a switch over it gains a
+case.
 
 ### New: the fonts ship [T19]
 
@@ -73,9 +77,10 @@ and may not carry the reserved word, not even as part of a new name):
 `KP Academia Serif` (Lora), `KP Ticker Sans` and `KP Ticker Mono` (IBM
 Plex), `KP Shade Sans` (Source Sans 3), `KP Outrun Display` (Orbitron).
 The tokens name the renamed family first and the original after it, so a
-reader who has the original installed sees it. Woodblock ships its two
-Japanese families in the regular weight only (the 1.5 MB budget); the
-browser synthesises the bold — a known limitation [R6-Q6].
+reader who has the original installed sees it. Woodblock ships a real
+bold face for each of its two Japanese families and carries its own 2.5 MB
+budget for it [R6-Q6]: a synthesised bold thickens a Japanese stroke where
+a real face redraws it, so the weight is spent on purpose.
 
 ### One base-layer rule, one token
 

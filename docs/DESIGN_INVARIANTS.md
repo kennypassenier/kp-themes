@@ -613,12 +613,14 @@ the gap is what eventually got the work done.
 **What DI5 measures, and what it does not.** The gate reads opacity
 keyframes and bounds the luminance swing pessimistically — the animated
 element is assumed fully bright over a fully dark ground, so a run that
-passes here passes in fact. Four of the six animations change no
-luminance (`fx-glitch-a`, `fx-glitch-b`: transform and clip-path;
-`fx-rgb-split`: drop-shadow offsets; `fx-cellflash`: one cell's text
-colour for 200ms) and are listed in the gate with that reason. An
-animation in neither category fails the gate rather than passing
-silently, so the next effect someone adds cannot slip through the hole.
+passes here passes in fact. An animation that changes no luminance is
+listed with that reason (`fx-glitch-a`, `fx-glitch-b`: transform and
+clip-path; `fx-rgb-split`: drop-shadow offsets; `fx-cellflash`: one cell's
+text colour for 200ms), and one in neither category is reported by name
+rather than passing silently, so the next effect someone adds cannot slip
+through the hole. Reported, not refused, and over far more than six
+animations: the reading covers the seventy effects in `TIMINGS` plus every
+register keyframe, and it runs in `npm run advice`.
 
 ## What changed on 2026-09-04, and what it cost
 
