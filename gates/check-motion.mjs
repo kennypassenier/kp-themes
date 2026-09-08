@@ -107,6 +107,8 @@ const OUT_OF_SCOPE = {
     // matches the shape of the retro selection bar's kp-drag-select below;
     // under 341x256 px.
     'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
+    // The topo register [TP1]: the contour trace beside the headline.
+    'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

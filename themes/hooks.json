@@ -178,6 +178,18 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='topo'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/topo-register.css",
+                "selector": "[data-theme='topo'] [data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/topo-register.css",
+                "selector": "[data-theme='topo'] [data-kp-reveal='rule']::before"
+            },
+            "divider": {
+                "css": "css/topo-register.css",
+                "selector": "[data-theme='topo'] [data-kp-divider]"
             }
         },
         "high-contrast": {

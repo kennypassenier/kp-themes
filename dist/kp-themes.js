@@ -3966,6 +3966,11 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The topo register [S48, LIFT_PLAN topo row]: the headline's own
+  // fade-in and the contour trace that draws beside it, both CSS-only
+  // (no routine — see css/topo-register.css's type section).
+  "kp-headline-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-trace": { durationMs: 1800, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
   // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
   // scaling in once with the headline, and the dossier's jewel plates
   // clearing on the "Open the file" trigger, staggered 140ms apart.
