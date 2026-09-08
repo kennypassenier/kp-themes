@@ -53,6 +53,18 @@
         --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28px);
     }
 
+    /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+    [data-theme='brutalism'] :focus-visible {
+        outline-color: var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
     /* Future Pharmaceutical's selection: ink on paper. */
     [data-theme='brutalism'] ::selection {
         background: var(--foreground);
@@ -277,7 +289,7 @@
 
     [data-theme='brutalism'] .kp-nav__link--cta:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow-up);
     }
 
@@ -323,9 +335,7 @@
     [data-theme='brutalism'] .kp-button {
         --kp-plate: var(--secondary);
         --kp-plate-ink: var(--secondary-foreground);
-        padding-inline: 1.5rem;
         font-weight: 700;
-        font-size: 0.9rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--kp-plate-ink);
@@ -333,6 +343,24 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
+    }
+
+    /* The size the demo drew, and the two the package owes beside it
+       [S49, A4 + TH111's amendment]: one height for all three, and the
+       type and the padding are what tell them apart. */
+    [data-theme='brutalism'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
+        font-size: 0.9rem;
+        padding-inline: 1.5rem;
+    }
+
+    [data-theme='brutalism'] .kp-button--sm {
+        font-size: 0.78rem;
+        padding-inline: 1rem;
+    }
+
+    [data-theme='brutalism'] .kp-button--lg {
+        font-size: 1.05rem;
+        padding-inline: 2rem;
     }
 
     [data-theme='brutalism'] .kp-button:not(:active):hover,
@@ -348,13 +376,18 @@
        the inner ring in the ink — kept in front of the shadow (DI2, AR30). */
     [data-theme='brutalism'] .kp-button:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow-up);
+    }
+
+    /* The demo's height, on every button [S49, A4]; TH111's amendment
+       lets the sizes separate in padding and type instead. */
+    [data-theme='brutalism'] .kp-button {
+        min-block-size: 3rem;
     }
 
     [data-theme='brutalism'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 3rem;
     }
 
     [data-theme='brutalism'] .kp-button--primary {
@@ -434,7 +467,7 @@
         background: var(--secondary);
         color: var(--secondary-foreground);
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow);
     }
 
@@ -629,7 +662,7 @@
     }
 
     [data-theme='brutalism'] .kp-menu .kp-menu__item:focus-visible {
-        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
     }
 
     [data-theme='brutalism'] .kp-alert {
@@ -1154,12 +1187,18 @@
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 
-        /* The lift moves; the shadow and the ring switch at once, so a
-           focus ring is whole from its first frame (AR30's test reads it
-           the instant the theme changes). */
+        /* What the demo moves on a hover [S49, A6 of 2026-09-08]: the
+           lift, the shadow it lifts away from, and the plate colour. KT8
+           held a hover to one step with no colour transition; Kenny chose
+           the demo for this theme, and AR30's reader waits out
+           --fx-duration after a theme switch rather than reading a ring
+           mid-flight. */
         [data-theme='brutalism'] .kp-button,
         [data-theme='brutalism'] .kp-nav__link--cta {
-            transition: translate var(--fx-duration) var(--fx-ease);
+            transition:
+                translate var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease);
         }
     }
 

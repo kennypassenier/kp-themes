@@ -377,9 +377,7 @@
     /* ── Buttons: brackets and plates; no radius, a cell has no corner ── */
 
     [data-theme='terminal'] .kp-button {
-        padding-inline: 1.4rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.95rem;
         font-weight: 400;
         letter-spacing: 0.08em;
         color: var(--foreground);
@@ -387,6 +385,24 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         position: relative;
+    }
+
+    /* The size the demo drew, and the two the package owes beside it
+       [S49, A4 + TH111's amendment]: one height for all three, and the
+       type and the padding are what tell them apart. */
+    [data-theme='terminal'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
+        font-size: 0.9rem;
+        padding-inline: 1.4rem;
+    }
+
+    [data-theme='terminal'] .kp-button--sm {
+        font-size: 0.78rem;
+        padding-inline: 0.9rem;
+    }
+
+    [data-theme='terminal'] .kp-button--lg {
+        font-size: 1.05rem;
+        padding-inline: 1.9rem;
     }
 
     /* A phosphor brightens under pressure; it does not step toward the
@@ -400,6 +416,14 @@
 
     [data-theme='terminal'] .kp-button:active {
         background: var(--secondary);
+    }
+
+    /* The demo's height, on every button [S49, A4 of 2026-09-08]. TH111's
+       amendment of the same day: the sizes separate in padding and type
+       where a theme pins one height, and tests/button.spec.mjs measures
+       that rather than height alone. */
+    [data-theme='terminal'] .kp-button {
+        min-block-size: 2.9rem;
     }
 
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -1268,5 +1292,21 @@
     [data-theme='terminal'] .kp-nav__brand-tag {
         color: var(--muted-foreground);
         letter-spacing: 0.18em;
+    }
+
+    /* The demo's own arrow [S49, A12]: two triangles in the bright
+       phosphor, with the platform list behind them. KT8's exception for
+       this theme is recorded in tests/fixtures.spec.mjs. */
+    [data-theme='terminal'] select.kp-field__input {
+        appearance: none;
+        padding-inline-end: 2rem;
+        background-image: linear-gradient(45deg, transparent 50%, var(--primary) 50%), linear-gradient(135deg, var(--primary) 50%, transparent 50%);
+        background-repeat: no-repeat;
+        background-size:
+            7px 7px,
+            7px 7px;
+        background-position:
+            right 19px center,
+            right 13px center;
     }
 }

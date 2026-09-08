@@ -130,7 +130,7 @@
                             <tr><td><code>.kp-row--start</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-row--between</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-row--nowrap</code></td><td></td><td>—</td></tr>
-                            <tr><td><code>.kp-autogrid</code></td><td>A grid that picks its own column count from the space it has. The minimum track is the knob: a card wants 16rem, a tile less.</td><td><code>--kp-autogrid-min</code>, <code>--kp-autogrid-gap</code>, <code>--kp-space-lg</code></td></tr>
+                            <tr><td><code>.kp-autogrid</code></td><td>A grid that picks its own column count from the space it has. The minimum track is the knob: a card wants 16rem, a tile less.</td><td><code>--kp-autogrid-min</code>, <code>--kp-autogrid-gap</code>, <code>--kp-space-lg</code>, <code>--kp-autogrid-pad</code>, <code>--kp-space-sm</code></td></tr>
                             <tr><td><code>.kp-autogrid--tight</code></td><td>A tighter minimum, for a grid that must keep its columns on a phone (three footer columns at 320px; the concept demo, round six).</td><td>—</td></tr>
                             <tr><td><code>.kp-page--full</code></td><td>A page that uses the whole viewport: two frames side by side need the width more than the measure (the compare page, round six).</td><td>—</td></tr>
                             <tr><td><code>.kp-sidebar</code></td><td>Content with a side column that drops below when there is no room for both — no media query, so it behaves the same inside a narrow container as it does in a narrow window.</td><td><code>--kp-sidebar-gap</code>, <code>--kp-space-lg</code></td></tr>
@@ -149,11 +149,12 @@
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
-                    <h2 class="kp-fw-semibold">The 22 knobs</h2>
+                    <h2 class="kp-fw-semibold">The 23 knobs</h2>
                     <p class="kp-prose">Set any of these on a page, a theme or a single element. Each falls back to the scale.</p>
                     <ul class="kp-row kp-gap-sm">
                         <li><code>--kp-autogrid-gap</code></li>
                         <li><code>--kp-autogrid-min</code></li>
+                        <li><code>--kp-autogrid-pad</code></li>
                         <li><code>--kp-busy-opacity</code></li>
                         <li><code>--kp-center-max</code></li>
                         <li><code>--kp-mono-face</code></li>

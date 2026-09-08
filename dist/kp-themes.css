@@ -8988,6 +8988,18 @@
         --kp-brush: conic-gradient(var(--foreground) 0 90deg, transparent 0 180deg, var(--foreground) 0 270deg, transparent 0);
     }
 
+    /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+    [data-theme='retro'] :focus-visible {
+        outline-color: var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='retro'] h1,
@@ -9404,7 +9416,7 @@
     [data-theme='retro'] .kp-button:focus-visible,
     [data-theme='retro'] .kp-icon-button:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-raised);
     }
 
@@ -9512,7 +9524,7 @@
     [data-theme='retro'] .kp-combobox__input:focus-visible,
     [data-theme='retro'] .kp-palette__input:focus-visible {
         box-shadow:
-            0 0 0 2px var(--focus-ring),
+            0 0 0 2px var(--focus-ring-contrast),
             var(--kp-sunken);
     }
 
@@ -9578,7 +9590,7 @@
 
     [data-theme='retro'] .kp-field__check:focus-visible {
         box-shadow:
-            0 0 0 2px var(--focus-ring),
+            0 0 0 2px var(--focus-ring-contrast),
             var(--kp-sunken);
     }
 
@@ -9703,6 +9715,48 @@
     [data-theme='retro'] .kp-tooltip,
     [data-theme='retro'] .kp-confirm,
     [data-theme='retro'] .kp-datepicker__panel,
+
+    /* The combo button the demo paints [S49, A12]: `appearance: none` and
+       a raised square with the ink arrow on it. KT8 kept the platform
+       list themeable and refused this; Kenny chose the demo for this
+       theme on 2026-09-08, and tests/fixtures.spec.mjs carries the
+       exception with that reason. */
+    [data-theme='retro'] select.kp-field__input {
+        appearance: none;
+        padding-inline-end: 2.1rem;
+        background-image:
+            linear-gradient(45deg, transparent 50%, var(--foreground) 50%), linear-gradient(135deg, var(--foreground) 50%, transparent 50%),
+            linear-gradient(180deg, var(--popover) 0 2px, transparent 2px), linear-gradient(90deg, var(--popover) 0 2px, transparent 2px),
+            linear-gradient(0deg, var(--border-strong) 0 2px, transparent 2px), linear-gradient(270deg, var(--border-strong) 0 2px, transparent 2px),
+            linear-gradient(var(--card), var(--card));
+        background-repeat: no-repeat;
+        background-size:
+            6px 6px,
+            6px 6px,
+            18px 18px,
+            18px 18px,
+            18px 18px,
+            18px 18px,
+            18px 18px;
+        background-position:
+            right 12px center,
+            right 6px center,
+            right 4px center,
+            right 4px center,
+            right 4px center,
+            right 4px center,
+            right 4px center;
+    }
+
+    /* And the keyboard highlight is the selection bar, as it is on a
+       mark: navy with white on it [S49, A12]. */
+    [data-theme='retro'] .kp-combobox__option.is-active,
+    [data-theme='retro'] .kp-palette__option.is-active,
+    [data-theme='retro'] .kp-datepicker__day.is-active {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
     [data-theme='retro'] .kp-combobox__list,
     [data-theme='retro'] .kp-palette,
     [data-theme='retro'] .kp-theme-menu {
@@ -12096,6 +12150,18 @@
         --kp-hard: 4px 4px 0 hsl(from var(--background) h s l / 0.55);
         --kp-line: hsl(from var(--foreground) h s l / 0.14);
 
+        /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+        [data-theme='phantom'] :focus-visible {
+            outline-color: var(--focus-ring);
+            box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+        }
+
         /* The texture [DI9, AR46, S49]: the three static layers the
            approved demo measured — the halftone screen with its 1px/3px
            scan, the desaturated grain over it, and the denser screen the
@@ -12672,8 +12738,9 @@
         caret-color: var(--primary);
     }
 
+    /* Both channels on the field too [S49, A5]: the register switched the
+       outline off here, which left DI2 with one ring on one control. */
     [data-theme='phantom'] .kp-field__input:focus-visible {
-        outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 2px var(--focus-ring-contrast);
     }
@@ -13958,9 +14025,7 @@
     /* ── Buttons: brackets and plates; no radius, a cell has no corner ── */
 
     [data-theme='terminal'] .kp-button {
-        padding-inline: 1.4rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.95rem;
         font-weight: 400;
         letter-spacing: 0.08em;
         color: var(--foreground);
@@ -13968,6 +14033,24 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         position: relative;
+    }
+
+    /* The size the demo drew, and the two the package owes beside it
+       [S49, A4 + TH111's amendment]: one height for all three, and the
+       type and the padding are what tell them apart. */
+    [data-theme='terminal'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
+        font-size: 0.9rem;
+        padding-inline: 1.4rem;
+    }
+
+    [data-theme='terminal'] .kp-button--sm {
+        font-size: 0.78rem;
+        padding-inline: 0.9rem;
+    }
+
+    [data-theme='terminal'] .kp-button--lg {
+        font-size: 1.05rem;
+        padding-inline: 1.9rem;
     }
 
     /* A phosphor brightens under pressure; it does not step toward the
@@ -13981,6 +14064,14 @@
 
     [data-theme='terminal'] .kp-button:active {
         background: var(--secondary);
+    }
+
+    /* The demo's height, on every button [S49, A4 of 2026-09-08]. TH111's
+       amendment of the same day: the sizes separate in padding and type
+       where a theme pins one height, and tests/button.spec.mjs measures
+       that rather than height alone. */
+    [data-theme='terminal'] .kp-button {
+        min-block-size: 2.9rem;
     }
 
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -14850,6 +14941,22 @@
         color: var(--muted-foreground);
         letter-spacing: 0.18em;
     }
+
+    /* The demo's own arrow [S49, A12]: two triangles in the bright
+       phosphor, with the platform list behind them. KT8's exception for
+       this theme is recorded in tests/fixtures.spec.mjs. */
+    [data-theme='terminal'] select.kp-field__input {
+        appearance: none;
+        padding-inline-end: 2rem;
+        background-image: linear-gradient(45deg, transparent 50%, var(--primary) 50%), linear-gradient(135deg, var(--primary) 50%, transparent 50%);
+        background-repeat: no-repeat;
+        background-size:
+            7px 7px,
+            7px 7px;
+        background-position:
+            right 19px center,
+            right 13px center;
+    }
 }
 
 @layer kp.register {
@@ -14905,6 +15012,18 @@
         /* The marquee's hatch: a strip of the plate colour on the ink. */
         --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28px);
         --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28px);
+    }
+
+    /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+    [data-theme='brutalism'] :focus-visible {
+        outline-color: var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
     }
 
     /* Future Pharmaceutical's selection: ink on paper. */
@@ -15131,7 +15250,7 @@
 
     [data-theme='brutalism'] .kp-nav__link--cta:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow-up);
     }
 
@@ -15177,9 +15296,7 @@
     [data-theme='brutalism'] .kp-button {
         --kp-plate: var(--secondary);
         --kp-plate-ink: var(--secondary-foreground);
-        padding-inline: 1.5rem;
         font-weight: 700;
-        font-size: 0.9rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--kp-plate-ink);
@@ -15187,6 +15304,24 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
+    }
+
+    /* The size the demo drew, and the two the package owes beside it
+       [S49, A4 + TH111's amendment]: one height for all three, and the
+       type and the padding are what tell them apart. */
+    [data-theme='brutalism'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
+        font-size: 0.9rem;
+        padding-inline: 1.5rem;
+    }
+
+    [data-theme='brutalism'] .kp-button--sm {
+        font-size: 0.78rem;
+        padding-inline: 1rem;
+    }
+
+    [data-theme='brutalism'] .kp-button--lg {
+        font-size: 1.05rem;
+        padding-inline: 2rem;
     }
 
     [data-theme='brutalism'] .kp-button:not(:active):hover,
@@ -15202,13 +15337,18 @@
        the inner ring in the ink — kept in front of the shadow (DI2, AR30). */
     [data-theme='brutalism'] .kp-button:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow-up);
+    }
+
+    /* The demo's height, on every button [S49, A4]; TH111's amendment
+       lets the sizes separate in padding and type instead. */
+    [data-theme='brutalism'] .kp-button {
+        min-block-size: 3rem;
     }
 
     [data-theme='brutalism'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 3rem;
     }
 
     [data-theme='brutalism'] .kp-button--primary {
@@ -15288,7 +15428,7 @@
         background: var(--secondary);
         color: var(--secondary-foreground);
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow);
     }
 
@@ -15483,7 +15623,7 @@
     }
 
     [data-theme='brutalism'] .kp-menu .kp-menu__item:focus-visible {
-        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
     }
 
     [data-theme='brutalism'] .kp-alert {
@@ -16008,12 +16148,18 @@
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 
-        /* The lift moves; the shadow and the ring switch at once, so a
-           focus ring is whole from its first frame (AR30's test reads it
-           the instant the theme changes). */
+        /* What the demo moves on a hover [S49, A6 of 2026-09-08]: the
+           lift, the shadow it lifts away from, and the plate colour. KT8
+           held a hover to one step with no colour transition; Kenny chose
+           the demo for this theme, and AR30's reader waits out
+           --fx-duration after a theme switch rather than reading a ring
+           mid-flight. */
         [data-theme='brutalism'] .kp-button,
         [data-theme='brutalism'] .kp-nav__link--cta {
-            transition: translate var(--fx-duration) var(--fx-ease);
+            transition:
+                translate var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease);
         }
     }
 
@@ -16124,6 +16270,12 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--kp-autogrid-min, 16rem), 1fr));
         gap: var(--kp-autogrid-gap, var(--kp-space-lg));
+        /* A little air on all four sides, so the first column's text never
+           sits against whatever edge the grid happens to land on (Kenny,
+           2026-09-08). The gap keeps the columns apart; this keeps the
+           grid off its own container's edge, and it is a knob like every
+           other length here [KT6]. */
+        padding: var(--kp-autogrid-pad, var(--kp-space-sm));
     }
     /* A tighter minimum, for a grid that must keep its columns on a phone
        (three footer columns at 320px; the concept demo, round six). */

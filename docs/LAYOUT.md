@@ -42,8 +42,11 @@ centred by default. Four modifiers change one thing each:
 to wrap. Knobs: `--kp-row-gap`, `--kp-row-align`.
 
 **`.kp-autogrid`** is a grid that adds a column when there is room for
-one, with no breakpoint anywhere. Knobs: `--kp-autogrid-min` (16rem),
-`--kp-autogrid-gap`.
+one, with no breakpoint anywhere. It keeps a little air on all four
+sides so the first column's text never sits against the edge of whatever
+it lands in (Kenny, 2026-09-08). Knobs: `--kp-autogrid-min` (16rem),
+`--kp-autogrid-gap`, `--kp-autogrid-pad` (`--kp-space-sm`; set it to `0`
+for a grid that should reach its container's edge).
 
 **`.kp-sidebar`** with `.kp-sidebar__aside` and `.kp-sidebar__main` is
 a sidebar that drops below its main column when the main column would
@@ -91,7 +94,7 @@ one is the fault correction KT6 exists about. Knob:
 
 `--kp-page-max`, `--kp-page-pad`, `--kp-page-pad-block`,
 `--kp-stack-gap`, `--kp-row-gap`, `--kp-row-align`, `--kp-autogrid-min`,
-`--kp-autogrid-gap`, `--kp-sidebar-width`, `--kp-sidebar-gap`,
+`--kp-autogrid-gap`, `--kp-autogrid-pad`, `--kp-sidebar-width`, `--kp-sidebar-gap`,
 `--kp-sidebar-break`, `--kp-section-gap`, `--kp-center-max`,
 `--kp-prose-max`, `--kp-mono-face`, `--kp-mono-size`,
 `--kp-busy-opacity`.

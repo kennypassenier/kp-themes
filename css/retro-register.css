@@ -111,6 +111,18 @@
         --kp-brush: conic-gradient(var(--foreground) 0 90deg, transparent 0 180deg, var(--foreground) 0 270deg, transparent 0);
     }
 
+    /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+    [data-theme='retro'] :focus-visible {
+        outline-color: var(--focus-ring);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='retro'] h1,
@@ -527,7 +539,7 @@
     [data-theme='retro'] .kp-button:focus-visible,
     [data-theme='retro'] .kp-icon-button:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-raised);
     }
 
@@ -635,7 +647,7 @@
     [data-theme='retro'] .kp-combobox__input:focus-visible,
     [data-theme='retro'] .kp-palette__input:focus-visible {
         box-shadow:
-            0 0 0 2px var(--focus-ring),
+            0 0 0 2px var(--focus-ring-contrast),
             var(--kp-sunken);
     }
 
@@ -701,7 +713,7 @@
 
     [data-theme='retro'] .kp-field__check:focus-visible {
         box-shadow:
-            0 0 0 2px var(--focus-ring),
+            0 0 0 2px var(--focus-ring-contrast),
             var(--kp-sunken);
     }
 
@@ -826,6 +838,48 @@
     [data-theme='retro'] .kp-tooltip,
     [data-theme='retro'] .kp-confirm,
     [data-theme='retro'] .kp-datepicker__panel,
+
+    /* The combo button the demo paints [S49, A12]: `appearance: none` and
+       a raised square with the ink arrow on it. KT8 kept the platform
+       list themeable and refused this; Kenny chose the demo for this
+       theme on 2026-09-08, and tests/fixtures.spec.mjs carries the
+       exception with that reason. */
+    [data-theme='retro'] select.kp-field__input {
+        appearance: none;
+        padding-inline-end: 2.1rem;
+        background-image:
+            linear-gradient(45deg, transparent 50%, var(--foreground) 50%), linear-gradient(135deg, var(--foreground) 50%, transparent 50%),
+            linear-gradient(180deg, var(--popover) 0 2px, transparent 2px), linear-gradient(90deg, var(--popover) 0 2px, transparent 2px),
+            linear-gradient(0deg, var(--border-strong) 0 2px, transparent 2px), linear-gradient(270deg, var(--border-strong) 0 2px, transparent 2px),
+            linear-gradient(var(--card), var(--card));
+        background-repeat: no-repeat;
+        background-size:
+            6px 6px,
+            6px 6px,
+            18px 18px,
+            18px 18px,
+            18px 18px,
+            18px 18px,
+            18px 18px;
+        background-position:
+            right 12px center,
+            right 6px center,
+            right 4px center,
+            right 4px center,
+            right 4px center,
+            right 4px center,
+            right 4px center;
+    }
+
+    /* And the keyboard highlight is the selection bar, as it is on a
+       mark: navy with white on it [S49, A12]. */
+    [data-theme='retro'] .kp-combobox__option.is-active,
+    [data-theme='retro'] .kp-palette__option.is-active,
+    [data-theme='retro'] .kp-datepicker__day.is-active {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
     [data-theme='retro'] .kp-combobox__list,
     [data-theme='retro'] .kp-palette,
     [data-theme='retro'] .kp-theme-menu {

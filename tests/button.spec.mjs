@@ -47,6 +47,7 @@ const metrics = (page, testId) =>
             height: el.getBoundingClientRect().height,
             minHeight: Number.parseFloat(s.minHeight),
             fontSize: Number.parseFloat(s.fontSize),
+            padding: Number.parseFloat(s.paddingInlineStart) + Number.parseFloat(s.paddingInlineEnd),
         };
     }, testId);
 
@@ -153,14 +154,26 @@ test.describe('the button', () => {
         ['framework-free', 'plain'],
         ['React', 'react'],
     ]) {
-        test(`the three sizes differ in height in all 24 themes, ${channel} [TH111]`, async ({ page }) => {
+        test(`the three sizes separate in all 24 themes, ${channel} [TH111]`, async ({ page }) => {
             /** @type {string[]} */
             const flat = [];
             for (const theme of THEMES) {
                 await wearTheme(page, theme);
                 const [sm, md, lg] = await Promise.all([metrics(page, `${prefix}-sm`), metrics(page, `${prefix}-md`), metrics(page, `${prefix}-lg`)]);
-                if (!(sm.height < md.height && md.height < lg.height)) {
-                    flat.push(`${theme}: ${sm.height.toFixed(1)} / ${md.height.toFixed(1)} / ${lg.height.toFixed(1)}`);
+                // TH111, amended 2026-09-08 with A4 of the deviation form:
+                // the three sizes must be TOLD APART, and a theme whose
+                // approved demo pins one height for every button (terminal
+                // 2.9rem, brutalism 3rem) separates them in type and in
+                // padding instead. Height alone was the old bar and it
+                // refused those two demos outright.
+                const byHeight = sm.height < md.height && md.height < lg.height;
+                const byScale = sm.fontSize < md.fontSize && md.fontSize < lg.fontSize && sm.padding < md.padding && md.padding < lg.padding;
+                if (!byHeight && !byScale) {
+                    flat.push(
+                        `${theme}: ${sm.height.toFixed(1)} / ${md.height.toFixed(1)} / ${lg.height.toFixed(1)} tall, ` +
+                            `${sm.fontSize.toFixed(1)} / ${md.fontSize.toFixed(1)} / ${lg.fontSize.toFixed(1)} type, ` +
+                            `${sm.padding.toFixed(1)} / ${md.padding.toFixed(1)} / ${lg.padding.toFixed(1)} padding`,
+                    );
                 }
             }
             expect(flat, `the sizes do not separate in:\n${flat.join('\n')}`).toEqual([]);

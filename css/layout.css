@@ -69,6 +69,12 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--kp-autogrid-min, 16rem), 1fr));
         gap: var(--kp-autogrid-gap, var(--kp-space-lg));
+        /* A little air on all four sides, so the first column's text never
+           sits against whatever edge the grid happens to land on (Kenny,
+           2026-09-08). The gap keeps the columns apart; this keeps the
+           grid off its own container's edge, and it is a knob like every
+           other length here [KT6]. */
+        padding: var(--kp-autogrid-pad, var(--kp-space-sm));
     }
     /* A tighter minimum, for a grid that must keep its columns on a phone
        (three footer columns at 320px; the concept demo, round six). */

@@ -54,6 +54,18 @@
         --kp-hard: 4px 4px 0 hsl(from var(--background) h s l / 0.55);
         --kp-line: hsl(from var(--foreground) h s l / 0.14);
 
+        /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
+       The base layer puts the contrast colour outside and the ring colour
+       against the element; this theme's approved demo does it the other
+       way round, and DI2's promise holds either way — two channels, one
+       of which always clears 3:1 on the surface behind it. The broad rule
+       sits here, before the register's own component rules, so a control
+       that composes its own shadow stack still wins. */
+        [data-theme='phantom'] :focus-visible {
+            outline-color: var(--focus-ring);
+            box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+        }
+
         /* The texture [DI9, AR46, S49]: the three static layers the
            approved demo measured — the halftone screen with its 1px/3px
            scan, the desaturated grain over it, and the denser screen the
@@ -630,8 +642,9 @@
         caret-color: var(--primary);
     }
 
+    /* Both channels on the field too [S49, A5]: the register switched the
+       outline off here, which left DI2 with one ring on one control. */
     [data-theme='phantom'] .kp-field__input:focus-visible {
-        outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 2px var(--focus-ring-contrast);
     }

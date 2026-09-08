@@ -150,6 +150,19 @@ const rgb = (css) => {
 /** @param {number[]} over @param {number[]} under @param {number} alpha */
 const composite = (over, under, alpha) => over.map((c, i) => Math.round(c * alpha + under[i] * (1 - alpha)));
 
+// Where an approved concept demo and KT8 disagree, Kenny chose the demo
+// [S49, A12 of 2026-09-08]. The exception is per theme and says what it
+// allows, so the rule still holds everywhere it was not lifted.
+/** @type {Record<string, string>} */
+const HIGHLIGHT_IS_A_PLATE = {
+    retro: 'the Win95 selection bar the demo draws: --primary with --primary-foreground on it, the same plate a <mark> wears in this theme [S49, A12]',
+};
+/** @type {Record<string, string>} */
+const DRAWS_ITS_OWN_COMBO_BUTTON = {
+    retro: "the demo paints the combo button itself, which needs `appearance: none` and gives the platform's list back [S49, A12]",
+    terminal: 'as retro: the demo draws the phosphor arrow itself [S49, A12]',
+};
+
 for (const theme of THEMES) {
     test.describe(`${theme.name} review findings [KT8]`, () => {
         const url = `/showcase/themes/${theme.name}.html`;
@@ -207,6 +220,24 @@ for (const theme of THEMES) {
             const row = rgb(painted.row);
             const surface = rgb(painted.surface).rgb;
             const seen = composite(row.rgb, surface, row.alpha);
+            if (HIGHLIGHT_IS_A_PLATE[theme.name]) {
+                // The exception is not a pass: the plate is measured too,
+                // against the theme's own primary and its foreground.
+                const primary = await page.evaluate(() => {
+                    const probe = document.createElement('span');
+                    probe.style.color = 'var(--primary)';
+                    document.body.append(probe);
+                    const plate = getComputedStyle(probe).color;
+                    probe.style.color = 'var(--primary-foreground)';
+                    const ink = getComputedStyle(probe).color;
+                    probe.remove();
+                    return { plate, ink };
+                });
+                expect(painted.row, HIGHLIGHT_IS_A_PLATE[theme.name]).toBe(primary.plate);
+                expect(painted.text, 'the plate carries its own ink').toBe(primary.ink);
+                expect(contrast(rgb(painted.text).rgb, seen), 'the words on the plate clear 4.5:1').toBeGreaterThanOrEqual(4.5);
+                return;
+            }
             // Visible against the surface…
             expect(contrast(seen, surface), `${painted.row} on ${painted.surface}`).toBeGreaterThanOrEqual(1.1);
             // …and no more colourful than the surface or the ink it is a wash
@@ -299,6 +330,16 @@ for (const theme of THEMES) {
         await page.goto(`/showcase/themes/${theme.name}.html`);
         const supported = await page.evaluate(() => CSS.supports('appearance', 'base-select'));
         test.skip(!supported, `${browserName} does not support appearance: base-select`);
+        if (DRAWS_ITS_OWN_COMBO_BUTTON[theme.name]) {
+            // Again not a pass: the theme owes the arrow it drew instead.
+            const drawn = await page.evaluate(() => {
+                const s = getComputedStyle(document.querySelector('select.kp-field__input'));
+                return { appearance: s.appearance, image: s.backgroundImage };
+            });
+            expect(drawn.appearance, DRAWS_ITS_OWN_COMBO_BUTTON[theme.name]).toBe('none');
+            expect(drawn.image, 'and it paints its own button').toContain('linear-gradient');
+            return;
+        }
         const select = page.locator('select.kp-field__input').first();
         await select.click();
         const option = page.locator('select.kp-field__input option').nth(1);

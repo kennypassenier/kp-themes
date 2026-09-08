@@ -33,7 +33,21 @@ export async function tabTo(page, testId, limit = 40) {
 }
 
 /** Wear a theme. @param {import('@playwright/test').Page} page @param {string} theme */
-export const wearTheme = (page, theme) => page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+export const wearTheme = async (page, theme) => {
+    await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+    // A theme that transitions its shadow or its plate (brutalism, whose
+    // approved demo does — S49, A6) is still mid-flight for --fx-duration
+    // after the switch, and a ring read now is a ring half-painted.
+    await page.evaluate(
+        () =>
+            new Promise((resolve) => {
+                const declared = getComputedStyle(document.documentElement).getPropertyValue('--fx-duration').trim();
+                const value = Number.parseFloat(declared) || 0;
+                const ms = declared.endsWith('ms') || value === 0 ? value : value * 1000;
+                setTimeout(resolve, ms + 40);
+            }),
+    );
+};
 
 /**
  * Split a computed `box-shadow` into its layers. Commas inside `rgb(…)`
@@ -104,6 +118,7 @@ export const indicator = (page, testId) =>
             focused: el === document.activeElement,
             outlineStyle: s.outlineStyle,
             outlineWidth: Number.parseFloat(s.outlineWidth),
+            outlineColor: s.outlineColor,
             boxShadow: s.boxShadow,
             ring,
             ringContrast,
@@ -113,14 +128,21 @@ export const indicator = (page, testId) =>
 
 /**
  * True when both halves of the ring are declared on what `indicator()`
- * read: an outline of at least 2px, and a box-shadow layer in
- * --focus-ring with a real SPREAD.
+ * read: an outline of at least 2px, and a box-shadow layer with a real
+ * SPREAD, one in --focus-ring and the other in --focus-ring-contrast.
  *
  * The spread rather than any length, because brutalism's offset shadow
  * is 4px 4px in a colour that happens to equal its --focus-ring: an
  * offset is not a ring.
  *
- * @param {{ outlineStyle: string, outlineWidth: number, boxShadow: string, ring: string }} found
+ * EITHER ORDER passes [S49, A5 of 2026-09-08]. The base layer puts the
+ * contrast colour outside and the ring colour inside; brutalism's,
+ * retro's and phantom's approved demos put them the other way round, and
+ * DI2's promise — two channels, one of which always clears 3:1 on the
+ * surface behind it — holds whichever way they are stacked. What this
+ * refuses is the same colour twice, or one channel alone.
+ *
+ * @param {{ outlineStyle: string, outlineWidth: number, outlineColor?: string, boxShadow: string, ring: string, ringContrast?: string }} found
  */
 export function bothHalves(found) {
     /** A ring layer is one in `colour` with a real SPREAD, inset or not. */
@@ -134,8 +156,14 @@ export function bothHalves(found) {
     // takes it with the corner. Under the bevel the outer half is an
     // inset ring in --focus-ring-contrast instead, which is what the
     // 96-pair contrast measurement of MR-NOTCH was taken for.
-    const outer = (found.outlineStyle !== 'none' && found.outlineWidth >= 2) || ringLayer(found.ringContrast ?? '\u0000');
-    const inner = ringLayer(found.ring);
+    const outline = found.outlineStyle !== 'none' && found.outlineWidth >= 2;
+    const outlineIs = (/** @type {string} */ colour) => outline && (found.outlineColor === undefined || found.outlineColor === colour);
+    // One channel in each colour, in either order: the outline outside
+    // with the shadow inside, or the shadow outside with the outline in.
+    const outer =
+        (outlineIs(found.ringContrast ?? '\u0000') || ringLayer(found.ringContrast ?? '\u0000')) &&
+        (outline || ringLayer(found.ringContrast ?? '\u0000'));
+    const inner = outlineIs(found.ring) ? ringLayer(found.ringContrast ?? '\u0000') || outline : ringLayer(found.ring);
 
     // And whatever is found must actually be the FOCUS doing it. A theme
     // whose decoration is already ring-coloured scores both halves while
