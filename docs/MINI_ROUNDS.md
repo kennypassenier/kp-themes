@@ -72,3 +72,25 @@ gains "the compare page shows 4.0.0 on the left and the current build on
 the right for the theme in the query, and Kenny has opened it". The
 frozen list is amended by this note rather than reopened, because the
 request extends a feature it does not change.
+
+## R6-Q1, R6-Q6 and R6-Q8, answered 2026-09-08
+
+Kenny's answers at the release form, before the version was set:
+
+- **The texture ceiling stays 0.06.** Three themes carry their own — phantom
+  0.14, blueprint 0.18, dark 0.35 — each named in `gates/config.json` with
+  the approved demo that measured it. The alternative, raising DI9 until
+  nobody meets it, would have turned a decision into an absence of one.
+- **Woodblock's font budget is raised for that theme alone**, to 2.5 MB
+  against a measured 2,375,188 bytes, so its two Japanese families ship a
+  real bold face each. A synthesised bold thickens a Japanese stroke where
+  a real face redraws it. `gates/check-fonts.mjs` reads a per-theme budget
+  the way the texture gate reads a per-theme ceiling.
+- **The concept pages' footer counts twenty-five registers.** Every page
+  counted the registers as they stood on the day its own demo was
+  approved — three, six, seven — and one still said twenty-four themes.
+  The line states a fact about the package, not a design choice, so it is
+  corrected rather than frozen.
+- **The version is 5.0.0, after the three procedure steps** that have not
+  run for this round: the test-gap audit, the documentation pass and the
+  field test. Not another alpha.

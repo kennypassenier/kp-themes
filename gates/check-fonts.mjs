@@ -53,10 +53,11 @@ export const REDISTRIBUTABLE = ['OFL-1.1', 'Apache-2.0', 'UFL-1.0'];
  * @param {(slug: string) => { files: string[], licence: boolean, bytes: number } | null} readDir null when the directory is absent
  * @param {Map<string, string[]>} themeFamilies theme → family names its tokens name
  * @param {number} budgetBytes
+ * @param {Record<string, number>} [perTheme] a theme's own budget, with its reason in gates/config.json
  * @param {string[]} onDisk every directory under fonts/
  * @returns {string[]} problems
  */
-export function audit(families, readDir, themeFamilies, budgetBytes, onDisk) {
+export function audit(families, readDir, themeFamilies, budgetBytes, onDisk, perTheme = {}) {
     /** @type {string[]} */
     const problems = [];
     for (const slug of onDisk)
@@ -120,7 +121,13 @@ export function audit(families, readDir, themeFamilies, budgetBytes, onDisk) {
     for (const [theme, names] of themeFamilies) {
         let total = 0;
         for (const [slug, entry] of Object.entries(families)) if (names.includes(entry.renamed ?? entry.family)) total += bytesBySlug.get(slug) ?? 0;
-        if (total > budgetBytes) problems.push(`${theme}: its families weigh ${total} bytes, over the budget of ${budgetBytes} (budget)`);
+        // A theme may carry its own budget, named with its reason in
+        // gates/config.json — woodblock is the first: two Japanese
+        // families with a real bold face each cannot fit the shared
+        // number, and Kenny raised it for this theme rather than ship a
+        // browser-drawn bold (R6-Q6, 2026-09-08).
+        const budget = perTheme[theme] ?? budgetBytes;
+        if (total > budget) problems.push(`${theme}: its families weigh ${total} bytes, over the budget of ${budget} (budget)`);
     }
     return problems;
 }
@@ -206,6 +213,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         familiesByTheme(),
         Number(CONFIG.fontsBudgetBytes?.value ?? 1_500_000),
         onDisk,
+        CONFIG.fontsBudgetBytes?.perTheme ?? {},
     );
     // The stylesheet and the listing must agree: a family declared and
     // not listed has no licence record; one listed and not declared is a
