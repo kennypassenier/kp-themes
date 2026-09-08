@@ -81,6 +81,7 @@ Plain CSS (any stack):
 @import '@kp-soft/themes/css/phantom-register'; /* optional: phantom's cut paper, plates and tears */
 @import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels, grooves, dither and POST */
 @import '@kp-soft/themes/css/terminal-register'; /* optional: terminal's glass, cursor, inverse video and POST */
+@import '@kp-soft/themes/css/brutalism-register'; /* optional: brutalism's plates, slam, bars and marquee */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -212,6 +213,7 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 | `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in     |
 | `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in         |
 | `@kp-soft/themes/css/terminal-register`  | terminal's glass, cursor, inverse video and POST, opt-in |
+| `@kp-soft/themes/css/brutalism-register` | brutalism's plates, slam, bars and marquee, opt-in       |
 | `@kp-soft/themes/css/layout`             | the sixteen layout classes                               |
 | `@kp-soft/themes/css/utilities`          | the 115 utility classes                                  |
 | `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                                |

@@ -164,6 +164,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='brutalism'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/brutalism-register.css",
+                "selector": "[data-theme='brutalism'] mark"
+            },
+            "reveal": {
+                "css": "css/brutalism-register.css",
+                "selector": "[data-theme='brutalism'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/brutalism-register.css",
+                "selector": "[data-theme='brutalism'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/brutalism-register.css",
+                "selector": "[data-theme='brutalism'] [data-kp-surface] h1"
             }
         },
         "deco": {

@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="../css/synthwave-register.css" />
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
+        <link rel="stylesheet" href="../css/brutalism-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
     </head>
     <body>
@@ -562,9 +563,10 @@ colour; a grey hairline anywhere would be a different theme.</li>
 <li><strong>The shadow is a knob, not a rule.</strong> <code>--fx-shadow-offset: 4px</code> is the
 whole effect: <code>css/components.css</code> paints
 <code>offset offset 0 0 var(--border-strong)</code> on buttons, cards and inputs
-in every theme, and the other eleven answer 0px, which paints nothing.
-Measured at R0: the eleven fixtures are pixel-identical before and
-after the knob existed.</li>
+in every theme, and the other themes answer 0px, which paints
+nothing. The register exaggerates it to six pixels (<code>--kp-drop</code>) and
+adds the lift: a box under the pointer rises two pixels away from its
+shadow, and drops onto it when pressed.</li>
 <li><strong>Yellow is the default button, black is the primary.</strong> The contrast
 gate holds <code>--primary</code> at 4.5:1 against the page as link text, which
 no yellow can pass on off-white — so the ink is primary (13.4:1 with

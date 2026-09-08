@@ -68,6 +68,21 @@ effects module writes the column (`--kp-caret: block` on the root,
 `--kp-col` on the field), the register paints and blinks it. The
 register is `css/terminal-register.css`.
 
+**The fifth lift: brutalism.** Built from the approved concept demo
+"Hard Copy" (2026-09-08) on the §7 research (Gumroad, BEIGE FORCE,
+Future Pharmaceutical). The headline's words slam onto their yellow
+offset one after another (`--kp-reveal-headline: slam`), a `<mark>` is a
+yellow plate wiped in behind the word and closed by the line (`plate`),
+a six-pixel bar rules a heading off when it enters the viewport (`bar`),
+the dividers are a hatched marquee strip translating seamlessly — the
+second one the other way — every hover is the yellow plate with the
+line, the cta and the buttons lift two pixels away from a shadow that
+grows, the labels carry the pixel outline of four hard box-shadows, the
+dossier's stamp is tilted signal red and its redactions are ink bars
+that slide off, and there is no arrival at all: printed matter is simply
+there. The register is `css/brutalism-register.css`; it introduces no
+family (Archivo Black already ships) and no token.
+
 ## 4.0.0 — 2026-09-07
 
 **A destructive button asks before it acts, and four things that were

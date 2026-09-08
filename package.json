@@ -148,6 +148,7 @@
         "./css/synthwave-register": "./css/synthwave-register.css",
         "./css/phantom-register": "./css/phantom-register.css",
         "./css/terminal-register": "./css/terminal-register.css",
+        "./css/brutalism-register": "./css/brutalism-register.css",
         "./css/layout": "./css/layout.css",
         "./css/utilities": "./css/utilities.css",
         "./dist/css": "./dist/kp-themes.css",

@@ -60,7 +60,7 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `sepia` | Sepia | no |
 | `blueprint` | Blueprint | yes |
 | `solstice` | Solstice | yes |
-| `brutalism` | Brutalism | no |
+| `brutalism` | Brutalism | yes |
 | `deco` | Art Deco | yes |
 | `academia` | Dark Academia | yes |
 | `phantom` | Phantom | yes |
@@ -81,7 +81,7 @@ research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
 second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
 is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
-(row 4).
+(row 4); `brutalism` is the fifth, from "Hard Copy" (row 5).
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:

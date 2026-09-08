@@ -133,6 +133,7 @@ export function diffs() {
         synthwave: read('css/synthwave-register.css'),
         phantom: read('css/phantom-register.css'),
         terminal: read('css/terminal-register.css'),
+        brutalism: read('css/brutalism-register.css'),
     };
     const rules = read('css/_rules.css');
     const oldBlocks = themeBlocks(oldCss);
@@ -178,7 +179,9 @@ export function diffs() {
             // the new side is compared as the same union.
             const oldRules = scopedRules(oldCss, theme.name);
             const nowRules = scopedRules(
-                newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal'} */ (theme.name)],
+                newThemes +
+                    '\n' +
+                    newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)],
                 theme.name,
             );
             register = !oldBlocks.has(theme.name)
@@ -193,7 +196,10 @@ export function diffs() {
             old: textureOf(oldCss, theme.name),
             now:
                 textureOf(rules, theme.name) ??
-                textureOf(newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal'} */ (theme.name)] ?? '', theme.name),
+                textureOf(
+                    newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)] ?? '',
+                    theme.name,
+                ),
             proposal: theme.name === 'dark' ? CEILING : null,
         };
         // The story, and the sections the pair must show.
@@ -279,6 +285,7 @@ const CURRENT = [
     'synthwave-register.css',
     'phantom-register.css',
     'terminal-register.css',
+    'brutalism-register.css',
 ];
 
 /**

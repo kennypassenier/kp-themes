@@ -46,6 +46,7 @@ const SHEETS = [
     'synthwave-register.css',
     'phantom-register.css',
     'terminal-register.css',
+    'brutalism-register.css',
 ];
 
 /**

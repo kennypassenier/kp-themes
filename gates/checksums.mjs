@@ -38,6 +38,7 @@ export const FILES = [
     'css/synthwave-register.css',
     'css/phantom-register.css',
     'css/terminal-register.css',
+    'css/brutalism-register.css',
     'css/tailwind-bridge.css',
     'css/fonts.css',
     'css/themes.css',

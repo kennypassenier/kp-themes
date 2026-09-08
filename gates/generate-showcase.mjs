@@ -136,6 +136,7 @@ function showcase() {
         <link rel="stylesheet" href="../css/synthwave-register.css" />
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
+        <link rel="stylesheet" href="../css/brutalism-register.css" />
         <style>
 ${STYLE}        </style>
     </head>
@@ -236,6 +237,7 @@ function fixture(theme) {
         <link rel="stylesheet" href="../../css/synthwave-register.css" />
         <link rel="stylesheet" href="../../css/phantom-register.css" />
         <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
         <style>
 ${STYLE}        </style>
     </head>
