@@ -154,13 +154,13 @@ status check, and nothing runs on a server — 254 runs in five days and
 35.9 hours of waiting, on a project whose every change Kenny approves
 himself. Five commands replace it, and three of them are his to give:
 
-| Command                 | What                                     | When                             |
-| ----------------------- | ---------------------------------------- | -------------------------------- |
-| `npm run gates`         | the thirty blocking checks, seconds      | every commit, by the hook        |
-| `npm run test:affected` | the specs a change touches, Firefox only | during work                      |
-| `npm run test:browser`  | the whole suite, both engines            | when Kenny asks                  |
-| `npm run advice`        | contrast, invariants, motion, texture    | when Kenny wants the reading     |
-| `npm run verify`        | all three in order                       | before a release, on his command |
+| Command                 | What                                                             | When                             |
+| ----------------------- | ---------------------------------------------------------------- | -------------------------------- |
+| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook        |
+| `npm run test:affected` | the specs a change touches, Firefox only                         | during work                      |
+| `npm run test:browser`  | the whole suite, both engines                                    | when Kenny asks                  |
+| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading     |
+| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his command |
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
 contrast, the design invariants, the flash threshold, the reduced-motion

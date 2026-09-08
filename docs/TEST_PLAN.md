@@ -32,6 +32,15 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 | `npm run advice` | contrast, invariants, motion, texture — a reading, never a verdict | when Kenny wants the reading |
 | `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
 
+`verify` is `gates/verify.mjs` rather than three commands joined by `&&`:
+it banners each phase with the wall clock, prints a heartbeat when a phase
+goes quiet for thirty seconds, and ends with a table of what ran and how
+long each took. It runs the same commands the chain did — measured
+overhead one node process, 17 ms. `--fast` runs the browser phase in
+Firefox only, `--only=<phase>` runs one, `--no-advice` stops after the
+suite. The advisory phase never fails the run; its findings appear in the
+summary instead.
+
 Three rules hold this together, and they are the reason it is safe to run
 less rather than the reason it is faster:
 

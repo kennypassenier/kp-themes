@@ -518,9 +518,11 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     // reading. A check that is in neither `gates` nor `advice` runs
     // nowhere, and that is what the two assertions above and this one
     // together refuse.
-    assert.ok(/npm run gates/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the gates');
-    assert.ok(/npm run test:browser/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the browser suite');
-    assert.ok(/npm run advice/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run the advisory checks');
+    const verify = readFileSync(new URL('verify.mjs', import.meta.url), 'utf8');
+    assert.ok(/node gates\/verify\.mjs/.test(pkg.scripts.verify ?? ''), '`npm run verify` does not run gates/verify.mjs');
+    assert.ok(/'run', 'gates'/.test(verify), 'gates/verify.mjs does not run the gates');
+    assert.ok(/'playwright', 'test'/.test(verify), 'gates/verify.mjs does not run the browser suite');
+    assert.ok(/'run', 'advice'/.test(verify), 'gates/verify.mjs does not run the advisory checks');
     // The third list, added at round five's Phase 5 gate (H2). It builds
     // the tag, and until then nothing held it: it ran the hook script,
     // which is equivalent only for as long as nobody changes either.

@@ -289,7 +289,7 @@
         "test:affected": "node gates/run-affected.mjs",
         "test:firefox": "playwright test --project=firefox",
         "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants",
-        "verify": "npm run gates && npm run test:browser && npm run advice"
+        "verify": "node gates/verify.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",
