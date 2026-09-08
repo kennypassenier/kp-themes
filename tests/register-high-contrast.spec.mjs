@@ -19,7 +19,9 @@
 // replaces the demo's literal duplicate-label slide, which the shared
 // Button renderer has no markup for.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the headline's `clip-path` + `animation` rule removed from the
 //     register → the headline never narrows from the left edge, red on
 //     "the headline wipes in from the left, once, on load";

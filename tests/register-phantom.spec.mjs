@@ -21,6 +21,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -223,9 +224,11 @@ for (const [channel, url] of CHANNELS) {
                 .click()
                 .catch(() => {});
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content', 'transform', 'background-color']);
-            // Firefox reports the unresolved attr(); chromium the value.
-            expect(stamp.content).toMatch(/Calling\ card|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(dossier, '::before', ['transform', 'background-color']);
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Calling card/i);
             expect(stamp.transform).toMatch(/matrix\(0\.99/);
             const mark = dossier.locator('mark').first();
             expect((await pseudo(mark, '::after', ['transform'])).transform, 'covered before the trigger').not.toMatch(/matrix\(0,|, 0, 0, 0\)/);

@@ -31,6 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -106,21 +107,8 @@ for (const [channel, url] of CHANNELS) {
                 .poll(() => bar.evaluate((el) => Number(getComputedStyle(el).getPropertyValue('--kp-boot-progress'))), 'the bar fills')
                 .toBeGreaterThan(0);
             expect(await boot.evaluate((el) => getComputedStyle(el).fontFamily), 'the DOS voice').toMatch(/VT323/);
-            // The boot ends by itself as well, and on a loaded machine the
-            // poll above can take long enough that the overlay is already
-            // leaving when the click lands — the page then reports `<body>
-            // intercepts pointer events` and the test fails for a reason
-            // that has nothing to do with Skip. Measured 2026-09-08: green
-            // alone, red under eight workers. So: if the overlay is still
-            // up, Skip must end it; if it ended on its own first, that is
-            // the same promise kept by the other half of the mechanism.
-            if ((await boot.count()) > 0 && (await boot.isVisible())) {
-                await boot
-                    .locator('.kp-boot__skip')
-                    .click({ timeout: 5000 })
-                    .catch(() => {});
-            }
-            await expect(boot).toHaveCount(0, { timeout: 5000 });
+            await boot.locator('.kp-boot__skip').click();
+            await expect(boot).toHaveCount(0, { timeout: 3000 });
             await page.reload();
             await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
             expect(await page.locator('.kp-boot').count(), 'seen this session: no second boot').toBe(0);
@@ -281,9 +269,11 @@ for (const [channel, url] of CHANNELS) {
                 .click()
                 .catch(() => {});
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content', 'rotate', 'border-top-width']);
-            // Firefox reports the unresolved attr(); chromium the value.
-            expect(stamp.content).toMatch(/READ\ ONLY|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(dossier, '::before', ['rotate', 'border-top-width']);
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/READ ONLY/i);
             expect(stamp.rotate).toBe('-8deg');
             expect(stamp['border-top-width']).toBe('2px');
             expect(await dossier.locator('.kp-card__header').evaluate((el) => getComputedStyle(el).backgroundImage), 'the title bar').toMatch(

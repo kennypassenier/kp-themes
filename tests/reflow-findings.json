@@ -1,0 +1,267 @@
+{
+    "//": "Every element-level overflow the twenty-five registers produce at 320 and 768px, measured 2026-09-08 by tests/reflow.spec.mjs in chromium and firefox, both channels [G12]. NOT a list of things to fix: a register is an approved concept demo, and Kenny's rule of 2026-09-08 (S49) is that a test which says a demo must change produces a finding for him, never a silent correction. So this file is the finding, with the measurement, and the suite refuses any overflow it does not already name. The document itself scrolls sideways in NO theme, in neither channel, at neither width -- SC 1.4.10 holds everywhere; what is recorded here is the package's own stricter rule, an element wider than the box that holds it.",
+    "how": "Keyed by theme and by the element the audit named, with the state classes (is-*) stripped, because a headline caught mid-reveal carries a different one in each browser. A value of null means that browser did not reproduce it: the pixels are small enough that the two engines disagree, which is itself part of the finding. The suite checks one direction only -- an overflow this file does not name is red -- because an entry that one engine reproduces and the other does not could never pass a stale check in both.",
+    "themes": {
+        "academia": [
+            {
+                "where": "div.kp-card",
+                "chromium": "content 267 wide in a box of 262",
+                "firefox": "content 267 wide in a box of 262"
+            },
+            {
+                "where": "div.kp-stack",
+                "chromium": "content 268 wide in a box of 264",
+                "firefox": "content 268 wide in a box of 264"
+            }
+        ],
+        "brutalism": [
+            {
+                "where": "dl",
+                "chromium": null,
+                "firefox": "content 218 wide in a box of 216"
+            }
+        ],
+        "high-contrast": [
+            {
+                "where": "mark",
+                "chromium": "content 69 wide in a box of 67",
+                "firefox": "content 71 wide in a box of 69"
+            }
+        ],
+        "lapis": [
+            {
+                "where": "div.kp-card",
+                "chromium": "content 271 wide in a box of 262",
+                "firefox": "content 271 wide in a box of 262"
+            },
+            {
+                "where": "div.kp-stack",
+                "chromium": "content 272 wide in a box of 264",
+                "firefox": "content 272 wide in a box of 264"
+            }
+        ],
+        "mono": [
+            {
+                "where": "aside.kp-spec",
+                "chromium": "content 265 wide in a box of 262",
+                "firefox": "content 265 wide in a box of 262"
+            },
+            {
+                "where": "dl",
+                "chromium": "content 249 wide in a box of 230",
+                "firefox": "content 249 wide in a box of 230"
+            },
+            {
+                "where": "i.kp-spec__swatch inside dd",
+                "chromium": "wider than its container by 14px",
+                "firefox": "wider than its container by 14px"
+            },
+            {
+                "where": "span.kp-spec__font inside dd",
+                "chromium": "wider than its container by 10px",
+                "firefox": "wider than its container by 10px"
+            }
+        ],
+        "pastel": [
+            {
+                "where": "div.kp-stack",
+                "chromium": "content 266 wide in a box of 264",
+                "firefox": "content 266 wide in a box of 264"
+            },
+            {
+                "where": "h1.kp-text-balance",
+                "chromium": "content 266 wide in a box of 264",
+                "firefox": "content 266 wide in a box of 264"
+            }
+        ],
+        "phantom": [
+            {
+                "where": "a.kp-nav__link.kp-nav__link--cta inside li",
+                "chromium": "wider than its container by 2px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "button.kp-button inside div.kp-row",
+                "chromium": "wider than its container by 3px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "button.kp-button.kp-button--destructive.kp-button--mirror inside div.kp-row",
+                "chromium": "wider than its container by 3px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "button.kp-button.kp-button--ghost inside div.kp-row",
+                "chromium": "wider than its container by 3px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary inside div.kp-row",
+                "chromium": "wider than its container by 3px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary.kp-button--mirror inside div.kp-row",
+                "chromium": "wider than its container by 3px",
+                "firefox": "wider than its container by 3px"
+            },
+            {
+                "where": "div.kp-card__body",
+                "chromium": "content 303 wide in a box of 300",
+                "firefox": null
+            },
+            {
+                "where": "dl",
+                "chromium": "content 231 wide in a box of 213",
+                "firefox": "content 231 wide in a box of 213"
+            },
+            {
+                "where": "i.kp-spec__swatch inside dd",
+                "chromium": "wider than its container by 13px",
+                "firefox": "wider than its container by 13px"
+            },
+            {
+                "where": "li",
+                "chromium": "content 92 wide in a box of 89",
+                "firefox": "content 88 wide in a box of 85"
+            },
+            {
+                "where": "p",
+                "chromium": "content 303 wide in a box of 300",
+                "firefox": null
+            },
+            {
+                "where": "span.kp-spec__font inside dd",
+                "chromium": "wider than its container by 6px",
+                "firefox": "wider than its container by 6px"
+            },
+            {
+                "where": "ul.kp-nav__links",
+                "chromium": "content 593 wide in a box of 590",
+                "firefox": "content 567 wide in a box of 565"
+            }
+        ],
+        "retro": [
+            {
+                "where": "div.kp-stack",
+                "chromium": "content 276 wide in a box of 272",
+                "firefox": "content 276 wide in a box of 272"
+            },
+            {
+                "where": "h1.kp-text-balance",
+                "chromium": "content 276 wide in a box of 272",
+                "firefox": "content 276 wide in a box of 272"
+            }
+        ],
+        "sepia": [
+            {
+                "where": "mark inside p.kp-prose.kp-lede",
+                "chromium": "wider than its container by 1px",
+                "firefox": null
+            }
+        ],
+        "solstice": [
+            {
+                "where": "div.kp-card__body",
+                "chromium": "content 305 wide in a box of 303",
+                "firefox": null
+            },
+            {
+                "where": "mark inside p",
+                "chromium": "wider than its container by 2px",
+                "firefox": null
+            },
+            {
+                "where": "p",
+                "chromium": "content 305 wide in a box of 303",
+                "firefox": null
+            }
+        ],
+        "synthwave": [
+            {
+                "where": "button.kp-button",
+                "chromium": "content 208 wide in a box of 204",
+                "firefox": "content 208 wide in a box of 204"
+            },
+            {
+                "where": "button.kp-button.kp-button--destructive.kp-button--mirror",
+                "chromium": "content 152 wide in a box of 148",
+                "firefox": "content 153 wide in a box of 149"
+            },
+            {
+                "where": "button.kp-button.kp-button--ghost",
+                "chromium": "content 208 wide in a box of 204",
+                "firefox": "content 208 wide in a box of 204"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary",
+                "chromium": "content 185 wide in a box of 181",
+                "firefox": "content 182 wide in a box of 178"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary.kp-button--mirror",
+                "chromium": "content 208 wide in a box of 204",
+                "firefox": "content 208 wide in a box of 204"
+            },
+            {
+                "where": "div.kp-card__body",
+                "chromium": "content 239 wide in a box of 230",
+                "firefox": null
+            },
+            {
+                "where": "mark inside p",
+                "chromium": "wider than its container by 7px",
+                "firefox": null
+            },
+            {
+                "where": "p",
+                "chromium": "content 239 wide in a box of 230",
+                "firefox": null
+            }
+        ],
+        "terminal": [
+            {
+                "where": "dl",
+                "chromium": "content 238 wide in a box of 224",
+                "firefox": "content 238 wide in a box of 224"
+            },
+            {
+                "where": "i.kp-spec__swatch inside dd",
+                "chromium": "wider than its container by 9px",
+                "firefox": "wider than its container by 9px"
+            },
+            {
+                "where": "input.kp-field__check",
+                "chromium": "content 27 wide in a box of 22",
+                "firefox": "content 26 wide in a box of 23"
+            },
+            {
+                "where": "span.kp-spec__font inside dd",
+                "chromium": "wider than its container by 7px",
+                "firefox": "wider than its container by 7px"
+            }
+        ],
+        "woodblock": [
+            {
+                "where": "button.kp-button.kp-button--destructive.kp-button--mirror",
+                "chromium": "content 106 wide in a box of 102",
+                "firefox": "content 105 wide in a box of 101"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary.kp-button--mirror",
+                "chromium": "content 133 wide in a box of 129",
+                "firefox": "content 128 wide in a box of 124"
+            },
+            {
+                "where": "div.kp-stack",
+                "chromium": "content 266 wide in a box of 264",
+                "firefox": "content 266 wide in a box of 264"
+            },
+            {
+                "where": "h1.kp-text-balance",
+                "chromium": "content 266 wide in a box of 264",
+                "firefox": "content 266 wide in a box of 264"
+            }
+        ]
+    }
+}

@@ -28,6 +28,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -202,17 +203,27 @@ for (const [channel, url] of CHANNELS) {
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const kento = await pseudo(dossier, '::after', ['background-image']);
             expect(kento['background-image'], "the dossier's own kagi mark").toMatch(/linear-gradient/);
-            const stampBefore = await pseudo(dossier, '::before', ['content']);
-            expect(stampBefore.content).toMatch(/Sealed|attr\(data-kp-label\)/i);
+            // Measured through the paint: firefox reports `attr()`
+            // unresolved and the old `|attr(data-kp-label)` alternative
+            // accepted a stamp that printed nothing [G4].
+            const DOSSIER = '.kp-card[data-kp-reveal="emphasis"]';
+            expect(await stampWord(page, DOSSIER, '::before', 'data-kp-label')).toMatch(/Sealed/i);
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::before', ['transform']);
-            expect(covered.transform, 'no bar before the trigger').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            // Measured, not merely "not scaled away": `none` was accepted
+            // here, and `none` is also what a `::before` that does not
+            // exist reports — the assertion could not tell a covering bar
+            // from no bar at all [G5]. What the demo shows is a solid ink
+            // bar at full width over the phrase, so that is what is read.
+            const covered = await pseudo(mark, '::before', ['transform', 'width', 'height', 'background-color']);
+            expect(covered.transform, 'the bar stands at its full width before the trigger').toBe('matrix(1, 0, 0, 1, 0, 0)');
+            expect(Number.parseFloat(covered.width), 'and it is a real bar with a box').toBeGreaterThan(0);
+            expect(Number.parseFloat(covered.height)).toBeGreaterThan(0);
+            expect(covered['background-color'], 'in the ink of the block').toBe(await paint(page, '--foreground'));
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::before', ['transform'])).transform, 'the ink bar wiped off').toMatch(/^matrix\(0,/);
-            const stampAfter = await pseudo(dossier, '::before', ['content']);
-            expect(stampAfter.content).toMatch(/Opened|attr\(data-kp-label-open\)/i);
+            expect(await stampWord(page, DOSSIER, '::before', 'data-kp-label-open'), 'the stamp swapped to its open word').toMatch(/Opened/i);
         });
 
         test('the spec sheet is the block itself: the grain, and its own kentō mark', async ({ page }) => {

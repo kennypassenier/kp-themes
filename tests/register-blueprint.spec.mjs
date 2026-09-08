@@ -26,6 +26,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -211,8 +213,8 @@ for (const [channel, url] of CHANNELS) {
         test('the dropdown is a title block: the ground colour, one hairline, a cyan top rule and numbered leaders [KT14]', async ({ page }) => {
             await open(page, url);
             const menu = page.locator('.kp-nav__menu').first();
-            const link = page.locator('.kp-nav__links > li').first().locator('.kp-nav__link');
-            await link.focus();
+            // Reached with the keyboard, not focus() [G15].
+            await tabToSelector(page, '.kp-nav__links > li:first-child > .kp-nav__link');
             await expect(menu).toBeVisible();
             const panel = await menu.evaluate((el) => {
                 const s = getComputedStyle(el);
@@ -243,8 +245,10 @@ for (const [channel, url] of CHANNELS) {
         test('the dossier’s redactions are solid ink blocks that clear left to right on the trigger, staggered', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content']);
-            expect(stamp.content).toMatch(/Approved|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Approved/i);
             const mark = dossier.locator('mark').first();
             const covered = await pseudo(mark, '::after', ['clip-path', 'background-color']);
             expect(covered['clip-path'], 'covered before the trigger').toMatch(/^inset\(0(px)?\)$|^inset\(0px 0px 0px 0px\)$/);

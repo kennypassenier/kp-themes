@@ -12,19 +12,29 @@
 // clear on the trigger staggered 400ms apart, the focus ring in the
 // demo's own reversed order, and the whole approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], repeated 2026-09-08 in firefox as well as chromium [G13].
+// Two of the three hold; the third does NOT go red in either browser and
+// is recorded here as it measured, not as it was claimed:
 //   - the armed hidden mask (`[data-kp-effects] [data-kp-reveal='headline']
 //     :not(.is-deciphered)`) removed from the register → the headline
-//     carries no mask-image at all on first paint, red on "the headline is
-//     hidden behind the mask before it sweeps in";
+//     carries no mask-image at all on first paint, red on "the headline
+//     stays whole and sweeps into view once" in BOTH browsers, then
+//     restored green;
 //   - the nav link's `mix-blend-mode: difference` removed → hovering paints
-//     no ::before difference blend, red on "the nav link inverts";
-//   - the redaction bar's `mask-image` (`mark::after`) removed → the bar
-//     covers nothing measurable, red on "the redaction bar is a masked
-//     ink layer over the word".
+//     no ::before difference blend, red on "the nav link and the ghost
+//     button invert with mix-blend-mode" in BOTH browsers, then restored
+//     green;
+//   - REFUTED: the redaction bar's `mask-image` (`mark::after`) removed
+//     leaves the WHOLE suite green in chromium AND firefox, and the test
+//     the claim names ("the redaction bar is a masked ink layer over the
+//     word") does not exist in this repository. "The dossier: redaction
+//     bars mask-sweep clear on the trigger" reads `mask-position` and the
+//     bar's background only, and both survive the removal of
+//     `mask-image`.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -213,8 +223,12 @@ for (const [channel, url] of CHANNELS) {
 
         test("the focus ring is the demo's own order: paper against the control, ink outside it [DI2]", async ({ page }) => {
             await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            await button.focus();
+            const BUTTON = '[data-kp-surface="hero"] .kp-button';
+            const button = page.locator(BUTTON).first();
+            // Reached with the keyboard, not focus(): a focus() that never
+            // lands resolves happily and the reads below then measure the
+            // element at rest and pass [G15].
+            await tabToSelector(page, BUTTON);
             const ring = await button.evaluate((el) => {
                 const s = getComputedStyle(el);
                 return { outlineColor: s.outlineColor, boxShadow: s.boxShadow };

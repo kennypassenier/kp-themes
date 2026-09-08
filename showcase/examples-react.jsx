@@ -20,6 +20,7 @@ import Alert from '../components/alert.jsx';
 import Card from '../components/card.jsx';
 import Field from '../components/field.jsx';
 import Table from '../components/table.jsx';
+import Marquee from '../components/marquee.jsx';
 import { EXAMPLES, conceptBody, isComponent } from './examples.mjs';
 import { conceptCopy } from './concept-copy.mjs';
 
@@ -183,6 +184,20 @@ const TO_REACT = {
             autoComplete={p.autocomplete}
             required={p.required === true}
             className={p.class}
+        />
+    ),
+    // components/marquee.jsx: the items are the page's own copy, so they
+    // go through the same conversion every other child does [M1].
+    Marquee: (p, _children, key) => (
+        <Marquee
+            key={key}
+            items={(p.items ?? []).map((/** @type {Child} */ item, /** @type {number} */ index) => toReact(item, index))}
+            duration={p.duration}
+            pause={p.pause}
+            label={p.label}
+            as={p.as}
+            className={p.class}
+            {...Object.fromEntries(Object.entries(p).filter(([name]) => name.startsWith('data-')))}
         />
     ),
     Table: (p, _children, key) => (

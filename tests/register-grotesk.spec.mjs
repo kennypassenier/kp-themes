@@ -26,6 +26,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -201,13 +203,17 @@ for (const [channel, url] of CHANNELS) {
             expect(covered.transform, 'covered before the trigger').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
             expect(covered['background-color']).toBe(await paint(page, '--foreground'));
             expect(await mark.evaluate((el) => getComputedStyle(el).color), 'the word itself is hidden while armed').toBe('rgba(0, 0, 0, 0)');
-            const stamp = await pseudo(dossier, '::before', ['content']);
-            expect(stamp.content).toMatch(/Restricted|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Restricted/i);
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await expect(dossier).toHaveAttribute('data-kp-open', '');
-            const opened = await pseudo(dossier, '::before', ['content']);
-            expect([await dossier.getAttribute('data-kp-label-open'), 'attr(data-kp-label-open)']).toContain(opened.content.replace(/^"|"$/g, ''));
+            expect(
+                await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label-open'),
+                'the stamp swapped to its open word',
+            ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
             const lifted = await pseudo(mark, '::after', ['transform']);
             expect(lifted.transform, 'the bar has cut away').toMatch(/^matrix\(0,/);
@@ -230,8 +236,8 @@ for (const [channel, url] of CHANNELS) {
 
         test("the dropdown is styled in the theme's own language [KT14]", async ({ page }) => {
             await open(page, url);
-            const item = page.locator('.kp-nav__link[aria-haspopup]').first();
-            await item.focus();
+            // Reached with the keyboard, not focus() [G15].
+            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
             expect(await menu.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');

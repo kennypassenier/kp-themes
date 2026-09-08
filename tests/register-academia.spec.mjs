@@ -11,22 +11,33 @@
 // confirmation dialog for the destructive wipe, and the whole approved
 // inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
-//   - `[data-kp-effects] h1[data-kp-reveal='headline']:not(.is-in)::after
-//     { transform: scaleX(0); }` removed → the headline's rule reads
-//     drawn from the first paint instead of growing in on view, red on
-//     "the headline draws once the heading enters the viewport";
+// Drills [KT3], repeated 2026-09-08 in firefox as well as chromium [G13].
+// One of the three holds; the other two do NOT go red in either browser
+// and are recorded here as they measured, not as they were claimed:
 //   - `[data-kp-effects] .kp-card[data-kp-reveal='emphasis']
 //     mark:not(.is-cleared) { background: var(--background); color:
 //     var(--background); }` removed → the dossier's words are legible
 //     before the trigger is pressed, red on "the redactions stay covered
-//     until the trigger opens the file";
-//   - `.kp-nav__menu` rule removed → the dropdown paints the page's own
-//     background instead of the popover panel, red on "the dropdown is a
-//     popover panel".
+//     until the trigger opens the file" in BOTH browsers, then restored
+//     green;
+//   - REFUTED: `[data-kp-effects] h1[data-kp-reveal='headline']
+//     :not(.is-in):not(.is-deciphered)::after { transform: scaleX(0) }`
+//     removed leaves the whole suite green in chromium AND firefox. "The
+//     headline draws once the heading enters the viewport" reads the bar
+//     only after `is-in` has landed; it captures the armed transform into
+//     `before` and then discards it (`void before`), so no assertion in
+//     this file observes the armed state at all;
+//   - REFUTED: the `.kp-nav__menu` rule removed leaves the whole suite
+//     green in chromium AND firefox. css/components.css already gives the
+//     menu `background: var(--popover)`, a `1px` `--border-strong` border
+//     and `border-radius: var(--radius)` — and this theme's `--radius` is
+//     0 — so the three values "the dropdown is a popover panel" asserts
+//     are the base layer's own defaults and the register's rule changes
+//     nothing measurable here.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -178,11 +189,13 @@ for (const [channel, url] of CHANNELS) {
             expect(stack.content, 'the folder-stack plate is painted, not left at its unset default').toBe('""');
             expect(stack.position).toBe('absolute');
             expect(stack.transform, 'the plate is rotated behind the card').not.toBe('none');
-            // Firefox reports an unresolved `attr()` value literally rather
-            // than the string it resolves to, which Chromium does — both
-            // are "the stamp still owns ::before", the thing this asserts.
-            const stamp = await pseudo(card, '::before', ['content']);
-            expect(stamp.content, 'the stamp keeps its own pseudo-element').toMatch(/^("Restricted"|attr\(data-kp-label\))$/);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            expect(
+                await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label'),
+                'the stamp keeps its own pseudo-element and prints the card’s label',
+            ).toBe('Restricted');
             const mark = card.locator('mark').first();
             const covered = await mark.evaluate((el) => {
                 const s = getComputedStyle(el);

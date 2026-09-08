@@ -311,6 +311,25 @@
             <span class="kp-health" data-state="ok" data-test="plain-health"><span class="kp-health__dot" aria-hidden="true"></span> In orde</span>
         </section>
 
+        <section id="plain-marquee-section">
+            <h2>Marquee, framework-free</h2>
+            <!-- The same five props the React half passes, written the way a
+                 server writes them: the element `as` chose, the accessible
+                 name `label` gives it, and the two knobs as inline custom
+                 properties [M1, G14]. -->
+            <aside
+                class="kp-marquee"
+                data-kp-marquee
+                aria-label="Market tape"
+                style="--kp-marquee: 9000ms; --kp-marquee-pause: never"
+                data-test="plain-marquee"
+            >
+                <span>KP 412.75 +1.9%</span>
+                <span>THEME 98.20 -0.4%</span>
+                <span>BAND 1.00 0.0%</span>
+            </aside>
+        </section>
+
         <section id="plain-form">
             <h2>Formulier, framework-free</h2>
             <form class="kp-form" data-kp-form data-test="plain-form">

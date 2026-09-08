@@ -16,16 +16,24 @@
 // redactions hidden by colour only (KT5) until the trigger clears them,
 // in one frame; and the whole approved inventory on the page.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
-//   - the armed cover (`[data-kp-effects] mark:not(.is-cleared)`) removed
-//     → a lede mark reads its revealed colours from the first paint, red
-//     on "the mark starts covered, not highlighted";
+// Drills [KT3], repeated 2026-09-08 in firefox as well as chromium [G13].
+// Two of the three hold; the first does NOT go red in either browser and
+// is recorded here as it measured, not as it was claimed:
+//   - REFUTED: the armed cover (`[data-kp-effects] mark:not(.is-cleared)`)
+//     removed leaves the WHOLE suite green in chromium AND firefox. "The
+//     mark starts covered, and the amber wash and underline arrive
+//     together" waits for `is-cleared` and then reads only the RESTED
+//     colours, which the unconditional `[data-theme='ticker'] mark` rule
+//     supplies whether the armed rule is there or not; nothing in this
+//     file observes the covered state. (The claim also names a test,
+//     "the mark starts covered, not highlighted", that does not exist.)
 //   - the pending rule width (`:not(.is-in)::after { inline-size: 0 }`)
 //     removed → the rule reads 3rem before its heading is ever scrolled
-//     to, red on "the rule starts at zero width";
+//     to, red on "the rule starts at zero width" in BOTH browsers, then
+//     restored green;
 //   - `.kp-nav__menu a:hover`'s own rule removed → a hovered row reads the
 //     same background before and after, red on "a hovered row its own
-//     highlight" (`.kp-nav__menu`'s own frame rule was tried first and
+//     highlight" in BOTH browsers, then restored green (`.kp-nav__menu`'s own frame rule was tried first and
 //     found to duplicate the base layer's own defaults for this theme
 //     exactly — radius 0 from the token, the same border and popover
 //     ground — so drilling it proved nothing; the hover rule, which has
@@ -34,6 +42,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -136,9 +145,12 @@ for (const [channel, url] of CHANNELS) {
         test('the mark starts covered, and the amber wash and underline arrive together, in one frame [TH120]', async ({ page }) => {
             await open(page, url);
             const mark = page.locator('[data-kp-surface="hero"] .kp-lede mark').first();
-            // Drilled: removing `[data-kp-effects] mark:not(.is-cleared)`
-            // makes this read the revealed colours immediately — red on
-            // "the mark starts covered, not highlighted".
+            // NOT drilled, and it cannot be [G13]: removing
+            // `[data-kp-effects] mark:not(.is-cleared)` leaves this green
+            // in both browsers, because every read below waits for
+            // `is-cleared` first and then measures the RESTED colours the
+            // unconditional `mark` rule supplies either way. The covered
+            // state this test is named for is never observed here.
             await expect(mark).toHaveClass(/is-cleared/, { timeout: 5000 });
             await settled(page);
             expect(await mark.evaluate((el) => getComputedStyle(el).textDecorationColor)).toBe(await paint(page, '--primary'));
@@ -232,7 +244,10 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url);
             const input = page.locator('input.kp-field__input[type="text"], input.kp-field__input:not([type])').first();
             expect(await input.evaluate((el) => getComputedStyle(el).fontVariantNumeric)).toContain('tabular-nums');
-            await input.focus();
+            // Reached with the keyboard, not focus(): a focus() that never
+            // lands resolves happily and the read below then measures the
+            // field at rest and passes [G15].
+            await tabToSelector(page, 'input.kp-field__input[type="text"], input.kp-field__input:not([type])');
             const ring = await input.evaluate((el) => getComputedStyle(el).boxShadow);
             // Four stacked layers: bg, ring, bg, fg — the demo's own order.
             expect((ring.match(/rgba?\(/g) ?? []).length, 'four stacked shadow layers').toBeGreaterThanOrEqual(4);

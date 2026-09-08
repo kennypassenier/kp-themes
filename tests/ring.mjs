@@ -13,24 +13,42 @@
 // AR30 is about one layer down.
 
 /**
- * Reach an element with the keyboard.
+ * Reach an element with the keyboard, by CSS selector.
  *
- * `element.focus()` does not make `:focus-visible` match in either
- * browser, and `:focus-visible` is the selector under test, so the ring
- * has to be reached the way a keyboard user reaches it.
+ * Measured in both browsers on 2026-09-08 (G15): a bare
+ * `element.focus()` DOES make `:focus-visible` match — chromium and
+ * firefox both treat a script focus of a page that has seen no pointer
+ * input as keyboard-like. What suppresses the ring is a pointer
+ * interaction BEFORE the focus: click anywhere first and the same
+ * `focus()` leaves `:focus-visible` unmatched. An earlier comment here
+ * claimed the opposite and is refuted.
+ *
+ * The keyboard path is still the one to use, for a different reason: a
+ * `locator.focus()` on something that cannot take focus resolves
+ * happily and leaves focus where it was, so the test then reads the
+ * RESTING state of an element it believes it focused and passes. Tabbing
+ * cannot do that quietly — this throws when it never arrives.
  *
  * @param {import('@playwright/test').Page} page
- * @param {string} testId
+ * @param {string} selector
  * @param {number} [limit]
  */
-export async function tabTo(page, testId, limit = 40) {
-    const selector = `[data-test="${testId}"]`;
+export async function tabToSelector(page, selector, limit = 60) {
     for (let i = 0; i < limit; i++) {
         await page.keyboard.press('Tab');
         if (await page.evaluate((s) => document.activeElement?.matches(s) ?? false, selector)) return;
     }
     throw new Error(`could not reach ${selector} with Tab`);
 }
+
+/**
+ * Reach an element with the keyboard, by its `data-test` id.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} testId
+ * @param {number} [limit]
+ */
+export const tabTo = (page, testId, limit = 40) => tabToSelector(page, `[data-test="${testId}"]`, limit);
 
 /** Wear a theme. @param {import('@playwright/test').Page} page @param {string} theme */
 export const wearTheme = async (page, theme) => {
@@ -84,9 +102,20 @@ export const lengths = (layer) => [...layer.matchAll(/(-?[\d.]+)px/g)].map((m) =
  * @param {import('@playwright/test').Page} page
  * @param {string} testId
  */
-export const indicator = (page, testId) =>
-    page.evaluate((id) => {
-        const el = /** @type {HTMLElement} */ (document.querySelector(`[data-test="${id}"]`));
+export const indicator = (page, testId) => indicatorFor(page, `[data-test="${testId}"]`);
+
+/**
+ * The same measurement as `indicator()`, on any CSS selector — the
+ * register suites measure controls the concept page never gave a
+ * `data-test` id.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} selector
+ */
+export const indicatorFor = (page, selector) =>
+    page.evaluate((sel) => {
+        const el = /** @type {HTMLElement} */ (document.querySelector(sel));
+        if (!el) throw new Error(`no element matches ${sel}`);
         const s = getComputedStyle(el);
         // --focus-ring is authored as hsl() and a computed box-shadow is
         // rgb(): comparing the two as strings never matches, so the token
@@ -124,7 +153,7 @@ export const indicator = (page, testId) =>
             ringContrast,
             unfocused,
         };
-    }, testId);
+    }, selector);
 
 /**
  * True when both halves of the ring are declared on what `indicator()`

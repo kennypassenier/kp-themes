@@ -13,7 +13,9 @@
 // word when the file opens and its redactions fading and narrowing away
 // on the trigger, and the whole approved inventory on the page.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the armed overprint rule (`[data-kp-effects] … :not(.is-deciphered)
 //     ::before`) removed → the duplicate stands at its 2px rest position
 //     from the first paint instead of the wide offset, red on "the
@@ -27,6 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -229,8 +232,11 @@ for (const [channel, url] of CHANNELS) {
         test('the dossier: the rotated stamp swaps its word when the file opens, and the redactions cover the words until then', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content', 'rotate', 'background-color', 'color']);
-            expect(stamp.content).toMatch(/Proof approved|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(dossier, '::before', ['rotate', 'background-color', 'color']);
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Proof approved/i);
             expect(stamp.rotate).toBe('-3deg');
             const mark = dossier.locator('mark').first();
             const covered = await pseudo(mark, '::after', ['opacity', 'transform']);
@@ -242,8 +248,10 @@ for (const [channel, url] of CHANNELS) {
             // [S49, A11]. Drill [KT3]: the [data-kp-open] rule removed →
             // the stamp keeps saying "Proof approved", red here.
             await expect(dossier).toHaveAttribute('data-kp-open', '');
-            const opened = await pseudo(dossier, '::before', ['content']);
-            expect([await dossier.getAttribute('data-kp-label-open'), 'attr(data-kp-label-open)']).toContain(opened.content.replace(/^"|"$/g, ''));
+            expect(
+                await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label-open'),
+                'the stamp swapped to its open word',
+            ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['opacity'])).opacity, 'the redaction faded away').toBe('0');
         });

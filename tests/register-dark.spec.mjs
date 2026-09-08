@@ -27,6 +27,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -205,7 +206,10 @@ for (const [channel, url] of CHANNELS) {
             await expect(menu).toBeVisible();
             expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
             const link = menu.locator('a').first();
-            await link.focus();
+            // Walked to with the keyboard, not focus(): :focus-visible is
+            // the selector under test and a focus() that never lands would
+            // read the item at rest [G15].
+            await tabToSelector(page, '.kp-nav__menu a');
             const ring = await link.evaluate((el) => getComputedStyle(el).outlineColor);
             expect(ring, 'the keyboard state is the theme’s own violet, not the page-wide ink outline').toBe(await paint(page, '--primary'));
         });

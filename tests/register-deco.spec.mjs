@@ -12,7 +12,9 @@
 // foreground/background), the nav dropdown styled (KT14), and the whole
 // approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the cartouche's `::before` frame (box-shadow + clip-path) removed →
 //     no frame paints around the headline, red on "the cartouche frames";
 //   - the armed redaction rule (`[data-kp-effects] mark:not(.is-cleared)`)
@@ -24,6 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -173,8 +176,12 @@ for (const [channel, url] of CHANNELS) {
 
         test('the focus ring needs no override: the base layer default already answers DI2 for this theme', async ({ page }) => {
             await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            await button.focus();
+            const BUTTON = '[data-kp-surface="hero"] .kp-button';
+            const button = page.locator(BUTTON).first();
+            // Reached with the keyboard, not focus(): a focus() that never
+            // lands resolves happily and the reads below then measure the
+            // element at rest and pass [G15].
+            await tabToSelector(page, BUTTON);
             const ring = await button.evaluate((el) => getComputedStyle(el).boxShadow);
             expect(ring, 'the inner ring is the foreground token').toContain(await paint(page, '--foreground'));
             const outline = await button.evaluate((el) => getComputedStyle(el).outlineColor);

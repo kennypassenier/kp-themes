@@ -11,7 +11,9 @@
 // soft hover, the dossier's three redactions clearing on the trigger,
 // and the whole approved inventory (S46).
 //
-// Drills [KT3], performed 2026-09-08 in chromium, restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - `mix-blend-mode: difference` removed from the headline overlay's
 //     `::after` rule → red on "a mix-blend-mode overlay covers it";
 //   - the redaction bar's `background: var(--border-strong)` (the
@@ -27,6 +29,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -90,6 +94,29 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 for (const [channel, url] of CHANNELS) {
     test.describe(`the solstice register, ${channel}`, () => {
         test('the headline calibrates once: a mix-blend-mode overlay covers it, then clears to its own text [S49, A1]', async ({ page }) => {
+            // Recorded before navigation. The resting reads below are
+            // exactly what a theme declaring NO headline routine also
+            // produces — the overlay sits at opacity 0 either way — so on
+            // their own they could not fail [G3]. `calibrate` is the one
+            // run of `kp-cal-slide` on the overlay, and this catches the
+            // browser starting it: the register's own keyframe name, and
+            // the clip the overlay carries at the moment it begins.
+            await page.addInitScript(() => {
+                window.kpCalibration = null;
+                document.addEventListener('animationstart', (e) => {
+                    const event = /** @type {AnimationEvent} */ (e);
+                    if (event.animationName !== 'kp-cal-slide' || window.kpCalibration) return;
+                    const target = /** @type {Element} */ (event.target);
+                    const style = getComputedStyle(target, '::after');
+                    window.kpCalibration = {
+                        headline: target.matches('[data-kp-reveal="headline"]'),
+                        pseudo: event.pseudoElement,
+                        clip: style.clipPath,
+                        opacity: style.opacity,
+                        blend: style.mixBlendMode,
+                    };
+                });
+            });
             await open(page, url);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
@@ -103,6 +130,13 @@ for (const [channel, url] of CHANNELS) {
             expect(rest.opacity).toBe('0');
             expect(rest['mix-blend-mode']).toBe('difference');
             expect(await h1.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--foreground'));
+            // And the wipe itself ran, once, on the headline's own overlay.
+            const calibration = await page.evaluate(() => window.kpCalibration);
+            expect(calibration, 'the register started its own kp-cal-slide').not.toBeNull();
+            expect(calibration.headline, 'on the headline').toBe(true);
+            expect(calibration.pseudo, 'on the overlay, not the element').toBe('::after');
+            expect(calibration.opacity, 'and the overlay was visible while it ran — it is not clearing nothing').toBe('1');
+            expect(calibration.blend, 'in difference, the demo’s own device').toBe('difference');
         });
 
         test('under reduced motion the headline is never covered: no calibration overlay, no rule/redaction motion', async ({ page }) => {
@@ -148,7 +182,8 @@ for (const [channel, url] of CHANNELS) {
             const caret = await pseudo(trigger, '::after', ['content']);
             expect(caret.content).toMatch(/⌄/);
             const menu = trigger.locator('xpath=following-sibling::*[contains(@class,"kp-nav__menu")]');
-            await trigger.focus();
+            // Reached with the keyboard, not focus() [G15].
+            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
             await expect(menu).toBeVisible();
             expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));
             const item = menu.locator('a').first();
@@ -187,10 +222,11 @@ for (const [channel, url] of CHANNELS) {
         test("the stamp carries the demo's own word and rides a slight rotation", async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content', 'background-color', 'rotate']);
-            // Firefox reports the unresolved `attr()` function; Chromium
-            // resolves it to the attribute's own value (the demo's word).
-            expect(stamp.content).toMatch(/On file|attr\(data-kp-label\)/);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(dossier, '::before', ['background-color', 'rotate']);
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toBe('On file');
             expect(stamp['background-color']).toBe(await paint(page, '--accent'));
         });
 
@@ -200,8 +236,12 @@ for (const [channel, url] of CHANNELS) {
             // dedicated :focus-visible rule composed the two — the same
             // fault retro's own register comment records for its bevel.
             await open(page, url);
-            const btn = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            await btn.focus();
+            const MIRROR = '[data-kp-surface="hero"] .kp-button--mirror';
+            const btn = page.locator(MIRROR).first();
+            // Reached with the keyboard, not focus(): a focus() that never
+            // lands resolves happily and the reads below then measure the
+            // button at rest and pass [G15].
+            await tabToSelector(page, MIRROR);
             const focused = await btn.evaluate((el) => {
                 const s = getComputedStyle(el);
                 return { outline: s.outlineStyle, boxShadow: s.boxShadow };

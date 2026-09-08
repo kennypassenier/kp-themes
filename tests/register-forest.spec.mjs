@@ -14,7 +14,9 @@
 // nav dropdown [KT14], the mirror button's sheen, the stamp, and the
 // whole approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the armed cover (`[data-kp-effects] [data-kp-reveal='emphasis']
 //     mark:not(.is-cleared)`) removed → the redactions read from the
 //     first paint, red on "the redactions are covered while armed";
@@ -27,6 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -220,10 +223,11 @@ for (const [channel, url] of CHANNELS) {
         test('the stamp reads the dossier’s own label, rotated, in the destructive ink', async ({ page }) => {
             await open(page, url);
             const card = page.locator('.kp-card[data-kp-label]').first();
-            const stamp = await pseudo(card, '::before', ['content', 'color', 'transform']);
-            // Firefox reports an attr() content unresolved; chromium
-            // resolves it. Both say the stamp reads the card's own label.
-            expect(['Field copy', 'attr(data-kp-label)']).toContain(stamp.content.replace(/"/g, ''));
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(card, '::before', ['color', 'transform']);
+            expect(await stampWord(page, '.kp-card[data-kp-label]', '::before', 'data-kp-label')).toBe('Field copy');
             expect(stamp.color).toBe(await paint(page, '--destructive'));
             expect(stamp.transform).toMatch(/matrix/);
         });

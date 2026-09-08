@@ -26,6 +26,10 @@
             "marker": "kp-nav__link--cta"
         },
         {
+            "what": "the running band under the strip",
+            "marker": "class=\"kp-marquee\""
+        },
+        {
             "what": "the hero surface",
             "marker": "data-kp-surface=\"hero\""
         },

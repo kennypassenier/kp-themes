@@ -21,6 +21,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -215,8 +216,11 @@ for (const [channel, url] of CHANNELS) {
         test('the dossier: the tilted stamp with the pixel outline, and the bars sliding off on the trigger', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const stamp = await pseudo(dossier, '::before', ['content', 'rotate', 'background-color']);
-            expect(stamp.content).toMatch(/Sealed|attr\(data-kp-label\)/i);
+            // Measured through the paint, not the declaration: firefox
+            // reports `attr()` unresolved and the old `|attr(...)`
+            // alternative accepted a stamp that printed nothing [G4].
+            const stamp = await pseudo(dossier, '::before', ['rotate', 'background-color']);
+            expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Sealed/i);
             expect(stamp.rotate).toBe('-7deg');
             expect(stamp['background-color']).toBe(await paint(page, '--fx-signal'));
             const mark = dossier.locator('mark').first();
@@ -229,10 +233,10 @@ for (const [channel, url] of CHANNELS) {
             // does [S49, A11]. Drill [KT3]: the [data-kp-open] rule removed
             // → the stamp keeps saying "Sealed", red here.
             await expect(dossier).toHaveAttribute('data-kp-open', '');
-            const opened = await pseudo(dossier, '::before', ['content']);
-            // Firefox reports `content` with its attr() unresolved, which
-            // is why the sealed stamp above is read the same way.
-            expect([await dossier.getAttribute('data-kp-label-open'), 'attr(data-kp-label-open)']).toContain(opened.content.replace(/^"|"$/g, ''));
+            expect(
+                await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label-open'),
+                'the stamp swapped to its open word',
+            ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['transform'])).transform, 'the bar slid off').toMatch(/^matrix\(0,/);
         });

@@ -28,7 +28,7 @@
 //   - the `.kp-card` clip removed → no polygon, red.
 
 import { expect, test } from '@playwright/test';
-import { paintedFocusDelta, tabTo } from './ring.mjs';
+import { paintedFocusDelta, tabTo, tabToSelector } from './ring.mjs';
 
 const URL = '/examples/concept.html?theme=cyberpunk';
 
@@ -86,7 +86,8 @@ test.describe('the cyberpunk register on the concept page [C2]', () => {
         });
         expect(hit, "the hit test at the menu link's centre").toBe('link');
         // Keyboard: Tab from the trigger reaches the first item.
-        await trigger.focus();
+        // Reached with the keyboard, not focus() [G15].
+        await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
         await page.keyboard.press('Tab');
         expect(await page.evaluate(() => document.activeElement?.closest('.kp-nav__menu') !== null)).toBe(true);
     });

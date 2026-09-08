@@ -15,7 +15,9 @@
 // dossier's redactions clearing on the trigger, staggered; and the whole
 // approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the armed clip rule (`[data-kp-effects] […]:not(.is-deciphered)`)
 //     removed → the headline test's `animationstart` capture stayed green
 //     (the keyframe's own 0% step still paints the clipped start, same

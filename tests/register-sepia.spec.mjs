@@ -13,7 +13,9 @@
 // confirmation dialog, a real <dialog> with Cancel focused by default
 // (never Wipe); and the whole approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the ghost rule (`[data-kp-effects] [data-kp-reveal='headline'].is-settling`)
 //     emptied in the register → no ghosted frame is ever painted, red on
 //     "a blurred, ghosted frame was painted before it settled" (the first

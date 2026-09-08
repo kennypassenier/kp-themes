@@ -14,7 +14,9 @@
 // covering its redactions until the trigger clears them on a stagger, and
 // the whole approved inventory on the page.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - `color: var(--primary)` removed from `[data-kp-reveal='headline']`'s
 //     rest rule → the landed headline paints in the inherited h1 colour
 //     (ivory), not gold, red on "the headline stands covered before the
@@ -32,6 +34,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -199,7 +202,8 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
             const cta = page.locator('.kp-nav__link--cta').first();
             expect(await cta.evaluate((el) => getComputedStyle(el).backgroundColor), 'the filled gold plate').toBe(await paint(page, '--primary'));
-            await page.locator('.kp-nav__link[aria-haspopup]').first().focus();
+            // Reached with the keyboard, not focus() [G15].
+            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
             expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));

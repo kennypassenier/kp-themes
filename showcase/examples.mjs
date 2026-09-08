@@ -268,6 +268,22 @@ const TO_MARKUP = {
             ),
         );
     },
+
+    // components/marquee.jsx: one row of items and nothing else. The
+    // module builds the track, doubles the row and hides the copy, so
+    // both channels start from the same markup and a page without the
+    // module shows the items standing still [M1, T17, AR34].
+    Marquee: (p) =>
+        el(
+            'div',
+            {
+                class: cx('kp-marquee', p.class),
+                'data-kp-marquee': '',
+                'aria-label': p.label,
+                'data-example': p['data-example'],
+            },
+            (p.items ?? []).map((/** @type {Child} */ item) => el('span', {}, item)),
+        ),
 };
 
 /**
@@ -444,6 +460,13 @@ export function conceptBody(c) {
                 { href: '#try-11', label: c.navCta, className: 'kp-nav__link--cta' },
             ],
         }),
+        // The running band, under the strip [M1 of 2026-09-08]. Every one
+        // of the twenty-five registers already answers `.kp-marquee` and no
+        // page carried one, so no gate had ever seen a band under a theme
+        // (G14). It is scenery: the items are this theme's own words, and
+        // it takes no accessible name, because a band nobody has to read
+        // should not announce itself as a region.
+        el('Marquee', { 'data-kp-marquee': '', 'data-example': 'concept-band', items: [c.band1, c.band2, c.band3, c.band4] }),
         el(
             'main',
             { id: 'main', class: 'kp-page', tabindex: '-1' },

@@ -19,6 +19,7 @@ import DataTable from '../../components/datatable.jsx';
 import { Form, FormField } from '../../components/form.jsx';
 import { StringsProvider } from '../../hooks/use-strings.jsx';
 import { Copyable } from '../../components/patterns.jsx';
+import Marquee from '../../components/marquee.jsx';
 import { Reorder, SplitPane, Tree } from '../../components/structure.jsx';
 import { DatePicker, Upload, Wizard } from '../../components/flow.jsx';
 import { ColorPicker, GridLayout } from '../../components/canvas.jsx';
@@ -276,6 +277,18 @@ function Cases() {
                 />
                 <ShortcutSheet shortcuts={[{ keys: 'Ctrl K', description: 'Opdrachten openen' }]} />
             </div>
+            {/* The marquee's five props, all of them at once [M1, G14]: the
+                items, the element it renders as, the accessible name that
+                element then carries, and the two knobs. Nothing had ever
+                executed this component. */}
+            <Marquee
+                items={['KP 412.75 +1.9%', 'THEME 98.20 -0.4%', 'BAND 1.00 0.0%']}
+                as="aside"
+                label="Market tape"
+                duration="9000ms"
+                pause="never"
+                data-test="react-marquee"
+            />
             <div data-test="react-tags">
                 <Combobox
                     label="Labels"

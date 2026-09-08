@@ -10,7 +10,9 @@
 // as ink plates that clear left to right on the trigger, the two-channel
 // focus ring, the divider's radial swell, and the whole approved inventory.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - the loose-mark rule (`[data-theme='shade-dark'] mark { background:
 //     var(--fx-signal); ... }`) removed → the hero mark painted no
 //     background at all, red on "the lede mark is a signal plate";
@@ -24,6 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -87,6 +90,30 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 for (const [channel, url] of CHANNELS) {
     test.describe(`the shade-dark register, ${channel}`, () => {
         test('the headline arrives word by word out of a blur, and ends as its own text [TH119]', async ({ page }) => {
+            // Recorded before navigation. At rest the headline is simply
+            // its own text with no wrappers — which is also exactly what a
+            // theme declaring NO headline routine produces, so the reads
+            // below could not fail on their own [G3]. `focus` is the word
+            // routine: every word in its own span, each running the
+            // register's `kp-focus` out of a blur. Caught while `is-words`
+            // is still on the element, and the animation read off the word
+            // itself rather than counted — a register that wrapped the
+            // words but never animated them would pass a bare count.
+            await page.addInitScript(() => {
+                window.kpWords = 0;
+                window.kpBlurred = false;
+                new MutationObserver(() => {
+                    const h = document.querySelector('[data-kp-reveal="headline"]');
+                    if (!h) return;
+                    const words = [...h.querySelectorAll('[data-word]')];
+                    if (words.length > window.kpWords) window.kpWords = words.length;
+                    if (!h.classList.contains('is-words')) return;
+                    for (const word of words) {
+                        const style = getComputedStyle(word);
+                        if (style.animationName === 'kp-focus' && style.filter !== 'none') window.kpBlurred = true;
+                    }
+                }).observe(document, { subtree: true, childList: true, attributes: true });
+            });
             await open(page, url);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
@@ -95,6 +122,9 @@ for (const [channel, url] of CHANNELS) {
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
             expect(await h1.textContent()).toBe(source);
             expect(await h1.locator('[data-word]').count(), 'no word wrappers remain once at rest').toBe(0);
+            expect(await page.evaluate(() => window.kpWords), 'every word had its own span while the routine ran').toBe(source?.split(/\s+/).length);
+            expect(await page.evaluate(() => window.kpBlurred), 'and each ran the register’s own kp-focus, out of a real blur').toBe(true);
+            expect(await h1.evaluate((el) => getComputedStyle(el).filter), 'nothing is left blurred at rest').toBe('none');
         });
 
         test('under reduced motion the headline, the rule, the hero button and the dossier marks are all at rest', async ({ page }) => {
@@ -187,8 +217,12 @@ for (const [channel, url] of CHANNELS) {
 
         test('the focus ring keeps two channels: an outline in the foreground, a moat in the ground [DI2]', async ({ page }) => {
             await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            await primary.focus();
+            const PRIMARY = '[data-kp-surface="hero"] .kp-button--primary';
+            const primary = page.locator(PRIMARY).first();
+            // Reached with the keyboard, not focus(): a focus() that never
+            // lands resolves happily and the reads below then measure the
+            // button at rest and pass [G15].
+            await tabToSelector(page, PRIMARY);
             const ring = await primary.evaluate((el) => {
                 const s = getComputedStyle(el);
                 return { outlineColor: s.outlineColor, outlineStyle: s.outlineStyle, boxShadow: s.boxShadow };

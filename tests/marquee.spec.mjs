@@ -12,7 +12,9 @@
 // shows the items rather than a half-built band [T17, AR34], and a menu
 // draws a caption only where one was supplied.
 //
-// Drills [KT3], performed 2026-09-08 in chromium and restored:
+// Drills [KT3], performed 2026-09-08 in chromium, repeated the same
+// day in firefox (each one red on the test it names, then restored green
+// in both browsers) [G13]:
 //   - `animation: kp-marquee-pass …` removed from css/components.css →
 //     the track never moves, red on "the band runs";
 //   - the `[data-kp-paused]` rule removed → the band keeps running with
@@ -140,6 +142,143 @@ test.describe('the marquee [M1]', () => {
         const items = band.locator('span');
         expect(await items.count()).toBe(2);
         for (const i of [0, 1]) await expect(items.nth(i)).toBeVisible();
+    });
+});
+
+test.describe('the band on a page [M1, G14]', () => {
+    // Until 2026-09-08 `components/marquee.jsx` was imported by no fixture
+    // and `data-kp-marquee` appeared on no page under examples/ or
+    // showcase/: five props that had never been executed, and a band no
+    // theme had ever been measured with. Both halves are closed here — the
+    // component is mounted in tests/fixtures/react-components.jsx beside
+    // its framework-free twin in tests/fixtures/components.html, and the
+    // concept page carries a band in every theme's own words.
+
+    /**
+     * The band as the browser lays it out: the element, its classes, and
+     * the parts the module built inside it.
+     *
+     * @param {import('@playwright/test').Page} page
+     */
+    const structure = (page) =>
+        page.evaluate(() => {
+            const band = document.querySelector('[data-kp-marquee]');
+            if (!band) return null;
+            const laidOut = (/** @type {Element} */ el) => {
+                const box = el.getBoundingClientRect();
+                return box.width > 0 && box.height > 0;
+            };
+            const name = (/** @type {Element} */ el) => `${el.tagName.toLowerCase()}|${[...el.classList].sort().join(' ')}`;
+            const track = band.querySelector('[data-kp-marquee-track]');
+            const runs = [...band.querySelectorAll('[data-kp-marquee-run]')];
+            return {
+                band: name(band),
+                overflow: getComputedStyle(band).overflowX,
+                runs: runs.length,
+                // The copy is announced to nobody; the original is.
+                hidden: runs.map((run) => run.getAttribute('aria-hidden') ?? ''),
+                // The items the browser actually drew, per run, with their words.
+                items: runs.map((run) => [...run.children].filter(laidOut).map((item) => item.textContent?.trim() ?? '')),
+                // One track, one width, both channels.
+                trackWidth: track ? Math.round(track.getBoundingClientRect().width) : 0,
+                bandHeight: Math.round(band.getBoundingClientRect().height),
+            };
+        });
+
+    test('the concept page carries the same band in both channels [AR20]', async ({ page }) => {
+        // Drill [KT3]: the Marquee entry of TO_MARKUP in
+        // showcase/examples.mjs given the class 'kp-marquee-DRILL' and the
+        // pages regenerated — red on `band`: "div|kp-marquee-DRILL" against
+        // "div|kp-marquee". Put back: green.
+        await page.setViewportSize({ width: 1280, height: 900 });
+        // Both channels in the same theme, or the two bands are measured
+        // in two different faces: the generated page wears ticker in its
+        // markup, and the React fixture takes it the way a consumer does,
+        // from the stored value the head snippet applies.
+        await page.addInitScript(() => {
+            try {
+                localStorage.setItem('theme', 'ticker');
+            } catch {
+                /* the assertion on data-theme is the check */
+            }
+        });
+        await page.goto('/examples/concept-ticker.html');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'ticker');
+        await expect(page.locator('[data-kp-marquee]')).toHaveAttribute('data-kp-marquee-ready', '');
+        const free = await structure(page);
+        await page.goto('/tests/fixtures/examples.html?example=concept&copy=ticker');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'ticker');
+        await expect(page.locator('[data-kp-marquee]')).toHaveAttribute('data-kp-marquee-ready', '');
+        const react = await structure(page);
+        expect(free).not.toBe(null);
+        expect(react).toEqual(free);
+        // And it is a band with something in it, not two empty runs that
+        // would compare equal by being equally empty.
+        expect(free?.items[0].length).toBe(4);
+        expect(free?.items[0][0]).toBe('KP 412.75 +1.9%');
+    });
+
+    test('the five props are five knobs, and the browser shows all five [M1, KT6]', async ({ page }) => {
+        // The React band is mounted after js/auto.js has run, so the module
+        // is asked once more; it skips a band it has already built.
+        await page.goto('/tests/fixtures/components.html');
+        await page.evaluate(async () => {
+            const { attachEffects } = await import('/js/effects.js');
+            attachEffects(document);
+        });
+
+        // `as` and `label` together, read off the accessibility tree rather
+        // than off the attributes the component wrote [KT13]: an <aside>
+        // with an accessible name is a complementary landmark, and that is
+        // the browser's own answer to what those two props did. Two of
+        // them, because the framework-free twin passes the same pair.
+        const band = page.locator('[data-test="react-marquee"]');
+        await expect(page.getByRole('complementary', { name: 'Market tape' })).toHaveCount(2);
+        // Drills [KT3], each one line in components/marquee.jsx, each put
+        // back afterwards, all four red in chromium on 2026-09-08:
+        //   `as` ignored and the element forced to 'div' — the landmark is
+        //     gone, "toHaveCount: expected 2, received 1" on the line above;
+        //   `aria-label={label}` removed — the aside has no name, the same
+        //     line red the same way;
+        //   the items rendered as `null` — "expected [3 items], received
+        //     []" on the three cells below;
+        //   `style={knobs}` reduced to `style={style}` — the duration falls
+        //     back to the theme's own, "expected 9s, received 42s";
+        //   the `--kp-marquee-pause` line dropped from `knobs` — the last
+        //     assertion red, "expected never, received" nothing.
+
+        // `items`: three cells the browser drew, in the order given.
+        const drawn = await band.evaluate((el) => {
+            const run = el.querySelector('[data-kp-marquee-run]');
+            return [...(run?.children ?? [])].filter((item) => item.getBoundingClientRect().width > 0).map((item) => item.textContent?.trim() ?? '');
+        });
+        expect(drawn).toEqual(['KP 412.75 +1.9%', 'THEME 98.20 -0.4%', 'BAND 1.00 0.0%']);
+
+        // `duration`: the pass the browser will run, not the property set.
+        const track = band.locator('[data-kp-marquee-track]');
+        expect(await track.evaluate((el) => getComputedStyle(el).animationDuration)).toBe('9s');
+
+        // `pause`: the cascaded value on the band, which is where the prop
+        // puts it. A FINDING sits under this line rather than a stronger
+        // assertion: js/effects.js resolves this knob from the document
+        // ROOT, so a value a consumer sets on one band never reaches the
+        // module and that band goes on resting off screen. The suite's own
+        // "says never" test above sets it on documentElement, which is why
+        // that one passes. Reported, not repaired — js/effects.js belongs
+        // to another session.
+        expect(await band.evaluate((el) => getComputedStyle(el).getPropertyValue('--kp-marquee-pause').trim())).toBe('never');
+    });
+
+    test('the framework-free twin of that band is the same band [AR7]', async ({ page }) => {
+        await page.goto('/tests/fixtures/components.html');
+        const plain = page.locator('[data-test="plain-marquee"]');
+        // Written the way a server writes it, and the module has already
+        // built it: the same two runs, the same knob answered.
+        // Drill [KT3]: `animation: kp-marquee-pass …` removed from
+        // css/components.css — "expected 9s, received 0s". Put back: green.
+        await expect(plain).toHaveAttribute('data-kp-marquee-ready', '');
+        expect(await plain.locator('[data-kp-marquee-run]').count()).toBe(2);
+        expect(await plain.locator('[data-kp-marquee-track]').evaluate((el) => getComputedStyle(el).animationDuration)).toBe('9s');
     });
 });
 
