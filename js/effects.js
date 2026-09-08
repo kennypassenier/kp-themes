@@ -69,6 +69,11 @@ export const REVEALS = Object.freeze(['headline', 'emphasis', 'rule']);
  * values: a consumer may select on them, a register does.
  */
 export const STATE = Object.freeze({
+    // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
+    // blur+brightness resolve, a one-shot optical sweep on the whole,
+    // unsplit line — no word-splitting, so it is its own routine rather
+    // than the shared `focus` word-stagger group shade-dark already owns.
+    sharpening: 'is-sharpening',
     in: 'is-in',
     cleared: 'is-cleared',
     deciphered: 'is-deciphered',
@@ -273,6 +278,14 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
+    // resolve, a monotone blur+brightness sweep, once, on the whole,
+    // unsplit line (`kp-sharpen-in` — not `kp-focus-in`/`focus`, which the
+    // dark and shade-dark registers already own for their own, different
+    // mechanics). The confirmation dialog's one-shot open reuses the
+    // `kp-dialog-in` row above, which academia, nostromo and shade-dark
+    // already share.
+    'kp-sharpen-in': { durationMs: 640, cycles: 1, property: 'filter', luminanceSteps: [] },
     // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
     // in, and the two dimension lines extending like a tape measure (a
     // transform each, no luminance change) with their labels fading in.
@@ -687,6 +700,35 @@ export function attachEffects(root = document, options = {}) {
             later(finish, TIMINGS['kp-burnish'].durationMs + 50);
             return;
         }
+        if (routine === 'sharpen') {
+            // The grotesk headline [S49, LIFT_PLAN row 12]: the text is whole
+            // under a blur+brightness the register paints; the class runs the
+            // one-shot optical resolve, then the element rests. Without an
+            // animation the class comes off by the table's duration. Its own
+            // routine name and keyframe, distinct from the `focus` word-
+            // stagger group and `kp-focus-in` shade-dark already owns.
+            pending++;
+            el.classList.add(STATE.sharpening);
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.sharpening);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-sharpen-in') return;
+                el.removeEventListener('animationend', onEnd);
+                finish();
+            };
+            el.addEventListener('animationend', onEnd);
+            later(finish, TIMINGS['kp-sharpen-in'].durationMs + 50);
+            return;
+        }
+
         if (routine === 'shout' || routine === 'slam' || routine === 'focus' || routine === 'resolve') {
             // A word routine [PH2, BR2, S48 shade-dark and dark]: every word in its own span with its
             // index, the register animates them one after another by

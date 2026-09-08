@@ -96,6 +96,12 @@ const OUT_OF_SCOPE = {
     // lines extending like a tape measure, one transform each.
     'kp-dim-draw': 'a horizontal scale on a hairline under the headline, once; no luminance change and nothing over 341x256 px',
     'kp-elev-draw': 'a vertical scale on a hairline beside the headline, once; no luminance change and nothing over 341x256 px',
+    // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
+    // resolve, on the whole, unsplit line (`kp-sharpen-in` — not
+    // `kp-focus-in`/`focus`, which the dark and shade-dark registers
+    // already own for their own, different mechanics).
+    'kp-sharpen-in':
+        "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

@@ -422,6 +422,18 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='grotesk'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/grotesk-register.css",
+                "selector": "[data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/grotesk-register.css",
+                "selector": "[data-theme='grotesk'][data-kp-effects] [data-kp-reveal='headline'].is-sharpening"
+            },
+            "divider": {
+                "css": "css/grotesk-register.css",
+                "selector": "[data-theme='grotesk'] [data-kp-divider]"
             }
         },
         "tazhib": {

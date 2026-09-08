@@ -2909,8 +2909,8 @@
     --surface-hero-card: hsl(0, 0%, 100%);
     --surface-hero-card-foreground: hsl(0, 0%, 7%);
 
-    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
-    --kp-text-display: clamp(2rem, 4vw, 3rem);
+    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. The approved concept demo ("Twelve Columns", 2026-09-08) sets its h1 to clamp(2rem, 4vw, 3.4rem); the token wins per S49 — measured against docs/DESIGN_INVARIANTS.md's DI11 at 320px, the 4vw middle step keeps the line under the viewport at every width the overflow gate checks. */
+    --kp-text-display: clamp(2rem, 4vw, 3.4rem);
 
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(355, 95%, 45%);
