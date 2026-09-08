@@ -2176,7 +2176,7 @@
 }
 
 [data-theme='woodblock'] {
-    /* Nishiki: unbleached washi, Prussian-blue water, beni red, and the black key-block line around every shape. */
+    /* Woodblock: unbleached washi, Prussian-blue water, beni red, and the black key-block line around every shape. */
     --background: hsl(42, 52%, 92%);
     --foreground: hsl(36, 10%, 10%);
     --card: hsl(42, 60%, 95%);
@@ -2932,7 +2932,7 @@
 }
 
 [data-theme='lapis'] {
-    /* Tazhib: Persian illumination — lapis ground, ivory text, gold ruling, vermilion accents, a girih star under the glass. */
+    /* Lapis: Persian illumination — lapis ground, ivory text, gold ruling, vermilion accents, a girih star under the glass. */
     --background: hsl(228, 60%, 26%);
     --foreground: hsl(42, 55%, 89%);
     --card: hsl(228, 57%, 31%);
@@ -3925,7 +3925,7 @@
         letter-spacing: 0.04em;
     }
 
-    /* Nishiki: washi fibre, long and sparse [TH69]. */
+    /* Woodblock: washi fibre, long and sparse [TH69]. */
     [data-theme='woodblock'] {
         --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.3' numOctaves='3'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23w)'/%3E%3C/svg%3E");
         --fx-texture-size: 320px 320px;
@@ -3985,7 +3985,7 @@
         background: var(--primary);
     }
 
-    /* Tazhib: an eight-fold girih star, tiled, in the ruling gold [TH74]. */
+    /* Lapis: an eight-fold girih star, tiled, in the ruling gold [TH74]. */
     [data-theme='lapis'] {
         --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d4a72c' stroke-width='1'%3E%3Cpath d='M32 4l6.5 21.5L60 32l-21.5 6.5L32 60l-6.5-21.5L4 32l21.5-6.5z'/%3E%3Cpath d='M12.2 12.2l19.8 8.2 19.8-8.2-8.2 19.8 8.2 19.8-19.8-8.2-19.8 8.2 8.2-19.8z'/%3E%3C/g%3E%3C/svg%3E");
         --fx-texture-size: 64px 64px;
@@ -4024,7 +4024,7 @@
         box-shadow: 0 0 0 1px var(--border-strong);
     }
 
-    /* T9 · Topo: contour lines wandering across the kraft paper. */
+    /* T9 · Forest: contour lines wandering across the kraft paper. */
     [data-theme='forest'] {
         --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%23335544' stroke-width='1'%3E%3Cpath d='M-20 60 Q 60 20 140 65 T 300 55 T 400 80'/%3E%3Cpath d='M-20 95 Q 70 55 150 100 T 305 90 T 400 115'/%3E%3Cpath d='M-20 130 Q 80 95 160 135 T 310 125 T 400 150'/%3E%3Cpath d='M-20 230 Q 50 195 130 235 T 290 225 T 400 250'/%3E%3Cpath d='M-20 265 Q 60 235 140 270 T 295 260 T 400 285'/%3E%3Cpath d='M-20 330 Q 70 300 150 335 T 305 325 T 400 350'/%3E%3C/g%3E%3C/svg%3E");
         --fx-texture-size: 360px 360px;

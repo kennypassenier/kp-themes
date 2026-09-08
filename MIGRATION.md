@@ -73,7 +73,7 @@ and may not carry the reserved word, not even as part of a new name):
 `KP Academia Serif` (Lora), `KP Ticker Sans` and `KP Ticker Mono` (IBM
 Plex), `KP Shade Sans` (Source Sans 3), `KP Outrun Display` (Orbitron).
 The tokens name the renamed family first and the original after it, so a
-reader who has the original installed sees it. Nishiki ships its two
+reader who has the original installed sees it. Woodblock ships its two
 Japanese families in the regular weight only (the 1.5 MB budget); the
 browser synthesises the bold — a known limitation [R6-Q6].
 

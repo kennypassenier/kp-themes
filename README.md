@@ -124,7 +124,7 @@ and the original after it, for a reader who has the original installed:
 | `KP Outrun Display` | Orbitron        | synthwave               |
 
 `gates/check-fonts.mjs` reads every shipped file's name table and refuses
-one that carries a reserved word. Nishiki ships its two Japanese families
+one that carries a reserved word. Woodblock ships its two Japanese families
 in the regular weight only, inside the 1.5 MB per-theme budget; the
 browser synthesises the bold (a known limitation, R6-Q6). A consumer that
 prefers a font service can still load the originals itself: the stacks
@@ -676,7 +676,7 @@ beside it.
 ### Theme names
 
 The labels are English in the token source since 3.0.0 — "Formal",
-"Light", "Dark", "High contrast", "Blueprint", "Solstice", "Topographic",
+"Light", "Dark", "High contrast", "Blueprint", "Solstice", "Forest",
 and the rest are names; the thirteen themes of 3.1.0 arrived with English
 labels ("Art Deco", "Shade (light)", "Shade (dark)"). The interface names
 (`formal`, `forest`, `shade-light`) did not change. Override any label in

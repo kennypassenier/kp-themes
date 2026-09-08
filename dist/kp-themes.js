@@ -11,7 +11,7 @@ var THEMES = Object.freeze([
   { name: "synthwave", label: "Synthwave", dark: true },
   { name: "pastel", label: "Pastel", dark: false },
   { name: "terminal", label: "Terminal", dark: true },
-  { name: "forest", label: "Topographic", dark: false },
+  { name: "forest", label: "Forest", dark: false },
   { name: "high-contrast", label: "High contrast", dark: false },
   { name: "sepia", label: "Sepia", dark: false },
   { name: "blueprint", label: "Blueprint", dark: true },
@@ -21,13 +21,13 @@ var THEMES = Object.freeze([
   { name: "academia", label: "Dark Academia", dark: true },
   { name: "phantom", label: "Phantom", dark: true },
   { name: "ticker", label: "Ticker", dark: true },
-  { name: "woodblock", label: "Nishiki", dark: false },
+  { name: "woodblock", label: "Woodblock", dark: false },
   { name: "shade-light", label: "Shade (light)", dark: false },
   { name: "shade-dark", label: "Shade (dark)", dark: true },
   { name: "mono", label: "Mono", dark: false },
   { name: "retro", label: "Retro", dark: false },
   { name: "grotesk", label: "Grotesk", dark: false },
-  { name: "lapis", label: "Tazhib", dark: true },
+  { name: "lapis", label: "Lapis", dark: true },
   { name: "nostromo", label: "Nostromo", dark: false }
 ]);
 var DEFAULT_THEME = "formal";
