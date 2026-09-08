@@ -767,3 +767,17 @@ makes it the right call for his consumers: chassis-rs serves dashboards
 under `font-src 'self'`, so a named-but-not-shipped face never renders
 there. Licences per family (SIL OFL or equivalent), the manifest,
 `SHA256SUMS`, a `css/fonts.css` and a size budget are Phase 4's to shape.
+
+**S49 · An approved demo is implemented exactly.** (Kenny, 2026-09-08.)
+The concept demo Kenny approved for a theme (S46) is the specification of
+that theme's lift: every token, every element and every mechanism it
+showed is carried into the package as shown. A test or a gate that reads
+the demo as wrong — a contrast ratio, a design invariant, KT8's wash, a
+fixture test on the pointer target or the focus ring — does not change
+the implementation; it produces a finding that is put to Kenny, and only
+his explicit approval changes a value the demo showed. Until he answers,
+the deviation is not made and `main` does not move. What a demo could not
+show (the dictionary's copy under KT5, the module's own hooks) is carried
+by the package's mechanism with the demo's appearance; that, too, is
+named in the ratification. The measured diff of the compare page (R6-Q4)
+is the mechanical half; the rest is discipline (KT15).

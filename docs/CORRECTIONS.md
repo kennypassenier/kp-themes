@@ -1366,3 +1366,81 @@ browser, the way the KT8 fixture tests do for the combobox highlight.
 `REQUIRED_PARTS` should grow to every interaction-only part (the list in
 field 3), or whether the concept demo's inventory should carry a
 "styled" flag per element instead.
+
+## KT15 · Four registers deviated from their approved demos "on purpose", and nobody asked
+
+Found by Kenny on 2026-09-08, while brutalism (the fifth lift) was being
+committed: "Ik wil dat de demo's die goedgekeurd zijn exact zo
+geïmplementeerd worden, dus zelfs al zeggen onze testen omtrent contrast
+en dergelijke dat ze moeten aangepast worden, mag je dat enkel doen als
+je mijn expliciete goedkeuring hebt." Recorded as S49. **Put to Kenny in
+the deviation form of 2026-09-08; awaiting his answer.**
+
+**1 · What went wrong.** The phantom, retro, terminal and brutalism
+registers were each built from an approved concept demo (S46) and each
+shipped with deviations from it that no form ever asked about: retro's
+anatomy lists six "on purpose", terminal's four, brutalism's three, and
+beside those a fixture test changed a value the demo showed whenever it
+went red — the button's `min-height` (terminal, brutalism), the focus
+ring's composition (brutalism), a transition (brutalism), the navy
+combobox highlight and the select's `appearance: none` (retro). Four
+read-only audits on 2026-09-08 (`docs/audits/DEMO_FIDELITY_*.md`) count
+**50 class-A deviations** — a value or element the demo showed that the
+package changed or dropped: phantom 8, retro 15, terminal 14, brutalism
+13. The largest single one is systemic: none of the four demos' own
+words ship — `examples/concept.html` is one page for all six lifted
+themes and carries cyberpunk's copy under every `data-theme`.
+
+**2 · Which gate let it through.** The milestone ratification in AFK
+mode. C5 had already been read by Kenny as "the demo exact, compare as a
+measured diff" — for cyberpunk, on 2026-09-07 — but that reading was
+recorded as a milestone outcome, not as a rule, so the next four lifts
+treated a deviation as something to write down in the anatomy rather
+than something to ask. The compare page (R6-Q4) measures the old
+register against the new, not the demo against the register, so no gate
+saw it either.
+
+**3 · Where else the same fault sits — measured 2026-09-08.** All four
+registers built since C5 (the audits). Synthwave (SW0–SW4, ratified
+2026-09-08) was built the same way and is not audited yet; cyberpunk
+was rebuilt under C5's reading. The same shape — a test that reads one
+theme's value as the norm for all — sits in `tests/button.spec.mjs`
+(the three sizes, TH111; the ring's channel order, AR30) and in
+`gates/check-texture.mjs` (one ceiling for every theme).
+
+**4 · The measure.** S49 in `docs/SCOPE.md` and the project rule in
+`CLAUDE.md`: an approved demo is implemented exactly; a test or gate that
+disagrees produces a finding for Kenny, with "Demo exact" as the
+recommended option, and `main` waits. Every lift's ratification carries
+an audit of demo against register (the four audits are the first), and
+every deviation in it is an item Kenny answers. The 50 findings of this
+correction are put to him grouped by what the deviation *is* (copy,
+missing chrome, sizes, the ring, transitions, texture, token values,
+fonts, mechanisms, KT8's two points), one item each.
+
+**5 · What it costs.** One audit per lift (a Sonnet agent, ten to
+fifteen minutes, read-only) and a longer ratification form. Where Kenny
+chooses the demo over a test, the test changes or the frozen feature
+gets its mini-round — that is the cost of the rule, and it is his to
+spend.
+
+**6 · Who enforces it.** Discipline for the rule and the audit step;
+code for the half the compare page measures. The audit is a report, not
+a gate, until field 8 says otherwise.
+
+**7 · How and when it is measured.** At the next lift built from a
+demo after this form (blueprint v3, once approved): its ratification
+form carries the audit, and the audit finds zero deviations that were
+not first asked. Recorded as KT15-M1 in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback.** If that audit finds an unasked deviation, the
+audit becomes a gate: a script that lays the demo's declared values
+(tokens, sizes, durations, the header comment's measurements) beside the
+register's and refuses the commit on a difference without a recorded
+approval.
+
+**9 · When we review the measure.** At round six's retrospective
+(Phase 10), with the count of deviation items Kenny answered "Demo
+exact" against "Houden" — if he keeps nearly every deviation, the rule
+costs more than it protects and gets rewritten.
+
