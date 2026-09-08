@@ -36,6 +36,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='formal'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/formal-register.css",
+                "selector": "[data-theme='formal'] mark"
+            },
+            "reveal": {
+                "css": "css/formal-register.css",
+                "selector": "[data-theme='formal'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/formal-register.css",
+                "selector": "[data-theme='formal'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/formal-register.css",
+                "selector": "[data-theme='formal'] [data-kp-surface] h1"
             }
         },
         "light": {

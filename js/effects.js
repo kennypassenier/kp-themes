@@ -441,6 +441,30 @@ export function attachEffects(root = document, options = {}) {
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
             return;
         }
+        if (routine === 'arrive') {
+            // The formal headline [S49, LIFT_PLAN row 16]: whole and
+            // untouched — this theme does not glitch or type, it commits.
+            // Nothing here manipulates a character; the class the register
+            // reads (STATE.deciphered, same completion marker every
+            // routine sets) is held off by one frame past the next, the
+            // same two-`requestAnimationFrame` technique the approved demo
+            // used itself, so the browser paints the hidden state before a
+            // plain CSS transition (fade, rise) carries it to rest.
+            pending++;
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const arm = () => later(finish, 500);
+            if (view) view.requestAnimationFrame(() => view.requestAnimationFrame(arm));
+            else arm();
+            return;
+        }
         if (routine === 'ink') {
             // The sepia headline [S48, LIFT_PLAN row 9]: no per-word
             // stagger — the whole line is one CSS transition, a faint

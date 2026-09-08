@@ -4065,6 +4065,22 @@ function attachEffects(root = document, options = {}) {
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
       return;
     }
+    if (routine === "arrive") {
+      pending++;
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const arm = () => later(finish2, 500);
+      if (view) view.requestAnimationFrame(() => view.requestAnimationFrame(arm));
+      else arm();
+      return;
+    }
     if (routine === "ink") {
       pending++;
       el.classList.add(STATE.settling);

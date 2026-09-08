@@ -149,6 +149,7 @@
         "./css/phantom-register": "./css/phantom-register.css",
         "./css/terminal-register": "./css/terminal-register.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
+        "./css/formal-register": "./css/formal-register.css",
         "./css/sepia-register": "./css/sepia-register.css",
         "./css/solstice-register": "./css/solstice-register.css",
         "./css/mono-register": "./css/mono-register.css",
