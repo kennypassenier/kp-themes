@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/tazhib-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
     </head>
@@ -984,27 +985,49 @@ theme.</li>
                         </ul>
                         <div class="kp-prose">
 <p>Tazhib, the illumination of a Persian manuscript: a lapis-ultramarine
-ground, ivory text, gold ruling, vermilion accents, and an eight-fold
-girih star tiled under the glass. The only dark theme in the set built
-on a saturated pigment rather than a neutral — formal has the navy and
-the bronze but on light paper, blueprint has the blue but as a
-technical drawing, and neither is black anywhere. Nothing here is.</p>
+ground, ivory text, gold ruling, vermilion accents, and a ten-fold girih
+star tiled under the glass of the hero and the app surface. The only dark
+theme in the set built on a saturated pigment rather than a neutral —
+formal has the navy and the bronze but on light paper, blueprint has the
+blue but as a technical drawing, and neither is black anywhere. Nothing
+here is.</p>
+<p>Round six's approved concept demo, &quot;Lapis and Leaf&quot; (2026-09-08), is the
+specification this register is built from (S49); this document is the
+anatomy's answer, not the demo itself.</p>
 <ol>
-<li><strong>The ground is a pigment.</strong> <code>hsl(228, 60%, 26%)</code> is lapis, not
-navy; the card and popover are the same pigment lifted (31%, 36%),
-so DI6's rising layers are written in lightness, not in saturation —
-a more saturated lapis would look richer and read as lower.</li>
-<li><strong>Gold acts.</strong> <code>--primary</code> at <code>hsl(43, 67%, 50%)</code> measures 5.89:1
-on lapis and carries a deep-blue ink; the boundaries are a quieter
-gold, and the card carries a gold hairline inset from its edge — the
-ruling a page was drawn inside.</li>
+<li><strong>The ground is a pigment.</strong> <code>hsl(228, 60%, 26%)</code> is lapis, not navy;
+the card and popover are the same pigment lifted (31%, 36%), so DI6's
+rising layers are written in lightness, not in saturation — a more
+saturated lapis would look richer and read as lower.</li>
+<li><strong>Gold acts.</strong> <code>--primary</code> at <code>hsl(43, 67%, 50%)</code> measures 5.83:1 on
+lapis and carries a deep-blue ink; the boundaries are a quieter gold
+(<code>--border-strong</code>, <code>hsl(43, 45%, 52%)</code>), and the card, the popover,
+the spec sheet and every dropdown carry a four-ring frame — a ruled
+border of concentric insets drawn rather than filled, the page a
+manuscript was ruled inside.</li>
 <li><strong>Vermilion is a plate, never text.</strong> <code>hsl(5, 75%, 55%)</code> on lapis
-measures 3.20:1 — enough for a large-text accent with a dark ink,
-not for a word. Where red must be text (<code>--destructive</code>) it is lifted
-to 70% lightness.</li>
-<li><strong>Markazi Text for headings, Vazirmatn for the body.</strong> Both drawn
-for Arabic script with a Latin that holds its own; the pairing is
-the manuscript and its margin notes.</li>
+measures 3.24:1 and on card 2.78:1 — enough for a large-text accent
+or a filled chip with a dark ink, not for a word of running prose.
+Where red must be text (<code>--destructive</code>) it is lifted to 70%
+lightness (<code>hsl(5, 90%, 70%)</code>, 4.99:1 on lapis).</li>
+<li><strong>Markazi Text for headings, Vazirmatn for the body.</strong> Both drawn for
+Arabic script with a Latin that holds its own; the pairing is the
+manuscript and its margin notes. Both are already shipped
+(<code>fonts/families.json</code>, OFL-1.1, no Reserved Font Name clause) — X3
+needed no work.</li>
+<li><strong>The girih tile is confined to what it decorates.</strong> The demo refuses
+this theme's own pre-round-six page-wide texture (3.1.1, TH74) as a
+hazard — &quot;the same conic-gradient recipe at 5%, confined to the
+hero/app surfaces, not the whole page&quot; — so the register turns the
+page-wide layer off (<code>--fx-texture-opacity: 0</code>, a later cascade layer
+than <code>css/_rules.css</code>'s <code>kp.base</code> declaration of it) and paints the
+tile itself only where <code>[data-kp-surface]</code> stands.</li>
+<li><strong>The burnish, not a decipher or a type.</strong> The headline is whole and
+already gold; a single clip-path wipe opens it left to right once,
+with a brief brightness lift that settles as it lands — a gilder's
+burnishing pass, not a per-glyph or per-word reveal. This is the
+theme's own headline routine, <code>gild</code> (S49, X2 — see &quot;What the demo
+showed&quot; below).</li>
 </ol>
                         </div>
                     </article>

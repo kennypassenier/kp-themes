@@ -3815,7 +3815,12 @@ var STATE = Object.freeze({
   // clears out of a dither (retro), one that types itself (terminal).
   words: "is-words",
   dissolving: "is-dissolving",
-  typing: "is-typing"
+  typing: "is-typing",
+  // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
+  // whole clause, once — the gilder's burnishing pass, not a per-word or
+  // per-glyph reveal, so it earns its own routine rather than reusing
+  // `dissolve` or `type` [S49].
+  gilding: "is-gilding"
 });
 var ROUTINES = Object.freeze({
   headline: "--kp-reveal-headline",
@@ -3884,6 +3889,9 @@ var TIMINGS = Object.freeze({
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
+  // clip-path wipe over the headline once, no loop.
+  "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
   // The brutalism register [BR1]: the words dropping onto their offset and
   // the seamless marquee.
   "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -4025,6 +4033,31 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "gild") {
+      pending++;
+      el.classList.add(STATE.gilding);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.gilding);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-burnish"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-burnish"].durationMs + 50);
       return;
     }
     if (routine === "shout" || routine === "slam" || routine === "focus") {

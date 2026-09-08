@@ -302,6 +302,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='tazhib'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/tazhib-register.css",
+                "selector": "[data-theme='tazhib'] mark"
+            },
+            "reveal": {
+                "css": "css/tazhib-register.css",
+                "selector": "[data-theme='tazhib'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/tazhib-register.css",
+                "selector": "[data-theme='tazhib'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/tazhib-register.css",
+                "selector": "[data-theme='tazhib'] [data-kp-surface] h1"
             }
         },
         "nostromo": {

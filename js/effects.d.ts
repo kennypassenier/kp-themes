@@ -31,6 +31,7 @@ export declare const STATE: Readonly<{
     words: "is-words";
     dissolving: "is-dissolving";
     typing: "is-typing";
+    gilding: "is-gilding";
 }>;
 /**
  * The custom properties a theme declares to say which reveals it performs

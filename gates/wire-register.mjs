@@ -67,6 +67,50 @@ export function edits(theme) {
             line: `        <link rel="stylesheet" href="\${up}css/${theme}-register.css" />`,
             after: after('css/<t>-register.css" />'),
         },
+        {
+            file: 'tests/fixtures/bundle-loose.html',
+            line: `        <link rel="stylesheet" href="/css/${theme}-register.css" />`,
+            after: after('/css/<t>-register.css" />'),
+        },
+        {
+            file: 'tests/fixtures/button.html',
+            line: `        <link rel="stylesheet" href="/css/${theme}-register.css" />`,
+            after: after('/css/<t>-register.css" />'),
+        },
+        {
+            file: 'tests/fixtures/dashboard.html',
+            line: `        <link rel="stylesheet" href="/css/${theme}-register.css" />`,
+            after: after('/css/<t>-register.css" />'),
+        },
+        {
+            file: 'tests/fixtures/examples.html',
+            line: `        <link rel="stylesheet" href="/css/${theme}-register.css" />`,
+            after: after('/css/<t>-register.css" />'),
+        },
+    ];
+}
+
+/**
+ * The three edits an anchor cannot express: the compliance gate's three
+ * file lists, the showcase generator's two templates, and the regex the
+ * bare fixture reads. Each is a substitution on the last register wired.
+ *
+ * @param {string} theme
+ * @returns {{ file: string, from: RegExp, to: (m: RegExpMatchArray) => string }[]}
+ */
+export function substitutions(theme) {
+    return [
+        {
+            file: 'gates/compliance.mjs',
+            from: /'\.\.\/css\/([a-z-]+)-register\.css'(?!,\n\s*'\.\.\/css\/[a-z-]+-register)/g,
+            to: (m) => `${m[0]},\n    '../css/${theme}-register.css'`,
+        },
+        {
+            file: 'gates/generate-showcase.mjs',
+            from: /( *)(<link rel="stylesheet" href="([^"]*?)brutalism-register\.css" \/>)/g,
+            to: (m) => `${m[1]}${m[2]}\n${m[1]}<link rel="stylesheet" href="${m[3]}${theme}-register.css" />`,
+        },
+        { file: 'tests/bare.spec.mjs', from: /brutalism-register/g, to: () => `brutalism-register|${theme}-register` },
     ];
 }
 
@@ -78,6 +122,22 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(2);
     }
     let missing = 0;
+    for (const { file, from, to } of substitutions(theme)) {
+        const source = read(file);
+        if (source.includes(`${theme}-register`)) {
+            console.log(`ok      ${file}`);
+            continue;
+        }
+        missing++;
+        if (check) console.log(`MISSING ${file}: ${theme}-register is not named in it`);
+        else {
+            write(
+                file,
+                source.replace(from, (...args) => to(/** @type {RegExpMatchArray} */ (args.slice(0, -2)))),
+            );
+            console.log(`wired   ${file}`);
+        }
+    }
     for (const { file, line, after } of edits(theme)) {
         const source = read(file);
         const { text, added } = insertAfter(source, line, after);
@@ -94,8 +154,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
     console.log(
         `\n${missing === 0 ? 'nothing to do' : check ? `${missing} place(s) still to wire` : `${missing} place(s) wired`}.` +
-            '\nThe rest is by hand and by eye: gates/compliance.mjs (three lists), gates/generate-showcase.mjs (twice),' +
-            '\ntests/bare.spec.mjs (the regex), the four fixtures under tests/fixtures/, and themes/hooks.json.',
+            '\nWhat is left for a human: themes/hooks.json and showcase/concept-copy.mjs (both carried by' +
+            '\ngates/integrate-lift.mjs), and anything the agent changed outside its own theme.',
     );
     if (check && missing > 0) process.exit(1);
 }

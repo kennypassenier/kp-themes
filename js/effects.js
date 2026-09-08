@@ -85,6 +85,11 @@ export const STATE = Object.freeze({
     words: 'is-words',
     dissolving: 'is-dissolving',
     typing: 'is-typing',
+    // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
+    // whole clause, once — the gilder's burnishing pass, not a per-word or
+    // per-glyph reveal, so it earns its own routine rather than reusing
+    // `dissolve` or `type` [S49].
+    gilding: 'is-gilding',
 });
 
 /**
@@ -199,6 +204,9 @@ export const TIMINGS = Object.freeze({
     'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-backdrop-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
+    // clip-path wipe over the headline once, no loop.
+    'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     // The brutalism register [BR1]: the words dropping onto their offset and
     // the seamless marquee.
     'kp-slam': { durationMs: 260, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -401,6 +409,35 @@ export function attachEffects(root = document, options = {}) {
             };
             el.addEventListener('animationend', onEnd);
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
+            return;
+        }
+        if (routine === 'gild') {
+            // The tazhib headline [S48, LIFT_PLAN row 6]: the text is whole
+            // and already gold; the class runs one clip-path wipe left to
+            // right (the register's `kp-burnish` keyframe), then the
+            // element rests. Without an animation the class comes off by
+            // the table's duration — same shape as `dissolve`, a different
+            // keyframe, because the demo's mechanism is neither a dither
+            // nor a per-glyph type [S49].
+            pending++;
+            el.classList.add(STATE.gilding);
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.gilding);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-burnish') return;
+                el.removeEventListener('animationend', onEnd);
+                finish();
+            };
+            el.addEventListener('animationend', onEnd);
+            later(finish, TIMINGS['kp-burnish'].durationMs + 50);
             return;
         }
         if (routine === 'shout' || routine === 'slam' || routine === 'focus') {
