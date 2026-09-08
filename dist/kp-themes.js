@@ -3816,6 +3816,9 @@ var STATE = Object.freeze({
   words: "is-words",
   dissolving: "is-dissolving",
   typing: "is-typing",
+  // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+  // across the whole, unsplit line once.
+  revealed: "is-revealed",
   // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
   // whole clause, once — the gilder's burnishing pass, not a per-word or
   // per-glyph reveal, so it earns its own routine rather than reusing
@@ -3889,6 +3892,11 @@ var TIMINGS = Object.freeze({
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+  // once across a headline (the whole line, unsplit) or a redaction bar.
+  // No luminance step: the mask moves, the content under it does not
+  // change colour.
+  "kp-wipe": { durationMs: 600, cycles: 1, property: "mask-position", luminanceSteps: [] },
   // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
   // clip-path wipe over the headline once, no loop.
   "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
@@ -4039,6 +4047,31 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "wipe") {
+      pending++;
+      el.classList.add(STATE.revealed);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.revealed);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-wipe"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-wipe"].durationMs + 50);
       return;
     }
     if (routine === "gild") {

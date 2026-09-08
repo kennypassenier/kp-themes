@@ -51,6 +51,7 @@ function motionScope() {
         '../css/shade-dark-register.css',
         '../css/tazhib-register.css',
         '../css/high-contrast-register.css',
+        '../css/mono-register.css',
     ]) {
         const css = readFileSync(new URL(rel, import.meta.url), 'utf8');
         names.push(...[...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
@@ -72,6 +73,7 @@ function motionVerdicts() {
         '../css/shade-dark-register.css',
         '../css/tazhib-register.css',
         '../css/high-contrast-register.css',
+        '../css/mono-register.css',
         '../css/_rules.css',
     ]) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
@@ -108,6 +110,7 @@ function layersClean() {
         '../css/shade-dark-register.css',
         '../css/tazhib-register.css',
         '../css/high-contrast-register.css',
+        '../css/mono-register.css',
         '../css/tailwind-bridge.css',
     ].every((rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0);
 }

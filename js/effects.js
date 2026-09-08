@@ -85,6 +85,9 @@ export const STATE = Object.freeze({
     words: 'is-words',
     dissolving: 'is-dissolving',
     typing: 'is-typing',
+    // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+    // across the whole, unsplit line once.
+    revealed: 'is-revealed',
     // The tazhib headline [S48, LIFT_PLAN row 6]: a single wipe over the
     // whole clause, once — the gilder's burnishing pass, not a per-word or
     // per-glyph reveal, so it earns its own routine rather than reusing
@@ -204,6 +207,11 @@ export const TIMINGS = Object.freeze({
     'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-backdrop-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+    // once across a headline (the whole line, unsplit) or a redaction bar.
+    // No luminance step: the mask moves, the content under it does not
+    // change colour.
+    'kp-wipe': { durationMs: 600, cycles: 1, property: 'mask-position', luminanceSteps: [] },
     // The tazhib register [S48, LIFT_PLAN row 6]: the burnish, a single
     // clip-path wipe over the headline once, no loop.
     'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
@@ -415,6 +423,34 @@ export function attachEffects(root = document, options = {}) {
             };
             el.addEventListener('animationend', onEnd);
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
+            return;
+        }
+        if (routine === 'wipe') {
+            // The mono headline [S48, LIFT_PLAN row 6]: the text stays whole,
+            // never split into words or glyphs; the register sweeps a
+            // hard-edge mask across it once, left to right — rauno.me's
+            // verticalFade, adapted from opacity to mask-position so nothing
+            // ever flashes. The class arms the register's own animation;
+            // without one the class comes off by the table's duration.
+            pending++;
+            el.classList.add(STATE.revealed);
+            let ended = false;
+            const finish = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.revealed);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(finish);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-wipe') return;
+                el.removeEventListener('animationend', onEnd);
+                finish();
+            };
+            el.addEventListener('animationend', onEnd);
+            later(finish, TIMINGS['kp-wipe'].durationMs + 50);
             return;
         }
         if (routine === 'gild') {

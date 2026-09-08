@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../css/tazhib-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
@@ -874,30 +875,37 @@ the register adds nothing to the ground.</li>
                         <div class="kp-prose">
 <p>Greyscale, and nothing else: the ink is the brand. Vercel's Geist is the
 living reference — near-white canvas, near-black ink, a mid grey, a
-hairline, and no accent colour anywhere — and the register it produces
-is the one that puts the content first because there is nothing else to
-look at. Different from high-contrast, which keeps a navy, a yellow and
-five chart hues for a safety reason; this theme drops hue for an
-aesthetic one.</p>
+hairline, and no accent colour anywhere — and the register it produces is
+the one that puts the content first because there is nothing else to look
+at. Different from high-contrast, which keeps a navy, a yellow and five
+chart hues for a safety reason; this theme drops hue for an aesthetic
+one. It reads as a well-set document, not a design.</p>
 <ol>
 <li><strong>Meaning by lightness.</strong> Every colour that means something elsewhere
 is a grey here, so the seven status plates are a <strong>ladder</strong>: 86% for
 offer, then 74, 62, 52, 34, 22, and 9% for rejected — each pair at
-least 1.25:1 apart, which a unit test holds (<code>gates/gates.test.mjs</code>,
-TH86). The DI4 gate's own pair, offer against rejected, is the two
-ends of the ladder.</li>
-<li><strong>Charts get a pattern as well as a grey.</strong> <code>--chart-pattern-1..5</code>
-are five SVG fills — diagonal, dots, crosshatch, horizontal, vertical
-— drawn at 30–35% black over the series colour, so five greys between
-9% and 55% lightness are told apart by texture before anyone squints
-at the shade. Every other theme answers <code>none</code>.</li>
+least 1.25:1 apart, held by a unit test (<code>gates/gates.test.mjs</code>, TH86).</li>
+<li><strong>Charts get a pattern as well as a grey.</strong> <code>--chart-pattern-1..5</code> are
+five SVG fills — diagonal, dots, crosshatch, horizontal, vertical —
+drawn at 30–35% black over the series colour, so five greys between 9%
+and 55% lightness are told apart by texture before anyone squints at
+the shade. Every other theme answers <code>none</code>.</li>
 <li><strong>The ink is 9%, the action is 14%.</strong> <code>--primary</code> sits a step above
 the text because the visited-link derivation needs room to move: at
 9% the visited colour measured 11.3 from the link, under the floor of
 12, and at 14% it clears (12.7).</li>
-<li><strong>Inter Tight for the text, Geist Mono for headings and numerals.</strong>
-A grotesk set tight is the Geist gesture; the mono is where the
-theme allows itself a voice.</li>
+<li><strong>Inter Tight for the text, Geist Mono for headings and numerals.</strong> A
+grotesk set tight is the Geist gesture; the mono is where the theme
+allows itself a voice — headings, numerals, labels and code all read
+in it, and the register's <code>--theme-font-display</code> and
+<code>--theme-font-mono</code> are the same family for that reason.</li>
+<li><strong>One mechanism, two directions.</strong> rauno.me's mask-image fade — a
+hard-edge mask swept by <code>mask-position</code> across a 200%-wide two-stop
+gradient — reveals the headline (content emerging) and clears a
+dossier's redactions (a bar being hidden), the same keyframe
+(<code>kp-wipe</code>) run both ways. Adapted from the reference's opacity
+cross-fade specifically so nothing ever flashes (DI5): the mask moves,
+the content under it never changes colour.</li>
 </ol>
                         </div>
                     </article>

@@ -279,6 +279,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='mono'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/mono-register.css",
+                "selector": "[data-theme='mono'] mark"
+            },
+            "reveal": {
+                "css": "css/mono-register.css",
+                "selector": "[data-theme='mono'] [data-kp-reveal='rule']::after"
+            },
+            "divider": {
+                "css": "css/mono-register.css",
+                "selector": "[data-theme='mono'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/mono-register.css",
+                "selector": "[data-theme='mono'] [data-kp-surface] h1"
             }
         },
         "retro": {

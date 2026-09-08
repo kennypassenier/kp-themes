@@ -72,6 +72,10 @@ const OUT_OF_SCOPE = {
     // horizontal scale (a transform on a 3px bar, once, under 341x256 px).
     'kp-hc-headline-wipe': 'a clip-path ellipse wipe across the hero headline, once, on load; no opacity change anywhere',
     'kp-hc-rule-wipe': 'a horizontal scale on a 3px rule under a heading, once, on load; no luminance change and under 341x256 px',
+    // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+    // once across a headline or a redaction bar (mask-position).
+    'kp-wipe':
+        'a hard-edge mask sweeping once across a headline (the whole line, unsplit) or a redaction bar (mark::after); the content under the mask keeps its own colours, only the reveal edge moves',
     // The tazhib register [S48, LIFT_PLAN row 6].
     'kp-burnish':
         'a clip-path wipe over the headline once (the burnish); the text is gold from the first frame of the wipe and stays gold, only the reveal boundary moves',

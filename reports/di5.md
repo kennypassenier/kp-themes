@@ -31,6 +31,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-focus-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-dialog-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-backdrop-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-wipe` | mask-position | 600 ms | 1× | — | 0.00/s | under |
 | `kp-burnish` | clip-path | 900 ms | 1× | — | 0.00/s | under |
 | `kp-hc-headline-wipe` | clip-path | 550 ms | 1× | — | 0.00/s | under |
 | `kp-hc-rule-wipe` | transform | 400 ms | 1× | — | 0.00/s | under |
