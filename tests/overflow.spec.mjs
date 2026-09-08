@@ -219,8 +219,14 @@ test.describe('the overflow and rhythm gate', () => {
                     // extends the scrollable area — measured once as a 1280px
                     // overflow in chromium that three reruns did not reproduce
                     // (rule 8a: a flake is named, then removed).
+                    // A loop cannot be finished (the terminal register's sweep,
+                    // brutalism's marquee, topo's drift): a finite animation is
+                    // finished, an infinite one is left where it is — it moves a
+                    // pattern or a band and never the layout.
                     await page.evaluate(() => {
-                        for (const animation of document.getAnimations()) animation.finish();
+                        for (const animation of document.getAnimations()) {
+                            if (animation.effect?.getTiming().iterations !== Infinity) animation.finish();
+                        }
                     });
                     const found = await audit(page, { minGap: MIN_GAP, containers: BLOCK_CONTAINERS });
                     if (found.length > 0) problems.push(`at ${width}px:\n${report(found)}`);

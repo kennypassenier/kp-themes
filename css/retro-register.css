@@ -326,7 +326,6 @@
     [data-theme='retro'] .kp-nav__links > li:focus-within > .kp-nav__link {
         background: var(--primary);
         color: var(--primary-foreground);
-        box-shadow: none;
     }
 
     [data-theme='retro'] .kp-nav__link[aria-haspopup]::after {

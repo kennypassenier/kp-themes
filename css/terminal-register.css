@@ -374,8 +374,7 @@
     /* ── Buttons: brackets and plates; no radius, a cell has no corner ── */
 
     [data-theme='terminal'] .kp-button {
-        min-height: 2.9rem;
-        padding: 0.55rem 1.4rem;
+        padding-inline: 1.4rem;
         font-family: var(--theme-font-mono);
         font-size: 0.95rem;
         font-weight: 400;
@@ -384,7 +383,6 @@
         background: transparent;
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        box-shadow: none;
         position: relative;
     }
 
@@ -403,6 +401,7 @@
 
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
+        min-height: 2.9rem;
     }
 
     [data-theme='terminal'] .kp-button--primary,
