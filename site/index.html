@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/pastel-register.css" />
         <link rel="stylesheet" href="../css/shade-light-register.css" />
         <link rel="stylesheet" href="../css/ticker-register.css" />
         <link rel="stylesheet" href="../css/topo-register.css" />
@@ -360,22 +361,35 @@ when the register is off.</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>Risograph. A lavender-milk ground, plum ink, and the slight
-misregistration of a second pass that never quite lines up. Soft without
-being weak: the ink colours are properly saturated, it is the <em>ground</em>
-that is pale.</p>
-<p>The 16 px corner radius is the largest of any theme and it is doing real
-work — this is the only theme whose geometry is soft.</p>
+<p>Risograph printing. A lavender-milk ground, plum ink, and the slight
+misregistration of a second pass that never quite lines up — not as a
+flaw dressed up as a feature, but as the theme's actual mechanism: a
+duplicate layer that springs from a wide mis-registration into its
+2px rest position once, on load. Soft without being weak: the ink
+colours are properly saturated, it is the <em>ground</em> that is pale.</p>
+<p>The largest corner radius of any theme carries through here as a full
+rounded outer clip on the hero, and a torn-tab zig-zag divider answers
+S46's razor-tear brief in the theme's own material: paper, not metal.</p>
 <ol>
-<li><strong>The ground is tinted, not white.</strong> <code>hsl(285, 45%, 97%)</code> — a lavender
-so pale it reads as white until you put white next to it.</li>
-<li><strong>Plum, rose and mint.</strong> Three ink colours from a limited palette, the
-way a risograph has a limited drum set.</li>
-<li><strong>The overprint.</strong> Headings carry a 2 px offset shadow in a second ink,
-imitating misregistration. It is the theme's signature and its main
-accessibility risk.</li>
-<li><strong>Soft geometry.</strong> Large radii everywhere. Sharpening them makes it
-another light theme.</li>
+<li><strong>The ground is tinted, not white.</strong> A lavender so pale it reads as
+white until you put white next to it.</li>
+<li><strong>Plum, rose and mint</strong>, plus sky, sand and violet as the same
+base/soft system — every one of them the theme's own existing
+semantic token pair (background/foreground), shown together on the
+concept page's spec sheet as a kit, not invented for the demo.</li>
+<li><strong>The overprint.</strong> The headline carries a duplicate layer in a second
+ink, held at its measured 2px offset. It is the theme's signature and
+its main accessibility risk (see &quot;may not do&quot; below); the demo adds
+one arrival on top of the always-static signature, never instead of
+it.</li>
+<li><strong>Soft geometry.</strong> Large radii everywhere, and now a full rounded
+clip on the hero and the dossier. Sharpening them makes it another
+light theme.</li>
+<li><strong>The springy overshoot.</strong> The theme's own <code>--fx-ease</code> (an overshoot
+cubic-bezier, tuned down from Aardvark Book Club's reference for a
+gentler kit) drives the headline's spring-in, the mark fills, the
+rule draw and every hover/press transform. Nothing else in the
+package eases this way.</li>
 </ol>
                         </div>
                     </article>

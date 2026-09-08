@@ -3803,6 +3803,9 @@ var HOOKS = Object.freeze({
 var SURFACES = Object.freeze(["hero", "app"]);
 var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
 var STATE = Object.freeze({
+  // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
+  // springs from a wide mis-registration into its rest position once.
+  registering: "is-registering",
   // The light headline [S48, A1]: the clip window opening once.
   revealing: "is-revealing",
   // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
@@ -3966,6 +3969,13 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The pastel register [S48, LIFT_PLAN row 6]: the overprint layer's
+  // spring-in (opacity, matched against its own keyframe below) and the
+  // mark fill and the rule draw, both transform-free size changes with
+  // no luminance step of their own.
+  "kp-registration": { durationMs: 650, cycles: 1, property: "opacity", luminanceSteps: [0, 0.55] },
+  "kp-fill": { durationMs: 420, cycles: 1, property: "background-size", luminanceSteps: [] },
+  "kp-draw": { durationMs: 500, cycles: 1, property: "width", luminanceSteps: [] },
   // The shade-light register [SL2]: the headline's words resolving out
   // of a blur, the lede's marks filling in (a size, not a luminance
   // change), and the dialog rising into place.
@@ -4351,6 +4361,31 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(finish2, TIMINGS["kp-clip-reveal"].durationMs + 50);
+      return;
+    }
+    if (routine === "overprint") {
+      pending++;
+      el.classList.add(STATE.registering);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.registering);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-registration"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-registration"].durationMs + 50);
       return;
     }
     if (routine === "shout" || routine === "slam" || routine === "focus" || routine === "resolve" || routine === "blur") {

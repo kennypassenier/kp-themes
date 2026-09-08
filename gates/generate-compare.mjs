@@ -298,6 +298,7 @@ const CURRENT = [
     'phantom-register.css',
     'terminal-register.css',
     'brutalism-register.css',
+    'pastel-register.css',
     'shade-light-register.css',
     'ticker-register.css',
     'topo-register.css',

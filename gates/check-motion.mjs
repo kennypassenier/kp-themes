@@ -113,6 +113,9 @@ const OUT_OF_SCOPE = {
     // background-size change, not a luminance one — the fill colour and
     // its alpha are constant throughout, only the covered area grows.
     'kp-mark-in': 'a background-size widening over a mark once, 0% to 100%; the fill colour and alpha never change, only the area',
+    // The pastel register [S48, LIFT_PLAN row 6].
+    'kp-fill': "a mark's background-size growing from 0% to 100% once; the ink colour itself never changes, only how much of the word it covers",
+    'kp-draw': "a rule's width growing from 0% to 100% once; no luminance change and the rule is a few px tall",
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

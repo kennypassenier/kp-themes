@@ -732,7 +732,7 @@
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(200, 60%, 62%);
     --fx-scanline: hsl(150, 40%, 88%);
-    --fx-lift: 3px;
+    --fx-lift: 2px;
     --fx-hot: hsl(285, 25%, 25%);
     --fx-hot-alarm: hsl(355, 65%, 30%);
     --fx-shadow-offset: 0px;

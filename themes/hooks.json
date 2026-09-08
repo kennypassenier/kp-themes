@@ -146,6 +146,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='pastel'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] mark"
+            },
+            "reveal": {
+                "css": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before"
+            },
+            "divider": {
+                "css": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] [data-kp-surface] h1"
             }
         },
         "terminal": {

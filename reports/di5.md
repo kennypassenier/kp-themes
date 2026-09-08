@@ -59,6 +59,9 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-ember` | box-shadow | 840 ms | 1× | — | 0.00/s | under |
 | `kp-spin` | transform | 900 ms | loops | — | 0.00/s | under |
 | `kp-pulse` | opacity | 1600 ms | loops | 1 → 0.6 → 1 | 1.25/s | under |
+| `kp-registration` | opacity | 650 ms | 1× | 0 → 0.55 | 1.00/s | under |
+| `kp-fill` | background-size | 420 ms | 1× | — | 0.00/s | under |
+| `kp-draw` | width | 500 ms | 1× | — | 0.00/s | under |
 | `kp-word-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-mark-in` | background-size | 300 ms | 1× | — | 0.00/s | under |
 | `kp-headline-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |

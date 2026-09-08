@@ -149,6 +149,7 @@
         "./css/phantom-register": "./css/phantom-register.css",
         "./css/terminal-register": "./css/terminal-register.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
+        "./css/pastel-register": "./css/pastel-register.css",
         "./css/shade-light-register": "./css/shade-light-register.css",
         "./css/ticker-register": "./css/ticker-register.css",
         "./css/topo-register": "./css/topo-register.css",
