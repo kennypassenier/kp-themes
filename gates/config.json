@@ -53,6 +53,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/solstice-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/mono-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/high-contrast-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/tazhib-register.css": ["authored", "bundled", "classes", "motion", "texture"],

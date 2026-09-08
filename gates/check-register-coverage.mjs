@@ -42,6 +42,7 @@ export const REGISTERS = [
     'css/retro-register.css',
     'css/terminal-register.css',
     'css/brutalism-register.css',
+    'css/solstice-register.css',
     'css/mono-register.css',
     'css/high-contrast-register.css',
     'css/tazhib-register.css',

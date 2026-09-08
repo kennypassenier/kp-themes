@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/solstice-register.css" />
         <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../css/tazhib-register.css" />
@@ -533,11 +534,13 @@ high-contrast.</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>Warm dark. Charcoal with amber and rust, for the reader who finds dark
-too clinical and cyberpunk too loud. Both existing dark themes are cool —
-one indigo, one magenta-on-violet — and neither is restful.</p>
+<p>Warm dark. Charcoal with amber and rust, for the reader who finds dark too
+clinical and cyberpunk too loud. Both existing dark themes are cool — one
+indigo, one magenta-on-violet — and neither is restful.</p>
 <p>The reference is firelight rather than screenlight: the low sun of the
-name, not a neon sign.</p>
+name, not a neon sign, not a phosphor. An hour of the day, not a filter —
+the demo's own laurels put it in three words: &quot;No neon&quot;, &quot;Still legible&quot;,
+&quot;Unhurried&quot;.</p>
 <ol>
 <li><strong>The ground is warm charcoal, not black.</strong> <code>hsl(20, 14%, 10%)</code> — a
 trace of red in the dark. Take the hue out and it becomes dark's
@@ -545,11 +548,19 @@ neutral cousin, which the set already has.</li>
 <li><strong>Amber leads, rust supports.</strong> <code>--primary</code> at 28° and <code>--accent</code> at
 12°, close enough to be one family and far enough apart to tell which
 is which. This is the only theme whose primary and accent are
-neighbours on the wheel.</li>
+neighbours on the wheel, and the calibration wipe's three bands (the
+headline's own reveal) are built from exactly this triad plus the
+foreground.</li>
 <li><strong>A serif for display.</strong> Shared with sepia, and for the same reason:
 warmth reads better with a little contrast in the letterforms.</li>
 <li><strong><code>--radius: 0.625rem</code>.</strong> The softest in the set. Sharp corners fight
-the warmth; this theme is the one place where roundness is doing work.</li>
+the warmth; this theme is the one place where roundness is doing work,
+and every window, plate and swatch in the register carries it —
+nothing here is a bevel, a scanline or a grid.</li>
+<li><strong><code>--fx-duration: 240ms</code>.</strong> The slowest of all eleven lifted themes.
+Warmth is unhurried; hover and focus transitions read the token
+directly from <code>css/components.css</code>'s own no-preference block, so this
+register never redeclares them.</li>
 </ol>
                         </div>
                     </article>

@@ -3816,6 +3816,9 @@ var STATE = Object.freeze({
   words: "is-words",
   dissolving: "is-dissolving",
   typing: "is-typing",
+  // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
+  // bands wiping away once over text that never moves.
+  calibrating: "is-calibrating",
   // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
   // across the whole, unsplit line once.
   revealed: "is-revealed",
@@ -3892,6 +3895,11 @@ var TIMINGS = Object.freeze({
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
+  // over the headline, the rule draw, and the dossier's redaction lift.
+  "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+  "kp-cal-rule": { durationMs: 480, cycles: 1, property: "transform", luminanceSteps: [] },
+  "kp-cal-redact": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
   // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
   // once across a headline (the whole line, unsplit) or a redaction bar.
   // No luminance step: the mask moves, the content under it does not
@@ -4047,6 +4055,31 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "calibrate") {
+      pending++;
+      el.classList.add(STATE.calibrating);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.calibrating);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-cal-slide"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-cal-slide"].durationMs + 50);
       return;
     }
     if (routine === "wipe") {

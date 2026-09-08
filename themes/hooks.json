@@ -173,6 +173,18 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='solstice'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/solstice-register.css",
+                "selector": "[data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/solstice-register.css",
+                "selector": "[data-theme='solstice'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/solstice-register.css",
+                "selector": "[data-theme='solstice'] [data-kp-divider]"
             }
         },
         "brutalism": {
