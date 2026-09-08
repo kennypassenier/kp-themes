@@ -55,7 +55,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["cyberpunk"],
+        "themes": ["cyberpunk", "synthwave"],
         "scripts": ["latin"],
         "upstream": "ofl/rajdhani",
         "faces": [
@@ -655,6 +655,35 @@
             {
                 "file": "michroma-regular",
                 "source": "Michroma-Regular.ttf",
+                "weight": "400",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ]
+    },
+    "orbitron": {
+        "family": "Orbitron",
+        "licence": "OFL-1.1",
+        "reservedFontName": true,
+        "subset": false,
+        "themes": ["synthwave"],
+        "scripts": ["latin"],
+        "upstream": "ofl/orbitron",
+        "why": "OFL with Reserved Font Name 'Orbitron': a subset may not carry the name; ships under Q1's renamed delivery (SW3).",
+        "faces": []
+    },
+    "vt323": {
+        "family": "VT323",
+        "licence": "OFL-1.1",
+        "reservedFontName": false,
+        "subset": true,
+        "themes": ["synthwave"],
+        "scripts": ["latin"],
+        "upstream": "ofl/vt323",
+        "faces": [
+            {
+                "file": "vt323-regular",
+                "source": "VT323-Regular.ttf",
                 "weight": "400",
                 "style": "normal",
                 "scripts": ["latin"]

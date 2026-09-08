@@ -40,15 +40,19 @@ const NOT_GATED = {};
 
 /** A theme is in DI5's scope when the register actually targets it. */
 function motionScope() {
-    const css = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
-    return new Set([...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
+    const names = [];
+    for (const rel of ['../css/cyberpunk-register.css', '../css/synthwave-register.css']) {
+        const css = readFileSync(new URL(rel, import.meta.url), 'utf8');
+        names.push(...[...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
+    }
+    return new Set(names);
 }
 
 /** DI5 and DI7 are properties of the stylesheets, so they are measured once. */
 function motionVerdicts() {
     const flash = [];
     const guard = [];
-    for (const rel of ['../css/cyberpunk-register.css', '../css/_rules.css']) {
+    for (const rel of ['../css/cyberpunk-register.css', '../css/synthwave-register.css', '../css/_rules.css']) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
         const frames = parseOpacityKeyframes(source);
         for (const a of animations(source)) {
@@ -70,9 +74,14 @@ function motionVerdicts() {
 
 /** DI9 is a property of the authored stylesheets, so it is measured once. */
 function layersClean() {
-    return ['../css/_rules.css', '../css/_header.css', '../css/components.css', '../css/cyberpunk-register.css', '../css/tailwind-bridge.css'].every(
-        (rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0,
-    );
+    return [
+        '../css/_rules.css',
+        '../css/_header.css',
+        '../css/components.css',
+        '../css/cyberpunk-register.css',
+        '../css/synthwave-register.css',
+        '../css/tailwind-bridge.css',
+    ].every((rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0);
 }
 
 export function table() {

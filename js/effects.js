@@ -42,6 +42,8 @@
 // and reports every rate (S42: reported, never corrected by the gate).
 
 /** The attributes of the hook vocabulary [AR35]. Contract values. */
+import { getStrings } from './strings.js';
+
 export const HOOKS = Object.freeze({
     surface: 'data-kp-surface',
     reveal: 'data-kp-reveal',
@@ -68,6 +70,11 @@ export const STATE = Object.freeze({
     deciphered: 'is-deciphered',
     glitching: 'is-glitching',
     noise: 'is-noise',
+    // The synthwave routines [SW2]: the tracking wipe and the shine of a
+    // headline, and the boot overlay switching off.
+    tracking: 'is-tracking',
+    shine: 'is-shine',
+    off: 'is-off',
 });
 
 /**
@@ -79,7 +86,12 @@ export const ROUTINES = Object.freeze({
     headline: '--kp-reveal-headline',
     emphasis: '--kp-reveal-emphasis',
     rule: '--kp-reveal-rule',
+    // How the page arrives, read from the root [SW2]: `boot` builds the
+    // overlay below; anything else, or nothing, is quiet.
+    arrival: '--kp-arrival',
 });
+/** The class names of the arrival overlay the module builds. */
+export const ARRIVAL = Object.freeze({ root: 'kp-boot', line: 'kp-boot__line', skip: 'kp-boot__skip' });
 
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
@@ -127,6 +139,18 @@ export const TIMINGS = Object.freeze({
     // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
     // glitch (two steps, once), the headline's slice burst (one burst of
     // six bands, once) and the charge sweep (a transform, no luminance).
+    // The synthwave register [SW1]: the tracking wipe and the shine of the
+    // chrome headline, the tube that switches on (one dip), the sun cut on
+    // a button, the bar entering, the floor's drift and the CRT switching
+    // the boot overlay off — every one once, except the drift, which moves
+    // a pattern and never changes luminance.
+    'kp-tracking': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
+    'kp-shine': { durationMs: 1400, cycles: 1, property: 'background-position', luminanceSteps: [] },
+    'kp-tube-on': { durationMs: 1100, cycles: 1, property: 'color', luminanceSteps: [0, 1, 0, 1] },
+    'kp-sun-cut': { durationMs: 360, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
+    'kp-bar-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-floor-drift': { durationMs: 6000, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-crt-off': { durationMs: 550, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
     'kp-strip-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-strip-in-end': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-slice-a': { durationMs: 320, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
@@ -230,7 +254,7 @@ export function attachEffects(root = document, options = {}) {
         }, ms);
         timers.add(id);
     };
-    /** @param {Element} el @param {'headline' | 'emphasis' | 'rule'} reveal */
+    /** @param {Element} el @param {'headline' | 'emphasis' | 'rule' | 'arrival'} reveal */
     const routineOf = (el, reveal) => (view ? view.getComputedStyle(el).getPropertyValue(ROUTINES[reveal]).trim() : '');
     /**
      * The memo key: the path, the hook, and the element's position among
@@ -291,6 +315,36 @@ export function attachEffects(root = document, options = {}) {
         };
         if (routine === '' || reduced() || seen(el, 'headline')) {
             rest(true);
+            return;
+        }
+        if (routine === 'tracking') {
+            // The synthwave headline [SW2]: the text stays whole; one tracking
+            // wipe crosses it, then one shine. The register animates the
+            // classes; without an animation the classes come off by the
+            // table's durations, so nothing waits on an event that never comes.
+            pending++;
+            let ended = false;
+            const shine = () => {
+                if (ended) return;
+                ended = true;
+                el.classList.remove(STATE.tracking);
+                el.classList.add(STATE.shine);
+                const off = () => el.classList.remove(STATE.shine);
+                el.addEventListener('animationend', off, { once: true });
+                later(off, TIMINGS['kp-shine'].durationMs + 50);
+                rest(false);
+                pending--;
+                done();
+            };
+            finishers.push(shine);
+            el.classList.add(STATE.tracking);
+            const onEnd = (/** @type {Event} */ e) => {
+                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-tracking') return;
+                el.removeEventListener('animationend', onEnd);
+                shine();
+            };
+            el.addEventListener('animationend', onEnd);
+            later(shine, TIMINGS['kp-tracking'].durationMs + 50);
             return;
         }
         pending++;
@@ -510,6 +564,66 @@ export function attachEffects(root = document, options = {}) {
     }
 
     scan(root);
+
+    // ── The arrival [SW2]: how the page comes on ───────────────────────
+    // A theme answers `--kp-arrival` on the root; `boot` is synthwave's:
+    // a diegetic line counting up in the overlay the register paints, a
+    // Skip button, and the CRT switching the overlay off. Once per session,
+    // never under reduced motion, and every word from the dictionary [KT5].
+    const arrival = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
+        if (routine !== 'boot' || !doc.body) return;
+        if (reduced() || seen(html, 'arrival')) {
+            announce(html, 'arrival', routine, true);
+            return;
+        }
+        const words = getStrings();
+        const overlay = doc.createElement('div');
+        overlay.className = ARRIVAL.root;
+        const line = doc.createElement('pre');
+        line.className = ARRIVAL.line;
+        line.setAttribute('aria-live', 'polite');
+        const skip = doc.createElement('button');
+        skip.type = 'button';
+        skip.className = ARRIVAL.skip;
+        skip.textContent = words.arrivalSkip;
+        overlay.append(line, skip);
+        doc.body.append(overlay);
+        pending++;
+        let ended = false;
+        let pct = 0;
+        const remove = () => {
+            overlay.remove();
+            announce(html, 'arrival', routine, false);
+            pending--;
+            done();
+        };
+        const end = () => {
+            if (ended) return;
+            ended = true;
+            if (reduced()) {
+                remove();
+                return;
+            }
+            overlay.classList.add(STATE.off);
+            overlay.addEventListener('animationend', remove, { once: true });
+            later(remove, TIMINGS['kp-crt-off'].durationMs + 50);
+        };
+        const step = () => {
+            if (ended) return;
+            pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
+            line.textContent = [words.arrivalLine, words.arrivalProgress + ' ' + pct + '%', pct === 100 ? words.arrivalReady : '']
+                .filter(Boolean)
+                .join('\n');
+            if (pct === 100) later(end, 220);
+            else later(step, 110);
+        };
+        skip.addEventListener('click', end);
+        finishers.push(end);
+        cleanups.push(() => overlay.remove());
+        step();
+    };
+    arrival();
 
     return {
         detach() {

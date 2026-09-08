@@ -4,12 +4,12 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Start — kp-themes</title>
-        <meta name="description" content="The kp-themes design system: 24 themes, two delivery channels, no runtime dependencies." />
+        <meta name="description" content="The kp-themes design system: 25 themes, two delivery channels, no runtime dependencies." />
         <link rel="stylesheet" href="../css/themes.css" />
         <link rel="stylesheet" href="../css/components.css" />
         <link rel="stylesheet" href="../css/layout.css" />
         <link rel="stylesheet" href="../css/utilities.css" />
-        <!-- Both registers, from 2026-09-07. They are opt-in for a consumer,
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
              and leaving them off here was an omission rather than a
              decision: a component page where you pick cyberpunk and see a
              button that does not look like cyberpunk shows something that
@@ -17,6 +17,7 @@
              loaded them all along; these pages did not. -->
         <link rel="stylesheet" href="../css/cyberpunk-register.css" />
         <link rel="stylesheet" href="../css/retro-register.css" />
+        <link rel="stylesheet" href="../css/synthwave-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
     </head>
     <body>
@@ -114,7 +115,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">kp-themes</h1>
-                    <p class="kp-prose">One design system, 24 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
+                    <p class="kp-prose">One design system, 25 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
                 </header>
                 <section class="kp-section" data-sc-section="install" id="install">
                     <h2 class="kp-fw-semibold">Install</h2>
@@ -125,7 +126,7 @@
 &lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/utilities.css&quot;</span> /&gt;</code></pre>
                 </section>
                 <section class="kp-section" data-sc-section="themes" id="themes">
-                    <h2 class="kp-fw-semibold">The 24 themes</h2>
+                    <h2 class="kp-fw-semibold">The 25 themes</h2>
                     <p class="kp-prose">Each theme answers the same questions differently. What follows is why each one exists, taken from its own anatomy document, with its live tokens beside it.</p>
                     <div class="kp-autogrid kp-gap-lg">
                     <article class="kp-card sc-story" data-sc-story="formal" data-theme="formal">
@@ -254,6 +255,48 @@ is a different theme.</li>
 reads as a terminal; smoke reads as print.</li>
 <li>The radius is 0. Every corner is either square or a notch (<code>--fx-notch</code>
 14px), and the notch is the register's, not the token file's.</li>
+<li>The register is decoration: the theme is complete with <code>themes.css</code>
+alone, and <code>check-hooks</code> holds that every hook has an answer here even
+when the register is off.</li>
+</ul>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="synthwave" data-theme="synthwave">
+                        <h3 class="kp-fw-semibold kp-mb-sm">synthwave</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Cyberpunk is diagonal and day; synthwave is horizontal and night. A
+horizon, not a palette:</p>
+<ol>
+<li><strong>The void as ground.</strong> <code>hsl(263, 89%, 7%)</code> — deep indigo, never pure
+black (every measured reference agrees: <code>#0d0221</code>, <code>#010310</code>,
+<code>#171520</code>). Cards are the tape: <code>hsl(250, 20%, 17%)</code>, the Synthwave
+'84 editor ground.</li>
+<li><strong>Hot pink as the signal.</strong> <code>hsl(341, 100%, 64%)</code> for the primary,
+with the void as its ink (5.5:1 and up). The pink that reads as
+<em>text</em> is lighter, <code>hsl(316, 100%, 75%)</code> — 8.9:1 on the void, 6.9:1
+on the tape — because the reference pink <code>#f92aad</code> fails on the card
+at 4.34 and the '84 rule puts the colour in the shadow, not the core.</li>
+<li><strong>Cyan for what must be read.</strong> <code>hsl(179, 94%, 59%)</code>, the accent and
+the label colour, 15:1 on the void.</li>
+<li><strong>Laser yellow for a warning</strong>, <code>hsl(48, 98%, 68%)</code>, and the sun's
+ramp <code>#fcc22f → #f945e5</code> painted by the register only.</li>
+<li><strong>Lavender text</strong>, <code>hsl(260, 100%, 91%)</code> — never pure white.</li>
+</ol>
+<ul>
+<li>Pink signals, cyan labels, laser warns. The three never trade places.</li>
+<li>The core of a neon element is near-white; the colour is in its glow.
+Without the glow the text still passes — the register never relies on
+a <code>text-shadow</code> for contrast.</li>
+<li>The radius is 2px. Every cut is horizontal: the sun's stripes, the
+button's sun cut, the horizon. Nothing is notched.</li>
 <li>The register is decoration: the theme is complete with <code>themes.css</code>
 alone, and <code>check-hooks</code> holds that every hook has an answer here even
 when the register is off.</li>

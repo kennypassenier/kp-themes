@@ -33,7 +33,7 @@
    version meets a registry from another. js/diagnostics.js reads them. */
 :root {
     --kp-themes-version: '4.0.0';
-    --kp-themes-names: 'formal light dark cyberpunk pastel terminal topo high-contrast sepia blueprint solstice brutalism deco academia phantom ticker nishiki shade-light shade-dark mono retro grotesk tazhib nostromo';
+    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel terminal topo high-contrast sepia blueprint solstice brutalism deco academia phantom ticker nishiki shade-light shade-dark mono retro grotesk tazhib nostromo';
 }
 
 :root,
@@ -104,6 +104,7 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(30, 40%, 88%);
     --fx-scanline: hsl(30, 40%, 88%);
     --fx-lift: 0px;
@@ -227,6 +228,7 @@
     --fx-duration: 150ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(190, 80%, 92%);
     --fx-scanline: hsl(190, 80%, 92%);
     --fx-lift: 2px;
@@ -350,6 +352,7 @@
     --fx-duration: 150ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(226, 18%, 18%);
     --fx-scanline: hsl(226, 18%, 18%);
     --fx-lift: 2px;
@@ -467,6 +470,7 @@
     --theme-font-body: 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
     --radius: 0;
     --theme-font-display: 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --theme-font-mono: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
     --fx-signal: hsl(56, 98%, 51%);
     --fx-signal-foreground: hsl(53, 36%, 5%);
     --fx-notch: 14px;
@@ -524,6 +528,128 @@
     --destructive-hover: hsl(355, 100%, 66%);
     --destructive-active: hsl(357, 77%, 70%);
     --destructive-disabled: hsl(346, 95%, 41%);
+}
+
+[data-theme='synthwave'] {
+    /* Midnight void, a striped sun, a floor that never arrives [LIFT_PLAN row 1, RESEARCH §25]: hot pink for the signal, cyan for what must be read, laser yellow for a warning; lavender text, never pure white; the void never pure black. */
+    /* The app surface is the void with tape-coloured cards. The hero surface below is the night sky, and the register paints the sun, the floor and the horizon on it. */
+    --background: hsl(263, 89%, 7%);
+    --foreground: hsl(260, 100%, 91%);
+    --card: hsl(250, 20%, 17%);
+    --card-foreground: hsl(260, 100%, 91%);
+    --popover: hsl(262, 27%, 18%);
+    --popover-foreground: hsl(260, 100%, 91%);
+    --primary: hsl(341, 100%, 64%);
+    --primary-foreground: hsl(263, 89%, 7%);
+    --secondary: hsl(250, 20%, 17%);
+    --secondary-foreground: hsl(260, 100%, 91%);
+    --muted: hsl(255, 22%, 14%);
+    --muted-foreground: hsl(253, 41%, 69%);
+    --accent: hsl(179, 94%, 59%);
+    --accent-foreground: hsl(178, 100%, 5%);
+    --destructive: hsl(356, 99%, 63%);
+    --destructive-foreground: hsl(356, 90%, 8%);
+    --success: hsl(155, 60%, 14%);
+    --success-foreground: hsl(153, 82%, 70%);
+    --warning: hsl(48, 60%, 16%);
+    --warning-foreground: hsl(48, 98%, 68%);
+    --info: hsl(179, 70%, 14%);
+    --info-foreground: hsl(179, 94%, 59%);
+    --border: hsl(300, 45%, 22%);
+    --border-strong: hsl(313, 55%, 52%);
+    --input: hsl(313, 55%, 52%);
+    --ring: hsl(179, 94%, 59%);
+    --selected: hsl(341, 100%, 56%);
+    --chart-1: hsl(341, 100%, 64%);
+    --chart-2: hsl(179, 94%, 59%);
+    --chart-3: hsl(48, 98%, 68%);
+    --chart-4: hsl(258, 100%, 72%);
+    --chart-5: hsl(260, 100%, 91%);
+    --sidebar-background: hsl(260, 87%, 4%);
+    --sidebar-foreground: hsl(260, 100%, 91%);
+    --sidebar-primary: hsl(341, 100%, 64%);
+    --sidebar-primary-foreground: hsl(263, 89%, 7%);
+    --sidebar-accent: hsl(250, 20%, 17%);
+    --sidebar-accent-foreground: hsl(179, 80%, 75%);
+    --sidebar-border: hsl(300, 40%, 16%);
+    --sidebar-ring: hsl(179, 94%, 59%);
+    --status-draft: hsl(250, 20%, 24%);
+    --status-draft-foreground: hsl(260, 100%, 93%);
+    --status-sent: hsl(179, 94%, 59%);
+    --status-sent-foreground: hsl(178, 100%, 5%);
+    --status-screening: hsl(341, 100%, 64%);
+    --status-screening-foreground: hsl(263, 89%, 7%);
+    --status-interview: hsl(258, 100%, 72%);
+    --status-interview-foreground: hsl(258, 90%, 10%);
+    --status-offer: hsl(153, 82%, 70%);
+    --status-offer-foreground: hsl(153, 90%, 8%);
+    --status-rejected: hsl(356, 99%, 63%);
+    --status-rejected-foreground: hsl(356, 90%, 8%);
+    --status-withdrawn: hsl(258, 30%, 26%);
+    --status-withdrawn-foreground: hsl(258, 25%, 82%);
+    --color-scheme: dark;
+    --theme-font-body: 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --radius: 2px;
+    --theme-font-display: 'Orbitron', 'Audiowide', 'Eurostile', 'Arial Black', sans-serif;
+    /* The mono face: the OSD (VT323) for labels and identifiers; the contract's theme-font-mono since 5.0.0 [S47, SW3]. */
+    --theme-font-mono: 'VT323', 'Share Tech Mono', ui-monospace, Menlo, monospace;
+    --fx-signal: hsl(341, 100%, 64%);
+    --fx-signal-foreground: hsl(263, 89%, 7%);
+    --fx-notch: 0px;
+    --fx-duration: 220ms;
+    --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+    --fx-overprint: hsl(179, 94%, 59%);
+    --fx-scanline: hsl(260, 100%, 91%);
+    --fx-lift: 1px;
+    --fx-shadow-offset: 0px;
+    --chart-pattern-1: none;
+    --chart-pattern-2: none;
+    --chart-pattern-3: none;
+    --chart-pattern-4: none;
+    --chart-pattern-5: none;
+    --kp-space-xs: 0.25rem;
+    --kp-space-sm: 0.5rem;
+    --kp-space-md: 0.75rem;
+    --kp-space-lg: 1rem;
+    --kp-space-xl: 1.5rem;
+    --kp-space-2xl: 2rem;
+    --kp-text-xs: 0.75rem;
+    --kp-text-sm: 0.8125rem;
+    --kp-text-md: 1rem;
+
+    /* The hero surface: the night sky, deep indigo under the sun and the floor; lavender on it, the pink that reads as text for the second ink, the tape card. */
+    --surface-hero-bg: hsl(258, 60%, 11%);
+    --surface-hero-fg: hsl(260, 100%, 91%);
+    --surface-hero-fg-2: hsl(316, 100%, 75%);
+    --surface-hero-muted: hsl(253, 41%, 69%);
+    --surface-hero-border: hsl(316, 65%, 62%);
+    --surface-hero-primary: hsl(341, 100%, 64%);
+    --surface-hero-primary-foreground: hsl(263, 89%, 7%);
+    --surface-hero-danger: hsl(356, 99%, 63%);
+    --surface-hero-danger-foreground: hsl(356, 90%, 8%);
+    --surface-hero-card: hsl(250, 20%, 17%);
+    --surface-hero-card-foreground: hsl(260, 100%, 91%);
+
+    /* The display step of the typography scale: wide type, so a step below cyberpunk's condensed one [S47]. */
+    --kp-text-display: clamp(2.4rem, 6.4vw, 5.2rem);
+
+    /* Derived interaction states — see gates/generate-themes.mjs. */
+    --link: hsl(341, 100%, 64%);
+    --link-visited: hsl(26, 100%, 47%);
+    --focus-ring: hsl(260, 100%, 91%);
+    --focus-ring-contrast: hsl(263, 89%, 7%);
+    --primary-hover: hsl(340, 100%, 68%);
+    --primary-active: hsl(340, 77%, 72%);
+    --primary-disabled: hsl(337, 75%, 50%);
+    --secondary-hover: hsl(249, 16%, 23%);
+    --secondary-active: hsl(249, 13%, 29%);
+    --secondary-disabled: hsl(252, 36%, 9%);
+    --accent-hover: hsl(180, 100%, 67%);
+    --accent-active: hsl(179, 58%, 85%);
+    --accent-disabled: hsl(179, 100%, 43%);
+    --destructive-hover: hsl(357, 100%, 68%);
+    --destructive-active: hsl(360, 75%, 71%);
+    --destructive-disabled: hsl(351, 81%, 48%);
 }
 
 [data-theme='pastel'] {
@@ -593,6 +719,7 @@
     --fx-duration: 220ms;
     --fx-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(200, 60%, 62%);
     --fx-scanline: hsl(150, 40%, 88%);
     --fx-lift: 3px;
@@ -716,6 +843,7 @@
     --fx-duration: 90ms;
     --fx-ease: steps(2, end);
     --theme-font-display: 'Share Tech Mono', ui-monospace, monospace;
+    --theme-font-mono: 'Share Tech Mono', ui-monospace, Menlo, monospace;
     --fx-overprint: hsl(65, 90%, 50%);
     --fx-scanline: hsl(65, 90%, 50%);
     --fx-lift: 0px;
@@ -839,6 +967,7 @@
     --fx-duration: 200ms;
     --fx-ease: cubic-bezier(0.33, 0, 0.15, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(24, 55%, 86%);
     --fx-scanline: hsl(24, 55%, 86%);
     --fx-lift: 2px;
@@ -962,6 +1091,7 @@
     --fx-duration: 120ms;
     --fx-ease: linear;
     --theme-font-display: 'Atkinson Hyperlegible', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(48, 100%, 50%);
     --fx-scanline: hsl(48, 100%, 50%);
     --fx-lift: 0px;
@@ -1085,6 +1215,7 @@
     --fx-duration: 240ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Instrument Serif', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(24, 40%, 70%);
     --fx-scanline: hsl(30, 40%, 80%);
     --fx-lift: 0px;
@@ -1208,6 +1339,7 @@
     --fx-duration: 160ms;
     --fx-ease: linear;
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(190, 60%, 40%);
     --fx-scanline: hsl(190, 70%, 70%);
     --fx-lift: 0px;
@@ -1331,6 +1463,7 @@
     --fx-duration: 240ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Instrument Serif', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(28, 60%, 40%);
     --fx-scanline: hsl(28, 70%, 60%);
     --fx-lift: 1px;
@@ -1454,6 +1587,7 @@
     --fx-duration: 100ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Archivo Black', 'Archivo', Impact, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(48, 100%, 60%);
     --fx-scanline: hsl(0, 0%, 7%);
     --fx-lift: 2px;
@@ -1578,6 +1712,7 @@
     --fx-duration: 200ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Poiret One', 'Josefin Sans', ui-sans-serif, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(43, 65%, 52%);
     --fx-scanline: hsl(43, 65%, 52%);
     --fx-lift: 0px;
@@ -1701,6 +1836,7 @@
     --fx-duration: 240ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Cormorant Garamond', 'Lora', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(0, 62%, 30%);
     --fx-scanline: hsl(38, 50%, 58%);
     --fx-lift: 0px;
@@ -1824,6 +1960,7 @@
     --fx-duration: 120ms;
     --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
     --theme-font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(45, 100%, 55%);
     --fx-scanline: hsl(0, 0%, 98%);
     --fx-lift: 1px;
@@ -1947,6 +2084,7 @@
     --fx-duration: 0ms;
     --fx-ease: linear;
     --theme-font-display: 'IBM Plex Mono', ui-monospace, monospace;
+    --theme-font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
     --fx-overprint: hsl(36, 91%, 55%);
     --fx-scanline: hsl(36, 91%, 55%);
     --fx-lift: 0px;
@@ -2070,6 +2208,7 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Shippori Mincho', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(1, 58%, 46%);
     --fx-scanline: hsl(215, 51%, 25%);
     --fx-lift: 0px;
@@ -2193,6 +2332,7 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Source Serif 4', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(175, 60%, 36%);
     --fx-scanline: hsl(180, 8%, 48%);
     --fx-lift: 0px;
@@ -2316,6 +2456,7 @@
     --fx-duration: 180ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Source Serif 4', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(175, 59%, 40%);
     --fx-scanline: hsl(194, 14%, 50%);
     --fx-lift: 0px;
@@ -2439,6 +2580,7 @@
     --fx-duration: 150ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Geist Mono', ui-monospace, monospace;
+    --theme-font-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
     --fx-overprint: hsl(0, 0%, 60%);
     --fx-scanline: hsl(0, 0%, 9%);
     --fx-lift: 0px;
@@ -2562,6 +2704,7 @@
     --fx-duration: 0ms;
     --fx-ease: linear;
     --theme-font-display: 'Pixelify Sans', 'Silkscreen', ui-sans-serif, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(240, 100%, 25%);
     --fx-scanline: hsl(0, 0%, 10%);
     --fx-lift: 0px;
@@ -2685,6 +2828,7 @@
     --fx-duration: 120ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Archivo', 'Inter', ui-sans-serif, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(355, 95%, 45%);
     --fx-scanline: hsl(0, 0%, 7%);
     --fx-lift: 0px;
@@ -2808,6 +2952,7 @@
     --fx-duration: 220ms;
     --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --theme-font-display: 'Markazi Text', ui-serif, Georgia, serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(5, 75%, 55%);
     --fx-scanline: hsl(43, 67%, 50%);
     --fx-lift: 1px;
@@ -2931,6 +3076,7 @@
     --fx-duration: 160ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
     --theme-font-display: 'Michroma', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(17, 74%, 38%);
     --fx-scanline: hsl(24, 12%, 15%);
     --fx-lift: 1px;
@@ -3083,6 +3229,29 @@
         --destructive-hover: hsl(354, 100%, 34%);
         --destructive-active: hsl(0, 100%, 30%);
         --destructive-disabled: hsl(358, 77%, 57%);
+    }
+    [data-theme='synthwave'] [data-kp-surface='hero'] {
+        --background: var(--surface-hero-bg);
+        --foreground: var(--surface-hero-fg);
+        --muted-foreground: var(--surface-hero-muted);
+        --border-strong: var(--surface-hero-border);
+        --input: var(--surface-hero-border);
+        --selected: var(--surface-hero-primary);
+        --primary: var(--surface-hero-primary);
+        --primary-foreground: var(--surface-hero-primary-foreground);
+        --destructive: var(--surface-hero-danger);
+        --destructive-foreground: var(--surface-hero-danger-foreground);
+        --card: var(--surface-hero-card);
+        --card-foreground: var(--surface-hero-card-foreground);
+        --link: var(--surface-hero-fg-2);
+        --focus-ring: var(--surface-hero-fg);
+        --focus-ring-contrast: var(--surface-hero-bg);
+        --primary-hover: hsl(340, 100%, 68%);
+        --primary-active: hsl(340, 77%, 72%);
+        --primary-disabled: hsl(337, 75%, 50%);
+        --destructive-hover: hsl(357, 100%, 68%);
+        --destructive-active: hsl(360, 75%, 71%);
+        --destructive-disabled: hsl(351, 81%, 48%);
     }
     [data-theme='pastel'] [data-kp-surface='hero'] {
         --background: var(--surface-hero-bg);

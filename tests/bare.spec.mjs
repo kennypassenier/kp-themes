@@ -17,7 +17,10 @@ import { expect, test } from '@playwright/test';
 
 /** @param {string} rgb */
 function luminance(rgb) {
-    const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    // A relative colour (`hsl(from …)`, the synthwave register) computes
+    // to `color(srgb r g b)`; a plain one to `rgb(r, g, b)`.
+    const srgb = rgb.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/);
+    const m = srgb ? [srgb[0], ...srgb.slice(1).map((v) => String(Math.round(Number(v) * 255)))] : rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
     if (!m) throw new Error(`not a colour: ${rgb}`);
     const [r, g, b] = [m[1], m[2], m[3]].map((v) => {
         const c = Number(v) / 255;
@@ -34,7 +37,7 @@ const ratio = (a, b) => {
 for (const theme of ['cyberpunk', 'formal']) {
     test(`bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`, async ({ page }) => {
         const blocked = [];
-        await page.route(/(cyberpunk-register|retro-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/, (route) => {
+        await page.route(/(cyberpunk-register|retro-register|synthwave-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/, (route) => {
             blocked.push(route.request().url());
             route.abort();
         });

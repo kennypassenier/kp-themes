@@ -132,6 +132,7 @@ const EXEMPT = {
     'kp-space-2xl': 'not a colour (a length: one step of the spacing scale) [TH94]',
     'theme-font-body': 'not a colour',
     'theme-font-display': 'not a colour',
+    'theme-font-mono': 'a font stack, not a colour; the mono face of the theme (the contract since 5.0.0, S47)',
     'fx-overprint':
         'a decorative second ink, drawn at 40% alpha behind a heading that carries its own --foreground; it is not a surface and nothing reads on it',
     'fx-scanline': 'a 1px line at 4% alpha across the texture layer; at that opacity it is a veil rather than a surface',

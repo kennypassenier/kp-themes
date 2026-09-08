@@ -113,7 +113,7 @@ export function textureOf(css, theme) {
  *   name: string, label: string,
  *   changed: TokenChange[], added: TokenChange[], removed: TokenChange[],
  *   fonts: { family: string, shipped: boolean }[],
- *   register: 'rewritten' | 'changed' | 'unchanged' | 'none',
+ *   register: 'new' | 'rewritten' | 'changed' | 'unchanged' | 'none',
  *   texture: { old: number | null, now: number | null, proposal: number | null },
  *   lines: string[], show: string[],
  * }} ThemeDiff
@@ -127,7 +127,11 @@ export function textureOf(css, theme) {
 export function diffs() {
     const oldCss = read('showcase/baseline/4.0.0/kp-themes.css');
     const newThemes = read('css/themes.css');
-    const newRegisters = { cyberpunk: read('css/cyberpunk-register.css'), retro: read('css/retro-register.css') };
+    const newRegisters = {
+        cyberpunk: read('css/cyberpunk-register.css'),
+        retro: read('css/retro-register.css'),
+        synthwave: read('css/synthwave-register.css'),
+    };
     const rules = read('css/_rules.css');
     const oldBlocks = themeBlocks(oldCss);
     const newBlocks = themeBlocks(newThemes);
@@ -171,12 +175,23 @@ export function diffs() {
             // The old bundle holds the base rules and the register in one file;
             // the new side is compared as the same union.
             const oldRules = scopedRules(oldCss, theme.name);
-            const nowRules = scopedRules(newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'retro'} */ (theme.name)], theme.name);
-            register = theme.name === 'cyberpunk' ? 'rewritten' : hash(oldRules) === hash(nowRules) ? 'unchanged' : 'changed';
+            const nowRules = scopedRules(
+                newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave'} */ (theme.name)],
+                theme.name,
+            );
+            register = !oldBlocks.has(theme.name)
+                ? 'new'
+                : theme.name === 'cyberpunk'
+                  ? 'rewritten'
+                  : hash(oldRules) === hash(nowRules)
+                    ? 'unchanged'
+                    : 'changed';
         }
         const texture = {
             old: textureOf(oldCss, theme.name),
-            now: textureOf(rules, theme.name) ?? textureOf(newRegisters[/** @type {'cyberpunk' | 'retro'} */ (theme.name)] ?? '', theme.name),
+            now:
+                textureOf(rules, theme.name) ??
+                textureOf(newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave'} */ (theme.name)] ?? '', theme.name),
             proposal: theme.name === 'dark' ? CEILING : null,
         };
         // The story, and the sections the pair must show.
@@ -208,7 +223,13 @@ export function diffs() {
             const distinct = heroAdded.filter(
                 (a) => a.now !== after.get(a.token.replace('surface-hero-bg', 'background').replace('surface-hero-fg', 'foreground')),
             );
-            if (theme.name === 'cyberpunk') {
+            if (!oldBlocks.has(theme.name)) {
+                lines.length = 0;
+                lines.push(
+                    `New in 5.0.0: this theme did not exist in 4.0.0 — every one of its ${after.size} tokens, its register and its fonts are new, so the left frame shows what a 4.0.0 page does with a theme it does not know (the loud fallback), and nothing is marked because everything differs.`,
+                );
+                show.clear();
+            } else if (theme.name === 'cyberpunk') {
                 lines.push(
                     'Two surfaces: the hero is signal yellow with ink on it and the app surface stays the void — eleven hero tokens are new, and every component reads them inside the hero.',
                 );
@@ -220,7 +241,9 @@ export function diffs() {
             void distinct;
         }
         if (removed.length > 0) lines.push(`Removed: ${removed.map((r) => `--${r.token}`).join(', ')}.`);
-        if (register === 'rewritten') {
+        if (register === 'new') {
+            /* said above */
+        } else if (register === 'rewritten') {
             lines.push(
                 'The register is rewritten from the approved demo: the navigation strip with its cut corner and stepped notch and the dash-prefixed dropdown; the notched buttons with the slit and the charge sweep; the fields with the clipped corner and the accent caret; the dossier card with the file stamp and the redactions that lift; the razor tear between surfaces; and the scanlines at exactly the DI9 ceiling. The old .fx-flicker, .fx-pulse, .fx-cellpop and .fx-media classes are gone with the 4.x theme.',
             );
@@ -243,7 +266,16 @@ export function diffs() {
 }
 
 /** The stylesheet links of the current build, relative to examples/. */
-const CURRENT = ['fonts.css', 'themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
+const CURRENT = [
+    'fonts.css',
+    'themes.css',
+    'components.css',
+    'layout.css',
+    'utilities.css',
+    'cyberpunk-register.css',
+    'retro-register.css',
+    'synthwave-register.css',
+];
 
 /**
  * The component layer, which both frames share. What a compare page shows

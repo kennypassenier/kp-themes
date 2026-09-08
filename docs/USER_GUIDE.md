@@ -44,7 +44,7 @@ An unknown stored value is corrected to the default theme as soon as the
 picker is attached; `initializeTheme(fallback)` names another, and
 `applyTheme(name, { strict: true })` throws instead of substituting.
 
-## The twenty-four themes
+## The twenty-five themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -52,6 +52,7 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `light` | Light | no |
 | `dark` | Dark | yes |
 | `cyberpunk` | Cyberpunk | yes |
+| `synthwave` | Synthwave | yes |
 | `pastel` | Pastel | no |
 | `terminal` | Terminal | yes |
 | `topo` | Topographic | no |
@@ -74,7 +75,9 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `nostromo` | Nostromo | no |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `brutalism`
-on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`.
+on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
+`synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
+research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1).
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -87,7 +90,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those twenty-four names since 1.1.0,
+The `Theme` type is the union of exactly those twenty-five names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -570,7 +573,10 @@ line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
 brutalism, a double gold rule in deco, a slower gold rule in academia, a
 badge that slides in in phantom, a hanko seal after a heading in nishiki,
-and the bevel register in retro. Sepia, high-contrast, ticker, mono and
+the bevel register in retro, and since 5.0.0 the horizon register in
+synthwave — a striped sun and a drifting floor on the hero, a neon tube
+that a `<mark>` switches on, a laser line under a heading, a boot line
+with a Skip once per session. Sepia, high-contrast, ticker, mono and
 both halves of shade have none on purpose — in the restful theme, the
 accessible one, the data-dense one and the medium-contrast pair, a
 gesture works against the reason the theme exists.

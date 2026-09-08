@@ -729,7 +729,7 @@ export const EXAMPLES = [
                 el(
                     'p',
                     { class: 'kp-prose kp-mx-auto kp-text-muted' },
-                    'One set of tokens, twenty-four themes, and the same components in every application you run. Nothing to configure on day one.',
+                    'One set of tokens, twenty-five themes, and the same components in every application you run. Nothing to configure on day one.',
                 ),
                 el(
                     'div',
@@ -745,7 +745,7 @@ export const EXAMPLES = [
                 el(
                     'div',
                     { class: 'kp-autogrid' },
-                    el('Card', { title: 'Themes' }, el('p', {}, 'Twenty-four palettes that all clear WCAG AA, gated on every commit.')),
+                    el('Card', { title: 'Themes' }, el('p', {}, 'Twenty-five palettes that all clear WCAG AA, gated on every commit.')),
                     el('Card', { title: 'Components' }, el('p', {}, 'The same behaviour in React and in plain markup a server writes.')),
                     el('Card', { title: 'Layout' }, el('p', {}, 'Sixteen classes and a utility API, so a page needs no stylesheet of its own.')),
                 ),
@@ -961,7 +961,7 @@ export const EXAMPLES = [
         // A theme picker sits above it; `?theme=<name>` also works.
         id: 'concept',
         title: 'Concept demo',
-        note: 'The page every new theme is tried on, element for element the approved "Signal Yellow" demo (S46): a brand and a strip of links with dropdowns, a hero with laurels, a side note, a deciphering headline, a lede with two marks, three buttons, the platforms line and a spec sheet; the razor tear; a form beside a dossier with redactions; a footer behind a second tear. A theme picker sits above it so the same page wears all twenty-four.',
+        note: 'The page every new theme is tried on, element for element the approved "Signal Yellow" demo (S46): a brand and a strip of links with dropdowns, a hero with laurels, a side note, a deciphering headline, a lede with two marks, three buttons, the platforms line and a spec sheet; the razor tear; a form beside a dossier with redactions; a footer behind a second tear. A theme picker sits above it so the same page wears all twenty-five.',
         probes: [
             '[data-kp-theme-picker]',
             '[data-kp-surface="hero"]',
@@ -1038,7 +1038,7 @@ export const EXAMPLES = [
                                 'ul',
                                 { class: 'kp-laurels', 'aria-label': 'What this register is measured against' },
                                 el('li', {}, el('b', {}, '“Spits off the screen”'), 'the brief'),
-                                el('li', {}, el('b', {}, '93 tokens'), 'parity gate'),
+                                el('li', {}, el('b', {}, '94 tokens'), 'parity gate'),
                                 el('li', {}, el('b', {}, 'DI5 safe'), 'no flashing'),
                             ),
                             el('p', { class: 'microlabel' }, 'register 02 · preview build'),
@@ -1218,7 +1218,7 @@ export const EXAMPLES = [
                             el(
                                 'p',
                                 { class: 'kp-prose' },
-                                'The house theme system. Twenty-four themes, two registers, one promise: a released theme never changes.',
+                                'The house theme system. Twenty-five themes, three registers, one promise: a released theme never changes.',
                             ),
                         ),
                         el(

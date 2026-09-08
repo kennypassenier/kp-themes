@@ -35,7 +35,16 @@ const OUT = new URL('../examples/', import.meta.url);
 // it whole.
 // fonts.css joined at round six's C4 (T19): a page that exists to show a
 // theme shows it in its own face.
-const SHEETS = ['fonts.css', 'themes.css', 'components.css', 'layout.css', 'utilities.css', 'cyberpunk-register.css', 'retro-register.css'];
+const SHEETS = [
+    'fonts.css',
+    'themes.css',
+    'components.css',
+    'layout.css',
+    'utilities.css',
+    'cyberpunk-register.css',
+    'retro-register.css',
+    'synthwave-register.css',
+];
 
 /**
  * @param {string} title
@@ -113,7 +122,7 @@ function index() {
                     'p',
                     { class: 'kp-prose' },
                     el('a', { href: 'concept.html' }, 'The concept demo'),
-                    ' under the theme this page is wearing, or under one of the twenty-four by name:',
+                    ' under the theme this page is wearing, or under any of the themes by name:',
                 ),
                 el(
                     'ul',

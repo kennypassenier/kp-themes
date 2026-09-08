@@ -1,13 +1,14 @@
 # @kp-soft/themes
 
-The house themes as a shared package: twenty-four `data-theme` palettes
+The house themes as a shared package: twenty-five `data-theme` palettes
 — thirteen light (formal, light, pastel, topo, high-contrast, sepia,
 brutalism, nishiki, shade-light, mono, retro, grotesk, nostromo) and
-eleven dark (dark, cyberpunk, terminal, blueprint, solstice, deco,
-academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
+twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
+deco, academia, phantom, ticker, shade-dark, tazhib) — as plain CSS custom
 properties, the element-level rules that make a theme complete (links,
 code, selection, form fields, print), eighteen components, a theme
-picker, and two opt-in registers: cyberpunk's effects and retro's bevels.
+picker, and three opt-in registers: cyberpunk's effects, synthwave's
+horizon and retro's bevels.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -67,15 +68,16 @@ Peer dependencies: `react >= 19`; `motion >= 12` only if you use
 `BootSequence` from `@kp-soft/themes/fx`. Node 26 for the scripts.
 
 Types ship with the package: `.d.ts` beside every entry point since 1.1.0,
-and `Theme` is the union of the twenty-four names rather than `string`.
+and `Theme` is the union of the twenty-five names rather than `string`.
 
 ## Consume the CSS
 
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the twenty-four themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the twenty-five themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
+@import '@kp-soft/themes/css/synthwave-register'; /* optional: synthwave's sun, floor and neon */
 @import '@kp-soft/themes/css/retro-register'; /* optional: retro's bevels */
 ```
 
@@ -171,28 +173,29 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Every entry point
 
-| Import                                | What it is                                            |
-| ------------------------------------- | ----------------------------------------------------- |
-| `@kp-soft/themes`                     | React: components, hooks, the switcher                |
-| `@kp-soft/themes/fx`                  | React: the cyberpunk effects                          |
-| `@kp-soft/themes/css`                 | the palette — the one file a vendoring consumer needs |
-| `@kp-soft/themes/css/components`      | the component classes                                 |
-| `@kp-soft/themes/css/register`        | the cyberpunk HUD chrome, opt-in                      |
-| `@kp-soft/themes/css/retro-register`  | retro's raised and sunken bevels, opt-in              |
-| `@kp-soft/themes/css/layout`          | the sixteen layout classes                            |
-| `@kp-soft/themes/css/utilities`       | the 115 utility classes                               |
-| `@kp-soft/themes/css/tailwind-bridge` | for Tailwind v4 consumers                             |
-| `@kp-soft/themes/dist/css`            | all of the above in one stylesheet                    |
-| `@kp-soft/themes/dist/js`             | js/auto and everything it imports, in one module      |
-| `@kp-soft/themes/js/core`             | the theme state, framework-free                       |
-| `@kp-soft/themes/js/picker`           | the framework-free picker                             |
-| `@kp-soft/themes/js/components`       | the DI4 and DI10 contracts                            |
-| `@kp-soft/themes/js/overlays`         | dialogs, tabs, toasts                                 |
-| `@kp-soft/themes/js/registry`         | the generated theme list                              |
-| `@kp-soft/themes/js/no-flash`         | the first-paint snippet                               |
-| `@kp-soft/themes/js/strings`          | the dictionary and its defaults                       |
-| `@kp-soft/themes/js/tables`           | the keyboard-reachable table scroll region            |
-| `@kp-soft/themes/js/diagnostics`      | which half of a vendored pair is behind               |
+| Import                                   | What it is                                            |
+| ---------------------------------------- | ----------------------------------------------------- |
+| `@kp-soft/themes`                        | React: components, hooks, the switcher                |
+| `@kp-soft/themes/fx`                     | React: the cyberpunk effects                          |
+| `@kp-soft/themes/css`                    | the palette — the one file a vendoring consumer needs |
+| `@kp-soft/themes/css/components`         | the component classes                                 |
+| `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                      |
+| `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in      |
+| `@kp-soft/themes/css/retro-register`     | retro's raised and sunken bevels, opt-in              |
+| `@kp-soft/themes/css/layout`             | the sixteen layout classes                            |
+| `@kp-soft/themes/css/utilities`          | the 115 utility classes                               |
+| `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                             |
+| `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                    |
+| `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module      |
+| `@kp-soft/themes/js/core`                | the theme state, framework-free                       |
+| `@kp-soft/themes/js/picker`              | the framework-free picker                             |
+| `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                            |
+| `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                 |
+| `@kp-soft/themes/js/registry`            | the generated theme list                              |
+| `@kp-soft/themes/js/no-flash`            | the first-paint snippet                               |
+| `@kp-soft/themes/js/strings`             | the dictionary and its defaults                       |
+| `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region            |
+| `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind               |
 
 ## Consume the JavaScript
 
@@ -461,7 +464,7 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 
 ## Home Assistant
 
-`ha/kp-*.yaml` is the same twenty-four themes as Home Assistant themes,
+`ha/kp-*.yaml` is the same twenty-five themes as Home Assistant themes,
 generated from the same token sources. Copy them into Home Assistant's
 `themes/` directory and reload; they appear under their Dutch names beside
 whatever you already have. The `kp-` prefix is there so a file called

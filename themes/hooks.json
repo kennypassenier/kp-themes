@@ -1,11 +1,12 @@
 {
     "//": "The hook matrix [S45, AR36]. Every theme answers every hook: with a selector scoped to that theme (a rule containing [data-theme='<name>'] in the named stylesheet), or with the word quiet and a reason. The default row is the shared base answer; a theme row overrides one hook at a time. gates/check-hooks.mjs refuses a theme that leaves a hook unanswered, a non-quiet answer whose selector is not scoped to the theme, and a quiet answer without a reason.",
     "hooks": {
-        "surface": "data-kp-surface: hero or app \u2014 which ground a section stands on [TH116]",
-        "emphasis": "<mark> \u2014 an emphasis the theme may reveal [TH120]",
-        "reveal": "data-kp-reveal: headline, emphasis or rule \u2014 something that arrives [TH119, TH122]",
-        "divider": "data-kp-divider \u2014 a section transition [TH121]",
-        "accent": "the heading accent: h1 and h2 inside a surface [TH122]"
+        "surface": "data-kp-surface: hero or app — which ground a section stands on [TH116]",
+        "emphasis": "<mark> — an emphasis the theme may reveal [TH120]",
+        "reveal": "data-kp-reveal: headline, emphasis or rule — something that arrives [TH119, TH122]",
+        "divider": "data-kp-divider — a section transition [TH121]",
+        "accent": "the heading accent: h1 and h2 inside a surface [TH122]",
+        "arrival": "--kp-arrival on the root — how a page arrives; js/effects.js performs the theme's answer once per session [SW2]"
     },
     "default": {
         "surface": {
@@ -25,6 +26,9 @@
         },
         "accent": {
             "quiet": "no accent beyond the heading's own type"
+        },
+        "arrival": {
+            "quiet": "no arrival; the page is simply there"
         }
     },
     "themes": {
@@ -66,6 +70,32 @@
             "accent": {
                 "css": "css/cyberpunk-register.css",
                 "selector": "[data-theme='cyberpunk'] [data-kp-surface] h1"
+            }
+        },
+        "synthwave": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='synthwave'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/synthwave-register.css",
+                "selector": "[data-theme='synthwave'] mark"
+            },
+            "reveal": {
+                "css": "css/synthwave-register.css",
+                "selector": "[data-theme='synthwave'] [data-kp-reveal='headline']"
+            },
+            "divider": {
+                "css": "css/synthwave-register.css",
+                "selector": "[data-theme='synthwave'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/synthwave-register.css",
+                "selector": "[data-theme='synthwave'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "css": "css/synthwave-register.css",
+                "selector": "[data-theme='synthwave'] .kp-boot"
             }
         },
         "pastel": {

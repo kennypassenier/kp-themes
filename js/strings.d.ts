@@ -84,6 +84,22 @@ export type Strings = {
      * The stamp a register may print on an emphasis reveal (the dossier) [AR35]
      */
     classified: string;
+    /**
+     * The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+     */
+    arrivalLine: string;
+    /**
+     * The word before the percentage on that line
+     */
+    arrivalProgress: string;
+    /**
+     * The word that closes the boot line
+     */
+    arrivalReady: string;
+    /**
+     * The button that ends the arrival at once
+     */
+    arrivalSkip: string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -190,6 +206,10 @@ export type Strings = {
  * @property {string} diagnosticsEffects  The diagnostics row that lists unknown hook values [AR44]
  * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
+ * @property {string} arrivalLine  The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+ * @property {string} arrivalProgress  The word before the percentage on that line
+ * @property {string} arrivalReady  The word that closes the boot line
+ * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker

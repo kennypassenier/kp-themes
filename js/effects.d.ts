@@ -1,4 +1,3 @@
-/** The attributes of the hook vocabulary [AR35]. Contract values. */
 export declare const HOOKS: Readonly<{
     surface: "data-kp-surface";
     reveal: "data-kp-reveal";
@@ -22,6 +21,9 @@ export declare const STATE: Readonly<{
     deciphered: "is-deciphered";
     glitching: "is-glitching";
     noise: "is-noise";
+    tracking: "is-tracking";
+    shine: "is-shine";
+    off: "is-off";
 }>;
 /**
  * The custom properties a theme declares to say which reveals it performs
@@ -32,6 +34,13 @@ export declare const ROUTINES: Readonly<{
     headline: "--kp-reveal-headline";
     emphasis: "--kp-reveal-emphasis";
     rule: "--kp-reveal-rule";
+    arrival: "--kp-arrival";
+}>;
+/** The class names of the arrival overlay the module builds. */
+export declare const ARRIVAL: Readonly<{
+    root: "kp-boot";
+    line: "kp-boot__line";
+    skip: "kp-boot__skip";
 }>;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";

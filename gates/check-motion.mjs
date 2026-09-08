@@ -41,6 +41,12 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
  */
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
+    // The synthwave register [SW1].
+    'kp-shine':
+        'a highlight band sliding across clipped text once (background-position); the text keeps its colours and the band is under 341x256 px',
+    'kp-tube-on': 'a colour and text-shadow switch on an inline phrase, one dip, once; rated in TIMINGS at 2.7/s and under 341x256 px',
+    'kp-floor-drift': 'a background-position slide of a grid over 6 seconds; the pattern keeps its colours, only its position moves',
+
     'kp-spin': 'a rotation: no luminance change at all',
     'kp-rule-in': 'a horizontal scale on a 1px rule; no luminance change and nothing over 341x256 px',
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',

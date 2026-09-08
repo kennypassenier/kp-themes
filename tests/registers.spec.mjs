@@ -11,7 +11,11 @@ import { contrast } from '../gates/colour.mjs';
 
 /** @param {string} rgb */
 const parse = (rgb) => {
-    const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/.exec(rgb);
+    // A relative colour (`hsl(from …)`) computes to `color(srgb r g b [/ a])`.
+    const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?/.exec(rgb);
+    const m = srgb
+        ? [srgb[0], ...srgb.slice(1, 4).map((v) => String(Math.round(Number(v) * 255))), srgb[4]]
+        : /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/.exec(rgb);
     if (!m) throw new Error(`not a colour: ${rgb}`);
     // A transparent border is no boundary at all; the first drill of this
     // test read rgba(0, 0, 0, 0) as black and passed, which is the

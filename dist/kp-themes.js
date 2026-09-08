@@ -8,6 +8,7 @@ var THEMES = Object.freeze([
   { name: "light", label: "Light", dark: false },
   { name: "dark", label: "Dark", dark: true },
   { name: "cyberpunk", label: "Cyberpunk", dark: true },
+  { name: "synthwave", label: "Synthwave", dark: true },
   { name: "pastel", label: "Pastel", dark: false },
   { name: "terminal", label: "Terminal", dark: true },
   { name: "topo", label: "Topographic", dark: false },
@@ -156,6 +157,10 @@ var DEFAULT_STRINGS = Object.freeze({
   mainNavigation: "Main navigation",
   skipToContent: "Skip to the content",
   classified: "Classified",
+  arrivalLine: "\u25B6 Calibrating neural uplink",
+  arrivalProgress: "Progress",
+  arrivalReady: "OK",
+  arrivalSkip: "Skip",
   breadcrumb: "Breadcrumb",
   pagination: "Pagination",
   themePicker: "Choose a theme",
@@ -3791,13 +3796,22 @@ var STATE = Object.freeze({
   cleared: "is-cleared",
   deciphered: "is-deciphered",
   glitching: "is-glitching",
-  noise: "is-noise"
+  noise: "is-noise",
+  // The synthwave routines [SW2]: the tracking wipe and the shine of a
+  // headline, and the boot overlay switching off.
+  tracking: "is-tracking",
+  shine: "is-shine",
+  off: "is-off"
 });
 var ROUTINES = Object.freeze({
   headline: "--kp-reveal-headline",
   emphasis: "--kp-reveal-emphasis",
-  rule: "--kp-reveal-rule"
+  rule: "--kp-reveal-rule",
+  // How the page arrives, read from the root [SW2]: `boot` builds the
+  // overlay below; anything else, or nothing, is quiet.
+  arrival: "--kp-arrival"
 });
+var ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip" });
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var TEXT_ATTRIBUTE = "data-kp-text";
@@ -3809,6 +3823,18 @@ var TIMINGS = Object.freeze({
   // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
   // glitch (two steps, once), the headline's slice burst (one burst of
   // six bands, once) and the charge sweep (a transform, no luminance).
+  // The synthwave register [SW1]: the tracking wipe and the shine of the
+  // chrome headline, the tube that switches on (one dip), the sun cut on
+  // a button, the bar entering, the floor's drift and the CRT switching
+  // the boot overlay off — every one once, except the drift, which moves
+  // a pattern and never changes luminance.
+  "kp-tracking": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+  "kp-shine": { durationMs: 1400, cycles: 1, property: "background-position", luminanceSteps: [] },
+  "kp-tube-on": { durationMs: 1100, cycles: 1, property: "color", luminanceSteps: [0, 1, 0, 1] },
+  "kp-sun-cut": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+  "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+  "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
   "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
@@ -3913,6 +3939,35 @@ function attachEffects(root = document, options = {}) {
     };
     if (routine === "" || reduced() || seen(el, "headline")) {
       rest(true);
+      return;
+    }
+    if (routine === "tracking") {
+      pending++;
+      let ended = false;
+      const shine = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.tracking);
+        el.classList.add(STATE.shine);
+        const off = () => el.classList.remove(STATE.shine);
+        el.addEventListener("animationend", off, { once: true });
+        later(off, TIMINGS["kp-shine"].durationMs + 50);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(shine);
+      el.classList.add(STATE.tracking);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-tracking"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        shine();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(shine, TIMINGS["kp-tracking"].durationMs + 50);
       return;
     }
     pending++;
@@ -4106,6 +4161,58 @@ function attachEffects(root = document, options = {}) {
     cleanups.push(() => query.removeEventListener("change", onPreference));
   }
   scan(root);
+  const arrival = () => {
+    const routine = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
+    if (routine !== "boot" || !doc.body) return;
+    if (reduced() || seen(html, "arrival")) {
+      announce(html, "arrival", routine, true);
+      return;
+    }
+    const words = getStrings();
+    const overlay = doc.createElement("div");
+    overlay.className = ARRIVAL.root;
+    const line = doc.createElement("pre");
+    line.className = ARRIVAL.line;
+    line.setAttribute("aria-live", "polite");
+    const skip = doc.createElement("button");
+    skip.type = "button";
+    skip.className = ARRIVAL.skip;
+    skip.textContent = words.arrivalSkip;
+    overlay.append(line, skip);
+    doc.body.append(overlay);
+    pending++;
+    let ended = false;
+    let pct = 0;
+    const remove = () => {
+      overlay.remove();
+      announce(html, "arrival", routine, false);
+      pending--;
+      done();
+    };
+    const end = () => {
+      if (ended) return;
+      ended = true;
+      if (reduced()) {
+        remove();
+        return;
+      }
+      overlay.classList.add(STATE.off);
+      overlay.addEventListener("animationend", remove, { once: true });
+      later(remove, TIMINGS["kp-crt-off"].durationMs + 50);
+    };
+    const step = () => {
+      if (ended) return;
+      pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
+      line.textContent = [words.arrivalLine, words.arrivalProgress + " " + pct + "%", pct === 100 ? words.arrivalReady : ""].filter(Boolean).join("\n");
+      if (pct === 100) later(end, 220);
+      else later(step, 110);
+    };
+    skip.addEventListener("click", end);
+    finishers.push(end);
+    cleanups.push(() => overlay.remove());
+    step();
+  };
+  arrival();
   return {
     detach() {
       if (detached) return;

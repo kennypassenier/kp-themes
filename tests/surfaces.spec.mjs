@@ -42,7 +42,10 @@ async function open(page, theme) {
 
 /** @param {string} rgb a computed `rgb(r, g, b)` or `rgba(r, g, b, a)` */
 function luminance(rgb) {
-    const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    // A relative colour (`hsl(from …)`, the synthwave register) computes
+    // to `color(srgb r g b)`; a plain one to `rgb(r, g, b)`.
+    const srgb = rgb.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/);
+    const m = srgb ? [srgb[0], ...srgb.slice(1).map((v) => String(Math.round(Number(v) * 255)))] : rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
     if (!m) throw new Error(`not a colour: ${rgb}`);
     const [r, g, b] = [m[1], m[2], m[3]].map((v) => {
         const c = Number(v) / 255;

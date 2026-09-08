@@ -1,5 +1,21 @@
 # Changelog
 
+## 5.0.0 — in progress
+
+**The next cyberpunk, and the first theme lifted after it.** Cyberpunk is
+rebuilt on signal yellow under the same name (S39); `synthwave` is the
+twenty-fifth theme, built from the approved concept demo "Outrun
+Horizon" (2026-09-08) on the §25 research: the striped sun and the
+drifting floor on the hero, the horizon as divider, chrome type with one
+tracking wipe and one shine, the neon tube a `<mark>` switches on, the
+laser line under a heading, a boot line with a Skip once per session
+(`--kp-arrival: boot`, the sixth hook), VT323 as its mono face. Every
+theme gained `theme-font-mono` (the contract is 94 tokens, S47) and the
+base layer carries `[hidden] { display: none !important }` (KT13). The
+fonts ship with the package; the two registers became three
+(`css/synthwave-register.css`). `MIGRATION.md` has the consumer-facing
+detail at C6.
+
 ## 4.0.0 — 2026-09-07
 
 **A destructive button asks before it acts, and four things that were

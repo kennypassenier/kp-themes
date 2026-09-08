@@ -9,6 +9,13 @@ reported here in capitals and corrected by nobody but Kenny.
 
 | Effect | Property | Duration | Plays | Opacity steps | Rate | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
+| `kp-tracking` | opacity | 700 ms | 1× | 1 → 0 | 1.00/s | under |
+| `kp-shine` | background-position | 1400 ms | 1× | — | 0.00/s | under |
+| `kp-tube-on` | color | 1100 ms | 1× | 0 → 1 → 0 → 1 | 0.00/s | under |
+| `kp-sun-cut` | opacity | 360 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-bar-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-floor-drift` | background-position | 6000 ms | loops | — | 0.00/s | under |
+| `kp-crt-off` | opacity | 550 ms | 1× | 1 → 0 | 1.00/s | under |
 | `kp-strip-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-strip-in-end` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-slice-a` | opacity | 320 ms | 1× | 1 → 1 → 0 | 1.00/s | under |

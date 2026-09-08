@@ -34,8 +34,10 @@ import { declaredRoots, rulesOf, subjectRoots } from './selectors.mjs';
 
 const root = new URL('../', import.meta.url);
 
-/** The register this gate measures. */
-export const REGISTER = 'css/cyberpunk-register.css';
+/** The registers this gate measures, one theme each [TH124]. */
+export const REGISTERS = ['css/cyberpunk-register.css', 'css/synthwave-register.css'];
+/** The first register, kept for the callers that measure one. */
+export const REGISTER = REGISTERS[0];
 
 /** Roots with no visual identity of their own, each with the reason. */
 export const HELPERS = {
@@ -86,29 +88,33 @@ export function audit(componentsCss, registerCss, helpers, pending) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
     const components = readFileSync(new URL('css/components.css', root), 'utf8');
-    const register = readFileSync(new URL(REGISTER, root), 'utf8');
-    const { declared, covered, uncovered, stale } = audit(components, register, HELPERS, PENDING);
     let failed = 0;
-    for (const name of uncovered) {
-        failed++;
-        console.error(`.kp-${name} has no rule in ${REGISTER} and no exception with a reason (HELPERS or gates/register-pending.json).`);
-    }
-    for (const name of stale) {
-        failed++;
-        console.error(
-            `.kp-${name} is listed as an exception but the register covers it or css/components.css does not declare it — remove the entry.`,
-        );
-    }
-    if (declared.length === 0) {
-        console.error('gate broke: css/components.css declares no roots, which cannot be right.');
-        process.exit(1);
+    for (const REGISTER of REGISTERS) {
+        const register = readFileSync(new URL(REGISTER, root), 'utf8');
+        const { declared, covered, uncovered, stale } = audit(components, register, HELPERS, PENDING);
+        for (const name of uncovered) {
+            failed++;
+            console.error(`.kp-${name} has no rule in ${REGISTER} and no exception with a reason (HELPERS or gates/register-pending.json).`);
+        }
+        for (const name of stale) {
+            failed++;
+            console.error(
+                `.kp-${name} is listed as an exception but ${REGISTER} covers it or css/components.css does not declare it — remove the entry.`,
+            );
+        }
+        if (declared.length === 0) {
+            console.error('gate broke: css/components.css declares no roots, which cannot be right.');
+            process.exit(1);
+        }
+        if (uncovered.length === 0 && stale.length === 0) {
+            const pendingCount = Object.keys(PENDING).length;
+            console.log(
+                `Register coverage: ${covered.length} of ${declared.length} roots answered by ${REGISTER}, ${Object.keys(HELPERS).length} helpers excused, ${pendingCount} pending.`,
+            );
+        }
     }
     if (failed > 0) {
         console.error(`\n${failed} coverage fault(s).`);
         process.exit(1);
     }
-    const pendingCount = Object.keys(PENDING).length;
-    console.log(
-        `Register coverage: ${covered.length} of ${declared.length} roots answered by ${REGISTER}, ${Object.keys(HELPERS).length} helpers excused, ${pendingCount} pending for C2.`,
-    );
 }

@@ -35,6 +35,7 @@ export const FILES = [
     'css/cyberpunk-register.css',
     'css/layout.css',
     'css/retro-register.css',
+    'css/synthwave-register.css',
     'css/tailwind-bridge.css',
     'css/fonts.css',
     'css/themes.css',
