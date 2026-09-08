@@ -1309,4 +1309,21 @@
             right 19px center,
             right 13px center;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — phosphor between dashed rules. */
+    [data-theme='terminal'] .kp-marquee {
+        background: var(--background);
+        color: var(--primary);
+        border-block: 1px dashed color-mix(in srgb, var(--primary) 50%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 30000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='terminal'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px dashed currentColor;
+    }
 }

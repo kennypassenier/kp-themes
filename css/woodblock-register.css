@@ -1159,4 +1159,20 @@
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — paper with a beni border, in the display face. */
+    [data-theme='woodblock'] .kp-marquee {
+        background: color-mix(in srgb, var(--primary) 8%, var(--background));
+        border-block: 1px solid var(--primary);
+        font-family: var(--theme-font-display);
+        --kp-marquee: 52000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='woodblock'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        border-block-end: 1px solid var(--primary);
+    }
 }

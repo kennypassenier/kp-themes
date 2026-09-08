@@ -1103,4 +1103,23 @@
             opacity: 1;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the cyan top rule of a title block, mono in caps. */
+    [data-theme='blueprint'] .kp-marquee {
+        border-block-start: 2px solid var(--primary);
+        border-block-end: 1px solid var(--border);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        --kp-marquee: 34000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='blueprint'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        border-block-end: 1px dashed var(--border);
+    }
 }

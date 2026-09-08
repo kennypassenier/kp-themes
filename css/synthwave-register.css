@@ -1546,4 +1546,20 @@
             opacity: 0;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a neon rule under the band and a glow around the text. */
+    [data-theme='synthwave'] .kp-marquee {
+        background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, transparent), transparent);
+        border-block-end: 2px solid var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        --kp-marquee: 26000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        border-block-end: 0;
+    }
 }

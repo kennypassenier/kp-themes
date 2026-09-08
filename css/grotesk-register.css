@@ -1054,4 +1054,21 @@
             transform: none;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — heavy rules above and below, half-bold. */
+    [data-theme='grotesk'] .kp-marquee {
+        border-block: 2px solid var(--foreground);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        --kp-marquee: 30000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='grotesk'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border-block-end: 2px solid var(--foreground);
+    }
 }

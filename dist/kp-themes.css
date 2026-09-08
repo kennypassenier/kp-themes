@@ -8927,6 +8927,36 @@
         color: var(--accent);
         letter-spacing: 0.2em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the band Kenny corrected on 2026-09-08: every corner cut the same, and the ground signal yellow with the ink in blood red rather than the unreadable white it had. The pair measures 3.21 against the 4.5 floor, reported to him with the change. */
+    [data-theme='cyberpunk'] .kp-marquee {
+        background: var(--primary);
+        color: var(--destructive);
+        clip-path: polygon(
+            var(--fx-notch-sm) 0,
+            calc(100% - var(--fx-notch-sm)) 0,
+            100% var(--fx-notch-sm),
+            100% calc(100% - var(--fx-notch-sm)),
+            calc(100% - var(--fx-notch-sm)) 100%,
+            var(--fx-notch-sm) 100%,
+            0 calc(100% - var(--fx-notch-sm)),
+            0 var(--fx-notch-sm)
+        );
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        --kp-marquee: 18000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='cyberpunk'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.14em;
+        border-block-end: 0;
+    }
 }
 
 @layer kp.register {
@@ -10616,6 +10646,25 @@
         inline-size: calc(var(--kp-boot-progress, 0) * 100%);
         background-image: repeating-linear-gradient(90deg, var(--primary) 0 10px, transparent 10px 13px);
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a pressed bevel, the same one its windows carry. */
+    [data-theme='retro'] .kp-marquee {
+        background: var(--card);
+        border-block-start: 2px solid var(--background);
+        border-block-end: 2px solid var(--border-strong);
+        box-shadow: inset 0 2px 0 color-mix(in srgb, var(--foreground) 12%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 36000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='retro'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--secondary);
+        font-family: var(--theme-font-mono);
+        text-transform: none;
+        border-block-end: 2px solid var(--border-strong);
+    }
 }
 
 @layer kp.register {
@@ -12165,6 +12214,22 @@
             filter: brightness(50);
             opacity: 0;
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a neon rule under the band and a glow around the text. */
+    [data-theme='synthwave'] .kp-marquee {
+        background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, transparent), transparent);
+        border-block-end: 2px solid var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        --kp-marquee: 26000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        border-block-end: 0;
     }
 }
 
@@ -13729,6 +13794,26 @@
         font-style: normal;
         letter-spacing: 0.2em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the whole band a degree off square, inverted, in caps. */
+    [data-theme='phantom'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        transform: skewY(-1deg);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        --kp-marquee: 22000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='phantom'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: skewX(-8deg);
+        border-block-end: 0;
+    }
 }
 
 @layer kp.register {
@@ -15042,6 +15127,23 @@
             right 19px center,
             right 13px center;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — phosphor between dashed rules. */
+    [data-theme='terminal'] .kp-marquee {
+        background: var(--background);
+        color: var(--primary);
+        border-block: 1px dashed color-mix(in srgb, var(--primary) 50%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 30000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='terminal'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px dashed currentColor;
+    }
 }
 
 @layer kp.register {
@@ -16289,6 +16391,26 @@
         font-weight: 700;
         letter-spacing: 0.14em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — ink on paper inverted, the fastest pass but its own hatch band. */
+    [data-theme='brutalism'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        border-block: 3px solid var(--foreground);
+        font-weight: 700;
+        text-transform: uppercase;
+        --kp-marquee: 20000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='brutalism'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        border-block-end: 0;
+    }
 }
 
 @layer kp.register {
@@ -17452,6 +17574,22 @@
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — paper with a beni border, in the display face. */
+    [data-theme='woodblock'] .kp-marquee {
+        background: color-mix(in srgb, var(--primary) 8%, var(--background));
+        border-block: 1px solid var(--primary);
+        font-family: var(--theme-font-display);
+        --kp-marquee: 52000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='woodblock'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        border-block-end: 1px solid var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -18459,6 +18597,24 @@
             width: 100%;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a rounded pill on the card colour, like everything else here. */
+    [data-theme='pastel'] .kp-marquee {
+        background: var(--card);
+        border-radius: 999px;
+        margin-inline: 1rem;
+        --kp-marquee: 38000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='pastel'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: color-mix(in srgb, var(--primary) 12%, transparent);
+        border-radius: 999px;
+        margin: 0.25rem;
+        border-block-end: 0;
+        text-transform: none;
+    }
 }
 
 @layer kp.register {
@@ -19439,6 +19595,24 @@
             transform: translateY(0);
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the edges fade to nothing, the seam this theme is built on. */
+    [data-theme='shade-light'] .kp-marquee {
+        mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='shade-light'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted-foreground);
+        border-block-end: 0;
+    }
 }
 
 @layer kp.register {
@@ -20395,6 +20569,23 @@
     [data-theme='ticker'] .kp-spec__font[data-font='body'] {
         font-family: var(--theme-font-body);
         text-transform: none;
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the tape its own approved demo showed, mono on the card colour with the items hard against each other. */
+    [data-theme='ticker'] .kp-marquee {
+        background: var(--card);
+        border-block: 1px solid var(--border);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 24000ms;
+        --kp-marquee-gap: 0rem;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='ticker'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px solid var(--border);
     }
 }
 
@@ -21394,6 +21585,23 @@
         100% {
             stroke-dashoffset: 0;
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a contour line under the band, in the mono face. */
+    [data-theme='forest'] .kp-marquee {
+        border-block-start: 1px solid var(--border-strong);
+        border-block-end: 3px double var(--border-strong);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 48000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='forest'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        color: var(--primary);
+        border-block-end: 1px dotted var(--border-strong);
     }
 }
 
@@ -22493,6 +22701,25 @@
         font-family: var(--theme-font-mono);
         letter-spacing: 0.14em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — gold rules above and below, the display face set very wide. */
+    [data-theme='deco'] .kp-marquee {
+        border-block: 1px solid var(--primary);
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.24em;
+        border-block-end: 1px solid var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -23184,6 +23411,23 @@
             background-size: 100% 100%;
             color: var(--accent-foreground);
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a grey row with air between the items. */
+    [data-theme='light'] .kp-marquee {
+        border-block: 1px solid var(--border);
+        color: var(--muted-foreground);
+        --kp-marquee: 55000ms;
+        --kp-marquee-gap: 2.5rem;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before {
+        text-transform: none;
+        letter-spacing: 0;
+        border-block-end: 0;
+        padding-block-end: 0;
     }
 }
 
@@ -24242,6 +24486,23 @@
             opacity: 1;
             transform: none;
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — heavy rules above and below, half-bold. */
+    [data-theme='grotesk'] .kp-marquee {
+        border-block: 2px solid var(--foreground);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        --kp-marquee: 30000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='grotesk'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border-block-end: 2px solid var(--foreground);
     }
 }
 
@@ -25350,6 +25611,25 @@
             opacity: 1;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the cyan top rule of a title block, mono in caps. */
+    [data-theme='blueprint'] .kp-marquee {
+        border-block-start: 2px solid var(--primary);
+        border-block-end: 1px solid var(--border);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        --kp-marquee: 34000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='blueprint'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        border-block-end: 1px dashed var(--border);
+    }
 }
 
 @layer kp.register {
@@ -26347,6 +26627,26 @@
             opacity: 1;
             transform: translateY(0) scale(1);
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a beige plate, small mono set very wide in caps. */
+    [data-theme='nostromo'] .kp-marquee {
+        background: var(--card);
+        border-block: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8em;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        --kp-marquee: 42000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='nostromo'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border-strong);
     }
 }
 
@@ -27900,6 +28200,20 @@
             background-position: 0 0;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='dark'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
 }
 
 @layer kp.register {
@@ -28859,6 +29173,24 @@
             transform: translateY(0) scale(1);
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — small caps over a thick ribbon, the gesture this theme already rules its headings with. */
+    [data-theme='academia'] .kp-marquee {
+        border-block-start: 1px solid var(--border-strong);
+        border-block-end: 4px solid var(--primary);
+        font-family: var(--theme-font-display);
+        font-variant-caps: all-small-caps;
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='academia'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-display);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -29620,6 +29952,24 @@
         [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
             transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — small caps between two hairlines, the slowest pass in the package. */
+    [data-theme='formal'] .kp-marquee {
+        border-block: 1px solid var(--border-strong);
+        background: color-mix(in srgb, var(--card) 70%, var(--background));
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+        --kp-marquee: 60000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='formal'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.1em;
+        color: var(--foreground);
+        border-block-end: 1px solid var(--border-strong);
     }
 }
 
@@ -30678,6 +31028,25 @@
             opacity: 1;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a double gold rule above it, set in the italic display face. */
+    [data-theme='sepia'] .kp-marquee {
+        border-block-start: 3px double var(--primary);
+        border-block-end: 1px solid var(--primary);
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        --kp-marquee: 56000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='sepia'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -31535,6 +31904,22 @@
         to {
             clip-path: inset(0 100% 0 0);
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — amber between two translucent amber rules. */
+    [data-theme='solstice'] .kp-marquee {
+        color: var(--primary);
+        border-block: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 44000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='solstice'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
     }
 }
 
@@ -32465,6 +32850,22 @@
         color: var(--muted-foreground);
         letter-spacing: 0.08em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a hairline above and below, everything in mono, a step smaller. */
+    [data-theme='mono'] .kp-marquee {
+        border-block: 1px solid var(--border);
+        font-family: var(--theme-font-mono);
+        font-size: 0.85em;
+        --kp-marquee: 40000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='mono'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+        border-block-end: 1px solid var(--border);
+    }
 }
 
 @layer kp.register {
@@ -33275,6 +33676,24 @@
         [data-theme='high-contrast'] .kp-nav__link {
             transition: border-color var(--fx-duration) var(--fx-ease);
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — inverted: the ground is ink and the ink is paper. */
+    [data-theme='high-contrast'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+        text-transform: uppercase;
+        --kp-marquee: 52000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='high-contrast'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+        border-block-end: 0;
     }
 }
 
@@ -34172,6 +34591,23 @@
             filter: brightness(1);
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — gold rules over a lapis wash, set wide. */
+    [data-theme='lapis'] .kp-marquee {
+        border-block: 1px solid var(--primary);
+        color: var(--primary);
+        background: color-mix(in srgb, var(--primary) 8%, transparent);
+        letter-spacing: 0.14em;
+        --kp-marquee: 54000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='lapis'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        letter-spacing: 0.16em;
+        border-block-end: 1px solid var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -35043,6 +35479,24 @@
         100% {
             opacity: 1;
         }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the same fade in the dark. */
+    [data-theme='shade-dark'] .kp-marquee {
+        mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='shade-dark'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted-foreground);
+        border-block-end: 0;
     }
 }
 

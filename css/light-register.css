@@ -688,4 +688,21 @@
             color: var(--accent-foreground);
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a grey row with air between the items. */
+    [data-theme='light'] .kp-marquee {
+        border-block: 1px solid var(--border);
+        color: var(--muted-foreground);
+        --kp-marquee: 55000ms;
+        --kp-marquee-gap: 2.5rem;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before {
+        text-transform: none;
+        letter-spacing: 0;
+        border-block-end: 0;
+        padding-block-end: 0;
+    }
 }

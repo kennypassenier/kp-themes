@@ -994,4 +994,24 @@
             transform: translateY(0) scale(1);
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a beige plate, small mono set very wide in caps. */
+    [data-theme='nostromo'] .kp-marquee {
+        background: var(--card);
+        border-block: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8em;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        --kp-marquee: 42000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='nostromo'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border-strong);
+    }
 }

@@ -1559,4 +1559,24 @@
         font-style: normal;
         letter-spacing: 0.2em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the whole band a degree off square, inverted, in caps. */
+    [data-theme='phantom'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        transform: skewY(-1deg);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        --kp-marquee: 22000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='phantom'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: skewX(-8deg);
+        border-block-end: 0;
+    }
 }

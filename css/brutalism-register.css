@@ -1243,4 +1243,24 @@
         font-weight: 700;
         letter-spacing: 0.14em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — ink on paper inverted, the fastest pass but its own hatch band. */
+    [data-theme='brutalism'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        border-block: 3px solid var(--foreground);
+        font-weight: 700;
+        text-transform: uppercase;
+        --kp-marquee: 20000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='brutalism'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        border-block-end: 0;
+    }
 }

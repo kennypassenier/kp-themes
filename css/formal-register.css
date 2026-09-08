@@ -758,4 +758,22 @@
             transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — small caps between two hairlines, the slowest pass in the package. */
+    [data-theme='formal'] .kp-marquee {
+        border-block: 1px solid var(--border-strong);
+        background: color-mix(in srgb, var(--card) 70%, var(--background));
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+        --kp-marquee: 60000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='formal'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.1em;
+        color: var(--foreground);
+        border-block-end: 1px solid var(--border-strong);
+    }
 }

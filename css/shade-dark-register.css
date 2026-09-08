@@ -868,4 +868,22 @@
             opacity: 1;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the same fade in the dark. */
+    [data-theme='shade-dark'] .kp-marquee {
+        mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='shade-dark'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted-foreground);
+        border-block-end: 0;
+    }
 }

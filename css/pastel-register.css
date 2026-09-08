@@ -1003,4 +1003,22 @@
             width: 100%;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a rounded pill on the card colour, like everything else here. */
+    [data-theme='pastel'] .kp-marquee {
+        background: var(--card);
+        border-radius: 999px;
+        margin-inline: 1rem;
+        --kp-marquee: 38000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='pastel'] .kp-nav__menu[data-kp-menu-label]::before {
+        background: color-mix(in srgb, var(--primary) 12%, transparent);
+        border-radius: 999px;
+        margin: 0.25rem;
+        border-block-end: 0;
+        text-transform: none;
+    }
 }

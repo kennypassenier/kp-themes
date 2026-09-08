@@ -1094,4 +1094,23 @@
         font-family: var(--theme-font-mono);
         letter-spacing: 0.14em;
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — gold rules above and below, the display face set very wide. */
+    [data-theme='deco'] .kp-marquee {
+        border-block: 1px solid var(--primary);
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before {
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.24em;
+        border-block-end: 1px solid var(--primary);
+    }
 }

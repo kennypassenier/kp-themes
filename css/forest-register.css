@@ -995,4 +995,21 @@
             stroke-dashoffset: 0;
         }
     }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a contour line under the band, in the mono face. */
+    [data-theme='forest'] .kp-marquee {
+        border-block-start: 1px solid var(--border-strong);
+        border-block-end: 3px double var(--border-strong);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 48000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    [data-theme='forest'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-mono);
+        color: var(--primary);
+        border-block-end: 1px dotted var(--border-strong);
+    }
 }
