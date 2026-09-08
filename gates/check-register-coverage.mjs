@@ -42,6 +42,7 @@ export const REGISTERS = [
     'css/retro-register.css',
     'css/terminal-register.css',
     'css/brutalism-register.css',
+    'css/shade-dark-register.css',
 ];
 /** The first register, kept for the callers that measure one. */
 export const REGISTER = REGISTERS[0];

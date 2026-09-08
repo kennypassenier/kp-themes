@@ -3876,6 +3876,14 @@ var TIMINGS = Object.freeze({
   "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
   // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
   "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
+  // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
+  // arriving out of a blur, the hero button and the dossier card settling
+  // out of the same blur once on load, and the confirmation dialog's
+  // native open/close.
+  "kp-focus": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+  "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   // The brutalism register [BR1]: the words dropping onto their offset and
   // the seamless marquee.
   "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -4019,7 +4027,7 @@ function attachEffects(root = document, options = {}) {
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
       return;
     }
-    if (routine === "shout" || routine === "slam") {
+    if (routine === "shout" || routine === "slam" || routine === "focus") {
       pending++;
       const parts = text.split(/(\s+)/);
       let index = 0;

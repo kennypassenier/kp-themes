@@ -159,6 +159,20 @@ test.describe('two surfaces in one theme [TH116]', () => {
         expect(appGround).toBe(paint[1]);
     });
 
+    // A pair an approved demo puts under the floor is REPORTED, not lifted
+    // [S49, S42]: the register carries the demo's own value, the shortfall
+    // is measured here with the demo it came from, and Kenny decides at
+    // that theme's ratification. An entry whose theme no longer paints it
+    // is a failure of its own, so this list cannot go stale quietly.
+    /** @type {Record<string, { measured: number, what: string, why: string }>} */
+    const REPORTED = {
+        'shade-dark': {
+            measured: 4.21,
+            what: 'app p "FILE 06 · STATUS: PREVIEW · CL"',
+            why: "the demo's own `.microlabel { color: var(--accent) }` is one rule for every surface, and on the card the accent measures 4.21 against the 4.5 floor. The demo's contrast table lists twelve pairs and never this one — it only ever measured the accent as a background. Reported at the shade-dark lift, 2026-09-08, awaiting Kenny.",
+        },
+    };
+
     for (const theme of THEMES) {
         test(`every text on both surfaces clears its contrast floor under ${theme.name}`, async ({ page }) => {
             await open(page, theme.name);
@@ -191,6 +205,17 @@ test.describe('two surfaces in one theme [TH116]', () => {
                 .filter((f) => worst(f) < f.floor)
                 .map((f) => `${f.surface} ${f.tag} "${f.text}": ${f.fg} on ${f.bgs.join(' | ')} = ${worst(f).toFixed(2)} (floor ${f.floor})`);
             expect(failures.length, 'nothing measured').toBeGreaterThan(10);
+            const reported = REPORTED[theme.name];
+            if (reported) {
+                const named = bad.filter((line) => line.startsWith(reported.what));
+                expect(named, `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${reported.why}`).toHaveLength(1);
+                expect(Number(named[0].match(/= ([\d.]+) /)?.[1]), 'the reported pair still measures what the report says').toBeCloseTo(
+                    reported.measured,
+                    1,
+                );
+                expect(bad.filter((line) => !line.startsWith(reported.what))).toEqual([]);
+                return;
+            }
             expect(bad).toEqual([]);
         });
     }

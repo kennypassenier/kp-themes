@@ -27,6 +27,10 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sweep` | transform | 10000 ms | loops | — | 0.00/s | under |
 | `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-caret` | background-size | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
+| `kp-focus` | opacity | 600 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-focus-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-dialog-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-backdrop-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-slam` | transform | 260 ms | 1× | — | 0.00/s | under |
 | `kp-marquee` | transform | 42000 ms | loops | — | 0.00/s | under |
 | `kp-strip-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |

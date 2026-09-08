@@ -59,6 +59,33 @@ export const WIRED = [
 const GENERATED =
     /^(css\/themes\.css|css\/utilities\.css|css\/fonts\.css|dist\/|examples\/|showcase\/(index|themes)|showcase\/baseline|site\/|ha\/|reports\/|docs\/DESIGN_INVARIANTS\.md|.*\.d\.ts$|tests\/fixtures\/\.build\/)/;
 
+/** How a theme's key is written in showcase/concept-copy.mjs. */
+const key = (/** @type {string} */ theme) => (/^[a-z][a-z0-9]*$/.test(theme) ? theme : `'${theme}'`);
+
+/**
+ * One theme's block out of a `{ theme: { … }, … }` module, by brace depth.
+ *
+ * @param {string} file
+ * @param {string} theme
+ * @returns {string | null}
+ */
+function lift(file, theme) {
+    if (!existsSync(file)) return null;
+    const source = readFileSync(file, 'utf8');
+    const head = `\n    ${key(theme)}: {`;
+    const start = source.indexOf(head);
+    if (start === -1) return null;
+    let depth = 0;
+    for (let at = start + 1; at < source.length; at++) {
+        if (source[at] === '{') depth++;
+        else if (source[at] === '}') {
+            depth--;
+            if (depth === 0) return source.slice(start + 1, source.indexOf('\n', at) + 1).replace(/\n$/, '');
+        }
+    }
+    return null;
+}
+
 /**
  * @param {string} worktree
  * @returns {string[]} every path the worktree changed against its base
@@ -104,25 +131,43 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.log(`${apply ? 'copied  ' : 'would copy'} ${path}`);
     }
     console.log('');
-    // The theme's own entry in the two shared files it legitimately adds to.
-    for (const shared of ['showcase/concept-copy.mjs', 'themes/hooks.json']) {
-        const from = `${worktree}/${shared}`;
-        if (!existsSync(from)) continue;
-        const theirs = readFileSync(from, 'utf8');
-        const ours = readFileSync(here(shared), 'utf8');
-        if (theirs === ours) continue;
-        console.log(`── ${shared}: the theme's own entry has to be lifted out by hand ──`);
-        console.log(execFileSync('diff', ['-u', here(shared), from], { encoding: 'utf8', maxBuffer: 8 << 20 }).slice(0, 4000) || '(identical)');
-    }
+    // The theme's own entry in the two shared files it legitimately adds
+    // to, lifted out by key rather than by merging the whole file: every
+    // agent edited its own copy of these, and only its own theme's block
+    // belongs here.
+    const copyEntry = lift(`${worktree}/showcase/concept-copy.mjs`, theme);
+    if (copyEntry) {
+        const ours = readFileSync(here('showcase/concept-copy.mjs'), 'utf8');
+        if (ours.includes(`\n    ${key(theme)}: {`)) console.log('showcase/concept-copy.mjs already carries this theme');
+        else if (apply) {
+            const at = ours.lastIndexOf('\n};');
+            writeFileSync(here('showcase/concept-copy.mjs'), ours.slice(0, at) + '\n' + copyEntry + ours.slice(at));
+            console.log(`copied   the ${theme} entry into showcase/concept-copy.mjs (${copyEntry.split('\n').length} lines)`);
+        } else console.log(`would copy the ${theme} entry into showcase/concept-copy.mjs (${copyEntry.split('\n').length} lines)`);
+    } else console.log(`showcase/concept-copy.mjs: no ${theme} entry in the worktree`);
+
+    const theirHooks = JSON.parse(readFileSync(`${worktree}/themes/hooks.json`, 'utf8'));
+    const ourHooks = JSON.parse(readFileSync(here('themes/hooks.json'), 'utf8'));
+    const rows = theirHooks[theme] ?? theirHooks.themes?.[theme];
+    if (rows === undefined) console.log(`themes/hooks.json: no ${theme} rows in the worktree`);
+    else if (JSON.stringify(rows) === JSON.stringify(ourHooks[theme] ?? ourHooks.themes?.[theme]))
+        console.log('themes/hooks.json already carries these rows');
+    else if (apply) {
+        if (ourHooks.themes) ourHooks.themes[theme] = rows;
+        else ourHooks[theme] = rows;
+        writeFileSync(here('themes/hooks.json'), JSON.stringify(ourHooks, null, 4) + '\n');
+        console.log(`copied   the ${theme} rows into themes/hooks.json`);
+    } else console.log(`would copy the ${theme} rows into themes/hooks.json`);
     if (review.length > 0) {
         console.log('\n── changed outside the theme and outside the wiring; read these ──');
         for (const path of review) {
             console.log(`\n=== ${path}`);
+            // diff exits 1 when the files differ, which is the normal case
+            // here, so its output is read from the error as well.
             try {
                 console.log(execFileSync('diff', ['-u', here(path), `${worktree}/${path}`], { encoding: 'utf8', maxBuffer: 8 << 20 }).slice(0, 6000));
             } catch (error) {
-                const diff = /** @type {{ stdout?: Buffer }} */ (error).stdout;
-                console.log(String(diff ?? '(new file)').slice(0, 6000));
+                console.log(String(/** @type {{ stdout?: Buffer }} */ (error).stdout ?? '(new file)').slice(0, 6000));
             }
         }
     }

@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
     </head>
     <body>
@@ -814,21 +815,34 @@ should say so.</li>
                         </ul>
                         <div class="kp-prose">
 <p>The dark half of the shade pair: the same Solarized scheme with the
-lightness steps mirrored, so switching between the two halves changes
-the ground and keeps the accents. Medium contrast on a deep blue-black,
-for reading at night without the glare of white text. See
+lightness steps mirrored, so switching between the two halves changes the
+ground and keeps the accents. Medium contrast on a deep blue-black, for
+reading at night without the glare of white text. See
 <a href="../shade-light/anatomy.md">shade-light</a> for the idea the pair shares;
 this document records only what the dark half does differently.</p>
+<p>Shade-dark is a <strong>one-ground theme</strong>: the hero and the app share
+<code>--background</code> (<code>--surface-hero-bg</code> equals <code>--background</code> in
+<code>tokens.json</code>), which is load-bearing for the divider below — a plain
+fade to transparent would fade to the colour it already sits on and
+vanish.</p>
 <ol>
-<li><strong>The ground is base03, the text is lifted.</strong> <code>hsl(192, 100%, 11%)</code>
-is Solarized's own; the canonical text colour base0 measured 4.28:1
-on the card and was lifted to <code>hsl(186, 8%, 64%)</code>, which reads at
-4.5 on every surface and still stops far short of white.</li>
+<li><strong>The ground is base03, the text is lifted.</strong> <code>hsl(192, 100%, 11%)</code> is
+Solarized's own; the canonical text colour base0 measured 4.28:1 on
+the card and was lifted to <code>hsl(186, 8%, 64%)</code>, which reads at 4.5 on
+every surface and still stops far short of white.</li>
 <li><strong>Accents lighter than the light half's.</strong> Blue at 60% instead of
 38%, magenta at 58%, red at 66%: the same hues, mirrored across the
 middle, so a plate reads at the same contrast on either ground.</li>
 <li><strong>The layers rise.</strong> Ground 11%, card 14%, popover 17% — deliberate,
 where the light half's card goes the other way.</li>
+<li><strong>No elevation shadow.</strong> <code>--fx-lift: 0px</code> and <code>--fx-shadow-offset: 0px</code>
+already shipped; three independently measured sources (this
+theme's own research, obsidianassembly.com, Dark_Editorial.html)
+carried between zero and three soft box-shadows each. Depth between
+surfaces (bg → card → popover, and the dossier card) comes from the
+tone ladder alone.</li>
+<li><strong>No texture.</strong> <code>--fx-texture</code> stays unset. No starfield, no grain —
+the register adds nothing to the ground.</li>
 </ol>
                         </div>
                     </article>
