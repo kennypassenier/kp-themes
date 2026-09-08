@@ -1404,15 +1404,16 @@
             transition: transform var(--fx-duration) var(--fx-ease);
         }
 
-        /* No box-shadow transition here: the focus ring is a shadow layer
-           and must appear at once (AR30); a theme switch mid-transition
-           reads the previous theme's ring. */
+        /* Transform only. No box-shadow transition: the focus ring is a
+           shadow layer and must appear at once (AR30). No colour transition
+           either: a theme applied after first paint transitions every
+           colour, and CI's chromium read a nav link halfway — `oklab(…)`,
+           a colour the theme does not own (KT8; flake named, rule 8a,
+           run 34175026456). */
         [data-theme='synthwave'] .kp-nav__link,
         [data-theme='synthwave'] .kp-nav__link--cta,
         [data-theme='synthwave'] .kp-button {
-            transition:
-                color var(--fx-duration) var(--fx-ease),
-                transform var(--fx-duration) var(--fx-ease);
+            transition: transform var(--fx-duration) var(--fx-ease);
         }
 
         [data-theme='synthwave'] .kp-button:hover::before {
@@ -1421,12 +1422,6 @@
 
         [data-theme='synthwave'] .kp-button:hover::after {
             animation: kp-sun-cut 360ms steps(3, end) 1 60ms;
-        }
-
-        [data-theme='synthwave'] .kp-field__input {
-            transition:
-                border-color var(--fx-duration) var(--fx-ease),
-                box-shadow var(--fx-duration) var(--fx-ease);
         }
 
         [data-theme='synthwave'] [data-kp-surface='hero']::after {
