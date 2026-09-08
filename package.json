@@ -149,6 +149,7 @@
         "./css/phantom-register": "./css/phantom-register.css",
         "./css/terminal-register": "./css/terminal-register.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
+        "./css/light-register": "./css/light-register.css",
         "./css/grotesk-register": "./css/grotesk-register.css",
         "./css/blueprint-register": "./css/blueprint-register.css",
         "./css/nostromo-register": "./css/nostromo-register.css",

@@ -55,6 +55,7 @@
         "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/terminal-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
+        "css/light-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/grotesk-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/blueprint-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/nostromo-register.css": ["authored", "bundled", "classes", "motion", "texture"],

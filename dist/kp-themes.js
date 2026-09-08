@@ -3803,6 +3803,8 @@ var HOOKS = Object.freeze({
 var SURFACES = Object.freeze(["hero", "app"]);
 var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
 var STATE = Object.freeze({
+  // The light headline [S48, A1]: the clip window opening once.
+  revealing: "is-revealing",
   // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
   // blur+brightness resolve, a one-shot optical sweep on the whole,
   // unsplit line — no word-splitting, so it is its own routine rather
@@ -3964,6 +3966,12 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The light register [S48, LIFT_PLAN, A1]: the headline's rounded clip
+  // window opening once (a shape and a fade, never a loop), and the lede
+  // marks' background-size sweep with its one colour swap — a highlighter
+  // reveal, not a flash.
+  "kp-clip-reveal": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
+  "kp-mark-sweep": { durationMs: 420, cycles: 1, property: "color", luminanceSteps: [0, 1] },
   // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
   // resolve, a monotone blur+brightness sweep, once, on the whole,
   // unsplit line (`kp-sharpen-in` — not `kp-focus-in`/`focus`, which the
@@ -4303,6 +4311,31 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(finish2, TIMINGS["kp-sharpen-in"].durationMs + 50);
+      return;
+    }
+    if (routine === "clip") {
+      pending++;
+      el.classList.add(STATE.revealing);
+      let ended = false;
+      const finish2 = () => {
+        if (ended) return;
+        ended = true;
+        el.classList.remove(STATE.revealing);
+        rest(false);
+        pending--;
+        done();
+      };
+      finishers.push(finish2);
+      const onEnd = (e) => {
+        if (
+          /** @type {AnimationEvent} */
+          e.animationName !== "kp-clip-reveal"
+        ) return;
+        el.removeEventListener("animationend", onEnd);
+        finish2();
+      };
+      el.addEventListener("animationend", onEnd);
+      later(finish2, TIMINGS["kp-clip-reveal"].durationMs + 50);
       return;
     }
     if (routine === "shout" || routine === "slam" || routine === "focus" || routine === "resolve") {

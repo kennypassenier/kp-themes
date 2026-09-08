@@ -59,6 +59,7 @@ function motionScope() {
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
+        '../css/light-register.css',
     ]) {
         const css = readFileSync(new URL(rel, import.meta.url), 'utf8');
         names.push(...[...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
@@ -88,6 +89,7 @@ function motionVerdicts() {
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
+        '../css/light-register.css',
         '../css/_rules.css',
     ]) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
@@ -132,6 +134,7 @@ function layersClean() {
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
+        '../css/light-register.css',
         '../css/tailwind-bridge.css',
     ].every((rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0);
 }

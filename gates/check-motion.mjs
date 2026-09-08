@@ -102,6 +102,11 @@ const OUT_OF_SCOPE = {
     // already own for their own, different mechanics).
     'kp-sharpen-in':
         "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
+    // The light register [S48, LIFT_PLAN, A1]: the lede mark's
+    // background-size sweep, one colour swap on an inline phrase, once —
+    // matches the shape of the retro selection bar's kp-drag-select below;
+    // under 341x256 px.
+    'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

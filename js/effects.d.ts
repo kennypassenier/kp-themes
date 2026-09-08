@@ -20,6 +20,7 @@ export declare const REVEALS: readonly string[];
  * values: a consumer may select on them, a register does.
  */
 export declare const STATE: Readonly<{
+    revealing: "is-revealing";
     sharpening: "is-sharpening";
     in: "is-in";
     cleared: "is-cleared";
