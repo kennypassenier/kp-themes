@@ -143,9 +143,14 @@
 
     /* The mark: emphasis is a plate of cut paper shoved under the word,
        black ink on red. At rest the plate is there; with the script armed
-       the word is white until the plate arrives. */
+       the word is white until the plate arrives. The plate is painted
+       twice on purpose: the skewed pseudo-element is what the eye sees,
+       and a narrower rectangle of the same red is the element's own
+       background, so that what measures a text against its ground — the
+       surfaces test, an accessibility tool, forced colours — finds the
+       red and not the void. CI found black on black without it. */
     [data-theme='phantom'] mark {
-        background: none;
+        background: linear-gradient(var(--primary), var(--primary)) center / calc(100% - 8px) 100% no-repeat;
         color: var(--primary-foreground);
         font-weight: 700;
         white-space: nowrap;
@@ -167,6 +172,7 @@
 
     [data-theme='phantom'][data-kp-effects] mark:not(.is-cleared) {
         color: var(--foreground);
+        background-size: 0 100%;
     }
 
     [data-theme='phantom'][data-kp-effects] mark:not(.is-cleared)::before {
@@ -498,10 +504,20 @@
             0 0 0 5px var(--focus-ring);
     }
 
-    [data-theme='phantom'] .kp-button--primary {
+    /* The primary plate is painted twice, like the mark's: the skewed
+       pseudo-element for the eye, a narrower rectangle of the same red as
+       the button's own background for whatever measures the ink against
+       its ground. */
+    [data-theme='phantom'] .kp-button--primary,
+    [data-theme='phantom'] .kp-button--primary:hover,
+    [data-theme='phantom'] .kp-button--primary:focus-visible {
         --kp-plate-fill: var(--primary);
         --kp-plate-ink: var(--primary-foreground);
         --kp-plate-frame: var(--primary);
+        background: linear-gradient(var(--primary), var(--primary)) center / calc(100% - 14px) 100% no-repeat;
+    }
+
+    [data-theme='phantom'] .kp-button--primary {
         filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
     }
 
@@ -689,6 +705,7 @@
 
     [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark {
         color: var(--card-foreground);
+        background: none;
         padding-inline: 0;
     }
 
@@ -1364,6 +1381,13 @@
 
         [data-theme='phantom'] mark::before {
             transition: transform var(--kp-plate) var(--kp-cut);
+        }
+
+        /* The rectangle under the plate switches on after the slide, in no
+           time at all: a size, not a colour, so KT8's mid-transition colour
+           can never be read. */
+        [data-theme='phantom'] mark {
+            transition: background-size 0s linear var(--kp-plate);
         }
 
         [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark::after {
