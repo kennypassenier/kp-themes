@@ -131,7 +131,7 @@ export const DESCRIPTORS = [
         // what a passage IS and a theme decides what that looks like. The
         // aliases claim the attributes js/effects.js writes and the one
         // event it dispatches.
-        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text'],
+        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text', 'open'],
         intro: 'A small vocabulary of attributes that say what a passage is — a hero, an app surface, a divider, a phrase that should land — and leave what that looks like to the theme. A theme that has an answer paints it; a theme that has none stays quiet, and the page reads the same either way.',
         whenToUse:
             'Mark the structure of a page you want a theme to be able to dramatise: the opening surface, the working surface, the seam between them, the words that carry the point. Do not use the attributes to ask for a particular effect — there is no attribute for a glitch or a flicker, only for the thing a theme may glitch or flicker. A theme decides, and a reader who asked for reduced motion gets the words without the drama.',
@@ -156,8 +156,9 @@ export const DESCRIPTORS = [
 </section>
 <div data-kp-divider></div>
 <section data-kp-surface="app">
-<p data-kp-reveal="emphasis">Dossier 7 — <mark>cleared</mark></p>
+<p data-kp-reveal="emphasis" data-kp-label="Sealed" data-kp-label-open="Open">Dossier 7 — <mark>cleared</mark></p>
 <button type="button" class="kp-button" data-kp-reveal-trigger>Reveal</button>
+<p data-kp-label="Sealed" data-kp-label-open="Open" data-kp-open>Dossier 8 — the same stamp, with the file already open.</p>
 </section>
 `,
             },
@@ -168,6 +169,14 @@ export const DESCRIPTORS = [
             { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
             { name: 'data-kp-reveal', what: 'headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every="load" says otherwise.' },
             { name: 'data-kp-reveal-trigger', what: 'A control that replays the reveals of the surface it sits in.' },
+            {
+                name: 'data-kp-label-open',
+                what: 'The word a stamp takes once the file is open, beside data-kp-label for the word it wears while sealed. A theme whose demo changes the stamp answers it; the rest keep the one word.',
+            },
+            {
+                name: 'data-kp-open',
+                what: 'What the module writes on a reveal container while its trigger holds it open, so a register can answer the open state without a script of its own.',
+            },
             { name: '<mark>', what: 'Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.' },
             { name: 'data-kp-text', what: 'The copy of a headline or a navigation label that a register\u2019s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.' },
             { name: 'data-kp-effects', what: 'What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.' },

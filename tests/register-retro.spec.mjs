@@ -286,6 +286,28 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(mark, '::after', ['clip-path']))['clip-path'], 'the brush lifted off').toMatch(/100%\)$/);
         });
 
+        test('the selection drags its own words in with the bar, and the fieldset is a groove [S49, A11]', async ({ page }) => {
+            await open(page, url);
+            const mark = page.locator('[data-kp-surface="hero"] mark').first();
+            await expect(mark).toHaveClass(/is-cleared/, { timeout: 15000 });
+            // The plate carries a copy of the element's own text, which is
+            // what makes white words arrive with the bar rather than after
+            // it. Drill [KT3]: `content: attr(data-kp-text)` back to '' →
+            // the plate is empty and this reads "none".
+            const plate = await pseudo(mark, '::before', ['content', 'color']);
+            expect(plate.content.replace(/^"|"$/g, '')).toBe((await mark.textContent())?.trim());
+            expect(plate.color).toBe(await paint(page, '--primary-foreground'));
+
+            // And the fieldset's groove is the demo's two hairlines: four
+            // inset shadows, light against dark on both diagonals.
+            const fieldset = page.locator('.kp-fieldset').first();
+            if ((await fieldset.count()) > 0) {
+                const shadow = await fieldset.evaluate((el) => getComputedStyle(el).boxShadow);
+                expect(shadow.match(/inset/g) ?? [], 'four hairlines').toHaveLength(4);
+                expect(await fieldset.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('0px');
+            }
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');

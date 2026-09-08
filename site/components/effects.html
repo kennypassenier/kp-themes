@@ -150,8 +150,9 @@
 </section>
 <div data-kp-divider></div>
 <section data-kp-surface="app">
-    <p data-kp-reveal="emphasis">Dossier 7 — <mark>cleared</mark></p>
+    <p data-kp-reveal="emphasis" data-kp-label="Sealed" data-kp-label-open="Open">Dossier 7 — <mark>cleared</mark></p>
     <button type="button" class="kp-button" data-kp-reveal-trigger>Reveal</button>
+    <p data-kp-label="Sealed" data-kp-label-open="Open" data-kp-open>Dossier 8 — the same stamp, with the file already open.</p>
 </section>
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;hero&quot;</span>&gt;
@@ -160,8 +161,9 @@
 &lt;/<span class="kp-code__keyword">section</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-divider</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;app&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-reveal</span><span class="kp-code__string">=&quot;emphasis&quot;</span>&gt;Dossier 7 — &lt;<span class="kp-code__keyword">mark</span>&gt;cleared&lt;/<span class="kp-code__keyword">mark</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-reveal</span><span class="kp-code__string">=&quot;emphasis&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Sealed&quot;</span> <span class="kp-code__keyword">data-kp-label-open</span><span class="kp-code__string">=&quot;Open&quot;</span>&gt;Dossier 7 — &lt;<span class="kp-code__keyword">mark</span>&gt;cleared&lt;/<span class="kp-code__keyword">mark</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
     &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-reveal-trigger</span>&gt;Reveal&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Sealed&quot;</span> <span class="kp-code__keyword">data-kp-label-open</span><span class="kp-code__string">=&quot;Open&quot;</span> <span class="kp-code__keyword">data-kp-open</span>&gt;Dossier 8 — the same stamp, with the file already open.&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -173,6 +175,7 @@
                             <tr><td><code>data-kp-divider</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-effects</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-effects-done</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-open</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-every</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>written</td></tr>
@@ -220,6 +223,8 @@
                             <tr><td><code>data-kp-divider</code></td><td>The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.</td></tr>
                             <tr><td><code>data-kp-reveal</code></td><td>headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every=&quot;load&quot; says otherwise.</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>A control that replays the reveals of the surface it sits in.</td></tr>
+                            <tr><td><code>data-kp-label-open</code></td><td>The word a stamp takes once the file is open, beside data-kp-label for the word it wears while sealed. A theme whose demo changes the stamp answers it; the rest keep the one word.</td></tr>
+                            <tr><td><code>data-kp-open</code></td><td>What the module writes on a reveal container while its trigger holds it open, so a register can answer the open state without a script of its own.</td></tr>
                             <tr><td><code>&lt;mark&gt;</code></td><td>Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.</td></tr>
                             <tr><td><code>data-kp-text</code></td><td>The copy of a headline or a navigation label that a register’s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.</td></tr>
                             <tr><td><code>data-kp-effects</code></td><td>What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.</td></tr>

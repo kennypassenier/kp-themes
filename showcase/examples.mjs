@@ -590,7 +590,13 @@ export function conceptBody(c) {
                         el('h2', { 'data-kp-reveal': 'rule' }, c.h2Dossier),
                         el(
                             'Card',
-                            { title: c.cardTitle, 'data-kp-reveal': 'emphasis', 'data-kp-label': c.stampLabel, 'data-example': 'concept-dossier' },
+                            {
+                                title: c.cardTitle,
+                                'data-kp-reveal': 'emphasis',
+                                'data-kp-label': c.stampLabel,
+                                'data-kp-label-open': c.stampLabelOpen,
+                                'data-example': 'concept-dossier',
+                            },
                             el('p', { class: 'microlabel' }, c.dossierMeta),
                             el(
                                 'p',

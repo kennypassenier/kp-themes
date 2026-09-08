@@ -566,6 +566,13 @@
         box-shadow: var(--kp-pixel);
     }
 
+    /* The stamp changes when the file opens, as the demo's does [S49, A11]. */
+    [data-theme='brutalism'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
     /* The redactions: black bars that slide off one after another, the
        way a pen is dragged off a page. */
     [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark {

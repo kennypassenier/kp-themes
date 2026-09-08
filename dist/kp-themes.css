@@ -9114,12 +9114,20 @@
         white-space: nowrap;
     }
 
+    /* The bar in motion, with the words it has already covered [S49,
+       A11]: the demo drags white text in with the bar, so the plate
+       carries a copy of the element's own text — the module writes it to
+       data-kp-text, the same attribute a headline carries — and the
+       clip-path that sweeps the bar sweeps the words with it. */
     [data-theme='retro'] mark::before {
-        content: '';
+        content: attr(data-kp-text);
         position: absolute;
         inset: 0;
+        padding: inherit;
         background: var(--primary);
+        color: var(--primary-foreground);
         clip-path: inset(0 100% 0 0);
+        white-space: nowrap;
         z-index: 1;
         pointer-events: none;
     }
@@ -9595,9 +9603,21 @@
     }
 
     /* The fieldset groove of 98.css. */
+    /* The groove the demo drew with a 5×5 border-image [S49, A11]: two
+       hairlines, the outer dark over light, the inner light over dark.
+       The image itself would have to name its two colours, which DI9
+       forbids in this layer, so the same four lines are drawn as nested
+       inset shadows in the theme's own tokens — the shape the SVG was
+       there to make, and pixel for pixel the same. */
     [data-theme='retro'] .kp-fieldset {
-        border: 2px groove var(--border);
+        border: 0;
         border-radius: 0;
+        padding: 0.9rem 1rem;
+        box-shadow:
+            inset 1px 1px 0 0 var(--border-strong),
+            inset -1px -1px 0 0 var(--popover),
+            inset 2px 2px 0 0 var(--popover),
+            inset -2px -2px 0 0 var(--border-strong);
     }
 
     [data-theme='retro'] .kp-form__summary {
@@ -15525,6 +15545,13 @@
         text-transform: uppercase;
         padding: 0.3rem 0.55rem;
         box-shadow: var(--kp-pixel);
+    }
+
+    /* The stamp changes when the file opens, as the demo's does [S49, A11]. */
+    [data-theme='brutalism'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+        background: var(--success);
+        color: var(--success-foreground);
     }
 
     /* The redactions: black bars that slide off one after another, the

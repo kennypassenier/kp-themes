@@ -3791,6 +3791,10 @@ var HOOKS = Object.freeze({
   revealEvery: "data-kp-reveal-every",
   divider: "data-kp-divider",
   label: "data-kp-label",
+  /** The label a stamp takes once the file is open [S49, A11]. */
+  labelOpen: "data-kp-label-open",
+  /** Set on the container while the file is open. */
+  openState: "data-kp-open",
   navSide: "data-kp-nav-side"
 });
 var SURFACES = Object.freeze(["hero", "app"]);
@@ -4183,6 +4187,7 @@ function attachEffects(root = document, options = {}) {
   };
   const emphasis = (container) => {
     const marks = [...container.querySelectorAll("mark")];
+    for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
     const routine = routineOf(container, "emphasis");
     const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
     if (marks.length === 0) {
@@ -4214,6 +4219,7 @@ function attachEffects(root = document, options = {}) {
       const open = trigger.getAttribute("aria-pressed") !== "true";
       trigger.setAttribute("aria-pressed", String(open));
       for (const mark of marks) mark.classList.toggle(STATE.cleared, open);
+      container.toggleAttribute(HOOKS.openState, open);
       announce(container, "emphasis", routine, false);
     };
     trigger.addEventListener("click", onClick);
@@ -4222,6 +4228,7 @@ function attachEffects(root = document, options = {}) {
   const looseMarks = (scope) => {
     const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started.has(m));
     if (marks.length === 0) return;
+    for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
     for (const m of marks) started.add(m);
     const first = marks[0];
     const routine = routineOf(first, "emphasis");

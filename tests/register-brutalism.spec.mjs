@@ -225,6 +225,12 @@ for (const [channel, url] of CHANNELS) {
             expect(covered['background-color']).toBe(await paint(page, '--foreground'));
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
+            // And the stamp changes when the file opens, as the demo's
+            // does [S49, A11]. Drill [KT3]: the [data-kp-open] rule removed
+            // → the stamp keeps saying "Sealed", red here.
+            await expect(dossier).toHaveAttribute('data-kp-open', '');
+            const opened = await pseudo(dossier, '::before', ['content']);
+            expect(opened.content.replace(/^"|"$/g, '')).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['transform'])).transform, 'the bar slid off').toMatch(/^matrix\(0,/);
         });

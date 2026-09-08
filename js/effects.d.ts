@@ -5,6 +5,10 @@ export declare const HOOKS: Readonly<{
     revealEvery: "data-kp-reveal-every";
     divider: "data-kp-divider";
     label: "data-kp-label";
+    /** The label a stamp takes once the file is open [S49, A11]. */
+    labelOpen: "data-kp-label-open";
+    /** Set on the container while the file is open. */
+    openState: "data-kp-open";
     navSide: "data-kp-nav-side";
 }>;
 /** The surfaces a section can stand on [TH116]. */
