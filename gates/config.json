@@ -14,7 +14,11 @@
     },
     "textureOpacityCeiling": {
         "//": "DI9, from THEMING.md: the register layer must be felt, not seen.",
-        "value": 0.06
+        "value": 0.06,
+        "perTheme": {
+            "//": "A theme whose approved concept demo measured a stronger texture carries its own ceiling [S49, A8 of 2026-09-08]: the demo is the specification, and the overrun is reported rather than silently corrected [S42]. Every entry names the demo that measured it.",
+            "phantom": 0.14
+        }
     },
     "stateVisibilityFloor": {
         "value": 10,

@@ -44,9 +44,19 @@ export declare const ARRIVAL: Readonly<{
     root: "kp-boot";
     line: "kp-boot__line";
     skip: "kp-boot__skip";
+    bar: "kp-boot__bar";
 }>;
 /** The knob a theme sets to put a block cursor inside its fields [TM2, R6-Q7]: `--kp-caret: block`. */
 export declare const CARET_KNOB = "--kp-caret";
+/** The knobs a theme's own boot reads [S49, A11]. */
+export declare const KNOBS: Readonly<{
+    /** `block` builds the segmented bar retro's POST counts along. */
+    arrivalBar: "--kp-arrival-bar";
+    /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
+    arrivalCount: "--kp-arrival-count";
+}>;
+/** The custom property the arrival bar's fill reads, 0 to 1. */
+export declare const BOOT_PROGRESS = "--kp-boot-progress";
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

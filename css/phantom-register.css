@@ -54,13 +54,35 @@
         --kp-hard: 4px 4px 0 hsl(from var(--background) h s l / 0.55);
         --kp-line: hsl(from var(--foreground) h s l / 0.14);
 
-        /* The texture [DI9, AR46]: Dead North's halftone screen and its
-           1px/3px scan, both static, at DI9's ceiling. */
+        /* The texture [DI9, AR46, S49]: the three static layers the
+           approved demo measured — the halftone screen with its 1px/3px
+           scan, the desaturated grain over it, and the denser screen the
+           hero carries. The demo is the specification (S49, A8, Kenny
+           2026-09-08), so the page layer paints at the demo's 0.14 and
+           phantom carries its own ceiling in gates/config.json; the
+           overrun against DI9's 0.06 is reported, not corrected (S42). */
         --fx-texture:
-            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.06) 0.9px, transparent 1px),
-            repeating-linear-gradient(hsl(from var(--foreground) h s l / 0.03) 0 1px, transparent 1px 3px);
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.16) 0.9px, transparent 1px),
+            repeating-linear-gradient(hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 3px);
         --fx-texture-size: 7px 7px, 100% 3px;
-        --fx-texture-opacity: 1;
+        --fx-texture-opacity: 0.14;
+    }
+
+    /* The grain: fractal noise with its colour taken out, laid over the
+       screen in soft light. Its own layer, its own measured opacity, and
+       its own line in the texture gate — a second layer is not a place to
+       hide a first one. */
+    [data-theme='phantom'] body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: var(--kp-z-texture, 80);
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+        --fx-texture-opacity: 0.1;
+        background-image: var(--fx-texture);
+        opacity: var(--fx-texture-opacity);
+        mix-blend-mode: soft-light;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -225,12 +247,19 @@
         padding-block: 3rem 4.5rem;
     }
 
+    /* The screen is denser over the hero than over the page: the demo's
+       0.22 dot at 0.55 [S49, A8], declared through the texture tokens so
+       gates/check-texture.mjs measures this layer too. */
     [data-theme='phantom'] [data-kp-surface='hero']::before {
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.12) 0.9px, transparent 1px) 0 0 / 7px 7px;
+        --fx-texture: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.22) 0.9px, transparent 1px);
+        --fx-texture-opacity: 0.55;
+        background-image: var(--fx-texture);
+        background-size: 7px 7px;
+        opacity: var(--fx-texture-opacity);
         z-index: -2;
     }
 
@@ -1498,5 +1527,12 @@
         100% {
             transform: skew(-20deg) translateX(-115vw);
         }
+    }
+
+    /* The card's file code, in the red the plates wear [S49, A3]. */
+    [data-theme='phantom'] .kp-nav__brand-tag {
+        color: var(--primary);
+        font-style: normal;
+        letter-spacing: 0.2em;
     }
 }

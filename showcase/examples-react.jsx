@@ -20,7 +20,8 @@ import Alert from '../components/alert.jsx';
 import Card from '../components/card.jsx';
 import Field from '../components/field.jsx';
 import Table from '../components/table.jsx';
-import { EXAMPLES, isComponent } from './examples.mjs';
+import { EXAMPLES, conceptBody, isComponent } from './examples.mjs';
+import { conceptCopy } from './concept-copy.mjs';
 
 /** @typedef {import('./examples.mjs').Child} Child */
 
@@ -120,8 +121,10 @@ function kids(children) {
  * @type {Record<string, (props: Record<string, any>, children: Child[], key: string | number) => any>}
  */
 const TO_REACT = {
+    // `brand` may be a string or descriptor children (the brand tag,
+    // S49/A3), so it goes through the same conversion the children do.
     NavBar: (p, children, key) => (
-        <NavBar key={key} brand={p.brand} links={p.links ?? []} skipTo={p.skipTo}>
+        <NavBar key={key} brand={typeof p.brand === 'string' ? p.brand : kids(p.brand)} links={p.links ?? []} skipTo={p.skipTo}>
             {kids(children)}
         </NavBar>
     ),
@@ -215,10 +218,15 @@ export function toReact(child, key) {
 /**
  * One example page, by id.
  *
- * @param {{id: string}} props
+ * `copy` names the theme whose words the concept demo is rendered in
+ * [S49, A1]; the framework-free channel gets one file per theme and this
+ * is the same choice in the channel that renders at runtime.
+ *
+ * @param {{id: string, copy?: string}} props
  */
-export function ExamplePage({ id }) {
+export function ExamplePage({ id, copy }) {
     const example = EXAMPLES.find((e) => e.id === id);
     if (!example) throw new Error(`No example named ${id}`);
-    return createElement(Fragment, null, ...example.body.map((child, index) => toReact(child, index)));
+    const body = id === 'concept' && copy ? conceptBody(conceptCopy(copy)) : example.body;
+    return createElement(Fragment, null, ...body.map((child, index) => toReact(child, index)));
 }

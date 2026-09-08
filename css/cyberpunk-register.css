@@ -1478,4 +1478,10 @@
         --fx-tear-line-alt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 44' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='white' stroke-width='1' stroke-opacity='0.45' transform='translate(0 -3)' d='M0 17 L74 17 L74 25 L84 25 L84 17 L196 17 L212 14 L351 14 L351 22 L364 22 L364 14 L436 14 L436 22 L442 22 L442 14 L590 14 L590 22 L597 22 L597 14 L669 14 L679 12 L777 12 L777 20 L789 20 L789 12 L954 12 L966 19 L1041 19 L1050.5 38 L1060 19 L1220 19 L1233 15 L1291 15 L1302 12 L1431 12 L1439 17 L1544 17 L1561 13 L1632 13 L1632 21 L1639 21 L1639 13 L1771 13 L1788 12 L1887 12 L1887 20 L1893 20 L1893 12 L1920 12 L1920 20 L1920 20 L1920 12'/%3E%3C/svg%3E");
     }
     /* end of the generated tear */
+
+    /* The sector code beside the wordmark [S49, A3]. */
+    [data-theme='cyberpunk'] .kp-nav__brand-tag {
+        color: var(--accent);
+        letter-spacing: 0.2em;
+    }
 }

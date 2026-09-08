@@ -25,8 +25,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept'],
+    ['framework-free', '/examples/concept-phantom.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=phantom'],
 ];
 
 /**
@@ -219,7 +219,7 @@ for (const [channel, url] of CHANNELS) {
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const stamp = await pseudo(dossier, '::before', ['content', 'transform', 'background-color']);
             // Firefox reports the unresolved attr(); chromium the value.
-            expect(stamp.content).toMatch(/Classified|attr\(data-kp-label\)/i);
+            expect(stamp.content).toMatch(/Calling\ card|attr\(data-kp-label\)/i);
             expect(stamp.transform).toMatch(/matrix\(0\.99/);
             const mark = dossier.locator('mark').first();
             expect((await pseudo(mark, '::after', ['transform'])).transform, 'covered before the trigger').not.toMatch(/matrix\(0,|, 0, 0, 0\)/);

@@ -89,6 +89,13 @@
         --kp-groove-line: linear-gradient(to bottom, var(--border) 0 1px, var(--popover) 1px 2px);
         /* The hard shadow of a window and a menu. */
         --kp-drop: 3px 3px 0 hsl(from var(--foreground) h s l / 0.3);
+        /* The desktop the window sits on, and the window's own hard drop
+           [S49, A2]: the demo's desktop is the accent teal at 25%. */
+        --kp-desktop: hsl(from var(--accent) h s 25%);
+        --kp-drop-hard: 4px 4px 0 0 hsl(from var(--foreground) h s l / 0.35);
+        /* The POST counts along a segmented bar. */
+        --kp-arrival-bar: block;
+        --kp-arrival-count: 640;
         /* The dither ladder: four densities of a checkerboard in the ground's
            own colour, for the dissolve; and the same four as masks for the
            boot screen (a mask reads alpha, so the ink serves). */
@@ -270,6 +277,28 @@
         }
     }
 
+    /* ── The window on the desktop [S49, A2] ──────────────────────────────
+       The approved demo puts the whole page inside one application window
+       on the teal desktop, and that window is what makes the theme read as
+       1995 rather than as grey. The page carries no wrapper element for
+       it and may not grow one (the concept page's structure is the same
+       for every theme, S46), so the root is the desktop and the body is
+       the window: the same two boxes, drawn on the two elements every
+       document already has. */
+
+    [data-theme='retro'] {
+        background: var(--kp-desktop);
+    }
+
+    [data-theme='retro'] body {
+        max-inline-size: 84rem;
+        margin: clamp(0.4rem, 1.6vw, 1.4rem) auto;
+        padding: 3px;
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-raised), var(--kp-drop-hard);
+    }
+
     /* ── The navbar: the title bar and the menu strip in one row ──────── */
 
     [data-theme='retro'] .kp-nav-wrap {
@@ -284,6 +313,53 @@
         gap: 0.5rem;
         position: relative;
         z-index: var(--kp-z-nav, 30);
+    }
+
+    /* The three window controls the demo's title bar ends on [S49, A2]:
+       minimise, maximise, close. Drawn rather than typed — a glyph in
+       `content` is copy (KT5) and its own metrics would decide where the
+       boxes fall, where gradients put every edge exactly where the box
+       is. Three 20×18 faces on a 24px pitch, each with the bevel the rest
+       of the theme wears, and the three marks over them. */
+    [data-theme='retro'] .kp-nav::after {
+        content: '';
+        margin-inline-start: auto;
+        align-self: center;
+        flex: none;
+        inline-size: 68px;
+        block-size: 18px;
+        background-image:
+            linear-gradient(45deg, transparent 46%, var(--foreground) 46% 54%, transparent 54%),
+            linear-gradient(-45deg, transparent 46%, var(--foreground) 46% 54%, transparent 54%),
+            linear-gradient(0deg, var(--foreground) 0 1px, transparent 1px), linear-gradient(180deg, var(--foreground) 0 1px, transparent 1px),
+            linear-gradient(90deg, var(--foreground) 0 1px, transparent 1px), linear-gradient(270deg, var(--foreground) 0 1px, transparent 1px),
+            linear-gradient(0deg, var(--foreground) 0 2px, transparent 2px),
+            repeating-linear-gradient(90deg, var(--popover) 0 2px, transparent 2px 20px, transparent 20px 24px),
+            repeating-linear-gradient(90deg, transparent 0 18px, var(--border-strong) 18px 20px, transparent 20px 24px),
+            repeating-linear-gradient(90deg, var(--card) 0 20px, transparent 20px 24px);
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat-x, repeat-x, repeat-x;
+        background-size:
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 6px,
+            24px 18px,
+            24px 18px,
+            24px 18px;
+        background-position:
+            54px center,
+            54px center,
+            30px center,
+            30px center,
+            30px center,
+            30px center,
+            6px center,
+            0 0,
+            0 0,
+            0 0;
     }
 
     /* The brand is the title bar: the measured ramp, white pixel type. */
@@ -824,6 +900,31 @@
     [data-theme='retro'] .kp-footer {
         background: var(--background);
         color: var(--foreground);
+        position: relative;
+    }
+
+    /* The resize grip in the corner of the status bar [S49, A2]: the
+       three diagonal runs of pixels a 1995 window ends on. */
+    [data-theme='retro'] .kp-footer::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 3px;
+        inset-block-end: 3px;
+        inline-size: 13px;
+        block-size: 13px;
+        background-image:
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%),
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%),
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%);
+        background-repeat: no-repeat;
+        background-size:
+            5px 5px,
+            9px 9px,
+            13px 13px;
+        background-position:
+            right bottom,
+            right bottom,
+            right bottom;
     }
 
     [data-theme='retro'] .kp-footer h4 {
@@ -1257,6 +1358,13 @@
         line-height: 1.5;
     }
 
+    /* The swatches sit in the groove well the demo's fieldset draws. */
+    [data-theme='retro'] .kp-spec dl {
+        border: 2px groove var(--border);
+        padding: 0.6rem 0.7rem;
+        margin-block-start: 3px;
+    }
+
     [data-theme='retro'] .kp-spec::before {
         content: '';
         display: block;
@@ -1472,5 +1580,35 @@
         to {
             clip-path: inset(0 0 0 100%);
         }
+    }
+
+    /* In the title bar the tag is white on the ramp, in the DOS face. */
+    [data-theme='retro'] .kp-nav__brand-tag {
+        font-family: var(--kp-dos);
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        color: var(--primary-foreground);
+        opacity: 0.9;
+    }
+
+    /* The segmented bar the POST counts along [S49, A11]: a sunken well
+       with the blocks a memory test fills. The module writes
+       --kp-boot-progress from 0 to 1; nothing here animates. */
+    [data-theme='retro'] .kp-boot__bar {
+        inline-size: min(22rem, 70vw);
+        block-size: 18px;
+        margin-block: 0.9rem 0.2rem;
+        padding: 2px;
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-boot__bar::before {
+        content: '';
+        display: block;
+        block-size: 100%;
+        inline-size: calc(var(--kp-boot-progress, 0) * 100%);
+        background-image: repeating-linear-gradient(90deg, var(--primary) 0 10px, transparent 10px 13px);
     }
 }

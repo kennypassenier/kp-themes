@@ -158,6 +158,10 @@ var DEFAULT_STRINGS = Object.freeze({
   skipToContent: "Skip to the content",
   classified: "Classified",
   arrivalLine: "\u25B6 Calibrating neural uplink",
+  arrivalLinesByTheme: {
+    retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
+    terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
+  },
   arrivalProgress: "Progress",
   arrivalReady: "OK",
   arrivalSkip: "Skip",
@@ -3817,8 +3821,15 @@ var ROUTINES = Object.freeze({
   // overlay below; anything else, or nothing, is quiet.
   arrival: "--kp-arrival"
 });
-var ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip" });
+var ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip", bar: "kp-boot__bar" });
 var CARET_KNOB = "--kp-caret";
+var KNOBS = Object.freeze({
+  /** `block` builds the segmented bar retro's POST counts along. */
+  arrivalBar: "--kp-arrival-bar",
+  /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
+  arrivalCount: "--kp-arrival-count"
+});
+var BOOT_PROGRESS = "--kp-boot-progress";
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var TEXT_ATTRIBUTE = "data-kp-text";
@@ -4337,7 +4348,13 @@ function attachEffects(root = document, options = {}) {
     skip.type = "button";
     skip.className = ARRIVAL.skip;
     skip.textContent = words.arrivalSkip;
-    overlay.append(line, skip);
+    const bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === "block" ? doc.createElement("div") : null;
+    if (bar) {
+      bar.className = ARRIVAL.bar;
+      bar.setAttribute("aria-hidden", "true");
+      bar.style.setProperty(BOOT_PROGRESS, "0");
+    }
+    overlay.append(line, ...bar ? [bar] : [], skip);
     doc.body.append(overlay);
     pending++;
     let ended = false;
@@ -4363,8 +4380,23 @@ function attachEffects(root = document, options = {}) {
       if (ended) return;
       pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
       line.textContent = [words.arrivalLine, words.arrivalProgress + " " + pct + "%", pct === 100 ? words.arrivalReady : ""].filter(Boolean).join("\n");
+      bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
       if (pct === 100) later(end, 220);
       else later(step, 110);
+    };
+    const lines = words.arrivalLinesByTheme?.[html.getAttribute("data-theme") ?? ""] ?? null;
+    let shown = 0;
+    const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
+    const lineStep = () => {
+      if (ended || !lines) return;
+      shown++;
+      const upto = lines.slice(0, shown);
+      line.textContent = upto.map(
+        (text, index) => text.replace("{count}", String(index === shown - 1 ? Math.round(total * shown / lines.length) : total))
+      ).join("\n");
+      bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
+      if (shown === lines.length) later(end, 320);
+      else later(lineStep, 190);
     };
     skip.addEventListener("click", end);
     finishers.push(end);
@@ -4372,7 +4404,8 @@ function attachEffects(root = document, options = {}) {
     if (card) {
       line.textContent = html.getAttribute("data-theme") ?? "";
       later(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);
-    } else step();
+    } else if (lines && lines.length > 0) lineStep();
+    else step();
   };
   arrival();
   return {

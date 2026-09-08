@@ -1084,6 +1084,16 @@
         font-weight: 700;
     }
 
+    /* The file code beside the wordmark [S49, A3]: phantom's PH//15,
+       terminal's TTY//06. Quiet by default; a register gives it a voice. */
+    .kp-nav__brand-tag {
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        font-size: 0.68em;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        color: var(--muted-foreground);
+    }
+
     .kp-nav__links {
         display: flex;
         gap: 0.75rem;

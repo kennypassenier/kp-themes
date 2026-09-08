@@ -1376,6 +1376,17 @@ en dergelijke dat ze moeten aangepast worden, mag je dat enkel doen als
 je mijn expliciete goedkeuring hebt." Recorded as S49. **Put to Kenny in
 the deviation form of 2026-09-08; awaiting his answer.**
 
+**Approved by Kenny on 2026-09-08 (Klopt), all nine rows unchanged.** His
+answers to the twelve deviation groups in the same form: **Demo exact for
+eleven of them** (A1 copy, A2 retro's window, A3 the small elements, A4
+the button height with TH111's mini-round, A5 the ring order, A6 the
+transitions including the colour — KT8 yields for brutalism, A8 the
+texture including the ceiling per theme, A9 the token values, A10 the
+fonts, A11 the mechanisms, A12 the select and the highlight — KT8 yields
+there too); **A7** (phantom's skewed button) he answered "Eigen antwoord:
+show me the difference on a web page", so that one is still open and
+phantom's button stays as built until he decides.
+
 **1 · What went wrong.** The phantom, retro, terminal and brutalism
 registers were each built from an approved concept demo (S46) and each
 shipped with deviations from it that no form ever asked about: retro's

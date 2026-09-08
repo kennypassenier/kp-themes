@@ -383,10 +383,24 @@
         "upstream": "ofl/barlowcondensed",
         "faces": [
             {
+                "file": "barlowcondensed-blackitalic",
+                "source": "BarlowCondensed-BlackItalic.ttf",
+                "weight": "900",
+                "style": "italic",
+                "scripts": ["latin"]
+            },
+            {
                 "file": "barlowcondensed-bold",
                 "source": "BarlowCondensed-Bold.ttf",
                 "weight": "700",
                 "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "barlowcondensed-extrabolditalic",
+                "source": "BarlowCondensed-ExtraBoldItalic.ttf",
+                "weight": "800",
+                "style": "italic",
                 "scripts": ["latin"]
             },
             {

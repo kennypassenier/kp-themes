@@ -23,6 +23,7 @@
 
 import { getStrings } from '../js/strings.js';
 import { THEMES } from '../js/theme-registry.js';
+import { conceptCopy } from './concept-copy.mjs';
 
 /**
  * @typedef {{ tag: string, props: Record<string, any>, children: Child[] }} Node
@@ -376,6 +377,276 @@ const LONG_VALUE = 'f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7
  * @property {string[]} probes  selectors both channels must render
  * @property {Child[]} body
  */
+
+/**
+ * The concept demo's body in one theme's own words [S46, S49].
+ *
+ * The structure is fixed — it is the approved demo's inventory, and
+ * showcase/concept-demo.json holds every marker a page must carry — and
+ * the words come from showcase/concept-copy.mjs. One page per theme with
+ * an approved demo (gates/generate-examples.mjs writes them), because a
+ * theme whose page says another theme's words is the fault Kenny named
+ * on 2026-09-08 (A1, S49).
+ *
+ * @param {import('./concept-copy.mjs').ConceptCopy} c
+ * @returns {Child[]}
+ */
+export function conceptBody(c) {
+    return [
+        el(
+            'div',
+            { class: 'kp-row', 'data-kp-theme-picker': '', 'data-example': 'concept-picker', 'aria-label': s.themePicker },
+            THEMES.map((theme) =>
+                el(
+                    'button',
+                    { type: 'button', 'data-kp-theme': theme.name },
+                    el('span', { class: 'kp-swatch', 'data-theme': theme.name }),
+                    ' ',
+                    theme.label,
+                ),
+            ),
+        ),
+        el('p', { 'data-kp-theme-status': '', hidden: '' }),
+        el('NavBar', {
+            brand: c.brandTag ? [c.brand, ' ', el('small', { class: 'kp-nav__brand-tag' }, c.brandTag)] : c.brand,
+            links: [
+                {
+                    href: '#try',
+                    label: c.navThemes,
+                    links: [
+                        { href: '#try-2', label: c.navThemes1 },
+                        { href: '#try-3', label: c.navThemes2 },
+                        { href: '#try-4', label: c.navThemes3 },
+                    ],
+                },
+                {
+                    href: '#try-5',
+                    label: c.navComponents,
+                    links: [
+                        { href: '#try-6', label: c.navComponents1 },
+                        { href: '#try-7', label: c.navComponents2 },
+                        { href: '#dossier', label: c.navComponents3 },
+                    ],
+                },
+                { href: '#effects', label: c.navEffects },
+                { href: '#docs', label: c.navDocs },
+                {
+                    href: '#try-8',
+                    label: c.navLang,
+                    className: 'kp-nav__link--lang',
+                    links: [
+                        { href: '#try-9', label: c.navLang1 },
+                        { href: '#try-10', label: c.navLang2 },
+                    ],
+                },
+                { href: '#try-11', label: c.navCta, className: 'kp-nav__link--cta' },
+            ],
+        }),
+        el(
+            'main',
+            { id: 'main', class: 'kp-page', tabindex: '-1' },
+            el(
+                'section',
+                { class: 'kp-section kp-stack', 'data-kp-surface': 'hero', 'data-example': 'concept-hero' },
+                el('p', { class: 'kp-side-note', 'aria-hidden': 'true' }, c.sideNote),
+                el(
+                    'div',
+                    { class: 'kp-autogrid', 'data-kp-hero-grid': '' },
+                    el(
+                        'div',
+                        { class: 'kp-stack' },
+                        el(
+                            'ul',
+                            { class: 'kp-laurels', 'aria-label': 'What this register is measured against' },
+                            el('li', {}, el('b', {}, c.laurel1b), c.laurel1),
+                            el('li', {}, el('b', {}, c.laurel2b), c.laurel2),
+                            el('li', {}, el('b', {}, c.laurel3b), c.laurel3),
+                        ),
+                        el('p', { class: 'microlabel' }, c.microlabelHero),
+                        el('h1', { class: 'kp-text-balance', 'data-kp-reveal': 'headline' }, c.headline),
+                        el('p', { class: 'kp-prose kp-lede' }, c.lede1, el('mark', {}, c.ledeMark1), c.lede2, el('mark', {}, c.ledeMark2), c.lede3),
+                        el(
+                            'div',
+                            { class: 'kp-row' },
+                            el('Button', { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis' }, c.btnPrimary),
+                            el('Button', {}, c.btnSecondary),
+                            el('Button', { variant: 'ghost' }, c.btnGhost),
+                        ),
+                        el(
+                            'div',
+                            { class: 'kp-platforms', 'aria-label': 'Where it renders' },
+                            el('span', {}, c.platform1),
+                            el('span', {}, c.platform2),
+                            el('span', {}, c.platform3),
+                            el('span', {}, c.platform4),
+                        ),
+                    ),
+                    el(
+                        'aside',
+                        { class: 'kp-spec', id: 'spec', 'aria-label': 'Palette and type' },
+                        el(
+                            'dl',
+                            {},
+                            el('dt', {}, c.spec1),
+                            el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'surface-hero-bg' }), '--surface-hero-bg'),
+                            el('dt', {}, c.spec2),
+                            el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'background' }), '--background'),
+                            el('dt', {}, c.spec3),
+                            el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'destructive' }), '--destructive'),
+                            el('dt', {}, c.spec4),
+                            el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'accent' }), '--accent'),
+                            el('dt', {}, c.spec5),
+                            el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'chart-4' }), '--chart-4'),
+                            el('dt', {}, c.spec6),
+                            el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'display' }, 'Aa Bb Cc'), ' --theme-font-display'),
+                            el('dt', {}, c.spec7),
+                            el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'body' }, 'Aa Bb Cc'), ' --theme-font-body'),
+                            el('dt', {}, c.spec8),
+                            el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'mono' }, 'Aa Bb Cc'), ' --kp-mono'),
+                        ),
+                    ),
+                ),
+            ),
+            el('div', { 'data-kp-divider': '' }),
+            el(
+                'section',
+                { class: 'kp-section kp-stack', 'data-kp-surface': 'app', id: 'try', 'data-example': 'concept-app' },
+                el(
+                    'div',
+                    { class: 'kp-autogrid' },
+                    el(
+                        'div',
+                        { class: 'kp-stack' },
+                        el('p', { class: 'microlabel' }, c.microlabelForm),
+                        el('h2', { 'data-kp-reveal': 'rule' }, c.h2Form),
+                        el(
+                            'form',
+                            { class: 'kp-form kp-stack', 'data-kp-form': '', novalidate: '' },
+                            el('Field', {
+                                id: 'concept-handle',
+                                label: c.handleLabel,
+                                name: 'handle',
+                                required: true,
+                                autocomplete: 'username',
+                                placeholder: c.handlePlaceholder,
+                                help: c.handleHelp,
+                            }),
+                            el('Field', {
+                                id: 'concept-mail',
+                                label: c.mailLabel,
+                                name: 'mail',
+                                type: 'email',
+                                required: true,
+                                autocomplete: 'email',
+                                placeholder: c.mailPlaceholder,
+                                help: c.mailHelp,
+                            }),
+                            el(
+                                'div',
+                                { class: 'kp-field' },
+                                el('label', { class: 'kp-field__label', for: 'concept-district' }, c.districtLabel),
+                                el(
+                                    'select',
+                                    { class: 'kp-field__input', id: 'concept-district', name: 'district' },
+                                    el('option', {}, c.district1),
+                                    el('option', {}, c.district2),
+                                    el('option', {}, c.district3),
+                                    el('option', {}, c.district4),
+                                ),
+                            ),
+                            el(
+                                'div',
+                                { class: 'kp-field' },
+                                el('label', { class: 'kp-field__label', for: 'concept-why' }, c.whyLabel),
+                                el('textarea', {
+                                    class: 'kp-field__input kp-field__input--multiline',
+                                    id: 'concept-why',
+                                    name: 'why',
+                                    placeholder: c.whyPlaceholder,
+                                }),
+                            ),
+                            el(
+                                'div',
+                                { class: 'kp-field kp-field--check' },
+                                el('input', { class: 'kp-field__check', id: 'concept-terms', name: 'terms', type: 'checkbox' }),
+                                el('label', { class: 'kp-field__label', for: 'concept-terms' }, c.termsLabel),
+                            ),
+                            el(
+                                'div',
+                                { class: 'kp-row' },
+                                el('Button', { type: 'submit', variant: 'primary' }, c.btnSubmit),
+                                el(
+                                    'Button',
+                                    { type: 'reset', variant: 'destructive', class: 'kp-button--mirror', confirm: c.wipeConfirm },
+                                    c.btnWipe,
+                                ),
+                            ),
+                        ),
+                    ),
+                    el(
+                        'div',
+                        { class: 'kp-stack', id: 'dossier' },
+                        el('p', { class: 'microlabel' }, c.microlabelDossier),
+                        el('h2', { 'data-kp-reveal': 'rule' }, c.h2Dossier),
+                        el(
+                            'Card',
+                            { title: c.cardTitle, 'data-kp-reveal': 'emphasis', 'data-kp-label': c.stampLabel, 'data-example': 'concept-dossier' },
+                            el('p', { class: 'microlabel' }, c.dossierMeta),
+                            el(
+                                'p',
+                                {},
+                                c.dossier1,
+                                el('mark', {}, c.dossierMark1),
+                                c.dossier2,
+                                el('mark', {}, c.dossierMark2),
+                                c.dossier3,
+                                el('mark', {}, c.dossierMark3),
+                                c.dossier4,
+                            ),
+                            el('p', {}, c.dossierPara2),
+                            el('div', { class: 'kp-row' }, el('Button', { variant: 'primary', 'data-kp-reveal-trigger': '' }, c.dossierTrigger)),
+                        ),
+                    ),
+                ),
+            ),
+            el('div', { 'data-kp-divider': 'alt' }),
+            el(
+                'footer',
+                { class: 'kp-footer', 'data-example': 'concept-footer' },
+                el(
+                    'div',
+                    { class: 'kp-autogrid kp-autogrid--tight' },
+                    el('div', {}, el('h4', {}, c.footerTitle), el('p', { class: 'kp-prose' }, c.footerBlurb)),
+                    el(
+                        'div',
+                        {},
+                        el('h4', {}, c.footerCol2),
+                        el(
+                            'ul',
+                            {},
+                            el('li', {}, el('a', { href: '#try-12' }, c.footerCol2a)),
+                            el('li', {}, el('a', { href: '#try-13' }, c.footerCol2b)),
+                            el('li', {}, el('a', { href: '#try-14' }, c.footerCol2c)),
+                        ),
+                    ),
+                    el(
+                        'div',
+                        {},
+                        el('h4', {}, c.footerCol3),
+                        el(
+                            'ul',
+                            {},
+                            el('li', {}, el('a', { href: '#try-15' }, c.footerCol3a)),
+                            el('li', {}, el('a', { href: '#try-16' }, c.footerCol3b)),
+                            el('li', {}, el('a', { href: '#try-17' }, c.footerCol3c)),
+                        ),
+                    ),
+                ),
+                el('p', { class: 'microlabel' }, c.footerFine),
+            ),
+        ),
+    ];
+}
 
 /** @type {Example[]} */
 export const EXAMPLES = [
@@ -953,15 +1224,9 @@ export const EXAMPLES = [
         ),
     },
     {
-        // The concept demo [TH126, S46]: element for element the approved
-        // "Signal Yellow" demo (Kenny, 2026-09-07: "exact de pagina die je
-        // eerst had gemaakt"), written in the package's components and the
-        // hooks of S45, so the same descriptor is the demo for every theme
-        // and a theme that answers quietly shows exactly what quiet means.
-        // A theme picker sits above it; `?theme=<name>` also works.
         id: 'concept',
         title: 'Concept demo',
-        note: 'The page every new theme is tried on, element for element the approved "Signal Yellow" demo (S46): a brand and a strip of links with dropdowns, a hero with laurels, a side note, a deciphering headline, a lede with two marks, three buttons, the platforms line and a spec sheet; the razor tear; a form beside a dossier with redactions; a footer behind a second tear. A theme picker sits above it so the same page wears all twenty-five.',
+        note: 'The page every new theme is tried on, element for element the approved demo (S46): a brand and a strip of links with dropdowns, a hero with laurels, a side note, a revealing headline, a lede with two marks, three buttons, the platforms line and a spec sheet; the divider; a form beside a dossier with redactions; a footer behind a second divider. A theme picker sits above it so the same page wears all twenty-five, and a theme whose demo Kenny approved has its own page in its own words (S49).',
         probes: [
             '[data-kp-theme-picker]',
             '[data-kp-surface="hero"]',
@@ -971,285 +1236,7 @@ export const EXAMPLES = [
             '.kp-card[data-kp-reveal="emphasis"]',
             '.kp-footer',
         ],
-        body: [
-            el(
-                'div',
-                { class: 'kp-row', 'data-kp-theme-picker': '', 'data-example': 'concept-picker', 'aria-label': s.themePicker },
-                THEMES.map((theme) =>
-                    el(
-                        'button',
-                        { type: 'button', 'data-kp-theme': theme.name },
-                        el('span', { class: 'kp-swatch', 'data-theme': theme.name }),
-                        ' ',
-                        theme.label,
-                    ),
-                ),
-            ),
-            el('p', { 'data-kp-theme-status': '', hidden: '' }),
-            el('NavBar', {
-                brand: 'kp-themes',
-                links: [
-                    {
-                        href: '#try',
-                        label: 'Themes',
-                        links: [
-                            { href: '#try-2', label: 'Signal' },
-                            { href: '#try-3', label: 'Synthwave' },
-                            { href: '#try-4', label: 'Nostromo' },
-                        ],
-                    },
-                    {
-                        href: '#try-5',
-                        label: 'Components',
-                        links: [
-                            { href: '#try-6', label: 'Buttons' },
-                            { href: '#try-7', label: 'Forms' },
-                            { href: '#dossier', label: 'Dossiers' },
-                        ],
-                    },
-                    { href: '#effects', label: 'Effects' },
-                    { href: '#docs', label: 'Docs' },
-                    {
-                        href: '#try-8',
-                        label: 'EN',
-                        className: 'kp-nav__link--lang',
-                        links: [
-                            { href: '#try-9', label: 'Nederlands' },
-                            { href: '#try-10', label: 'English' },
-                        ],
-                    },
-                    { href: '#try-11', label: 'Try it', className: 'kp-nav__link--cta' },
-                ],
-            }),
-            el(
-                'main',
-                { id: 'main', class: 'kp-page', tabindex: '-1' },
-                el(
-                    'section',
-                    { class: 'kp-section kp-stack', 'data-kp-surface': 'hero', 'data-example': 'concept-hero' },
-                    el('p', { class: 'kp-side-note', 'aria-hidden': 'true' }, 'NC · 2077 · SECTOR 06 · 0x1F'),
-                    el(
-                        'div',
-                        { class: 'kp-autogrid', 'data-kp-hero-grid': '' },
-                        el(
-                            'div',
-                            { class: 'kp-stack' },
-                            el(
-                                'ul',
-                                { class: 'kp-laurels', 'aria-label': 'What this register is measured against' },
-                                el('li', {}, el('b', {}, '“Spits off the screen”'), 'the brief'),
-                                el('li', {}, el('b', {}, '94 tokens'), 'parity gate'),
-                                el('li', {}, el('b', {}, 'DI5 safe'), 'no flashing'),
-                            ),
-                            el('p', { class: 'microlabel' }, 'register 02 · preview build'),
-                            el('h1', { class: 'kp-text-balance', 'data-kp-reveal': 'headline' }, 'Stop looking like a theme.'),
-                            el(
-                                'p',
-                                { class: 'kp-prose kp-lede' },
-                                'Signal yellow on void. Blood red ',
-                                el('mark', {}, 'where it counts'),
-                                '. Neon only ',
-                                el('mark', {}, 'where it hurts'),
-                                '. A cyberpunk register for kp-themes that behaves like a place, not a palette.',
-                            ),
-                            el(
-                                'div',
-                                { class: 'kp-row' },
-                                el('Button', { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis' }, 'Try the demo'),
-                                el('Button', {}, 'Read the spec'),
-                                el('Button', { variant: 'ghost' }, 'Ghost'),
-                            ),
-                            el(
-                                'div',
-                                { class: 'kp-platforms', 'aria-label': 'Where it renders' },
-                                el('span', {}, 'Chromium'),
-                                el('span', {}, 'Firefox'),
-                                el('span', {}, 'Framework-free'),
-                                el('span', {}, 'React'),
-                            ),
-                        ),
-                        el(
-                            'aside',
-                            { class: 'kp-spec', id: 'spec', 'aria-label': 'Palette and type' },
-                            el(
-                                'dl',
-                                {},
-                                el('dt', {}, 'ground'),
-                                el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'surface-hero-bg' }), '--surface-hero-bg'),
-                                el('dt', {}, 'void'),
-                                el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'background' }), '--background'),
-                                el('dt', {}, 'alert'),
-                                el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'destructive' }), '--destructive'),
-                                el('dt', {}, 'label'),
-                                el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'accent' }), '--accent'),
-                                el('dt', {}, 'glitch'),
-                                el('dd', {}, el('i', { class: 'kp-spec__swatch', 'data-token': 'chart-4' }), '--chart-4'),
-                                el('dt', {}, 'display'),
-                                el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'display' }, 'Aa Bb Cc'), ' --theme-font-display'),
-                                el('dt', {}, 'body'),
-                                el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'body' }, 'Aa Bb Cc'), ' --theme-font-body'),
-                                el('dt', {}, 'mono'),
-                                el('dd', {}, el('span', { class: 'kp-spec__font', 'data-font': 'mono' }, 'Aa Bb Cc'), ' --kp-mono'),
-                            ),
-                        ),
-                    ),
-                ),
-                el('div', { 'data-kp-divider': '' }),
-                el(
-                    'section',
-                    { class: 'kp-section kp-stack', 'data-kp-surface': 'app', id: 'try', 'data-example': 'concept-app' },
-                    el(
-                        'div',
-                        { class: 'kp-autogrid' },
-                        el(
-                            'div',
-                            { class: 'kp-stack' },
-                            el('p', { class: 'microlabel' }, 'access.request_form'),
-                            el('h2', { 'data-kp-reveal': 'rule' }, 'Request a handle'),
-                            el(
-                                'form',
-                                { class: 'kp-form kp-stack', 'data-kp-form': '', novalidate: '' },
-                                el('Field', {
-                                    id: 'concept-handle',
-                                    label: 'Handle',
-                                    name: 'handle',
-                                    required: true,
-                                    autocomplete: 'username',
-                                    placeholder: 'v.night',
-                                    help: 'Lowercase, dots allowed, no spaces.',
-                                }),
-                                el('Field', {
-                                    id: 'concept-mail',
-                                    label: 'Contact',
-                                    name: 'mail',
-                                    type: 'email',
-                                    required: true,
-                                    autocomplete: 'email',
-                                    placeholder: 'you@dogtown.nc',
-                                    help: 'We answer within one cycle.',
-                                }),
-                                el(
-                                    'div',
-                                    { class: 'kp-field' },
-                                    el('label', { class: 'kp-field__label', for: 'concept-district' }, 'District'),
-                                    el(
-                                        'select',
-                                        { class: 'kp-field__input', id: 'concept-district', name: 'district' },
-                                        el('option', {}, 'Watson'),
-                                        el('option', {}, 'Westbrook'),
-                                        el('option', {}, 'Santo Domingo'),
-                                        el('option', {}, 'Dogtown'),
-                                    ),
-                                ),
-                                el(
-                                    'div',
-                                    { class: 'kp-field' },
-                                    el('label', { class: 'kp-field__label', for: 'concept-why' }, 'Why you'),
-                                    el('textarea', {
-                                        class: 'kp-field__input kp-field__input--multiline',
-                                        id: 'concept-why',
-                                        name: 'why',
-                                        placeholder: 'Two lines. Make them count.',
-                                    }),
-                                ),
-                                el(
-                                    'div',
-                                    { class: 'kp-field kp-field--check' },
-                                    el('input', { class: 'kp-field__check', id: 'concept-terms', name: 'terms', type: 'checkbox' }),
-                                    el(
-                                        'label',
-                                        { class: 'kp-field__label', for: 'concept-terms' },
-                                        'I understand this register ships no theme picker of its own.',
-                                    ),
-                                ),
-                                el(
-                                    'div',
-                                    { class: 'kp-row' },
-                                    el('Button', { type: 'submit', variant: 'primary' }, 'Send request'),
-                                    el(
-                                        'Button',
-                                        { type: 'reset', variant: 'destructive', class: 'kp-button--mirror', confirm: 'Wipe the form' },
-                                        'Wipe form',
-                                    ),
-                                ),
-                            ),
-                        ),
-                        el(
-                            'div',
-                            { class: 'kp-stack', id: 'dossier' },
-                            el('p', { class: 'microlabel' }, 'dossier.kp-themes-06'),
-                            el('h2', { 'data-kp-reveal': 'rule' }, 'The register, on record'),
-                            el(
-                                'Card',
-                                { title: 'Signal', 'data-kp-reveal': 'emphasis', 'data-kp-label': s.classified, 'data-example': 'concept-dossier' },
-                                el('p', { class: 'microlabel' }, 'FILE 06 · STATUS: PREVIEW · CLEARANCE: KENNY'),
-                                el(
-                                    'p',
-                                    {},
-                                    'A second cyberpunk register for kp-themes. The first one was ',
-                                    el('mark', {}, 'violet night and magenta'),
-                                    '; this one is built on ',
-                                    el('mark', {}, 'signal yellow and blood red'),
-                                    ', with cyan for what must be read and violet only inside a glitch. Every effect is ',
-                                    el('mark', {}, 'opt-in and reduced-motion safe'),
-                                    ', and the old register stays exactly as shipped.',
-                                ),
-                                el(
-                                    'p',
-                                    {},
-                                    'Open the file to clear the redactions. They lift one after another, the way a document does when the clearance comes through — not all at once.',
-                                ),
-                                el('div', { class: 'kp-row' }, el('Button', { variant: 'primary', 'data-kp-reveal-trigger': '' }, 'Open the file')),
-                            ),
-                        ),
-                    ),
-                ),
-                el('div', { 'data-kp-divider': 'alt' }),
-                el(
-                    'footer',
-                    { class: 'kp-footer', 'data-example': 'concept-footer' },
-                    el(
-                        'div',
-                        { class: 'kp-autogrid kp-autogrid--tight' },
-                        el(
-                            'div',
-                            {},
-                            el('h4', {}, 'kp-themes'),
-                            el(
-                                'p',
-                                { class: 'kp-prose' },
-                                'The house theme system. Twenty-five themes, three registers, one promise: a released theme never changes.',
-                            ),
-                        ),
-                        el(
-                            'div',
-                            {},
-                            el('h4', {}, 'Registers'),
-                            el(
-                                'ul',
-                                {},
-                                el('li', {}, el('a', { href: '#try-12' }, 'Signal')),
-                                el('li', {}, el('a', { href: '#try-13' }, 'Cyberpunk (archived)')),
-                                el('li', {}, el('a', { href: '#try-14' }, 'Retro')),
-                            ),
-                        ),
-                        el(
-                            'div',
-                            {},
-                            el('h4', {}, 'Channels'),
-                            el(
-                                'ul',
-                                {},
-                                el('li', {}, el('a', { href: '#try-15' }, 'Framework-free')),
-                                el('li', {}, el('a', { href: '#try-16' }, 'React')),
-                                el('li', {}, el('a', { href: '#try-17' }, 'Home Assistant')),
-                            ),
-                        ),
-                    ),
-                    el('p', { class: 'microlabel' }, '/// BUILD 5.0.0-PREVIEW · RENDERED FROM TOKENS · NO IMAGES WERE HARMED'),
-                ),
-            ),
-        ],
+        body: conceptBody(conceptCopy()),
     },
 ];
 

@@ -37,8 +37,8 @@
         --kp-reveal-stagger: 320ms;
         --kp-redact-stagger: 200ms;
         --kp-classified-delay: 260ms;
-        --kp-decipher-cps: 30;
-        --kp-decipher-lead: 200;
+        --kp-decipher-cps: 29.41;
+        --kp-decipher-lead: 0;
         --kp-lift: 640ms;
         --kp-rule: 900ms;
         --kp-sweep: 10000ms;
@@ -57,9 +57,12 @@
         /* The bloom on the titles, and the brighter phosphor under pressure. */
         --kp-bloom: 0 0 0.4em hsl(from var(--primary) h s l / 0.28);
         --kp-bloom-accent: 0 0 0.4em hsl(from var(--accent) h s l / 0.25);
-        --kp-hot: hsl(from var(--foreground) h s 80%);
-        --kp-hot-plate: hsl(from var(--primary) h s 80%);
-        --kp-hot-alarm: hsl(from var(--destructive) h s 75%);
+        /* One hot phosphor for text and plate alike, and one for the
+           alarm — the flat pair the approved demo measured [S49, A9],
+           carried by the token contract so DI9 keeps its rule. */
+        --kp-hot: var(--fx-hot);
+        --kp-hot-plate: var(--fx-hot);
+        --kp-hot-alarm: var(--fx-hot-alarm);
         /* The dashes of a rule and the character cells of a redaction. */
         --kp-dash: repeating-linear-gradient(90deg, var(--border-strong) 0 8px, transparent 8px 14px);
         --kp-cells: repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 1px), transparent calc(1ch - 1px) 1ch);
@@ -1259,5 +1262,11 @@
             transform: scaleY(0.02) scaleX(0);
             opacity: 0;
         }
+    }
+
+    /* The tty the shell line is attached to [S49, A3]. */
+    [data-theme='terminal'] .kp-nav__brand-tag {
+        color: var(--muted-foreground);
+        letter-spacing: 0.18em;
     }
 }

@@ -115,17 +115,23 @@
                 <ul class="kp-stack" data-compare-lines>
                     <li>Typography: Instrument Sans and Pixelify Sans now ship with the package and load here; 4.0.0 shipped no font file, so the browser drew the system fallback.</li>
                     <li>Typography, still the fallback: ui-monospace carries a Reserved Font Name and waits on R6-Q1 — no visible change yet.</li>
+                    <li>
+                        <details>
+                            <summary>Palette: 3 tokens changed value</summary>
+                            <p class="kp-prose">--sidebar-accent hsl(240, 80%, 35%) → hsl(208, 86%, 36%); --theme-font-body 'Instrument Sans', ui-sans-serif, system-ui, sans-serif → 'Instrument Sans', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif; --theme-font-display 'Pixelify Sans', 'Silkscreen', ui-sans-serif, sans-serif → 'Pixelify Sans', 'Silkscreen', 'Courier New', ui-monospace, monospace.</p>
+                        </details>
+                    </li>
                     <li>New in 5.0.0: 11 hero tokens and the display text step, all pointing at values this theme already had — the hero paints the same ground as the app, so nothing visible changed.</li>
                     <li>The register changed (rule for rule, the retro rules differ from 4.0.0).</li>
                 </ul>
                 <div class="kp-autogrid kp-autogrid--tight" data-compare-pair>
                     <section class="kp-stack" aria-label="Retro under 4.0.0">
                         <h3>Retro under 4.0.0</h3>
-                        <iframe src="compare-frame-4.0.0.html?theme=retro&amp;mark=type" title="Retro under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
+                        <iframe src="compare-frame-4.0.0.html?theme=retro&amp;mark=type,palette" title="Retro under 4.0.0" width="100%" height="900" data-compare-side="old"></iframe>
                     </section>
                     <section class="kp-stack" aria-label="Retro under the current build">
                         <h3>Retro under the current build</h3>
-                        <iframe src="compare-frame.html?theme=retro&amp;mark=type" title="Retro under the current build" width="100%" height="900" data-compare-side="new"></iframe>
+                        <iframe src="compare-frame.html?theme=retro&amp;mark=type,palette" title="Retro under the current build" width="100%" height="900" data-compare-side="new"></iframe>
                     </section>
                 </div>
                 <p class="kp-prose">

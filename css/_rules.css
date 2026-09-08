@@ -77,9 +77,10 @@
 
     /* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
     [data-theme='brutalism'] {
-        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1px, transparent 1px);
-        --fx-texture-size: 16px 16px;
-        --fx-texture-opacity: 0.06;
+        /* The demo's own geometry [S49, A8]: 1.6px dots on a 20px grid. */
+        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 0.06) 1.6px, transparent 1.6px);
+        --fx-texture-size: 20px 20px;
+        --fx-texture-opacity: 1;
     }
 
     /* The check and the radio dot: the ink is the primary here, so the browser

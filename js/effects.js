@@ -97,9 +97,18 @@ export const ROUTINES = Object.freeze({
     arrival: '--kp-arrival',
 });
 /** The class names of the arrival overlay the module builds. */
-export const ARRIVAL = Object.freeze({ root: 'kp-boot', line: 'kp-boot__line', skip: 'kp-boot__skip' });
+export const ARRIVAL = Object.freeze({ root: 'kp-boot', line: 'kp-boot__line', skip: 'kp-boot__skip', bar: 'kp-boot__bar' });
 /** The knob a theme sets to put a block cursor inside its fields [TM2, R6-Q7]: `--kp-caret: block`. */
 export const CARET_KNOB = '--kp-caret';
+/** The knobs a theme's own boot reads [S49, A11]. */
+export const KNOBS = Object.freeze({
+    /** `block` builds the segmented bar retro's POST counts along. */
+    arrivalBar: '--kp-arrival-bar',
+    /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
+    arrivalCount: '--kp-arrival-count',
+});
+/** The custom property the arrival bar's fill reads, 0 to 1. */
+export const BOOT_PROGRESS = '--kp-boot-progress';
 
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
@@ -764,7 +773,15 @@ export function attachEffects(root = document, options = {}) {
         skip.type = 'button';
         skip.className = ARRIVAL.skip;
         skip.textContent = words.arrivalSkip;
-        overlay.append(line, skip);
+        // The segmented bar retro's POST counts along [S49, A11]: built
+        // only when the theme asks for one, and painted by its register.
+        const bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === 'block' ? doc.createElement('div') : null;
+        if (bar) {
+            bar.className = ARRIVAL.bar;
+            bar.setAttribute('aria-hidden', 'true');
+            bar.style.setProperty(BOOT_PROGRESS, '0');
+        }
+        overlay.append(line, ...(bar ? [bar] : []), skip);
         doc.body.append(overlay);
         pending++;
         let ended = false;
@@ -792,8 +809,32 @@ export function attachEffects(root = document, options = {}) {
             line.textContent = [words.arrivalLine, words.arrivalProgress + ' ' + pct + '%', pct === 100 ? words.arrivalReady : '']
                 .filter(Boolean)
                 .join('\n');
+            bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
             if (pct === 100) later(end, 220);
             else later(step, 110);
+        };
+
+        // The lines mode [S49, A11]: a theme whose own boot is a POST
+        // shows its lines one after another, cumulatively, rather than a
+        // percentage — retro's BIOS banner and memory test, terminal's
+        // five lines. The words are the dictionary's (KT5), the cadence
+        // the demos' own 190ms, and a `{count}` counts up to the theme's
+        // declared total the way a memory test does.
+        const lines = words.arrivalLinesByTheme?.[html.getAttribute('data-theme') ?? ''] ?? null;
+        let shown = 0;
+        const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
+        const lineStep = () => {
+            if (ended || !lines) return;
+            shown++;
+            const upto = lines.slice(0, shown);
+            line.textContent = upto
+                .map((/** @type {string} */ text, /** @type {number} */ index) =>
+                    text.replace('{count}', String(index === shown - 1 ? Math.round((total * shown) / lines.length) : total)),
+                )
+                .join('\n');
+            bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
+            if (shown === lines.length) later(end, 320);
+            else later(lineStep, 190);
         };
         skip.addEventListener('click', end);
         finishers.push(end);
@@ -801,7 +842,8 @@ export function attachEffects(root = document, options = {}) {
         if (card) {
             line.textContent = html.getAttribute('data-theme') ?? '';
             later(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
-        } else step();
+        } else if (lines && lines.length > 0) lineStep();
+        else step();
     };
     arrival();
 

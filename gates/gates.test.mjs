@@ -18,6 +18,7 @@ import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion } from './check-motion.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
+import { CONCEPT_COPY, DEFAULT_COPY_THEME } from '../showcase/concept-copy.mjs';
 import { loosePhrases } from './check-strings.mjs';
 import { copyableExports } from './check-manifest.mjs';
 import { VENDORED, closure, specifiers } from './check-closure.mjs';
@@ -891,4 +892,33 @@ test('S46: every element of the approved demo is on the concept page [correction
     }
     // Drill [L7]: the laurels removed from the descriptor and the page
     // regenerated → "lacks the laurels", red (2026-09-07).
+});
+
+test('S49: every theme with an approved demo has its own concept page, whole and in its own words [A1]', () => {
+    const inventory = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8'));
+    const slots = Object.keys(CONCEPT_COPY[DEFAULT_COPY_THEME]);
+    for (const [theme, copy] of Object.entries(CONCEPT_COPY)) {
+        // The same slots for every theme: that is what makes the pages
+        // comparable, and what stops a demo's words from going missing.
+        assert.deepEqual(Object.keys(copy).sort(), [...slots].sort(), `${theme}'s copy has different slots`);
+        for (const [slot, text] of Object.entries(copy)) {
+            assert.equal(typeof text, 'string', `${theme}.${slot} is not a string`);
+            if (slot !== 'arrivalLine' && slot !== 'arrivalReady' && slot !== 'brandTag')
+                assert.notEqual(text.trim(), '', `${theme}.${slot} is empty`);
+        }
+        if (theme === DEFAULT_COPY_THEME) continue;
+        const page = readFileSync(new URL(`../examples/concept-${theme}.html`, import.meta.url), 'utf8');
+        for (const { what, marker } of inventory.elements) {
+            assert.ok(page.includes(marker), `the ${theme} concept page lacks ${what} (no "${marker}")`);
+        }
+        // And it says its own words, not the default theme's.
+        assert.ok(page.includes(copy.headline), `the ${theme} concept page does not carry its own headline`);
+        assert.ok(
+            !page.includes(CONCEPT_COPY[DEFAULT_COPY_THEME].headline),
+            `the ${theme} concept page still carries ${DEFAULT_COPY_THEME}'s headline`,
+        );
+        assert.ok(page.includes(`data-theme="${theme}"`), `the ${theme} concept page does not wear its own theme`);
+    }
+    // Drill [KT3]: phantom's entry pointed at cyberpunk's headline →
+    // "still carries cyberpunk's headline", red (2026-09-08).
 });

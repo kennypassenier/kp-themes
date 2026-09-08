@@ -113,6 +113,8 @@
     --fx-overprint: hsl(30, 40%, 88%);
     --fx-scanline: hsl(30, 40%, 88%);
     --fx-lift: 0px;
+    --fx-hot: hsl(220, 30%, 25%);
+    --fx-hot-alarm: hsl(0, 60%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -237,6 +239,8 @@
     --fx-overprint: hsl(190, 80%, 92%);
     --fx-scanline: hsl(190, 80%, 92%);
     --fx-lift: 2px;
+    --fx-hot: hsl(224, 25%, 25%);
+    --fx-hot-alarm: hsl(0, 72%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -361,6 +365,8 @@
     --fx-overprint: hsl(226, 18%, 18%);
     --fx-scanline: hsl(226, 18%, 18%);
     --fx-lift: 2px;
+    --fx-hot: hsl(220, 20%, 80%);
+    --fx-hot-alarm: hsl(0, 70%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -484,6 +490,8 @@
     --fx-overprint: hsl(184, 100%, 50%);
     --fx-scanline: hsl(56, 98%, 51%);
     --fx-lift: 1px;
+    --fx-hot: hsl(50, 12%, 80%);
+    --fx-hot-alarm: hsl(353, 84%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -606,6 +614,8 @@
     --fx-overprint: hsl(179, 94%, 59%);
     --fx-scanline: hsl(260, 100%, 91%);
     --fx-lift: 1px;
+    --fx-hot: hsl(260, 100%, 80%);
+    --fx-hot-alarm: hsl(356, 99%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -728,6 +738,8 @@
     --fx-overprint: hsl(200, 60%, 62%);
     --fx-scanline: hsl(150, 40%, 88%);
     --fx-lift: 3px;
+    --fx-hot: hsl(285, 25%, 25%);
+    --fx-hot-alarm: hsl(355, 65%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -785,13 +797,13 @@
     /* Phosphor-green monochrome on CRT black; everything is mono. */
     --background: hsl(120, 10%, 5%);
     --foreground: hsl(120, 85%, 68%);
-    --card: hsl(120, 9%, 7%);
+    --card: hsl(120, 14%, 7%);
     --card-foreground: hsl(120, 85%, 68%);
-    --popover: hsl(120, 9%, 7%);
+    --popover: hsl(120, 14%, 7%);
     --popover-foreground: hsl(120, 85%, 68%);
     --primary: hsl(120, 90%, 50%);
     --primary-foreground: hsl(120, 100%, 4%);
-    --secondary: hsl(120, 8%, 11%);
+    --secondary: hsl(120, 16%, 9%);
     --secondary-foreground: hsl(120, 50%, 75%);
     --muted: hsl(120, 8%, 10%);
     --muted-foreground: hsl(120, 25%, 62%);
@@ -815,7 +827,7 @@
     --chart-3: hsl(65, 85%, 55%);
     --chart-4: hsl(180, 60%, 55%);
     --chart-5: hsl(120, 20%, 70%);
-    --sidebar-background: hsl(120, 12%, 3%);
+    --sidebar-background: hsl(120, 18%, 3%);
     --sidebar-foreground: hsl(120, 60%, 70%);
     --sidebar-primary: hsl(120, 90%, 50%);
     --sidebar-primary-foreground: hsl(120, 100%, 4%);
@@ -852,6 +864,8 @@
     --fx-overprint: hsl(65, 90%, 50%);
     --fx-scanline: hsl(65, 90%, 50%);
     --fx-lift: 0px;
+    --fx-hot: hsl(120, 100%, 80%);
+    --fx-hot-alarm: hsl(0, 100%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -894,9 +908,9 @@
     --primary-hover: hsl(119, 100%, 59%);
     --primary-active: hsl(116, 85%, 73%);
     --primary-disabled: hsl(120, 100%, 43%);
-    --secondary-hover: hsl(120, 6%, 15%);
-    --secondary-active: hsl(120, 5%, 21%);
-    --secondary-disabled: hsl(120, 14%, 6%);
+    --secondary-hover: hsl(120, 12%, 13%);
+    --secondary-active: hsl(120, 8%, 19%);
+    --secondary-disabled: hsl(121, 32%, 4%);
     --accent-hover: hsl(65, 100%, 60%);
     --accent-active: hsl(64, 93%, 81%);
     --accent-disabled: hsl(65, 100%, 44%);
@@ -976,6 +990,8 @@
     --fx-overprint: hsl(24, 55%, 86%);
     --fx-scanline: hsl(24, 55%, 86%);
     --fx-lift: 2px;
+    --fx-hot: hsl(160, 28%, 25%);
+    --fx-hot-alarm: hsl(8, 62%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1100,6 +1116,8 @@
     --fx-overprint: hsl(48, 100%, 50%);
     --fx-scanline: hsl(48, 100%, 50%);
     --fx-lift: 0px;
+    --fx-hot: hsl(0, 0%, 25%);
+    --fx-hot-alarm: hsl(0, 100%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1224,6 +1242,8 @@
     --fx-overprint: hsl(24, 40%, 70%);
     --fx-scanline: hsl(30, 40%, 80%);
     --fx-lift: 0px;
+    --fx-hot: hsl(28, 45%, 25%);
+    --fx-hot-alarm: hsl(6, 60%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1348,6 +1368,8 @@
     --fx-overprint: hsl(190, 60%, 40%);
     --fx-scanline: hsl(190, 70%, 70%);
     --fx-lift: 0px;
+    --fx-hot: hsl(190, 55%, 80%);
+    --fx-hot-alarm: hsl(2, 70%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1472,6 +1494,8 @@
     --fx-overprint: hsl(28, 60%, 40%);
     --fx-scanline: hsl(28, 70%, 60%);
     --fx-lift: 1px;
+    --fx-hot: hsl(35, 30%, 80%);
+    --fx-hot-alarm: hsl(0, 65%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1584,18 +1608,20 @@
     --status-withdrawn: hsl(0, 0%, 72%);
     --status-withdrawn-foreground: hsl(0, 0%, 7%);
     --color-scheme: light;
-    --theme-font-body: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-body: 'Space Grotesk', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
     --radius: 0rem;
     --fx-signal: hsl(0, 90%, 58%);
     --fx-signal-foreground: hsl(0, 0%, 7%);
     --fx-notch: 0px;
     --fx-duration: 100ms;
     --fx-ease: cubic-bezier(0.2, 0, 0, 1);
-    --theme-font-display: 'Archivo Black', 'Archivo', Impact, sans-serif;
+    --theme-font-display: 'Archivo Black', 'Archivo', Impact, Haettenschweiler, 'Arial Black', sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(48, 100%, 60%);
     --fx-scanline: hsl(0, 0%, 7%);
     --fx-lift: 2px;
+    --fx-hot: hsl(0, 0%, 25%);
+    --fx-hot-alarm: hsl(0, 85%, 30%);
     --fx-shadow-offset: 4px;
     --fx-shadow-offset: 4px;
     --chart-pattern-1: none;
@@ -1721,6 +1747,8 @@
     --fx-overprint: hsl(43, 65%, 52%);
     --fx-scanline: hsl(43, 65%, 52%);
     --fx-lift: 0px;
+    --fx-hot: hsl(42, 60%, 80%);
+    --fx-hot-alarm: hsl(355, 80%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1845,6 +1873,8 @@
     --fx-overprint: hsl(0, 62%, 30%);
     --fx-scanline: hsl(38, 50%, 58%);
     --fx-lift: 0px;
+    --fx-hot: hsl(38, 40%, 80%);
+    --fx-hot-alarm: hsl(0, 65%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -1969,6 +1999,8 @@
     --fx-overprint: hsl(45, 100%, 55%);
     --fx-scanline: hsl(0, 0%, 98%);
     --fx-lift: 1px;
+    --fx-hot: hsl(0, 0%, 80%);
+    --fx-hot-alarm: hsl(355, 100%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2093,6 +2125,8 @@
     --fx-overprint: hsl(36, 91%, 55%);
     --fx-scanline: hsl(36, 91%, 55%);
     --fx-lift: 0px;
+    --fx-hot: hsl(40, 12%, 80%);
+    --fx-hot-alarm: hsl(0, 100%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2217,6 +2251,8 @@
     --fx-overprint: hsl(1, 58%, 46%);
     --fx-scanline: hsl(215, 51%, 25%);
     --fx-lift: 0px;
+    --fx-hot: hsl(36, 10%, 25%);
+    --fx-hot-alarm: hsl(1, 58%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2341,6 +2377,8 @@
     --fx-overprint: hsl(175, 60%, 36%);
     --fx-scanline: hsl(180, 8%, 48%);
     --fx-lift: 0px;
+    --fx-hot: hsl(194, 14%, 25%);
+    --fx-hot-alarm: hsl(1, 71%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2465,6 +2503,8 @@
     --fx-overprint: hsl(175, 59%, 40%);
     --fx-scanline: hsl(194, 14%, 50%);
     --fx-lift: 0px;
+    --fx-hot: hsl(186, 8%, 80%);
+    --fx-hot-alarm: hsl(1, 85%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2589,6 +2629,8 @@
     --fx-overprint: hsl(0, 0%, 60%);
     --fx-scanline: hsl(0, 0%, 9%);
     --fx-lift: 0px;
+    --fx-hot: hsl(0, 0%, 25%);
+    --fx-hot-alarm: hsl(0, 0%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 8L8 0' stroke='%23000' stroke-opacity='0.35' stroke-width='1.5'/%3E%3C/svg%3E");
     --chart-pattern-2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23000' fill-opacity='0.35'/%3E%3C/svg%3E");
@@ -2680,7 +2722,7 @@
     --sidebar-foreground: hsl(0, 0%, 100%);
     --sidebar-primary: hsl(0, 0%, 100%);
     --sidebar-primary-foreground: hsl(240, 100%, 25%);
-    --sidebar-accent: hsl(240, 80%, 35%);
+    --sidebar-accent: hsl(208, 86%, 36%);
     --sidebar-accent-foreground: hsl(0, 0%, 100%);
     --sidebar-border: hsl(240, 60%, 45%);
     --sidebar-ring: hsl(0, 0%, 100%);
@@ -2701,18 +2743,20 @@
     --status-withdrawn: hsl(0, 0%, 55%);
     --status-withdrawn-foreground: hsl(0, 0%, 10%);
     --color-scheme: light;
-    --theme-font-body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --theme-font-body: 'Instrument Sans', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
     --radius: 0rem;
     --fx-signal: hsl(180, 100%, 20%);
     --fx-signal-foreground: hsl(0, 0%, 100%);
     --fx-notch: 0px;
     --fx-duration: 0ms;
     --fx-ease: linear;
-    --theme-font-display: 'Pixelify Sans', 'Silkscreen', ui-sans-serif, sans-serif;
+    --theme-font-display: 'Pixelify Sans', 'Silkscreen', 'Courier New', ui-monospace, monospace;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(240, 100%, 25%);
     --fx-scanline: hsl(0, 0%, 10%);
     --fx-lift: 0px;
+    --fx-hot: hsl(0, 0%, 25%);
+    --fx-hot-alarm: hsl(0, 100%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2837,6 +2881,8 @@
     --fx-overprint: hsl(355, 95%, 45%);
     --fx-scanline: hsl(0, 0%, 7%);
     --fx-lift: 0px;
+    --fx-hot: hsl(0, 0%, 25%);
+    --fx-hot-alarm: hsl(355, 95%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -2961,6 +3007,8 @@
     --fx-overprint: hsl(5, 75%, 55%);
     --fx-scanline: hsl(43, 67%, 50%);
     --fx-lift: 1px;
+    --fx-hot: hsl(42, 55%, 80%);
+    --fx-hot-alarm: hsl(5, 90%, 75%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -3085,6 +3133,8 @@
     --fx-overprint: hsl(17, 74%, 38%);
     --fx-scanline: hsl(24, 12%, 15%);
     --fx-lift: 1px;
+    --fx-hot: hsl(24, 12%, 25%);
+    --fx-hot-alarm: hsl(10, 80%, 30%);
     --fx-shadow-offset: 0px;
     --chart-pattern-1: none;
     --chart-pattern-2: none;
@@ -3798,9 +3848,10 @@
 
     /* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
     [data-theme='brutalism'] {
-        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1px, transparent 1px);
-        --fx-texture-size: 16px 16px;
-        --fx-texture-opacity: 0.06;
+        /* The demo's own geometry [S49, A8]: 1.6px dots on a 20px grid. */
+        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 0.06) 1.6px, transparent 1.6px);
+        --fx-texture-size: 20px 20px;
+        --fx-texture-opacity: 1;
     }
 
     /* The check and the radio dot: the ink is the primary here, so the browser
@@ -5610,6 +5661,16 @@
 
     .kp-nav__brand {
         font-weight: 700;
+    }
+
+    /* The file code beside the wordmark [S49, A3]: phantom's PH//15,
+       terminal's TTY//06. Quiet by default; a register gives it a voice. */
+    .kp-nav__brand-tag {
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        font-size: 0.68em;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        color: var(--muted-foreground);
     }
 
     .kp-nav__links {
@@ -8806,6 +8867,12 @@
         --fx-tear-line-alt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 44' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='white' stroke-width='1' stroke-opacity='0.45' transform='translate(0 -3)' d='M0 17 L74 17 L74 25 L84 25 L84 17 L196 17 L212 14 L351 14 L351 22 L364 22 L364 14 L436 14 L436 22 L442 22 L442 14 L590 14 L590 22 L597 22 L597 14 L669 14 L679 12 L777 12 L777 20 L789 20 L789 12 L954 12 L966 19 L1041 19 L1050.5 38 L1060 19 L1220 19 L1233 15 L1291 15 L1302 12 L1431 12 L1439 17 L1544 17 L1561 13 L1632 13 L1632 21 L1639 21 L1639 13 L1771 13 L1788 12 L1887 12 L1887 20 L1893 20 L1893 12 L1920 12 L1920 20 L1920 20 L1920 12'/%3E%3C/svg%3E");
     }
     /* end of the generated tear */
+
+    /* The sector code beside the wordmark [S49, A3]. */
+    [data-theme='cyberpunk'] .kp-nav__brand-tag {
+        color: var(--accent);
+        letter-spacing: 0.2em;
+    }
 }
 
 @layer kp.register {
@@ -8899,6 +8966,13 @@
         --kp-groove-line: linear-gradient(to bottom, var(--border) 0 1px, var(--popover) 1px 2px);
         /* The hard shadow of a window and a menu. */
         --kp-drop: 3px 3px 0 hsl(from var(--foreground) h s l / 0.3);
+        /* The desktop the window sits on, and the window's own hard drop
+           [S49, A2]: the demo's desktop is the accent teal at 25%. */
+        --kp-desktop: hsl(from var(--accent) h s 25%);
+        --kp-drop-hard: 4px 4px 0 0 hsl(from var(--foreground) h s l / 0.35);
+        /* The POST counts along a segmented bar. */
+        --kp-arrival-bar: block;
+        --kp-arrival-count: 640;
         /* The dither ladder: four densities of a checkerboard in the ground's
            own colour, for the dissolve; and the same four as masks for the
            boot screen (a mask reads alpha, so the ink serves). */
@@ -9080,6 +9154,28 @@
         }
     }
 
+    /* ── The window on the desktop [S49, A2] ──────────────────────────────
+       The approved demo puts the whole page inside one application window
+       on the teal desktop, and that window is what makes the theme read as
+       1995 rather than as grey. The page carries no wrapper element for
+       it and may not grow one (the concept page's structure is the same
+       for every theme, S46), so the root is the desktop and the body is
+       the window: the same two boxes, drawn on the two elements every
+       document already has. */
+
+    [data-theme='retro'] {
+        background: var(--kp-desktop);
+    }
+
+    [data-theme='retro'] body {
+        max-inline-size: 84rem;
+        margin: clamp(0.4rem, 1.6vw, 1.4rem) auto;
+        padding: 3px;
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-raised), var(--kp-drop-hard);
+    }
+
     /* ── The navbar: the title bar and the menu strip in one row ──────── */
 
     [data-theme='retro'] .kp-nav-wrap {
@@ -9094,6 +9190,53 @@
         gap: 0.5rem;
         position: relative;
         z-index: var(--kp-z-nav, 30);
+    }
+
+    /* The three window controls the demo's title bar ends on [S49, A2]:
+       minimise, maximise, close. Drawn rather than typed — a glyph in
+       `content` is copy (KT5) and its own metrics would decide where the
+       boxes fall, where gradients put every edge exactly where the box
+       is. Three 20×18 faces on a 24px pitch, each with the bevel the rest
+       of the theme wears, and the three marks over them. */
+    [data-theme='retro'] .kp-nav::after {
+        content: '';
+        margin-inline-start: auto;
+        align-self: center;
+        flex: none;
+        inline-size: 68px;
+        block-size: 18px;
+        background-image:
+            linear-gradient(45deg, transparent 46%, var(--foreground) 46% 54%, transparent 54%),
+            linear-gradient(-45deg, transparent 46%, var(--foreground) 46% 54%, transparent 54%),
+            linear-gradient(0deg, var(--foreground) 0 1px, transparent 1px), linear-gradient(180deg, var(--foreground) 0 1px, transparent 1px),
+            linear-gradient(90deg, var(--foreground) 0 1px, transparent 1px), linear-gradient(270deg, var(--foreground) 0 1px, transparent 1px),
+            linear-gradient(0deg, var(--foreground) 0 2px, transparent 2px),
+            repeating-linear-gradient(90deg, var(--popover) 0 2px, transparent 2px 20px, transparent 20px 24px),
+            repeating-linear-gradient(90deg, transparent 0 18px, var(--border-strong) 18px 20px, transparent 20px 24px),
+            repeating-linear-gradient(90deg, var(--card) 0 20px, transparent 20px 24px);
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat-x, repeat-x, repeat-x;
+        background-size:
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 8px,
+            8px 6px,
+            24px 18px,
+            24px 18px,
+            24px 18px;
+        background-position:
+            54px center,
+            54px center,
+            30px center,
+            30px center,
+            30px center,
+            30px center,
+            6px center,
+            0 0,
+            0 0,
+            0 0;
     }
 
     /* The brand is the title bar: the measured ramp, white pixel type. */
@@ -9634,6 +9777,31 @@
     [data-theme='retro'] .kp-footer {
         background: var(--background);
         color: var(--foreground);
+        position: relative;
+    }
+
+    /* The resize grip in the corner of the status bar [S49, A2]: the
+       three diagonal runs of pixels a 1995 window ends on. */
+    [data-theme='retro'] .kp-footer::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 3px;
+        inset-block-end: 3px;
+        inline-size: 13px;
+        block-size: 13px;
+        background-image:
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%),
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%),
+            linear-gradient(135deg, transparent 0 46%, var(--popover) 46% 62%, var(--border-strong) 62% 78%, transparent 78%);
+        background-repeat: no-repeat;
+        background-size:
+            5px 5px,
+            9px 9px,
+            13px 13px;
+        background-position:
+            right bottom,
+            right bottom,
+            right bottom;
     }
 
     [data-theme='retro'] .kp-footer h4 {
@@ -10067,6 +10235,13 @@
         line-height: 1.5;
     }
 
+    /* The swatches sit in the groove well the demo's fieldset draws. */
+    [data-theme='retro'] .kp-spec dl {
+        border: 2px groove var(--border);
+        padding: 0.6rem 0.7rem;
+        margin-block-start: 3px;
+    }
+
     [data-theme='retro'] .kp-spec::before {
         content: '';
         display: block;
@@ -10282,6 +10457,36 @@
         to {
             clip-path: inset(0 0 0 100%);
         }
+    }
+
+    /* In the title bar the tag is white on the ramp, in the DOS face. */
+    [data-theme='retro'] .kp-nav__brand-tag {
+        font-family: var(--kp-dos);
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        color: var(--primary-foreground);
+        opacity: 0.9;
+    }
+
+    /* The segmented bar the POST counts along [S49, A11]: a sunken well
+       with the blocks a memory test fills. The module writes
+       --kp-boot-progress from 0 to 1; nothing here animates. */
+    [data-theme='retro'] .kp-boot__bar {
+        inline-size: min(22rem, 70vw);
+        block-size: 18px;
+        margin-block: 0.9rem 0.2rem;
+        padding: 2px;
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-boot__bar::before {
+        content: '';
+        display: block;
+        block-size: 100%;
+        inline-size: calc(var(--kp-boot-progress, 0) * 100%);
+        background-image: repeating-linear-gradient(90deg, var(--primary) 0 10px, transparent 10px 13px);
     }
 }
 
@@ -11891,13 +12096,35 @@
         --kp-hard: 4px 4px 0 hsl(from var(--background) h s l / 0.55);
         --kp-line: hsl(from var(--foreground) h s l / 0.14);
 
-        /* The texture [DI9, AR46]: Dead North's halftone screen and its
-           1px/3px scan, both static, at DI9's ceiling. */
+        /* The texture [DI9, AR46, S49]: the three static layers the
+           approved demo measured — the halftone screen with its 1px/3px
+           scan, the desaturated grain over it, and the denser screen the
+           hero carries. The demo is the specification (S49, A8, Kenny
+           2026-09-08), so the page layer paints at the demo's 0.14 and
+           phantom carries its own ceiling in gates/config.json; the
+           overrun against DI9's 0.06 is reported, not corrected (S42). */
         --fx-texture:
-            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.06) 0.9px, transparent 1px),
-            repeating-linear-gradient(hsl(from var(--foreground) h s l / 0.03) 0 1px, transparent 1px 3px);
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.16) 0.9px, transparent 1px),
+            repeating-linear-gradient(hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 3px);
         --fx-texture-size: 7px 7px, 100% 3px;
-        --fx-texture-opacity: 1;
+        --fx-texture-opacity: 0.14;
+    }
+
+    /* The grain: fractal noise with its colour taken out, laid over the
+       screen in soft light. Its own layer, its own measured opacity, and
+       its own line in the texture gate — a second layer is not a place to
+       hide a first one. */
+    [data-theme='phantom'] body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: var(--kp-z-texture, 80);
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+        --fx-texture-opacity: 0.1;
+        background-image: var(--fx-texture);
+        opacity: var(--fx-texture-opacity);
+        mix-blend-mode: soft-light;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -12062,12 +12289,19 @@
         padding-block: 3rem 4.5rem;
     }
 
+    /* The screen is denser over the hero than over the page: the demo's
+       0.22 dot at 0.55 [S49, A8], declared through the texture tokens so
+       gates/check-texture.mjs measures this layer too. */
     [data-theme='phantom'] [data-kp-surface='hero']::before {
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.12) 0.9px, transparent 1px) 0 0 / 7px 7px;
+        --fx-texture: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.22) 0.9px, transparent 1px);
+        --fx-texture-opacity: 0.55;
+        background-image: var(--fx-texture);
+        background-size: 7px 7px;
+        opacity: var(--fx-texture-opacity);
         z-index: -2;
     }
 
@@ -13336,6 +13570,13 @@
             transform: skew(-20deg) translateX(-115vw);
         }
     }
+
+    /* The card's file code, in the red the plates wear [S49, A3]. */
+    [data-theme='phantom'] .kp-nav__brand-tag {
+        color: var(--primary);
+        font-style: normal;
+        letter-spacing: 0.2em;
+    }
 }
 
 @layer kp.register {
@@ -13377,8 +13618,8 @@
         --kp-reveal-stagger: 320ms;
         --kp-redact-stagger: 200ms;
         --kp-classified-delay: 260ms;
-        --kp-decipher-cps: 30;
-        --kp-decipher-lead: 200;
+        --kp-decipher-cps: 29.41;
+        --kp-decipher-lead: 0;
         --kp-lift: 640ms;
         --kp-rule: 900ms;
         --kp-sweep: 10000ms;
@@ -13397,9 +13638,12 @@
         /* The bloom on the titles, and the brighter phosphor under pressure. */
         --kp-bloom: 0 0 0.4em hsl(from var(--primary) h s l / 0.28);
         --kp-bloom-accent: 0 0 0.4em hsl(from var(--accent) h s l / 0.25);
-        --kp-hot: hsl(from var(--foreground) h s 80%);
-        --kp-hot-plate: hsl(from var(--primary) h s 80%);
-        --kp-hot-alarm: hsl(from var(--destructive) h s 75%);
+        /* One hot phosphor for text and plate alike, and one for the
+           alarm — the flat pair the approved demo measured [S49, A9],
+           carried by the token contract so DI9 keeps its rule. */
+        --kp-hot: var(--fx-hot);
+        --kp-hot-plate: var(--fx-hot);
+        --kp-hot-alarm: var(--fx-hot-alarm);
         /* The dashes of a rule and the character cells of a redaction. */
         --kp-dash: repeating-linear-gradient(90deg, var(--border-strong) 0 8px, transparent 8px 14px);
         --kp-cells: repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 1px), transparent calc(1ch - 1px) 1ch);
@@ -14600,6 +14844,12 @@
             opacity: 0;
         }
     }
+
+    /* The tty the shell line is attached to [S49, A3]. */
+    [data-theme='terminal'] .kp-nav__brand-tag {
+        color: var(--muted-foreground);
+        letter-spacing: 0.18em;
+    }
 }
 
 @layer kp.register {
@@ -14942,7 +15192,7 @@
     [data-theme='brutalism'] .kp-button:not(:active):hover,
     [data-theme='brutalism'] .kp-button:focus-visible {
         color: var(--kp-plate-ink);
-        background: hsl(from var(--kp-plate) h s calc(l - 6));
+        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
         border-color: var(--border-strong);
         translate: -2px -2px;
         box-shadow: var(--kp-shadow-up);
@@ -14968,7 +15218,7 @@
 
     [data-theme='brutalism'] .kp-button--primary:not(:active):hover,
     [data-theme='brutalism'] .kp-button--primary:focus-visible {
-        background: hsl(from var(--kp-plate) h s calc(l + 8));
+        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
     }
 
     [data-theme='brutalism'] .kp-button--destructive {
@@ -15793,6 +16043,13 @@
         to {
             transform: translateX(-50%);
         }
+    }
+
+    /* Stamped beside the wordmark, in the ink [S49, A3]. */
+    [data-theme='brutalism'] .kp-nav__brand-tag {
+        color: var(--foreground);
+        font-weight: 700;
+        letter-spacing: 0.14em;
     }
 }
 

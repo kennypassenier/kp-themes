@@ -338,7 +338,7 @@
     [data-theme='brutalism'] .kp-button:not(:active):hover,
     [data-theme='brutalism'] .kp-button:focus-visible {
         color: var(--kp-plate-ink);
-        background: hsl(from var(--kp-plate) h s calc(l - 6));
+        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
         border-color: var(--border-strong);
         translate: -2px -2px;
         box-shadow: var(--kp-shadow-up);
@@ -364,7 +364,7 @@
 
     [data-theme='brutalism'] .kp-button--primary:not(:active):hover,
     [data-theme='brutalism'] .kp-button--primary:focus-visible {
-        background: hsl(from var(--kp-plate) h s calc(l + 8));
+        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
     }
 
     [data-theme='brutalism'] .kp-button--destructive {
@@ -1189,5 +1189,12 @@
         to {
             transform: translateX(-50%);
         }
+    }
+
+    /* Stamped beside the wordmark, in the ink [S49, A3]. */
+    [data-theme='brutalism'] .kp-nav__brand-tag {
+        color: var(--foreground);
+        font-weight: 700;
+        letter-spacing: 0.14em;
     }
 }

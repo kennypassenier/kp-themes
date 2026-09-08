@@ -25,8 +25,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept'],
+    ['framework-free', '/examples/concept-brutalism.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=brutalism'],
 ];
 
 /**
@@ -216,7 +216,7 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const stamp = await pseudo(dossier, '::before', ['content', 'rotate', 'background-color']);
-            expect(stamp.content).toMatch(/Classified|attr\(data-kp-label\)/i);
+            expect(stamp.content).toMatch(/Sealed|attr\(data-kp-label\)/i);
             expect(stamp.rotate).toBe('-7deg');
             expect(stamp['background-color']).toBe(await paint(page, '--fx-signal'));
             const mark = dossier.locator('mark').first();

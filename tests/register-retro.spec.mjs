@@ -35,8 +35,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept'],
+    ['framework-free', '/examples/concept-retro.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=retro'],
 ];
 
 /**
@@ -97,7 +97,14 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url);
             const boot = page.locator('.kp-boot');
             await expect(boot).toBeVisible();
-            await expect(boot.locator('.kp-boot__line')).toContainText(/%/);
+            // The POST is the demo's own lines now [S49, A1/A11], from the
+            // dictionary rather than a percentage counter.
+            await expect(boot.locator('.kp-boot__line')).toContainText('KP Modular BIOS');
+            const bar = boot.locator('.kp-boot__bar');
+            await expect(bar).toBeVisible();
+            await expect
+                .poll(() => bar.evaluate((el) => Number(getComputedStyle(el).getPropertyValue('--kp-boot-progress'))), 'the bar fills')
+                .toBeGreaterThan(0);
             expect(await boot.evaluate((el) => getComputedStyle(el).fontFamily), 'the DOS voice').toMatch(/VT323/);
             await boot.locator('.kp-boot__skip').click();
             await expect(boot).toHaveCount(0, { timeout: 3000 });
@@ -263,7 +270,7 @@ for (const [channel, url] of CHANNELS) {
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const stamp = await pseudo(dossier, '::before', ['content', 'rotate', 'border-top-width']);
             // Firefox reports the unresolved attr(); chromium the value.
-            expect(stamp.content).toMatch(/Classified|attr\(data-kp-label\)/i);
+            expect(stamp.content).toMatch(/READ\ ONLY|attr\(data-kp-label\)/i);
             expect(stamp.rotate).toBe('-8deg');
             expect(stamp['border-top-width']).toBe('2px');
             expect(await dossier.locator('.kp-card__header').evaluate((el) => getComputedStyle(el).backgroundImage), 'the title bar').toMatch(

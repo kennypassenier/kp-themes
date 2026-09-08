@@ -29,8 +29,8 @@ import { expect, test } from '@playwright/test';
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept'],
+    ['framework-free', '/examples/concept-terminal.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=terminal'],
 ];
 
 /**
@@ -91,7 +91,9 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url);
             const boot = page.locator('.kp-boot');
             await expect(boot).toBeVisible();
-            await expect(boot.locator('.kp-boot__line')).toContainText(/%/);
+            // The POST is the demo's own lines now [S49, A1/A11], from the
+            // dictionary rather than a percentage counter.
+            await expect(boot.locator('.kp-boot__line')).toContainText('KP-THEMES BIOS');
             expect(await boot.evaluate((el) => getComputedStyle(el).textShadow), 'the bloom').not.toBe('none');
             await boot.locator('.kp-boot__skip').click();
             await expect(boot).toHaveCount(0, { timeout: 3000 });

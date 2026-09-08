@@ -118,6 +118,7 @@
  * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
  * @property {string} arrivalLine  The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+ * @property {Record<string, string[]>} arrivalLinesByTheme  The lines a theme's own boot shows instead of that one line, in order, keyed by theme [S49, A11]. A `{count}` in a line is replaced by a number counting up to `--kp-arrival-count` (640 by default), which is how retro's memory test reads.
  * @property {string} arrivalProgress  The word before the percentage on that line
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
@@ -252,6 +253,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     skipToContent: 'Skip to the content',
     classified: 'Classified',
     arrivalLine: '▶ Calibrating neural uplink',
+    arrivalLinesByTheme: {
+        retro: ['KP Modular BIOS v4.51PG', 'kp-themes 95 — retro build', 'Memory Test : {count}K'],
+        terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
+    },
     arrivalProgress: 'Progress',
     arrivalReady: 'OK',
     arrivalSkip: 'Skip',

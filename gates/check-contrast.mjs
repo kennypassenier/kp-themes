@@ -136,6 +136,9 @@ const EXEMPT = {
     'fx-overprint':
         'a decorative second ink, drawn at 40% alpha behind a heading that carries its own --foreground; it is not a surface and nothing reads on it',
     'fx-scanline': 'a 1px line at 4% alpha across the texture layer; at that opacity it is a veil rather than a surface',
+    'fx-hot':
+        "the ink a theme that BRIGHTENS under pressure gives a hovered control, DI3's opt-out [S49, A9]. No pair here can measure it: which surface it lands on is the register's choice, and a theme whose register never opts in never paints it. The one register that does — terminal's, on its own plate — has the painted pair measured in the browser by tests/register-terminal.spec.mjs, which reads what is drawn rather than what a pair would predict.",
+    'fx-hot-alarm': 'as --fx-hot, for the destructive control',
     'fx-notch': 'not a colour (a length)',
     'fx-lift': 'not a colour (how far a thing moves when it moves; 0 is a real answer)',
     'fx-shadow-offset': 'not a colour (a length: how far the hard shadow sits from its box; 0 paints nothing) [TH85]',

@@ -16,7 +16,8 @@
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { EXAMPLES, el, renderHTML } from '../showcase/examples.mjs';
+import { EXAMPLES, conceptBody, el, renderHTML } from '../showcase/examples.mjs';
+import { CONCEPT_COPY, DEFAULT_COPY_THEME, conceptCopy } from '../showcase/concept-copy.mjs';
 import { THEMES } from '../js/theme-registry.js';
 import { noFlashSnippet } from '../js/no-flash.js';
 import { comparePages } from './generate-compare.mjs';
@@ -54,11 +55,14 @@ const SHEETS = [
  * @param {string} body
  * @returns {string}
  */
-function page(title, body, { themeFromQuery = false } = {}) {
+function page(title, body, { themeFromQuery = false, theme = '' } = {}) {
     const links = SHEETS.map((sheet) => `        <link rel="stylesheet" href="../css/${sheet}" />`).join('\n');
     // The concept demo opts in to `?theme=<name>` [AR42]; no other page
     // does, so a query parameter never changes a page that did not ask.
-    const html = themeFromQuery ? '<html lang="en" data-kp-theme-from-query>' : '<html lang="en">';
+    // A per-theme concept page (S49, A1) also wears its own theme from the
+    // markup, so the words and the tokens arrive together with no script.
+    const attrs = [themeFromQuery ? ' data-kp-theme-from-query' : '', theme ? ` data-theme="${theme}"` : ''].join('');
+    const html = `<html lang="en"${attrs}>`;
     return `<!doctype html>
 ${html}
     <head>
@@ -118,8 +122,9 @@ function index() {
                 el(
                     'p',
                     { class: 'kp-prose kp-text-muted' },
-                    'The page every new theme is tried on before a token is written. The same file under every theme; ' +
-                        'a theme that has not been lifted yet answers the hooks quietly, and that is what quiet looks like.',
+                    'The page every new theme is tried on before a token is written. A theme whose concept demo Kenny approved ' +
+                        'has its own page in its own words (S49); a theme that has not been lifted yet wears the default page and ' +
+                        'answers the hooks quietly, and that is what quiet looks like.',
                 ),
                 el(
                     'p',
@@ -130,7 +135,22 @@ function index() {
                 el(
                     'ul',
                     { class: 'kp-row' },
-                    THEMES.map((theme) => el('li', {}, el('a', { href: `concept.html?theme=${theme.name}` }, theme.label))),
+                    THEMES.map((theme) =>
+                        el(
+                            'li',
+                            {},
+                            el(
+                                'a',
+                                {
+                                    href:
+                                        theme.name in CONCEPT_COPY && theme.name !== DEFAULT_COPY_THEME
+                                            ? `concept-${theme.name}.html`
+                                            : `concept.html?theme=${theme.name}`,
+                                },
+                                theme.label,
+                            ),
+                        ),
+                    ),
                 ),
                 el(
                     'p',
@@ -153,6 +173,17 @@ const pages = [
         file: `${example.id}.html`,
         content: page(example.title, renderHTML(example.body, 8), { themeFromQuery: example.id === 'concept' }),
     })),
+    // One concept page per theme with an approved demo [S49, A1 of
+    // 2026-09-08]: the same structure and the same markers (S46, KT11),
+    // the theme's own words. The default page keeps the picker and stays
+    // the place to compare all twenty-five under one set of words.
+    ...Object.keys(CONCEPT_COPY)
+        .filter((theme) => theme !== DEFAULT_COPY_THEME)
+        .map((theme) => ({
+            name: `examples/concept-${theme}.html`,
+            file: `concept-${theme}.html`,
+            content: page('Concept demo', renderHTML(conceptBody(conceptCopy(theme)), 8), { themeFromQuery: true, theme }),
+        })),
 ];
 
 if (process.argv.includes('--check')) {

@@ -34,6 +34,26 @@ const root = new URL('../', import.meta.url);
 const CONFIG = JSON.parse(readFileSync(new URL('config.json', import.meta.url), 'utf8'));
 export const CEILING = Number(CONFIG.textureOpacityCeiling.value);
 
+/** Per-theme ceilings [S49]: a theme's approved demo may measure stronger. */
+export const PER_THEME = Object.fromEntries(
+    Object.entries(CONFIG.textureOpacityCeiling.perTheme ?? {})
+        .filter(([name]) => name !== '//')
+        .map(([name, value]) => [name, Number(value)]),
+);
+
+/**
+ * The ceiling a declaration is held to: its theme's own, or DI9's.
+ *
+ * @param {string} selector
+ * @param {number} fallback
+ * @returns {{ ceiling: number, theme: string | null }}
+ */
+export function ceilingFor(selector, fallback) {
+    const theme = selector.match(/\[data-theme='([a-z-]+)'\]/);
+    const name = theme ? theme[1] : null;
+    return { ceiling: name && name in PER_THEME ? PER_THEME[name] : fallback, theme: name };
+}
+
 /** The stylesheets that declare textures. */
 export const CSS = stylesheets('texture');
 
@@ -113,11 +133,12 @@ export function audit(sources, pending, ceiling) {
         for (const t of textures(source)) {
             checked++;
             seen.add(t.selector);
-            if (t.effective <= ceiling) continue;
+            const { ceiling: bar, theme } = ceilingFor(t.selector, ceiling);
+            if (t.effective <= bar) continue;
             const excused = pending[t.selector];
             if (excused === undefined)
                 over.push(
-                    `${file}:${t.line} ${t.selector}: texture paints at ${t.effective} (layer ${t.opacity} × alpha ${t.alpha}), over DI9's ceiling of ${ceiling}`,
+                    `${file}:${t.line} ${t.selector}: texture paints at ${t.effective} (layer ${t.opacity} × alpha ${t.alpha}), over ${theme && theme in PER_THEME ? `${theme}'s ceiling of ${bar}` : `DI9's ceiling of ${ceiling}`}`,
                 );
             else if (Math.abs(excused - t.effective) > 0.005)
                 over.push(`${file}:${t.line} ${t.selector}: pending at ${excused} but paints at ${t.effective} — update the entry or the stylesheet`);
@@ -125,7 +146,8 @@ export function audit(sources, pending, ceiling) {
     }
     const stale = Object.keys(pending).filter((selector) => {
         if (!seen.has(selector)) return true;
-        for (const source of sources.values()) for (const t of textures(source)) if (t.selector === selector && t.effective > ceiling) return false;
+        for (const source of sources.values())
+            for (const t of textures(source)) if (t.selector === selector && t.effective > ceilingFor(t.selector, ceiling).ceiling) return false;
         return true;
     });
     return { checked, over, stale };
@@ -163,6 +185,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
     console.log(
-        `Texture: ${checked} declarations measured against DI9's ceiling of ${CEILING}; ${Object.keys(pending).length} pending with their measured value.`,
+        `Texture: ${checked} declarations measured against DI9's ceiling of ${CEILING} (${Object.keys(PER_THEME).length} theme(s) with their own, from their approved demo); ${Object.keys(pending).length} pending with their measured value.`,
     );
 }
