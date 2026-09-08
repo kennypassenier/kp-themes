@@ -107,9 +107,11 @@ test.describe('the compare pages', () => {
         expect((await identity(current)).heroSource, 'the right is the current build').not.toBe('');
     });
 
-    // pastel, not light: light's warning ink moved one step at C1, so its
-    // palette is marked too — the measurement, not the test, decides.
-    test('pastel: the statement is about typography, the demo is whole, and only the type is marked', async ({ page }) => {
+    // pastel: the type is the headline of its 5.0.0 change, and its
+    // palette is marked too since the lift, because the demo's own lift
+    // distance moved (--fx-lift 3px → 2px). The measurement, not the
+    // test, decides which categories are marked.
+    test('pastel: the statement is about typography, the demo is whole, and the type is marked', async ({ page }) => {
         const pair = await open(page, 'pastel');
         const lines = await page.locator('[data-compare-lines] li').allTextContents();
         expect(lines.join(' ')).toMatch(/Typography: Instrument Sans/);
@@ -117,7 +119,9 @@ test.describe('the compare pages', () => {
         const old = pair.frameLocator('iframe[data-compare-side="old"]');
         const current = pair.frameLocator('iframe[data-compare-side="new"]');
         const found = await marks(current);
-        expect(new Set(found.map((m) => m.label)), 'only the type is marked').toEqual(new Set(['Typography']));
+        expect(new Set(found.map((m) => m.label)), 'the type is marked, and the palette since the lift moved --fx-lift').toEqual(
+            new Set(['Typography', 'Palette']),
+        );
         expect(found.filter((m) => !m.visible)).toEqual([]);
         expect((await identity(old)).theme).toBe('pastel');
         const html = await served(page, pair.locator('iframe[data-compare-side="old"]'));

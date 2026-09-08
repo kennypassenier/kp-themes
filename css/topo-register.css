@@ -391,12 +391,16 @@
         box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
     }
 
-    /* DI2: the two-channel focus ring is a system constant; the lift
-       stays (it is transform-safe) but the hover shadow never contests
-       the ring's own box-shadow on :focus-visible. */
+    /* DI2, AR30: the two-channel focus ring is a system constant. The
+       lift stays (it is transform-safe) and the hover shadow gives way,
+       but by restating the base layer's own ring rather than by removing
+       the shadow — `box-shadow: none` here took the ring's second channel
+       with it, which tests/button.spec.mjs measured across every theme. */
     [data-theme='topo'] .kp-button:focus-visible {
         transform: translateY(calc(-1 * var(--fx-lift)));
-        box-shadow: none;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     [data-theme='topo'] .kp-button--primary {
