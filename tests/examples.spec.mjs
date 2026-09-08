@@ -67,7 +67,17 @@ const shape = (page, root) =>
         return [...el.querySelectorAll('*')]
             .filter((n) => !['SCRIPT', 'STYLE', 'TEMPLATE'].includes(n.tagName))
             .map((n) => {
-                const classes = [...n.classList].sort().join(' ');
+                // AR20 is about the classes the two channels *write*, not
+                // about what the effects module has done by the time each
+                // page is read: `is-in` lands when a heading scrolls into
+                // view, `is-cleared` on a timer, and a slower machine can
+                // catch one page mid-reveal and the other at rest. CI
+                // caught exactly that on 2026-09-08 (firefox, `h2|is-in`
+                // against `h2|`), where this machine never did.
+                const classes = [...n.classList]
+                    .filter((c) => !c.startsWith('is-'))
+                    .sort()
+                    .join(' ');
                 return `${n.tagName.toLowerCase()}|${classes}|${n.getAttribute('role') ?? ''}|${n.getAttribute('aria-current') ?? ''}`;
             });
     }, root);

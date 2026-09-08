@@ -56,6 +56,9 @@ node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 echo "→ the dist bundle matches its sources (TH106)"
 node gates/generate-bundle.mjs --check
 
+echo "→ the minified build matches its sources, and its size table with it"
+node gates/generate-min.mjs --check
+
 echo "→ the migration note points at classes that exist (TH108)"
 node gates/check-migration.mjs
 

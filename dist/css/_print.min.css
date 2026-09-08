@@ -1,0 +1,2 @@
+@media print{:root{color-scheme:light;--background: hsl(0, 0%, 100%);--foreground: hsl(0, 0%, 0%)}body:after{display:none}a{color:inherit}a[href^=http]:after{content:" (" attr(href) ")";font-size:.85em;word-break:break-all}}
+/*# sourceMappingURL=_print.min.css.map */

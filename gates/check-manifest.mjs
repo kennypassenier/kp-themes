@@ -146,9 +146,13 @@ function reachableFrom(entry, found) {
     const dir = entry.slice(0, entry.lastIndexOf('/'));
     for (const spec of references(source)) {
         const target = normalise(`${dir}/${spec}`);
-        if (!/\.(css|js|woff2)$/.test(target)) continue;
+        if (!/\.(css|js|woff2|map)$/.test(target)) continue;
         if (found.has(target)) continue;
         found.add(target);
+        // A source map is a leaf: it carries a copy of the source it maps,
+        // so reading it for references would find that source's own
+        // `url(…)` again and resolve it from the wrong directory.
+        if (target.endsWith('.map')) continue;
         reachableFrom(target, found);
     }
 }
@@ -169,6 +173,10 @@ export function references(source) {
     const out = [];
     for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) out.push(match[1]);
     for (const match of source.matchAll(/url\(\s*['"]?(\.[^'")]+)['"]?\s*\)/g)) out.push(match[1]);
+    // A minified file names its source map the same way a stylesheet
+    // names a font: the consumer who copies one copies the other, or the
+    // browser asks for a file that is not there [2026-09-08].
+    for (const match of source.matchAll(/sourceMappingURL=([^\s*]+)/g)) out.push(`./${match[1]}`);
     return out;
 }
 
