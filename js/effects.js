@@ -208,7 +208,8 @@ export const TIMINGS = Object.freeze({
     // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
     // arriving out of a blur, the hero button and the dossier card settling
     // out of the same blur once on load, and the confirmation dialog's
-    // native open/close.
+    // native open/close — the last two shared with academia's, which mounts
+    // its dialog the same way.
     'kp-focus': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
@@ -330,6 +331,12 @@ export function attachEffects(root = document, options = {}) {
     const finishers = [];
     /** @type {IntersectionObserver | null} */
     let io = null;
+
+    /** The headline's own on-view watcher [S48, academia, LIFT_PLAN row 10]:
+     * kept apart from `io` (the rule hook's) so a page whose rule reveal is
+     * quiet still gets a working headline draw, and the other way round. */
+    /** @type {IntersectionObserver | null} */
+    let ioHeadline = null;
     let pending = 0;
 
     const done = () => {
@@ -439,6 +446,41 @@ export function attachEffects(root = document, options = {}) {
             };
             el.addEventListener('animationend', onEnd);
             later(shine, TIMINGS['kp-tracking'].durationMs + 50);
+            return;
+        }
+        if (routine === 'draw') {
+            // The academia headline [lift row 10]: the words are never
+            // touched — no noise, no split into words. A rule beneath the
+            // heading grows in once it enters the viewport, the exact
+            // mechanism `rule()` below already performs, generalised to
+            // h1 because the approved demo drives both off one
+            // IntersectionObserver and one class ("The Reading Room",
+            // 2026-09-08). The register paints the draw; this only
+            // watches and flips the class.
+            if (!view || typeof view.IntersectionObserver !== 'function') {
+                el.classList.add(STATE.in);
+                announce(el, 'headline', routine, true);
+                return;
+            }
+            pending++;
+            finishers.push(() => {
+                el.classList.add(STATE.in);
+                announce(el, 'headline', routine, false);
+            });
+            ioHeadline ??= new view.IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        if (!entry.isIntersecting) continue;
+                        ioHeadline?.unobserve(entry.target);
+                        entry.target.classList.add(STATE.in);
+                        announce(entry.target, 'headline', routine, false);
+                        pending--;
+                        done();
+                    }
+                },
+                { threshold: cfg.threshold },
+            );
+            ioHeadline.observe(el);
             return;
         }
         if (routine === 'arrive') {
@@ -1065,6 +1107,8 @@ export function attachEffects(root = document, options = {}) {
             frames.clear();
             io?.disconnect();
             io = null;
+            ioHeadline?.disconnect();
+            ioHeadline = null;
             for (const cleanup of cleanups.splice(0)) cleanup();
             if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
         },

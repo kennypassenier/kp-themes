@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../css/phantom-register.css" />
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/academia-register.css" />
         <link rel="stylesheet" href="../css/formal-register.css" />
         <link rel="stylesheet" href="../css/sepia-register.css" />
         <link rel="stylesheet" href="../css/solstice-register.css" />
@@ -676,30 +677,44 @@ wide tracking; a control label in it would vanish at 14px.</li>
                         </ul>
                         <div class="kp-prose">
 <p>Dark academia: the library at night. Ink and mahogany for the ground,
-parchment for the text, candle gold for what you can act on, oxblood
-and forest green for the blocks that mean something. Garamond for the
-headings, Lora for the reading.</p>
+parchment for the text, candle gold for what you can act on, oxblood and
+forest green for the blocks that mean something. Cormorant Garamond for
+the headings, Lora for the reading.</p>
 <p>This is sepia's darker counterpart — Kenny's own framing — and that is
 the reason it is dark. The style's own sources describe a parchment
 ground with oxblood and forest blocks, and that version sits within a
-step of sepia. Turn it over and it has no sibling: solstice is a
-sunset, this is a room.</p>
+step of sepia. Turn it over and it has no sibling: solstice is a sunset,
+this is a room.</p>
 <ol>
-<li><strong>The ground is ink with a trace of red.</strong> <code>hsl(24, 30%, 9%)</code>; the
-card is a leather brown a shade lighter. Take the hue out and it is
-dark; take the lightness down and it is phantom.</li>
+<li><strong>The ground is ink with a trace of red.</strong> <code>--background</code>
+<code>hsl(24, 30%, 9%)</code>; the card is a leather brown a shade lighter, the
+popover a shade lighter again — three surfaces rising at 0.0087 →
+0.0153 → 0.0219 relative luminance (measured, <code>node gates/check-invariants.mjs</code>
+reads this theme clean). Take the hue out and it is dark; take the
+lightness down and it is phantom.</li>
 <li><strong>Gold acts, oxblood and forest mean.</strong> <code>--primary</code> is candle gold
-<code>hsl(38, 50%, 58%)</code> because the contrast gate holds primary at 4.5:1
-as link text, and oxblood at 30% lightness cannot read on ink (1.9:1
-measured). So the gold is the link and the primary button, forest is
-the ordinary button (<code>--secondary</code>), and oxblood is <code>--accent</code> — a
-plate with parchment ink at 8.42:1.</li>
+<code>hsl(38, 50%, 58%)</code> because the contrast gate holds primary at 7.49:1
+against the ground as a link and 7.32:1 as the button's own ink
+underneath it (the demo's own header comment, verbatim: both
+token values match this theme's <code>tokens.json</code> to the pixel — measured
+by converting every HSL token to hex and diffing against the demo's
+literal hex table, 2026-09-08). Oxblood at 1.74:1 cannot read on ink,
+so it is never a word — <code>--accent</code> is a plate only, with parchment ink
+on top at 8.79:1.</li>
 <li><strong>Serifs everywhere, but a readable one for the body.</strong> Cormorant
 Garamond is thin and lives on headings; Lora carries the body at
 normal weight. The house pattern that forbids a serif body is met
 halfway: this is the reading theme, and Lora was drawn for screens.</li>
 <li><strong>Radius 0, hairline rules.</strong> A rounded corner in a library is a
-modern intrusion.</li>
+modern intrusion — every panel, button, field and dialog in the
+register is square.</li>
+<li><strong>The one gesture is a rule drawing under a heading, slower than
+everyone else's.</strong> Other registers that answer this hook draw at
+<code>--fx-duration</code> multiples or a shared 900ms baseline (cyberpunk and
+synthwave both set <code>--kp-rule-draw: 900ms</code>); academia's section rule
+draws at that same 900ms, and its headline — the same mechanism,
+generalised to h1 — draws slower still, at 1100ms. A library is not in
+a hurry.</li>
 </ol>
                         </div>
                     </article>

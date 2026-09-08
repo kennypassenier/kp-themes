@@ -284,6 +284,20 @@ const ALLOWED = [
 for (const theme of THEMES) {
     test(`${theme.name} paints no colour that is not its own [KT8]`, async ({ page }) => {
         await page.goto(`/showcase/themes/${theme.name}.html`);
+        // Let every finite animation and transition finish first: a theme
+        // whose register settles a colour on load (sepia's mark) is
+        // MID-TRANSITION for a moment, and a sample taken then reads a
+        // blend of two of the theme's own colours as a foreign one —
+        // measured at rgb(63, 41, 22) between the accent's ink and the
+        // page's, 2026-09-08, which is neither token and is nobody's fault.
+        await page.evaluate(() =>
+            Promise.all(
+                document
+                    .getAnimations()
+                    .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+                    .map((a) => a.finished.catch(() => {})),
+            ),
+        );
         const palette = paletteOf(theme.name);
         const near = (c) => palette.some((p) => Math.abs(p[0] - c[0]) <= 3 && Math.abs(p[1] - c[1]) <= 3 && Math.abs(p[2] - c[2]) <= 3);
         const painted = await page.evaluate(

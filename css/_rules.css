@@ -623,17 +623,10 @@
             animation: kp-rule-in calc(var(--fx-duration) * 4) var(--fx-ease) both;
         }
 
-        /* academia — the same rule in candle gold, slower: a library is not
-       in a hurry. */
-        [data-theme='academia'] h1::after,
-        [data-theme='academia'] h2::after {
-            content: '';
-            display: block;
-            block-size: 1px;
-            margin-block-start: 0.35rem;
-            background: var(--primary);
-            animation: kp-rule-in calc(var(--fx-duration) * 5) var(--fx-ease) both;
-        }
+        /* academia — lifted to a register [S48, LIFT_PLAN row 10]: the
+       gesture is now the register's own headline and rule draw, gated on
+       the heading entering the viewport rather than firing on every load.
+       Two of them ran at once until this went. */
 
         /* phantom — a badge slides in from the left, once. A transform only:
        nothing changes luminance. */

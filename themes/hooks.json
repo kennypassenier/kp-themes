@@ -254,6 +254,22 @@
             "surface": {
                 "css": "css/themes.css",
                 "selector": "[data-theme='academia'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/academia-register.css",
+                "selector": "[data-theme='academia'] .kp-card[data-kp-reveal='emphasis'] mark"
+            },
+            "reveal": {
+                "css": "css/academia-register.css",
+                "selector": "[data-theme='academia'] h1[data-kp-reveal='headline']::after"
+            },
+            "divider": {
+                "css": "css/academia-register.css",
+                "selector": "[data-theme='academia'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/academia-register.css",
+                "selector": "[data-theme='academia'] [data-kp-surface] h1"
             }
         },
         "phantom": {

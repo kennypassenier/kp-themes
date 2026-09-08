@@ -3893,7 +3893,8 @@ var TIMINGS = Object.freeze({
   // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
   // arriving out of a blur, the hero button and the dossier card settling
   // out of the same blur once on load, and the confirmation dialog's
-  // native open/close.
+  // native open/close — the last two shared with academia's, which mounts
+  // its dialog the same way.
   "kp-focus": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
@@ -3975,6 +3976,7 @@ function attachEffects(root = document, options = {}) {
   const cleanups = [];
   const finishers = [];
   let io = null;
+  let ioHeadline = null;
   let pending = 0;
   const done = () => {
     if (detached || pending > 0) return;
@@ -4063,6 +4065,33 @@ function attachEffects(root = document, options = {}) {
       };
       el.addEventListener("animationend", onEnd);
       later(shine, TIMINGS["kp-tracking"].durationMs + 50);
+      return;
+    }
+    if (routine === "draw") {
+      if (!view || typeof view.IntersectionObserver !== "function") {
+        el.classList.add(STATE.in);
+        announce(el, "headline", routine, true);
+        return;
+      }
+      pending++;
+      finishers.push(() => {
+        el.classList.add(STATE.in);
+        announce(el, "headline", routine, false);
+      });
+      ioHeadline ??= new view.IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            ioHeadline?.unobserve(entry.target);
+            entry.target.classList.add(STATE.in);
+            announce(entry.target, "headline", routine, false);
+            pending--;
+            done();
+          }
+        },
+        { threshold: cfg.threshold }
+      );
+      ioHeadline.observe(el);
       return;
     }
     if (routine === "arrive") {
@@ -4590,6 +4619,8 @@ function attachEffects(root = document, options = {}) {
       frames.clear();
       io?.disconnect();
       io = null;
+      ioHeadline?.disconnect();
+      ioHeadline = null;
       for (const cleanup of cleanups.splice(0)) cleanup();
       if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
     },
