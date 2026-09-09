@@ -317,6 +317,7 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 | docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                  |
 | docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
 | docs/USER_GUIDE.md               | how a consumer builds a page with this                    |
+| docs/ADOPTION_PROMPTS.md         | the two consumer prompts, one per project (Dutch)         |
 | docs/TROUBLESHOOTING.md          | when it looks wrong, or a check says no                   |
 | docs/ARCHITECTURE_REFERENCE.md   | the system as built, as opposed to as decided             |
 | docs/TEST_PLAN.md                | what is tested, where, and what deliberately is not       |
