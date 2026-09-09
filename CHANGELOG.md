@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.0 — in progress
+## 5.0.0 — 2026-09-09
 
 **Three themes changed name.** `topo` is now `forest`, `tazhib` is now
 `lapis`, `nishiki` is now `woodblock` (Kenny, 2026-09-08, at their lift).
@@ -123,6 +123,55 @@ dossier's stamp is tilted signal red and its redactions are ink bars
 that slide off, and there is no arrival at all: printed matter is simply
 there. The register is `css/brutalism-register.css`; it introduces no
 family (Archivo Black already ships) and no token.
+
+**The remaining nineteen lifts, and the twenty-five registers.** After
+brutalism the other nineteen themes were lifted the same way in one day
+(2026-09-08), each from its own approved concept demo and each recording
+what it reported rather than corrected —
+`docs/audits/DEMO_FIDELITY_ROUND_SIX_2026-09-08.md` gathers all of it in
+one place. Every one of the twenty-five themes now ships a register of
+its own, `css/<name>-register.css`, opt-in and exported separately, and
+every one answers all six hooks. Five registers had to retire a
+pre-register signature from `css/_rules.css` first: an animation there
+outranks a normal declaration, so formal, blueprint, deco, nishiki and
+woodblock had each been painting the rule their register was trying to
+draw.
+
+**Three themes changed name at their lift** — recorded above.
+
+**Two shared elements, from what the lifts found missing.** A marquee
+(`data-kp-marquee`, `components/marquee.jsx`) that doubles its row for a
+seamless pass, hides the copy from a screen reader, rests off screen by
+default (`--kp-marquee-pause`) and takes its speed from
+`--kp-marquee`; and a caption above a nav dropdown
+(`data-kp-menu-label`, or `menuLabel` on a NavBar link) that draws
+nothing where nobody asked for one. Kenny judged all twenty-five side by
+side and chose each theme's own version. Cyberpunk's band is signal
+yellow with blood-red ink at his instruction — 3.21 against the 4.5
+floor, an approved exception recorded in `themes/cyberpunk/anatomy.md`.
+
+**A minified build.** Every stylesheet the package ships now has a
+minified twin under `dist/css/`, plus the bundle — 45% smaller, with a
+source map beside each and the per-file sizes in `docs/MINIFIED.md`,
+generated and gated. `url(../fonts/…)` is rewritten one level deeper so
+the twin finds the faces.
+
+**How this package is tested changed** [Kenny, 2026-09-09]. There is no
+CI: the workflow is deleted and `main` requires no status check. Five
+commands replace it — `npm run gates` on every commit, `test:affected`
+for what a change touches, `test:browser` for all of it, `advice` for
+the reading, and `verify` for everything before a release. The
+accessibility floors (contrast, the design invariants, the flash
+threshold, the reduced-motion guards, the texture ceiling) are **advice
+rather than gates**: measured and printed, never refused, with no
+per-theme exception list any more. README.md and
+`docs/DESIGN_INVARIANTS.md` say plainly what that costs, so the package
+does not claim to enforce what it does not.
+
+**No field test before this release** [Kenny, 2026-09-09, REL3]. Phase 9
+asks for one — the package used once from a clean install as a real
+consumer would. Kenny chose to skip it, and it is recorded here rather
+than left unsaid: what such a run would have found, a consumer finds.
 
 ## 4.0.0 — 2026-09-07
 

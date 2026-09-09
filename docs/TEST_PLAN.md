@@ -16,6 +16,22 @@ The split is Kenny's decision H1: the fast gates block a commit, the
 browser tests block nothing. A gate slow enough to be worked around is not
 a gate.
 
+## The field test that was not run [Kenny, 2026-09-09, REL3]
+
+Phase 9 asks for one before the release gate: the package used once from
+a clean install, as a real consumer would, with at least one step scripted
+rather than interactive. Kenny was asked and chose to skip it for 5.0.0.
+
+It is written here rather than left unsaid, because the reason the step
+exists is exactly this shape of confidence: latch 2.0.1 passed CI, a
+hardening round and an external security review and was still unusable in
+every real project — the first genuine use found it in one command. So
+what this release has instead is thirty gates, some 2500 browser tests
+over both engines, and Kenny's own look at the pages. What it does not
+have is one run through a consumer's own path: `npm pack`, install into
+an empty directory, build a page with a theme, a register and a component
+in both channels. Whatever that would have found, a consumer finds.
+
 ## How the suite is run [Kenny, 2026-09-09]
 
 Round six ended with the suite at some 2500 tests, run in full on every
