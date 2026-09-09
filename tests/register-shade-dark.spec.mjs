@@ -26,6 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -210,7 +211,7 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const after = await pseudo(marks.first(), '::after', ['transform']);
             expect(after.transform, 'the plate has receded').toMatch(/^matrix\(0,/);
-            expect(await marks.first().evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--card-foreground'));
+            await style(marks.first(), 'color').toBe(await paint(page, '--card-foreground'));
             await trigger.click();
             await expect(marks.first()).not.toHaveClass(/is-cleared/);
         });

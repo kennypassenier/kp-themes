@@ -34,6 +34,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -206,7 +207,7 @@ for (const [channel, url] of CHANNELS) {
             await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));
+            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
         });
 
         test('the buttons: a plain ring, the filled gold plate, and the mirror gloss', async ({ page }) => {
@@ -233,8 +234,7 @@ for (const [channel, url] of CHANNELS) {
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await mark.evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(cleared, 'the seal lifted').toBe('rgba(0, 0, 0, 0)');
+            await style(mark, 'background-color', 'the seal lifted').toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

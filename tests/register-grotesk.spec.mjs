@@ -26,6 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
@@ -158,8 +159,7 @@ for (const [channel, url] of CHANNELS) {
             const rest = await link.evaluate((el) => getComputedStyle(el).transitionDuration);
             expect(rest).toBe('0.1s');
             await link.hover();
-            const hovered = await link.evaluate((el) => getComputedStyle(el).transitionDuration);
-            expect(hovered).toBe('0.15s');
+            await style(link, 'transition-duration').toBe('0.15s');
             await settled(page);
             await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--foreground'));
         });

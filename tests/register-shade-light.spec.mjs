@@ -27,6 +27,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -180,11 +181,8 @@ for (const [channel, url] of CHANNELS) {
             await item.hover();
             const menu = item.locator('.kp-nav__menu');
             await expect(menu).toBeVisible();
-            const shadow = await menu.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'the dropdown lifts on a shadow, not a border alone').not.toBe('none');
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderColor), 'the boundary stays too').toBe(
-                await paint(page, '--border-strong'),
-            );
+            await style(menu, 'box-shadow', 'the dropdown lifts on a shadow, not a border alone').not.toBe('none');
+            await style(menu, 'border-color', 'the boundary stays too').toBe(await paint(page, '--border-strong'));
         });
 
         test('the buttons are flat: the primary a plate, the ghost underlined, the destructive an outline', async ({ page }) => {
@@ -203,8 +201,8 @@ for (const [channel, url] of CHANNELS) {
             const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
             expect(await ghost.evaluate((el) => getComputedStyle(el).textDecorationLine)).toMatch(/underline/);
             const destructive = page.locator('.kp-button--destructive').first();
-            expect(await destructive.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--destructive'));
-            expect(await destructive.evaluate((el) => getComputedStyle(el).borderColor)).toBe(await paint(page, '--destructive'));
+            await style(destructive, 'color').toBe(await paint(page, '--destructive'));
+            await style(destructive, 'border-color').toBe(await paint(page, '--destructive'));
         });
 
         test('the dossier covers its marks before the trigger opens them, then clears the redaction bars in order', async ({ page }) => {
@@ -229,9 +227,8 @@ for (const [channel, url] of CHANNELS) {
             await trigger.click();
             const dialog = page.locator('dialog[open]').first();
             await expect(dialog).toBeVisible();
-            expect(await dialog.evaluate((el) => getComputedStyle(el).animationName)).toBe('kp-dialog-in');
-            const shadow = await dialog.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow).not.toBe('none');
+            await style(dialog, 'animation-name').toBe('kp-dialog-in');
+            await style(dialog, 'box-shadow').not.toBe('none');
             await settled(page);
             await expect.poll(async () => await dialog.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
         });

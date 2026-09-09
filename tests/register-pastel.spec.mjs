@@ -29,6 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -262,8 +263,8 @@ for (const [channel, url] of CHANNELS) {
             await wipe.click();
             const dialog = page.locator('dialog[open], .kp-dialog:visible, .kp-confirm:visible').first();
             await expect(dialog).toBeVisible({ timeout: 3000 });
-            expect(await dialog.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('17.6px');
-            expect(await dialog.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
+            await style(dialog, 'border-radius').toBe('17.6px');
+            await style(dialog, 'background-color').toBe(await paint(page, '--card'));
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

@@ -31,6 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -209,10 +210,10 @@ for (const [channel, url] of CHANNELS) {
             await li.hover();
             const menu = li.locator('.kp-nav__menu');
             await expect(menu).toBeVisible();
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));
+            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
             const item = menu.locator('a').first();
             await item.hover();
-            expect(await item.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
+            await style(item, 'color').toBe(await paint(page, '--primary'));
         });
 
         test('the primary, ghost and destructive buttons carry the theme’s own quiet plates', async ({ page }) => {
@@ -244,7 +245,7 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const lifted = await pseudo(marks.first(), '::after', ['transform']);
             expect(lifted.transform, 'the bar lifted').toMatch(/matrix\(0,|scale\(0/);
-            expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word now reads').not.toBe('rgba(0, 0, 0, 0)');
+            await style(marks.first(), 'color', 'the word now reads').not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the wipe confirmation is a real dialog, Cancel focused by default, never Wipe [DI10]', async ({ page }) => {
@@ -256,7 +257,7 @@ for (const [channel, url] of CHANNELS) {
             expect(await dialog.evaluate((el) => (el instanceof HTMLDialogElement ? el.open : false)), 'a real <dialog>').toBe(true);
             const focusedIsDestructive = await page.evaluate(() => document.activeElement?.classList.contains('kp-button--destructive') ?? false);
             expect(focusedIsDestructive, 'focus is not on the destructive action').toBe(false);
-            expect(await dialog.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));
+            await style(dialog, 'background-color').toBe(await paint(page, '--popover'));
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

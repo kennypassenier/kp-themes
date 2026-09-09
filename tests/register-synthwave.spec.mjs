@@ -22,6 +22,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { bootGone, style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -87,6 +88,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const hero = page.locator('[data-kp-surface="hero"]').first();
             const sun = await pseudo(hero, '::before', ['mask-image', '-webkit-mask-image', 'border-radius', 'animation-name', 'width']);
             expect(sun['mask-image'] || sun['-webkit-mask-image'], 'the sun is striped').toMatch(/linear-gradient/);
@@ -131,6 +135,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
@@ -163,6 +170,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const mark = page.locator('[data-kp-surface="hero"] mark').first();
             await expect(mark).toHaveClass(/is-cleared/, { timeout: 15000 });
             // The animation ends before the rest state is read.
@@ -189,6 +199,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await rule.scrollIntoViewIfNeeded();
             await expect(rule).toHaveClass(/is-in/, { timeout: 5000 });
@@ -212,6 +225,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const link = page.locator('.kp-nav__link').nth(1);
             const before = await pseudo(link, '::after', ['transform']);
             expect(before.transform).toMatch(/matrix\(0,/);
@@ -230,9 +246,11 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const label = page.locator('.kp-field__label').first();
-            const family = await label.evaluate((el) => getComputedStyle(el).fontFamily);
-            expect(family).toMatch(/VT323/);
+            await style(label, 'font-family').toMatch(/VT323/);
             await expect
                 .poll(() =>
                     page.evaluate(async () => {

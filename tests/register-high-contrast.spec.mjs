@@ -35,6 +35,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -153,7 +154,7 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const cleared = await pseudo(marks.first(), '::after', ['transform']);
             expect(cleared.transform, 'the bar lifted off').toMatch(/matrix\(0/);
-            expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word reads again').not.toBe('rgba(0, 0, 0, 0)');
+            await style(marks.first(), 'color', 'the word reads again').not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the lede marks are a plain accent plate, with no cover-and-clear step [finding, S49]', async ({ page }) => {

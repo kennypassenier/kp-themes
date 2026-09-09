@@ -21,6 +21,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { bootGone, measured, style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -108,15 +109,22 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
             expect(await h1.textContent()).toBe(source);
             expect(await h1.locator('[data-word]').count(), 'the words are gone: the element is its text').toBe(0);
             expect(await page.evaluate(() => window.kpWords), 'every word had its span').toBe(source?.split(/\s+/).length);
-            const shadow = await h1.evaluate((el) => getComputedStyle(el).textShadow);
-            expect(shadow.split(/px,\s*/).length, 'a hard black shadow and one red offset').toBeGreaterThanOrEqual(2);
-            expect(await h1.evaluate((el) => getComputedStyle(el).fontStyle)).toBe('italic');
+            await measured(
+                h1,
+                (el) => getComputedStyle(el).textShadow.split(/px,\s*/).length,
+                undefined,
+                'a hard black shadow and one red offset',
+            ).toBeGreaterThanOrEqual(2);
+            await style(h1, 'font-style').toBe('italic');
         });
 
         test('the plate arrives: white while armed, black ink on red once cleared [TH120]', async ({ page }) => {
@@ -134,6 +142,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const mark = page.locator('[data-kp-surface="hero"] mark').first();
             await expect(mark).toHaveClass(/is-cleared/, { timeout: 15000 });
             await settled(page);
@@ -165,6 +176,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await rule.scrollIntoViewIfNeeded();
             await expect(rule).toHaveClass(/is-in/, { timeout: 5000 });
@@ -197,6 +211,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const link = page.locator('.kp-nav__link').nth(1);
             expect((await pseudo(link, '::before', ['width'])).width).toBe('0px');
             expect((await pseudo(link, '::before', ['transform'])).transform, 'the bar is skewed').toMatch(/matrix\(1, 0, -0\.28/);
@@ -208,11 +225,11 @@ for (const [channel, url] of CHANNELS) {
             // its own element. Drill [KT3]: the skew moved back to
             // `::before` → the element reads "none" and this goes red.
             const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).transform), 'the button is skewed').toMatch(/matrix\(1, 0, -0\.14/);
+            await style(button, 'transform', 'the button is skewed').toMatch(/matrix\(1, 0, -0\.14/);
             const plate = await pseudo(button, '::before', ['border-top-width']);
             expect(plate['border-top-width']).toBe('2px');
             const label = button.locator('.kp-button__label');
-            expect(await label.evaluate((el) => getComputedStyle(el).transform), 'and the label is set upright again').toMatch(/matrix\(1, 0, 0\.14/);
+            await style(label, 'transform', 'and the label is set upright again').toMatch(/matrix\(1, 0, 0\.14/);
             await button.hover();
             await expect.poll(async () => parseFloat((await pseudo(button, '::after', ['width'])).width)).toBeGreaterThan(40);
         });
@@ -223,6 +240,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             // Measured through the paint, not the declaration: firefox
             // reports `attr()` unresolved and the old `|attr(...)`

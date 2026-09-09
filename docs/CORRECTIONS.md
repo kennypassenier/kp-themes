@@ -1245,6 +1245,69 @@ shape it can recur in is a release tagged on a sha whose suite nobody
 ran, and standing rule 36 (a publish chain verifies every step) is what
 holds that.
 
+## KT16 · Two tests gave a different answer under load, and one of them was right by luck
+
+Found by Kenny on 2026-09-09, in his own `npm run verify` before the
+v5.1.0 tag. Approved as TF1-TF4 the same day.
+
+**1 · What went wrong.** Two chromium tests failed in the React channel —
+`tests/register-retro.spec.mjs`, "the brand is the title bar…" and "the
+dossier is a Notepad window…" — while the same twenty tests pass in 4.6 s
+when that file runs alone, the whole chromium project passes (1260), and
+the whole suite passes twice over (2495 passed, 31 skipped, 5.9 min, run
+twice on 2026-09-09). It has not reproduced since. Kenny's rule decides
+what that means: a test that answers differently under load is not a test.
+
+**2 · Which gate let it through.** None could. `npm run gates` reads
+files, and the browser suite was the thing that was wrong. What let it
+survive review is that the specs were written read-once and nothing
+refused that.
+
+**3 · Where else the same fault sits.** Measured, not guessed: 538
+one-shot reads of computed style across the suite against 73 retrying
+ones, of which **63 sit after a click, a hover or a press** in 19 of the
+25 register specs. Those 63 are the ones that can lose a race. A read of
+something settled the moment the page exists — a border-radius, a font
+stack — cannot, and was left alone.
+
+**4 · How we prevent recurrence.** Three things, per Kenny's answers.
+`tests/paint.mjs` holds retrying readers (`style`, `pseudoStyle`,
+`measured`) and `bootGone`, and the 63 sites now use them (TF1, TF3). The
+boot overlay is `position: fixed; inset: 0` over the whole page and only
+stops intercepting once `.is-off` lands, so 22 places that clicked Skip
+and read immediately now wait for the overlay to actually leave. And the
+module gained a readable state (TF2): `data-kp-reveal-state` is `armed`,
+`rest` or `played` on the element, beside the `kp-reveal` event that was
+previously the only signal — a moment you had to be listening for.
+
+**5 · What the remedy costs.** Almost nothing at runtime: a retrying read
+that is already right returns on its first attempt. In the source it costs
+one import per spec and a helper module. The module carries one attribute
+write per announced element.
+
+**6 · Who enforces it.** Discipline for the habit; code for the state —
+`tests/register-retro.spec.mjs` asserts `armed` before the trigger and
+`played` after it, and that assertion was drilled red by removing the
+attribute from `js/effects.js`.
+
+**7 · How we measure that it works.** At the next full `npm run verify`
+Kenny gives: the suite is green, and no test in it reads computed style
+after an action without a second chance. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback.** If a load-dependent failure appears again after
+this, the next measure is the gate TF3 declined: refuse a bare
+`getComputedStyle` anywhere in a spec, about 465 sites.
+
+**9 · When the measure is reviewed.** At this round's Phase 10.
+
+**What this correction cannot claim.** Which of the nine reads in those
+two tests actually lost is unknown. Playwright wipes `test-results/` at
+the start of every run and Claude ran the suite three times while
+diagnosing, destroying the traces Kenny's failing run had left behind —
+`trace: retain-on-failure` had captured them. That is its own lesson for
+Phase 10: the evidence of a live-found fault is collected before anything
+is re-run.
+
 ## KT13 · A layout class beat the `hidden` attribute, and the test read the attribute
 
 Approved by Kenny on 2026-09-08, all nine fields unchanged. His remark on

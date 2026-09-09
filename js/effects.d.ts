@@ -93,6 +93,23 @@ export declare const MEASURE_KNOB = "--kp-measure";
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */
 export declare const DONE_ATTRIBUTE = "data-kp-effects-done";
+/**
+ * The state a reveal is in, on the element that carries it [TF2, 2026-09-09].
+ *
+ * `DONE_ATTRIBUTE` says the module has finished the page; this says what
+ * happened to one element, and it stays readable afterwards. Until now the
+ * only signal was the `kp-reveal` event, which is a moment: whoever was
+ * not listening when it fired could never learn the answer. A consumer
+ * asking "is the dossier armed yet" had nowhere to look, and a test had
+ * nothing to wait for — which is how two retro tests could fail under
+ * load while passing alone.
+ *
+ * Three values, and they are the whole truth about an element:
+ *   armed  — wired to a trigger and waiting for it; nothing has run
+ *   rest   — settled without playing (reduced motion, no routine, seen)
+ *   played — the routine ran
+ */
+export declare const REVEAL_STATE = "data-kp-reveal-state";
 /** The copy of a headline the register's slice pseudo-elements read. */
 export declare const TEXT_ATTRIBUTE = "data-kp-text";
 /**

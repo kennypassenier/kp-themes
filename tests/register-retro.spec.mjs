@@ -31,6 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { bootGone, pseudoStyle, style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -150,6 +151,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
@@ -157,8 +161,8 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.textContent()).toBe(source);
             const after = await pseudo(h1, '::after', ['opacity']);
             expect(after.opacity, 'the dither is gone at rest').toBe('0');
-            expect(await h1.evaluate((el) => getComputedStyle(el).fontFamily)).toMatch(/Pixelify Sans/);
-            expect(await h1.evaluate((el) => getComputedStyle(el).textShadow), 'the hard white shadow').toMatch(/2px 2px 0px/);
+            await style(h1, 'font-family').toMatch(/Pixelify Sans/);
+            await style(h1, 'text-shadow', 'the hard white shadow').toMatch(/2px 2px 0px/);
             const ladder = await page.evaluate(() => window.kpDither);
             expect(
                 ladder.some((s) => s.startsWith('1|') && /conic-gradient/.test(s)),
@@ -193,6 +197,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const mark = page.locator('[data-kp-surface="hero"] mark').first();
             await expect(mark).toHaveClass(/is-cleared/, { timeout: 15000 });
             await settled(page);
@@ -200,7 +207,7 @@ for (const [channel, url] of CHANNELS) {
             expect(await mark.evaluate((el) => getComputedStyle(el).backgroundImage), 'the bar is the element’s own ground').toMatch(
                 /linear-gradient/,
             );
-            expect(await mark.evaluate((el) => getComputedStyle(el).color), 'white on navy').toBe(await paint(page, '--primary-foreground'));
+            await style(mark, 'color', 'white on navy').toBe(await paint(page, '--primary-foreground'));
             const armed = await page.evaluate(() => window.kpArmed);
             expect(
                 armed.some((s) => /^0(px|%)/.test(s)),
@@ -214,6 +221,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await rule.scrollIntoViewIfNeeded();
             await expect(rule).toHaveClass(/is-in/, { timeout: 5000 });
@@ -245,21 +255,32 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
+            // Nothing below is read before the module says it is finished
+            // and the boot overlay is off the page with it [TF1].
+            await bootGone(page);
             const brand = page.locator('.kp-nav__brand').first();
-            expect(await brand.evaluate((el) => getComputedStyle(el).backgroundImage), 'the navy ramp').toMatch(/linear-gradient/);
-            expect(await brand.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
+            await style(brand, 'background-image').toMatch(/linear-gradient/);
+            await style(brand, 'color').toBe(await paint(page, '--primary-foreground'));
             const link = page.locator('.kp-nav__link').nth(1);
             await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
+            await style(link, 'background-color').toBe(await paint(page, '--primary'));
             const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            const shadow = await button.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow.match(/inset/g)?.length, 'the four-inset bevel').toBe(4);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
+            await expect
+                .poll(async () => (await button.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
+                    message: 'the four-inset bevel',
+                })
+                .toBe(4);
+            await style(button, 'border-radius').toBe('0px');
             const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the default button is navy').toBe(
-                await paint(page, '--primary'),
-            );
-            expect((await primary.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, 'with its own bevel').toBe(4);
+            await style(primary, 'background-color').toBe(await paint(page, '--primary'));
+            await expect
+                .poll(async () => (await primary.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
+                    message: 'with its own bevel',
+                })
+                .toBe(4);
         });
 
         test('the dossier is a Notepad window: the read-only stamp, and the dither brush lifting off on the trigger', async ({ page }) => {
@@ -268,23 +289,31 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
+            await bootGone(page);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
+            // The dossier is wired to its trigger and has not run: that is
+            // now a state on the element rather than a moment that passed
+            // [TF2]. Asserting it here is also the honest precondition for
+            // "covered before the trigger" two lines down — before, the
+            // test simply hoped the module had got there.
+            await expect(dossier).toHaveAttribute('data-kp-reveal-state', 'armed');
             // Measured through the paint, not the declaration: firefox
             // reports `attr()` unresolved and the old `|attr(...)`
             // alternative accepted a stamp that printed nothing [G4].
-            const stamp = await pseudo(dossier, '::before', ['rotate', 'border-top-width']);
+            await pseudoStyle(dossier, '::before', 'rotate').toBe('-8deg');
+            await pseudoStyle(dossier, '::before', 'border-top-width').toBe('2px');
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/READ ONLY/i);
-            expect(stamp.rotate).toBe('-8deg');
-            expect(stamp['border-top-width']).toBe('2px');
-            expect(await dossier.locator('.kp-card__header').evaluate((el) => getComputedStyle(el).backgroundImage), 'the title bar').toMatch(
-                /linear-gradient/,
-            );
+            await pseudoStyle(dossier.locator('.kp-card__header'), '', 'background-image').toMatch(/linear-gradient/);
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['clip-path', 'background-image']);
-            expect(covered['clip-path'], 'covered before the trigger').toMatch(/^inset\(0(px)?\)$|^inset\(0px 0px 0px 0px\)$/);
-            expect(covered['background-image'], 'the 50% dither brush').toMatch(/conic-gradient/);
+            await pseudoStyle(mark, '::after', 'clip-path').toMatch(/^inset\(0(px)?\)$|^inset\(0px 0px 0px 0px\)$/);
+            await pseudoStyle(mark, '::after', 'background-image').toMatch(/conic-gradient/);
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
+            // The trigger made it play, and that too is readable now [TF2].
+            await expect(dossier).toHaveAttribute('data-kp-reveal-state', 'played');
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['clip-path']))['clip-path'], 'the brush lifted off').toMatch(/100%\)$/);
         });

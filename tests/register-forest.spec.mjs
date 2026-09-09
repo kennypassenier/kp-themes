@@ -29,6 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -146,8 +147,8 @@ for (const [channel, url] of CHANNELS) {
             await expect(marks.nth(0)).toHaveClass(/is-cleared/);
             await expect(marks.nth(2)).toHaveClass(/is-cleared/, { timeout: 2000 });
             await settled(page);
-            expect(await marks.nth(0).evaluate((el) => getComputedStyle(el).backgroundColor), 'cleared').toBe('rgba(0, 0, 0, 0)');
-            expect(await marks.nth(0).evaluate((el) => getComputedStyle(el).color), 'ink reads again, matching its paragraph').toBe(inkAround);
+            await style(marks.nth(0), 'background-color', 'cleared').toBe('rgba(0, 0, 0, 0)');
+            await style(marks.nth(0), 'color', 'ink reads again, matching its paragraph').toBe(inkAround);
         });
 
         test('without the module (reduced motion) the redactions read from the first paint [DI7]', async ({ page }) => {

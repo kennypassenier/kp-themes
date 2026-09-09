@@ -26,6 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -197,9 +198,9 @@ for (const [channel, url] of CHANNELS) {
             await link.hover();
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderStyle)).toBe('solid');
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderColor)).toBe(await paint(page, '--border-strong'));
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--popover'));
+            await style(menu, 'border-style').toBe('solid');
+            await style(menu, 'border-color').toBe(await paint(page, '--border-strong'));
+            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

@@ -21,6 +21,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -187,8 +188,8 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--secondary'));
             expect(await link.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
             const cta = page.locator('.kp-nav__link--cta').first();
-            expect(await cta.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await cta.evaluate((el) => getComputedStyle(el).boxShadow), 'the shadow').toMatch(/6px 6px 0px 0px/);
+            await style(cta, 'background-color').toBe(await paint(page, '--primary'));
+            await style(cta, 'box-shadow', 'the shadow').toMatch(/6px 6px 0px 0px/);
             await cta.hover();
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).translate), 'lifted').toBe('-2px -2px');
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).boxShadow), 'the shadow grows').toMatch(/8px 8px 0px 0px/);

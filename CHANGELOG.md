@@ -51,6 +51,21 @@ use. Neither is more supported than the other.
 
 Nothing in this release touches a theme, a token or a rule.
 
+**A reveal's state is readable** [TF2, KT16]. `js/effects.js` sets
+`data-kp-reveal-state` on the element it handled — `armed` (wired to a
+trigger, nothing has run), `rest` (settled without playing) or `played`.
+Until now the only signal was the `kp-reveal` event, which is a moment:
+whoever was not listening when it fired could never learn the answer, so a
+consumer asking "is the dossier armed yet" had nowhere to look. The event
+is unchanged and still fires.
+
+It came out of two browser tests that failed under load and passed alone
+in Kenny's verify run. The tests are repaired the same way the state is:
+63 reads that happened after a click, a hover or a press now retry instead
+of reading one moment, 22 places that clicked the boot overlay's Skip now
+wait for the overlay to actually leave, and `tests/paint.mjs` holds the
+readers. Recorded as KT16.
+
 ## 5.0.0 — 2026-09-09
 
 **Three themes changed name.** `topo` is now `forest`, `tazhib` is now

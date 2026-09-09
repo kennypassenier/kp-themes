@@ -37,6 +37,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -209,8 +210,7 @@ for (const [channel, url] of CHANNELS) {
             await card.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await mark.evaluate((el) => getComputedStyle(el).color);
-            expect(cleared).toBe(await paint(page, '--popover-foreground'));
+            await style(mark, 'color').toBe(await paint(page, '--popover-foreground'));
         });
 
         test('the destructive wipe opens a real confirmation dialog, styled as the theme’s own popover panel', async ({ page }) => {

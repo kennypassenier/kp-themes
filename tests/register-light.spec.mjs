@@ -34,6 +34,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -248,10 +249,8 @@ for (const [channel, url] of CHANNELS) {
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await mark.evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(cleared, 'the bar cleared to the accent tint').toBe(await paint(page, '--accent'));
-            const clearedColor = await mark.evaluate((el) => getComputedStyle(el).color);
-            expect(clearedColor, 'the words are readable again').toBe(await paint(page, '--foreground'));
+            await style(mark, 'background-color', 'the bar cleared to the accent tint').toBe(await paint(page, '--accent'));
+            await style(mark, 'color', 'the words are readable again').toBe(await paint(page, '--foreground'));
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

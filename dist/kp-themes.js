@@ -4151,6 +4151,7 @@ __export(effects_exports, {
   MEMO_PREFIX: () => MEMO_PREFIX,
   REVEALS: () => REVEALS,
   REVEAL_EVENT: () => REVEAL_EVENT,
+  REVEAL_STATE: () => REVEAL_STATE,
   ROOT_ATTRIBUTE: () => ROOT_ATTRIBUTE,
   ROUTINES: () => ROUTINES,
   STATE: () => STATE,
@@ -4267,6 +4268,7 @@ var MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 var MEASURE_KNOB = "--kp-measure";
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
+var REVEAL_STATE = "data-kp-reveal-state";
 var TEXT_ATTRIBUTE = "data-kp-text";
 var UNKNOWN_EVENT = "kp-effect-unknown";
 var REVEAL_EVENT = "kp-reveal";
@@ -4470,6 +4472,7 @@ function attachEffects(root = document, options = {}) {
     html.setAttribute(DONE_ATTRIBUTE, "");
   };
   const announce = (el, reveal, routine, skipped) => {
+    el.setAttribute(REVEAL_STATE, skipped ? "rest" : "played");
     el.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
   };
   const later = (fn, ms) => {
@@ -5001,6 +5004,7 @@ function attachEffects(root = document, options = {}) {
     if (trigger) {
       wireTrigger(trigger, marks, container, routine);
       trigger.setAttribute("aria-pressed", "false");
+      container.setAttribute(REVEAL_STATE, "armed");
       return;
     }
     if (seen(container, "emphasis")) {
@@ -5570,6 +5574,7 @@ export {
   REORDER_EVENT,
   REVEALS,
   REVEAL_EVENT,
+  REVEAL_STATE,
   ROOT_ATTRIBUTE,
   ROUTINES,
   RUN_EVENT,

@@ -603,6 +603,29 @@ straight out of it. Two names are namespace-only — `OPEN_EVENT` and
 `MATCHERS` — because combobox, datepicker and palette each declare their
 own, and a flat one would silently be somebody else's.
 
+## Knowing where a reveal is [TF2]
+
+`js/effects.js` writes `data-kp-reveal-state` on every element it handles:
+
+| Value | What it means |
+| --- | --- |
+| `armed` | wired to its `data-kp-reveal-trigger` and waiting for it; nothing has run |
+| `rest` | settled without playing — reduced motion, no routine, or already seen this session |
+| `played` | the routine ran |
+
+Read it whenever you need to know, rather than having had to listen. The
+`kp-reveal` event still fires and carries the same information in its
+detail; the difference is that the attribute is still there afterwards.
+
+```js
+const dossier = document.querySelector('[data-kp-reveal="emphasis"]');
+if (dossier.dataset.kpRevealState === 'armed') showTheHint();
+```
+
+An element with no value has not been handled yet — a `rule` below the
+fold waiting for the viewport reads exactly that way, which is how to tell
+"not yet" from "nothing to do".
+
 ## The marquee, and the menu's caption [M1, M3]
 
 Two shared elements round six added. Both are meaning in your HTML and

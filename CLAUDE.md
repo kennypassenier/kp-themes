@@ -181,6 +181,27 @@ This retires correction KT12's measure together with the CI it guarded;
 the record and the reasoning are in
 [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction KT16 (2026-09-09)
+
+A browser test reads the paint **until** it is the value, never once. A
+bare `getComputedStyle` after a click, a hover or a press has one moment
+and no second chance, so a value that arrives a tick later leaves the test
+red for good — which is how two retro tests failed in Kenny's own verify
+run and passed on their own. `tests/paint.mjs` holds the retrying readers
+(`style`, `pseudoStyle`, `measured`) and `bootGone`, and the 63 sites in
+the register specs that read after an action now use them.
+
+Two things came with it. A click on the boot overlay's Skip resolves when
+the click is dispatched, not when the overlay is gone, and that overlay is
+fixed over the whole page — so twenty-two places now wait for it to
+actually leave. And `js/effects.js` gained `data-kp-reveal-state`
+(`armed` · `rest` · `played`) beside the `kp-reveal` event: a state a test
+or a consumer can read at any time, where before there was only a moment
+you had to have been listening for.
+
+Discipline-enforced for the habit, code-enforced for the state. Full
+record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Project rule from correction KT13 (2026-09-08)
 
 A browser test reads the paint, not the attribute: what the browser draws

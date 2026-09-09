@@ -25,6 +25,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { bootGone, style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -130,13 +131,16 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
             expect(await h1.textContent()).toBe(source);
             expect(await h1.locator('[data-caret]').count(), 'the caret leaves with the last glyph').toBe(0);
-            expect(await h1.evaluate((el) => getComputedStyle(el).textShadow), 'the bloom').not.toBe('none');
-            expect(await h1.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
+            await style(h1, 'text-shadow', 'the bloom').not.toBe('none');
+            await style(h1, 'color').toBe(await paint(page, '--primary'));
             const typed = await page.evaluate(() => window.kpTyped);
             expect(typed.length, 'the caret was seen while typing').toBeGreaterThan(3);
             expect(
@@ -163,13 +167,14 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const mark = page.locator('[data-kp-surface="hero"] mark').first();
             await expect(mark).toHaveClass(/is-cleared/, { timeout: 15000 });
             await settled(page);
-            expect(await mark.evaluate((el) => getComputedStyle(el).backgroundColor), 'the phosphor as ground').toBe(
-                await paint(page, '--foreground'),
-            );
-            expect(await mark.evaluate((el) => getComputedStyle(el).color), 'the void as ink').toBe(await paint(page, '--background'));
+            await style(mark, 'background-color', 'the phosphor as ground').toBe(await paint(page, '--foreground'));
+            await style(mark, 'color', 'the void as ink').toBe(await paint(page, '--background'));
             const armed = await page.evaluate(() => window.kpArmed);
             expect(
                 armed.some((s) => s.startsWith('rgba(0, 0, 0, 0)|') && /inset/.test(s)),
@@ -183,6 +188,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await rule.scrollIntoViewIfNeeded();
             await expect(rule).toHaveClass(/is-in/, { timeout: 5000 });
@@ -219,18 +227,21 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const link = page.locator('.kp-nav__link').nth(1);
             await link.hover();
             await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
             expect(await link.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
             const cta = page.locator('.kp-nav__link--cta').first();
             expect((await pseudo(cta, '::before', ['content'])).content).toMatch(/\[/);
-            expect(await cta.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--accent'));
+            await style(cta, 'color').toBe(await paint(page, '--accent'));
             const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            expect(await button.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
+            await style(button, 'border-radius').toBe('0px');
+            await style(button, 'background-color').toBe('rgba(0, 0, 0, 0)');
             const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the plate').toBe(await paint(page, '--primary'));
+            await style(primary, 'background-color', 'the plate').toBe(await paint(page, '--primary'));
             const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
             expect((await pseudo(ghost, '::before', ['content', 'opacity'])).opacity, 'the brackets wait for the pointer').toBe('0');
             await ghost.hover();
@@ -243,10 +254,12 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const input = page.locator('input.kp-field__input[type="text"], input.kp-field__input:not([type])').first();
             await input.scrollIntoViewIfNeeded();
-            const before = await input.evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(before, 'no block before focus').toBe('none');
+            await style(input, 'background-image', 'no block before focus').toBe('none');
             await input.click();
             await input.type('kenny');
             const focused = await input.evaluate((el) => {
@@ -270,6 +283,9 @@ for (const [channel, url] of CHANNELS) {
                 .locator('.kp-boot__skip')
                 .click()
                 .catch(() => {});
+            // The click is dispatched, not finished: the overlay is fixed over
+            // the whole page until it is actually removed [TF1].
+            await bootGone(page);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const stamp = await pseudo(dossier, '::before', ['content', 'color']);
             expect(stamp.content).toMatch(/\[/);
