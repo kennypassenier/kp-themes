@@ -14,10 +14,35 @@
 // kp.utilities, and the files that follow fill those layers. Reordering
 // them would change which rule wins.
 //
-// The module is esbuild's bundle of js/auto.js, which is the one entry
-// with a side effect. esbuild is already a dev dependency; nothing is
+// The module is esbuild's bundle of a generated entry that re-exports
+// every published module. esbuild is already a dev dependency; nothing is
 // added to what a consumer installs, and the bundle has no runtime
 // dependency either (T6).
+//
+// It used to bundle js/auto.js alone, and therefore exported one name:
+// `attachAll`. chassis-rs found what that costs (their R3, 2026-09-09):
+// they call five specific functions, all five sit inside the bundle, and
+// none of them comes out — so a consumer who does not want the whole
+// automatic attachment has to take the loose modules instead, and the
+// bundle fails at the one thing it exists for. Kenny's answer at CF2 was
+// to export everything.
+//
+// Two shapes come out, and both are needed:
+//
+//   - A namespace per module, named `<module>Exports`:
+//     `import { comboboxExports } from '.../kp-themes.js'` reaches
+//     everything that module exports, whatever it is called. The suffix
+//     is not decoration — `combobox` is itself a declared function name,
+//     so a bare namespace would collide with the flat export and esbuild
+//     refuses the whole build.
+//   - A flat name for every export that exactly ONE module DECLARES.
+//     Declares, not re-exports: `THEMES` is written in js/theme-registry.js
+//     and passed on by theme-core and theme-picker, so it is one binding
+//     and flattens safely. `OPEN_EVENT` is declared by combobox, datepicker
+//     AND palette with three different values, so it does not flatten —
+//     a flat `OPEN_EVENT` would silently be one of the three. Those stay
+//     reachable through their namespace, which is the point of having
+//     both.
 //
 // Usage:
 //   node gates/generate-bundle.mjs           write dist/
@@ -46,15 +71,101 @@ function css() {
     return head + STYLESHEETS.map((file) => readFileSync(join(ROOT, file), 'utf8').trimEnd()).join('\n\n') + '\n';
 }
 
+/** Every `js/*.js` the package publishes, from the export map. */
+export const MODULES = /** @type {string[]} */ (
+    [
+        ...new Set(
+            Object.values(JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).exports)
+                .map((/** @type {unknown} */ v) => (typeof v === 'string' ? v : /** @type {{default?: string}} */ (v)?.default))
+                .filter((/** @type {unknown} */ v) => typeof v === 'string' && /^\.\/js\/[a-z-]+\.js$/.test(v) && !v.includes('.min.')),
+        ),
+    ].sort()
+);
+
+/** A `js/x.js` path as a JavaScript identifier: `js/theme-core.js` → `themeCore`. */
+export const identifierFor = (/** @type {string} */ path) =>
+    path
+        .replace(/^\.\/js\//, '')
+        .replace(/\.js$/, '')
+        .replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+
+/** The namespace export's name for a module: `js/combobox.js` → `comboboxExports`. */
+export const namespaceFor = (/** @type {string} */ path) => `${identifierFor(path)}Exports`;
+
+/**
+ * Which module declares which name, reading only `export function|class|const|let|var`.
+ *
+ * A re-export (`export { THEMES }`) is deliberately not a declaration:
+ * that is what makes a name passed along by three modules still count as
+ * one binding, and a name written three times count as three.
+ *
+ * @param {(path: string) => string} read
+ * @returns {Map<string, string[]>} name → the modules that declare it
+ */
+export function declarations(read) {
+    /** @type {Map<string, string[]>} */
+    const out = new Map();
+    for (const module of MODULES) {
+        const source = read(module);
+        for (const match of source.matchAll(/^export\s+(?:async\s+)?(?:function|class|const|let|var)\s+([A-Za-z0-9_$]+)/gm)) {
+            const name = match[1];
+            if (!name) continue;
+            out.set(name, [...(out.get(name) ?? []), module]);
+        }
+    }
+    return out;
+}
+
+/**
+ * The generated entry: a namespace per module, then every singly-declared
+ * name flat.
+ *
+ * @param {Map<string, string[]>} declared
+ * @returns {string}
+ */
+export function entrySource(declared) {
+    // A namespace whose name is also a declared export would make two
+    // exports with one name, which esbuild refuses outright. It has never
+    // happened with the `Exports` suffix; if it ever does, it fails here
+    // with the name rather than as a build error nobody can place.
+    for (const module of MODULES) {
+        const clash = namespaceFor(module);
+        if (declared.has(clash)) throw new Error(`${module}'s namespace \`${clash}\` collides with a declared export of the same name`);
+    }
+    const lines = MODULES.map((m) => `export * as ${namespaceFor(m)} from '${m}';`);
+    /** @type {Map<string, string[]>} */
+    const flatByModule = new Map();
+    for (const [name, modules] of declared) {
+        const only = modules.length === 1 ? modules[0] : undefined;
+        if (!only) continue;
+        flatByModule.set(only, [...(flatByModule.get(only) ?? []), name]);
+    }
+    for (const module of MODULES) {
+        const names = (flatByModule.get(module) ?? []).sort();
+        if (names.length) lines.push(`export { ${names.join(', ')} } from '${module}';`);
+    }
+    return lines.join('\n') + '\n';
+}
+
 async function js() {
+    const declared = declarations((module) => readFileSync(join(ROOT, module.slice(2)), 'utf8'));
+    const ambiguous = [...declared].filter(([, modules]) => modules.length > 1);
     const result = await esbuild.build({
-        entryPoints: [join(ROOT, 'js/auto.js')],
+        stdin: { contents: entrySource(declared), resolveDir: ROOT, sourcefile: 'kp-themes-entry.js', loader: 'js' },
         bundle: true,
         format: 'esm',
         target: 'es2022',
         write: false,
         banner: {
-            js: `/* @kp-soft/themes v${version} — dist/kp-themes.js\n   Generated by gates/generate-bundle.mjs — do not edit by hand.\n   js/auto.js and everything it imports, in one module. */`,
+            js:
+                `/* @kp-soft/themes v${version} — dist/kp-themes.js\n` +
+                `   Generated by gates/generate-bundle.mjs — do not edit by hand.\n` +
+                `   Every published js/ module in one file: a namespace per module\n` +
+                `   (${MODULES.map(namespaceFor).join(', ')}),\n` +
+                `   plus every export that exactly one module declares, flat.\n` +
+                (ambiguous.length
+                    ? `   Reachable only through a namespace, because more than one module\n   declares them: ${ambiguous.map(([n]) => n).join(', ')}. */`
+                    : `   Nothing is namespace-only: every name is declared once. */`),
         },
     });
     return result.outputFiles[0].text;

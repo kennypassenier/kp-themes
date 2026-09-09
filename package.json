@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "5.0.0",
+    "version": "5.1.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -263,6 +263,7 @@
         "generate:site": "node gates/generate-site.mjs",
         "check:site": "node gates/generate-site.mjs --check && node gates/check-site.mjs",
         "checksums": "node gates/checksums.mjs --write",
+        "consumer-tar": "node gates/consumer-tar.mjs",
         "check:types": "tsc --noEmit -p jsconfig.json",
         "check:layers": "node gates/check-layers.mjs",
         "check:closure": "node gates/check-closure.mjs",

@@ -558,6 +558,51 @@ dissolves, terminal types, formal stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
+## Which register a page loads [CF1, CF2, CF3]
+
+Every theme has a register — the opt-in stylesheet carrying its
+expression — and a page with a picker can end up on any of the
+twenty-five. There are two ways to handle that, and the package supports
+both.
+
+The simple one is `dist/kp-themes.css`: twenty-nine stylesheets in one
+file, including all twenty-five registers, each scoped to
+`[data-theme='name']`. Load it once and a theme change fetches nothing —
+`applyTheme()` sets the attribute and the right register is already
+there. It costs 693 kB minified.
+
+The frugal one is a `<link>` whose `href` follows `onThemeChange`. A
+register averages 20 kB minified (dark 44 kB, light 12 kB), so a visitor
+who stays in one theme downloads far less; the cost is a request per
+switch and a frame between the old register leaving and the new one
+arriving.
+
+If you serve your own files, take the bundle. If bytes over the wire are
+the constraint, take the link. README.md has both snippets.
+
+**Taking the files.** A release attaches `consumer.tar`: everything the
+checksum manifest names except the fonts (they ship as `fonts.tar`) and
+the source maps. It carries `SHA256SUMS` itself, so:
+
+```sh
+tar -xf consumer.tar
+sha256sum -c --ignore-missing SHA256SUMS
+```
+
+The flag matters. The manifest inside is the release's own and names the
+fonts and maps the tarball leaves out, so a bare `sha256sum -c` buries
+ninety-two `OK` lines under a hundred-odd warnings about files that were
+never supposed to be there.
+
+**One module instead of eight.** `dist/kp-themes.js` exports every
+published module: a namespace per module (`comboboxExports`,
+`themeCoreExports`, …) plus every function and constant that exactly one
+module declares, flat. So `attachThemePickers`, `enforceContracts`,
+`attachConfirmations`, `attachSkipLinks` and `applyStoredTheme` come
+straight out of it. Two names are namespace-only — `OPEN_EVENT` and
+`MATCHERS` — because combobox, datepicker and palette each declare their
+own, and a flat one would silently be somebody else's.
+
 ## The marquee, and the menu's caption [M1, M3]
 
 Two shared elements round six added. Both are meaning in your HTML and

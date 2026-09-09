@@ -17,3 +17,4 @@ SHA256SUMS
 tests/tmp-*.spec.mjs
 # The release asset the workflow builds from fonts/ [AR39].
 fonts.tar
+consumer.tar

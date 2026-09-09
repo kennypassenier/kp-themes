@@ -1,5 +1,56 @@
 # Changelog
 
+## 5.1.0 — 2026-09-09
+
+The first release shaped by a consumer rather than by this project's own
+gates. chassis-rs adopted 5.0.0 the day it published and reported two
+things back (their R3); both were measured here and both were right.
+
+**A release carries `consumer.tar`.** The release attached eight assets
+while `SHA256SUMS` beside them named 231 copyable files, so a consumer
+that bakes the package into its own binary pulled the six JavaScript
+modules, the twenty-five registers, `css/layout.css` and
+`css/utilities.css` off the git tag one file at a time. The tarball is
+built FROM the manifest — not from a list anyone maintains, which is the
+drift KT7 and TH130 exist about — and carries everything it names except
+the fonts (already `fonts.tar`) and the source maps: 92 files, 4.7 MB. It
+travels with `SHA256SUMS`, so a consumer verifies what it just received
+without a second download:
+
+```sh
+tar -xf consumer.tar && sha256sum -c --ignore-missing SHA256SUMS
+```
+
+The flag is not optional. The manifest inside is the release's own and
+names the fonts and maps the tarball leaves out, so a bare `sha256sum -c`
+buries ninety-two `OK` lines under a hundred-odd warnings.
+
+**`dist/kp-themes.js` exports every published module.** It bundled
+`js/auto.js` and therefore exported one name, `attachAll` — so a consumer
+calling `enforceContracts`, `attachConfirmations`, `attachSkipLinks`,
+`attachThemePickers` or `applyStoredTheme` found all five inside the
+bundle and none of them coming out, and had to take the loose modules
+instead. The bundle now exports a namespace per module
+(`comboboxExports`, `themeCoreExports`, …) plus every name that exactly
+one module _declares_, flat. Declares, not re-exports: `THEMES` is
+written once in `js/theme-registry.js` and passed on by two others, so it
+flattens safely, while `OPEN_EVENT` and `MATCHERS` are each written by
+several modules with different values and stay namespace-only rather than
+silently becoming one of them. A unit test holds the bundle's surface
+beside the modules', the way KT7's test holds the check lists.
+
+**How to load twenty-five registers is written down.** chassis-rs asked
+how a consumer with a client-side picker should do it, and the honest
+answer was that the package already solves it and never said so:
+`dist/kp-themes.css` is twenty-nine stylesheets including all twenty-five
+registers, each scoped to `[data-theme='name']`, so a theme change fetches
+nothing. README.md and `docs/USER_GUIDE.md` now carry both routes with the
+measurements: 693 kB minified for everything at once, against an average
+of 20 kB per register (dark 44 kB, light 12 kB) for loading the one in
+use. Neither is more supported than the other.
+
+Nothing in this release touches a theme, a token or a rule.
+
 ## 5.0.0 — 2026-09-09
 
 **Three themes changed name.** `topo` is now `forest`, `tazhib` is now

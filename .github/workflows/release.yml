@@ -53,6 +53,12 @@ jobs:
       # stylesheet takes the faces in one download.
       - name: Fonts
         run: tar -cf fonts.tar fonts
+      # The consumer tarball [CF1, 2026-09-09]. chassis-rs pulled thirty-odd
+      # files off the git tag one by one because the release attached eight
+      # assets while SHA256SUMS beside them named 231 copyable files. This
+      # is built FROM that manifest, so its contents cannot go stale.
+      - name: Consumer tarball
+        run: npm run consumer-tar
       # A draft, never a published release. Pushing a tag is a technical
       # act; publishing is Kenny's, and the two should not be the same
       # keystroke. A draft can also be deleted without leaving a hole in
@@ -66,4 +72,4 @@ jobs:
             --title "${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md \
             SHA256SUMS MIGRATION.md css/themes.css css/components.css css/fonts.css \
-            dist/kp-themes.css dist/kp-themes.js fonts.tar
+            dist/kp-themes.css dist/kp-themes.js fonts.tar consumer.tar

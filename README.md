@@ -213,6 +213,52 @@ const report = diagnostics();
 `renderDiagnostics(element)` draws the same thing as a table with the
 verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
+## Loading the registers when a visitor can pick any theme
+
+Twenty-five themes, twenty-five registers, one picker: which of them does
+a page load? Two answers, and both are right for someone. Measured
+2026-09-09 on this repository's own build.
+
+**The bundle — load everything once, switch by attribute.**
+`dist/kp-themes.css` is twenty-nine stylesheets concatenated: the palette,
+the components, **all twenty-five registers**, layout and utilities. Every
+register rule is scoped to `[data-theme='name']`, so with that one file
+loaded a theme change needs nothing fetched — flipping the attribute on
+`<html>` is the whole mechanism, which is what `applyTheme()` already
+does.
+
+```html
+<link rel="stylesheet" href="/kp/dist/kp-themes.min.css" />
+```
+
+It costs 693 kB minified for the lot. For anything serving its own files
+— a Rust binary with the stylesheet baked in, an intranet app, a desktop
+shell — that is not a number worth engineering around, and it removes a
+moving part: no load on switch, no flash while the new register arrives,
+no error path when it does not.
+
+**Per theme — load the one in use.**
+
+```html
+<link rel="stylesheet" href="/kp/css/themes.css" />
+<link rel="stylesheet" id="register" href="/kp/css/formal-register.css" />
+<script type="module">
+    import { onThemeChange } from '@kp-soft/themes/js/core';
+    onThemeChange((theme) => {
+        document.getElementById('register').href = `/kp/css/${theme}-register.css`;
+    });
+</script>
+```
+
+A register averages 20 kB minified — `dark` is the heaviest at 44 kB,
+`light` the lightest at 12 kB — so a visitor who never leaves one theme
+downloads about 3% of what the bundle costs. Worth it for a public site
+over a slow connection; the price is a request on every switch and a
+frame where the old register has gone and the new one has not arrived.
+
+Neither is more supported than the other. If you are not counting bytes,
+take the bundle: it is the one that cannot go wrong.
+
 ## The entry points worth naming
 
 Not all of them: `package.json` exports 181 paths, because every register,

@@ -850,6 +850,65 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
     assert.match(over[0], /\[data-theme='a'\].*0\.0715/);
 });
 
+// ── The consumer tarball [CF1, 2026-09-09] ───────────────────────────────
+
+test('CF1: the tarball is the manifest minus the fonts and the source maps', async () => {
+    // The point of building it from SHA256SUMS is that its contents cannot
+    // go stale. This holds the two exclusions and nothing else, so a file
+    // can never fall out of the tarball by being forgotten — only by
+    // leaving the manifest, which is a decision with its own gate.
+    const { contents, EXCLUDED } = await import('./consumer-tar.mjs');
+    const manifest = readFileSync(new URL('../SHA256SUMS', import.meta.url), 'utf8');
+    const files = contents(manifest);
+    assert.equal(EXCLUDED.length, 2, 'the exclusions are fonts/ and *.map, and adding a third is a decision');
+    assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
+    assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
+    assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');
+    // The three groups chassis-rs had to pull off the tag one by one.
+    for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
+        assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
+    }
+    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 25, 'all twenty-five registers travel in the tarball');
+    // A malformed manifest line must not smuggle an empty path into tar.
+    assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
+});
+
+// ── The dist bundle's export surface [CF2, 2026-09-09] ────────────────────
+
+test('CF2: the bundle exports every published module, and never a name two modules declare', async () => {
+    // chassis-rs called five functions that all sat inside the bundle and
+    // none of which came out of it, because the bundle was js/auto.js and
+    // js/auto.js exports one name. This holds the repair the way KT7
+    // holds the check lists: the two surfaces side by side, so the bundle
+    // cannot quietly stop carrying a module.
+    const { MODULES, namespaceFor, declarations, entrySource } = await import('./generate-bundle.mjs');
+    const read = (/** @type {string} */ m) => readFileSync(new URL(`../${m.slice(2)}`, import.meta.url), 'utf8');
+    assert.ok(MODULES.length >= 20, `expected the published js/ modules, found ${MODULES.length}`);
+
+    const declared = declarations(read);
+    const entry = entrySource(declared);
+    for (const module of MODULES) {
+        assert.ok(entry.includes(`export * as ${namespaceFor(module)} from '${module}';`), `${module} has no namespace in the bundle entry`);
+    }
+
+    // A name exactly one module declares is flat; a name several declare
+    // is not, because a flat one would silently be one of them.
+    const single = [...declared].filter(([, m]) => m.length === 1).map(([n]) => n);
+    const many = [...declared].filter(([, m]) => m.length > 1).map(([n]) => n);
+    assert.ok(single.length >= 100, `expected the singly-declared exports, found ${single.length}`);
+    for (const name of single) assert.match(entry, new RegExp(`\\b${name}\\b`), `${name} is declared once and is not exported flat`);
+    for (const name of many) {
+        const flat = new RegExp(`export \\{[^}]*\\b${name}\\b[^}]*\\} from`);
+        assert.ok(!flat.test(entry), `${name} is declared by ${declared.get(name)?.length} modules and must not be flat`);
+    }
+
+    // And the built artefact really carries them, not just the entry.
+    const bundle = readFileSync(new URL('../dist/kp-themes.js', import.meta.url), 'utf8');
+    for (const fn of ['enforceContracts', 'attachConfirmations', 'attachSkipLinks', 'attachThemePickers', 'applyStoredTheme']) {
+        assert.match(bundle, new RegExp(`\\b${fn}\\b`), `the bundle does not carry ${fn} — the five chassis-rs calls`);
+    }
+});
+
 // ── Round six, C2: the register's configuration surface [AR43] ─────────────
 
 test('AR43: every knob the architecture names has its default in the cyberpunk register', () => {
