@@ -1313,7 +1313,8 @@ is re-run.
 Found by Kenny on 2026-09-10, in the `npm run verify` that KT16's own
 field 7 named as its measurement: `gates 0:12 ok`, `browser 7:14 FAILED`.
 Two tests, both firefox, both a read with one moment — the shape KT16
-exists about, one day after KT16 shipped.
+exists about, one day after KT16 shipped. Approved by Kenny the same day,
+including the deliberate departure from KT16's own field 8.
 
 **1 · What went wrong.** `tests/dashboard.spec.mjs`, "the confirmation's
 buttons carry both halves of the ring — React", reported forest as

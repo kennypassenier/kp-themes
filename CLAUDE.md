@@ -202,6 +202,33 @@ you had to have been listening for.
 Discipline-enforced for the habit, code-enforced for the state. Full
 record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
+## Project rule from correction fix-1 (2026-09-10)
+
+A value that **settles** and a value that **passes** are read in opposite
+ways, and a test has to know which one it is looking at. A colour, a box
+or a box-shadow arrives and stays, so the reader waits for it —
+`tests/paint.mjs`, and now `wholeRing()` in `tests/ring.mjs` for the
+focus ring. A finite animation does not stay: `animation-name` is the
+keyframe while it runs and nothing afterwards, so waiting is not patience
+but a race the fast machine loses. For those, the listener is armed
+before the page exists — `recordAnimations()` and `animationsSeen()`.
+
+This is KT16 a second time, one day later, and the reason it came back is
+the reason §8 of the form protocol keeps writing down: KT16's measure was
+written for the surface the fault appeared on — "a read after a click, a
+hover or a press", 63 sites in the register specs — rather than for the
+property it had. Kenny's verify run of 2026-09-10 failed on two reads
+that were neither.
+
+Discipline-enforced. The fallback KT16 named — refuse every bare
+`getComputedStyle` in a spec, about 465 sites — is deliberately NOT taken:
+it would not have caught either failure and would have pushed the
+animation half into a poll that waits the full timeout for a value that
+left before it started looking. If it recurs, the fallback is two narrow
+gates instead: no spec read of `animationName` against a keyframe name,
+and no `indicator()` outside `wholeRing()`. Full record:
+[docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
 ## Project rule from correction KT13 (2026-09-08)
 
 A browser test reads the paint, not the attribute: what the browser draws

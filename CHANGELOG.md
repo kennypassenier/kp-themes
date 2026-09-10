@@ -68,6 +68,16 @@ of reading one moment, 22 places that clicked the boot overlay's Skip now
 wait for the overlay to actually leave, and `tests/paint.mjs` holds the
 readers. Recorded as KT16.
 
+It came back the next day, in the verify run that measure was queued
+against, on two reads that were neither of those things [fix-1]. The
+repair separates the two halves the first one had run together: a value
+that settles is read until it is the value (`wholeRing()` for the focus
+ring, four sites), and a value that passes is caught by a listener armed
+before the page exists (`recordAnimations()` and `animationsSeen()`,
+three sites) — because polling for a keyframe name that has already gone
+finds nothing and then costs the whole timeout. Nothing a consumer runs
+changes; this is the suite.
+
 **A badge can be told not to break its word** [ask-1]. Five components
 share one rule that lets an unbroken value break rather than push the
 page sideways — measured before it existed at 607, 485, 483 and 581px in
