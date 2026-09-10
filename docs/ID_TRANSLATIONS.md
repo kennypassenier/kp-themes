@@ -18,3 +18,4 @@ This file is the one place the old names are supposed to live.
 | Old | New | Moved | Why it surfaced |
 | --- | --- | ----- | --------------- |
 | HA3 | feat-ha-1 | 2026-09-10 | Kenny approved the two Home Assistant card-mod registers, so the row that defines the item was rewritten from open to closed |
+| KT16-M1 | step-3 | 2026-09-10 | The measurement it names came due and failed, so the row that defines it was rewritten from open to closed |

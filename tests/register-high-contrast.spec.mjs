@@ -35,7 +35,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { animationsSeen, recordAnimations, style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -99,6 +99,10 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 for (const [channel, url] of CHANNELS) {
     test.describe(`the high-contrast register, ${channel}`, () => {
         test('the headline wipes in from the left, once, on load, with no character scrambling', async ({ page }) => {
+            // Armed before the page exists: the wipe runs once and stops,
+            // so a read one moment later is a race and a poll for a value
+            // that has already left never finds it [fix-1].
+            await recordAnimations(page);
             await open(page, url);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const text = await h1.textContent();
@@ -106,7 +110,7 @@ for (const [channel, url] of CHANNELS) {
             // gate on the visible text — the words are on the page from
             // the first paint, only the clip-path narrows in.
             expect(text?.trim().length, 'the words are already the headline, never scrambled').toBeGreaterThan(0);
-            expect(await h1.evaluate((el) => getComputedStyle(el).animationName)).toBe('kp-hc-headline-wipe');
+            await animationsSeen(page, 'the wipe is this register’s own keyframe').toContain('kp-hc-headline-wipe');
             await settled(page);
             expect(await h1.evaluate((el) => getComputedStyle(el).clipPath), 'settled at the full ellipse').toMatch(/ellipse/);
             expect(await h1.textContent()).toBe(text);

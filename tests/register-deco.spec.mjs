@@ -26,7 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { animationsSeen, recordAnimations, style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -102,6 +102,10 @@ for (const [channel, url] of CHANNELS) {
         });
 
         test('the cartouche frames the headline: three concentric steps, a chevron bite, scaling in once [S49]', async ({ page }) => {
+            // Armed before the page exists: the cartouche scales in once
+            // and stops, so a read one moment later is a race and a poll
+            // for a value that has already left never finds it [fix-1].
+            await recordAnimations(page);
             await open(page, url);
             const h1 = page.locator('[data-kp-surface="hero"] h1[data-kp-reveal="headline"]').first();
             const frame = await pseudo(h1, '::before', ['box-shadow', 'clip-path', 'position']);
@@ -111,8 +115,7 @@ for (const [channel, url] of CHANNELS) {
             expect(layers.length, 'three concentric steps').toBe(3);
             for (const layer of layers) expect(layer).toMatch(/inset/);
             expect(frame['clip-path'], 'the chevron corner cut').toMatch(/polygon\(/);
-            const anim = await h1.evaluate((el) => getComputedStyle(el).animationName);
-            expect(anim).toBe('kp-cartouche-in');
+            await animationsSeen(page, 'the cartouche scales in on its own keyframe').toContain('kp-cartouche-in');
             await settled(page);
             await expect.poll(async () => h1.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
             // The base layer's shared double-rule flourish is neutralised here:

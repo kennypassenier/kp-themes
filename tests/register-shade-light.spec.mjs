@@ -27,7 +27,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { animationsSeen, recordAnimations, style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -91,15 +91,18 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 for (const [channel, url] of CHANNELS) {
     test.describe(`the shade-light register, ${channel}`, () => {
         test('the headline’s words resolve out of a blur, one after another, and end as their own text [TH119, SL2]', async ({ page }) => {
+            // Armed before the page exists, because the keyframe that
+            // proves this register is its own runs and then stops: reading
+            // `animationName` one moment after load answered "" in Kenny's
+            // verify run of 2026-09-10, and polling for a value that has
+            // already left never finds it [fix-1].
+            await recordAnimations(page);
             await open(page, url);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
             const source = await h1.getAttribute('data-kp-text');
-            // Armed, before the words finish: at least one word still
-            // carries the blur (opacity below 1, or the animation running).
             const words = h1.locator('[data-word]');
             expect(await words.count(), 'the module wrapped the words').toBeGreaterThan(1);
-            const firstName = await words.first().evaluate((el) => getComputedStyle(el).animationName);
-            expect(firstName, 'the demo’s own keyframe, not shout or slam').toBe('kp-word-in');
+            await animationsSeen(page, 'the demo’s own keyframe, not shout or slam').toContain('kp-word-in');
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 15000 });
             await settled(page);
             expect(await h1.textContent()).toBe(source);

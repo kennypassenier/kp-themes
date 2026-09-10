@@ -331,3 +331,49 @@ export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 40
         [shot.toString('base64'), ring, { pad, width: box.width, height: box.height, clipWidth: clip.width, where }],
     );
 }
+
+/**
+ * The indicator, read until both halves of the ring are actually painted.
+ *
+ * A focus ring that arrives through a transition is not whole on the
+ * frame after the theme changed. `indicator()` reads one moment, and one
+ * moment landed mid-transition in Kenny's verify run of 2026-09-10:
+ * forest reported `rgb(28, 53, 41) 0 0 0 2px, rgb(95, 143, 125) 0 0 0
+ * 0px` — the second layer at nought spread, on its way to two [fix-1].
+ *
+ * Not a sleep and not a retry: the reading is taken again until it is the
+ * value, which is the rule KT16 wrote for every read after an action. The
+ * last reading comes back either way, so a caller collecting a report
+ * across twenty-five themes still names what it saw rather than only that
+ * it gave up.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} testId
+ * @param {{ timeout?: number, step?: number }} [options]
+ */
+export async function wholeRing(page, testId, { timeout = 2000, step = 50 } = {}) {
+    const until = Date.now() + timeout;
+    for (;;) {
+        const found = await indicator(page, testId);
+        const halves = bothHalves(found);
+        if ((halves.outer && halves.inner) || Date.now() > until) return { found, ...halves };
+        await new Promise((resolve) => setTimeout(resolve, step));
+    }
+}
+
+/**
+ * The same, for the register suites, which address a control by selector.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} selector
+ * @param {{ timeout?: number, step?: number }} [options]
+ */
+export async function wholeRingFor(page, selector, { timeout = 2000, step = 50 } = {}) {
+    const until = Date.now() + timeout;
+    for (;;) {
+        const found = await indicatorFor(page, selector);
+        const halves = bothHalves(found);
+        if ((halves.outer && halves.inner) || Date.now() > until) return { found, ...halves };
+        await new Promise((resolve) => setTimeout(resolve, step));
+    }
+}

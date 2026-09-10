@@ -29,7 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { bothHalves, indicatorFor, shadowLayers, tabToSelector } from './ring.mjs';
+import { bothHalves, shadowLayers, tabToSelector, wholeRingFor } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -207,7 +207,9 @@ for (const [channel, url] of CHANNELS) {
             // never lands resolves happily, and every read below then
             // measures the RESTING element and passes [G15].
             await tabToSelector(page, MIRROR);
-            const found = await indicatorFor(page, MIRROR);
+            // Read until the ring is whole [fix-1]: the keyboard landed a
+            // moment ago and the ring arrives through a transition.
+            const { found } = await wholeRingFor(page, MIRROR);
             expect(found.focused, 'the keyboard actually reached the mirror button').toBe(true);
             const focused = shadowLayers(found.boxShadow);
             expect(

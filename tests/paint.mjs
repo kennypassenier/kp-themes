@@ -79,3 +79,52 @@ export const measured = (locator, fn, arg, message) => expect.poll(() => locator
  * @param {import('@playwright/test').Page} page
  */
 export const bootGone = (page) => expect(page.locator('.kp-boot')).toHaveCount(0);
+
+/**
+ * Start remembering which animations the page runs, before it runs any.
+ *
+ * The readers above wait for a value to ARRIVE, which is the right answer
+ * for anything that settles: a colour, a box, a box-shadow. It is the
+ * wrong answer for a finite animation, because there the value leaves
+ * again — `animation-name` reads as the keyframe while it runs and as
+ * nothing afterwards. A test that polls for it has not become patient;
+ * it has become a test that fails whenever the machine is fast enough to
+ * finish the animation first.
+ *
+ * That is the shape that failed in Kenny's verify run of 2026-09-10:
+ * `register-shade-light.spec.mjs` read `animationName` on the first word
+ * one moment after the page loaded and got `""`. Three specs read a
+ * running keyframe that way; four others already did it correctly, by
+ * arming a listener in an init script before the page existed. This is
+ * that idiom, in one place [fix-1].
+ *
+ * Call it BEFORE the navigation — an init script added after `goto` is
+ * too late for the animation it was meant to catch.
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+export const recordAnimations = (page) =>
+    page.addInitScript(() => {
+        /** @type {string[]} */
+        const seen = [];
+        Object.defineProperty(window, 'kpAnimationsSeen', { value: seen });
+        // Capture on the window: AnimationEvent bubbles, but a listener in
+        // the capture phase also catches one whose target is removed from
+        // the document before the event finishes bubbling.
+        addEventListener('animationstart', (event) => seen.push(/** @type {AnimationEvent} */ (event).animationName), true);
+    });
+
+/**
+ * The animation names the page has started, read until yours is among them.
+ *
+ * The pairing for `recordAnimations`: the record only grows, so this can
+ * be asked at any moment after the animation began and still answer.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} [message]
+ */
+export const animationsSeen = (page, message) =>
+    expect.poll(
+        () => page.evaluate(() => [.../** @type {string[]} */ (/** @type {any} */ (window).kpAnimationsSeen ?? [])]),
+        message ? { message } : undefined,
+    );

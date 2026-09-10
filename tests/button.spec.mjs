@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
 // The ring measurement lives in tests/ring.mjs since W4, because the
 // assembly suite measures the same ring on the destructive item inside a
 // row menu and two copies of it would drift apart.
-import { bothHalves, indicator, paintedFocusDelta, tabTo, wearTheme } from './ring.mjs';
+import { paintedFocusDelta, tabTo, wearTheme, wholeRing } from './ring.mjs';
 
 const FIXTURE = '/tests/fixtures/button.html';
 
@@ -76,14 +76,15 @@ test.describe('the button', () => {
             const broken = [];
             for (const theme of THEMES) {
                 await wearTheme(page, theme);
-                const found = await indicator(page, id);
+                // Read until the ring is whole [fix-1]: the theme changed a
+                // moment ago and the ring arrives through a transition.
+                const { found, outer, inner, changed } = await wholeRing(page, id);
                 expect(found.focused, `${theme}: the keyboard lost the button`).toBe(true);
 
                 // The outer half is an outline in --focus-ring-contrast,
                 // the inner one a box-shadow layer in --focus-ring with a
                 // real spread: `0px 0px 0px 0px` is a layer that paints
                 // nothing, and that is exactly what the layer collision left.
-                const { outer, inner, changed } = bothHalves(found);
                 if (!outer || !inner || !changed) {
                     const why = !changed ? 'focus changes nothing' : 'half a ring';
                     broken.push(`${theme}: ${why} — outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);

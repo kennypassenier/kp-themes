@@ -1308,6 +1308,85 @@ diagnosing, destroying the traces Kenny's failing run had left behind —
 Phase 10: the evidence of a live-found fault is collected before anything
 is re-run.
 
+## fix-1 · KT16's measure was written for the half of the fault it was found in
+
+Found by Kenny on 2026-09-10, in the `npm run verify` that KT16's own
+field 7 named as its measurement: `gates 0:12 ok`, `browser 7:14 FAILED`.
+Two tests, both firefox, both a read with one moment — the shape KT16
+exists about, one day after KT16 shipped.
+
+**1 · What went wrong.** `tests/dashboard.spec.mjs`, "the confirmation's
+buttons carry both halves of the ring — React", reported forest as
+`shadow rgb(28, 53, 41) 0px 0px 0px 2px, rgb(95, 143, 125) 0px 0px 0px
+0px` — the inner layer at nought spread on its way to two, read
+mid-transition. `tests/register-shade-light.spec.mjs`, "the headline's
+words resolve out of a blur", read `animationName` on the first word and
+got `""` where `kp-word-in` was expected. Both artefacts were copied out
+of `test-results/` before anything was re-run, which is the lesson KT16
+could not apply to itself.
+
+**2 · Which gate let it through.** None, again, and for the same reason:
+`npm run gates` reads files. What let it survive KT16 is narrower and
+more interesting — KT16 measured "a read of computed style AFTER a click,
+a hover or a press", found 63 of them in the register specs, and
+converted those. Neither of these two is in that set. One is in a spec
+that is not a register spec; the other reads after a page load rather
+than after an input.
+
+**3 · Where else the same fault sits.** Named as a property and then
+searched, per §8's own rule. The property is **a test that reads a value
+which is only true for a moment**, and it has two halves that want
+opposite answers:
+
+- _A value that settles_ — a colour, a box, a box-shadow. Waiting works.
+  Searched for every call of `indicator()` and `indicatorFor()`, the
+  focus-ring readings: **four**, in `tests/dashboard.spec.mjs` (two),
+  `tests/button.spec.mjs` and `tests/register-formal.spec.mjs`. All four
+  read once, right after the theme changed or the keyboard landed.
+- _A value that passes_ — a finite animation. Waiting cannot work,
+  because polling for a name that has already gone finds nothing and
+  then times out. Searched for every spec read of `animationName`
+  compared against a keyframe rather than against `none`: **three**, in
+  `register-shade-light`, `register-high-contrast` and `register-deco`.
+  Four other specs already did it correctly — `register-dark`,
+  `register-light`, `register-shade-dark` and `register-solstice` arm a
+  listener or an observer in an init script before the page exists. The
+  right idiom was already in the repository, in four places, unnamed.
+
+**4 · How we prevent recurrence.** The idiom gets a name and one home.
+`tests/paint.mjs` gains `recordAnimations(page)` — an init script that
+remembers every `animationstart` — and `animationsSeen(page)`, which
+polls a record that only grows and therefore cannot miss its moment.
+`tests/ring.mjs` gains `wholeRing()` and `wholeRingFor()`, which take the
+focus-ring reading again until both halves are painted and return the
+last reading either way, so a report across twenty-five themes still
+names what it saw. All seven sites use them.
+
+**5 · What the remedy costs.** Nothing when the value is already right:
+both readers return on the first attempt. `recordAnimations` costs one
+init script per test that uses it. `wholeRing` costs up to two seconds on
+a ring that never becomes whole — which is a test that was going to fail
+anyway.
+
+**6 · Who enforces it.** Discipline, for now. The gate KT16 declined
+would not have caught either of these, and one of them it would have made
+worse.
+
+**7 · How we measure that it works.** At Kenny's next full `npm run
+verify`. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback.** KT16's field 8 named one: refuse a bare
+`getComputedStyle` anywhere in a spec, about 465 sites. It is on the
+table and it is not recommended, because these two failures show what it
+would do — a blanket "wrap it in a poll" pushes the animation half of the
+fault into a poll that waits the full timeout for a value that left
+before it started looking. The narrower fallback is two gates that match
+the two halves: refuse a spec read of `animationName` against a keyframe
+name, and refuse `indicator()` outside `wholeRing()`.
+
+**9 · When the measure is reviewed.** At this round's Phase 10, together
+with KT16, since this is the same fault twice.
+
 ## KT13 · A layout class beat the `hidden` attribute, and the test read the attribute
 
 Approved by Kenny on 2026-09-08, all nine fields unchanged. His remark on

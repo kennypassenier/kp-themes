@@ -44,7 +44,7 @@
 
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { bothHalves, indicator, paintedFocusDelta, tabTo, wearTheme } from './ring.mjs';
+import { paintedFocusDelta, tabTo, wearTheme, wholeRing } from './ring.mjs';
 
 const PAGE = '/tests/fixtures/dashboard.html';
 
@@ -254,9 +254,10 @@ for (const channel of CHANNELS) {
         const broken = [];
         for (const theme of THEMES) {
             await wearTheme(page, theme);
-            const found = await indicator(page, `${channel.prefix}-delete-r1`);
+            // Read until the ring is whole, not once [fix-1]: the theme just
+            // changed and the ring arrives through a transition.
+            const { found, outer, inner } = await wholeRing(page, `${channel.prefix}-delete-r1`);
             expect(found.focused, `${theme}: the keyboard lost the menu item`).toBe(true);
-            const { outer, inner } = bothHalves(found);
             if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
         }
         expect(broken, `half a ring on the destructive menu item in:\n${broken.join('\n')}`).toEqual([]);
@@ -321,9 +322,11 @@ for (const channel of CHANNELS) {
         const broken = [];
         for (const theme of THEMES) {
             await wearTheme(page, theme);
-            const found = await indicator(page, 'confirm-cancel');
+            // The reading that failed in Kenny's verify run of 2026-09-10,
+            // mid-transition on forest: the second shadow layer at nought
+            // spread on its way to two. Read until it is the value [fix-1].
+            const { found, outer, inner } = await wholeRing(page, 'confirm-cancel');
             expect(found.focused, `${theme}: the keyboard is not on Cancel`).toBe(true);
-            const { outer, inner } = bothHalves(found);
             if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
         }
         expect(broken, `half a ring on the confirmation's Cancel in:\n${broken.join('\n')}`).toEqual([]);
