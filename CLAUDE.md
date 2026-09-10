@@ -154,15 +154,16 @@ Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 There is no CI. `.github/workflows/ci.yml` is deleted, `main` requires no
 status check, and nothing runs on a server — 254 runs in five days and
 35.9 hours of waiting, on a project whose every change Kenny approves
-himself. Five commands replace it, and three of them are his to give:
+himself. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
+the keyboard work need not be (see the rule from correction fix-2 below):
 
-| Command                 | What                                                             | When                             |
-| ----------------------- | ---------------------------------------------------------------- | -------------------------------- |
-| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook        |
-| `npm run test:affected` | the specs a change touches, Firefox only                         | during work                      |
-| `npm run test:browser`  | the whole suite, both engines                                    | when Kenny asks                  |
-| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading     |
-| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his command |
+| Command                 | What                                                             | When                                                                                                            |
+| ----------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook                                                                                       |
+| `npm run test:affected` | the specs a change touches, Firefox only                         | during work                                                                                                     |
+| `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks |
+| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                    |
+| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                     |
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
 contrast, the design invariants, the flash threshold, the reduced-motion
@@ -200,6 +201,31 @@ or a consumer can read at any time, where before there was only a moment
 you had to have been listening for.
 
 Discipline-enforced for the habit, code-enforced for the state. Full
+record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
+## Project rule from correction fix-2 (2026-09-10)
+
+The whole browser suite is not Claude's to start. `npm run test:browser`
+is `playwright test` — 2528 tests, both engines — and the no-CI table
+gives it to Kenny. Claude ran it anyway, and it emptied `test-results/`
+with his two failing tests still in it; only a copy taken beforehand kept
+the evidence alive.
+
+**Kenny's amendment, the same day, for this project only.** Before a
+release Claude ASKS in a form whether it may run the suite, and with his
+go Claude runs it. His words: _"Dan beslis ik nog altijd en moet ik niet
+zelf die test laten draaien."_ The decision stays where it was; the
+typing moves. Outside that moment nothing changes — the whole suite is
+still his to ask for, and it does not widen to other projects.
+
+During work the command is `npm run test:affected` and nothing else: it
+runs the specs a change touches, in firefox alone, because Kenny's own
+browser is a firefox derivative and firefox has been the odd engine here
+fourteen times against chromium's six. Where a drill wants the second
+engine, Claude asks rather than decides.
+
+Discipline-enforced. If it recurs, `test:browser` gains a guard that
+refuses unless an environment variable only Kenny sets is present. Full
 record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
 ## Project rule from correction fix-1 (2026-09-10)
