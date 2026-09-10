@@ -858,8 +858,14 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     // can never fall out of the tarball by being forgotten — only by
     // leaving the manifest, which is a decision with its own gate.
     const { contents, EXCLUDED } = await import('./consumer-tar.mjs');
-    const manifest = readFileSync(new URL('../SHA256SUMS', import.meta.url), 'utf8');
-    const files = contents(manifest);
+    // The manifest is GENERATED here rather than read from SHA256SUMS.
+    // That file is a release artefact and is gitignored, so reading it
+    // passes on a machine where a previous release left one lying about
+    // and fails on every fresh checkout — which is exactly what the
+    // v5.1.0 release job found, red, while `npm run gates` was green
+    // here [fix-3].
+    const { checksums } = await import('./checksums.mjs');
+    const files = contents(checksums());
     assert.equal(EXCLUDED.length, 2, 'the exclusions are fonts/ and *.map, and adding a third is a decision');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');

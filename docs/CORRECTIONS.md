@@ -1308,6 +1308,55 @@ diagnosing, destroying the traces Kenny's failing run had left behind —
 Phase 10: the evidence of a live-found fault is collected before anything
 is re-run.
 
+## fix-3 · A check read a release artefact, so it was green here and red on a fresh checkout
+
+Found by the `v5.1.0` release job on 2026-09-10, minutes after a green
+`npm run verify` on this machine.
+
+**1 · What went wrong.** `gates/gates.test.mjs`, the CF1 test written for
+this very release, read `SHA256SUMS` from the repository root. That file
+is a release artefact, it is gitignored, and it existed here only because
+a previous release had left one behind — dated 2026-09-09 04:30. On the
+runner it does not exist: `Error: ENOENT: no such file or directory, open
+'/home/runner/work/kp-themes/kp-themes/SHA256SUMS'`, and the job stopped
+before it could build a single asset.
+
+**2 · Which gate let it through.** `npm run gates` ran it and passed, on
+a machine holding the artefact. The gate was not wrong about the code; it
+was reading a file the repository does not contain, which no check of
+this project had a reason to notice.
+
+**3 · Where else the same fault sits.** The property is "a check reads a
+path `.gitignore` excludes", and it was searched rather than guessed:
+every ignored entry was taken from `.gitignore` and grepped across
+`gates/`. Four files name `SHA256SUMS`, and only this one READ it —
+`consumer-tar.mjs` reads it at release time and says so when it is
+missing, `checksums.mjs` writes it, `check-baseline.mjs` names the
+vendored baselines' own copies, which are un-ignored on purpose and do
+travel with the repository. `node_modules/` is named by two, correctly.
+So: one instance, and the search is the answer rather than the count.
+
+**4 · How we prevent recurrence.** The test generates the manifest
+instead of reading one: `checksums()` builds the same text from the
+repository's own files, so there is nothing left to be stale or absent.
+
+**5 · What the remedy costs.** Fifteen milliseconds of hashing per run.
+
+**6 · Who enforces it.** Discipline, plus the release job itself, which
+is the only thing here that ever runs on a checkout with nothing lying
+around.
+
+**7 · How we measure that it works.** At the next tag: the release job
+reaches its assets. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback.** A gate that greps `gates/` for a read of any path
+`.gitignore` excludes, and refuses it.
+
+**9 · When the measure is reviewed.** At this round's Phase 10.
+
+**Drilled.** With the fix reverted and `SHA256SUMS` moved aside, CF1 goes
+red exactly as the runner saw it; with the fix and no artefact, 99 pass.
+
 ## fix-2 · Claude ran the whole browser suite without being asked
 
 Found by Kenny on 2026-09-10, reading a progress line: "jouw eigen run? ik
