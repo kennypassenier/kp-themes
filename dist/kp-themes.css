@@ -5167,6 +5167,19 @@
         line-height: 1.4;
         background: var(--muted);
         color: var(--muted-foreground);
+        /* The overflow floor above puts five components on `anywhere`, and
+     * for four of them that is the whole story. The badge is the one
+     * whose content is usually a label — and a label cut in half reads
+     * worse than a column that grew. chassis-rs measured "acti / ve" in
+     * a status column at a 1000px viewport [ask-1], where the badge was
+     * narrow because the column was, not because the value was long.
+     *
+     * Both cases are real, so neither becomes the rule: the default is
+     * unchanged, and a consumer whose badges only ever hold labels sets
+     * `--kp-badge-wrap: normal` on the badge or on anything above it.
+     * A custom property rather than a modifier class, because the place
+     * that knows is usually the column, not the badge. */
+        overflow-wrap: var(--kp-badge-wrap, anywhere);
     }
 
     /* --- Card [TH6] ------------------------------------------------------ */

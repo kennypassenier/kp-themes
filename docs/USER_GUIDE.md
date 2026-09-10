@@ -220,6 +220,28 @@ Framework-free, the same markup by hand:
 <span class="kp-badge" data-kp-semantic data-status="offer">Aanbod</span>
 ```
 
+**A badge that only ever holds a label.** Five components share one rule
+that lets an unbroken value break rather than push the page sideways:
+`.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable` all
+carry `overflow-wrap: anywhere`. It was measured — before that rule a
+badge with a 44-character id in it was 485px wide in a 360px viewport —
+and it is still the default.
+
+The badge is the one of the five whose content is usually a word, and a
+word cut in half in a narrow column reads worse than a column that grew.
+So it takes a knob, and the place that knows is normally the column
+rather than the badge:
+
+```css
+.status-column {
+    --kp-badge-wrap: normal;
+}
+```
+
+Set it to `normal` where badges hold labels; leave it alone where one
+might hold an id. Reported by chassis-rs [ask-1], which measured "acti /
+ve" in a status column at a 1000px viewport.
+
 ### Two contracts that are enforced, and can be taken back
 
 **A destructive action must offer an undo or a confirmation** [DI10]. Not

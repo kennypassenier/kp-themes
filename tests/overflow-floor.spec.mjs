@@ -22,6 +22,7 @@
 // before the rule was written it was the one of the five already green.
 
 import { expect, test } from '@playwright/test';
+import { measured } from './paint.mjs';
 
 const FIXTURE = '/tests/fixtures/narrow.html';
 
@@ -66,4 +67,41 @@ test.describe('the overflow floor', () => {
             expect(problems.join('\n'), problems.join('\n')).toBe('');
         });
     }
+
+    // The knob the floor grew after chassis-rs reported a label cut in
+    // half [ask-1]. The floor itself is unchanged and the five tests above
+    // still measure it; this measures the way out of it for the one
+    // component whose content is usually a label.
+    //
+    // The reading is the painted height, not the declared value: a badge
+    // that broke its word is two line boxes tall, one that did not is one.
+    // Reading `overflow-wrap` back would only prove the browser stored
+    // what the stylesheet said [KT13].
+    //
+    // Drill [KT3]: `overflow-wrap: var(--kp-badge-wrap, anywhere)` removed
+    // from `.kp-badge` in css/components.css, so the badge fell back to the
+    // shared rule's plain `anywhere` — the knob test went red in both
+    // browsers (both boxes two lines tall), the default test stayed green.
+    test('the badge answers --kp-badge-wrap, and anywhere stays the default [ask-1]', async ({ page }) => {
+        await page.setViewportSize({ width: 320, height: 800 });
+        await page.goto(FIXTURE);
+        await page.waitForLoadState('load');
+
+        // One reading rather than two, because the claim is a comparison:
+        // the default badge is taller than the one that kept its word
+        // whole. A word broken over two lines makes the box roughly twice
+        // as tall, so 1.5 is comfortably clear of a rounding difference,
+        // and a knob that did nothing would answer exactly 1.
+        const ratio = measured(
+            page.locator('body'),
+            () => {
+                /** @param {string} id */
+                const height = (id) => /** @type {HTMLElement} */ (document.querySelector(`[data-test="${id}"]`)).getBoundingClientRect().height;
+                return Math.round((height('wrap-default') / height('wrap-knob')) * 100) / 100;
+            },
+            undefined,
+            'the default badge should paint taller than the one with --kp-badge-wrap: normal',
+        );
+        await ratio.toBeGreaterThan(1.5);
+    });
 });

@@ -47,6 +47,20 @@
             </span>
         </p>
 
+        <!-- The badge's wrap is a knob [ask-1]. Two boxes too narrow for one
+             short word: the left one takes the package's default and breaks
+             it, the right one inherits `--kp-badge-wrap: normal` from its
+             container and does not. The container is where the property is
+             set on purpose — a consumer knows a status column holds labels,
+             the badge itself does not. -->
+        <p data-case="wrap-default" style="width: 44px">
+            <span class="kp-badge" data-test="wrap-default">active</span>
+        </p>
+
+        <p data-case="wrap-knob" style="width: 44px; --kp-badge-wrap: normal">
+            <span class="kp-badge" data-test="wrap-knob">active</span>
+        </p>
+
         <p data-case="copyable">
             <span class="kp-copyable" data-test="copyable">
                 <span class="kp-copyable__value">AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEE</span>

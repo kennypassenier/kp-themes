@@ -49,7 +49,9 @@ measurements: 693 kB minified for everything at once, against an average
 of 20 kB per register (dark 44 kB, light 12 kB) for loading the one in
 use. Neither is more supported than the other.
 
-Nothing in this release touches a theme, a token or a rule.
+No colour and no token moves in this release. Two rules do, and both are
+below: a component gained a knob and the Home Assistant themes gained a
+register. Every existing page renders exactly as it did.
 
 **A reveal's state is readable** [TF2, KT16]. `js/effects.js` sets
 `data-kp-reveal-state` on the element it handled — `armed` (wired to a
@@ -65,6 +67,31 @@ in Kenny's verify run. The tests are repaired the same way the state is:
 of reading one moment, 22 places that clicked the boot overlay's Skip now
 wait for the overlay to actually leave, and `tests/paint.mjs` holds the
 readers. Recorded as KT16.
+
+**A badge can be told not to break its word** [ask-1]. Five components
+share one rule that lets an unbroken value break rather than push the
+page sideways — measured before it existed at 607, 485, 483 and 581px in
+a 360px viewport. chassis-rs found the other half of that trade: in a
+narrow status column the badge cut "active" into "acti / ve", because the
+badge was narrow through its column and not through its content. Both
+cases are real, so neither becomes the rule. The default is unchanged and
+`.kp-badge` now reads `overflow-wrap: var(--kp-badge-wrap, anywhere)`; a
+consumer whose badges only hold labels sets `--kp-badge-wrap: normal` on
+the column. A custom property rather than a modifier class, because the
+place that knows is usually the column rather than the badge.
+
+**Cyberpunk and synthwave wear their register on a Home Assistant
+dashboard** [feat-ha-1]. A generated Home Assistant theme carried 23
+colour variables, the card radius and width, and the theme's own duration
+as a transition — the colour travelled and the expression did not, because
+a dashboard has no `.kp-*` class for a register to hang on. Where card-mod
+is installed, those two themes now inject their own: cyberpunk's notched
+card corner, its signal-yellow tick and its scanlines at DI9's 0.06
+ceiling; synthwave's fixed horizon with the floor running to a vanishing
+point, and cards as lit panels. Every colour and face comes from the same
+tokens as the rest of the file. The other twenty-three are unchanged and
+carry colour and timing only — a register is a design choice per theme,
+and two of them have been made.
 
 ## 5.0.0 — 2026-09-09
 
