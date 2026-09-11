@@ -157,7 +157,7 @@
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__aside</code></td><td></td><td><code>--kp-sidebar-width</code></td></tr>
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__main</code></td><td></td><td><code>--kp-sidebar-break</code></td></tr>
                             <tr><td><code>.kp-sidebar[data-kp-sidebar]</code></td><td>── The side column that can be put away [feat-nav-2, scope-10] ── Opt-in through the attribute: four pages in this repository already use .kp-sidebar as a plain two-column layout, and a package does not move furniture a consumer has already placed. The state attribute takes 'true' or 'false' rather than being there or not, because there are three states and not two: absent means the width decides, which is what a page gets before any script has run and what it keeps if none ever does. Wide, the aside is there and 'false' takes it away; narrow, the aside is away and 'true' brings it back. 40rem is the package's one narrow step [TH26] and this stands on the same one, so a page does not collapse its bar at one width and its sidebar at another. Narrow and open, the aside covers the main column. `--push` is the way out [KT6]: it puts the aside back in the flow, where flex-wrap gives it its own row and the main moves down instead of being covered.</td><td>—</td></tr>
-                            <tr><td><code>.kp-sidebar[data-kp-sidebar] &gt; .kp-sidebar__toggle</code></td><td>Its own row above both columns, so opening and closing does not move the columns sideways.</td><td>—</td></tr>
+                            <tr><td><code>.kp-sidebar[data-kp-sidebar] &gt; .kp-sidebar__toggle</code></td><td>Its own row above both columns, so opening and closing does not move the columns sideways — and above the drawer as well, because the covering form starts at the top of the sidebar and would otherwise lie over the one button that closes it. Found by the test that presses it twice.</td><td><code>--kp-sidebar-layer</code></td></tr>
                             <tr><td><code>.kp-sidebar[data-kp-sidebar][data-kp-sidebar-open='false'] &gt; .kp-sidebar__aside</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-section</code></td><td>A section of a page: space above it, and nothing else. The heading inside keeps whatever the theme gives it.</td><td><code>--kp-section-gap</code>, <code>--kp-space-2xl</code></td></tr>
                             <tr><td><code>.kp-section:first-child</code></td><td></td><td>—</td></tr>
@@ -173,7 +173,7 @@
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
-                    <h2 class="kp-fw-semibold">The 25 knobs</h2>
+                    <h2 class="kp-fw-semibold">The 26 knobs</h2>
                     <p class="kp-prose">Set any of these on a page, a theme or a single element. Each falls back to the scale.</p>
                     <ul class="kp-row kp-gap-sm">
                         <li><code>--kp-autogrid-gap</code></li>
@@ -192,6 +192,7 @@
                         <li><code>--kp-section-gap</code></li>
                         <li><code>--kp-sidebar-break</code></li>
                         <li><code>--kp-sidebar-gap</code></li>
+                        <li><code>--kp-sidebar-layer</code></li>
                         <li><code>--kp-sidebar-width</code></li>
                         <li><code>--kp-space-2xl</code></li>
                         <li><code>--kp-space-lg</code></li>

@@ -73,6 +73,19 @@
             </div>
         </div>
 
+        <!-- The fifth: no width of its own, so it follows the viewport and
+             a test can walk it across the 40rem step without touching a
+             button. What the button ANNOUNCES has to follow the paint. -->
+        <div class="kp-sidebar" data-kp-sidebar data-test="fluid">
+            <button type="button" class="kp-sidebar__toggle" data-kp-sidebar-toggle data-test="fluid-toggle">Menu</button>
+            <nav class="kp-sidebar__aside" data-test="fluid-aside" aria-label="Sections">
+                <a href="#a">One</a>
+            </nav>
+            <main class="kp-sidebar__main" data-test="fluid-main">
+                <p>The column that follows the window.</p>
+            </main>
+        </div>
+
         <script type="module" src="/js/auto.js"></script>
     </body>
 </html>

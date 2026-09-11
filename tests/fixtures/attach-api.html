@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>What attach returns, and what it announces</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- A harness rather than a page. js/auto.js attaches everything and
+             throws the handle away, which is the right thing for a consumer
+             who wants one script tag and is exactly why the two things this
+             page exists for were reachable by no test: the event nobody
+             listened to, and the detach nobody held.
+
+             So this page does the attaching itself, keeps the handle, and
+             writes down every event it hears. Both behaviours, one harness,
+             because they are the same two questions asked of two modules. -->
+        <div style="inline-size: 360px">
+            <!-- The wrapper is the container the bar's narrow rule reads;
+                 without it the toggle is never painted at all. -->
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation" data-test="nav">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <button type="button" data-kp-nav-toggle data-test="nav-toggle" class="kp-nav__toggle"></button>
+                    <ul class="kp-nav__links" data-test="nav-links">
+                        <li><a class="kp-nav__link" href="#a">One</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div style="inline-size: 360px">
+            <div class="kp-sidebar" data-kp-sidebar data-test="side">
+                <button type="button" class="kp-sidebar__toggle" data-kp-sidebar-toggle data-test="side-toggle">Menu</button>
+                <nav class="kp-sidebar__aside" data-test="side-aside" aria-label="Sections">
+                    <a href="#a">One</a>
+                </nav>
+                <main class="kp-sidebar__main" data-test="side-main">
+                    <p>The column beside it.</p>
+                </main>
+            </div>
+        </div>
+
+        <script type="module">
+            import { attachNavToggles, attachSidebars } from '/js/components.js';
+
+            // The page writes down what it heard, so a test reads a record
+            // rather than having to have been listening at the right moment.
+            window.kpHeard = [];
+            for (const name of ['kp-nav-toggle', 'kp-sidebar-toggle']) {
+                document.addEventListener(name, (event) => {
+                    window.kpHeard.push({ name, open: event.detail?.open, on: event.target.dataset.test });
+                });
+            }
+
+            const detaches = [attachNavToggles(document), attachSidebars(document)];
+            window.kpDetach = () => {
+                for (const detach of detaches) detach();
+            };
+        </script>
+    </body>
+</html>

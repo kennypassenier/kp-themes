@@ -142,6 +142,28 @@ test.describe('the sidebar that can be put away', () => {
         await page.evaluate(() => localStorage.removeItem('kp-test-sidebar'));
     });
 
+    test('what the button announces follows the width, not the moment it was wired [feat-nav-2, KT13]', async ({ page }) => {
+        // Live-found on the demonstration page, standing rule 8. The module
+        // reads the paint once at attach and never again, so a window that
+        // crosses the 40rem step leaves the button saying the opposite of
+        // what is on the screen — and it fails silently, for exactly the
+        // people who cannot see that it failed.
+        await page.setViewportSize({ width: 1100, height: 800 });
+        await page.goto(FIXTURE);
+        const { toggle, aside } = parts(page, 'fluid');
+
+        await width(aside, 'wide: the aside is painted').toBeGreaterThan(0);
+        await expect(toggle, 'wide: and the button says so').toHaveAttribute('aria-expanded', 'true');
+
+        await page.setViewportSize({ width: 420, height: 800 });
+        await width(aside, 'narrow: the same aside is gone').toBe(0);
+        await expect(toggle, 'narrow: and the button has to have noticed').toHaveAttribute('aria-expanded', 'false');
+
+        await page.setViewportSize({ width: 1100, height: 800 });
+        await width(aside, 'wide again: back on the screen').toBeGreaterThan(0);
+        await expect(toggle, 'wide again: and said so again').toHaveAttribute('aria-expanded', 'true');
+    });
+
     test('a sidebar nobody asked to hide keeps the layout it had [stage 1.4]', async ({ page }) => {
         // The opt-in, measured from the other side: the documentation site
         // and three example pages use .kp-sidebar as a plain two-column

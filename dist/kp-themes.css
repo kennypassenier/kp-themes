@@ -35733,9 +35733,14 @@
     }
 
     /* Its own row above both columns, so opening and closing does not move
-       the columns sideways. */
+       the columns sideways — and above the drawer as well, because the
+       covering form starts at the top of the sidebar and would otherwise
+       lie over the one button that closes it. Found by the test that
+       presses it twice. */
     .kp-sidebar[data-kp-sidebar] > .kp-sidebar__toggle {
         flex-basis: 100%;
+        position: relative;
+        z-index: calc(var(--kp-sidebar-layer, 40) + 1);
     }
 
     .kp-sidebar[data-kp-sidebar][data-kp-sidebar-open='false'] > .kp-sidebar__aside {

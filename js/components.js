@@ -444,13 +444,21 @@ export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED
             return nav.hasAttribute('data-kp-nav-open') ? s.closeMenu : s.menu;
         };
         /** @param {boolean} open */
-        const set = (open) => {
+        const write = (open) => {
             nav.toggleAttribute('data-kp-nav-open', open);
             button.setAttribute('aria-expanded', String(open));
             button.setAttribute('aria-label', label());
+        };
+        /** @param {boolean} open */
+        const set = (open) => {
+            write(open);
             nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
         };
-        set(nav.hasAttribute('data-kp-nav-open'));
+        // Attaching is not a toggle. This wrote the starting state THROUGH
+        // the dispatch, so every consumer listening heard a close that
+        // nobody performed, on every page load — found by the first test
+        // ever to listen.
+        write(nav.hasAttribute('data-kp-nav-open'));
 
         const onClick = () => set(!nav.hasAttribute('data-kp-nav-open'));
         /** @param {KeyboardEvent} event */
@@ -576,6 +584,22 @@ export function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWN
         if (remembered === 'true' || remembered === 'false') set(remembered === 'true');
         else say(painted());
 
+        // And keep saying it. Reading the paint once is right at attach and
+        // wrong ever after: while the attribute is absent the width has the
+        // say, and a window crossing the 40rem step — a phone turning
+        // sideways — moves the aside without anybody pressing anything.
+        // The button would go on announcing the opposite, silently, to the
+        // people who cannot see that it did. Live-found on the round-seven
+        // demonstration page.
+        let watcher = null;
+        if (typeof ResizeObserver === 'function') {
+            watcher = new ResizeObserver(() => {
+                if (sidebar.hasAttribute('data-kp-sidebar-open')) return;
+                say(painted());
+            });
+            watcher.observe(aside);
+        }
+
         const onClick = () => set(!painted());
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
@@ -599,6 +623,7 @@ export function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWN
         button.ownerDocument.addEventListener('click', onOutside, true);
 
         cleanups.push(() => {
+            watcher?.disconnect();
             button.removeEventListener('click', onClick);
             sidebar.removeEventListener('keydown', /** @type {EventListener} */ (onKey));
             button.ownerDocument.removeEventListener('click', onOutside, true);

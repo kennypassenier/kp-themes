@@ -655,13 +655,16 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       const s = { ...getStrings(), ...strings };
       return nav.hasAttribute("data-kp-nav-open") ? s.closeMenu : s.menu;
     };
-    const set = (open) => {
+    const write = (open) => {
       nav.toggleAttribute("data-kp-nav-open", open);
       button.setAttribute("aria-expanded", String(open));
       button.setAttribute("aria-label", label());
+    };
+    const set = (open) => {
+      write(open);
       nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
     };
-    set(nav.hasAttribute("data-kp-nav-open"));
+    write(nav.hasAttribute("data-kp-nav-open"));
     const onClick = () => set(!nav.hasAttribute("data-kp-nav-open"));
     const onKey = (event) => {
       if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
@@ -753,6 +756,14 @@ function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWNED, sto
     }
     if (remembered === "true" || remembered === "false") set(remembered === "true");
     else say(painted());
+    let watcher = null;
+    if (typeof ResizeObserver === "function") {
+      watcher = new ResizeObserver(() => {
+        if (sidebar.hasAttribute("data-kp-sidebar-open")) return;
+        say(painted());
+      });
+      watcher.observe(aside);
+    }
     const onClick = () => set(!painted());
     const onKey = (event) => {
       if (event.key !== "Escape" || !painted()) return;
@@ -776,6 +787,7 @@ function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWNED, sto
     );
     button.ownerDocument.addEventListener("click", onOutside, true);
     cleanups.push(() => {
+      watcher?.disconnect();
       button.removeEventListener("click", onClick);
       sidebar.removeEventListener(
         "keydown",
