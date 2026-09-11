@@ -141,7 +141,7 @@
                     <p class="kp-prose">Classes for the shape of a page, in the cascade layer after the components, so a layout class wins on a component that sets the same property itself. Every value reads a knob whose default is the theme spacing scale.</p>
                 </header>
                 <section class="kp-section" data-sc-section="classes" id="classes">
-                    <h2 class="kp-fw-semibold">The 23 rules</h2>
+                    <h2 class="kp-fw-semibold">The 24 rules</h2>
                     <div class="sc-example__live"><table class="kp-table"><thead><tr><th>Selector</th><th>What it is for</th><th>Knobs</th></tr></thead><tbody>
                             <tr><td><code>.kp-page</code></td><td>The page itself: a measure to read within, centred, with margins that shrink on a phone instead of stepping at a breakpoint.</td><td><code>--kp-page-max</code>, <code>--kp-page-pad</code>, <code>--kp-space-md</code>, <code>--kp-space-xl</code>, <code>--kp-page-pad-block</code></td></tr>
                             <tr><td><code>.kp-stack</code></td><td>Vertical rhythm. This is the fault the round started from: two fields and a button touched because a field has no vertical margin and nothing above it supplied one.</td><td><code>--kp-stack-gap</code>, <code>--kp-space-md</code></td></tr>
@@ -165,11 +165,12 @@
                             <tr><td><code>.kp-text-center</code></td><td></td><td>—</td></tr>
                             <tr><td><code>.kp-mono</code></td><td></td><td><code>--kp-mono-face</code>, <code>--kp-mono-size</code></td></tr>
                             <tr><td><code>.kp-code-block</code></td><td>A block of code that breaks rather than widening the page. A key or a token has no spaces to break at, which is why anywhere and not break-word.</td><td><code>--kp-space-md</code>, <code>--kp-space-lg</code>, <code>--kp-mono-face</code></td></tr>
+                            <tr><td><code>[data-kp-sticky]</code></td><td>Opt-in, by an attribute rather than a class, because staying put is a behaviour of that element on that page and not a kind of element. The offset above is what pairs with it: a page that sticks its nav sets --kp-scroll-offset to the height it stuck.</td><td><code>--kp-sticky-top</code>, <code>--kp-sticky-layer</code></td></tr>
                             <tr><td><code>[aria-busy='true']</code></td><td>Standing rule 31 says a button that starts something slow shows it. The behaviour was already in the package and the styling was not, so the chassis kit wrote this rule itself. It belongs here.</td><td><code>--kp-busy-opacity</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
-                    <h2 class="kp-fw-semibold">The 23 knobs</h2>
+                    <h2 class="kp-fw-semibold">The 25 knobs</h2>
                     <p class="kp-prose">Set any of these on a page, a theme or a single element. Each falls back to the scale.</p>
                     <ul class="kp-row kp-gap-sm">
                         <li><code>--kp-autogrid-gap</code></li>
@@ -195,6 +196,8 @@
                         <li><code>--kp-space-sm</code></li>
                         <li><code>--kp-space-xl</code></li>
                         <li><code>--kp-stack-gap</code></li>
+                        <li><code>--kp-sticky-layer</code></li>
+                        <li><code>--kp-sticky-top</code></li>
                     </ul>
                 </section>
                 </div>

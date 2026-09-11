@@ -90,14 +90,35 @@ one is the fault correction KT6 exists about. Knob:
 
 ---
 
-## The seventeen knobs
+## Staying put, and where an anchor lands
+
+**`[data-kp-sticky]`** makes an element stay at the top while the page
+scrolls. It is an attribute rather than a class because staying put is
+something this element does on this page, not a kind of element. Knobs:
+`--kp-sticky-top` (0), `--kp-sticky-layer` (30).
+
+It has a partner. **`--kp-scroll-offset`** (0px) is how far an in-page
+link stops short of the top, and a page that sticks something sets it to
+the height of what it stuck. Without it the skip link every page carries
+lands underneath the bar, and the person using that link is exactly the
+person who cannot see that it did.
+
+**`--kp-scroll-behavior`** (auto) turns on smooth scrolling. It is read
+inside the reduced-motion guard, so `smooth` cannot survive a reader who
+asked for less motion.
+
+All three defaults change nothing: a page that does not ask gets what it
+got before.
+
+## The twenty-one knobs
 
 `--kp-page-max`, `--kp-page-pad`, `--kp-page-pad-block`,
 `--kp-stack-gap`, `--kp-row-gap`, `--kp-row-align`, `--kp-autogrid-min`,
 `--kp-autogrid-gap`, `--kp-autogrid-pad`, `--kp-sidebar-width`, `--kp-sidebar-gap`,
 `--kp-sidebar-break`, `--kp-section-gap`, `--kp-center-max`,
 `--kp-prose-max`, `--kp-mono-face`, `--kp-mono-size`,
-`--kp-busy-opacity`.
+`--kp-busy-opacity`, `--kp-sticky-top`, `--kp-sticky-layer`,
+`--kp-scroll-offset`, `--kp-scroll-behavior`.
 
 ## The name is a promise
 

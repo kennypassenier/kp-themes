@@ -35679,6 +35679,43 @@
         white-space: pre-wrap;
     }
 
+    /* ── Staying put, and where an anchor lands [scope-10, stage 1.1] ─ */
+
+    /* Measured on 2026-09-11 across css/, js/ and components/: this package
+       contained zero occurrences of `sticky`, and zero of `scroll-behavior`,
+       `scroll-padding` or `scroll-margin`. Nothing stayed put while a page
+       scrolled, and nothing knew where an anchor should land.
+
+       Both defaults here change nothing for a page that does not ask: the
+       offset is 0 and the behaviour is `auto`, so an existing consumer sees
+       exactly what it saw before. What they buy is that the two belong
+       together — the moment anything is stuck over the content, every
+       in-page link has to clear it, and the link that matters most is the
+       skip link every page in this package carries. Someone using that link
+       cannot see that its target went under the bar. */
+    html {
+        scroll-padding-block-start: var(--kp-scroll-offset, 0px);
+    }
+
+    /* DI7: a page that asks for smooth scrolling still does not get it when
+       the reader asked for less motion. The knob is read inside the guard
+       rather than outside it, so `smooth` cannot survive the preference. */
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            scroll-behavior: var(--kp-scroll-behavior, auto);
+        }
+    }
+
+    /* Opt-in, by an attribute rather than a class, because staying put is a
+       behaviour of that element on that page and not a kind of element.
+       The offset above is what pairs with it: a page that sticks its nav
+       sets --kp-scroll-offset to the height it stuck. */
+    [data-kp-sticky] {
+        position: sticky;
+        inset-block-start: var(--kp-sticky-top, 0);
+        z-index: var(--kp-sticky-layer, 30);
+    }
+
     /* ── State ──────────────────────────────────────────────────────── */
 
     /* Standing rule 31 says a button that starts something slow shows it.
