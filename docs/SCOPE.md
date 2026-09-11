@@ -1007,3 +1007,26 @@ synthwave's bands — not a control silhouette. So the milled corner exists
 twice, once of which is the theme he calls perfect, and there is no crowd
 to thin out. The field of control silhouettes is nearly empty, which is
 why the four shapes he liked all have somewhere to go.
+
+**scope-21 · The new theme is called titanium.** Kenny, 2026-09-11. The
+round opened asking for a theme named hypertech and closes with one named
+after its material, which is how every theme in this package is named:
+retro is the desktop, terminal is the tube, blueprint is the drawing,
+woodblock is the technique, lapis is the stone, nostromo is the ship,
+pastel is the ink. Not one is named after a category — and a category was
+the starting point that cost six refused worlds, because the first
+proposal was defined by the empty place on the colour wheel and it showed.
+"Hypertech" stays what it always was: the question the round opened with,
+not its answer.
+
+**scope-22 · The four placements are shown before they are approved.**
+Kenny, 2026-09-11, answering the placement proposal with "toon het mij" —
+the same answer he has given to every proposal made in prose this round,
+and by now the clearest standing preference in it. Each of the four is
+rendered in the real colours and faces of the theme it would go to, read
+out of that theme's own `tokens.json`, with the control as it is today
+beside the control with the shape on it and nothing else changed between
+them: <https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
+The proposals are the doubled edge to pastel as its second ink plate,
+cherenkov's under-lighting and expanding bar to solstice in amber, the
+moulded step to nostromo, and the rule that becomes an edge to grotesk.
