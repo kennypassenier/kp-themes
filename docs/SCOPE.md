@@ -889,3 +889,41 @@ one of the six was driven to at least two different values before it
 shipped, per the standing rule that a status field which cannot be shown
 to vary is decoration that lies; a field with no source prints two dashes
 rather than a zero.
+
+**scope-10 · The element list, answered 2026-09-11.** Kenny brought a
+list of twenty-seven things he had seen elsewhere. Measured against the
+code: twelve the package already has, six do not belong here with a
+reason each, and nine were a real question. His answers: the collapsible
+side navigation defaults to an **overlay** with the pushing variant as a
+knob; a navigation that collapses on a narrow screen, a bar that stays at
+the top, smooth scrolling with the offset that makes an anchor clear that
+bar, a back-to-top control and a component for a hero image are all
+**essential**; counters that count up are **wanted**; the three carousels
+are **not done**, with a scrollable row offered instead; an icon set is
+**later**, a round of its own. Two of the essentials are repairs rather
+than features: the package contains zero occurrences of `sticky` and zero
+of `scroll-behavior`, `scroll-padding` or `scroll-margin`, which is why
+the skip link every page carries lands underneath any bar that stays put.
+
+**scope-11 · Four themes leave the set.** Kenny, 2026-09-11: academia,
+ticker and woodblock "mogen verwijderd worden, die hebben we alle drie
+niet meer nodig vanaf nu", and mono "gaat eruit, niet meer nodig".
+Twenty-one remain and hypertech makes twenty-two. This is the first time
+this project removes a theme, and it sits against the rule that a
+released theme never changes: 5.0.0 and 5.1.0 shipped all twenty-five, so
+the removal is a change only a new major may make, which round seven
+already is. What cannot be measured from inside this repository is
+whether any consumer selects one of the four; the bundle every consumer
+vendors will simply stop carrying them, so each consumer is told before
+the tag rather than after.
+
+**scope-12 · Every theme earns a quirk of its own.** Kenny, 2026-09-11,
+naming the thing the whole round is actually about: what makes a theme
+cool is behaviour that belongs to it, like nostromo's dot in front of the
+active page. Measured the same day: the number of silhouettes a register
+cuts does not predict whether he finds it distinctive — terminal and
+brutalism cut none and he calls both very good, solstice cuts ten and he
+calls it sober. So the pass is about behaviour rather than decoration.
+The per-theme verdicts, the measurements behind them and the three
+observations that turned out differently than expected are in
+[THEME_VERDICTS.md](THEME_VERDICTS.md).
