@@ -9509,6 +9509,38 @@
         letter-spacing: 0.14em;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines the page you are on; the column cuts its corner
+       off instead. The notch is this theme's whole grammar and it belongs
+       on the one row that is different from the others. */
+    [data-theme='cyberpunk'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-list-pad: 0;
+        --kp-sidenav-gap: 0;
+        border-inline-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link,
+    [data-theme='cyberpunk'] .kp-sidenav__category-toggle {
+        padding: 0.7rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.92rem;
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
+    }
 }
 
 @layer kp.register {
@@ -11217,6 +11249,45 @@
         text-transform: none;
         border-block-end: 2px solid var(--border-strong);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Everything in this theme is a window on a desktop, and a column of
+       links is the one part of that desktop that was always a list box:
+       sunken, with the selection painted edge to edge. */
+    [data-theme='retro'] .kp-sidenav {
+        --kp-sidenav-surface: var(--input);
+        --kp-sidenav-list-pad: 0.15rem;
+        --kp-sidenav-gap: 0;
+        border: 2px solid;
+        border-color: var(--border-strong) var(--border) var(--border) var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-sidenav__header {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-block-end: none;
+        padding: 0.2rem 0.4rem;
+    }
+
+    [data-theme='retro'] .kp-sidenav__title {
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        text-transform: none;
+        color: inherit;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link,
+    [data-theme='retro'] .kp-sidenav__category-toggle {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
 }
 
 @layer kp.register {
@@ -12782,6 +12853,37 @@
         color: var(--primary);
         text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar lights its current item from underneath. A column has no
+       underneath, so the glow moves to the leading edge and becomes the
+       tube running down the side of the active row. */
+    [data-theme='synthwave'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__title {
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link,
+    [data-theme='synthwave'] .kp-sidenav__category-toggle {
+        padding: 0.6rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--kp-core);
+        background: none;
+        box-shadow:
+            inset 0.2rem 0 0 var(--primary),
+            inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
     }
 }
 
@@ -14366,6 +14468,50 @@
         transform: skewX(-8deg);
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar grows a plate out from behind the current item. Down the
+       side it does the same thing sideways: the plate slides out of the
+       edge the panel is attached to. */
+    [data-theme='phantom'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link,
+    [data-theme='phantom'] .kp-sidenav__category-toggle {
+        position: relative;
+        z-index: 0;
+        padding: 0.5rem 0.95rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        z-index: -1;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav__link::before {
+            transition: inline-size var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link:hover::before {
+        inline-size: 0.35rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary-foreground);
+        background: none;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
+        inline-size: 100%;
+    }
 }
 
 @layer kp.register {
@@ -15696,6 +15842,53 @@
         font-family: var(--theme-font-mono);
         border-block-end: 1px dashed currentColor;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column of paths with the prompt in front of the one you are in.
+       The bar fills its current item; here the fill stays and the caret
+       arrives in the gutter, which is where this theme puts every mark of
+       where you are. */
+    [data-theme='terminal'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.18em;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link,
+    [data-theme='terminal'] .kp-sidenav__category-toggle {
+        padding: 0.35rem 0.7rem 0.35rem 1.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link::before {
+        content: '>';
+        position: absolute;
+        inset-inline-start: 0.55rem;
+        color: var(--primary);
+        opacity: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link:hover::before {
+        opacity: 0.5;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page']::before {
+        color: var(--primary-foreground);
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -16963,6 +17156,61 @@
         letter-spacing: 0.02em;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Not a panel but a column of slabs, each with its own hard shadow.
+       The current one does not tint: it slides into its shadow and the
+       shadow goes out from under it [approved by Kenny, 2026-09-11]. */
+    [data-theme='brutalism'] .kp-sidenav {
+        --kp-sidenav-surface: transparent;
+        --kp-sidenav-gap: 0.4rem;
+        border: none;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__header {
+        background: var(--foreground);
+        color: var(--background);
+        border: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link,
+    [data-theme='brutalism'] .kp-sidenav__category-toggle {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+        padding: 0.5rem 0.75rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-sidenav__link,
+        [data-theme='brutalism'] .kp-sidenav__category-toggle {
+            transition:
+                translate var(--fx-duration, 120ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 120ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link:hover {
+        translate: -1px -1px;
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -18142,6 +18390,32 @@
         font-family: var(--theme-font-display);
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column of blocks cut from the same board. The current one is not
+       tinted but INKED: it takes the paper's grain the other way, the way
+       a second impression sits on a print. */
+    [data-theme='woodblock'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        color: var(--primary);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__link,
+    [data-theme='woodblock'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+        color: var(--foreground);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
 }
 
 @layer kp.register {
@@ -19167,6 +19441,53 @@
         border-block-end: 0;
         text-transform: none;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.9rem;
+        padding: 0.55rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        rotate: -1.4deg;
+        box-shadow:
+            0 3px 0 color-mix(in srgb, var(--primary) 55%, black),
+            0 6px 12px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
 }
 
 @layer kp.register {
@@ -20165,6 +20486,32 @@
         color: var(--muted-foreground);
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this theme sober, and the answer is not more colour
+       but more DEPTH: the column is a card, and the row you are on is the
+       one lifted off it. Light comes from the top, as it does everywhere
+       else here. */
+    [data-theme='shade-light'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.25rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='shade-light'] .kp-sidenav__link,
+    [data-theme='shade-light'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='shade-light'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--background);
+        color: var(--primary);
+        box-shadow:
+            0 1px 0 hsl(from var(--background) h s l / 0.9) inset,
+            0 2px 6px hsl(from var(--foreground) h s l / 0.14);
+    }
 }
 
 @layer kp.register {
@@ -21138,6 +21485,38 @@
         color: var(--primary);
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid var(--border);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A board of quotations. The row you are on is the one the board is
+       reporting on, so it keeps the leading rule this theme puts beside
+       every figure that matters. */
+    [data-theme='ticker'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='ticker'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__link,
+    [data-theme='ticker'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__badge {
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--primary);
     }
 }
 
@@ -22154,6 +22533,27 @@
         font-family: var(--theme-font-mono);
         color: var(--primary);
         border-block-end: 1px dotted var(--border-strong);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines where you are. A column has no under, so the
+       line stands up and becomes the trunk beside the row — the same
+       hairline, turned ninety degrees. */
+    [data-theme='forest'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-sidenav__link,
+    [data-theme='forest'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='forest'] .kp-sidenav__link[aria-current='page'] {
+        border-inline-start-color: var(--primary);
+        color: var(--primary);
+        background: none;
     }
 }
 
@@ -23272,6 +23672,33 @@
         letter-spacing: 0.24em;
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column reads as a fluted panel, so the row you are on is the one
+       whose flute is filled — a thicker rule at the edge and the letters
+       opened up, which is how this theme marks anything at all. */
+    [data-theme='deco'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-sidenav__title {
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link,
+    [data-theme='deco'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-inline-start: 3px solid transparent;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--border-strong);
+        letter-spacing: 0.1em;
+    }
 }
 
 @layer kp.register {
@@ -23980,6 +24407,25 @@
         letter-spacing: 0;
         border-block-end: 0;
         padding-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked for this one to stay simple, so it does: the row you
+       are on is named in the accent and carries a short rule at its
+       leading edge. Nothing else changes. */
+    [data-theme='light'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='light'] .kp-sidenav__link,
+    [data-theme='light'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='light'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--primary);
     }
 }
 
@@ -25055,6 +25501,38 @@
         font-weight: 600;
         letter-spacing: 0.02em;
         border-block-end: 2px solid var(--foreground);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny said this one can be better. Its whole idea is the grid, so
+       the column shows it: every row on a baseline, and the one you are
+       on set in the heavy weight this theme otherwise keeps for headings
+       — the type carries the state rather than a colour. */
+    [data-theme='grotesk'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__title {
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__link,
+    [data-theme='grotesk'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-block-end: 1px solid var(--border);
+        padding: 0.6rem 0.9rem;
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--foreground);
+        font-weight: 800;
+        letter-spacing: -0.01em;
     }
 }
 
@@ -26182,6 +26660,52 @@
         letter-spacing: 0.12em;
         border-block-end: 1px dashed var(--border);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A drawing's index. Every row is a callout, and the one you are on
+       carries the leader line and the tick that this theme draws beside
+       anything it is pointing at. */
+    [data-theme='blueprint'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link,
+    [data-theme='blueprint'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        padding-inline-start: 1.5rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 1px;
+        background: var(--border-strong);
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: none;
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page']::before,
+    [data-theme='blueprint'] .kp-sidenav__link:hover::before {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -27199,6 +27723,73 @@
         letter-spacing: 0.2em;
         color: var(--muted-foreground);
         border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The dot. It is the example the whole round is built on — Kenny's own
+       answer to what a quirk is — and a column is where it belongs even
+       more than a bar: the gutter is always there, and the lit one tells
+       you which deck you are on [approved 2026-09-11]. */
+    [data-theme='nostromo'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__header {
+        background: var(--muted);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 0.625rem;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link,
+    [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.6875rem;
+        border-radius: 0;
+        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        border-block-end: 1px solid var(--border);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-block-start: -0.2rem;
+        border-radius: 50%;
+        background: var(--primary);
+        opacity: 0;
+        translate: -0.35rem 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-sidenav__link::before {
+            transition:
+                opacity var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link:hover::before {
+        opacity: 0.45;
+        translate: 0 0;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+        translate: 0 0;
     }
 }
 
@@ -28766,6 +29357,26 @@
         color: var(--primary);
         border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Quiet, the way this theme is quiet: the row you are on is a raised
+       plate rather than a colour, and the accent shows only at its
+       leading edge. */
+    [data-theme='dark'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-sidenav__link,
+    [data-theme='dark'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--accent);
+        color: var(--foreground);
+        border-inline-start-color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -29743,6 +30354,32 @@
         letter-spacing: 0.06em;
         color: var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A table of contents in a book: the entry you are reading is set in
+       italic and its leader dots run to the edge, which is the only mark
+       a printed index ever needed. */
+    [data-theme='academia'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='academia'] .kp-sidenav__title {
+        font-style: italic;
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='academia'] .kp-sidenav__link,
+    [data-theme='academia'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+    }
+
+    [data-theme='academia'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--primary);
+        font-style: italic;
+        border-block-end: 1px dotted var(--border-strong);
+    }
 }
 
 @layer kp.register {
@@ -30522,6 +31159,20 @@
         letter-spacing: 0.1em;
         color: var(--foreground);
         border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked for this one to stay simple. It does: a hairline, a
+       quiet ground for the row you are on, and nothing that draws the eye
+       away from the content. */
+    [data-theme='formal'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        color: var(--primary);
     }
 }
 
@@ -31599,6 +32250,52 @@
         letter-spacing: 0;
         color: var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas. The theme is aged paper, so the
+       column is a margin: the row you are on is annotated rather than
+       highlighted — a hand-drawn bracket in the gutter, the way a reader
+       marks the passage they are in. */
+    [data-theme='sepia'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.15rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__title {
+        font-style: italic;
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link,
+    [data-theme='sepia'] .kp-sidenav__category-toggle {
+        padding-inline-start: 1.3rem;
+        border-radius: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.45rem;
+        inset-block: 0.3rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link:hover::before {
+        opacity: 0.4;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -32472,6 +33169,28 @@
         color: var(--primary);
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this one too sober. The theme is a low sun, so the
+       column carries the light it already has: the row you are on is warm
+       at its leading edge and cools across, which is the one gradient
+       this theme is allowed. */
+    [data-theme='solstice'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link,
+    [data-theme='solstice'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
+        box-shadow: inset 0.18rem 0 0 var(--primary);
     }
 }
 
@@ -33418,6 +34137,25 @@
         letter-spacing: 0.04em;
         border-block-end: 1px solid var(--border);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       One ink, one measure. The row you are on is inverted outright,
+       because inversion is the only emphasis a single-ink theme has. */
+    [data-theme='mono'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='mono'] .kp-sidenav__link,
+    [data-theme='mono'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
 }
 
 @layer kp.register {
@@ -34246,6 +34984,38 @@
         color: var(--background);
         font-weight: 700;
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas, and its constraint is the idea:
+       nothing here may rely on a hue. So the row you are on is bracketed
+       — a solid bar the full height of the row on both sides, which reads
+       at any contrast setting and at any size. */
+    [data-theme='high-contrast'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__title {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-block-end: 2px solid transparent;
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--foreground);
+        font-weight: 700;
+        box-shadow:
+            inset 0.3rem 0 0 var(--foreground),
+            inset -0.3rem 0 0 var(--foreground);
     }
 }
 
@@ -35160,6 +35930,50 @@
         letter-spacing: 0.16em;
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The fourfold ruling Kenny chose for this theme. A page of tazhib is
+       ruled before it is written — concentric lines at unequal intervals,
+       gold against blue, and what matters sits inside them. So the row you
+       are on is not coloured but RULED, and the outermost line is the one
+       that closes around it. */
+    [data-theme='lapis'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.45rem;
+        --kp-sidenav-list-pad: 0.55rem;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link,
+    [data-theme='lapis'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-sidenav__link {
+            transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--primary);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45),
+            0 0 0 6px var(--card),
+            0 0 0 7px var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -36049,6 +36863,31 @@
         letter-spacing: 0;
         color: var(--muted-foreground);
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this one sober too, and its answer is its twin's read
+       the other way round: light falls from above onto a dark ground, so
+       the row you are on is the one CUT INTO the panel rather than lifted
+       off it. */
+    [data-theme='shade-dark'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.25rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='shade-dark'] .kp-sidenav__link,
+    [data-theme='shade-dark'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='shade-dark'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--background);
+        color: var(--foreground);
+        box-shadow:
+            inset 0 1px 3px hsl(from var(--background) h s l / 0.9),
+            inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.12);
     }
 }
 

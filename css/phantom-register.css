@@ -1579,4 +1579,48 @@
         transform: skewX(-8deg);
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar grows a plate out from behind the current item. Down the
+       side it does the same thing sideways: the plate slides out of the
+       edge the panel is attached to. */
+    [data-theme='phantom'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link,
+    [data-theme='phantom'] .kp-sidenav__category-toggle {
+        position: relative;
+        z-index: 0;
+        padding: 0.5rem 0.95rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        z-index: -1;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav__link::before {
+            transition: inline-size var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link:hover::before {
+        inline-size: 0.35rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary-foreground);
+        background: none;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
+        inline-size: 100%;
+    }
 }

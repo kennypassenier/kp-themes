@@ -870,4 +870,26 @@
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this one too sober. The theme is a low sun, so the
+       column carries the light it already has: the row you are on is warm
+       at its leading edge and cools across, which is the one gradient
+       this theme is allowed. */
+    [data-theme='solstice'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link,
+    [data-theme='solstice'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
+        box-shadow: inset 0.18rem 0 0 var(--primary);
+    }
 }

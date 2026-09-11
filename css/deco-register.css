@@ -1113,4 +1113,31 @@
         letter-spacing: 0.24em;
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column reads as a fluted panel, so the row you are on is the one
+       whose flute is filled — a thicker rule at the edge and the letters
+       opened up, which is how this theme marks anything at all. */
+    [data-theme='deco'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-sidenav__title {
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link,
+    [data-theme='deco'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-inline-start: 3px solid transparent;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--border-strong);
+        letter-spacing: 0.1em;
+    }
 }

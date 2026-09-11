@@ -1175,4 +1175,30 @@
         font-family: var(--theme-font-display);
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column of blocks cut from the same board. The current one is not
+       tinted but INKED: it takes the paper's grain the other way, the way
+       a second impression sits on a print. */
+    [data-theme='woodblock'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        color: var(--primary);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__link,
+    [data-theme='woodblock'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+        color: var(--foreground);
+    }
+
+    [data-theme='woodblock'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
 }

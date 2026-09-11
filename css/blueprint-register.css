@@ -1122,4 +1122,50 @@
         letter-spacing: 0.12em;
         border-block-end: 1px dashed var(--border);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A drawing's index. Every row is a callout, and the one you are on
+       carries the leader line and the tick that this theme draws beside
+       anything it is pointing at. */
+    [data-theme='blueprint'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link,
+    [data-theme='blueprint'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        padding-inline-start: 1.5rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 1px;
+        background: var(--border-strong);
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: none;
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page']::before,
+    [data-theme='blueprint'] .kp-sidenav__link:hover::before {
+        opacity: 1;
+    }
 }

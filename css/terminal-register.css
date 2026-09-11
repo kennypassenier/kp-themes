@@ -1326,4 +1326,51 @@
         font-family: var(--theme-font-mono);
         border-block-end: 1px dashed currentColor;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column of paths with the prompt in front of the one you are in.
+       The bar fills its current item; here the fill stays and the caret
+       arrives in the gutter, which is where this theme puts every mark of
+       where you are. */
+    [data-theme='terminal'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.18em;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link,
+    [data-theme='terminal'] .kp-sidenav__category-toggle {
+        padding: 0.35rem 0.7rem 0.35rem 1.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link::before {
+        content: '>';
+        position: absolute;
+        inset-inline-start: 0.55rem;
+        color: var(--primary);
+        opacity: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link:hover::before {
+        opacity: 0.5;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page']::before {
+        color: var(--primary-foreground);
+        opacity: 1;
+    }
 }

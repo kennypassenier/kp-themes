@@ -53,7 +53,7 @@
  */
 
 /** The navigation sections, in order. */
-export const GROUPS = ['Getting started', 'Theming', 'Layout', 'Forms', 'Data', 'Feedback', 'Navigation', 'Structure'];
+export const GROUPS = ['Getting started', 'Theming', 'Layout', 'Forms', 'Data', 'Feedback', 'Navigation', 'Content', 'Structure'];
 
 /** @type {Descriptor[]} */
 export const DESCRIPTORS = [

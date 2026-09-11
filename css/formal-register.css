@@ -776,4 +776,18 @@
         color: var(--foreground);
         border-block-end: 1px solid var(--border-strong);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked for this one to stay simple. It does: a hairline, a
+       quiet ground for the row you are on, and nothing that draws the eye
+       away from the content. */
+    [data-theme='formal'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        color: var(--primary);
+    }
 }

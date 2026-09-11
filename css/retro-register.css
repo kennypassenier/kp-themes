@@ -1704,4 +1704,43 @@
         text-transform: none;
         border-block-end: 2px solid var(--border-strong);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Everything in this theme is a window on a desktop, and a column of
+       links is the one part of that desktop that was always a list box:
+       sunken, with the selection painted edge to edge. */
+    [data-theme='retro'] .kp-sidenav {
+        --kp-sidenav-surface: var(--input);
+        --kp-sidenav-list-pad: 0.15rem;
+        --kp-sidenav-gap: 0;
+        border: 2px solid;
+        border-color: var(--border-strong) var(--border) var(--border) var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-sidenav__header {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-block-end: none;
+        padding: 0.2rem 0.4rem;
+    }
+
+    [data-theme='retro'] .kp-sidenav__title {
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        text-transform: none;
+        color: inherit;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link,
+    [data-theme='retro'] .kp-sidenav__category-toggle {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
 }

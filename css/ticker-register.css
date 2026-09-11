@@ -970,4 +970,36 @@
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid var(--border);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A board of quotations. The row you are on is the one the board is
+       reporting on, so it keeps the leading rule this theme puts beside
+       every figure that matters. */
+    [data-theme='ticker'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='ticker'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__link,
+    [data-theme='ticker'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__badge {
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='ticker'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--primary);
+    }
 }

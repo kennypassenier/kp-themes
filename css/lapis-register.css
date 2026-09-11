@@ -909,4 +909,48 @@
         letter-spacing: 0.16em;
         border-block-end: 1px solid var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The fourfold ruling Kenny chose for this theme. A page of tazhib is
+       ruled before it is written — concentric lines at unequal intervals,
+       gold against blue, and what matters sits inside them. So the row you
+       are on is not coloured but RULED, and the outermost line is the one
+       that closes around it. */
+    [data-theme='lapis'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.45rem;
+        --kp-sidenav-list-pad: 0.55rem;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link,
+    [data-theme='lapis'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-sidenav__link {
+            transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--primary);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45),
+            0 0 0 6px var(--card),
+            0 0 0 7px var(--primary);
+    }
 }

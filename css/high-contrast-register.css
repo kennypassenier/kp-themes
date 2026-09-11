@@ -825,4 +825,36 @@
         font-weight: 700;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas, and its constraint is the idea:
+       nothing here may rely on a hue. So the row you are on is bracketed
+       — a solid bar the full height of the row on both sides, which reads
+       at any contrast setting and at any size. */
+    [data-theme='high-contrast'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__title {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-block-end: 2px solid transparent;
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--foreground);
+        font-weight: 700;
+        box-shadow:
+            inset 0.3rem 0 0 var(--foreground),
+            inset -0.3rem 0 0 var(--foreground);
+    }
 }

@@ -1072,4 +1072,50 @@
         letter-spacing: 0;
         color: var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas. The theme is aged paper, so the
+       column is a margin: the row you are on is annotated rather than
+       highlighted — a hand-drawn bracket in the gutter, the way a reader
+       marks the passage they are in. */
+    [data-theme='sepia'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.15rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__title {
+        font-style: italic;
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link,
+    [data-theme='sepia'] .kp-sidenav__category-toggle {
+        padding-inline-start: 1.3rem;
+        border-radius: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.45rem;
+        inset-block: 0.3rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link:hover::before {
+        opacity: 0.4;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+    }
 }

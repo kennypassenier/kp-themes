@@ -1263,4 +1263,59 @@
         letter-spacing: 0.02em;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Not a panel but a column of slabs, each with its own hard shadow.
+       The current one does not tint: it slides into its shadow and the
+       shadow goes out from under it [approved by Kenny, 2026-09-11]. */
+    [data-theme='brutalism'] .kp-sidenav {
+        --kp-sidenav-surface: transparent;
+        --kp-sidenav-gap: 0.4rem;
+        border: none;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__header {
+        background: var(--foreground);
+        color: var(--background);
+        border: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link,
+    [data-theme='brutalism'] .kp-sidenav__category-toggle {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+        padding: 0.5rem 0.75rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-sidenav__link,
+        [data-theme='brutalism'] .kp-sidenav__category-toggle {
+            transition:
+                translate var(--fx-duration, 120ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 120ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link:hover {
+        translate: -1px -1px;
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
 }

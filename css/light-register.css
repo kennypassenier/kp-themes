@@ -705,4 +705,23 @@
         border-block-end: 0;
         padding-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked for this one to stay simple, so it does: the row you
+       are on is named in the accent and carries a short rule at its
+       leading edge. Nothing else changes. */
+    [data-theme='light'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='light'] .kp-sidenav__link,
+    [data-theme='light'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='light'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--primary);
+    }
 }

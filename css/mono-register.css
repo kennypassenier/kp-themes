@@ -941,4 +941,23 @@
         letter-spacing: 0.04em;
         border-block-end: 1px solid var(--border);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       One ink, one measure. The row you are on is inverted outright,
+       because inversion is the only emphasis a single-ink theme has. */
+    [data-theme='mono'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='mono'] .kp-sidenav__link,
+    [data-theme='mono'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
 }

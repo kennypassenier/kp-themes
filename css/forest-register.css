@@ -1012,4 +1012,25 @@
         color: var(--primary);
         border-block-end: 1px dotted var(--border-strong);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines where you are. A column has no under, so the
+       line stands up and becomes the trunk beside the row — the same
+       hairline, turned ninety degrees. */
+    [data-theme='forest'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-sidenav__link,
+    [data-theme='forest'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='forest'] .kp-sidenav__link[aria-current='page'] {
+        border-inline-start-color: var(--primary);
+        color: var(--primary);
+        background: none;
+    }
 }

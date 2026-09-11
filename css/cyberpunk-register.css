@@ -1514,4 +1514,36 @@
         letter-spacing: 0.14em;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines the page you are on; the column cuts its corner
+       off instead. The notch is this theme's whole grammar and it belongs
+       on the one row that is different from the others. */
+    [data-theme='cyberpunk'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-list-pad: 0;
+        --kp-sidenav-gap: 0;
+        border-inline-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link,
+    [data-theme='cyberpunk'] .kp-sidenav__category-toggle {
+        padding: 0.7rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.92rem;
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
+    }
 }

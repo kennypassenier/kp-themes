@@ -1021,4 +1021,51 @@
         border-block-end: 0;
         text-transform: none;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.9rem;
+        padding: 0.55rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        rotate: -1.4deg;
+        box-shadow:
+            0 3px 0 color-mix(in srgb, var(--primary) 55%, black),
+            0 6px 12px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
 }

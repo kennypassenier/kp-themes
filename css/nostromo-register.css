@@ -1014,4 +1014,71 @@
         color: var(--muted-foreground);
         border-block-end: 1px solid var(--border-strong);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The dot. It is the example the whole round is built on — Kenny's own
+       answer to what a quirk is — and a column is where it belongs even
+       more than a bar: the gutter is always there, and the lit one tells
+       you which deck you are on [approved 2026-09-11]. */
+    [data-theme='nostromo'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__header {
+        background: var(--muted);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 0.625rem;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link,
+    [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.6875rem;
+        border-radius: 0;
+        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        border-block-end: 1px solid var(--border);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-block-start: -0.2rem;
+        border-radius: 50%;
+        background: var(--primary);
+        opacity: 0;
+        translate: -0.35rem 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-sidenav__link::before {
+            transition:
+                opacity var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link:hover::before {
+        opacity: 0.45;
+        translate: 0 0;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+        translate: 0 0;
+    }
 }

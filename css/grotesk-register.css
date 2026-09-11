@@ -1071,4 +1071,36 @@
         letter-spacing: 0.02em;
         border-block-end: 2px solid var(--foreground);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny said this one can be better. Its whole idea is the grid, so
+       the column shows it: every row on a baseline, and the one you are
+       on set in the heavy weight this theme otherwise keeps for headings
+       — the type carries the state rather than a colour. */
+    [data-theme='grotesk'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__title {
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__link,
+    [data-theme='grotesk'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-block-end: 1px solid var(--border);
+        padding: 0.6rem 0.9rem;
+    }
+
+    [data-theme='grotesk'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--foreground);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+    }
 }

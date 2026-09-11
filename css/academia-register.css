@@ -973,4 +973,30 @@
         letter-spacing: 0.06em;
         color: var(--primary);
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A table of contents in a book: the entry you are reading is set in
+       italic and its leader dots run to the edge, which is the only mark
+       a printed index ever needed. */
+    [data-theme='academia'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='academia'] .kp-sidenav__title {
+        font-style: italic;
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='academia'] .kp-sidenav__link,
+    [data-theme='academia'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+    }
+
+    [data-theme='academia'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--primary);
+        font-style: italic;
+        border-block-end: 1px dotted var(--border-strong);
+    }
 }
