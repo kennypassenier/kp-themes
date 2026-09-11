@@ -63,7 +63,7 @@ label.
 | formal | "mag op zich simpel blijven" | untouched |
 | grotesk | "kan nog beter"; the theme picker sits far left | a quirk of its own; the picker is the queue's own row about the picker moving per theme, and is measured below |
 | high-contrast | "mogen wel ideeën krijgen" | a quirk of its own |
-| lapis | "kan ook nog beter, heeft wel een distinct kleurenschema maar mist nog iets" | a quirk of its own |
+| lapis | "kan ook nog beter, heeft wel een distinct kleurenschema maar mist nog iets" | **done 2026-09-11** — the fourfold ruling he chose ("A de vierdubbele liniëring"), on every button and every field: three rules at rest, five once touched, and the keyboard ring in front of them so DI2 keeps both halves |
 | light | "mag simpel blijven" | untouched |
 | mono | "gaat eruit, niet meer nodig" | **leaves the set** |
 | nostromo | "redelijk goed, maar kan ook nog beter" | a quirk of its own — and its dot is the example the whole round is built on |
