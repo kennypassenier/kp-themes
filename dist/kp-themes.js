@@ -5615,7 +5615,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       const target = contentEl();
       if (!target) return { property: null, value: "" };
       const property = mode() === "push" ? "marginInlineStart" : "paddingInlineStart";
-      const value = open2 && mode() !== "over" ? `var(--kp-sidenav-width, 15rem)` : "";
+      const value = open2 && mode() !== "over" ? getComputedStyle(panel).inlineSize : "";
       target.style.marginInlineStart = "";
       target.style.paddingInlineStart = "";
       target.style[property] = value;
@@ -5640,6 +5640,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
       backdrop = doc.createElement("div");
       backdrop.className = `kp-sidenav__backdrop ${read(OPTIONS.backdropClass) ?? ""}`.trim();
+      if (read(OPTIONS.position) === "absolute") backdrop.style.position = "absolute";
       backdrop.addEventListener("click", () => close());
       panel.after(backdrop);
     };

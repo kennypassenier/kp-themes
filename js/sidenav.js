@@ -152,7 +152,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             // it matters: padding keeps a background under the panel, a
             // margin moves the whole box.
             const property = mode() === 'push' ? 'marginInlineStart' : 'paddingInlineStart';
-            const value = open && mode() !== 'over' ? `var(--kp-sidenav-width, 15rem)` : '';
+            // The panel's own painted width, not the token's default. The
+            // knob is usually set on the panel, where the content element
+            // cannot see it: a panel asked for 11rem moved its content by
+            // 15rem, and the gap showed.
+            const value = open && mode() !== 'over' ? getComputedStyle(panel).inlineSize : '';
             target.style.marginInlineStart = '';
             target.style.paddingInlineStart = '';
             target.style[property] = value;
@@ -181,6 +185,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
             backdrop = doc.createElement('div');
             backdrop.className = `kp-sidenav__backdrop ${read(OPTIONS.backdropClass) ?? ''}`.trim();
+            // The backdrop belongs to the same box the panel does. A panel
+            // scoped to a container with an absolute position had a fixed
+            // backdrop over the whole window, which dimmed a page that was
+            // never asked about.
+            if (read(OPTIONS.position) === 'absolute') backdrop.style.position = 'absolute';
             backdrop.addEventListener('click', () => close());
             panel.after(backdrop);
         };

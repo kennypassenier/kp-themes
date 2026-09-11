@@ -13,17 +13,23 @@
 // Every assertion reads what the browser painted rather than the attribute
 // the module just wrote [KT13].
 //
-// Drill [KT3], four passes:
+// Drill [KT3], six passes:
 //   · the panel's own `inline-size` removed → `1266 passed, 2 failed`, the
 //     side test and the slim test
-//   · `offsetContent` made a no-op in js/sidenav.js → the push test red
+//   · `offsetContent` made a no-op → the push test red
 //   · the accordion branch made unreachable → the accordion test red
 //   · the slim width rule removed → the slim test red
+//   · `flex-shrink: 0` removed and the backdrop's position line removed,
+//     together → `1268 passed, 2 failed`, the side test and the over test
+//   · the push offset put back to the token's default → the push test red
 //
-// The first pass is the one worth keeping: its first version asked whether
-// the panel was wider than 100px and stayed GREEN with the width removed,
-// because the header text alone is wider than that. Rule 7e, caught by the
-// drill it exists for.
+// Two of those passes are the reason the drill is not a formality. The
+// side test's first version asked whether the panel was wider than 100px
+// and stayed GREEN with the width rule gone, because the header text alone
+// is wider than that. And the push test could not tell the panel's real
+// width from the token's default until the fixture gave that panel a width
+// of its own — the two happened to be equal, so the assertion was true for
+// the wrong reason. Rule 7e, twice, caught by the drill it exists for.
 
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
@@ -48,7 +54,10 @@ test.describe('the side navigation', () => {
         // defaults to 15rem, and 15rem at the root's 16px is 240.
         await page.goto(FIXTURE);
 
-        await width(part(page, 'side'), 'side: exactly the width the token declares').toBeCloseTo(240, 0);
+        // In a flex row, which is where a side panel lives: the default
+        // there is to give width away, and a panel asked for 15rem painted
+        // at 135px beside its content until it was told not to.
+        await width(part(page, 'side'), 'side: exactly the width the token declares, beside content').toBeCloseTo(240, 0);
         await measured(part(page, 'side'), (el) => getComputedStyle(el).position, undefined, 'side: and in the flow, not over it').toBe('static');
     });
 
@@ -69,6 +78,15 @@ test.describe('the side navigation', () => {
 
         await left(panel, 'over: on the screen once asked').toBeCloseTo(box?.x ?? 0, 0);
         await expect(page.locator('.kp-sidenav__backdrop'), 'over: the backdrop came with it').toHaveCount(1);
+        // And it belongs to the same box the panel does. A panel scoped to
+        // a container had a backdrop over the whole window, dimming a page
+        // nobody had asked about.
+        await measured(
+            page.locator('.kp-sidenav__backdrop'),
+            (el) => getComputedStyle(el).position,
+            undefined,
+            'over: the backdrop stays in the box the panel was scoped to',
+        ).toBe('absolute');
     });
 
     test('over: Escape, the backdrop and the toggler each close it [feat-nav-3, KT6]', async ({ page }) => {
@@ -113,8 +131,15 @@ test.describe('the side navigation', () => {
         const content = part(page, 'push-content');
 
         const before = await content.evaluate((el) => el.getBoundingClientRect().left);
+        const panelWidth = await part(page, 'push').evaluate((el) => el.getBoundingClientRect().width);
         await part(page, 'push-toggle').click();
-        await measured(content, (el) => el.getBoundingClientRect().left, undefined, 'push: the content moved over').toBeGreaterThan(before);
+        // By the panel's own width, not by the token's default. The knob is
+        // set on the panel, where the content element cannot read it, so an
+        // offset taken from the default left a gap whenever the two differed.
+        await measured(content, (el) => el.getBoundingClientRect().left, undefined, 'push: the content moved over by exactly the panel').toBeCloseTo(
+            before + panelWidth,
+            0,
+        );
 
         const overContent = part(page, 'over-box');
         const overBefore = await overContent.evaluate((el) => el.getBoundingClientRect().left);

@@ -5943,6 +5943,11 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        /* It has a width, so it does not give it up. In `side` mode the
+           panel is a flex item of the consumer's own layout, and the
+           default there is to shrink — which made a panel asked for 11rem
+           paint at 135px beside its content. */
+        flex-shrink: 0;
         inline-size: var(--kp-sidenav-w);
         max-inline-size: 100%;
         background: var(--kp-sidenav-surface, var(--card));

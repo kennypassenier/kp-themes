@@ -17,7 +17,7 @@
              reference has it too, and this page is where it gets exercised. -->
 
         <!-- 1. side: part of the page, there from the start. -->
-        <div style="position: relative; inline-size: 30rem; block-size: 12rem" data-test="side-box">
+        <div style="position: relative; inline-size: 30rem; block-size: 12rem; display: flex" data-test="side-box">
             <nav class="kp-sidenav" id="nav-side" data-test="side" aria-label="Side">
                 <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
                 <div class="kp-sidenav__scroll">
@@ -28,6 +28,7 @@
                     </ul>
                 </div>
             </nav>
+            <main data-test="side-beside"><p>The content beside it, which is what makes this a flex row.</p></main>
         </div>
 
         <!-- 2. over: away until asked, with a backdrop and a focus trap. -->
@@ -58,6 +59,7 @@
                 data-kp-sidenav-position="absolute"
                 data-kp-sidenav-content="[data-test='push-content']"
                 aria-label="Push"
+                style="--kp-sidenav-width: 11rem"
             >
                 <div class="kp-sidenav__scroll">
                     <ul class="kp-sidenav__list">
