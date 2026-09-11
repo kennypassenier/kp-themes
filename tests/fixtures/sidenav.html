@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The side navigation, every option</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- One page, one panel per question. Every panel that covers uses
+             `position: absolute` inside its own positioned box rather than
+             the fixed default, because four fixed panels would stack on
+             top of each other and a test would be measuring the last one.
+             That is an option of the component, not a workaround: the
+             reference has it too, and this page is where it gets exercised. -->
+
+        <!-- 1. side: part of the page, there from the start. -->
+        <div style="position: relative; inline-size: 30rem; block-size: 12rem" data-test="side-box">
+            <nav class="kp-sidenav" id="nav-side" data-test="side" aria-label="Side">
+                <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#a" aria-current="page"><span class="kp-sidenav__label">One</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 2. over: away until asked, with a backdrop and a focus trap. -->
+        <div style="position: relative; inline-size: 30rem; block-size: 12rem" data-test="over-box">
+            <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav-over" data-test="over-toggle">Menu</button>
+            <nav class="kp-sidenav" id="nav-over" data-test="over" data-kp-sidenav-mode="over" data-kp-sidenav-position="absolute" aria-label="Over">
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#a" data-test="over-first"><span class="kp-sidenav__label">One</span></a>
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#b" data-test="over-last"><span class="kp-sidenav__label">Two</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 3. push: the content moves over to make room. -->
+        <div style="position: relative; inline-size: 30rem; block-size: 12rem" data-test="push-box">
+            <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav-push" data-test="push-toggle">Menu</button>
+            <nav
+                class="kp-sidenav"
+                id="nav-push"
+                data-test="push"
+                data-kp-sidenav-mode="push"
+                data-kp-sidenav-position="absolute"
+                data-kp-sidenav-content="[data-test='push-content']"
+                aria-label="Push"
+            >
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#a"><span class="kp-sidenav__label">One</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main data-test="push-content"><p>The content that makes room.</p></main>
+        </div>
+
+        <!-- 4. the slim rail, with its categories. -->
+        <div style="position: relative; inline-size: 30rem; block-size: 16rem" data-test="slim-box">
+            <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav-slim" data-test="slim-toggle" hidden>
+                Menu
+            </button>
+            <nav class="kp-sidenav" id="nav-slim" data-test="slim" data-kp-sidenav-slim data-kp-sidenav-accordion aria-label="Slim">
+                <div class="kp-sidenav__header">
+                    <span data-kp-sidenav-slim-hide data-test="slim-wordmark">kp-themes</span>
+                    <span data-kp-sidenav-slim-show data-test="slim-monogram">kp</span>
+                </div>
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li class="kp-sidenav__category" data-test="cat-one">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="cat-one-toggle">
+                                <span class="kp-sidenav__label">Reports</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#a" data-test="cat-one-link"
+                                            ><span class="kp-sidenav__label">Daily</span></a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="kp-sidenav__category" data-test="cat-two">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="cat-two-toggle">
+                                <span class="kp-sidenav__label">Settings</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#b" data-test="cat-two-link"
+                                            ><span class="kp-sidenav__label">Profile</span></a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="kp-sidenav__footer"><span class="kp-sidenav__label" data-test="slim-footer">Signed in</span></div>
+            </nav>
+        </div>
+
+        <!-- 5. the other edge. -->
+        <div style="position: relative; inline-size: 30rem; block-size: 12rem" data-test="end-box">
+            <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav-end" data-test="end-toggle">Menu</button>
+            <nav
+                class="kp-sidenav"
+                id="nav-end"
+                data-test="end"
+                data-kp-sidenav-mode="over"
+                data-kp-sidenav-position="absolute"
+                data-kp-sidenav-side="end"
+                aria-label="End"
+            >
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#a"><span class="kp-sidenav__label">One</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

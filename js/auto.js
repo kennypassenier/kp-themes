@@ -30,6 +30,7 @@ import { attachWizards } from './wizard.js';
 import { attachColorPickers } from './colorpicker.js';
 import { attachGrids } from './gridlayout.js';
 import { attachEffects } from './effects.js';
+import { attachSidenavs } from './sidenav.js';
 
 /**
  * Attach every behaviour under `root`. Returns one detach for all of it.
@@ -44,6 +45,7 @@ export function attachAll(root = document) {
         attachSkipLinks(root),
         attachNavToggles(root),
         attachSidebars(root),
+        attachSidenavs(root),
         attachDialogs(root),
         attachTabs(root),
         attachThemePickers(root),

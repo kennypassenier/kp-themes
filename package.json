@@ -104,6 +104,10 @@
             "types": "./js/structure.d.ts",
             "default": "./js/structure.js"
         },
+        "./js/sidenav": {
+            "types": "./js/sidenav.d.ts",
+            "default": "./js/sidenav.js"
+        },
         "./js/datepicker": {
             "types": "./js/datepicker.d.ts",
             "default": "./js/datepicker.js"

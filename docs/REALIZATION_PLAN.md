@@ -622,6 +622,7 @@ anything built after them lands on a floor that is already right.
 | 1.4 | the side navigation that can be hidden | `.kp-sidebar` exists in `css/layout.css:93` as a column layout with three knobs and no way to hide, open or remember. Default overlay, with pushing as a knob. |
 | 1.5 | a back-to-top control | Nothing like it exists; it depends on 1.1 for where it lands. |
 | 1.6 | a component for a hero image | Of the component roots the package declares, not one is for a picture. |
+| 1.7 | the side navigation as a component | Added on 2026-09-11 after Kenny looked at 1.4 and asked whether it was a proof of concept. Measured: `grep -l "kp-sidebar" css/*-register.css \| wc -l` gives 0, and the register-coverage gate reads its roots from `css/components.css` — so no theme had ever been asked to style a sidebar, because it was never a component. Built to the feature list he named. |
 
 **Gate log — stages 1.1 to 1.3, reported 2026-09-11.** The report Phase 6
 asks for, given late: these three closed on commits and the gate came

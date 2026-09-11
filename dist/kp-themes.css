@@ -5915,6 +5915,286 @@
         color: inherit;
     }
 
+    /* --- Side navigation [feat-nav-3] ------------------------------------
+       A navigation that stands beside the content instead of above it,
+       built to the feature list Kenny pointed at (MDBootstrap's sidenav,
+       read 2026-09-11). Three modes, a slim rail, collapsible categories,
+       a backdrop, either edge, and a way out of every one of them [KT6].
+
+       What is deliberately NOT taken from that reference is its `color`
+       option. What the active link looks like is the theme's to say, and
+       that is the whole of this package: a register answers `.kp-sidenav`,
+       and a consumer picks a theme rather than a colour.
+
+       One thing CSS cannot do alone: `push` and `side` offset a content
+       element this component does not own, so the module sets that inset
+       and says so in an event. Everything else here is CSS, so a page
+       without JavaScript still gets a navigation rather than a pile of
+       links. */
+
+    .kp-sidenav {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+        /* The knob names the whole panel, border included. Without this it
+           named the content box, the panel painted a pixel wider than the
+           number, and the offset a push mode puts on the content — which
+           reads that same knob — left the text under the border. The
+           package does not set box-sizing globally, so a component that
+           has a width says so itself. */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        inline-size: var(--kp-sidenav-w);
+        max-inline-size: 100%;
+        background: var(--kp-sidenav-surface, var(--card));
+        color: var(--foreground);
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* The panel that is part of the page. This is the default because a
+       navigation that is there is a better starting point than one that
+       has to be summoned; `over` and `push` are the ones you ask for. */
+    .kp-sidenav[data-kp-sidenav-mode='over'],
+    .kp-sidenav[data-kp-sidenav-mode='push'] {
+        --kp-sidenav-away: -100%;
+        position: fixed;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: var(--kp-sidenav-layer, 60);
+        translate: var(--kp-sidenav-away) 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-position='absolute'] {
+        position: absolute;
+    }
+
+    /* Either edge, and the edge is logical: in a right-to-left page the
+       start is the right, and the panel still slides out of the side it
+       came from. */
+    .kp-sidenav[data-kp-sidenav-side='end'] {
+        --kp-sidenav-away: 100%;
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav:dir(rtl) {
+        --kp-sidenav-away: 100%;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl) {
+        --kp-sidenav-away: -100%;
+    }
+
+    .kp-sidenav[data-kp-sidenav-open='true'] {
+        translate: 0 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'],
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'] + .kp-sidenav__backdrop {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav {
+            transition:
+                translate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease),
+                inline-size var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+        }
+    }
+
+    /* The slim rail: icons stay, labels go. `--slim-hide` and `--slim-show`
+       are the two halves of the same switch, so a consumer can swap a
+       wordmark for a monogram rather than only losing text. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed] {
+        --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) [data-kp-sidenav-slim-hide],
+    .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
+        display: none;
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover [data-kp-sidenav-slim-hide] {
+        display: none;
+    }
+
+    /* Hovering a rail that was told to expand gives the labels back without
+       changing the state anything else reads. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed][data-kp-sidenav-expand-on-hover]:hover {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+    }
+
+    .kp-sidenav__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav__title {
+        margin: 0;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        font-weight: 600;
+    }
+
+    /* The list scrolls, the header and footer do not. A long navigation in
+       a short window is the normal case, not the edge one. */
+    .kp-sidenav__scroll {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-sidenav__list {
+        list-style: none;
+        margin: 0;
+        padding: var(--kp-sidenav-list-pad, 0.4rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-sidenav-gap, 0.1rem);
+    }
+
+    .kp-sidenav__link,
+    .kp-sidenav__category-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        inline-size: 100%;
+        padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
+        font: inherit;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        text-align: start;
+        text-decoration: none;
+        color: inherit;
+        background: none;
+        border: none;
+        border-radius: var(--radius, 0);
+        cursor: pointer;
+    }
+
+    .kp-sidenav__link:hover,
+    .kp-sidenav__category-toggle:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    /* The current page is marked by more than colour [DI4], the same way
+       the top bar marks it: aria-current is what a screen reader reads and
+       what every theme hangs its own mark on. */
+    .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        font-weight: 600;
+    }
+
+    .kp-sidenav__icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        inline-size: var(--kp-sidenav-icon-size, 1.25rem);
+        justify-content: center;
+    }
+
+    .kp-sidenav__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-sidenav__badge {
+        margin-inline-start: auto;
+        font-size: var(--kp-font-size-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__divider {
+        block-size: 1px;
+        margin: var(--kp-sidenav-gap, 0.4rem) 0;
+        background: var(--border);
+        border: none;
+    }
+
+    .kp-sidenav__footer {
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* A category and its submenu. The open height is a grid track rather
+       than a measured pixel value, so the package animates it without
+       JavaScript having to know how tall the list is. */
+    .kp-sidenav__category-toggle::after {
+        content: '';
+        margin-inline-start: auto;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-inline-end: 1px solid currentcolor;
+        border-block-end: 1px solid currentcolor;
+        rotate: -45deg;
+        transition: rotate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+    }
+
+    .kp-sidenav__category-toggle[aria-expanded='true']::after {
+        rotate: 45deg;
+    }
+
+    .kp-sidenav__submenu {
+        display: grid;
+        grid-template-rows: 0fr;
+    }
+
+    .kp-sidenav__submenu > * {
+        overflow: hidden;
+        min-block-size: 0;
+        /* A zero track does not go below its child's own padding, so a
+           closed submenu measured 12.8px — the list's padding — and sat
+           there as a visible sliver. The inline inset stays; the block
+           inset comes from the items. */
+        padding-block: 0;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded] > .kp-sidenav__submenu {
+        grid-template-rows: 1fr;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__submenu {
+            transition: grid-template-rows var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+        }
+    }
+
+    .kp-sidenav__submenu .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* The backdrop is a dimming, not a tint: the same value the dialog
+       uses, for the same reason. */
+    .kp-sidenav__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        background: rgb(0 0 0 / 0.5);
+    }
+
+    /* The control that opens it. It draws nothing of its own: unlike the
+       bar's toggle this one is usually placed in a header the consumer
+       already has, with their own glyph in it. */
+    .kp-sidenav__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        min-block-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        /* Above the panel and above its backdrop. A control that opens
+           something and then disappears underneath it is the fault this
+           package already made once, in the bar's own drawer. A toggler
+           that does not take this class is the consumer's to place. */
+        position: relative;
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+    }
+
     /* --- Dialog ---------------------------------------------------------- */
 
     .kp-dialog {

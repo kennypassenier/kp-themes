@@ -1581,6 +1581,68 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'sidenav',
+        title: 'Side navigation',
+        group: 'Navigation',
+        classes: ['kp-sidenav'],
+        exports: [],
+        aliases: ['sidenav'],
+        intro: 'A navigation that stands beside the content instead of above it. Three modes — beside the page, over it, or pushing it aside — a slim rail that keeps the icons and drops the words, categories that fold, and either edge.',
+        whenToUse:
+            'For an application with more places than a bar can hold, or a hierarchy two levels deep. Not for the five links every page can reach — that is the bar at the top. Not as a drawer for content: a panel that slides in carrying a form is a dialog, and it wants a dialog’s focus handling and a dialog’s dismissal.',
+        examples: [
+            {
+                title: 'Beside the page',
+                why: 'The default mode is the one that is simply there: a column in the flow, no JavaScript needed to see it. The current page carries aria-current, which is what a screen reader announces and what every theme hangs its own mark on.',
+                markup: `
+<nav class="kp-sidenav" aria-label="Sections">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">Reports</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__label">Daily</span></a></li>
+<li><a class="kp-sidenav__link" href="#example"><span class="kp-sidenav__label">Weekly</span><span class="kp-sidenav__badge">12</span></a></li>
+</ul>
+</div>
+</nav>
+`,
+            },
+            {
+                title: 'Over the page, with a toggler',
+                why: 'data-kp-sidenav-mode="over" puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.',
+                markup: `
+<button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="app-nav">Menu</button>
+<nav class="kp-sidenav" id="app-nav" data-kp-sidenav-mode="over" aria-label="Sections">
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Daily</span></a></li>
+</ul>
+</div>
+</nav>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-sidenav-mode', what: 'side (the default, in the flow), over (above the content, with a backdrop) or push (fixed, and the content named by data-kp-sidenav-content moves over).' },
+            { name: 'data-kp-sidenav-position', what: 'fixed or absolute. Absolute puts the panel inside a positioned box rather than against the window, which is what a page with two of them needs.' },
+            { name: 'data-kp-sidenav-side', what: 'end puts the panel on the other edge, logically: in a right-to-left page that is the left, and it still slides out of the side it came from.' },
+            { name: 'data-kp-sidenav-slim', what: 'Allows the rail. With data-kp-sidenav-slim-collapsed it starts collapsed; data-kp-sidenav-expand-on-hover gives the words back while the pointer is over it.' },
+            { name: 'data-kp-sidenav-slim-hide', what: 'On an element inside, hides it in the rail; data-kp-sidenav-slim-show is its other half, so a wordmark can become a monogram instead of only disappearing.' },
+            { name: 'data-kp-sidenav-accordion', what: 'One category open at a time. Without it they are independent.' },
+            { name: 'data-kp-sidenav-backdrop', what: 'false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.' },
+            { name: 'data-kp-sidenav-close-on-esc', what: 'false keeps Escape from closing it. data-kp-sidenav-focus-trap="false" lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.' },
+            { name: 'data-kp-sidenav-remember', what: 'A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.' },
+            { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },
+            { name: '.kp-sidenav__category', what: 'A heading that folds, with .kp-sidenav__category-toggle and .kp-sidenav__submenu inside it. The open height is a grid track, so it animates without anything measuring it.' },
+        ],
+        accessibility: [
+            'Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.',
+            'Built in — the current page carries aria-current, so it is announced and not only drawn.',
+            'Built in — the toggler says whether it is expanded and which panel it controls.',
+            'Yours — give the nav element a name; a page with a bar and a side navigation has two of them.',
+            'Yours — put a label in every link. A rail of bare icons reads as a column of nothing.',
+        ],
+    },
+    {
         id: 'breadcrumb',
         title: 'Breadcrumb',
         group: 'Navigation',
