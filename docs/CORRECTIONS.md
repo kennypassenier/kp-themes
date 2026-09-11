@@ -1840,3 +1840,65 @@ approval.
 exact" against "Houden" — if he keeps nearly every deviation, the rule
 costs more than it protects and gets rewritten.
 
+---
+
+## fix-7 · Three faults that nothing had ever looked at from outside (2026-09-11)
+
+Kenny answered **Klopt** on the correction form of 2026-09-11, after
+asking to see the sidebar and to close the coverage gap the stage 1.4
+gate had found. Both errands turned up defects in code already pushed.
+
+**1 · What went wrong.** Three of them, one cause.
+
+The button announced the moment it was wired rather than the width:
+`attachSidebars` read the paint once at attach and never again, so a
+window crossing the 40rem step — a phone turning sideways — moved the
+aside while `aria-expanded` went on saying the opposite. It fails
+silently, and only for the people who cannot see that it failed.
+
+The open drawer lay over the one button that closes it. Escape and an
+outside click still worked; the visible way out was the one that did
+not. Found by the test that presses the same button twice, and Kenny
+then saw the milder half of it on the demonstration page — the first
+link sitting partly behind the button.
+
+And attaching is not a toggle: `attachNavToggles` wrote its starting
+state *through* the dispatch, so every consumer listening heard a close
+nobody performed, on every page load. Two milestones old, in the
+published bundle.
+
+**2 · Which gate let it through.** None, and that is the point. The
+frozen test bars name states and channels; nothing in them asks whether
+anything ever observes the module from outside — no listener, no
+detach, no eyes on a page.
+
+**3 · Where else the same fault sits.** The property is "a module
+behaviour no test observes from the outside", and it was searched for
+twice. `grep -rn "NAV_TOGGLE_EVENT\|attachNavToggles" tests/` returned
+four hits, every one inside a generated bundle under
+`tests/fixtures/.build`. Then the drill: emptying *every* returned
+cleanup loop at once touched four modules and turned exactly two tests
+red, so `attachConfirmations` and `attachSkipLinks` are as unexercised
+as these two were. Queued as `gap-8` rather than quietly folded in.
+
+**4 · How we prevent recurrence.** A module that returns a detach or
+fires an event gets, in the same milestone, a test that pulls it and a
+test that listens. `tests/fixtures/attach-api.html` is the harness:
+it attaches by hand and keeps the handle, which `js/auto.js` correctly
+throws away — and which is why a detach could sit unexercised through
+two milestones.
+
+**5 · What it costs.** Two tests per module, about twenty lines each,
+plus a harness that already exists and takes a third and a fourth
+without changing shape.
+
+**6 · Who enforces it.** Discipline.
+
+**7 · How and when it is measured.** At `gap-8`'s closing, before round
+seven's stage 2 ends: if those two go in without anyone being reminded,
+the measure works.
+
+**8 · The fallback.** A gate that looks up every exported event constant
+and every `attach*` export in `tests/` and refuses what no spec names.
+
+**9 · When we review the measure.** At round seven's retrospective.

@@ -69,6 +69,11 @@ the covering form: `--kp-sidebar-drawer` (`min(18rem, 85%)`),
 `--kp-sidebar-layer` (40), `--kp-sidebar-surface` (`--card`),
 `--kp-sidebar-edge`, `--kp-sidebar-pad`.
 
+The drawer starts below the toggle rather than behind it, and the row it
+clears is `--kp-sidebar-toggle-size` (2.25rem) — the package sets that
+height, so it knows where the drawer begins. A taller button of your own
+raises the token.
+
 `js/components.js` exports `attachSidebars()`, which `js/auto.js` calls
 for the whole page. It reads what the browser paints rather than the
 attribute, so it agrees with the width instead of guessing at it; it
@@ -135,13 +140,14 @@ asked for less motion.
 All three defaults change nothing: a page that does not ask gets what it
 got before.
 
-## The twenty-seven knobs
+## The twenty-eight knobs
 
 `--kp-page-max`, `--kp-page-pad`, `--kp-page-pad-block`,
 `--kp-stack-gap`, `--kp-row-gap`, `--kp-row-align`, `--kp-autogrid-min`,
 `--kp-autogrid-gap`, `--kp-autogrid-pad`, `--kp-sidebar-width`, `--kp-sidebar-gap`,
 `--kp-sidebar-break`, `--kp-sidebar-drawer`, `--kp-sidebar-layer`,
 `--kp-sidebar-surface`, `--kp-sidebar-edge`, `--kp-sidebar-pad`,
+`--kp-sidebar-toggle-size`,
 `--kp-section-gap`, `--kp-center-max`,
 `--kp-prose-max`, `--kp-mono-face`, `--kp-mono-size`,
 `--kp-busy-opacity`, `--kp-sticky-top`, `--kp-sticky-layer`,

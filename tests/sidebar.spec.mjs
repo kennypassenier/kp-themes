@@ -100,6 +100,29 @@ test.describe('the sidebar that can be put away', () => {
         await width(aside, 'narrow: closed by a click outside it').toBe(0);
     });
 
+    test('narrow: the drawer starts below its own button, not behind it [stage 1.4]', async ({ page }) => {
+        // Kenny, looking at the demonstration page: the first link sat
+        // partly behind the Menu button. The drawer covers the content —
+        // that is what he chose — but covering the one control that closes
+        // it is not part of the bargain.
+        //
+        // Drill: `inset-block-start` put back to 0, `1258 passed, 2 failed`
+        // — this one, and the covering test beside it, because a drawer
+        // starting at the very top with its own height no longer reaches
+        // the text it is supposed to be covering.
+        await page.goto(FIXTURE);
+        const { toggle, aside } = parts(page, 'narrow');
+
+        await toggle.click();
+        await width(aside, 'open before the measurement').toBeGreaterThan(0);
+
+        const boxes = await page.evaluate(() => {
+            const rect = (sel) => document.querySelector(sel).getBoundingClientRect();
+            return { toggle: rect('[data-test="narrow-toggle"]'), aside: rect('[data-test="narrow-aside"]') };
+        });
+        expect(boxes.aside.top, 'the drawer begins under the button that opened it').toBeGreaterThanOrEqual(boxes.toggle.bottom);
+    });
+
     test('narrow: the push knob moves the text instead of covering it [stage 1.4, KT6]', async ({ page }) => {
         await page.goto(FIXTURE);
         const { toggle, aside, main } = parts(page, 'push');

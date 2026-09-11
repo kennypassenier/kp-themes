@@ -35739,6 +35739,7 @@
        presses it twice. */
     .kp-sidebar[data-kp-sidebar] > .kp-sidebar__toggle {
         flex-basis: 100%;
+        min-block-size: var(--kp-sidebar-toggle-size, 2.25rem);
         position: relative;
         z-index: calc(var(--kp-sidebar-layer, 40) + 1);
     }
@@ -35755,9 +35756,15 @@
         .kp-sidebar[data-kp-sidebar][data-kp-sidebar-open='true'] > .kp-sidebar__aside {
             display: block;
             position: absolute;
-            inset-block-start: 0;
+            /* Below the button, not behind it. The drawer covers the
+               content; putting it over its own toggle as well left the
+               first link half hidden [Kenny, 2026-09-11]. The package
+               sets that row's height, so it knows where the drawer
+               starts; a taller button of your own raises the token. */
+            inset-block-start: calc(var(--kp-sidebar-toggle-size, 2.25rem) + var(--kp-sidebar-gap, var(--kp-space-lg)));
             inset-inline-start: 0;
-            block-size: 100%;
+            block-size: auto;
+            max-block-size: 100%;
             inline-size: var(--kp-sidebar-drawer, min(18rem, 85%));
             overflow-y: auto;
             z-index: var(--kp-sidebar-layer, 40);
