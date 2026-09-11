@@ -1248,3 +1248,60 @@ one custom property the DI9 gate reads, the demo's scanlines come down
 to 6%, and the gate is drilled on the old hidden shape. The alternative
 is Kenny's override (DESIGN_INVARIANTS.md, "Kenny's override"): a
 recorded DI9 exception for cyberpunk at 7.2%.
+
+## Round seven — decisions taken while building, recorded after (2026-09-11)
+
+**Back-filled.** These four were decided while stage 1 was being written
+and were not in this document until Kenny asked why the procedure had
+stopped being followed. Phase 4's whole purpose is that a decision
+expensive to change later is written down before it is built on; these
+were written down after. That is the fault, and recording them is the
+smaller half of repairing it. The IDs are the house scheme; the AR series
+is closed.
+
+### arch-1 · Behaviour is opted into by an attribute, and the default changes nothing
+
+`data-kp-sticky` and `data-kp-nav-toggle` turn on the two behaviours
+stage 1 added. An attribute rather than a class, because staying put or
+folding away is something *this element does on this page* rather than a
+kind of element — the same reasoning the reveal hooks already use.
+
+Every default is inert: the scroll offset is `0px`, the scroll behaviour
+is `auto`, and a nav without a toggle keeps exactly the layout it had. A
+consumer who upgrades and changes nothing sees nothing, which is standing
+rule 46's requirement that a shared foundation may only extend in ways a
+caller cannot feel.
+
+### arch-2 · One width decides, and it is the one already there
+
+The collapse fires inside the `@container kp-nav (max-width: 40rem)`
+block the nav already stepped at, rather than in a second query of its
+own. A container query cannot read a custom property, so the number is a
+contract value either way (TH26); the choice was whether the package has
+one such number or two. It has one, and `docs/USER_GUIDE.md` names it.
+
+### arch-3 · The channel that wires a control marks it, and the other skips marked controls
+
+`data-kp-nav-owner`, mirroring `data-kp-confirm-owner`. AR29 paid for
+this once: two channels wired the same button, re-armed each other's
+state forever, and the action never fired at any number of clicks. That
+was treated as a fix for the confirmation; it is the package's general
+answer to double-attachment, and stage 1.3 is where it became one. Every
+attach function that could meet a React-rendered control takes `ownedBy`,
+and `''` turns the guard off for a consumer who wants the module anyway.
+
+### arch-4 · The configuration surface grew by six knobs
+
+Phase 4 asks which operational knobs a project exposes and how, so that
+a knob nobody wrote down does not quietly become a constant again. Stage
+1 added `--kp-sticky-top`, `--kp-sticky-layer`, `--kp-scroll-offset`,
+`--kp-scroll-behavior`, `--kp-nav-toggle-size` and `--kp-nav-menu-indent`.
+All six are custom properties, which is this package's only configuration
+mechanism, and all six default to a no-op. The count the site gate reads
+moved from 87 to 89; the two layout knobs live in `docs/LAYOUT.md` and
+the two nav knobs in `docs/USER_GUIDE.md`.
+
+**What was not done and is owed.** The `architecture-critic` pass never
+ran over these four. Phase 4 puts the critic before the form so Kenny
+decides with both sides visible, and here there was neither a critic nor
+a form.

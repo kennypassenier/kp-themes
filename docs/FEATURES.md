@@ -424,3 +424,23 @@ KT10's measurement (K1: Akkoord) and froze the list (F2: Bevriezen).
 TH115–TH136 change through mini-rounds only. The research findings and
 the per-theme lists of 5.0.0 are deliberately outside this freeze: each
 theme gets its own short Phase 2 when its turn comes (TH134).
+
+## Round seven — the element list, rated (2026-09-11)
+
+**Back-filled, and the back-filling is the point.** These nine were rated
+by Kenny on 2026-09-11, on the canonical scale, in a form — and then lived
+only as prose in `docs/SCOPE.md` while the code was already being built.
+Phase 2's output is this document, so this is where they belong. The IDs
+are the house scheme; the TH series is closed.
+
+| ID | Feature | Rating | Test bar agreed |
+| -- | ------- | ------ | --------------- |
+| feat-nav-1 | A navigation that collapses into a toggle on a narrow screen | Onmisbaar | at 320 px the bar is one row with a button; the button opens and closes it; opening puts the focus where the keyboard expects it — **delivered 2026-09-11**, six tests over both channels, drill four red |
+| feat-layout-1 | A bar that stays at the top, and the scroll offset an anchor needs to clear it | Onmisbaar | a page longer than the screen keeps the bar in view, measured on the painted position; the skip link's target lands below it — **delivered 2026-09-11**, two tests, both halves of the drill run |
+| feat-layout-2 | Smooth in-page scrolling | Onmisbaar | read inside the reduced-motion guard, so `smooth` cannot survive a reader who asked for less — **delivered 2026-09-11** with feat-layout-1 |
+| feat-nav-2 | A side navigation that can be hidden, defaulting to an overlay | Onmisbaar | one test per state the component sets — open, closed, remembered — each of which also opens again, measured on what the browser paints |
+| feat-page-1 | A back-to-top control | Onmisbaar | absent at the top, present after scrolling, and it moves the focus and not only the view |
+| feat-media-1 | A component for a beeld in the hero | Onmisbaar | the space is there before the image loads, measured on the painted box with a slow image |
+| feat-count-1 | Numbers that count up | Gewenst | at the reduced-motion setting the final number is there immediately, measured on what is painted |
+| feat-carousel-1 | The three rotating banks | Niet doen | Kenny, 2026-09-11: a bank that advances by itself takes control away from someone who is reading, and one that does not is a row nobody looks past. A scrollable row is offered instead |
+| feat-icons-1 | An icon set shipped with the package | Later | a round of its own: a licence, a size budget, and the question of whether each of the themes may redraw them |
