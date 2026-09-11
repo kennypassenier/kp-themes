@@ -393,6 +393,100 @@ export function skipTo(href, root = document) {
     return true;
 }
 
+/** Fired on the nav when its toggle opens or closes it: `{ open }`. */
+export const NAV_TOGGLE_EVENT = 'kp-nav-toggle';
+
+/** The mark the React NavBar puts on a toggle it wires itself [AR29]. */
+export const NAV_OWNED = '[data-kp-nav-owner]';
+
+/**
+ * Wire the toggle a narrow navigation collapses into [scope-10, stage 1.3].
+ *
+ * Opt-in by the button being there: a nav without one keeps the behaviour
+ * it had, which is what makes this additive for every page already built.
+ * The CSS decides when the bar is narrow enough to collapse; this decides
+ * nothing about width at all, so the two cannot disagree.
+ *
+ * Every state it sets has a way out [KT6]: the toggle itself, Escape while
+ * the focus is inside the nav, a click outside it, and the `kp-nav-toggle`
+ * event for a consumer who wants to persist or veto nothing but observe.
+ * `detach` removes what attach stamped.
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string }} [options]
+ * @returns {() => void} detach
+ */
+export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+
+    for (const el of root.querySelectorAll('[data-kp-nav-toggle]')) {
+        const button = /** @type {HTMLElement} */ (el);
+        // AR29, and it is the fault that shipped once already: two channels
+        // wiring the same button re-armed each other's state forever. The
+        // React NavBar marks its own, and a consumer who wants this module
+        // over a React nav anyway passes `ownedBy: ''`.
+        if (ownedBy !== '' && button.matches(ownedBy)) continue;
+        if (button.dataset.kpNavToggleAttached !== undefined) continue;
+        button.dataset.kpNavToggleAttached = '';
+
+        const nav = button.closest('.kp-nav') ?? button.parentElement;
+        if (!nav) continue;
+        const links = nav.querySelector('.kp-nav__links');
+
+        // aria-controls needs an id, and a page that did not give one still
+        // deserves the association rather than silence.
+        if (links && !links.id) links.id = `kp-nav-links-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
+        if (links) button.setAttribute('aria-controls', links.id);
+
+        const label = () => {
+            const s = { ...getStrings(), ...strings };
+            return nav.hasAttribute('data-kp-nav-open') ? s.closeMenu : s.menu;
+        };
+        /** @param {boolean} open */
+        const set = (open) => {
+            nav.toggleAttribute('data-kp-nav-open', open);
+            button.setAttribute('aria-expanded', String(open));
+            button.setAttribute('aria-label', label());
+            nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+        };
+        set(nav.hasAttribute('data-kp-nav-open'));
+
+        const onClick = () => set(!nav.hasAttribute('data-kp-nav-open'));
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            if (event.key !== 'Escape' || !nav.hasAttribute('data-kp-nav-open')) return;
+            set(false);
+            button.focus();
+        };
+        /** @param {Event} event */
+        const onOutside = (event) => {
+            if (!nav.hasAttribute('data-kp-nav-open')) return;
+            if (nav.contains(/** @type {Node} */ (event.target))) return;
+            set(false);
+        };
+
+        button.addEventListener('click', onClick);
+        nav.addEventListener('keydown', /** @type {EventListener} */ (onKey));
+        document.addEventListener('click', onOutside, true);
+
+        cleanups.push(() => {
+            button.removeEventListener('click', onClick);
+            nav.removeEventListener('keydown', /** @type {EventListener} */ (onKey));
+            document.removeEventListener('click', onOutside, true);
+            nav.removeAttribute('data-kp-nav-open');
+            button.removeAttribute('aria-expanded');
+            button.removeAttribute('aria-label');
+            button.removeAttribute('aria-controls');
+            delete button.dataset.kpNavToggleAttached;
+        });
+    }
+
+    return () => {
+        for (const c of cleanups) c();
+    };
+}
+
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

@@ -5,6 +5,14 @@ export type Strings = {
     alertError: string;
     busy: string;
     close: string;
+    /**
+     * The accessible name of a collapsed navigation's toggle
+     */
+    menu: string;
+    /**
+     * The same toggle once the navigation is open
+     */
+    closeMenu: string;
     previous: string;
     next: string;
     finish: string;
@@ -149,6 +157,8 @@ export type Strings = {
  * @property {string} alertError
  * @property {string} busy
  * @property {string} close
+ * @property {string} menu          The accessible name of a collapsed navigation's toggle
+ * @property {string} closeMenu     The same toggle once the navigation is open
  * @property {string} previous
  * @property {string} next
  * @property {string} finish

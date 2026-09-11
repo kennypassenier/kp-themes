@@ -44,6 +44,8 @@
  * @property {string} alertError
  * @property {string} busy
  * @property {string} close
+ * @property {string} menu          The accessible name of a collapsed navigation's toggle
+ * @property {string} closeMenu     The same toggle once the navigation is open
  * @property {string} previous
  * @property {string} next
  * @property {string} finish
@@ -165,6 +167,12 @@ export const DEFAULT_STRINGS = Object.freeze({
     alertError: 'Error',
     busy: 'Working…',
     close: 'Close',
+    // The nav toggle carries no glyph of its own — this package ships
+    // type, not icons — so its accessible name is the whole of what a
+    // screen reader gets, and the two words have to say which way the
+    // press goes rather than what the control is.
+    menu: 'Open the navigation',
+    closeMenu: 'Close the navigation',
     previous: 'Previous',
     next: 'Next',
     finish: 'Finish',

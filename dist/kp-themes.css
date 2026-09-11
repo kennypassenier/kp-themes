@@ -5673,6 +5673,92 @@
         list-style: none;
     }
 
+    /* The toggle a narrow bar collapses into [scope-10, stage 1.3].
+
+ * Measured before this existed: the package had no collapse of any kind,
+ * so a bar simply wrapped. On the round-seven demo at 462px that put the
+ * chrome at 229px tall before any of the page was visible.
+ *
+ * It is opt-in by the presence of the button, not by a width: a nav
+ * without a toggle behaves exactly as it did, which is what keeps this
+ * additive for every page already built. The width that decides is the
+ * 40rem container query the nav already steps at — the package steps at
+ * one width rather than at two [TH104].
+ *
+ * The three bars are drawn rather than fetched, because this package
+ * ships type and not icons; a consumer who puts their own glyph in the
+ * button gets theirs instead. The accessible name comes from the
+ * dictionary [KT5] and says which way the press goes. */
+    .kp-nav__toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--kp-nav-toggle-size, 2.25rem);
+        block-size: var(--kp-nav-toggle-size, 2.25rem);
+        margin-inline-start: auto;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-nav__toggle::before {
+        content: '';
+        inline-size: 1.05rem;
+        block-size: 2px;
+        background: currentColor;
+        box-shadow:
+            0 -0.36rem 0 currentColor,
+            0 0.36rem 0 currentColor;
+    }
+
+    /* A consumer's own glyph wins over the drawn one. */
+    .kp-nav__toggle:has(*)::before {
+        content: none;
+    }
+
+    /* DI3: open is a state, and a state is visible as one. The plate is the
+ * theme's own accent rather than a shape change, because three bars
+ * folding into a cross is geometry that twenty-one registers would each
+ * have to keep working. */
+    .kp-nav[data-kp-nav-open] > .kp-nav__toggle {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        border-color: var(--accent);
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+            display: inline-flex;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            display: none;
+            flex-basis: 100%;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        /* A 12rem panel floating over a 320px screen is the fault TH99
+     * already caught once. Collapsed, a dropdown is a nested list
+     * instead: in the flow, open, and indented. */
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            position: static;
+            display: block;
+            opacity: 1;
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+        }
+    }
+
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */

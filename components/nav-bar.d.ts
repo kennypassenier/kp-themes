@@ -52,6 +52,14 @@ export type NavBarProps = {
      * The nav's accessible name. Default: the dictionary's.
      */
     label?: string;
+    /**
+     * Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.
+     */
+    collapsible?: boolean;
+    /**
+     * What goes in that button. Empty draws three bars; this package ships type, not icons.
+     */
+    toggleIcon?: import('react').ReactNode;
     classNames?: {
         brand?: string;
         list?: string;
@@ -60,6 +68,7 @@ export type NavBarProps = {
         skip?: string;
         menu?: string;
         menuLink?: string;
+        toggle?: string;
     };
     strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;

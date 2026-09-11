@@ -542,6 +542,41 @@ to its contents; `--kp-grid-wrap-min` and `--kp-nav-wrap-min` are the
 same floor `--kp-table-wrap-min` is, defaulting to `auto` and doing
 nothing until you set one.
 
+### A bar that collapses [stage 1.3]
+
+Below that same 40rem the bar can fold its links into a toggle. It is
+opt-in by the button being there, so a nav without one behaves exactly as
+it did:
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <button type="button" data-kp-nav-toggle class="kp-nav__toggle"></button>
+        <ul class="kp-nav__links">…</ul>
+    </nav>
+</div>
+```
+
+`js/auto.js` wires it: the button gets `aria-expanded` and an
+`aria-controls` pointing at the list, the nav gets `data-kp-nav-open`
+while it is open, and every state has a way out — the button, Escape
+while the focus is inside the nav, and a click outside it. Each change
+fires `kp-nav-toggle` on the nav with `{ open }`.
+
+The button draws three bars itself, because this package ships type and
+not icons; put your own glyph inside it and yours is used instead. Its
+accessible name comes from the dictionary (`menu`, `closeMenu`) and says
+which way the press goes rather than what the control is. Knobs:
+`--kp-nav-toggle-size` (2.25rem) and `--kp-nav-menu-indent` (1rem), which
+is how far a dropdown is inset once it is a nested list rather than a
+floating panel.
+
+In React it is the `collapsible` prop, and `toggleIcon` for what goes in
+the button. That channel wires its own button and marks it
+`data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
+`ownedBy: ''` if you want the module over a React nav anyway.
+
 ## The page shell [TH36]
 
 ```html

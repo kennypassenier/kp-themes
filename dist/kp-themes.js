@@ -126,6 +126,12 @@ var DEFAULT_STRINGS = Object.freeze({
   alertError: "Error",
   busy: "Working\u2026",
   close: "Close",
+  // The nav toggle carries no glyph of its own — this package ships
+  // type, not icons — so its accessible name is the whole of what a
+  // screen reader gets, and the two words have to say which way the
+  // press goes rather than what the control is.
+  menu: "Open the navigation",
+  closeMenu: "Close the navigation",
   previous: "Previous",
   next: "Next",
   finish: "Finish",
@@ -415,8 +421,11 @@ __export(components_exports, {
   CONFIRM_OWNED: () => CONFIRM_OWNED,
   CONFIRM_WINDOW_MS: () => CONFIRM_WINDOW_MS,
   EXEMPT: () => EXEMPT,
+  NAV_OWNED: () => NAV_OWNED,
+  NAV_TOGGLE_EVENT: () => NAV_TOGGLE_EVENT,
   VIOLATION_EVENT: () => VIOLATION_EVENT,
   attachConfirmations: () => attachConfirmations,
+  attachNavToggles: () => attachNavToggles,
   attachSkipLinks: () => attachSkipLinks,
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
@@ -616,6 +625,74 @@ function skipTo(href, root = document) {
   if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
   target.focus();
   return true;
+}
+var NAV_TOGGLE_EVENT = "kp-nav-toggle";
+var NAV_OWNED = "[data-kp-nav-owner]";
+function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
+  const cleanups = [];
+  for (const el of root.querySelectorAll("[data-kp-nav-toggle]")) {
+    const button = (
+      /** @type {HTMLElement} */
+      el
+    );
+    if (ownedBy !== "" && button.matches(ownedBy)) continue;
+    if (button.dataset.kpNavToggleAttached !== void 0) continue;
+    button.dataset.kpNavToggleAttached = "";
+    const nav = button.closest(".kp-nav") ?? button.parentElement;
+    if (!nav) continue;
+    const links = nav.querySelector(".kp-nav__links");
+    if (links && !links.id) links.id = `kp-nav-links-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
+    if (links) button.setAttribute("aria-controls", links.id);
+    const label = () => {
+      const s = { ...getStrings(), ...strings };
+      return nav.hasAttribute("data-kp-nav-open") ? s.closeMenu : s.menu;
+    };
+    const set = (open) => {
+      nav.toggleAttribute("data-kp-nav-open", open);
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute("aria-label", label());
+      nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+    };
+    set(nav.hasAttribute("data-kp-nav-open"));
+    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open"));
+    const onKey = (event) => {
+      if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
+      set(false);
+      button.focus();
+    };
+    const onOutside = (event) => {
+      if (!nav.hasAttribute("data-kp-nav-open")) return;
+      if (nav.contains(
+        /** @type {Node} */
+        event.target
+      )) return;
+      set(false);
+    };
+    button.addEventListener("click", onClick);
+    nav.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onKey
+    );
+    document.addEventListener("click", onOutside, true);
+    cleanups.push(() => {
+      button.removeEventListener("click", onClick);
+      nav.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onKey
+      );
+      document.removeEventListener("click", onOutside, true);
+      nav.removeAttribute("data-kp-nav-open");
+      button.removeAttribute("aria-expanded");
+      button.removeAttribute("aria-label");
+      button.removeAttribute("aria-controls");
+      delete button.dataset.kpNavToggleAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
 }
 function attachSkipLinks(root = document) {
   const cleanups = [];
@@ -5341,6 +5418,7 @@ function attachAll(root = document) {
     enforceContracts(root),
     attachConfirmations(root),
     attachSkipLinks(root),
+    attachNavToggles(root),
     attachDialogs(root),
     attachTabs(root),
     attachThemePickers(root),
@@ -5564,6 +5642,8 @@ export {
   MEMO_PREFIX,
   MONTH_EVENT,
   NAMES_PROPERTY,
+  NAV_OWNED,
+  NAV_TOGGLE_EVENT,
   NO_FLASH_SNIPPET,
   OPTION_SELECTOR,
   OPT_OUT,
@@ -5621,6 +5701,7 @@ export {
   attachEffects,
   attachForms,
   attachGrids,
+  attachNavToggles,
   attachPalettes,
   attachPatterns,
   attachSkipLinks,

@@ -178,7 +178,11 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-nav-open</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-nav-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-nav-side</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-nav-toggle</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-nav-toggle-attached</code></td><td>read, written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -203,7 +207,9 @@
                             <tr><td><code>wrap</code></td><td><code>boolean</code></td><td>optional</td><td>Render the `.kp-nav-wrap` container the narrow rule needs. Default true.</td></tr>
                             <tr><td><code>wrapClassName</code></td><td><code>string</code></td><td>optional</td><td>Extra classes for that wrapper.</td></tr>
                             <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The nav's accessible name. Default: the dictionary's.</td></tr>
-                            <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; }</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>collapsible</code></td><td><code>boolean</code></td><td>optional</td><td>Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.</td></tr>
+                            <tr><td><code>toggleIcon</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What goes in that button. Empty draws three bars; this package ships type, not icons.</td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; toggle?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>Trailing slot.</td></tr>
@@ -211,15 +217,19 @@
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <p class="kp-text-muted">This unit fires no events.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-nav-toggle</code></td><td>Fired on the nav when its toggle opens or closes it: `{ open }`.</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-mono</code></td><td><code>monospace</code></td></tr>
+                            <tr><td><code>--kp-nav-menu-indent</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-block</code></td><td><code>0.625rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline-narrow</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-nav-toggle-size</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-nav-wrap-min</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
