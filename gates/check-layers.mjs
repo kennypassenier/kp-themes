@@ -44,6 +44,10 @@ const AUTHORED = stylesheets('authored').map((file) => `../${file}`);
 const NOT_THEME_COLOUR = {
     'rgb(0 0 0 / 0.5)':
         'the backdrop behind a modal dialog. A backdrop dims what is behind it; a theme colour there would tint the page instead of darkening it.',
+    '#fff': 'the ink of a caption laid over a picture. The picture is the consumer’s and can be any brightness, so a theme’s foreground — dark in half of them — would be a caption nobody can read [DI1]. White over a darkening scrim is legible over every photograph; a consumer who knows their own picture overrides it with --kp-media-overlay-ink.',
+    'rgb(0 0 0 / 0.72)':
+        'the bottom of the scrim under that caption. It darkens a photograph rather than tinting it, for the same reason the dialog backdrop does.',
+    'rgb(0 0 0 / 0)': 'the top of that same scrim, where it has faded to nothing.',
     'hsl(0, 0%, 100%)': 'the print stylesheet. Paper has no theme: the ground is white.',
     'hsl(0, 0%, 0%)': 'the print stylesheet. Paper has no theme: the ink is black.',
 };

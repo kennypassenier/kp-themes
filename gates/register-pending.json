@@ -1,4 +1,7 @@
 {
     "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry the register already covers, so nothing can sit here after the work is done.",
-    "sidenav": "The side navigation was added on 2026-09-11, after Kenny found that the package had no styled one at all: 0 of the 25 registers mentioned the layout sidebar, because it was never a component. Every theme answers this at round seven's stage 2, where each theme's quirk is decided and three of them (nostromo, brutalism, pastel) are already drawn."
+    "sidenav": "The side navigation was added on 2026-09-11, after Kenny found that the package had no styled one at all: 0 of the 25 registers mentioned the layout sidebar, because it was never a component. Every theme answers this at round seven's stage 2, where each theme's quirk is decided and three of them (nostromo, brutalism, pastel) are already drawn.",
+    "to-top": "The back-to-top control, added 2026-09-11 with the side navigation. Every theme answers it at round seven's stage 2, where each theme's quirk is decided.",
+    "media": "The picture frame, added 2026-09-11. Same round, same moment: a theme has plenty to say about how a picture is framed and captioned, and it says it where the quirks are decided.",
+    "media-figure": "The caption that belongs to a picture frame, added 2026-09-11 beside it. It answers where the picture does, at stage 2."
 }

@@ -1645,6 +1645,77 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'to-top',
+        title: 'Back to top',
+        group: 'Navigation',
+        classes: ['kp-to-top'],
+        exports: [],
+        intro: 'The control that appears once the reader is a way down the page and takes them back — the view and the focus both, which is the half usually left out.',
+        whenToUse:
+            'On a page long enough that getting back is work: an article, a log, a table of a few hundred rows. Not on a page that fits on a screen, where it is a button that does nothing. Not as a substitute for a navigation — going up is not the same as going somewhere.',
+        examples: [
+            {
+                title: 'A control that knows when it is needed',
+                why: 'It is invisible until the reader has scrolled past the threshold, and `visibility: hidden` keeps it out of the tab order while it is. Pressing it scrolls to the top and moves the focus to the top of the document, so the next Tab starts where the eye is.',
+                markup: `
+<button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-to-top-after', what: 'How far down it appears, in pixels. Default 400.' },
+            { name: 'data-kp-to-top-target', what: 'A selector for where the focus should land instead of the top of the document. The focus moves without scrolling either way, so naming a landmark cannot undo the journey.' },
+            { name: 'data-kp-to-top-shown', what: 'Written by the module while the control is on the screen. Read it, do not set it.' },
+            { name: 'kp-to-top', what: 'The event, on the control, whenever it appears or goes away: `{ shown }`.' },
+            { name: '--kp-to-top-offset', what: 'How far it sits from the corner, both ways at once. Default 1.5rem.' },
+        ],
+        accessibility: [
+            'Built in — the focus goes back with the view, and it moves without scrolling, so the control cannot undo its own journey.',
+            'Built in — while it is not on the screen it is not in the tab order either.',
+            'Built in — the scroll follows the page’s own scroll-behaviour, so a reader who asked for less motion gets none.',
+            'Yours — give it a name. A button with only an arrow in it is announced as “button”.',
+        ],
+    },
+    {
+        id: 'media',
+        title: 'Media',
+        group: 'Content',
+        classes: ['kp-media', 'kp-media-figure'],
+        exports: [],
+        intro: 'A frame for a picture or a video that has its final shape before the picture arrives, so the text below it does not jump when the bytes land.',
+        whenToUse:
+            'Wherever a page shows an image whose size it does not control — a hero, a card’s thumbnail, an avatar. Not for a decorative background, which is a background. Not for an icon, which has one size and needs no frame.',
+        examples: [
+            {
+                title: 'A hero that holds its space',
+                why: 'The ratio is on the frame and the fit is on the image, so the page is the right shape at the first paint and the picture fills that shape rather than stretching to it. The caption over the picture has a darkening ground under it, because the picture belongs to you and can be any brightness.',
+                markup: `
+<figure class="kp-media-figure">
+<div class="kp-media kp-media--wide">
+<img src="/hero.jpg" alt="" />
+<p class="kp-media__overlay">Where this was taken</p>
+</div>
+<figcaption>And what it shows</figcaption>
+</figure>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-media--wide', what: '21/9, for a hero that spans the page.' },
+            { name: '.kp-media--square', what: '1/1, for a grid of thumbnails.' },
+            { name: '.kp-media--portrait', what: '3/4, for a person.' },
+            { name: '--kp-media-ratio', what: 'Any other shape. Default 16/9.' },
+            { name: '--kp-media-fit', what: 'cover by default — the picture fills the frame and is cropped. `contain` fits it whole, with the frame’s ground showing around it.' },
+            { name: '--kp-media-position', what: 'Which part survives the crop. Default the middle; `50% 20%` keeps heads in the frame.' },
+            { name: '.kp-media__overlay', what: 'Text on the picture, with a gradient under it. Its ink and its ground are knobs for a consumer who knows their own picture.' },
+        ],
+        accessibility: [
+            'Yours — every image needs alt text, and a decorative one needs an empty alt rather than none.',
+            'Yours — a caption that repeats the alt text is read twice. Say different things, or leave one out.',
+            'Built in — the frame keeps its shape before and after loading, so nothing the reader is looking at moves under them.',
+        ],
+    },
+    {
         id: 'breadcrumb',
         title: 'Breadcrumb',
         group: 'Navigation',

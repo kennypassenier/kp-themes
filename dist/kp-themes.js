@@ -137,6 +137,10 @@ var DEFAULT_STRINGS = Object.freeze({
   // controls whose names do not tell them apart.
   sidebar: "Open the side navigation",
   closeSidebar: "Close the side navigation",
+  // A control that appears part-way down a page and has no text of its
+  // own beyond an arrow: the accessible name is the whole of what a
+  // screen reader gets.
+  backToTop: "Back to top",
   previous: "Previous",
   next: "Next",
   finish: "Finish",
@@ -428,10 +432,13 @@ __export(components_exports, {
   EXEMPT: () => EXEMPT,
   NAV_OWNED: () => NAV_OWNED,
   NAV_TOGGLE_EVENT: () => NAV_TOGGLE_EVENT,
+  TO_TOP: () => TO_TOP,
+  TO_TOP_EVENT: () => TO_TOP_EVENT,
   VIOLATION_EVENT: () => VIOLATION_EVENT,
   attachConfirmations: () => attachConfirmations,
   attachNavToggles: () => attachNavToggles,
   attachSkipLinks: () => attachSkipLinks,
+  attachToTop: () => attachToTop,
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
   openConfirmation: () => openConfirmation,
@@ -630,6 +637,64 @@ function skipTo(href, root = document) {
   if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
   target.focus();
   return true;
+}
+var TO_TOP_EVENT = "kp-to-top";
+var TO_TOP = "[data-kp-to-top]";
+function attachToTop(root = document, { strings, after } = {}) {
+  const cleanups = [];
+  for (const el of root.querySelectorAll(TO_TOP)) {
+    const button = (
+      /** @type {HTMLElement} */
+      el
+    );
+    if (button.dataset.kpToTopAttached !== void 0) continue;
+    button.dataset.kpToTopAttached = "";
+    const doc = button.ownerDocument;
+    const view = doc.defaultView;
+    if (!view) continue;
+    const threshold = after ?? Number(button.getAttribute("data-kp-to-top-after") ?? "400");
+    const target = button.getAttribute("data-kp-to-top-target") ?? "";
+    const s = { ...getStrings(), ...strings };
+    if (button.getAttribute("aria-label") === null && button.textContent?.trim() === "") {
+      button.setAttribute("aria-label", s.backToTop);
+    }
+    let shown = false;
+    let queued = false;
+    const decide = () => {
+      queued = false;
+      const next = view.scrollY > threshold;
+      if (next === shown) return;
+      shown = next;
+      button.toggleAttribute("data-kp-to-top-shown", next);
+      button.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next } }));
+    };
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      view.requestAnimationFrame(decide);
+    };
+    const onClick = () => {
+      view.scrollTo({ top: 0 });
+      const to = (
+        /** @type {HTMLElement | null} */
+        (target === "" ? null : doc.querySelector(target)) ?? doc.body
+      );
+      if (!to.hasAttribute("tabindex")) to.setAttribute("tabindex", "-1");
+      to.focus({ preventScroll: true });
+    };
+    decide();
+    view.addEventListener("scroll", onScroll, { passive: true });
+    button.addEventListener("click", onClick);
+    cleanups.push(() => {
+      view.removeEventListener("scroll", onScroll);
+      button.removeEventListener("click", onClick);
+      button.removeAttribute("data-kp-to-top-shown");
+      delete button.dataset.kpToTopAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
 }
 var NAV_TOGGLE_EVENT = "kp-nav-toggle";
 var NAV_OWNED = "[data-kp-nav-owner]";
@@ -5709,6 +5774,7 @@ function attachAll(root = document) {
     enforceContracts(root),
     attachConfirmations(root),
     attachSkipLinks(root),
+    attachToTop(root),
     attachNavToggles(root),
     attachSidenavs(root),
     attachDialogs(root),
@@ -5972,6 +6038,8 @@ export {
   TOAST_HIDE_EVENT,
   TOAST_MS,
   TOAST_SHOW_EVENT,
+  TO_TOP,
+  TO_TOP_EVENT,
   TREE_EXPAND_EVENT,
   TREE_SELECT_EVENT,
   UNDO_EVENT,
@@ -6007,6 +6075,7 @@ export {
   attachTableRegions,
   attachTabs,
   attachThemePickers,
+  attachToTop,
   attachUploads,
   attachWizards,
   auto_exports as autoExports,

@@ -145,7 +145,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // ask-1 (2026-09-10) added one: --kp-badge-wrap, the way out of the
     // overflow floor for the one of its five components whose content is
     // usually a label rather than a value.
-    assert.equal(result.expected, 108, 'AR21 counted 108 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 116, 'AR21 counted 116 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -177,7 +177,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    assert.equal(result.readCount, 108);
+    assert.equal(result.readCount, 116);
     assert.deepEqual(result.unread, []);
 });
 

@@ -1367,6 +1367,110 @@
         color: inherit;
     }
 
+    /* --- Media [feat-media-1] --------------------------------------------
+       Of the component roots this package declares, not one was for a
+       picture, so every page that wanted one at the top invented its own —
+       and nearly all of them forgot the same thing.
+
+       The space is there before the picture is. `aspect-ratio` on the frame
+       and `object-fit` on the image mean the page has its final shape at
+       the first paint, so the text below it does not jump when the bytes
+       arrive. That is a layout bug a consumer cannot fix from the outside,
+       because it lives between the frame and the image.
+
+       No width of its own: a picture is as wide as what holds it, and
+       whoever placed it knows that better than this file does. */
+
+    .kp-media {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: var(--kp-media-ratio, 16 / 9);
+        background: var(--muted);
+        border-radius: var(--radius, 0);
+    }
+
+    .kp-media > img,
+    .kp-media > video,
+    .kp-media > picture,
+    .kp-media > picture > img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: var(--kp-media-fit, cover);
+        object-position: var(--kp-media-position, 50% 50%);
+        display: block;
+    }
+
+    /* Its own ratios, because a hero and a portrait are not the same
+       picture and a consumer should not have to remember the numbers. */
+    .kp-media--wide {
+        --kp-media-ratio: 21 / 9;
+    }
+
+    .kp-media--square {
+        --kp-media-ratio: 1;
+    }
+
+    .kp-media--portrait {
+        --kp-media-ratio: 3 / 4;
+    }
+
+    /* A caption belongs to the picture, so it sits with it rather than
+       floating below in whatever the page happens to give it. */
+    .kp-media-figure {
+        margin: 0;
+    }
+
+    .kp-media-figure > figcaption {
+        margin-block-start: 0.5rem;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        color: var(--muted-foreground);
+    }
+
+    /* Text over the picture, with a ground under it. A caption laid
+       straight on a photograph is legible until the day somebody uploads a
+       bright one [DI1]. */
+    .kp-media__overlay {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        padding: var(--kp-media-overlay-pad, 1rem);
+        color: var(--kp-media-overlay-ink, #fff);
+        background: var(--kp-media-overlay-ground, linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0)));
+    }
+
+    /* --- Back to top [feat-page-1] ---------------------------------------
+       The control that appears once the reader is a way down and takes them
+       back. It leans on the scroll offset built for the sticky bar: landing
+       at the top of a page whose bar covers the first line is not arriving.
+
+       Visibility is `visibility` rather than the hidden attribute, so the
+       button can fade rather than blink — and `visibility: hidden` keeps it
+       out of the tab order just as surely, which is the part that matters
+       for a control that is not there yet. */
+
+    .kp-to-top {
+        position: fixed;
+        inset-block-end: var(--kp-to-top-offset, 1.5rem);
+        inset-inline-end: var(--kp-to-top-offset, 1.5rem);
+        z-index: var(--kp-to-top-layer, 50);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .kp-to-top[data-kp-to-top-shown] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-to-top {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                visibility var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
     /* --- Side navigation [feat-nav-3] ------------------------------------
        A navigation that stands beside the content instead of above it,
        built to the feature list Kenny pointed at (MDBootstrap's sidenav,
