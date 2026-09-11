@@ -86,3 +86,51 @@ test.describe('staying put', () => {
         ).toBeGreaterThanOrEqual(BAR - 1);
     });
 });
+
+// Smooth scrolling, and the guard it is read inside [scope-10, stage 1.1].
+//
+// Found missing by the stage-1 milestone report, which is the whole reason
+// that gate exists: the feature was rated essential, was built, shipped in
+// the layout layer, and `grep -rn "scroll-behavior" tests/` returned one
+// hit — a comment. Kenny signed the gap off and asked for it closed before
+// stage 1.4.
+//
+// This is one of the few places where the computed value IS the
+// observable. What the property changes is how a LATER scroll animates,
+// and a test that raced that animation would be exactly the flake standing
+// rule 8a refuses. So the first test reads the value and the second — the
+// one that matters — proves the cascade did the right thing under a media
+// condition: a page that asked for `smooth` does not get it when the
+// reader asked for less motion.
+//
+// Drill [KT3]: the `html { scroll-behavior }` rule moved out of its
+// `@media (prefers-reduced-motion: no-preference)` block in
+// css/layout.css — "the guard keeps smooth away" goes red in firefox with
+// the value reading `smooth` under the preference, while the first test
+// stays green.
+
+const SMOOTH = '/tests/fixtures/smooth-scroll.html';
+
+test.describe('smooth scrolling', () => {
+    test('a page that asks for it gets it [stage 1.1]', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await page.goto(SMOOTH);
+        await measured(
+            page.locator('html'),
+            (el) => getComputedStyle(el).scrollBehavior,
+            undefined,
+            'the knob reaches the root when nothing objects',
+        ).toBe('smooth');
+    });
+
+    test('the guard keeps smooth away from a reader who asked for less [stage 1.1, DI7]', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(SMOOTH);
+        await measured(
+            page.locator('html'),
+            (el) => getComputedStyle(el).scrollBehavior,
+            undefined,
+            'the same page, the same knob, and the preference wins',
+        ).toBe('auto');
+    });
+});

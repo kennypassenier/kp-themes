@@ -623,6 +623,26 @@ anything built after them lands on a floor that is already right.
 | 1.5 | a back-to-top control | Nothing like it exists; it depends on 1.1 for where it lands. |
 | 1.6 | a component for a hero image | Of the component roots the package declares, not one is for a picture. |
 
+**Gate log — stages 1.1 to 1.3, reported 2026-09-11.** The report Phase 6
+asks for, given late: these three closed on commits and the gate came
+afterwards, which is the fault recorded as `fix-6`. Kenny signed all four
+criteria.
+
+| Criterion | Evidence | Outcome |
+| --------- | -------- | ------- |
+| The bar that stays put, and the anchor that clears it | 2 tests in `tests/sticky.spec.mjs`, both measuring the painted box; drill run in two halves, each turning exactly the other test red at `1238 passed, 1 failed` | Akkoord |
+| The navigation that folds into a toggle | 6 tests in `tests/nav-toggle.spec.mjs`, three per channel, one suite driving both; drill `1240 passed, 4 failed`, restored `1244 passed` | Akkoord |
+| Registry coverage | Smooth scrolling was rated essential, built, and covered by nothing: `grep -rn "scroll-behavior" tests/` returned one hit and it was a comment | Akkoord, gap accepted — **and then closed**: 2 tests added, `1246 passed`, drill `1245 passed, 1 failed` with the reduced-motion guard removed |
+| Deviations | A test deleted rather than reworded after its drill stayed green; the knob count 87 → 89; one bare playwright run and the false diagnosis that followed it; a form claiming a correction record that did not yet exist | Akkoord |
+
+**What the gate earned.** The coverage item found the missing test, which
+nothing else would have: the other two criteria were fully covered, every
+gate was green, and the feature worked. That is the argument for the gate
+that skipping it had quietly disproved.
+
+Kenny's order for what follows: close the gap first, then the sidebar.
+The gap is closed.
+
 **Stage 2 — the themes.** Titanium is added; dark is replaced outright by
 the spectral instrument; nine themes get the quirk settled for them in
 [THEME_VERDICTS.md](THEME_VERDICTS.md); blueprint takes the measurement
