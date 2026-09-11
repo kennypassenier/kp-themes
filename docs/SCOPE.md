@@ -852,3 +852,40 @@ animation is extrapolated as if it looped. Measured both ways over all
 thirty-six animations: fourteen cross the threshold on the two-argument
 call, all fourteen with exactly one cycle, and the verdict turns from FAIL
 to pass with the argument passed.
+
+**scope-8 · One ambient loop per theme.** (Kenny, 2026-09-11, on the first
+cut of the candidates.) "We moeten zien dat we niet teveel tegelijk tonen
+qua effecten." The pointer-driven haze and a band sweeping down the screen
+were both running in candidate A, and together they read as noise rather
+than as an instrument — his words: the pointer system is very good, the
+line that occasionally crosses the screen is a bit irritating beside it.
+So a theme gets one thing that moves on its own; everything else moves
+because something happened. The band is gone from candidate A. Two things
+he named as right are kept and extended: the colour transitions under the
+pointer, and buttons styled in a way characteristic of the theme.
+
+**scope-9 · A destructive control opens the theme's dialog.** (Kenny,
+2026-09-11.) The demos were still showing the arm-then-act confirmation
+of 3.x, which the package itself has not defaulted to since
+`attachConfirmations` took `mode = 'dialog'` — `js/components.js:274`
+builds a real `.kp-dialog.kp-confirm` with a title, a description and two
+actions, and `data-kp-confirm-mode` chooses per element. His instruction
+was to fix it for the future, so the concept demo now opens that dialog,
+built in the package's own shape, and the theme styles it. The inventory
+entry in `showcase/concept-demo.json` keeps its `data-kp-confirm` marker,
+because the attribute is the same; what changed is what the attribute
+does.
+
+**The candidate chosen, 2026-09-11.** Kenny picked **A · Spectraal
+instrument** — "de beste van de drie, maar het voelt nog altijd niet
+hightech genoeg aan". The second cut answers that without adding a loop:
+machined geometry (a cut corner on every control and panel), a data label
+above a control that lights in the theme's own ramp, brackets around the
+headline that report the box they hold, a character count per field, a
+nav marker that follows the pointer, and a fixed instrument rail reading
+six values the page measures about itself — pointer, viewport, scroll,
+frame time, the live contrast of ink on ground, and the candidate. Every
+one of the six was driven to at least two different values before it
+shipped, per the standing rule that a status field which cannot be shown
+to vary is decoration that lies; a field with no source prints two dashes
+rather than a zero.
