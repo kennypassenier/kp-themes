@@ -600,3 +600,39 @@ round-three Phase 10 form and the dev-procedure commit that waits on it.
 | R6-Q5 | C1, reading C0's CI | **A live-found process fault, Claude's own.** C0's commit `b6c5e5e` was pushed to `main` after the push chain reported CI green; CI was not green. The `gates` job passed and the `browser` job failed on one assertion (`tests/overflow.spec.mjs` still expected ten example pages), and the chain read the exit code of `gh run watch` — which had been moved to the background at its timeout and reported 0 — instead of the run's `conclusion` per job. Found at C1 when the whole browser suite was run locally before the push. Fixed in the same commit as C1's test fix, and the chain now reads `gh run view --json conclusion,jobs` for the sha and refuses to move `main` unless every job says success. Standing rule 36 was followed to the letter (wait on the checks of that sha) and still let this through, because it does not say which signal counts; a correction form is Kenny's (rule 29), queued here for the C5 report. **Closed 2026-09-08:** the correction is KT12 in `docs/CORRECTIONS.md`, all nine fields approved; field 7 was measured on `a02d31f` (the chain held `main` on a red browser job) and branch protection on `main` now requires both jobs. |
 | R6-Q6 | C4, the fonts budget | woodblock names two Japanese families; with a regular and a bold face each at the JIS level 1 subset it weighs 2.37 MB against `fontsBudgetBytes` 1.5 MB (AR39). Shipped now: the regular faces only, 1.2 MB, bold synthesised by the browser. Kenny decides: raise the budget for the CJK themes, accept the synthesised bold, or drop one of the two families from the theme.  **Answered by Kenny 2026-09-07 ("Synthetisch vet accepteren"), recorded 2026-09-08** in MIGRATION.md's 5.0.0 section as a known limitation. |
 | R6-Q4 | C0, Kenny's message | The compare page, MR-R6-COMPARE: 4.0.0 on the left, the current build on the right, for the theme in the query. Kenny asked for it during C0; it is recorded in `docs/MINI_ROUNDS.md` and built at C5. Nothing to decide unless the vendoring of the 4.0.0 stylesheets under `showcase/baseline/4.0.0/` is not what he meant. **Reopened 2026-09-08 on Kenny's second reading of the rebuilt page:** all 24 sections were visible (`.kp-stack`'s `display: flex` beats the `hidden` attribute, and the test checked the attribute, not the paint), and a theme whose only difference is typography showed a near-empty frame. His answer to the demo page (R6b) is Akkoord; the compare page is rebuilt on his V1 answer — one page per theme, the whole demo on both sides, the differing sections marked — and the visibility fault gets its own correction form after the rebuild. |
+
+## Round seven — the build order (2026-09-11)
+
+Kenny chose the order on the scope form: repairs first, then the themes,
+then the removals. What follows is that order written out, one stage at a
+time. Every stage runs `npm run gates` at its commit and the specs it
+touches; the whole browser suite stays Kenny's, with the standing
+agreement that Claude asks for it in a form before a release.
+
+**Stage 1 — the six pieces the element list calls essential.** They come
+first because three of them repair something that is broken today rather
+than adding something missing, and because all six touch every theme, so
+anything built after them lands on a floor that is already right.
+
+| # | What | Why it is first |
+| - | ---- | --------------- |
+| 1.1 | the scroll offset, and smooth scrolling behind a knob | The package has zero occurrences of `scroll-behavior`, `scroll-padding` or `scroll-margin`. Every page carries a skip link; the moment anything is sticky, that link lands underneath it and the person using it cannot see that it did. |
+| 1.2 | a navigation bar that can stay at the top | Zero occurrences of `sticky` anywhere in `css/`, `js/` or `components/`. Nothing in this package stays put while the page scrolls — not a bar, not a table header. |
+| 1.3 | a navigation that collapses on a narrow screen | No toggle of any kind exists. Today the links simply wrap, and on the demo at 462 px the chrome grew to 229 px tall before any of the page was visible. |
+| 1.4 | the side navigation that can be hidden | `.kp-sidebar` exists in `css/layout.css:93` as a column layout with three knobs and no way to hide, open or remember. Default overlay, with pushing as a knob. |
+| 1.5 | a back-to-top control | Nothing like it exists; it depends on 1.1 for where it lands. |
+| 1.6 | a component for a hero image | Of the component roots the package declares, not one is for a picture. |
+
+**Stage 2 — the themes.** Titanium is added; dark is replaced outright by
+the spectral instrument; nine themes get the quirk settled for them in
+[THEME_VERDICTS.md](THEME_VERDICTS.md); blueprint takes the measurement
+frame from the command table. Lapis waits on its second proposal.
+
+**Stage 3 — the removals.** academia, mono, ticker and woodblock leave
+the set, and every consumer is told before the tag rather than after.
+This is last on purpose: it is the only part of the round that cannot be
+undone without rolling back a version.
+
+**Not in any stage:** counters are wanted rather than essential and land
+if the stages above leave room; carousels are refused; an icon set is a
+round of its own.

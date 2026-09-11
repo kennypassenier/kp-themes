@@ -1058,3 +1058,24 @@ rule that becomes an edge**, both approved as first shown. The doubled
 edge, which pastel refused, stays in the demo as a shape without a home;
 a thin outline is a technical gesture and no theme in this round is
 asking for one.
+
+**scope-25 · Four of the five quirks are approved; lapis comes back.**
+Kenny, 2026-09-11. **high-contrast** takes the flip — a control turns
+into its own negative with no transition at all, because a theme whose
+own sentence says "nothing in between" should not fade, and the signal
+yellow exists only in the instant something is pressed. **sepia** takes
+the ink spreading into the paper on a press and the rule that is thickest
+in the middle. **shade-light and shade-dark** take the one mechanism that
+finally makes them a pair: the pointer is the light, and the light half
+throws its shade away from it while the dark half is lifted out of shade
+by it. **lapis is not approved** and gets a second idea before anything
+is built; the gold leaf catching the light was the one proposal of the
+five that did not land.
+
+**scope-26 · The build begins, repairs first.** Kenny, 2026-09-11. The
+order is his: the six essential pieces from the element list, then the
+themes, then the removal of the four. The reason it was worth choosing
+rather than letting happen is that removing four themes is the only part
+of this round that cannot be undone without rolling back a version, and
+it touches every consumer that vendors the bundle. Put last, everything
+before it has already run.
