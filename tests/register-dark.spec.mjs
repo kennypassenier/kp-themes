@@ -180,23 +180,31 @@ for (const [channel, url] of CHANNELS) {
             expect(await second.evaluate((el) => getComputedStyle(el).transform), 'the alt divider mirrors').not.toBe('none');
         });
 
-        test('the starfield is a still photograph at 0.35, over DI9’s ceiling and reported [S42]', async ({ page }) => {
+        test('there is no starfield: the ground is plain [Kenny, 2026-09-11]', async ({ page }) => {
+            // It had one, and he took it back out: "dark mag zijn sterren weer
+            // kwijtspelen op de achtergrond". This test is the other way round
+            // from the one it replaces, which asserted 102 points at 0.35 and a
+            // shimmer layer above them.
+            //
+            // Drill: `--fx-texture` put back on the root in css/_rules.css,
+            // AND `npm run generate` run — the page loads the generated
+            // css/themes.css, so a drill that edits the source without
+            // regenerating proves nothing. `18 passed, 2 failed`, one per
+            // channel. The first attempt skipped that step and reported
+            // green, which is the trap rule 7e is about.
             await open(page, url);
-            const opacity = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity').trim());
-            expect(opacity).toBe('0.35');
-            const field = await page.evaluate(() => {
-                const s = getComputedStyle(document.body, '::after');
-                return { image: s.backgroundImage, opacity: s.opacity, animationName: s.animationName };
+            const ground = await page.evaluate(() => {
+                const after = getComputedStyle(document.body, '::after');
+                const before = getComputedStyle(document.body, '::before');
+                return {
+                    after: after.backgroundImage,
+                    before: before.backgroundImage,
+                    token: getComputedStyle(document.documentElement).getPropertyValue('--fx-texture').trim(),
+                };
             });
-            expect(field.image, 'the 102-point field').toMatch(/radial-gradient/);
-            expect(field.opacity).toBe('0.35');
-            expect(field.animationName, 'a still photograph: nothing here loops').toBe('none');
-            const spikes = await page.evaluate(() => {
-                const s = getComputedStyle(document.body, '::before');
-                return { image: s.backgroundImage, mask: s.maskImage || s.webkitMaskImage, animationName: s.animationName };
-            });
-            expect(spikes.image, 'the ten shimmer stars').toMatch(/conic-gradient/);
-            expect(spikes.animationName).toBe('none');
+            expect(ground.token, 'the theme declares no texture at all').toBe('');
+            expect(ground.after, 'and nothing is painted on the shared layer').toBe('none');
+            expect(ground.before, 'nor on a layer of its own').toBe('none');
         });
 
         test('the nav dropdown: a quiet panel, its own violet keyboard ring [KT14]', async ({ page }) => {

@@ -201,7 +201,7 @@ built first.
 | TH80 | Theme vaporwave / synthwave | Don't do | synthwave scores 3 against cyberpunk, vaporwave 2 against pastel |
 | TH81 | Theme botanical / earth | Don't do | scores 3 against forest; sage fails DI1 as a boundary (2.23) |
 | TH82 | Theme steampunk | Don't do | scores 3 against solstice, 2–3 against sepia |
-| TH83 | Theme cosmic / space | Don't do | scores 3 against dark, which already carries the starfield |
+| TH83 | Theme cosmic / space | Don't do | scored 3 against dark, which carried the starfield. That reason expired on 2026-09-11 when Kenny took dark's stars out; the verdict stands on the score alone |
 | TH84 | Theme reader (e-paper) | Don't do | duplicates TH72 |
 | TH85 | `--fx-shadow-offset` knob — a hard offset shadow on card, button and input | Essential | 0px in every existing theme; the first theme knob added since L3, so a minor version. Test bar: the knob paints in brutalism and nothing changes in the eleven (pixel comparison on the fixture) |
 | TH86 | Pattern fills for status plates and chart colours | Desired | `--chart-pattern-1..5` and outline/dash badge variants, as tokens per DI9. Test bar: the seven badges of `mono` are pairwise distinguishable with hue removed |

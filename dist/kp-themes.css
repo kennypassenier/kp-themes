@@ -3810,12 +3810,12 @@
         --fx-texture-opacity: 0.05;
     }
 
-    /* T7 · Dark = "Observatorium": a faint starfield behind the glass. */
-    [data-theme='dark'] {
-        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='white'%3E%3Ccircle cx='24' cy='41' r='1'/%3E%3Ccircle cx='134' cy='17' r='0.6'/%3E%3Ccircle cx='201' cy='83' r='1.2'/%3E%3Ccircle cx='68' cy='129' r='0.7'/%3E%3Ccircle cx='249' cy='150' r='0.9'/%3E%3Ccircle cx='163' cy='196' r='0.6'/%3E%3Ccircle cx='41' cy='222' r='1.1'/%3E%3Ccircle cx='108' cy='257' r='0.7'/%3E%3Ccircle cx='226' cy='243' r='0.6'/%3E%3Ccircle cx='176' cy='115' r='0.5'/%3E%3Ccircle cx='95' cy='72' r='0.5'/%3E%3Ccircle cx='262' cy='38' r='0.7'/%3E%3C/g%3E%3C/svg%3E");
-        --fx-texture-size: 280px 280px;
-        --fx-texture-opacity: 0.06; /* DI9's ceiling; 0.5 before 5.0.0 (R6-Q2, Kenny 2026-09-08: on the compare page, side by side) */
-    }
+    /* T7 · Dark carries no texture. It was "Observatorium", a faint
+       starfield behind the glass, from round one until 2026-09-11, when
+       Kenny asked for it back out: "dark mag zijn sterren weer
+       kwijtspelen op de achtergrond". Its register's own field — 102
+       points and ten shimmer stars, added in round six — went in the
+       same change. The ground is plain. */
 
     /* T8 · Pastel = "Riso": risograph grain and a misregistered second ink. */
     [data-theme='pastel'] {
@@ -28202,51 +28202,34 @@
    The dark register, 5.0.0 [S48, LIFT_PLAN row 15]: the ordinary dark
    theme, done properly. Scoped to [data-theme='dark'] and inert
    elsewhere; opt-in, imported after themes.css. The approved concept
-   demo ("Small Hours", stars II, 2026-09-08) is the reference for every
-   value here — Kenny's second reading asked for a visible-but-subtle
-   starfield with a JWST-style shimmer on its brightest points, and this
-   file is that reading, not the plain first draft ("Small Hours") that
-   stayed a comparison point beside it.
+   demo ("Small Hours", stars II, 2026-09-08) was the reference for every
+   value here.
 
-   What this file does, in order: the knobs and the two texture layers
-   (the 102-point field on the shared texture pseudo-element, the ten
-   shimmer stars on their own); the two-channel focus ring, reversed from
-   the base default; the type; the hooks of S45 — the headline that
-   resolves word by word out of a blur, the mark as an ignite (the lede's
-   colour-only, scroll-bound; the dossier's a redact bar that lifts on
-   the trigger), the rule that sweeps in under a heading, the divider as
-   a night seam with its own dense local sample; the nav as a quiet strip
-   with its dropdown's own keyboard ring; the buttons, fields and panels;
-   and one answer per component root (TH124).
+   THE STARFIELD IS GONE [Kenny, 2026-09-11]: "dark mag zijn sterren weer
+   kwijtspelen op de achtergrond". What stood here until that day was 112
+   individually-generated positions pasted verbatim from the demo's own
+   header — a 102-point field on the shared texture layer at 0.35, and
+   ten brighter stars on a layer of their own, their SVG shimmer rebuilt
+   as masked conic gradients. None of it was animated; it was a still
+   photograph, painted once. It is recorded here rather than only in the
+   history because the demo that approved it still shows it, and anyone
+   comparing the two deserves to know which way the difference runs.
+
+   The divider keeps its own dense local sample. That is a seam between
+   sections, not the background he named, and it stays until he says
+   otherwise.
+
+   What this file does, in order: the knobs; the two-channel focus ring,
+   reversed from the base default; the type; the hooks of S45 — the
+   headline that resolves word by word out of a blur, the mark as an
+   ignite (the lede's colour-only, scroll-bound; the dossier's a redact
+   bar that lifts on the trigger), the rule that sweeps in under a
+   heading, the divider as a night seam with its own dense local sample;
+   the nav as a quiet strip with its dropdown's own keyboard ring; the
+   buttons, fields and panels; and one answer per component root (TH124).
 
    Colour discipline (DI9): nothing here names a colour. Every stop is
-   `var(--token)` or `hsl(from var(--token) h s l / alpha)`.
-
-   THE STARFIELD [S42, S49]: 112 individually-generated positions (dim 80
-   + mid 22 + bright/spike 10), pasted verbatim (as `hsl(from
-   var(--foreground) …)` in place of the demo's `var(--ink)`) from the
-   demo's own header comment, itself the stdout of a seeded mulberry32
-   PRNG (seed 20260908) run once and never regenerated. Nothing here is
-   randomised at build time or at runtime: every position is a literal.
-   The layer's own opacity is 0.35 — DI9's 0.06 ceiling names a felt, not
-   seen, texture; 0.35 is roughly 5.8x that, over it, and reported rather
-   than corrected (S42) via `textureOpacityCeiling.perTheme.dark` in
-   gates/config.json, the demo named as the reason. Nothing in the field
-   is animated: no `@keyframes`, no opacity cycling, nothing that could
-   ever oppose luminance (DI5) — it is a still photograph, painted once.
-
-   THE SHIMMER: the demo drew its ten brightest stars as an inline SVG
-   `<symbol>` reused by `<use>`. A register is CSS only and the concept
-   page's markup is shared by every theme, so that symbol cannot travel
-   here; the same appearance — a soft core plus eight thin rays fading
-   from the centre, a minority of stars a little brighter, never a wash —
-   is rebuilt as layered `conic-gradient`s (the eight rays, angularly
-   thin wedges recomputed per star from the demo's own literal rotation)
-   masked by a small `radial-gradient` per star (the length taper the
-   SVG's stroke gradient did with an alpha fade, this does with
-   `mask-image`), plus one `radial-gradient` core. A mechanism
-   substitution, not an appearance one: the same still, subtle glyph the
-   demo names. */
+   `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
 
     [data-theme='dark'] {
         /* The configuration surface [AR43], the demo's values as defaults. */
@@ -28266,118 +28249,12 @@
         /* Dead North's shout-in ease, reused for the word resolve [S49]. */
         --kp-settle: cubic-bezier(0.22, 1, 0.36, 1);
 
-        /* The starfield [S42, S49]: 102 static points on the shared
-           texture pseudo-element (css/_rules.css's body::after); the ten
-           brightest live in their own layer below, so their own alpha is
-           not diluted by this layer's 0.35. Each dot fades only in the
-           outer 8% of its own radius (transparent at 92%), not from the
-           centre, so the core still reaches close to its nominal alpha
-           despite the small size. */
-        --fx-texture:
-            radial-gradient(0.54px 0.54px at 88.87% 1.94%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.51px 0.51px at 51.53% 10.05%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.52px 0.52px at 80.97% 12.77%, hsl(from var(--foreground) h s l / 0.44), transparent 92%),
-            radial-gradient(0.55px 0.55px at 57.07% 70.36%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.69px 0.69px at 72.75% 59.8%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.49px 0.49px at 17.76% 13.19%, hsl(from var(--foreground) h s l / 0.46), transparent 92%),
-            radial-gradient(0.56px 0.56px at 84.6% 63.3%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.53px 0.53px at 43.84% 0.71%, hsl(from var(--foreground) h s l / 0.37), transparent 92%),
-            radial-gradient(0.71px 0.71px at 30.57% 23.7%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.6px 0.6px at 45.59% 17.57%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.54px 0.54px at 84.08% 21.21%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.61px 0.61px at 57.58% 0.8%, hsl(from var(--foreground) h s l / 0.35), transparent 92%),
-            radial-gradient(0.74px 0.74px at 53.5% 23.59%, hsl(from var(--foreground) h s l / 0.41), transparent 92%),
-            radial-gradient(0.61px 0.61px at 96.8% 63.48%, hsl(from var(--foreground) h s l / 0.44), transparent 92%),
-            radial-gradient(0.65px 0.65px at 31.69% 5.48%, hsl(from var(--foreground) h s l / 0.44), transparent 92%),
-            radial-gradient(0.7px 0.7px at 85.97% 22.48%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.55px 0.55px at 10.78% 2.19%, hsl(from var(--foreground) h s l / 0.43), transparent 92%),
-            radial-gradient(0.7px 0.7px at 74.14% 27.66%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.66px 0.66px at 99.49% 95.54%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.57px 0.57px at 4.38% 82.01%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.67px 0.67px at 7.01% 66.69%, hsl(from var(--foreground) h s l / 0.46), transparent 92%),
-            radial-gradient(0.65px 0.65px at 39.35% 68.25%, hsl(from var(--foreground) h s l / 0.3), transparent 92%),
-            radial-gradient(0.63px 0.63px at 59.61% 52.31%, hsl(from var(--foreground) h s l / 0.43), transparent 92%),
-            radial-gradient(0.46px 0.46px at 20.54% 11.46%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.56px 0.56px at 6.11% 95.56%, hsl(from var(--foreground) h s l / 0.36), transparent 92%),
-            radial-gradient(0.63px 0.63px at 25.77% 16.04%, hsl(from var(--foreground) h s l / 0.41), transparent 92%),
-            radial-gradient(0.71px 0.71px at 25.79% 87.93%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.52px 0.52px at 93.62% 52.85%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.66px 0.66px at 20.61% 98.01%, hsl(from var(--foreground) h s l / 0.42), transparent 92%),
-            radial-gradient(0.68px 0.68px at 93.97% 80.22%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.56px 0.56px at 87.03% 5.41%, hsl(from var(--foreground) h s l / 0.35), transparent 92%),
-            radial-gradient(0.59px 0.59px at 80.71% 65.76%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.57px 0.57px at 99.5% 10.27%, hsl(from var(--foreground) h s l / 0.36), transparent 92%),
-            radial-gradient(0.61px 0.61px at 53.68% 21.06%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.67px 0.67px at 77.82% 53.12%, hsl(from var(--foreground) h s l / 0.48), transparent 92%),
-            radial-gradient(0.57px 0.57px at 80.06% 25.6%, hsl(from var(--foreground) h s l / 0.35), transparent 92%),
-            radial-gradient(0.66px 0.66px at 76.73% 64.57%, hsl(from var(--foreground) h s l / 0.38), transparent 92%),
-            radial-gradient(0.53px 0.53px at 2.41% 79.31%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.57px 0.57px at 37.9% 83.64%, hsl(from var(--foreground) h s l / 0.38), transparent 92%),
-            radial-gradient(0.65px 0.65px at 94.54% 86.15%, hsl(from var(--foreground) h s l / 0.46), transparent 92%),
-            radial-gradient(0.53px 0.53px at 7.15% 75.91%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.54px 0.54px at 57.74% 29.82%, hsl(from var(--foreground) h s l / 0.4), transparent 92%),
-            radial-gradient(0.73px 0.73px at 19.11% 10.45%, hsl(from var(--foreground) h s l / 0.44), transparent 92%),
-            radial-gradient(0.74px 0.74px at 61.7% 28.91%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.67px 0.67px at 4.93% 25.58%, hsl(from var(--foreground) h s l / 0.48), transparent 92%),
-            radial-gradient(0.65px 0.65px at 65.41% 66.94%, hsl(from var(--foreground) h s l / 0.43), transparent 92%),
-            radial-gradient(0.55px 0.55px at 32.76% 18.3%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.53px 0.53px at 91.88% 26.54%, hsl(from var(--foreground) h s l / 0.47), transparent 92%),
-            radial-gradient(0.6px 0.6px at 4.13% 24.24%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.65px 0.65px at 32.88% 73.16%, hsl(from var(--foreground) h s l / 0.38), transparent 92%),
-            radial-gradient(0.68px 0.68px at 80.98% 85.39%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.72px 0.72px at 37.23% 9%, hsl(from var(--foreground) h s l / 0.39), transparent 92%),
-            radial-gradient(0.64px 0.64px at 62.52% 49.75%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.71px 0.71px at 21.79% 28.69%, hsl(from var(--foreground) h s l / 0.33), transparent 92%),
-            radial-gradient(0.48px 0.48px at 47.18% 75.92%, hsl(from var(--foreground) h s l / 0.41), transparent 92%),
-            radial-gradient(0.64px 0.64px at 43% 5.73%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.57px 0.57px at 9.38% 67.9%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.64px 0.64px at 99.12% 98.7%, hsl(from var(--foreground) h s l / 0.44), transparent 92%),
-            radial-gradient(0.74px 0.74px at 75.31% 9.18%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.71px 0.71px at 2.34% 3.41%, hsl(from var(--foreground) h s l / 0.38), transparent 92%),
-            radial-gradient(0.69px 0.69px at 80.76% 43.83%, hsl(from var(--foreground) h s l / 0.37), transparent 92%),
-            radial-gradient(0.73px 0.73px at 63.86% 92.45%, hsl(from var(--foreground) h s l / 0.4), transparent 92%),
-            radial-gradient(0.5px 0.5px at 62.88% 84.25%, hsl(from var(--foreground) h s l / 0.43), transparent 92%),
-            radial-gradient(0.73px 0.73px at 94.83% 37.32%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.73px 0.73px at 62.09% 28.54%, hsl(from var(--foreground) h s l / 0.46), transparent 92%),
-            radial-gradient(0.61px 0.61px at 51.93% 89.38%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.7px 0.7px at 56.41% 38.54%, hsl(from var(--foreground) h s l / 0.41), transparent 92%),
-            radial-gradient(0.53px 0.53px at 38.04% 68.09%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.52px 0.52px at 83.87% 43.57%, hsl(from var(--foreground) h s l / 0.38), transparent 92%),
-            radial-gradient(0.55px 0.55px at 88.65% 13.56%, hsl(from var(--foreground) h s l / 0.31), transparent 92%),
-            radial-gradient(0.62px 0.62px at 68.35% 77.8%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.48px 0.48px at 86.69% 61.36%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(0.48px 0.48px at 72.17% 53.66%, hsl(from var(--foreground) h s l / 0.41), transparent 92%),
-            radial-gradient(0.49px 0.49px at 6.64% 14.82%, hsl(from var(--foreground) h s l / 0.32), transparent 92%),
-            radial-gradient(0.72px 0.72px at 50.19% 78%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.63px 0.63px at 81.1% 46.81%, hsl(from var(--foreground) h s l / 0.37), transparent 92%),
-            radial-gradient(0.68px 0.68px at 12.25% 3.33%, hsl(from var(--foreground) h s l / 0.47), transparent 92%),
-            radial-gradient(0.52px 0.52px at 37.76% 7.71%, hsl(from var(--foreground) h s l / 0.42), transparent 92%),
-            radial-gradient(0.65px 0.65px at 72.41% 75.41%, hsl(from var(--foreground) h s l / 0.45), transparent 92%),
-            radial-gradient(0.67px 0.67px at 77.19% 0.8%, hsl(from var(--foreground) h s l / 0.34), transparent 92%),
-            radial-gradient(1.27px 1.27px at 55.66% 17.97%, hsl(from var(--foreground) h s l / 0.54), transparent 92%),
-            radial-gradient(0.92px 0.92px at 31.48% 98.08%, hsl(from var(--foreground) h s l / 0.56), transparent 92%),
-            radial-gradient(0.98px 0.98px at 54.66% 2.18%, hsl(from var(--foreground) h s l / 0.6), transparent 92%),
-            radial-gradient(1.23px 1.23px at 83.8% 86.11%, hsl(from var(--foreground) h s l / 0.51), transparent 92%),
-            radial-gradient(1.14px 1.14px at 46.9% 16.07%, hsl(from var(--foreground) h s l / 0.54), transparent 92%),
-            radial-gradient(1.14px 1.14px at 82.88% 35.84%, hsl(from var(--foreground) h s l / 0.59), transparent 92%),
-            radial-gradient(1.23px 1.23px at 93.79% 46.77%, hsl(from var(--foreground) h s l / 0.55), transparent 92%),
-            radial-gradient(0.97px 0.97px at 19.1% 95.09%, hsl(from var(--foreground) h s l / 0.55), transparent 92%),
-            radial-gradient(1.23px 1.23px at 92.01% 4.13%, hsl(from var(--foreground) h s l / 0.53), transparent 92%),
-            radial-gradient(1.22px 1.22px at 68.07% 1.21%, hsl(from var(--foreground) h s l / 0.55), transparent 92%),
-            radial-gradient(0.99px 0.99px at 54.49% 22.62%, hsl(from var(--foreground) h s l / 0.65), transparent 92%),
-            radial-gradient(1px 1px at 76.81% 11.69%, hsl(from var(--foreground) h s l / 0.65), transparent 92%),
-            radial-gradient(1.11px 1.11px at 26.4% 24.48%, hsl(from var(--foreground) h s l / 0.68), transparent 92%),
-            radial-gradient(0.92px 0.92px at 90.33% 70.56%, hsl(from var(--foreground) h s l / 0.51), transparent 92%),
-            radial-gradient(1.2px 1.2px at 70.33% 42.31%, hsl(from var(--foreground) h s l / 0.63), transparent 92%),
-            radial-gradient(1.16px 1.16px at 6.78% 72.2%, hsl(from var(--foreground) h s l / 0.54), transparent 92%),
-            radial-gradient(1.07px 1.07px at 90.1% 56.54%, hsl(from var(--foreground) h s l / 0.58), transparent 92%),
-            radial-gradient(1.09px 1.09px at 50.41% 9.21%, hsl(from var(--foreground) h s l / 0.62), transparent 92%),
-            radial-gradient(1.17px 1.17px at 91.22% 22.93%, hsl(from var(--foreground) h s l / 0.61), transparent 92%),
-            radial-gradient(1.08px 1.08px at 93.35% 23.28%, hsl(from var(--foreground) h s l / 0.63), transparent 92%),
-            radial-gradient(1.19px 1.19px at 32.44% 12.13%, hsl(from var(--foreground) h s l / 0.5), transparent 92%),
-            radial-gradient(0.93px 0.93px at 98.39% 26.47%, hsl(from var(--foreground) h s l / 0.56), transparent 92%);
-        --fx-texture-size: auto;
-        --fx-texture-opacity: 0.35;
+        /* No starfield. The approved demo had one — 102 points on the
+           shared texture layer with ten shimmer stars above it — and
+           Kenny took it back out on 2026-09-11: "dark mag zijn sterren
+           weer kwijtspelen op de achtergrond". The ground is plain now.
+           The divider keeps its own dense local sample, which is a seam
+           between sections rather than the background he named. */
     }
 
     /* ── The ring, reversed from the base default [DI2, AR30, S49] ────────
@@ -28389,427 +28266,6 @@
     [data-theme='dark'] :focus-visible {
         outline-color: var(--foreground);
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
-    }
-
-    /* The ten brightest stars, on their own layer so their alpha is not
-       diluted by the field's own 0.35 — see the header comment "THE
-       SHIMMER". Ten soft cores (radial-gradient) plus ten ray glyphs
-       (conic-gradient, eight thin wedges each, angles taken from the
-       demo's own literal per-star rotation) masked down to a small local
-       window per star so the rays taper by distance the way the SVG's own
-       gradient stroke did. Fully static — no keyframes anywhere near it. */
-    [data-theme='dark'] body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: var(--kp-z-texture, 80);
-        --fx-texture:
-            conic-gradient(
-                from 0deg at 58.58% 70.69%,
-                transparent 245.4deg,
-                transparent 285.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 285.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 288.6deg,
-                transparent 288.6deg,
-                transparent 315.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 315.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 318.6deg,
-                transparent 318.6deg,
-                transparent 375.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 375.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 378.6deg,
-                transparent 378.6deg,
-                transparent 435.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 435.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 438.6deg,
-                transparent 438.6deg,
-                transparent 465.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 465.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 468.6deg,
-                transparent 468.6deg,
-                transparent 495.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 495.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 498.6deg,
-                transparent 498.6deg,
-                transparent 555.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 555.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 558.6deg,
-                transparent 558.6deg,
-                transparent 615.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 615.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 618.6deg,
-                transparent 618.6deg,
-                transparent 658.6deg
-            ),
-            conic-gradient(
-                from 0deg at 81.84% 28.91%,
-                transparent 81.4deg,
-                transparent 121.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 121.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 124.6deg,
-                transparent 124.6deg,
-                transparent 151.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 151.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 154.6deg,
-                transparent 154.6deg,
-                transparent 211.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 211.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 214.6deg,
-                transparent 214.6deg,
-                transparent 271.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 271.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 274.6deg,
-                transparent 274.6deg,
-                transparent 301.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 301.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 304.6deg,
-                transparent 304.6deg,
-                transparent 331.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 331.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 334.6deg,
-                transparent 334.6deg,
-                transparent 391.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 391.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 394.6deg,
-                transparent 394.6deg,
-                transparent 451.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 451.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 454.6deg,
-                transparent 454.6deg,
-                transparent 494.6deg
-            ),
-            conic-gradient(
-                from 0deg at 81.8% 39.12%,
-                transparent 15.4deg,
-                transparent 55.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 55.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 58.6deg,
-                transparent 58.6deg,
-                transparent 85.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 85.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 88.6deg,
-                transparent 88.6deg,
-                transparent 145.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 145.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 148.6deg,
-                transparent 148.6deg,
-                transparent 205.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 205.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 208.6deg,
-                transparent 208.6deg,
-                transparent 235.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 235.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 238.6deg,
-                transparent 238.6deg,
-                transparent 265.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 265.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 268.6deg,
-                transparent 268.6deg,
-                transparent 325.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 325.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 328.6deg,
-                transparent 328.6deg,
-                transparent 385.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 385.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 388.6deg,
-                transparent 388.6deg,
-                transparent 428.6deg
-            ),
-            conic-gradient(
-                from 0deg at 25.76% 9.93%,
-                transparent 129.4deg,
-                transparent 169.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 169.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 172.6deg,
-                transparent 172.6deg,
-                transparent 199.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 199.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 202.6deg,
-                transparent 202.6deg,
-                transparent 259.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 259.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 262.6deg,
-                transparent 262.6deg,
-                transparent 319.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 319.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 322.6deg,
-                transparent 322.6deg,
-                transparent 349.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 349.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 352.6deg,
-                transparent 352.6deg,
-                transparent 379.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 379.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 382.6deg,
-                transparent 382.6deg,
-                transparent 439.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 439.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 442.6deg,
-                transparent 442.6deg,
-                transparent 499.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 499.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 502.6deg,
-                transparent 502.6deg,
-                transparent 542.6deg
-            ),
-            conic-gradient(
-                from 0deg at 31.34% 26.1%,
-                transparent 8.4deg,
-                transparent 48.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 48.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 51.6deg,
-                transparent 51.6deg,
-                transparent 78.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 78.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 81.6deg,
-                transparent 81.6deg,
-                transparent 138.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 138.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 141.6deg,
-                transparent 141.6deg,
-                transparent 198.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 198.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 201.6deg,
-                transparent 201.6deg,
-                transparent 228.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 228.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 231.6deg,
-                transparent 231.6deg,
-                transparent 258.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 258.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 261.6deg,
-                transparent 261.6deg,
-                transparent 318.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 318.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 321.6deg,
-                transparent 321.6deg,
-                transparent 378.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 378.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 381.6deg,
-                transparent 381.6deg,
-                transparent 421.6deg
-            ),
-            conic-gradient(
-                from 0deg at 28.08% 86.45%,
-                transparent 113.4deg,
-                transparent 153.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 153.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 156.6deg,
-                transparent 156.6deg,
-                transparent 183.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 183.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 186.6deg,
-                transparent 186.6deg,
-                transparent 243.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 243.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 246.6deg,
-                transparent 246.6deg,
-                transparent 303.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 303.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 306.6deg,
-                transparent 306.6deg,
-                transparent 333.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 333.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 336.6deg,
-                transparent 336.6deg,
-                transparent 363.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 363.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 366.6deg,
-                transparent 366.6deg,
-                transparent 423.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 423.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 426.6deg,
-                transparent 426.6deg,
-                transparent 483.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 483.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 486.6deg,
-                transparent 486.6deg,
-                transparent 526.6deg
-            ),
-            conic-gradient(
-                from 0deg at 53.82% 5.38%,
-                transparent -21.6deg,
-                transparent 18.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 18.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 21.6deg,
-                transparent 21.6deg,
-                transparent 48.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 48.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 51.6deg,
-                transparent 51.6deg,
-                transparent 108.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 108.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 111.6deg,
-                transparent 111.6deg,
-                transparent 168.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 168.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 171.6deg,
-                transparent 171.6deg,
-                transparent 198.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 198.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 201.6deg,
-                transparent 201.6deg,
-                transparent 228.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 228.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 231.6deg,
-                transparent 231.6deg,
-                transparent 288.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 288.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 291.6deg,
-                transparent 291.6deg,
-                transparent 348.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 348.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 351.6deg,
-                transparent 351.6deg,
-                transparent 391.6deg
-            ),
-            conic-gradient(
-                from 0deg at 91.59% 77.36%,
-                transparent 66.4deg,
-                transparent 106.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 106.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 109.6deg,
-                transparent 109.6deg,
-                transparent 136.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 136.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 139.6deg,
-                transparent 139.6deg,
-                transparent 196.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 196.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 199.6deg,
-                transparent 199.6deg,
-                transparent 256.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 256.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 259.6deg,
-                transparent 259.6deg,
-                transparent 286.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 286.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 289.6deg,
-                transparent 289.6deg,
-                transparent 316.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 316.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 319.6deg,
-                transparent 319.6deg,
-                transparent 376.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 376.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 379.6deg,
-                transparent 379.6deg,
-                transparent 436.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 436.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 439.6deg,
-                transparent 439.6deg,
-                transparent 479.6deg
-            ),
-            conic-gradient(
-                from 0deg at 48.25% 22.63%,
-                transparent 42.4deg,
-                transparent 82.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 82.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 85.6deg,
-                transparent 85.6deg,
-                transparent 112.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 112.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 115.6deg,
-                transparent 115.6deg,
-                transparent 172.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 172.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 175.6deg,
-                transparent 175.6deg,
-                transparent 232.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 232.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 235.6deg,
-                transparent 235.6deg,
-                transparent 262.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 262.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 265.6deg,
-                transparent 265.6deg,
-                transparent 292.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 292.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 295.6deg,
-                transparent 295.6deg,
-                transparent 352.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 352.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 355.6deg,
-                transparent 355.6deg,
-                transparent 412.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 412.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 415.6deg,
-                transparent 415.6deg,
-                transparent 455.6deg
-            ),
-            conic-gradient(
-                from 0deg at 21.4% 69.03%,
-                transparent 176.4deg,
-                transparent 216.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 216.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 219.6deg,
-                transparent 219.6deg,
-                transparent 246.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 246.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 249.6deg,
-                transparent 249.6deg,
-                transparent 306.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 306.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 309.6deg,
-                transparent 309.6deg,
-                transparent 366.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 366.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 369.6deg,
-                transparent 369.6deg,
-                transparent 396.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 396.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 399.6deg,
-                transparent 399.6deg,
-                transparent 426.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 426.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 429.6deg,
-                transparent 429.6deg,
-                transparent 486.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 486.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 489.6deg,
-                transparent 489.6deg,
-                transparent 546.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 546.4deg,
-                hsl(from var(--foreground) h s l / 0.4) 549.6deg,
-                transparent 549.6deg,
-                transparent 589.6deg
-            ),
-            radial-gradient(2px 2px at 58.58% 70.69%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 81.84% 28.91%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 81.8% 39.12%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 25.76% 9.93%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 31.34% 26.1%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 28.08% 86.45%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 53.82% 5.38%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 91.59% 77.36%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 48.25% 22.63%, hsl(from var(--foreground) h s l / 0.6), transparent 100%),
-            radial-gradient(2px 2px at 21.4% 69.03%, hsl(from var(--foreground) h s l / 0.6), transparent 100%);
-        --fx-texture-opacity: 0.35;
-        background-image: var(--fx-texture);
-        opacity: var(--fx-texture-opacity);
-        mask-image:
-            radial-gradient(circle 13px at 58.58% 70.69%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 81.84% 28.91%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 81.8% 39.12%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 25.76% 9.93%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 31.34% 26.1%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 28.08% 86.45%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 53.82% 5.38%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 91.59% 77.36%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 48.25% 22.63%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 21.4% 69.03%, hsl(from var(--foreground) h s l / 1), transparent 100%);
-        -webkit-mask-image:
-            radial-gradient(circle 13px at 58.58% 70.69%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 81.84% 28.91%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 81.8% 39.12%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 25.76% 9.93%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 31.34% 26.1%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 28.08% 86.45%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 53.82% 5.38%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 91.59% 77.36%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 48.25% 22.63%, hsl(from var(--foreground) h s l / 1), transparent 100%),
-            radial-gradient(circle 13px at 21.4% 69.03%, hsl(from var(--foreground) h s l / 1), transparent 100%);
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */

@@ -143,26 +143,33 @@ test.describe('the compare pages', () => {
     // is no per-theme ceiling to name: DI9 is advice, the reading simply
     // says the paint is over the number, and the proposal pair is gone
     // either way — there is nothing left to propose.
-    test('dark: the texture statement names what the register paints, the texture is marked, and no proposal pair remains', async ({ page }) => {
+    test('dark: the texture is gone, and the compare page says so [Kenny, 2026-09-11]', async ({ page }) => {
+        // This test used to assert the opposite: a layer painting at 0.238,
+        // over DI9's ceiling, as the approved demo measured it. Kenny took
+        // dark's stars out on 2026-09-11 — "dark mag zijn sterren weer
+        // kwijtspelen op de achtergrond" — and under S49 his word is what
+        // changes a value the demo showed. So the claim is inverted rather
+        // than deleted: the page must not promise a texture that is not
+        // painted.
+        //
+        // Drill: `--fx-texture` put back in css/_rules.css AND regenerated,
+        // and the texture statement returns — which is what makes this an
+        // assertion about the product rather than about the page's wording.
         const pair = await open(page, 'dark');
-        const lines = await page.locator('[data-compare-lines] li').allTextContents();
-        expect(lines.join(' ')).toMatch(/Texture: the layer painted at 0\.5 in 4\.0\.0 and paints at 0\.238 now/);
-        expect(lines.join(' '), 'the statement says the paint is over DI9 and that the demo measured it so').toMatch(
-            /DI9 ceiling 0\.06, over it, as the approved demo measured it/,
-        );
-        expect(await page.locator('[data-compare-pair="texture"]').count(), 'no proposal pair: the decision is taken').toBe(0);
-        const current = pair.frameLocator('iframe[data-compare-side="new"]');
-        expect(new Set((await marks(current)).map((m) => m.label))).toEqual(expect.objectContaining(new Set(['Texture', 'Typography'])));
+        const lines = (await page.locator('[data-compare-lines] li').allTextContents()).join(' ');
+        expect(lines, 'no statement about a texture layer that no longer exists').not.toMatch(/Texture: the layer painted/);
+        expect(await page.locator('[data-compare-pair="texture"]').count(), 'and nothing left to propose').toBe(0);
+
         const opacity = (side) =>
             pair
                 .frameLocator(`iframe[data-compare-side="${side}"]`)
                 .locator('html')
-                .evaluate((html) => parseFloat(getComputedStyle(html).getPropertyValue('--fx-texture-opacity')));
-        await expect.poll(() => opacity('old')).toBeGreaterThan(0.4);
-        // The right frame paints the register's own 0.35 layer, not the
-        // base layer's 0.06: that is what a reader of this page sees, and
-        // what the demo Kenny chose asks for.
-        await expect.poll(() => opacity('new')).toBeCloseTo(0.35, 2);
+                .evaluate((html) => getComputedStyle(html).getPropertyValue('--fx-texture').trim());
+        // 4.0.0 is a published version and keeps its starfield forever [S20];
+        // the difference between the frames IS the change he asked for.
+        await expect.poll(() => opacity('old')).toMatch(/circle/);
+        await expect.poll(() => opacity('new'), 'and the ground on the right is plain').toBe('');
+
         // The left frame wears dark, not the visitor's stored theme: the 4.0.0
         // module applies the stored one after the frame script (Kenny saw formal).
         await page.evaluate(() => localStorage.setItem('theme', 'formal'));

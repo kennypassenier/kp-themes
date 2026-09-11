@@ -57,7 +57,7 @@ label.
 | blueprint | "al heel goed, maar suggesties mogen altijd" | optional; a proposal only if it earns its place |
 | brutalism | "al heel goed vormgegeven, maar sta open voor opties, misschien vooral effecten hier?" | an effects pass, not a redesign |
 | cyberpunk | "heel goed in, die is heel distinct en perfect" | untouched, and the reference for what a quirk is |
-| dark | "mag zijn sterren weer kwijtspelen op de achtergrond" | the starfield goes |
+| dark | "mag zijn sterren weer kwijtspelen op de achtergrond" | **done 2026-09-11** — and it was in two places, not one: the register's 102-point field with its ten shimmer stars (round six), and the base layer's own "Observatorium" from round one. Both gone. The divider keeps its dense local sample, which is a seam between sections rather than the background he named |
 | deco | "al heel mooi, ook open voor suggesties" | optional |
 | forest | "moet ook niet aangepast worden tenzij je een goed idee hebt" | optional, and the bar is high |
 | formal | "mag op zich simpel blijven" | untouched |
