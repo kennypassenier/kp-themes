@@ -1308,6 +1308,59 @@ diagnosing, destroying the traces Kenny's failing run had left behind —
 Phase 10: the evidence of a live-found fault is collected before anything
 is re-run.
 
+## fix-5 · Showing Kenny something and then asking, in prose, what he thought
+
+**What went wrong.** Round seven is a chain of things built for Kenny to
+look at, and twice the turn that showed one of them ended in running text
+asking for his judgement instead of in a form. He said so himself on
+2026-09-11: *"volgens mij moest dit in een formulier, maar bon."* The
+second time was the four placements; the first was the deepened spectral
+instrument, where the reply described what had changed and left the
+verdict hanging in the prose.
+
+**Which gate let it through.** None, and that is the point — the rule is
+discipline-only. The form protocol says every choice Kenny makes is a
+form, however small, and standing rule 16a says a reply never ends on an
+open item. Nothing mechanical can see the end of a conversational turn,
+so the only guard is remembering, and under a long build it was the part
+that slipped.
+
+**Where the same fault still sits.** The property is not "a turn about a
+demo" but **a turn whose deliverable is something for Kenny to judge,
+ending without a form**. Counted over this round: the hypertech work has
+been put in front of him five times — the first cut, the deepened second
+cut, the three worlds, the four worlds beside the shapes page, and the
+four placements. Three of those five ended in a form; two did not, and
+they are the two named above. No other kind of turn in this round ends on
+a judgement, because the rest either ask nothing or already carry a form.
+
+**How we prevent recurrence.** The rule gets a trigger that is easy to
+see rather than easy to forget: *if this turn published or updated
+something Kenny is meant to look at, the turn ends with a form asking
+what he thinks of it.* Publishing is the trigger, and publishing is
+visible in the turn's own tool calls.
+
+**What the remedy costs.** Nothing but a form that would have been built
+anyway, one turn later, after a round trip.
+
+**Who enforces it.** Discipline. A gate cannot read a conversation. What
+makes this one different from a plain reminder is that the trigger is a
+tool call rather than a state of mind.
+
+**How we measure that it works, and when.** At the next turn in this
+round that publishes an artifact: does it end with a form? The round has
+several such turns left — the pastel choice, the concept page for
+titanium, the quirk pass on nine themes.
+
+**The fallback if it fails.** If a third turn ends on a judgement without
+a form, the trigger stops being a rule and becomes a habit with a shape:
+the form is written *before* the artifact is published, so the publish
+step cannot be the last thing in the turn.
+
+**When we review it.** At the round-seven retrospective, together with
+the question of whether a round built almost entirely out of things to
+look at needs its own rhythm.
+
 ## fix-3 · A check read a release artefact, so it was green here and red on a fresh checkout
 
 Found by the `v5.1.0` release job on 2026-09-10, minutes after a green

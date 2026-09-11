@@ -1030,3 +1030,19 @@ them: <https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
 The proposals are the doubled edge to pastel as its second ink plate,
 cherenkov's under-lighting and expanding bar to solstice in amber, the
 moulded step to nostromo, and the rule that becomes an edge to grotesk.
+
+**scope-23 · Two placements approved, two sent back.** Kenny,
+2026-09-11, looking at the rendered pairs. **Nostromo and grotesk are
+approved** as shown. **Solstice is the right theme but the wrong
+drawing**: the expanding line was a straight bar across the bottom of a
+button whose bottom is round, so it hung over the corners, and the filled
+button had no gesture at all. Rebuilt so the line *is* the button's own
+outline — it inherits the radius and opens from a short piece under the
+middle to the whole edge, so it cannot miss the shape — and the filled
+button now carries the same line cut out of its own plate in the ink
+colour, inverted rather than absent. **Pastel is not a match for the
+doubled edge**: a thin outline is a technical gesture and that theme is
+not technical. Three alternatives are shown instead, each leaning on
+something pastel already declares — the sticker, the squish, and the
+second ink clicking into register — at
+<https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
