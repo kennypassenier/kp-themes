@@ -1957,3 +1957,59 @@ search recorded.
 
 **9 · When we review the measure.** At round seven's retrospective.
 
+---
+
+## fix-9 · A settling value read once, under load (2026-09-11)
+
+**1 · What went wrong.** `tests/register-shade-dark.spec.mjs:182` failed
+in a full run and passed on its own seconds later: `1264 passed,
+1 failed`, then `20 passed` for that spec alone. Standing rule 8a — a
+test that fails and then passes is a defect until its cause has a name.
+
+The name: the test polls `opacity` until it is `1`, then reads `filter`
+ONCE. They are two properties of the same reveal, and opacity can finish
+while the blur is still running. Under a full suite the machine is slower
+and that gap opens.
+
+**2 · Which gate let it through.** None. `retries` is 0 by Kenny's rule,
+so the flake surfaced immediately rather than being papered over — that
+part worked. What no gate does is tell a settling read from a bare one.
+
+**3 · Where else the same fault sits.** The property is "a spec that
+reads a value once when something animates that property". Searched with
+`grep -rnE "expect\(await .*getComputedStyle" tests/*.spec.mjs`: 152
+bare reads, of which 86 are on a property something in this package
+animates. How many of those 86 are actually racy cannot be told by
+grepping — a border-radius read on a settled page is fine and a filter
+read mid-reveal is not, and the text of the two lines is identical. That
+is the honest limit of this search and it is why the measure below is
+what it is.
+
+**4 · How we prevent recurrence.** This is fix-1 a second time, on a
+surface its measure did not reach. fix-1 named two narrow gates as its
+fallback — no spec read of `animationName` against a keyframe name, and
+no `indicator()` outside `wholeRing()` — and neither shape covers a bare
+read of `filter`. The proposal is therefore the wider one fix-1 declined:
+a gate refusing `expect(await … getComputedStyle(…).<animatable>)` inside
+a spec, with `expect.poll` or `tests/paint.mjs` as the way to write it
+instead. 86 sites convert mechanically.
+
+**5 · What it costs.** 86 conversions, each a wrapper around an existing
+line, and a gate of about thirty lines. The risk is the one fix-1 named:
+a poll on a value that does NOT settle waits the full timeout for
+something that already left. The gate's list must therefore hold only
+properties that settle, and `animationName` stays off it.
+
+**6 · Who enforces it.** To be decided with Kenny — discipline today.
+
+**7 · How and when it is measured.** At the next full run after the
+measure lands: no spec fails and then passes. The pending measurement is
+in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback.** If a flake of this shape survives the gate, the
+suite records `--repeat-each=3` for the register specs once before a
+release, so a racy read is found deliberately rather than by luck.
+
+**9 · When we review the measure.** At round seven's retrospective,
+against the count of bare reads remaining.
+

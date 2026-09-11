@@ -185,7 +185,12 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
             // `blur(0)` and `none` paint identically; the browser reports
             // whichever the keyframe's own end state wrote.
-            expect(await cta.evaluate((el) => getComputedStyle(el).filter)).toMatch(/^(none|blur\(0px\))$/);
+            //
+            // Read until it is the value, not once [fix-1]. The poll above
+            // waits on opacity, and opacity can finish while the blur is
+            // still running — which is how this line failed under a full
+            // suite on 2026-09-11 and passed on its own seconds later.
+            await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).filter)).toMatch(/^(none|blur\(0px\))$/);
             const card = page.locator('.kp-card[data-kp-reveal="emphasis"]').first();
             await expect.poll(() => card.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
         });
