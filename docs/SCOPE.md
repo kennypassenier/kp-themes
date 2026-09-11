@@ -781,3 +781,74 @@ show (the dictionary's copy under KT5, the module's own hooks) is carried
 by the package's mechanism with the demo's appearance; that, too, is
 named in the ratification. The measured diff of the compare page (R6-Q4)
 is the mechanical half; the rest is discipline (KT15).
+
+## Round seven — hypertech, and a vocabulary for motion (opened 2026-09-11)
+
+Kenny opened the round by asking for a new theme called **hypertech** with
+"the full works" — not a colour scheme but high-tech effects over the whole
+page and nearly every element — and, in the same breath, what that would
+mean for the themes that are not so cool yet, naming pastel and asking for
+cute animations there. Seven items were decided on the scope form of
+2026-09-11. His answers are below, each with the measurement it rests on.
+The ID shape is the house scheme; the S-series above is closed.
+
+**scope-1 · Three candidates, judged on sight.** Measured first: all
+twenty-five themes pin their accent to a single hue, and the obvious
+hypertech colour is taken twice — blueprint at `hsl(190, 80%, 62%)` over
+`hsl(215, 65%, 12%)` and shade-dark at `hsl(205, 72%, 60%)` over
+`hsl(192, 100%, 11%)`. Rather than pick a direction in prose, three full
+concept demos are built on one markup and Kenny chooses from the rendered
+page: **A · Spectraal instrument** (an accent with no fixed hue, a
+dichroic ramp driven by the pointer, instrument white on cold black),
+**B · Schone kamer** (hypertech in the light: graphite hairlines, one
+electric blue, feedback that is mechanical rather than luminous) and
+**C · Dieptelaag** (layered glass over a drifting aurora, with depth on
+the pointer — no theme in the package has depth today).
+
+**scope-2 · A vocabulary for motion, not a routine per theme.** Round six
+gave each theme one routine and no shared grammar. Instead, three hooks
+join the six that exist — `react` (what happens under the pointer),
+`commit` (the confirmation of a press or a submission) and `ambient` (the
+page's idle life) — and every theme answers each of them in its own
+language or says quiet with a reason, which `gates/check-hooks.mjs`
+already enforces for the existing six. One shared piece of machinery makes
+it affordable: a single rAF-throttled pointer listener publishing the
+cursor position on the root, so no element carries a listener of its own.
+Every theme changes behaviour, so this is **6.0.0**.
+
+**scope-3 · All twenty-six arrive, and the overlay is repaired first.**
+Measured on `themes/hooks.json`: four of the six hooks are answered with a
+real rule by all twenty-five themes, `accent` is quiet in seven, and
+`arrival` is quiet in **twenty-one** — only phantom, retro, terminal and
+synthwave arrive at all. Before the other twenty-one get one, the overlay
+those four share stops swallowing clicks: today only its Skip button ends
+it, and a click anywhere else disappears without a sign.
+
+**scope-4 · Pastel answers in its own language.** Not a generic set of
+bounces shared between themes, but pastel's own risograph idiom extended:
+the second ink layer it already springs on headings, carried onto buttons,
+cards and fields, landing with a settle rather than a bounce.
+
+**scope-5 · Every gesture defaults to on.** The project rule that every
+feature is configurable with a default settles the knob; the choice was
+which way it points. It points on: a theme named hypertech with its
+effects off is not the theme, and all three consumers set a theme
+explicitly, so nobody gets this by accident. The system preference for
+reduced motion stays absolute above the knob.
+
+**scope-6 · The four waiting rows come along.** Four rows in
+`docs/MINI_ROUNDS.md` carried "at the next version" or "at the next
+round": the arrival overlay, the destructive alert whose text is
+unreadable in many themes, the theme picker that moves along the bar from
+theme to theme, and synthwave's per-cell gradient in a table header. This
+is that round, so all four are in it rather than shifting again.
+
+**scope-7 · The compliance table is corrected.** Found while surveying the
+motion machinery for this proposal: `docs/DESIGN_INVARIANTS.md` publishes
+FAIL for twenty-four of twenty-five themes on the flash threshold while
+the gate that measures it is green, because `gates/compliance.mjs` calls
+the rating function without its third argument and every one-shot
+animation is extrapolated as if it looped. Measured both ways over all
+thirty-six animations: fourteen cross the threshold on the two-argument
+call, all fourteen with exactly one cycle, and the verdict turns from FAIL
+to pass with the argument passed.
