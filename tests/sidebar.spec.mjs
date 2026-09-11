@@ -128,10 +128,17 @@ test.describe('the sidebar that can be put away', () => {
         await width(aside, 'remembered: still closed on the way back in').toBe(0);
         await expect(toggle, 'remembered: and the button says so').toHaveAttribute('aria-expanded', 'false');
 
+        // And out again, because a remembered state that cannot be
+        // changed back is not a way out [KT6]. The frozen bar asks this
+        // of all three states and this was the one it was missing.
+        await toggle.click();
+        await width(aside, 'remembered: open again by the same button').toBeGreaterThan(0);
+        await page.reload();
+        await width(aside, 'remembered: and that is what comes back').toBeGreaterThan(0);
+
         // Left as it was found: the key is this suite's own, and a test
         // that leaves state behind is a test the next one has to work
         // around.
-        await toggle.click();
         await page.evaluate(() => localStorage.removeItem('kp-test-sidebar'));
     });
 
