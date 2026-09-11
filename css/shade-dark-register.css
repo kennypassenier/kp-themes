@@ -911,4 +911,28 @@
             inset 0 1px 3px hsl(from var(--background) h s l / 0.9),
             inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.12);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Light from above onto a dark ground: the control is lifted, the
+       frame is set into the page. */
+    [data-theme='shade-dark'] .kp-to-top {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14),
+            0 2px 8px hsl(from var(--background) h s l / 0.8);
+    }
+
+    [data-theme='shade-dark'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 4px hsl(from var(--background) h s l / 0.9);
+    }
+
+    [data-theme='shade-dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='shade-dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

@@ -1318,4 +1318,38 @@
         translate: 3px 3px;
         box-shadow: 0 0 0 var(--foreground);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Slabs. The control sits on its shadow and moves into it when
+       pressed; the frame has the same border and never rounds. */
+    [data-theme='brutalism'] .kp-to-top {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-to-top:active {
+        translate: 4px 4px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media-figure > figcaption {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='brutalism'] .kp-media-figure {
+        color: var(--foreground);
+        text-align: start;
+    }
 }

@@ -1582,4 +1582,24 @@
         color: var(--foreground);
         border-inline-start-color: var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='dark'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

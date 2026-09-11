@@ -1373,4 +1373,34 @@
         color: var(--primary-foreground);
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture in a terminal is an attachment, so it is framed the way
+       this theme frames everything it did not draw itself: a dashed rule
+       and a filename underneath. */
+    [data-theme='terminal'] .kp-to-top {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] .kp-media {
+        border: 1px dashed var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption::before {
+        content: '# ';
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='terminal'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

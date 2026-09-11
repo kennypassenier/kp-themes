@@ -1020,4 +1020,26 @@
             0 1px 0 hsl(from var(--background) h s l / 0.9) inset,
             0 2px 6px hsl(from var(--foreground) h s l / 0.14);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Light from above: the control is lifted and the frame casts the
+       same soft shadow every raised thing here casts. */
+    [data-theme='shade-light'] .kp-to-top {
+        box-shadow: 0 2px 6px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-light'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='shade-light'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

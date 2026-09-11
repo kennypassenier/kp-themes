@@ -1546,4 +1546,31 @@
         color: var(--primary-foreground);
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The notch again: the control is cut, and the frame is cut the other
+       way, so a picture reads as a panel bolted into the page. */
+    [data-theme='cyberpunk'] .kp-to-top {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-media {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        clip-path: polygon(0.7rem 0, 100% 0, 100% 100%, 0 100%, 0 0.7rem);
+    }
+
+    [data-theme='cyberpunk'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='cyberpunk'] .kp-media-figure {
+        color: var(--muted-foreground);
+        text-align: start;
+    }
 }

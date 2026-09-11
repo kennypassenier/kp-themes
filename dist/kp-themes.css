@@ -9541,6 +9541,33 @@
         color: var(--primary-foreground);
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The notch again: the control is cut, and the frame is cut the other
+       way, so a picture reads as a panel bolted into the page. */
+    [data-theme='cyberpunk'] .kp-to-top {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-media {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        clip-path: polygon(0.7rem 0, 100% 0, 100% 100%, 0 100%, 0 0.7rem);
+    }
+
+    [data-theme='cyberpunk'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='cyberpunk'] .kp-media-figure {
+        color: var(--muted-foreground);
+        text-align: start;
+    }
 }
 
 @layer kp.register {
@@ -11288,6 +11315,31 @@
         background: var(--primary);
         color: var(--primary-foreground);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Everything on this desktop is bevelled, and a picture is an image
+       control sunk into its dialog. */
+    [data-theme='retro'] .kp-to-top {
+        border: 2px solid;
+        border-color: var(--background) var(--border-strong) var(--border-strong) var(--background);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media {
+        border: 2px solid;
+        border-color: var(--border-strong) var(--background) var(--background) var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media-figure > figcaption {
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='retro'] .kp-media-figure {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -12884,6 +12936,31 @@
         box-shadow:
             inset 0.2rem 0 0 var(--primary),
             inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Both get the tube: a ring of the primary that glows rather than
+       merely bounding. */
+    [data-theme='synthwave'] .kp-to-top {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-media {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='synthwave'] .kp-media-figure > figcaption {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='synthwave'] .kp-media-figure {
+        color: var(--primary);
+        text-align: start;
     }
 }
 
@@ -14512,6 +14589,28 @@
     [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
         inline-size: 100%;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The plate that slides out from behind things, held still: the frame
+       is offset from its own shadow rather than bordered. */
+    [data-theme='phantom'] .kp-to-top {
+        box-shadow: 0.25rem 0.25rem 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='phantom'] .kp-media {
+        border: 1px solid var(--border-strong);
+        box-shadow: 0.4rem 0.4rem 0 hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='phantom'] .kp-media-figure > figcaption {
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='phantom'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -15889,6 +15988,36 @@
         color: var(--primary-foreground);
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture in a terminal is an attachment, so it is framed the way
+       this theme frames everything it did not draw itself: a dashed rule
+       and a filename underneath. */
+    [data-theme='terminal'] .kp-to-top {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] .kp-media {
+        border: 1px dashed var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption::before {
+        content: '# ';
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='terminal'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -17211,6 +17340,40 @@
         translate: 3px 3px;
         box-shadow: 0 0 0 var(--foreground);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Slabs. The control sits on its shadow and moves into it when
+       pressed; the frame has the same border and never rounds. */
+    [data-theme='brutalism'] .kp-to-top {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-to-top:active {
+        translate: 4px 4px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media-figure > figcaption {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='brutalism'] .kp-media-figure {
+        color: var(--foreground);
+        text-align: start;
+    }
 }
 
 @layer kp.register {
@@ -18416,6 +18579,30 @@
         background: var(--foreground);
         color: var(--background);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A print has a key block around it and its title cut below. */
+    [data-theme='woodblock'] .kp-to-top {
+        border: 2px solid var(--border-strong);
+    }
+
+    [data-theme='woodblock'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='woodblock'] .kp-media-figure > figcaption {
+        text-align: center;
+        letter-spacing: 0.14em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='woodblock'] .kp-media-figure {
+        text-align: center;
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -19488,6 +19675,31 @@
         color: inherit;
         opacity: 0.75;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 color-mix(in srgb, var(--primary) 55%, black);
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.1rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -20512,6 +20724,28 @@
             0 1px 0 hsl(from var(--background) h s l / 0.9) inset,
             0 2px 6px hsl(from var(--foreground) h s l / 0.14);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Light from above: the control is lifted and the frame casts the
+       same soft shadow every raised thing here casts. */
+    [data-theme='shade-light'] .kp-to-top {
+        box-shadow: 0 2px 6px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-light'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='shade-light'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -21517,6 +21751,31 @@
         color: var(--primary);
         background: none;
         border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A board reports; a picture on it is a chart, framed by a hairline
+       and labelled in the same tabular face as every figure. */
+    [data-theme='ticker'] .kp-to-top {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='ticker'] .kp-media {
+        border: 1px solid var(--border);
+        border-radius: 0;
+    }
+
+    [data-theme='ticker'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='ticker'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 
@@ -22554,6 +22813,27 @@
         border-inline-start-color: var(--primary);
         color: var(--primary);
         background: none;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet: a hairline, and a caption that reads as a field note. */
+    [data-theme='forest'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-media-figure > figcaption {
+        font-style: italic;
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='forest'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 
@@ -23699,6 +23979,31 @@
         border-inline-start-color: var(--border-strong);
         letter-spacing: 0.1em;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A double rule, which is this theme's answer to every edge. */
+    [data-theme='deco'] .kp-to-top {
+        border: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-media {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-media-figure > figcaption {
+        text-align: center;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='deco'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -24426,6 +24731,26 @@
         color: var(--primary);
         background: none;
         border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Simple, as Kenny asked: a hairline and a muted caption. */
+    [data-theme='light'] .kp-to-top {
+        box-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-theme='light'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='light'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='light'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 
@@ -25533,6 +25858,31 @@
         color: var(--foreground);
         font-weight: 800;
         letter-spacing: -0.01em;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The grid: square corners, a caption on the baseline, and nothing
+       that is not a rule. */
+    [data-theme='grotesk'] .kp-to-top {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-media-figure > figcaption {
+        border-block-start: 1px solid var(--border);
+        padding-block-start: 0.4rem;
+        letter-spacing: 0.02em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='grotesk'] .kp-media-figure {
+        color: var(--foreground);
     }
 }
 
@@ -26706,6 +27056,34 @@
     [data-theme='blueprint'] .kp-sidenav__link:hover::before {
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture on a drawing is a detail view: ruled, cornered, and
+       captioned in the mono face the sheet is annotated in. */
+    [data-theme='blueprint'] .kp-to-top {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        outline: 1px solid var(--border);
+        outline-offset: 3px;
+    }
+
+    [data-theme='blueprint'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='blueprint'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -27790,6 +28168,33 @@
     [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
         translate: 0 0;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Ship fittings: the control is a plate with a bevel, and a picture is
+       a viewport with a caption stencilled under it. */
+    [data-theme='nostromo'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='nostromo'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 
@@ -29377,6 +29782,26 @@
         color: var(--foreground);
         border-inline-start-color: var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='dark'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -30380,6 +30805,30 @@
         font-style: italic;
         border-block-end: 1px dotted var(--border-strong);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A plate in a book: a thin rule, and a caption set in italic below
+       it the way a figure is captioned in print. */
+    [data-theme='academia'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='academia'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='academia'] .kp-media-figure > figcaption {
+        font-style: italic;
+        text-align: center;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='academia'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
 }
 
 @layer kp.register {
@@ -31173,6 +31622,26 @@
     [data-theme='formal'] .kp-sidenav__link[aria-current='page'] {
         background: var(--muted);
         color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Simple, as Kenny asked. */
+    [data-theme='formal'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='formal'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 
@@ -32296,6 +32765,32 @@
     [data-theme='sepia'] .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A pasted-in plate on aged paper: a keyline with a little air inside
+       it, and a hand-written caption. */
+    [data-theme='sepia'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] .kp-media {
+        border: 1px solid var(--border-strong);
+        outline: 4px solid var(--card);
+        outline-offset: -4px;
+    }
+
+    [data-theme='sepia'] .kp-media-figure > figcaption {
+        font-style: italic;
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='sepia'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -33191,6 +33686,28 @@
         color: var(--foreground);
         background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
         box-shadow: inset 0.18rem 0 0 var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Less sober, as Kenny asked: the low sun catches the top edge of
+       both, and the caption keeps the warm accent. */
+    [data-theme='solstice'] .kp-to-top {
+        box-shadow: inset 0 1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 2px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='solstice'] .kp-media-figure > figcaption {
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='solstice'] .kp-media-figure {
+        color: var(--primary);
     }
 }
 
@@ -34156,6 +34673,29 @@
         background: var(--foreground);
         color: var(--background);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       One ink: a single rule and nothing else. */
+    [data-theme='mono'] .kp-to-top {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-media {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-media-figure > figcaption {
+        border-block-start: 1px solid var(--border);
+        padding-block-start: 0.4rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='mono'] .kp-media-figure {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -35016,6 +35556,30 @@
         box-shadow:
             inset 0.3rem 0 0 var(--foreground),
             inset -0.3rem 0 0 var(--foreground);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Nothing here may rely on a hue, so both are bounded by a thick
+       rule that reads at any setting. */
+    [data-theme='high-contrast'] .kp-to-top {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='high-contrast'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='high-contrast'] .kp-media-figure > figcaption {
+        font-weight: 700;
+        color: var(--foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='high-contrast'] .kp-media-figure {
+        color: var(--foreground);
     }
 }
 
@@ -35974,6 +36538,35 @@
             0 0 0 6px var(--card),
             0 0 0 7px var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The ruling again: a picture in a manuscript is ruled before it is
+       placed, and the control carries the same gold hairline. */
+    [data-theme='lapis'] .kp-to-top {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='lapis'] .kp-media {
+        border: 1px solid var(--primary);
+        outline: 1px solid hsl(from var(--primary) h s l / 0.45);
+        outline-offset: 3px;
+    }
+
+    [data-theme='lapis'] .kp-media-figure > figcaption {
+        text-align: center;
+        color: var(--primary);
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='lapis'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }
 
 @layer kp.register {
@@ -36888,6 +37481,30 @@
         box-shadow:
             inset 0 1px 3px hsl(from var(--background) h s l / 0.9),
             inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Light from above onto a dark ground: the control is lifted, the
+       frame is set into the page. */
+    [data-theme='shade-dark'] .kp-to-top {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14),
+            0 2px 8px hsl(from var(--background) h s l / 0.8);
+    }
+
+    [data-theme='shade-dark'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 4px hsl(from var(--background) h s l / 0.9);
+    }
+
+    [data-theme='shade-dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='shade-dark'] .kp-media-figure {
+        color: var(--muted-foreground);
     }
 }
 

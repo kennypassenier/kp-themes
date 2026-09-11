@@ -790,4 +790,24 @@
         background: var(--muted);
         color: var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Simple, as Kenny asked. */
+    [data-theme='formal'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='formal'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

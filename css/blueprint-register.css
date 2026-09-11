@@ -1168,4 +1168,32 @@
     [data-theme='blueprint'] .kp-sidenav__link:hover::before {
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture on a drawing is a detail view: ruled, cornered, and
+       captioned in the mono face the sheet is annotated in. */
+    [data-theme='blueprint'] .kp-to-top {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        outline: 1px solid var(--border);
+        outline-offset: 3px;
+    }
+
+    [data-theme='blueprint'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='blueprint'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

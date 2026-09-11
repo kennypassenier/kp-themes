@@ -999,4 +999,28 @@
         font-style: italic;
         border-block-end: 1px dotted var(--border-strong);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A plate in a book: a thin rule, and a caption set in italic below
+       it the way a figure is captioned in print. */
+    [data-theme='academia'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='academia'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='academia'] .kp-media-figure > figcaption {
+        font-style: italic;
+        text-align: center;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='academia'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
 }

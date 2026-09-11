@@ -1118,4 +1118,30 @@
     [data-theme='sepia'] .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A pasted-in plate on aged paper: a keyline with a little air inside
+       it, and a hand-written caption. */
+    [data-theme='sepia'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] .kp-media {
+        border: 1px solid var(--border-strong);
+        outline: 4px solid var(--card);
+        outline-offset: -4px;
+    }
+
+    [data-theme='sepia'] .kp-media-figure > figcaption {
+        font-style: italic;
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='sepia'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }

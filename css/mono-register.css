@@ -960,4 +960,27 @@
         background: var(--foreground);
         color: var(--background);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       One ink: a single rule and nothing else. */
+    [data-theme='mono'] .kp-to-top {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-media {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='mono'] .kp-media-figure > figcaption {
+        border-block-start: 1px solid var(--border);
+        padding-block-start: 0.4rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='mono'] .kp-media-figure {
+        color: var(--foreground);
+    }
 }

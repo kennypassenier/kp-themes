@@ -1201,4 +1201,28 @@
         background: var(--foreground);
         color: var(--background);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A print has a key block around it and its title cut below. */
+    [data-theme='woodblock'] .kp-to-top {
+        border: 2px solid var(--border-strong);
+    }
+
+    [data-theme='woodblock'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='woodblock'] .kp-media-figure > figcaption {
+        text-align: center;
+        letter-spacing: 0.14em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='woodblock'] .kp-media-figure {
+        text-align: center;
+        color: var(--foreground);
+    }
 }

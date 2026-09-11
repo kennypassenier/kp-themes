@@ -1743,4 +1743,29 @@
         background: var(--primary);
         color: var(--primary-foreground);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Everything on this desktop is bevelled, and a picture is an image
+       control sunk into its dialog. */
+    [data-theme='retro'] .kp-to-top {
+        border: 2px solid;
+        border-color: var(--background) var(--border-strong) var(--border-strong) var(--background);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media {
+        border: 2px solid;
+        border-color: var(--border-strong) var(--background) var(--background) var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media-figure > figcaption {
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='retro'] .kp-media-figure {
+        color: var(--foreground);
+    }
 }

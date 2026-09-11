@@ -1593,4 +1593,29 @@
             inset 0.2rem 0 0 var(--primary),
             inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Both get the tube: a ring of the primary that glows rather than
+       merely bounding. */
+    [data-theme='synthwave'] .kp-to-top {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-media {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='synthwave'] .kp-media-figure > figcaption {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='synthwave'] .kp-media-figure {
+        color: var(--primary);
+        text-align: start;
+    }
 }

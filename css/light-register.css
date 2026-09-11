@@ -724,4 +724,24 @@
         background: none;
         border-inline-start-color: var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Simple, as Kenny asked: a hairline and a muted caption. */
+    [data-theme='light'] .kp-to-top {
+        box-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-theme='light'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='light'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='light'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

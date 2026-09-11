@@ -1068,4 +1068,29 @@
         color: inherit;
         opacity: 0.75;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 color-mix(in srgb, var(--primary) 55%, black);
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.1rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
 }

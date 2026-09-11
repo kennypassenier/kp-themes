@@ -1081,4 +1081,31 @@
         opacity: 1;
         translate: 0 0;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Ship fittings: the control is a plate with a bevel, and a picture is
+       a viewport with a caption stencilled under it. */
+    [data-theme='nostromo'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='nostromo'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

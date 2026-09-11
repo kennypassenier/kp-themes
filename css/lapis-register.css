@@ -953,4 +953,33 @@
             0 0 0 6px var(--card),
             0 0 0 7px var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The ruling again: a picture in a manuscript is ruled before it is
+       placed, and the control carries the same gold hairline. */
+    [data-theme='lapis'] .kp-to-top {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='lapis'] .kp-media {
+        border: 1px solid var(--primary);
+        outline: 1px solid hsl(from var(--primary) h s l / 0.45);
+        outline-offset: 3px;
+    }
+
+    [data-theme='lapis'] .kp-media-figure > figcaption {
+        text-align: center;
+        color: var(--primary);
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='lapis'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }

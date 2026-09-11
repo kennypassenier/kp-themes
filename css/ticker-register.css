@@ -1002,4 +1002,29 @@
         background: none;
         border-inline-start-color: var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A board reports; a picture on it is a chart, framed by a hairline
+       and labelled in the same tabular face as every figure. */
+    [data-theme='ticker'] .kp-to-top {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='ticker'] .kp-media {
+        border: 1px solid var(--border);
+        border-radius: 0;
+    }
+
+    [data-theme='ticker'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='ticker'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

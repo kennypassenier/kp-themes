@@ -1140,4 +1140,29 @@
         border-inline-start-color: var(--border-strong);
         letter-spacing: 0.1em;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A double rule, which is this theme's answer to every edge. */
+    [data-theme='deco'] .kp-to-top {
+        border: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-media {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-media-figure > figcaption {
+        text-align: center;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='deco'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
 }

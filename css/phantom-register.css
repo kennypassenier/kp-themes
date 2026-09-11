@@ -1623,4 +1623,26 @@
     [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
         inline-size: 100%;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The plate that slides out from behind things, held still: the frame
+       is offset from its own shadow rather than bordered. */
+    [data-theme='phantom'] .kp-to-top {
+        box-shadow: 0.25rem 0.25rem 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='phantom'] .kp-media {
+        border: 1px solid var(--border-strong);
+        box-shadow: 0.4rem 0.4rem 0 hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='phantom'] .kp-media-figure > figcaption {
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='phantom'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
 }

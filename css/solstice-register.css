@@ -892,4 +892,26 @@
         background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
         box-shadow: inset 0.18rem 0 0 var(--primary);
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Less sober, as Kenny asked: the low sun catches the top edge of
+       both, and the caption keeps the warm accent. */
+    [data-theme='solstice'] .kp-to-top {
+        box-shadow: inset 0 1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 2px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='solstice'] .kp-media-figure > figcaption {
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='solstice'] .kp-media-figure {
+        color: var(--primary);
+    }
 }

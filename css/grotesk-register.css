@@ -1103,4 +1103,29 @@
         font-weight: 800;
         letter-spacing: -0.01em;
     }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The grid: square corners, a caption on the baseline, and nothing
+       that is not a rule. */
+    [data-theme='grotesk'] .kp-to-top {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-media-figure > figcaption {
+        border-block-start: 1px solid var(--border);
+        padding-block-start: 0.4rem;
+        letter-spacing: 0.02em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='grotesk'] .kp-media-figure {
+        color: var(--foreground);
+    }
 }
