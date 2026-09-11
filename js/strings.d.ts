@@ -129,13 +129,9 @@ export type Strings = {
      */
     measureLoading: string;
     /**
-     * The horizontal dimension label once measured (blueprint) [S48]
+     * The size of the box the measurement frame holds (blueprint) [scope-18]
      */
-    measureWidth: (px: number) => string;
-    /**
-     * The vertical dimension label once measured (blueprint) [S48]
-     */
-    measureHeight: (px: number) => string;
+    measureBox: (w: number, h: number) => string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -253,8 +249,8 @@ export type Strings = {
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
- * @property {(px: number) => string} measureWidth  The horizontal dimension label once measured (blueprint) [S48]
- * @property {(px: number) => string} measureHeight  The vertical dimension label once measured (blueprint) [S48]
+ * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]
+
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker

@@ -25932,19 +25932,26 @@
    Drawing", 2026-09-08, its fourth version) is the reference for every
    value here.
 
-   Round four's verdict, in Kenny's own words, is the file's whole brief:
-   "I just don't like the frame. Can we replace it entirely with our
-   measurement lines? One vertical and one horizontal." So there is no
-   frame here — no drawn box around the headline, no bulky panel behind
-   it. There are two hairline dimension lines, one under the headline and
-   one beside it, each printing the true rendered size of the thing it
-   measures. That is this theme's signature, and it is real: the
-   horizontal line's width is read from the headline's own
-   `getBoundingClientRect()` and written to both the line and its label
-   in the same breath (js/effects.js, `measure()`); the vertical line
-   needs no read at all, because `top: 0; bottom: 0` inside a
-   `position: relative` wrap sizes it to the wrap's own content height by
-   CSS containment alone. Neither line is ever a fixed width.
+   Round four's verdict was "I just don't like the frame. Can we replace
+   it entirely with our measurement lines? One vertical and one
+   horizontal", and this file carried those two lines until 2026-09-11.
+   Then Kenny saw the command-table demo's own measurement frame — four
+   corner brackets reporting the box they hold in pixels — and found it
+   better than the one here: "dan is de demo hier niet voor niks geweest"
+   (scope-18).
+
+   So the signature is now that frame. Four brackets on the headline's own
+   corners and one readout under it, printing the box's true rendered
+   size. It is real rather than decorative: the readout is written from
+   `getBoundingClientRect()` (js/effects.js, `measure()`) and rewritten
+   whenever the box changes, and the brackets need no read at all because
+   they sit on the corners of a wrap that IS the headline's box. Nothing
+   here is ever a fixed size.
+
+   What it replaced is worth keeping in view: two lines meant two spans,
+   four ticks, two labels and four keyframes; the frame is four brackets,
+   one readout and one fade used twice. The brackets also report the whole
+   box rather than one edge, which is why one readout replaces two.
 
    What this file does, in order: the knobs — the ruled grid, the
    crosshair tile, the redaction and measurement timings; the type; the
@@ -26062,129 +26069,95 @@
         position: relative;
         display: inline-block;
         align-self: flex-start;
+        /* The frame lives INSIDE this box, with padding holding it off the
+           text. An absolutely positioned child counts toward its
+           containing block's scroll width, so brackets placed outside the
+           wrap pushed the page sideways by their own offset — nine pixels
+           at 320px, which DI11 refuses and the reflow suite caught. Moving
+           the wrap with a margin did not help, because the overflow was
+           never the wrap's position; it was the brackets' own. */
+        padding: 0.55rem 0.55rem 1.6rem;
         max-width: 100%;
     }
 
-    /* The vertical dimension line: sits just outside the headline's own
-       box on the right, sized to the wrap's content height by
-       `top: 0; bottom: 0` alone — no pixel value assigned by script that
-       could drift. Only at `min-width: 1180px` (the sheet's own shell
-       width): at every narrower width the two-column grid can reach, the
-       slack beside the headline is too tight to trust a tick and a label
-       against the text. */
-    [data-theme='blueprint'] [data-kp-elev-line] {
+    /* ── The measurement frame [scope-18] ──────────────────────────────
+       Four corner brackets around the headline's box with one readout
+       under it, printing the box's true rendered size. It replaced two
+       dimension lines on 2026-09-11: Kenny asked for those in round four
+       and then saw the command-table demo's brackets — "dan is de demo
+       hier niet voor niks geweest".
+
+       The brackets are pure CSS on four elements the module builds; the
+       readout is the only thing script writes, and it writes what it
+       measured. Nothing here is a fixed size: the brackets sit on the
+       wrap's own corners and the wrap is the headline's own box. */
+    [data-theme='blueprint'] [data-kp-measure-bracket] {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        inset-inline-start: 100%;
-        margin-inline-start: 14px;
-        inline-size: 8px;
-        pointer-events: none;
-        display: none;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+        border: 1px solid var(--border-strong);
+        opacity: 0;
     }
 
-    @media (min-width: 1180px) {
-        [data-theme='blueprint'] [data-kp-elev-line] {
-            display: block;
+    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure-bracket] {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-measure-bracket] {
+            transition: opacity var(--kp-measure-duration, 400ms) var(--fx-ease, ease);
         }
     }
 
-    [data-theme='blueprint'] [data-kp-elev-line]::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        inset-inline-start: 3px;
-        inline-size: 1px;
-        background: var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-kp-elev-tick] {
-        position: absolute;
+    [data-theme='blueprint'] [data-kp-measure-bracket='tl'] {
         inset-inline-start: 0;
-        inline-size: 8px;
-        block-size: 1px;
-        background: var(--border-strong);
+        inset-block-start: 0;
+        border-inline-end: 0;
+        border-block-end: 0;
     }
 
-    [data-theme='blueprint'] [data-kp-elev-tick]:first-of-type {
-        top: -0.5px;
+    [data-theme='blueprint'] [data-kp-measure-bracket='tr'] {
+        inset-inline-end: 0;
+        inset-block-start: 0;
+        border-inline-start: 0;
+        border-block-end: 0;
     }
 
-    [data-theme='blueprint'] [data-kp-elev-tick]:last-of-type {
-        bottom: -0.5px;
+    [data-theme='blueprint'] [data-kp-measure-bracket='bl'] {
+        inset-inline-start: 0;
+        inset-block-end: 1.05rem;
+        border-inline-end: 0;
+        border-block-start: 0;
     }
 
-    [data-theme='blueprint'] [data-kp-elev-measure] {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        inset-inline-start: 100%;
-        margin-inline-start: 0.4rem;
-        inline-size: 1.3em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.05em;
-        color: var(--muted-foreground);
-        white-space: nowrap;
-    }
-
-    /* The horizontal dimension line: `measure()` sets this element's own
-       `style.width` to the exact same pixel number it prints into the
-       label, so the two can never drift apart — the fix the frame never
-       needed and the line always did. */
-    [data-theme='blueprint'] [data-kp-dim] {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.3rem;
-        margin-block: 0.55rem 1.15rem;
-    }
-
-    [data-theme='blueprint'] [data-kp-dim-line] {
-        position: relative;
-        display: block;
-        flex: none;
-        inline-size: 0; /* set by measure() before first paint */
-        block-size: 8px;
-    }
-
-    [data-theme='blueprint'] [data-kp-dim-line]::before {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        top: 3px;
-        block-size: 1px;
-        background: var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-kp-dim-tick] {
-        position: absolute;
-        top: 0;
-        inline-size: 1px;
-        block-size: 8px;
-        background: var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-kp-dim-tick]:first-of-type {
-        inset-inline-start: -0.5px;
-    }
-
-    [data-theme='blueprint'] [data-kp-dim-tick]:last-of-type {
-        inset-inline-end: -0.5px;
+    [data-theme='blueprint'] [data-kp-measure-bracket='br'] {
+        inset-inline-end: 0;
+        inset-block-end: 1.05rem;
+        border-inline-start: 0;
+        border-block-start: 0;
     }
 
     [data-theme='blueprint'] [data-kp-measure] {
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-end: 0.2rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.05em;
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
         color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
         white-space: nowrap;
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure] {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-measure] {
+            transition: opacity var(--kp-measure-duration, 400ms) var(--fx-ease, ease);
+        }
     }
 
     /* The mark: the cyan highlight wash the demo paints, cleared in left
@@ -26916,38 +26889,15 @@
             animation: kp-headline-fade 300ms ease-out 600ms both;
         }
 
-        [data-theme='blueprint'] [data-kp-dim-line] {
-            transform: scaleX(0);
-            transform-origin: left center;
-        }
-
-        [data-theme='blueprint'][data-kp-effects] [data-kp-dim-line] {
-            animation: kp-dim-draw 500ms ease-out 1000ms both;
-        }
-
-        [data-theme='blueprint'] [data-kp-measure] {
-            opacity: 0;
+        /* The frame arrives after the headline has settled: the brackets
+           together, the readout behind them. Two animations where the two
+           dimension lines needed four. */
+        [data-theme='blueprint'][data-kp-effects] [data-kp-measure-bracket] {
+            animation: kp-dim-label 300ms ease-out 1000ms both;
         }
 
         [data-theme='blueprint'][data-kp-effects] [data-kp-measure] {
             animation: kp-dim-label 300ms ease-out 1300ms both;
-        }
-
-        [data-theme='blueprint'] [data-kp-elev-line] {
-            transform: scaleY(0);
-            transform-origin: top center;
-        }
-
-        [data-theme='blueprint'][data-kp-effects] [data-kp-elev-line] {
-            animation: kp-elev-draw 500ms ease-out 1050ms both;
-        }
-
-        [data-theme='blueprint'] [data-kp-elev-measure] {
-            opacity: 0;
-        }
-
-        [data-theme='blueprint'][data-kp-effects] [data-kp-elev-measure] {
-            animation: kp-elev-label 300ms ease-out 1350ms both;
         }
 
         [data-theme='blueprint'] [data-kp-reveal='rule'].is-in::after {
@@ -26990,16 +26940,6 @@
         }
     }
 
-    @keyframes kp-dim-draw {
-        0% {
-            transform: scaleX(0);
-        }
-
-        100% {
-            transform: scaleX(1);
-        }
-    }
-
     @keyframes kp-dim-label {
         0% {
             opacity: 0;
@@ -27010,25 +26950,6 @@
         }
     }
 
-    @keyframes kp-elev-draw {
-        0% {
-            transform: scaleY(0);
-        }
-
-        100% {
-            transform: scaleY(1);
-        }
-    }
-
-    @keyframes kp-elev-label {
-        0% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
     /* The band [M1, M4]: Kenny picked this theme's own version over the
        shared one on 2026-09-08 — the cyan top rule of a title block, mono in caps. */
     [data-theme='blueprint'] .kp-marquee {

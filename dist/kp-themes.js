@@ -240,8 +240,7 @@ var DEFAULT_STRINGS = Object.freeze({
   arrivalReady: "OK",
   arrivalSkip: "Skip",
   measureLoading: "measuring\u2026",
-  measureWidth: (px) => `${px}px measured \xB7 live`,
-  measureHeight: (px) => `${px}px`,
+  measureBox: (w, h) => `${w} \xD7 ${h} px`,
   breadcrumb: "Breadcrumb",
   pagination: "Pagination",
   themePicker: "Choose a theme",
@@ -4577,10 +4576,9 @@ var TIMINGS = Object.freeze({
   // on a later class toggle, not keyframes, so they carry no row here —
   // the same choice terminal's own redaction made [TM1].
   "kp-headline-fade": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-dim-draw": { durationMs: 500, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-dim-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-elev-draw": { durationMs: 500, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-elev-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
+  // One fade, used twice: the brackets, then the readout behind them.
+  // The two dimension lines this replaced needed four rows [scope-18].
+  "kp-dim-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
 });
 var started = /* @__PURE__ */ new WeakSet();
 var carets = /* @__PURE__ */ new WeakSet();
@@ -5302,40 +5300,23 @@ function attachEffects(root = document, options = {}) {
       const wrap = doc.createElement("span");
       wrap.setAttribute("data-kp-measured", "");
       h1.replaceWith(wrap);
-      const elevLine = doc.createElement("span");
-      elevLine.setAttribute("data-kp-elev-line", "");
-      elevLine.setAttribute("aria-hidden", "true");
-      const elevStart = doc.createElement("span");
-      elevStart.setAttribute("data-kp-elev-tick", "");
-      const elevEnd = doc.createElement("span");
-      elevEnd.setAttribute("data-kp-elev-tick", "");
-      const elevLabel = doc.createElement("span");
-      elevLabel.setAttribute("data-kp-elev-measure", "");
-      elevLabel.textContent = words.measureLoading;
-      elevLine.append(elevStart, elevEnd, elevLabel);
-      wrap.append(elevLine, h1);
-      const dim = doc.createElement("span");
-      dim.setAttribute("data-kp-dim", "");
-      dim.setAttribute("aria-hidden", "true");
-      const dimLine = doc.createElement("span");
-      dimLine.setAttribute("data-kp-dim-line", "");
-      const dimStart = doc.createElement("span");
-      dimStart.setAttribute("data-kp-dim-tick", "");
-      const dimEnd = doc.createElement("span");
-      dimEnd.setAttribute("data-kp-dim-tick", "");
-      dimLine.append(dimStart, dimEnd);
-      const dimLabel = doc.createElement("span");
-      dimLabel.setAttribute("data-kp-measure", "");
-      dimLabel.textContent = words.measureLoading;
-      dim.append(dimLine, dimLabel);
-      wrap.after(dim);
+      wrap.append(h1);
+      for (const corner of ["tl", "tr", "bl", "br"]) {
+        const bracket = doc.createElement("i");
+        bracket.setAttribute("data-kp-measure-bracket", corner);
+        bracket.setAttribute("aria-hidden", "true");
+        wrap.append(bracket);
+      }
+      const readout = doc.createElement("span");
+      readout.setAttribute("data-kp-measure", "");
+      readout.setAttribute("aria-hidden", "true");
+      readout.textContent = words.measureLoading;
+      wrap.append(readout);
       let timer;
       const update = () => {
-        const w = Math.round(h1.getBoundingClientRect().width);
-        dimLine.style.width = `${w}px`;
-        dimLabel.textContent = words.measureWidth(w);
-        const h = Math.round(wrap.getBoundingClientRect().height);
-        elevLabel.textContent = words.measureHeight(h);
+        const box = h1.getBoundingClientRect();
+        readout.textContent = words.measureBox(Math.round(box.width), Math.round(box.height));
+        wrap.setAttribute("data-kp-measured", "live");
       };
       update();
       const schedule = () => {

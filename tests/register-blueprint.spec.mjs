@@ -90,7 +90,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the blueprint register, ${channel}`, () => {
-        test('under reduced motion the headline stands, both dimension lines stand at their measured size, and every mark is cleared', async ({
+        test('under reduced motion the headline stands, the measurement frame stands at its measured size, and every mark is cleared', async ({
             page,
         }) => {
             await open(page, url, { reduced: true });
@@ -99,13 +99,12 @@ for (const [channel, url] of CHANNELS) {
             expect(await page.locator('[data-kp-surface="hero"] mark:not(.is-cleared)').count()).toBe(0);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await expect(rule).toHaveClass(/is-in/);
-            const line = await pseudo(page.locator('[data-kp-dim-line]').first(), '::before', ['animation-name']);
-            expect(line['animation-name']).toBe('none');
-            const width = await page
-                .locator('[data-kp-dim-line]')
-                .first()
-                .evaluate((el) => el.getBoundingClientRect().width);
-            expect(width, 'the line still measures, without playing an entrance').toBeGreaterThan(0);
+            const bracket = page.locator('[data-kp-measure-bracket]').first();
+            expect(await bracket.evaluate((el) => getComputedStyle(el).animationName), 'no entrance').toBe('none');
+            expect(await bracket.evaluate((el) => getComputedStyle(el).opacity), 'and the frame still stands').toBe('1');
+            expect(await page.locator('[data-kp-measure]').first().textContent(), 'the readout still reports, without playing an entrance').toMatch(
+                /\d+ × \d+ px/,
+            );
         });
 
         test('the headline settles in with a plain fade, never a decipher — the text is whole throughout', async ({ page }) => {
@@ -131,43 +130,42 @@ for (const [channel, url] of CHANNELS) {
             ).toBe(true);
         });
 
-        test('the two dimension lines are live: the horizontal one tracks the headline’s own rendered width, the vertical one the wrap’s own height — never a fixed number [S48]', async ({
-            page,
-        }) => {
+        test('the measurement frame reports the box it holds, and follows it [scope-18]', async ({ page }) => {
+            // It replaced two dimension lines on 2026-09-11: Kenny asked for
+            // those in round four and then saw the command-table demo's
+            // brackets — "dan is de demo hier niet voor niks geweest". The
+            // brackets report the box they hold rather than one edge of it,
+            // so one readout replaces two labels.
+            //
+            // Drill: `measure()` returned early in js/effects.js — `14 passed,
+            // 4 failed`, this test and the reduced-motion one, in both
+            // channels. No wrap, no brackets, no readout.
             await open(page, url);
             await settled(page);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
-            const dimLine = page.locator('[data-kp-dim-line]').first();
-            const dimLabel = page.locator('[data-kp-measure]').first();
-            const h1Width = await h1.evaluate((el) => Math.round(el.getBoundingClientRect().width));
-            const lineWidth = await dimLine.evaluate((el) => Math.round(el.getBoundingClientRect().width));
-            expect(Math.abs(lineWidth - h1Width), 'tick to tick is the measured span').toBeLessThanOrEqual(1);
-            expect(await dimLabel.textContent()).toContain(`${h1Width}px`);
-
             const wrap = page.locator('[data-kp-measured]').first();
-            const elevMeasure = page.locator('[data-kp-elev-measure]').first();
-            const wrapHeight = await wrap.evaluate((el) => Math.round(el.getBoundingClientRect().height));
-            const elevHeight = await page
-                .locator('[data-kp-elev-line]')
-                .first()
-                .evaluate((el) => Math.round(el.getBoundingClientRect().height));
-            expect(Math.abs(elevHeight - wrapHeight), 'the vertical line is contained to the wrap by CSS alone').toBeLessThanOrEqual(1);
-            expect(await elevMeasure.textContent()).toContain(`${wrapHeight}px`);
+            const readout = page.locator('[data-kp-measure]').first();
 
-            // Resize and measure again: a fixed-width line would not move.
-            await page.setViewportSize({ width: 1400, height: 900 });
-            await page.waitForTimeout(200);
-            const h1Width2 = await h1.evaluate((el) => Math.round(el.getBoundingClientRect().width));
-            const lineWidth2 = await dimLine.evaluate((el) => Math.round(el.getBoundingClientRect().width));
-            expect(Math.abs(lineWidth2 - h1Width2)).toBeLessThanOrEqual(1);
-        });
+            expect(await page.locator('[data-kp-measure-bracket]').count(), 'four corners').toBe(4);
 
-        test('the vertical dimension line only renders at 1180px and wider', async ({ page }) => {
-            await open(page, url, { width: 900 });
-            const elev = page.locator('[data-kp-elev-line]').first();
-            expect(await elev.evaluate((el) => getComputedStyle(el).display)).toBe('none');
-            await page.setViewportSize({ width: 1280, height: 900 });
-            await expect.poll(() => elev.evaluate((el) => getComputedStyle(el).display)).toBe('block');
+            const box = await h1.evaluate((el) => {
+                const r = el.getBoundingClientRect();
+                return { w: Math.round(r.width), h: Math.round(r.height) };
+            });
+            await expect.poll(() => readout.textContent(), { message: 'the readout is the box it holds' }).toBe(`${box.w} × ${box.h} px`);
+
+            // The frame follows the box. A WIDER page does not move it — the
+            // headline has a measure of its own and stayed at 496px, which
+            // the first version of this test did not notice and its own
+            // guard caught. Narrower does: the text rewraps.
+            const before = await readout.textContent();
+            await page.setViewportSize({ width: 760, height: 900 });
+            await expect.poll(() => readout.textContent(), { message: 'the readout reports again when the box changes' }).not.toBe(before);
+            const after = await h1.evaluate((el) => {
+                const r = el.getBoundingClientRect();
+                return `${Math.round(r.width)} × ${Math.round(r.height)} px`;
+            });
+            expect(await readout.textContent(), 'and what it reports is the box it now holds').toBe(after);
         });
 
         test('the lede’s marks wash in with cyan, one after another', async ({ page }) => {

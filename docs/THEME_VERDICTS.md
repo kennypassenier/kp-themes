@@ -132,7 +132,7 @@ handled by replacement rather than by addition.
 | solstice | the line that opens out of a short bar into the control's whole edge, lit from below | scope-24 |
 | nostromo | the moulded step, and the accent bar rising along the right edge | scope-24 |
 | grotesk | the rule that starts short under a control and becomes its whole edge | scope-24 |
-| blueprint | the measurement frame from the command table, replacing its own | scope-18 |
+| blueprint | the measurement frame from the command table, replacing its own | **done 2026-09-11** — four corner brackets and one readout printing the box they hold, in place of two dimension lines with four ticks and two labels. Four keyframes became one fade used twice |
 | high-contrast | the flip: a control turns into its own negative with no transition, and the yellow exists only while something is pressed | scope-25 |
 | sepia | the ink spreading into the paper on a press, and a rule that is thickest in the middle | scope-25 |
 | shade-light | the pointer is the light, and a control throws its shade away from it | scope-25 |

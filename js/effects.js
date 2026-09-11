@@ -397,10 +397,9 @@ export const TIMINGS = Object.freeze({
     // on a later class toggle, not keyframes, so they carry no row here —
     // the same choice terminal's own redaction made [TM1].
     'kp-headline-fade': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-dim-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
+    // One fade, used twice: the brackets, then the readout behind them.
+    // The two dimension lines this replaced needed four rows [scope-18].
     'kp-dim-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-elev-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-elev-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
 });
 
 /**
@@ -1335,17 +1334,22 @@ export function attachEffects(root = document, options = {}) {
     };
     caret();
 
-    // ── The measurement lines [S48, LIFT_PLAN row 6]: blueprint's own ──
+    // ── The measurement frame [scope-18]: blueprint's own ─────────────
     // A theme answers `--kp-measure: live` on the root. The module wraps
-    // its headline in a span it can measure and builds the two dimension
-    // lines beside it: the vertical one is sized by CSS containment alone
-    // (`top: 0; bottom: 0` inside the wrap the register gives a definite
-    // height), the horizontal one by a live pixel read set as the line's
-    // own `style.width` and printed into its label in the same breath —
-    // one measurement, two readouts, so the line is never a fixed width.
+    // its headline in a span it can measure and puts four corner brackets
+    // around that box with one readout under it, printing the box's true
+    // rendered size.
+    //
+    // It replaced two dimension lines on 2026-09-11. Kenny had asked for
+    // those in round four — "replace it entirely with our measurement
+    // lines" — and then saw the command-table demo's brackets and found
+    // them better: "dan is de demo hier niet voor niks geweest" (scope-18).
+    // The brackets report the box they hold rather than one edge of it,
+    // which is why one readout replaces two labels.
+    //
     // Runs once, after scan() has already put the headline at its rest
-    // text, so nothing here fights the decipher/type/word routines for
-    // the same child nodes.
+    // text, so nothing here fights the decipher/type/word routines for the
+    // same child nodes.
     const measure = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
         if (routine !== 'live' || !view) return;
@@ -1355,44 +1359,29 @@ export function attachEffects(root = document, options = {}) {
             const wrap = doc.createElement('span');
             wrap.setAttribute('data-kp-measured', '');
             h1.replaceWith(wrap);
+            wrap.append(h1);
 
-            const elevLine = doc.createElement('span');
-            elevLine.setAttribute('data-kp-elev-line', '');
-            elevLine.setAttribute('aria-hidden', 'true');
-            const elevStart = doc.createElement('span');
-            elevStart.setAttribute('data-kp-elev-tick', '');
-            const elevEnd = doc.createElement('span');
-            elevEnd.setAttribute('data-kp-elev-tick', '');
-            const elevLabel = doc.createElement('span');
-            elevLabel.setAttribute('data-kp-elev-measure', '');
-            elevLabel.textContent = words.measureLoading;
-            elevLine.append(elevStart, elevEnd, elevLabel);
-            wrap.append(elevLine, h1);
+            for (const corner of ['tl', 'tr', 'bl', 'br']) {
+                const bracket = doc.createElement('i');
+                bracket.setAttribute('data-kp-measure-bracket', corner);
+                bracket.setAttribute('aria-hidden', 'true');
+                wrap.append(bracket);
+            }
 
-            const dim = doc.createElement('span');
-            dim.setAttribute('data-kp-dim', '');
-            dim.setAttribute('aria-hidden', 'true');
-            const dimLine = doc.createElement('span');
-            dimLine.setAttribute('data-kp-dim-line', '');
-            const dimStart = doc.createElement('span');
-            dimStart.setAttribute('data-kp-dim-tick', '');
-            const dimEnd = doc.createElement('span');
-            dimEnd.setAttribute('data-kp-dim-tick', '');
-            dimLine.append(dimStart, dimEnd);
-            const dimLabel = doc.createElement('span');
-            dimLabel.setAttribute('data-kp-measure', '');
-            dimLabel.textContent = words.measureLoading;
-            dim.append(dimLine, dimLabel);
-            wrap.after(dim);
+            const readout = doc.createElement('span');
+            readout.setAttribute('data-kp-measure', '');
+            readout.setAttribute('aria-hidden', 'true');
+            readout.textContent = words.measureLoading;
+            wrap.append(readout);
 
             /** @type {ReturnType<typeof setTimeout>} */
             let timer;
             const update = () => {
-                const w = Math.round(h1.getBoundingClientRect().width);
-                dimLine.style.width = `${w}px`;
-                dimLabel.textContent = words.measureWidth(w);
-                const h = Math.round(wrap.getBoundingClientRect().height);
-                elevLabel.textContent = words.measureHeight(h);
+                const box = h1.getBoundingClientRect();
+                readout.textContent = words.measureBox(Math.round(box.width), Math.round(box.height));
+                // The state a test or a consumer can read at any time, rather
+                // than a moment they had to be listening for [KT16].
+                wrap.setAttribute('data-kp-measured', 'live');
             };
             update();
             const schedule = () => {
