@@ -253,6 +253,11 @@ export const TIMINGS = Object.freeze({
     // a button, the bar entering, the floor's drift and the CRT switching
     // the boot overlay off — every one once, except the drift, which moves
     // a pattern and never changes luminance.
+    // The side navigation's backdrop [feat-nav-3]: one fade in, at the
+    // theme's own duration, on a layer that is already a dimming. It runs
+    // once because the element is created when the panel opens and removed
+    // when it closes.
+    'kp-sidenav-backdrop': { durationMs: 220, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-tracking': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
     'kp-shine': { durationMs: 1400, cycles: 1, property: 'background-position', luminanceSteps: [] },
     'kp-tube-on': { durationMs: 1100, cycles: 1, property: 'color', luminanceSteps: [0, 1, 0, 1] },

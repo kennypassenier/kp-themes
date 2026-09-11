@@ -1455,17 +1455,20 @@
         display: none;
     }
 
+    /* Its timing is the theme's, like everything else here: a slide on the
+       package's own `ease` keyword read as abrupt, and terminal steps where
+       pastel overshoots is the handwriting this file is for. */
     @media (prefers-reduced-motion: no-preference) {
         .kp-sidenav {
-            transition: translate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+            transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
 
         /* Width is a layout property and animating it costs a reflow per
            frame. Only a panel that actually has a rail pays for it. */
         .kp-sidenav[data-kp-sidenav-slim] {
             transition:
-                translate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease),
-                inline-size var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+                translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease)),
+                inline-size var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
     }
 
@@ -1613,7 +1616,12 @@
         border-inline-end: 1px solid currentcolor;
         border-block-end: 1px solid currentcolor;
         rotate: -45deg;
-        transition: rotate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__category-toggle::after {
+            transition: rotate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
     }
 
     .kp-sidenav__category-toggle[aria-expanded='true']::after {
@@ -1641,7 +1649,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         .kp-sidenav__submenu {
-            transition: grid-template-rows var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+            transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
     }
 
@@ -1656,6 +1664,30 @@
         inset: 0;
         z-index: calc(var(--kp-sidenav-layer, 60) - 1);
         background: rgb(0 0 0 / 0.5);
+    }
+
+    /* It arrives with the panel instead of appearing on top of it. A
+       backdrop that snaps to full while the panel is still sliding is what
+       makes the whole movement read as jerky. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__backdrop {
+            /* A literal duration, unlike the panel's. The flash check has to
+               read this number to know the fade cannot strobe, and a chain of
+               fallbacks reads as zero to it — which is the worst case it then
+               has to assume. One fade from nothing to half-dark has nothing
+               worth tuning anyway. */
+            animation: kp-sidenav-backdrop 220ms var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+    }
+
+    @keyframes kp-sidenav-backdrop {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
     }
 
     /* The control that opens it. It draws nothing of its own: unlike the
