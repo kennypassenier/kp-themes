@@ -1046,3 +1046,15 @@ not technical. Three alternatives are shown instead, each leaning on
 something pastel already declares — the sticker, the squish, and the
 second ink clicking into register — at
 <https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
+
+**scope-24 · The four placements are settled.** Kenny, 2026-09-11.
+Pastel takes **the sticker**: a flat offset shadow instead of a blurred
+one, a lift and a nudge under the pointer, pressed completely flat when
+it is used — because a riso print ends up on paper as a sticker, and
+because the overshoot it springs on is the easing the theme already
+declares. Solstice takes **the expanding line**, second cut, approved on
+both objections. Nostromo takes **the moulded step** and grotesk **the
+rule that becomes an edge**, both approved as first shown. The doubled
+edge, which pastel refused, stays in the demo as a shape without a home;
+a thin outline is a technical gesture and no theme in this round is
+asking for one.

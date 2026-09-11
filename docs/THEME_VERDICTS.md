@@ -119,3 +119,22 @@ Kenny's own list, from the three hypertech worlds he was shown:
 - Double-layered buttons where the second layer converges on hover, and a
   ghost button built the same way — "interferometer".
 - "Meer unieke vormgevingen zijn goed."
+
+## What each theme is getting, as of 2026-09-11
+
+Five of the ten that needed a quirk now have one, and the sixth is
+handled by replacement rather than by addition.
+
+| Theme | Its quirk | Settled |
+| ----- | --------- | ------- |
+| dark | replaced outright by the spectral instrument | scope-16 |
+| pastel | the sticker: a flat offset shadow, a lift and a nudge, pressed flat | scope-24 |
+| solstice | the line that opens out of a short bar into the control's whole edge, lit from below | scope-24 |
+| nostromo | the moulded step, and the accent bar rising along the right edge | scope-24 |
+| grotesk | the rule that starts short under a control and becomes its whole edge | scope-24 |
+| blueprint | the measurement frame from the command table, replacing its own | scope-18 |
+
+Still without one: **high-contrast, lapis, sepia, shade-light and
+shade-dark**. Those are the last design work of the round, and each needs
+an idea out of its own world rather than a shape left over from the
+demos — which is the whole point of scope-12.
