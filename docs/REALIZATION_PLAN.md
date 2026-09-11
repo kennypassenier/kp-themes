@@ -619,10 +619,12 @@ anything built after them lands on a floor that is already right.
 | 1.1 | the scroll offset, and smooth scrolling behind a knob | The package has zero occurrences of `scroll-behavior`, `scroll-padding` or `scroll-margin`. Every page carries a skip link; the moment anything is sticky, that link lands underneath it and the person using it cannot see that it did. |
 | 1.2 | a navigation bar that can stay at the top | Zero occurrences of `sticky` anywhere in `css/`, `js/` or `components/`. Nothing in this package stays put while the page scrolls — not a bar, not a table header. |
 | 1.3 | a navigation that collapses on a narrow screen | No toggle of any kind exists. Today the links simply wrap, and on the demo at 462 px the chrome grew to 229 px tall before any of the page was visible. |
-| 1.4 | the side navigation that can be hidden | `.kp-sidebar` exists in `css/layout.css:93` as a column layout with three knobs and no way to hide, open or remember. Default overlay, with pushing as a knob. |
+| 1.4 | the side navigation that can be hidden | Built, then withdrawn on 2026-09-11 in favour of 1.7: the same reader's need, answered by a component a theme can style instead of by a layout class that none can. |
 | 1.5 | a back-to-top control | Nothing like it exists; it depends on 1.1 for where it lands. |
 | 1.6 | a component for a hero image | Of the component roots the package declares, not one is for a picture. |
 | 1.7 | the side navigation as a component | Added on 2026-09-11 after Kenny looked at 1.4 and asked whether it was a proof of concept. Measured: `grep -l "kp-sidebar" css/*-register.css \| wc -l` gives 0, and the register-coverage gate reads its roots from `css/components.css` — so no theme had ever been asked to style a sidebar, because it was never a component. Built to the feature list he named. |
+
+**Approved and waiting for stage 2.** Kenny approved the side navigation as nostromo, brutalism and pastel draw it — the bullet stepping in front of the active page, the plate sliding to its own shadow, the sticker set at an angle. They are not written into their registers yet, and cannot be one at a time: the coverage gate's pending list is one entry per root for all twenty-five themes, and it refuses an entry a register already covers. So all twenty-five land together where the quirks are decided, which is the order he chose.
 
 **Gate log — stages 1.1 to 1.3, reported 2026-09-11.** The report Phase 6
 asks for, given late: these three closed on commits and the gate came

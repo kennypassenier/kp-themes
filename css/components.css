@@ -1463,6 +1463,15 @@
             transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
 
+        /* Except from the far edge, where the slide stayed visibly rough
+           through two attempts at it [Kenny, 2026-09-11: "die is nog altijd
+           fucked up. Maar voorlopig laten we het er gewoon uit"]. The panel
+           still comes and goes from that side; it simply arrives rather than
+           travelling. Recorded as gap-9. */
+        .kp-sidenav[data-kp-sidenav-side='end'] {
+            transition: none;
+        }
+
         /* Width is a layout property and animating it costs a reflow per
            frame. Only a panel that actually has a rail pays for it. */
         .kp-sidenav[data-kp-sidenav-slim] {

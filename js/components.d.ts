@@ -150,40 +150,6 @@ export declare function attachNavToggles(root?: ParentNode, { strings, ownedBy }
     strings?: Partial<import('./strings.js').Strings>;
     ownedBy?: string;
 }): () => void;
-export declare const SIDEBAR_TOGGLE_EVENT = "kp-sidebar-toggle";
-/** The mark a consumer puts on a sidebar toggle they wire themselves [AR29]. */
-export declare const SIDEBAR_OWNED = "[data-kp-sidebar-owner]";
-/**
- * Wire the toggle that hides and shows a side navigation [feat-nav-2].
- *
- * The button may sit inside the sidebar or anywhere else on the page; a
- * toggle outside it says which one it drives with `aria-controls`, and one
- * inside is matched to the sidebar it stands in. Opt-in twice over: the
- * sidebar carries `data-kp-sidebar` and the button has to exist, so
- * nothing already built changes shape.
- *
- * It reads the paint rather than the attribute to learn where it starts
- * [KT13]. The state attribute has three values and not two — 'true',
- * 'false', and absent, which leaves the decision to the width — so the
- * attribute alone cannot say whether the aside is on the screen, while
- * `display` always can.
- *
- * Every state has a way out [KT6]: the toggle, Escape while the focus is
- * in the sidebar, a click outside it while it covers the page, the
- * `kp-sidebar-toggle` event, and `detach`. Remembering is off unless the
- * page asks for it by naming a key in `data-kp-sidebar-remember`, because
- * a package writing into a consumer's storage unasked is the same scope
- * creep the theme query parameter was kept out of [AR42].
- *
- * @param {ParentNode} root
- * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string, storage?: Storage | null }} [options]
- * @returns {() => void} detach
- */
-export declare function attachSidebars(root?: ParentNode, { strings, ownedBy, storage }?: {
-    strings?: Partial<import('./strings.js').Strings>;
-    ownedBy?: string;
-    storage?: Storage | null;
-}): () => void;
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

@@ -216,6 +216,10 @@ test.describe('the side navigation', () => {
         expect(edges.badge, 'and the count is inside the panel, not past it').toBeLessThanOrEqual(edges.panel);
     });
 
+    // The far edge does not animate [gap-9]. Kenny saw the slide stay rough
+    // through two attempts and asked for it out rather than fixed today, so
+    // the panel arrives instead of travelling. The test reads where it ends
+    // up, which is the part that has to keep working either way.
     test('end: the panel comes from the other edge [feat-nav-3]', async ({ page }) => {
         await page.goto(FIXTURE);
         const box = await part(page, 'end-box').boundingBox();

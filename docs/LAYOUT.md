@@ -1,6 +1,6 @@
 # The layout layer
 
-Twenty-three classes for the shape of a page, in `@layer kp.layout`. That
+Twenty-one classes for the shape of a page, in `@layer kp.layout`. That
 layer sits after `kp.components`, so adding a layout class to a component
 that sets the same property itself wins, without `!important` (AR17).
 
@@ -52,36 +52,6 @@ for a grid that should reach its container's edge).
 a sidebar that drops below its main column when the main column would
 be narrower than half the track. Knobs: `--kp-sidebar-width` (16rem),
 `--kp-sidebar-gap`, `--kp-sidebar-break` (50%).
-
-Adding **`data-kp-sidebar`** makes that aside something a reader can put
-away, and a **`.kp-sidebar__toggle`** button inside it is what does the
-putting. It is opt-in on purpose: three example pages and the
-documentation site's own chrome already use the plain two-column form,
-and they keep it exactly as it was.
-
-The state lives in `data-kp-sidebar-open`, which takes `true` or `false`
-— and, when it is absent, lets the width decide. Wide, the aside is
-there and the toggle takes it away; below the 40rem step the aside is
-away and the toggle brings it back, over the main column rather than
-shoving it down. **`.kp-sidebar--push`** is the other choice: the aside
-takes its own row and the main column moves down to make room. Knobs for
-the covering form: `--kp-sidebar-drawer` (`min(18rem, 85%)`),
-`--kp-sidebar-layer` (40), `--kp-sidebar-surface` (`--card`),
-`--kp-sidebar-edge`, `--kp-sidebar-pad`.
-
-The drawer starts below the toggle rather than behind it, and the row it
-clears is `--kp-sidebar-toggle-size` (2.25rem) — the package sets that
-height, so it knows where the drawer begins. A taller button of your own
-raises the token.
-
-`js/components.js` exports `attachSidebars()`, which `js/auto.js` calls
-for the whole page. It reads what the browser paints rather than the
-attribute, so it agrees with the width instead of guessing at it; it
-fires `kp-sidebar-toggle` with `{ open }`; and Escape or a click outside
-closes the aside while it is covering the page. Remembering is off until
-the page names a key in `data-kp-sidebar-remember`, because a package
-that writes into a consumer's storage unasked has decided something that
-was not its to decide.
 
 **`.kp-section`** puts space above itself, except as the first child,
 where the space would push the page down for no reason. Knob:
@@ -140,15 +110,12 @@ asked for less motion.
 All three defaults change nothing: a page that does not ask gets what it
 got before.
 
-## The twenty-eight knobs
+## The twenty-two knobs
 
 `--kp-page-max`, `--kp-page-pad`, `--kp-page-pad-block`,
 `--kp-stack-gap`, `--kp-row-gap`, `--kp-row-align`, `--kp-autogrid-min`,
 `--kp-autogrid-gap`, `--kp-autogrid-pad`, `--kp-sidebar-width`, `--kp-sidebar-gap`,
-`--kp-sidebar-break`, `--kp-sidebar-drawer`, `--kp-sidebar-layer`,
-`--kp-sidebar-surface`, `--kp-sidebar-edge`, `--kp-sidebar-pad`,
-`--kp-sidebar-toggle-size`,
-`--kp-section-gap`, `--kp-center-max`,
+`--kp-sidebar-break`, `--kp-section-gap`, `--kp-center-max`,
 `--kp-prose-max`, `--kp-mono-face`, `--kp-mono-size`,
 `--kp-busy-opacity`, `--kp-sticky-top`, `--kp-sticky-layer`,
 `--kp-scroll-offset`, `--kp-scroll-behavior`.

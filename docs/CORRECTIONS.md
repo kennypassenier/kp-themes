@@ -1902,3 +1902,58 @@ the measure works.
 and every `attach*` export in `tests/` and refuses what no spec names.
 
 **9 · When we review the measure.** At round seven's retrospective.
+
+---
+
+## fix-8 · Code in a form rendered white on white (2026-09-11)
+
+Kenny answered **Klopt**, and then reported that the measure did not
+work: *"maak een notitie dat je `<code>` blokken nog altijd wit op wit
+zijn en dus onleesbaar. Maar repareer dat volgende keer, goedgekeurd"*.
+So this entry records a fault AND a failed first measure.
+
+**1 · What went wrong.** Every piece of code inside a form's explanation
+sat in a bare `<code>` element with no colour of its own, and it rendered
+white on white on his screen. Part of the reasoning he was asked to
+decide on was unreadable.
+
+**2 · Which gate let it through.** `hooks/form-lint.py` counts pronouns,
+coinages, old-shape identifiers and missing examples. It reads the text
+and never how the text looks. Nothing in the protocol asks whether a
+form can be read.
+
+**3 · Where else the same fault sits.** The property is "a form surface
+whose colour I did not set myself". Searched with `grep -c "<code>"` over
+the four forms kept in the scratchpad: 6, 8, 14 and 12 — forty
+occurrences across this conversation alone.
+
+**4 · How we prevent recurrence — and why the first attempt failed.**
+The measure proposed was to give every such element its colour
+explicitly, from the widget's own variables, and the form proposing it
+did exactly that: `color: var(--text-primary)` and
+`background: var(--surface-1)` inline on each `<code>`. Kenny read that
+form and reported the blocks still unreadable.
+
+An inline declaration loses to nothing but `!important`, so either the
+host stylesheet marks its `code` rule that way, or those two variables
+resolve to the same colour in his rendering. The next attempt therefore
+does not style `<code>` at all: the same inline styles go on a `<span>`,
+which no element-name rule can reach. That is the repair he approved for
+next time rather than now.
+
+**5 · What it costs.** One inline style per fragment, written once and
+copied between forms.
+
+**6 · Who enforces it.** Discipline.
+
+**7 · How and when it is measured.** At the next form that carries code:
+Kenny can read it, or he cannot, and he finds out in the moment. This is
+the second attempt at the same measurement; the first is recorded as
+having failed.
+
+**8 · The fallback.** `hooks/form-lint.py` refuses a form containing a
+`<code>` element at all, the way it already refuses a correction with no
+search recorded.
+
+**9 · When we review the measure.** At round seven's retrospective.
+

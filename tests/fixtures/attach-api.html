@@ -32,31 +32,19 @@
             </div>
         </div>
 
-        <div style="inline-size: 360px">
-            <div class="kp-sidebar" data-kp-sidebar data-test="side">
-                <button type="button" class="kp-sidebar__toggle" data-kp-sidebar-toggle data-test="side-toggle">Menu</button>
-                <nav class="kp-sidebar__aside" data-test="side-aside" aria-label="Sections">
-                    <a href="#a">One</a>
-                </nav>
-                <main class="kp-sidebar__main" data-test="side-main">
-                    <p>The column beside it.</p>
-                </main>
-            </div>
-        </div>
-
         <script type="module">
-            import { attachNavToggles, attachSidebars } from '/js/components.js';
+            import { attachNavToggles } from '/js/components.js';
 
             // The page writes down what it heard, so a test reads a record
             // rather than having to have been listening at the right moment.
             window.kpHeard = [];
-            for (const name of ['kp-nav-toggle', 'kp-sidebar-toggle']) {
+            for (const name of ['kp-nav-toggle']) {
                 document.addEventListener(name, (event) => {
                     window.kpHeard.push({ name, open: event.detail?.open, on: event.target.dataset.test });
                 });
             }
 
-            const detaches = [attachNavToggles(document), attachSidebars(document)];
+            const detaches = [attachNavToggles(document)];
             window.kpDetach = () => {
                 for (const detach of detaches) detach();
             };

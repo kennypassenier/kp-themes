@@ -54,24 +54,6 @@ test.describe('what attach returns, and what it announces', () => {
         expect((await heard(page)).find((e) => e.name === 'kp-nav-toggle')?.on, 'and it announced it on the nav itself').toBe('nav');
     });
 
-    test('the sidebar says out loud that it closed, and that it opened [feat-nav-2]', async ({ page }) => {
-        await page.goto(FIXTURE);
-        const toggle = page.locator('[data-test="side-toggle"]');
-
-        // This box is narrow, so the aside starts away: the first press
-        // opens. The nav above starts closed, so the two run opposite ways
-        // and a test that confused them would say so.
-        await toggle.click();
-        await toggle.click();
-
-        await expect
-            .poll(async () => (await heard(page)).filter((e) => e.name === 'kp-sidebar-toggle').map((e) => e.open), {
-                message: 'the sidebar announced open and then closed',
-            })
-            .toEqual([true, false]);
-        expect((await heard(page)).find((e) => e.name === 'kp-sidebar-toggle')?.on, 'on the sidebar itself').toBe('side');
-    });
-
     test('detaching the nav toggle gives the page back [feat-nav-1, KT6]', async ({ page }) => {
         await page.goto(FIXTURE);
         const toggle = page.locator('[data-test="nav-toggle"]');
@@ -90,25 +72,6 @@ test.describe('what attach returns, and what it announces', () => {
         const before = (await heard(page)).length;
         await toggle.click();
         await measured(links, (el) => el.getBoundingClientRect().height, undefined, 'a press after the detach does nothing').toBe(0);
-        expect((await heard(page)).length, 'and says nothing either').toBe(before);
-    });
-
-    test('detaching the sidebar gives the page back [feat-nav-2, KT6]', async ({ page }) => {
-        await page.goto(FIXTURE);
-        const toggle = page.locator('[data-test="side-toggle"]');
-        const aside = page.locator('[data-test="side-aside"]');
-
-        await toggle.click();
-        await measured(aside, (el) => el.getBoundingClientRect().width, undefined, 'open before the detach').toBeGreaterThan(0);
-
-        await page.evaluate(() => window.kpDetach());
-
-        await measured(aside, (el) => el.getBoundingClientRect().width, undefined, 'the open state went with it').toBe(0);
-        await expect(toggle, 'and the button stopped claiming anything').not.toHaveAttribute('aria-expanded', /.*/);
-
-        const before = (await heard(page)).length;
-        await toggle.click();
-        await measured(aside, (el) => el.getBoundingClientRect().width, undefined, 'a press after the detach does nothing').toBe(0);
         expect((await heard(page)).length, 'and says nothing either').toBe(before);
     });
 });
