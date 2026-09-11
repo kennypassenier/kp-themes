@@ -927,3 +927,41 @@ calls it sober. So the pass is about behaviour rather than decoration.
 The per-theme verdicts, the measurements behind them and the three
 observations that turned out differently than expected are in
 [THEME_VERDICTS.md](THEME_VERDICTS.md).
+
+**scope-13 · Six worlds refused, and what that says.** Kenny saw three
+concept worlds on 2026-09-11, called the spectral instrument the best but
+not hightech enough, then saw three more — a lithography bay, a detector
+screen, an interferometer — and refused all three. Six proposals, none
+chosen. What he wrote about instead, every single time, was the shape of
+a control: the buttons and the form fields in one, the mirrored round end
+in another, the doubled layer and the ghost button in the third. And the
+fallback he named himself is a **ground colour**, not a world.
+
+Two rounds in which the world did nothing and the shape did everything is
+a pattern, so the round stops leading with worlds. His answer on
+2026-09-11 was **"allemaal"**: three more worlds were built (Cherenkov,
+the light over a reactor pool, lit from below; Titanium, anodised metal
+over carbon weave, where the shifting colour is an oxide film and has a
+cause; and the command table, where a panel stands on a surface rather
+than lying on a page) and beside them a page that strips the world away
+entirely — the same button, field and card cut six different ways on one
+ground, in one typeface, with one accent, so the silhouette is the only
+variable left. Worlds: <https://claude.ai/code/artifact/c1e977c6-bab9-434f-90ea-6f3047ca6e2e>.
+Shapes: <https://claude.ai/code/artifact/e7a287f1-2b9c-4758-a81d-07b997e9f180>.
+
+**scope-14 · The fallback is the spectral instrument.** Kenny, 2026-09-11,
+resolving his own "de allereerste (die met donkerblauwe achtergrond)",
+which pointed at two different candidates: the spectral instrument was
+first in order on `hsl(220 16% 5%)`, the deep layer was third but was the
+only one on a genuinely blue ground at `hsl(234 34% 7%)`. He meant the
+first. It is restored beside the three new worlds so they can be judged
+against it rather than from memory, in the state he last saw it — the
+second cut, with the scanning band gone, the machined corners, the data
+label and the dialog.
+
+**scope-15 · Whether hypertech absorbs dark is deferred.** Kenny,
+2026-09-11: "beslissen we later, na de volgende ronde." Nothing about the
+merge is built or assumed meanwhile; dark keeps its name, loses its stars
+as already decided, and the question of whether a neutral dark theme and
+the loudest theme in the set can be one theme is left standing rather
+than answered by default.
