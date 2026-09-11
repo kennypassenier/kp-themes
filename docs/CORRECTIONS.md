@@ -1308,6 +1308,74 @@ diagnosing, destroying the traces Kenny's failing run had left behind —
 Phase 10: the evidence of a live-found fault is collected before anything
 is re-run.
 
+## fix-6 · The round ran on forms and stopped running on phases
+
+**What went wrong.** Kenny asked, on 2026-09-11: *"en waarom volg je de
+procedure niet meer?"* Measured before answering: `docs/FEATURES.md` had
+zero mentions of round seven, `docs/ARCHITECTURE_DECISIONS.md` had zero
+entries from that day and still ended at AR46, and both the status block
+in `CLAUDE.md` and the session title said "Phase 0" while feature code was
+being committed. The round had done its design in decision forms and had
+skipped the gates of Phases 2, 4 and 5 entirely.
+
+**Which gate let it through.** The phase-entry refresh — the rule that on
+entering any phase, that phase is re-read fresh from disk and the session
+is renamed. It was never run on the move from designing to building.
+Nothing mechanical watches a phase boundary, so that rule is the whole
+guard, and it is the one that was skipped.
+
+**Where the same fault still sits.** Searched across every document a
+phase is supposed to produce, against the commit before the repair:
+
+```
+git show 35b9ede~1:<doc> | grep -ci "round seven"
+```
+
+`docs/SCOPE.md` 2, `docs/REALIZATION_PLAN.md` 1, `docs/FEATURES.md` 0,
+`docs/ARCHITECTURE_DECISIONS.md` 0. (`docs/INVENTORY.md` is 0 and is not
+owed by a round.) So two of the four documents a round should fill were
+empty.
+
+**And it recurred inside this correction, within the hour.** The form
+that announced this record said the nine fields stood written out in this
+document. They did not: the commit message carried `[fix-6]` and the
+entry did not exist. A claim of evidence pointing at nothing is standing
+rule 11a, and the shape is identical to the fault above — a record the
+procedure asks for, absent, while everything around it spoke as though it
+were there. Kenny was not the one who caught it this time; the check that
+caught it was `grep -c "fix-6" docs/CORRECTIONS.md` returning zero,
+run because the claim had been made and had to be worth something.
+
+**How we prevent recurrence.** The session title becomes the trigger:
+before the first commit that adds a feature, the phase-entry refresh runs
+and the title is renamed. A title naming a design phase while code lands
+is the visible tell that something was skipped. Kenny chose this over the
+mechanical version.
+
+**What the remedy costs.** One re-read per phase boundary. Against it:
+a round that otherwise reaches a release with no frozen feature list and
+no architecture decisions.
+
+**Who enforces it.** Discipline, by Kenny's decision of 2026-09-11. The
+mechanical alternative was offered and refused: a commit hook reading the
+status block and refusing a `feat(` commit while it names a design phase.
+That would have blocked stage 1.1's commit, three commits before his
+question. It stays available as the fallback rather than being built now.
+
+**How we measure that it works, and when.** At stage 1.4: does it open
+with a phase check and close with a milestone report rather than with a
+commit?
+
+**The fallback if it fails.** The hook Kenny refused today gets built.
+
+**When we review it.** At the round-seven retrospective, where this is
+the round's most important fault.
+
+**Not repaired, recorded.** The `architecture-critic` never ran over the
+four decisions stage 1 rests on, and stages 1.1 to 1.3 closed on commits
+rather than on the milestone report Phase 6 asks for. That report is owed
+and is the round's next gate.
+
 ## fix-5 · Showing Kenny something and then asking, in prose, what he thought
 
 **What went wrong.** Round seven is a chain of things built for Kenny to
