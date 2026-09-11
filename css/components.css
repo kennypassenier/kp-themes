@@ -1414,7 +1414,10 @@
     .kp-sidenav[data-kp-sidenav-mode='push'] {
         --kp-sidenav-away: -100%;
         position: fixed;
-        inset-block: 0;
+        /* One value or two, so a page with a bar it wants to keep can say
+           `--kp-sidenav-inset-block: 3rem 0` and have the panel start under
+           it instead of sliding beneath it. */
+        inset-block: var(--kp-sidenav-inset-block, 0);
         inset-inline-start: 0;
         z-index: var(--kp-sidenav-layer, 60);
         translate: var(--kp-sidenav-away) 0;
@@ -1454,6 +1457,12 @@
 
     @media (prefers-reduced-motion: no-preference) {
         .kp-sidenav {
+            transition: translate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
+        }
+
+        /* Width is a layout property and animating it costs a reflow per
+           frame. Only a panel that actually has a rail pays for it. */
+        .kp-sidenav[data-kp-sidenav-slim] {
             transition:
                 translate var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease),
                 inline-size var(--kp-sidenav-duration, 300ms) var(--kp-ease, ease);
@@ -1503,6 +1512,11 @@
     .kp-sidenav__scroll {
         flex: 1 1 auto;
         overflow-y: auto;
+        /* Never sideways [Kenny, 2026-09-11]. A narrow panel measured 140px
+           of content in a 127px box and the count after a long label sat two
+           pixels past the edge, reachable only by scrolling. A navigation you
+           have to scroll sideways is a navigation you cannot read. */
+        overflow-x: hidden;
         overscroll-behavior: contain;
     }
 
@@ -1520,7 +1534,13 @@
         display: flex;
         align-items: center;
         gap: 0.6rem;
+        /* Its width INCLUDING its padding. The package sets no global
+           box-sizing, so `inline-size: 100%` on a padded row made every row
+           19px wider than the list that held it — which is where the
+           sideways scroll came from. */
+        box-sizing: border-box;
         inline-size: 100%;
+        min-inline-size: 0;
         padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
         font: inherit;
         font-size: var(--kp-font-size-sm, 0.875rem);
@@ -1563,6 +1583,9 @@
 
     .kp-sidenav__badge {
         margin-inline-start: auto;
+        /* The label gives way, the count does not: a number cut in half is
+           worse than a name cut in half, because a name still reads. */
+        flex-shrink: 0;
         font-size: var(--kp-font-size-xs, 0.75rem);
         color: var(--muted-foreground);
     }

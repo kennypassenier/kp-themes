@@ -250,6 +250,7 @@
                             <tr><td><code>--kp-sidenav-edge</code></td><td><code>1px solid var(--border)</code></td></tr>
                             <tr><td><code>--kp-sidenav-gap</code></td><td><code>0.1rem</code></td></tr>
                             <tr><td><code>--kp-sidenav-icon-size</code></td><td><code>1.25rem</code></td></tr>
+                            <tr><td><code>--kp-sidenav-inset-block</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-sidenav-item-pad</code></td><td><code>0.5rem 0.6rem</code></td></tr>
                             <tr><td><code>--kp-sidenav-layer</code></td><td><code>60</code></td></tr>
                             <tr><td><code>--kp-sidenav-list-pad</code></td><td><code>0.4rem</code></td></tr>
@@ -284,6 +285,8 @@
                             <tr><td><code>data-kp-sidenav-backdrop</code></td><td>false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.</td></tr>
                             <tr><td><code>data-kp-sidenav-close-on-esc</code></td><td>false keeps Escape from closing it. data-kp-sidenav-focus-trap=&quot;false&quot; lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.</td></tr>
                             <tr><td><code>data-kp-sidenav-remember</code></td><td>A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.</td></tr>
+                            <tr><td><code>--kp-sidenav-inset-block</code></td><td>Where a covering panel starts and ends, one value or two. A page that keeps its own bar says `3rem 0` and the panel begins under it instead of sliding beneath it.</td></tr>
+                            <tr><td><code>never sideways</code></td><td>The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.</td></tr>
                             <tr><td><code>.kp-sidenav__scroll</code></td><td>The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.</td></tr>
                             <tr><td><code>.kp-sidenav__category</code></td><td>A heading that folds, with .kp-sidenav__category-toggle and .kp-sidenav__submenu inside it. The open height is a grid track, so it animates without anything measuring it.</td></tr>
                     </tbody></table></div>

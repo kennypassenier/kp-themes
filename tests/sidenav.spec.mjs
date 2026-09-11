@@ -22,6 +22,8 @@
 //   · `flex-shrink: 0` removed and the backdrop's position line removed,
 //     together → `1268 passed, 2 failed`, the side test and the over test
 //   · the push offset put back to the token's default → the push test red
+//   · `box-sizing: border-box` removed from the rows → `1269 passed,
+//     1 failed`, the sideways-scroll test
 //
 // Two of those passes are the reason the drill is not a formality. The
 // side test's first version asked whether the panel was wider than 100px
@@ -192,6 +194,28 @@ test.describe('the side navigation', () => {
         await measured(one, (el) => el.getBoundingClientRect().height, undefined, 'and the first closed, which is what accordion means').toBe(0);
     });
 
+    test('a side navigation never scrolls sideways [feat-nav-3]', async ({ page }) => {
+        // Kenny's rule, 2026-09-11, after seeing the count after a long label
+        // sit past the edge of a narrow panel: "in een sidenav mag er nooit
+        // gescrolled worden". Measured before the fix: 140px of content in a
+        // 127px box, with the number two pixels outside it.
+        //
+        // The cause was box-sizing. The package sets none globally, so a row
+        // at `inline-size: 100%` with padding came out 19px wider than the
+        // list holding it, and every row in every panel overflowed by
+        // exactly its own padding.
+        await page.goto(FIXTURE);
+
+        const box = await part(page, 'tight-scroll').evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+        expect(box.scroll, 'nothing to scroll to: the content is as wide as the box and no wider').toBeLessThanOrEqual(box.client);
+
+        const edges = await page.evaluate(() => {
+            const rect = (sel) => document.querySelector(sel).getBoundingClientRect();
+            return { badge: rect('[data-test="tight-badge"]').right, panel: rect('[data-test="tight"]').right };
+        });
+        expect(edges.badge, 'and the count is inside the panel, not past it').toBeLessThanOrEqual(edges.panel);
+    });
+
     test('end: the panel comes from the other edge [feat-nav-3]', async ({ page }) => {
         await page.goto(FIXTURE);
         const box = await part(page, 'end-box').boundingBox();
@@ -206,5 +230,17 @@ test.describe('the side navigation', () => {
             (box?.x ?? 0) + (box?.width ?? 0),
             0,
         );
+
+        // And it starts where the page told it to. This panel carries
+        // `--kp-sidenav-inset-block: 2rem 0`, which is how a page that keeps
+        // its own bar stops the panel sliding underneath it [Kenny, 2026-09-11].
+        // Both boxes read in one go: opening moves the focus into the panel,
+        // which can scroll the page, and a y captured beforehand is then a
+        // number from a different moment.
+        const tops = await page.evaluate(() => {
+            const rect = (sel) => document.querySelector(sel).getBoundingClientRect();
+            return { panel: rect('[data-test="end"]').top, box: rect('[data-test="end-box"]').top };
+        });
+        expect(tops.panel - tops.box, 'end: two rem below the top of its box').toBeCloseTo(32, 0);
     });
 });

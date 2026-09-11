@@ -129,11 +129,30 @@
                 data-kp-sidenav-position="absolute"
                 data-kp-sidenav-side="end"
                 aria-label="End"
+                style="--kp-sidenav-inset-block: 2rem 0"
             >
                 <div class="kp-sidenav__scroll">
                     <ul class="kp-sidenav__list">
                         <li>
                             <a class="kp-sidenav__link" href="#a"><span class="kp-sidenav__label">One</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 6. A narrow panel with a label that does not fit and a count
+             that must survive anyway. Kenny's rule: a side navigation never
+             scrolls sideways. -->
+        <div style="position: relative; inline-size: 30rem" data-test="tight-box">
+            <nav class="kp-sidenav" id="nav-tight" data-test="tight" aria-label="Tight" style="--kp-sidenav-width: 8rem">
+                <div class="kp-sidenav__scroll" data-test="tight-scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#a">
+                                <span class="kp-sidenav__label">Geschiedenis van alles</span>
+                                <span class="kp-sidenav__badge" data-test="tight-badge">12</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
