@@ -965,3 +965,45 @@ merge is built or assumed meanwhile; dark keeps its name, loses its stars
 as already decided, and the question of whether a neutral dark theme and
 the loudest theme in the set can be one theme is left standing rather
 than answered by default.
+
+**scope-16 · The spectral instrument becomes dark.** Kenny, 2026-09-11:
+"Spectral instrument wordt de nieuwe dark en vervangt deze vanaf nu
+helemaal." So the fallback is not a fallback any more — it is the answer
+to what dark should be, and it replaces dark outright rather than sitting
+beside it. This also settles `scope-15`'s deferred merge question in the
+one direction nobody had proposed: dark keeps its name and loses
+everything else, including the stars that were already going.
+
+**scope-17 · Titanium becomes a theme of its own.** Kenny, 2026-09-11:
+"Titanium wordt een nieuw thema op zichzelf, het is heel mooi." Anodised
+metal over carbon weave, where the shifting blue-violet on every edge is
+an oxide film rather than a gradient, and where a press takes sixty
+milliseconds and runs linear because metal does not ease. What it is
+called is the one thing still open — the round set out to build a theme
+named hypertech, and this is the theme that round produced.
+
+**scope-18 · Two pieces of the command table survive it.** Kenny,
+2026-09-11: the command table as a whole is "te veel zoals blueprint" and
+does not become a theme — but its measurement frame, the brackets that
+report the box they hold in pixels, is better than the one blueprint has
+and **replaces it**. His words: "dan is de demo hier niet voor niks
+geweest."
+
+**scope-19 · Cherenkov is not a theme; its gesture is placed.** Kenny,
+2026-09-11: good ideas, especially the destructive button with the short
+visible bar that expands under the pointer, and the shape of the buttons.
+His question — whether it could be applied in another theme — is answered
+in the placement item below.
+
+**scope-20 · The chamfer is not crowded, which changes the question.**
+Kenny assumed the milled corner was already used a few times and asked
+whether some of those should be replaced. Measured on 2026-09-11 across
+all twenty-five registers: `clip-path: polygon` appears in six of them,
+and thirty-one of the thirty-nine uses are cyberpunk's own notch system.
+Of the rest, blueprint has one chamfer (on `.kp-button--mirror`, cut from
+`--kp-chamfer`), and every other polygon in the package is a **tear or a
+divider** — forest's contour, pastel's torn edges, phantom's slashes,
+synthwave's bands — not a control silhouette. So the milled corner exists
+twice, once of which is the theme he calls perfect, and there is no crowd
+to thin out. The field of control silhouettes is nearly empty, which is
+why the four shapes he liked all have somewhere to go.
