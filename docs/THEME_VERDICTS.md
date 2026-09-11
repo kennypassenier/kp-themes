@@ -67,7 +67,7 @@ label.
 | light | "mag simpel blijven" | untouched |
 | mono | "gaat eruit, niet meer nodig" | **leaves the set** |
 | nostromo | "redelijk goed, maar kan ook nog beter" | a quirk of its own — and its dot is the example the whole round is built on |
-| pastel | "mag zeker wat individualiteit tonen bij sommige elementen" | a quirk of its own, in its own risograph language |
+| pastel | "mag zeker wat individualiteit tonen bij sommige elementen" | **done 2026-09-11** — the sticker he chose ("A de sticker"): a hard offset drop at rest, a lift and a nudge askew under the pointer, pressed completely flat. The active row of its side navigation wears the same gesture |
 | phantom | "één van de uniekst ogende thema's, al heel goed" | untouched |
 | retro | "prachtig (wel heel anders qua breedte, is misschien deel van het effect?)" | untouched — and yes, measured below |
 | sepia | "mogen wel ideeën krijgen"; and the scanline must go | a quirk of its own; the scanline is measured below and is not there |
