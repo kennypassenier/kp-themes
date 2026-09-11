@@ -1985,26 +1985,33 @@ read mid-reveal is not, and the text of the two lines is identical. That
 is the honest limit of this search and it is why the measure below is
 what it is.
 
-**4 · How we prevent recurrence.** This is fix-1 a second time, on a
-surface its measure did not reach. fix-1 named two narrow gates as its
-fallback — no spec read of `animationName` against a keyframe name, and
-no `indicator()` outside `wholeRing()` — and neither shape covers a bare
-read of `filter`. The proposal is therefore the wider one fix-1 declined:
-a gate refusing `expect(await … getComputedStyle(…).<animatable>)` inside
-a spec, with `expect.poll` or `tests/paint.mjs` as the way to write it
-instead. 86 sites convert mechanically.
+**4 · How we prevent recurrence — Kenny chose discipline, 2026-09-11.**
+The wider gate was offered and declined: a check refusing
+`expect(await … getComputedStyle(…).<animatable>)` inside a spec, with
+86 sites to convert. His answer was **Alleen discipline**, and per the
+protocol a written "consciously nothing" is information rather than an
+invented measure, so it is written here.
 
-**5 · What it costs.** 86 conversions, each a wrapper around an existing
-line, and a gate of about thirty lines. The risk is the one fix-1 named:
-a poll on a value that does NOT settle waits the full timeout for
-something that already left. The gate's list must therefore hold only
-properties that settle, and `animationName` stays off it.
+What stands instead: a value that SETTLES is polled — `expect.poll` or
+the readers in `tests/paint.mjs` — and the reads that matter are the ones
+after a load, a click, a hover or a scroll. The 86 bare reads are not
+swept; they are repaired where one is found, which is what fix-1 asked
+for and what this recurrence did not change his mind about.
 
-**6 · Who enforces it.** To be decided with Kenny — discipline today.
+This is the third correction in this family (KT16, fix-1, this one), and
+each time the broad sweep has been declined for the same reason: it would
+push the animation half into a poll that waits the full timeout for a
+value that left before it started looking. That reason has not weakened.
 
-**7 · How and when it is measured.** At the next full run after the
-measure lands: no spec fails and then passes. The pending measurement is
-in `docs/MINI_ROUNDS.md`.
+**5 · What it costs.** Nothing up front, and the honest price is that a
+flake of this shape can happen again — the search above says grep cannot
+tell which of the 86 are racy, so nobody can promise otherwise.
+
+**6 · Who enforces it.** Discipline, by Kenny's decision.
+
+**7 · How and when it is measured.** At round seven's last full run
+before the tag: if a spec fails and then passes, discipline was not
+enough and field 8 applies. Queued in `docs/MINI_ROUNDS.md` as `fix-9-M1`.
 
 **8 · The fallback.** If a flake of this shape survives the gate, the
 suite records `--repeat-each=3` for the register specs once before a
@@ -2012,4 +2019,47 @@ release, so a racy read is found deliberately rather than by luck.
 
 **9 · When we review the measure.** At round seven's retrospective,
 against the count of bare reads remaining.
+
+---
+
+## fix-10 · A turn of hours with no word in it (2026-09-11)
+
+Kenny answered **Klopt**, after having to ask for it himself: *"je moet
+normaal ook je vooruitgangindicatie tonen in chats"*.
+
+**1 · What went wrong.** The turn he said it in ran eight commits from
+end to end with no message in between. He saw tool calls and nothing
+else, and could not tell where the work stood.
+
+**2 · Which gate let it through.** None. Standing rule 16 asks for a
+progress checklist in EVERY reply during multi-stage work, and nothing
+counts how long it has been since there was a reply at all.
+
+**3 · Where else the same fault sits.** The property is "a turn that runs
+long without a word". Searched by reading this conversation back: the
+last four turns before his remark were each a single unbroken block of
+tool calls, and the longest of them landed eight commits. He interrupted
+twice during it — once about his processor, once about the checklist —
+and those are exactly the two moments a stop would have stood.
+
+**4 · How we prevent recurrence.** The checklist goes at the FRONT of a
+reply rather than the end, and a turn that would run past one commit is
+cut into turns instead. Shorter turns are the measure; the checklist is
+what they carry.
+
+**5 · What it costs.** More turns, and a little repetition in each.
+Against that: Kenny stopped having to guess, and twice in one turn he
+paid for the guessing by interrupting.
+
+**6 · Who enforces it.** Discipline. No check can see how long somebody
+has been looking at an empty chat.
+
+**7 · How and when it is measured.** At the next turn that does more than
+one commit: the reply opens with the checklist, and he sees it or he does
+not. Queued in `docs/MINI_ROUNDS.md` as `fix-10-M1`.
+
+**8 · The fallback.** Every commit becomes its own turn, so the checklist
+cannot be skipped.
+
+**9 · When we review the measure.** At round seven's retrospective.
 
