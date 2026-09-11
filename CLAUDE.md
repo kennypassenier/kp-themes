@@ -157,13 +157,13 @@ status check, and nothing runs on a server — 254 runs in five days and
 himself. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
 the keyboard work need not be (see the rule from correction fix-2 below):
 
-| Command                 | What                                                             | When                                                                                                            |
-| ----------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook                                                                                       |
-| `npm run test:affected` | the specs a change touches, Firefox only                         | during work                                                                                                     |
-| `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks |
-| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                    |
-| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                     |
+| Command                 | What                                                             | When                                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook                                                                                                     |
+| `npm run test:affected` | the specs a change touches, Firefox only                         | once before each report or commit — during the building itself it is the single spec file, see the 2026-09-11 amendment below |
+| `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks               |
+| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                                  |
+| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                                   |
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
 contrast, the design invariants, the flash threshold, the reduced-motion
@@ -223,6 +223,28 @@ runs the specs a change touches, in firefox alone, because Kenny's own
 browser is a firefox derivative and firefox has been the odd engine here
 fourteen times against chromium's six. Where a drill wants the second
 engine, Claude asks rather than decides.
+
+**Amended 2026-09-11, and this is the half that costs the time.**
+`test:affected` falls back to the whole suite for any change to a
+stylesheet or a module, by design — `gates/affected.mjs` says so in its
+own comment, because a map subtle enough to split them would be wrong
+where nobody looks. In practice that means nearly every step Claude takes
+runs everything: 1293 tests, three and a half minutes, dozens of times in
+one session, to check five. Kenny noticed from the other side — his
+machine stuttering while a run was going — and asked whether all of it
+was needed.
+
+The answer is the RHYTHM, not the count. While building, Claude runs the
+one spec file being worked on (`npx playwright test tests/<file>.spec.mjs
+--project=firefox`, measured at 3.6 seconds against 3.5 minutes), and
+runs `npm run test:affected` once before each report or commit. The bar
+on the tests themselves does not move: rule 7e still drives every
+assertion red, rule 8 still turns every live-found fault into a test
+first, and the milestone gate still carries its coverage item.
+
+Workers are capped at `50%` in `playwright.config.mjs` for the same
+reason — Playwright's default is every core, and on sixteen that makes
+the desktop unusable while a run goes. `KP_TEST_WORKERS` overrides it.
 
 Discipline-enforced. If it recurs, `test:browser` gains a guard that
 refuses unless an environment variable only Kenny sets is present. Full
@@ -300,13 +322,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven (6.0.0), Phase 6 — the development loop.** Corrected on 2026-09-11 after Kenny asked why the procedure had stopped being followed: this block said Phase 0 while feature code was being committed, and the session title said the same. The round ran its design in decision forms and skipped the gates of Phases 2, 4 and 5 — the ratings never reached [docs/FEATURES.md](docs/FEATURES.md), the architecture decisions never reached [docs/ARCHITECTURE_DECISIONS.md](docs/ARCHITECTURE_DECISIONS.md), and no milestone report closed a stage. Both documents are back-filled; the missing gates are recorded as `fix-6`. Stage 1 of the build order in [docs/REALIZATION_PLAN.md](docs/REALIZATION_PLAN.md) is three of six done |
-| Last completed gate | The stage-1 milestone report, 2026-09-11 — the first gate of round seven that the procedure actually asked for. Four criteria signed; the coverage item found that smooth scrolling had been rated essential, built and tested by nothing, and that gap is now closed with two tests and its drill                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Next gate           | Stage 1.4, the side navigation that can be hidden, defaulting to an overlay. It opens with the phase-entry refresh and closes with a report like the one stage 1 finally got — that pair is `step-8`, the measurement of `fix-6`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| Open queue items    | Twelve. `step-2` and `step-4` wait on Kenny; `KT6-M1` waits on JobTracker; `step-6` is the compliance repair, which a separate session reports committed on `claude/busy-jones-9d6fff` and unverified here. The other eight — `CP1`, `gap-1` to `gap-7` — are round seven's own work                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| AFK mode            | off; the round is at its first gate and that gate is Kenny's eyes on three URLs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Field               | Value                                                                                                                                                                                                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Current phase       | **Round seven (6.0.0), Phase 6 — the development loop.** Stage 1 of the build order in [docs/REALIZATION_PLAN.md](docs/REALIZATION_PLAN.md) is closed; stage 2 is the themes and stage 3 the removals                                                                                |
+| Last completed gate | **Stage 1 of round seven, closed 2026-09-11.** Six essential pieces plus the side navigation that grew out of them, four items signed. Eleven defects found along the way, eight of them in code already pushed                                                                      |
+| Next gate           | Stage 2, the themes: titanium added, dark replaced by the spectral instrument, blueprint's frame swapped for the measured one, and every theme earning its own quirk — which is also where the four roots in the register queue get answered                                         |
+| Open queue items    | Twelve. `step-2` and `step-4` wait on Kenny; `KT6-M1` waits on JobTracker; `step-6` is the compliance repair, which a separate session reports committed on `claude/busy-jones-9d6fff` and unverified here. The other eight — `CP1`, `gap-1` to `gap-7` — are round seven's own work |
+| AFK mode            | off; the round is at its first gate and that gate is Kenny's eyes on three URLs                                                                                                                                                                                                      |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

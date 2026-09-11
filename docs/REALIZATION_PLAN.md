@@ -646,6 +646,27 @@ that skipping it had quietly disproved.
 Kenny's order for what follows: close the gap first, then the sidebar.
 The gap is closed.
 
+**Gate log — stage 1, closed 2026-09-11.** The report Kenny asked for as
+one, covering 1.5 and 1.6 and the stage as a whole. He signed all four
+items.
+
+| Criterion | Evidence | Outcome |
+| --------- | -------- | ------- |
+| The six essential pieces, plus the component that grew out of them | 1.1 to 1.3 reported separately; 1.4 built and then withdrawn in favour of 1.7; 1.5 and 1.6 delivered with five tests, drilled in one pass at `2 passed, 3 failed`; 1.7 with nine tests and six drill passes | Akkoord |
+| Registry coverage | Four roots wait for stage 2 in `gates/register-pending.json`, each with its reason and each refused by the gate the moment a register covers it. `gap-8` (two untouched detaches) and `gap-9` (why the far edge stuttered was never measured) are in the queue | Akkoord |
+| Deviations | Three non-theme colours added to the DI9 exception list for the overlay caption; the worker cap; the picture frame having no width of its own; the back-to-top control aiming at the document rather than the main landmark | Akkoord |
+| How much gets tested | Measured rather than argued: 1293 tests in 75 files, 3.6 seconds for one file against 3.5 minutes for the affected set, which falls back to everything on any stylesheet or module change. Kenny chose the rhythm over the count | Minder vaak draaien |
+
+**What stage 1 cost and what it caught.** Eleven defects, of which eight
+were in code already committed and pushed: the stale announcement, the
+covered toggler, the spurious event on attach, the sideways scroll, the
+box-sizing on the rows, the panel giving away its width, the offset
+reading the wrong number, the backdrop covering a page nobody asked
+about. Two of those were found by Kenny looking at a page, and the rest
+by tests written afterwards. Twice the drill caught a test measuring its
+own scaffolding — once asking whether a panel was wider than 100px, once
+comparing two numbers that happened to be equal.
+
 **Stage 2 — the themes.** Titanium is added; dark is replaced outright by
 the spectral instrument; nine themes get the quirk settled for them in
 [THEME_VERDICTS.md](THEME_VERDICTS.md); blueprint takes the measurement
