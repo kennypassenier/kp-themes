@@ -577,6 +577,40 @@ the button. That channel wires its own button and marks it
 `data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
 `ownedBy: ''` if you want the module over a React nav anyway.
 
+### A side navigation that can be put away [stage 1.4]
+
+`.kp-sidebar` has been a two-column layout since round four. Adding
+`data-kp-sidebar` and a button gives the reader a way to close it — and
+gives a phone a page that opens on its content rather than on its menu:
+
+```html
+<div class="kp-sidebar" data-kp-sidebar>
+    <button type="button" class="kp-sidebar__toggle" data-kp-sidebar-toggle>Menu</button>
+    <nav class="kp-sidebar__aside" aria-label="Sections">…</nav>
+    <main class="kp-sidebar__main" id="main">…</main>
+</div>
+```
+
+Opt-in, like the bar above it: a `.kp-sidebar` without that attribute is
+untouched. The state lives in `data-kp-sidebar-open`, which takes `true`
+or `false` — and, while it is absent, lets the width decide. Wide, the
+aside is there and the button takes it away; below 40rem the aside is
+away and the button brings it back, over the main column. Add
+`.kp-sidebar--push` and it takes its own row instead, moving the content
+down rather than covering it.
+
+`js/auto.js` wires it through `attachSidebars()`. Every state has a way
+out: the button, Escape while the focus is inside, a click outside while
+it is covering the page, and a `kp-sidebar-toggle` event on the sidebar
+with `{ open }`. The button's accessible name comes from the dictionary
+(`sidebar`, `closeSidebar`).
+
+It remembers nothing until you ask it to. Name a key —
+`data-kp-sidebar-remember="app-nav"` — and the choice survives a reload;
+leave it off and this package writes nothing into your storage. Knobs
+for the covering form: `--kp-sidebar-drawer`, `--kp-sidebar-layer`,
+`--kp-sidebar-surface`, `--kp-sidebar-edge`, `--kp-sidebar-pad`.
+
 ## The page shell [TH36]
 
 ```html

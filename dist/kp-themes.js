@@ -132,6 +132,11 @@ var DEFAULT_STRINGS = Object.freeze({
   // press goes rather than what the control is.
   menu: "Open the navigation",
   closeMenu: "Close the navigation",
+  // Distinct from the two above on purpose: a page can carry both, and
+  // "Open the navigation" twice would leave a screen reader with two
+  // controls whose names do not tell them apart.
+  sidebar: "Open the side navigation",
+  closeSidebar: "Close the side navigation",
   previous: "Previous",
   next: "Next",
   finish: "Finish",
@@ -423,9 +428,12 @@ __export(components_exports, {
   EXEMPT: () => EXEMPT,
   NAV_OWNED: () => NAV_OWNED,
   NAV_TOGGLE_EVENT: () => NAV_TOGGLE_EVENT,
+  SIDEBAR_OWNED: () => SIDEBAR_OWNED,
+  SIDEBAR_TOGGLE_EVENT: () => SIDEBAR_TOGGLE_EVENT,
   VIOLATION_EVENT: () => VIOLATION_EVENT,
   attachConfirmations: () => attachConfirmations,
   attachNavToggles: () => attachNavToggles,
+  attachSidebars: () => attachSidebars,
   attachSkipLinks: () => attachSkipLinks,
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
@@ -693,6 +701,104 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
   return () => {
     for (const c of cleanups) c();
   };
+}
+var SIDEBAR_TOGGLE_EVENT = "kp-sidebar-toggle";
+var SIDEBAR_OWNED = "[data-kp-sidebar-owner]";
+function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWNED, storage } = {}) {
+  const cleanups = [];
+  const store = storage === void 0 ? safeStorage() : storage;
+  for (const el of root.querySelectorAll("[data-kp-sidebar-toggle]")) {
+    const button = (
+      /** @type {HTMLElement} */
+      el
+    );
+    if (ownedBy !== "" && button.matches(ownedBy)) continue;
+    if (button.dataset.kpSidebarToggleAttached !== void 0) continue;
+    const controls = button.getAttribute("aria-controls");
+    const sidebar = (controls ? button.ownerDocument.getElementById(controls) : null) ?? button.closest(".kp-sidebar");
+    if (!sidebar) continue;
+    const aside = (
+      /** @type {HTMLElement | null} */
+      sidebar.querySelector(".kp-sidebar__aside")
+    );
+    if (!aside) continue;
+    button.dataset.kpSidebarToggleAttached = "";
+    if (!aside.id) aside.id = `kp-sidebar-aside-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
+    button.setAttribute("aria-controls", aside.id);
+    const key = sidebar.getAttribute("data-kp-sidebar-remember");
+    const painted = () => getComputedStyle(aside).display !== "none";
+    const say = (open) => {
+      const s = { ...getStrings(), ...strings };
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute("aria-label", open ? s.closeSidebar : s.sidebar);
+    };
+    const set = (open) => {
+      sidebar.setAttribute("data-kp-sidebar-open", String(open));
+      say(open);
+      if (key && store) {
+        try {
+          store.setItem(key, String(open));
+        } catch {
+        }
+      }
+      sidebar.dispatchEvent(new CustomEvent(SIDEBAR_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+    };
+    let remembered = null;
+    if (key && store) {
+      try {
+        remembered = store.getItem(key);
+      } catch {
+        remembered = null;
+      }
+    }
+    if (remembered === "true" || remembered === "false") set(remembered === "true");
+    else say(painted());
+    const onClick = () => set(!painted());
+    const onKey = (event) => {
+      if (event.key !== "Escape" || !painted()) return;
+      set(false);
+      button.focus();
+    };
+    const onOutside = (event) => {
+      if (!painted() || getComputedStyle(aside).position !== "absolute") return;
+      const target = (
+        /** @type {Node} */
+        event.target
+      );
+      if (aside.contains(target) || button.contains(target)) return;
+      set(false);
+    };
+    button.addEventListener("click", onClick);
+    sidebar.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onKey
+    );
+    button.ownerDocument.addEventListener("click", onOutside, true);
+    cleanups.push(() => {
+      button.removeEventListener("click", onClick);
+      sidebar.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onKey
+      );
+      button.ownerDocument.removeEventListener("click", onOutside, true);
+      sidebar.removeAttribute("data-kp-sidebar-open");
+      button.removeAttribute("aria-expanded");
+      button.removeAttribute("aria-label");
+      delete button.dataset.kpSidebarToggleAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+function safeStorage() {
+  try {
+    return globalThis.localStorage ?? null;
+  } catch {
+    return null;
+  }
 }
 function attachSkipLinks(root = document) {
   const cleanups = [];
@@ -5419,6 +5525,7 @@ function attachAll(root = document) {
     attachConfirmations(root),
     attachSkipLinks(root),
     attachNavToggles(root),
+    attachSidebars(root),
     attachDialogs(root),
     attachTabs(root),
     attachThemePickers(root),
@@ -5659,6 +5766,8 @@ export {
   ROUTINES,
   RUN_EVENT,
   SELECT_EVENT,
+  SIDEBAR_OWNED,
+  SIDEBAR_TOGGLE_EVENT,
   SORT_EVENT,
   SPLIT_EVENT,
   STATE,
@@ -5704,6 +5813,7 @@ export {
   attachNavToggles,
   attachPalettes,
   attachPatterns,
+  attachSidebars,
   attachSkipLinks,
   attachStructure,
   attachTableRegions,

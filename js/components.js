@@ -487,6 +487,143 @@ export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED
     };
 }
 
+export const SIDEBAR_TOGGLE_EVENT = 'kp-sidebar-toggle';
+
+/** The mark a consumer puts on a sidebar toggle they wire themselves [AR29]. */
+export const SIDEBAR_OWNED = '[data-kp-sidebar-owner]';
+
+/**
+ * Wire the toggle that hides and shows a side navigation [feat-nav-2].
+ *
+ * The button may sit inside the sidebar or anywhere else on the page; a
+ * toggle outside it says which one it drives with `aria-controls`, and one
+ * inside is matched to the sidebar it stands in. Opt-in twice over: the
+ * sidebar carries `data-kp-sidebar` and the button has to exist, so
+ * nothing already built changes shape.
+ *
+ * It reads the paint rather than the attribute to learn where it starts
+ * [KT13]. The state attribute has three values and not two — 'true',
+ * 'false', and absent, which leaves the decision to the width — so the
+ * attribute alone cannot say whether the aside is on the screen, while
+ * `display` always can.
+ *
+ * Every state has a way out [KT6]: the toggle, Escape while the focus is
+ * in the sidebar, a click outside it while it covers the page, the
+ * `kp-sidebar-toggle` event, and `detach`. Remembering is off unless the
+ * page asks for it by naming a key in `data-kp-sidebar-remember`, because
+ * a package writing into a consumer's storage unasked is the same scope
+ * creep the theme query parameter was kept out of [AR42].
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string, storage?: Storage | null }} [options]
+ * @returns {() => void} detach
+ */
+export function attachSidebars(root = document, { strings, ownedBy = SIDEBAR_OWNED, storage } = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+    const store = storage === undefined ? safeStorage() : storage;
+
+    for (const el of root.querySelectorAll('[data-kp-sidebar-toggle]')) {
+        const button = /** @type {HTMLElement} */ (el);
+        if (ownedBy !== '' && button.matches(ownedBy)) continue;
+        if (button.dataset.kpSidebarToggleAttached !== undefined) continue;
+
+        const controls = button.getAttribute('aria-controls');
+        const sidebar = (controls ? button.ownerDocument.getElementById(controls) : null) ?? button.closest('.kp-sidebar');
+        if (!sidebar) continue;
+        const aside = /** @type {HTMLElement | null} */ (sidebar.querySelector('.kp-sidebar__aside'));
+        if (!aside) continue;
+        button.dataset.kpSidebarToggleAttached = '';
+
+        if (!aside.id) aside.id = `kp-sidebar-aside-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
+        button.setAttribute('aria-controls', aside.id);
+
+        const key = sidebar.getAttribute('data-kp-sidebar-remember');
+        // What the browser draws, not what the markup claims: absent means
+        // the width decides, and only the paint knows what it decided.
+        const painted = () => getComputedStyle(aside).display !== 'none';
+        /** @param {boolean} open */
+        const say = (open) => {
+            const s = { ...getStrings(), ...strings };
+            button.setAttribute('aria-expanded', String(open));
+            button.setAttribute('aria-label', open ? s.closeSidebar : s.sidebar);
+        };
+        /** @param {boolean} open */
+        const set = (open) => {
+            sidebar.setAttribute('data-kp-sidebar-open', String(open));
+            say(open);
+            if (key && store) {
+                try {
+                    store.setItem(key, String(open));
+                } catch {
+                    // A full or refused quota loses the memory, never the sidebar.
+                }
+            }
+            sidebar.dispatchEvent(new CustomEvent(SIDEBAR_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+        };
+
+        let remembered = null;
+        if (key && store) {
+            try {
+                remembered = store.getItem(key);
+            } catch {
+                remembered = null;
+            }
+        }
+        // Saying where it stands is not the same as deciding it: with
+        // nothing remembered the attribute stays absent, so the width keeps
+        // the say it had.
+        if (remembered === 'true' || remembered === 'false') set(remembered === 'true');
+        else say(painted());
+
+        const onClick = () => set(!painted());
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            if (event.key !== 'Escape' || !painted()) return;
+            set(false);
+            button.focus();
+        };
+        /** @param {Event} event */
+        const onOutside = (event) => {
+            // Only while it covers the page. A sidebar sitting in its own
+            // column beside the text is not a thing you dismiss by reading
+            // the text next to it.
+            if (!painted() || getComputedStyle(aside).position !== 'absolute') return;
+            const target = /** @type {Node} */ (event.target);
+            if (aside.contains(target) || button.contains(target)) return;
+            set(false);
+        };
+
+        button.addEventListener('click', onClick);
+        sidebar.addEventListener('keydown', /** @type {EventListener} */ (onKey));
+        button.ownerDocument.addEventListener('click', onOutside, true);
+
+        cleanups.push(() => {
+            button.removeEventListener('click', onClick);
+            sidebar.removeEventListener('keydown', /** @type {EventListener} */ (onKey));
+            button.ownerDocument.removeEventListener('click', onOutside, true);
+            sidebar.removeAttribute('data-kp-sidebar-open');
+            button.removeAttribute('aria-expanded');
+            button.removeAttribute('aria-label');
+            delete button.dataset.kpSidebarToggleAttached;
+        });
+    }
+
+    return () => {
+        for (const c of cleanups) c();
+    };
+}
+
+/** localStorage where there is one, null where reaching it throws. */
+function safeStorage() {
+    try {
+        return globalThis.localStorage ?? null;
+    } catch {
+        // A browser set to refuse site data throws on the property itself.
+        return null;
+    }
+}
+
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

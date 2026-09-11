@@ -13,6 +13,14 @@ export type Strings = {
      * The same toggle once the navigation is open
      */
     closeMenu: string;
+    /**
+     * The accessible name of a hidden side navigation's toggle
+     */
+    sidebar: string;
+    /**
+     * The same toggle once that side navigation is open
+     */
+    closeSidebar: string;
     previous: string;
     next: string;
     finish: string;
@@ -159,6 +167,8 @@ export type Strings = {
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
  * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
+ * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} previous
  * @property {string} next
  * @property {string} finish

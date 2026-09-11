@@ -46,6 +46,8 @@
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
  * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
+ * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} previous
  * @property {string} next
  * @property {string} finish
@@ -173,6 +175,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     // press goes rather than what the control is.
     menu: 'Open the navigation',
     closeMenu: 'Close the navigation',
+    // Distinct from the two above on purpose: a page can carry both, and
+    // "Open the navigation" twice would leave a screen reader with two
+    // controls whose names do not tell them apart.
+    sidebar: 'Open the side navigation',
+    closeSidebar: 'Close the side navigation',
     previous: 'Previous',
     next: 'Next',
     finish: 'Finish',

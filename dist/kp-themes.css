@@ -35708,6 +35708,70 @@
         min-inline-size: var(--kp-sidebar-break, 50%);
     }
 
+    /* ── The side column that can be put away [feat-nav-2, scope-10] ──
+       Opt-in through the attribute: four pages in this repository already
+       use .kp-sidebar as a plain two-column layout, and a package does not
+       move furniture a consumer has already placed.
+
+       The state attribute takes 'true' or 'false' rather than being there
+       or not, because there are three states and not two: absent means the
+       width decides, which is what a page gets before any script has run
+       and what it keeps if none ever does. Wide, the aside is there and
+       'false' takes it away; narrow, the aside is away and 'true' brings
+       it back. 40rem is the package's one narrow step [TH26] and this
+       stands on the same one, so a page does not collapse its bar at one
+       width and its sidebar at another.
+
+       Narrow and open, the aside covers the main column. `--push` is the
+       way out [KT6]: it puts the aside back in the flow, where flex-wrap
+       gives it its own row and the main moves down instead of being
+       covered. */
+    .kp-sidebar[data-kp-sidebar] {
+        position: relative;
+        container-type: inline-size;
+        container-name: kp-sidebar;
+    }
+
+    /* Its own row above both columns, so opening and closing does not move
+       the columns sideways. */
+    .kp-sidebar[data-kp-sidebar] > .kp-sidebar__toggle {
+        flex-basis: 100%;
+    }
+
+    .kp-sidebar[data-kp-sidebar][data-kp-sidebar-open='false'] > .kp-sidebar__aside {
+        display: none;
+    }
+
+    @container kp-sidebar (max-width: 40rem) {
+        .kp-sidebar[data-kp-sidebar] > .kp-sidebar__aside {
+            display: none;
+        }
+
+        .kp-sidebar[data-kp-sidebar][data-kp-sidebar-open='true'] > .kp-sidebar__aside {
+            display: block;
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            block-size: 100%;
+            inline-size: var(--kp-sidebar-drawer, min(18rem, 85%));
+            overflow-y: auto;
+            z-index: var(--kp-sidebar-layer, 40);
+            background: var(--kp-sidebar-surface, var(--card));
+            border-inline-end: var(--kp-sidebar-edge, 1px solid var(--border));
+            padding: var(--kp-sidebar-pad, var(--kp-space-md));
+        }
+
+        .kp-sidebar--push[data-kp-sidebar][data-kp-sidebar-open='true'] > .kp-sidebar__aside {
+            position: static;
+            block-size: auto;
+            inline-size: auto;
+            z-index: auto;
+            background: none;
+            border-inline-end: none;
+            padding: 0;
+        }
+    }
+
     /* A section of a page: space above it, and nothing else. The heading
        inside keeps whatever the theme gives it. */
     .kp-section {
