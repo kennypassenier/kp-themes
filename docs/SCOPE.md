@@ -1079,3 +1079,11 @@ rather than letting happen is that removing four themes is the only part
 of this round that cannot be undone without rolling back a version, and
 it touches every consumer that vendors the bundle. Put last, everything
 before it has already run.
+
+**scope-27 · Lapis takes the fourfold ruling.** Kenny, 2026-09-11,
+against the recommendation, which is what a form is for. A page of tazhib
+is ruled before anything is written on it — concentric lines at unequal
+intervals, gold against blue, and what matters sits inside them — so the
+frame of a control is not one line but four, and touching it adds the
+outermost. The ruling closes around the word instead of a colour
+changing. With it, all ten themes that needed a quirk have one.

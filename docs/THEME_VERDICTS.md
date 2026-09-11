@@ -133,8 +133,15 @@ handled by replacement rather than by addition.
 | nostromo | the moulded step, and the accent bar rising along the right edge | scope-24 |
 | grotesk | the rule that starts short under a control and becomes its whole edge | scope-24 |
 | blueprint | the measurement frame from the command table, replacing its own | scope-18 |
+| high-contrast | the flip: a control turns into its own negative with no transition, and the yellow exists only while something is pressed | scope-25 |
+| sepia | the ink spreading into the paper on a press, and a rule that is thickest in the middle | scope-25 |
+| shade-light | the pointer is the light, and a control throws its shade away from it | scope-25 |
+| shade-dark | the same light, the other reading: a control lies in shade and the pointer lifts it out | scope-25 |
+| lapis | the fourfold ruling: four concentric rules instead of one border, closing around the word when it is touched | scope-27 |
 
-Still without one: **high-contrast, lapis, sepia, shade-light and
-shade-dark**. Those are the last design work of the round, and each needs
-an idea out of its own world rather than a shape left over from the
-demos — which is the whole point of scope-12.
+**All ten are settled.** None of them is a shape left over from a demo:
+every one comes out of the sentence that theme already used to describe
+itself, which is what scope-12 asked for. Two needed a second attempt —
+solstice, where the first drawing overflowed a rounded corner, and lapis,
+where gold leaf catching the light turned out to be a property of a
+material rather than something a manuscript does.
