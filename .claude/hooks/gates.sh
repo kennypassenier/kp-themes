@@ -57,6 +57,9 @@ node gates/check-relative-colour.mjs
 echo "→ a register that cancels the pressed state [fix-12]"
 node gates/check-pressed-state.mjs
 
+echo "→ a register that repaints a variant's ground [gap-1]"
+node gates/check-variant-ground.mjs
+
 echo "→ the import closure of the modules chassis-rs vendors (AR28)"
 node gates/check-closure.mjs
 

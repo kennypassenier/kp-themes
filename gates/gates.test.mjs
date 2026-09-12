@@ -19,6 +19,7 @@ import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-co
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
 import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
+import { swallowedVariants, variantGrounds } from './check-variant-ground.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { CONCEPT_COPY, DEFAULT_COPY_THEME } from '../showcase/concept-copy.mjs';
@@ -1075,4 +1076,34 @@ test('fix-13: a gate module that another module imports does not run on import',
         if (imported && !source.includes('import.meta.url ===')) offenders.push(entry.name);
     }
     assert.deepEqual(offenders, [], 'these gates run their check on import, so importing one ends the importing process');
+});
+
+test("gap-1: a register that repaints a variant's ground without replacing it fails", () => {
+    const grounds = variantGrounds(`
+        .kp-alert--destructive { background: var(--destructive); color: var(--destructive-foreground); }
+        .kp-alert--success { background: var(--success); color: var(--success-foreground); }
+        .kp-badge--plain { background: var(--muted); }
+    `);
+    // Only the pairs: a ground with no ink of its own cannot orphan anything.
+    assert.deepEqual([...grounds.keys()], ['.kp-alert']);
+    assert.deepEqual(grounds.get('.kp-alert'), ['--destructive', '--success']);
+
+    // The fault Kenny saw: the base repainted for every flavour.
+    const swallows = `[data-theme='x'] .kp-alert { background: var(--background); }`;
+    assert.deepEqual(swallowedVariants(swallows, grounds), ['.kp-alert']);
+
+    // Scoped off the flavours, which is the repair.
+    const scoped = `[data-theme='x'] .kp-alert:not([class*='kp-alert--']) { background: var(--background); }`;
+    assert.deepEqual(swallowedVariants(scoped, grounds), []);
+
+    // The house indirection: the base reads a knob each flavour sets.
+    const knob = `[data-theme='x'] .kp-alert { background: var(--kp-plate); }
+        [data-theme='x'] .kp-alert--destructive { --kp-plate: var(--destructive); }
+        [data-theme='x'] .kp-alert--success { --kp-plate: var(--success); }`;
+    assert.deepEqual(swallowedVariants(knob, grounds), []);
+
+    // And the absence of a ground is not a ground — four registers say
+    // "I paint my plate on a pseudo-element" exactly this way.
+    const elsewhere = `[data-theme='x'] .kp-alert { background: transparent; }`;
+    assert.deepEqual(swallowedVariants(elsewhere, grounds), []);
 });

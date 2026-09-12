@@ -33,7 +33,7 @@ approved at L4.
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21).
 
-**Enforcement:** `npm run gates` — thirty-one checks — before every commit,
+**Enforcement:** `npm run gates` — thirty-two checks — before every commit,
 run by the git hook in `.claude/hooks/gates.sh`. No CI: Kenny runs the
 browser suite himself (see the rule of 2026-09-09 below). Node 26
 (`.nvmrc`). All artefact text in English.

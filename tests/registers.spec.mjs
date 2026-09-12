@@ -111,3 +111,40 @@ for (const theme of THEMES) {
         void paint;
     });
 }
+
+// gap-1 — the destructive alert's ink sits on the plate it was drawn for.
+//
+// The components layer defines a coloured variant as a pair: the plate and
+// the ink meant for it. A register painting `.kp-alert` — the base class,
+// every variant included — replaces the plate from a later layer and leaves
+// the ink pointing at nothing. Kenny saw it in chassis-rs on 2026-09-10:
+// "wit op wit". Measured in firefox on 2026-09-12, before the repair,
+// seventeen of the twenty-two themes were unreadable and grotesk was
+// exactly 1.00.
+//
+// `gates/check-variant-ground.mjs` holds the shape. This reads the paint,
+// which is the half a source gate cannot see [KT13].
+//
+// Drilled 2026-09-12 in firefox: the `:not([class*='kp-alert--'])` removed
+// from css/grotesk-register.css and the bundle regenerated → red on
+// grotesk alone, at 1.00. Restored green.
+for (const theme of THEMES) {
+    test(`the destructive alert can be read under ${theme} [gap-1]`, async ({ page }) => {
+        await page.goto(`/showcase/themes/${theme}.html`);
+        const alert = page.locator('.kp-alert--destructive').first();
+        await alert.scrollIntoViewIfNeeded();
+        const painted = await alert.evaluate((el) => {
+            const s = getComputedStyle(el);
+            // The ground the words actually stand on, not the one the
+            // element declares: a transparent alert shows what is behind it.
+            let node = /** @type {HTMLElement} */ (el);
+            let bg = s.backgroundColor;
+            while (bg === 'rgba(0, 0, 0, 0)' && node.parentElement) {
+                node = node.parentElement;
+                bg = getComputedStyle(node).backgroundColor;
+            }
+            return { fg: s.color, bg };
+        });
+        expect(contrast(parse(painted.fg), parse(painted.bg)), `${painted.fg} on ${painted.bg}`).toBeGreaterThanOrEqual(4.5);
+    });
+}
