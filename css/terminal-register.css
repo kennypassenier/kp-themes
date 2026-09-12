@@ -74,7 +74,54 @@
        it costs no layout, above everything and under the pointer's reach
        of nothing. Both assume the theme on the document root, which is how
        the package applies it. */
-    [data-theme='terminal']::before {
+    /* The skip link is positioned against the page rather than flowed, so
+       the padding above does not move it — and it is the first thing a
+       keyboard user reaches, which makes it the worst one to hide. It
+       clears the bezel on both axes instead. */
+    :root[data-theme='terminal'] .kp-skip-link {
+        inset-inline-start: calc(0.5rem + var(--kp-bezel));
+    }
+
+    :root[data-theme='terminal'] .kp-skip-link:focus {
+        inset-block-start: calc(0.5rem + var(--kp-bezel));
+    }
+
+    /* The bezel takes its own space rather than sitting on the content
+       [Kenny, 2026-09-12: "links moeten compleet en klikbaar zijn"]. It is
+       `position: fixed` against the viewport, so anything the page puts
+       within `--kp-bezel` of the edge disappears behind it. Measured on a
+       1600px viewport, where the clamp resolves to 17.8px: the
+       documentation site's first navigation link starts at 8px and lost
+       9.8 of them, and the approved demo itself hid the skip link and two
+       picker buttons by ten pixels each. Clicks still landed — the bezel
+       takes no pointer events — but a link you cannot fully read is not a
+       link you can fully use.
+
+       Padding on the root pushes everything inside the frame; the bezel
+       stays where the demo drew it, over empty space. A page's own body
+       padding still applies, inside this. */
+    :root[data-theme='terminal'] {
+        box-sizing: border-box;
+        padding: var(--kp-bezel);
+    }
+
+    /* Scoped to the ROOT, not to whatever carries the attribute [Kenny,
+       2026-09-12, at the release gate]. These two are `position: fixed`,
+       and a fixed element escapes its container: a page that previews
+       terminal inside a box — the documentation site puts one story card
+       per theme, each with its own `data-theme` — got this bezel and this
+       sweep across the WHOLE viewport, over its own navigation, while the
+       page itself was wearing formal. Kenny found it by opening the page,
+       which is what that rule is for: no assertion anyone had written
+       could see it, because every one of them measured a page whose root
+       carried the theme.
+
+       `:root` costs nothing where the theme IS on the root, which is the
+       case the approved demo shows. It only stops a preview from taking
+       over the page around it. terminal is the only register with rules
+       of this shape; phantom's equivalent asks for a `body` underneath
+       and a card has none. */
+    :root[data-theme='terminal']::before {
         content: '';
         position: fixed;
         inset: 0;
@@ -97,7 +144,7 @@
 
     /* The sweep band: one pass every ten seconds, resting eight of them,
        transform-only; at rest it sits above the viewport. */
-    [data-theme='terminal']::after {
+    :root[data-theme='terminal']::after {
         content: '';
         position: fixed;
         left: 0;
@@ -1223,7 +1270,7 @@
        from them; the matching --kp-* knobs are what js/effects.js reads. A
        terminal does not ease: every timing function here steps. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='terminal']::after {
+        :root[data-theme='terminal']::after {
             animation: kp-sweep 10000ms linear infinite;
         }
 

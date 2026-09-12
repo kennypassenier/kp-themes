@@ -151,7 +151,11 @@ Kenny answered the Phase 7 gate on 2026-09-12. Eight gaps were to be
 closed and one deferred; what stands here is the deferral, verbatim, plus
 what the closing work could not reach.
 
-**`second-engine` — the round's evidence comes from one engine.** Every
+**`second-engine` — the round's evidence comes from one engine.**
+Deferred again at the release gate on 2026-09-12, in Kenny's own words:
+*"misschien voor de volgende ronde als we terug iets aanpassen"* — the
+second engine runs when the next round touches something, rather than
+before this tag. Every
 test written in round seven was driven red and then green in **firefox
 only**: eight quirks, six hover gestures, two new registers, the pointer
 bus, the two button surfaces, the counters, the React side navigation and

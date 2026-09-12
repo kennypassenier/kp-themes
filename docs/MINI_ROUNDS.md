@@ -156,3 +156,5 @@ on it are read in the browser before it is published, the same way a
 register's colours are.
 
 | fix-16-M1 | Did a documentation gate catch a fault before a person did? Measured at the next document a phase writes: `check-docs-runnable`, `check-doc-quotes` and `check-docs-private` either pass it on the first run or they do not. | open |
+
+| fix-17-M1 | Does the loose-selector assertion catch page-level furniture before a person does? Measured at the next theme that draws a frame or a sweep on the root. | open |

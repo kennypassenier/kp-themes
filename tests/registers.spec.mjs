@@ -308,11 +308,40 @@ test('the theme picker rests in the same place in every theme [gap-2]', async ({
         expect(box, `${theme}: the picker is on the page`).not.toBeNull();
         seen.push([theme, Math.round(box.y), Math.round(box.x)]);
     }
-    const ys = seen.map(([, y]) => y);
-    const xs = seen.map(([, , x]) => x);
+    // One theme is inset on purpose, and it is not drift.
+    //
+    // terminal draws a CRT bezel — a frame up to 18px wide, fixed against
+    // the viewport — and since 2026-09-13 the theme reserves that space so
+    // nothing sits behind it. Kenny's words at the release gate: "links
+    // moeten compleet en klikbaar zijn". Before that, the site's first
+    // navigation link started at 8px and lost 9.8 of them behind the frame,
+    // and the approved demo hid its own skip link the same way.
+    //
+    // So terminal's picker really does rest further in than the others, by
+    // exactly the frame it draws. That is a theme having a frame, not a
+    // control wandering. It is named here with its measurement rather than
+    // widened away, so the day terminal stops framing the page this line
+    // fails and someone reads it.
+    const FRAMED = { terminal: 18 };
+    const INSET_REASON = 'terminal reserves the width of its own CRT bezel, measured 18px at 1600px and 18px at this width';
+
+    const straight = seen.filter(([name]) => !(name in FRAMED));
+    const ys = straight.map(([, y]) => y);
+    const xs = straight.map(([, , x]) => x);
     const drift = Math.max(...ys) - Math.min(...ys);
     // Five pixels: retro's own type metrics put it four out, and a control
     // four pixels from where it was is a control you still hit.
-    expect(drift, `vertical drift across ${seen.length} themes: ${JSON.stringify(seen)}`).toBeLessThanOrEqual(5);
+    expect(drift, `vertical drift across ${straight.length} themes: ${JSON.stringify(straight)}`).toBeLessThanOrEqual(5);
     expect(Math.max(...xs) - Math.min(...xs), 'and sideways').toBeLessThanOrEqual(5);
+
+    // And the framed one is inset by what it frames, no more and no less.
+    const floor = Math.min(...ys);
+    for (const [name, inset] of Object.entries(FRAMED)) {
+        const row = seen.find(([theme]) => theme === name);
+        expect(row, `${name} is in the sweep`).toBeTruthy();
+        expect(row[1] - floor, `${name}: ${INSET_REASON}, so it should sit ${inset}px lower than the unframed themes`).toBeGreaterThanOrEqual(
+            inset - 3,
+        );
+        expect(row[1] - floor, `${name} is inset by more than the frame it draws — something else moved it`).toBeLessThanOrEqual(inset + 3);
+    }
 });

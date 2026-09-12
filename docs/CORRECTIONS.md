@@ -2625,3 +2625,70 @@ paths, imports and quotes; `gh repo view --json visibility` and
 
 **10 · When we review the measure.** At round seven's retrospective, with
 the question: did a gate catch a documentation fault before a person did.
+
+## fix-17 · A theme's page furniture covered a page that only previewed it (2026-09-12)
+
+**1 · What went wrong.** Kenny opened the documentation site at the
+release gate and found two things. A dark frame around the whole page,
+present on load, over the left navigation — and a green stripe running
+across the screen that belongs to `terminal` alone. Measured: at a 1600px
+viewport the bezel resolves to 17.8px, the site's first navigation link
+starts at 8px, so 9.8px of it sat behind the frame. Clicks still landed,
+because the bezel takes no pointer events; his bar is higher than that —
+*"links moeten compleet en klikbaar zijn"*.
+
+**2 · Which gate let it through.** None, and none could. Thirty-five
+gates, 1,343 browser tests and a green field test all passed over it. The
+procedure names this exact case from round three and this is the third
+time the same rule has earned its place: a person opens the page and
+finds what nobody thought to assert.
+
+**3 · Where the same fault sits.** The property is **a register drawing
+`position: fixed` furniture on whatever carries `data-theme`**, which a
+nested preview then paints over the whole viewport. Searched with a
+regular expression over every register for a rule whose selector is the
+theme attribute itself and whose body sets `position: fixed`:
+`terminal-register.css` has two, and nothing else in the package does.
+The near miss is `phantom-register.css`, whose equivalent asks for a
+`body` underneath — a card has none, so it stays in its box.
+
+The second half is a different property — **content within `--kp-bezel`
+of the viewport edge** — and that one was in the approved demo too: it
+hid its own skip link and two picker buttons by ten pixels each.
+
+**4 · How we prevent recurrence.** Three things, all code:
+
+- The two rules are `:root[data-theme='terminal']`, so the furniture
+  belongs to the page rather than to any element wearing the theme.
+- The theme reserves the space its own frame occupies, with the skip link
+  — positioned rather than flowed, and the first thing a keyboard user
+  reaches — moved clear on both axes.
+- `tests/page-furniture.spec.mjs`: three assertions, each driven red
+  first. One reads every register for the loose selector shape; one opens
+  the site wearing `terminal` and refuses anything readable under the
+  frame; one opens the page of twenty-two preview cards and refuses fixed
+  furniture on any of them.
+
+**5 · What the remedy costs.** One real consequence: `terminal`'s picker
+now rests 18px further in than every other theme's, because the theme
+reserves the frame it draws. `tests/registers.spec.mjs`'s drift test names
+it with its measurement rather than widening its bar — a theme having a
+frame is not a control wandering, and the day terminal stops framing the
+page that line fails and someone reads it.
+
+**6 · Who enforces it.** Code, three assertions, in the browser suite.
+
+**7 · How we measure that it works.** At the next theme that draws
+page-level furniture: does the first assertion catch a loose selector
+before a person does. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** The selector check moves
+from the browser suite into `npm run gates`, where it costs milliseconds
+and refuses the commit rather than the run.
+
+**9 · Gezocht met.** A regular expression over `css/*-register.css` for
+`^\s*\[data-theme='…'\]::(before|after)` with `position: fixed` in the
+body; then the same for any descendant selector, which is what found
+phantom and cleared it.
+
+**10 · When we review the measure.** At round seven's retrospective.

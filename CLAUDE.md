@@ -334,13 +334,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                              |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven (6.0.0), Phase 9 — release and lifecycle.** Phase 8 closed on 2026-09-12 with all eight items approved                                                                                                                                                               |
-| Last completed gate | **Phase 8, signed 2026-09-12.** Six documents approved on spot-check, the demo links kept with an honest sentence, the document budget left at thirty-four with each extra one's reason recorded                                                                                   |
-| Next gate           | Phase 9's release gate. `second-engine` is the one thing deferred from Phase 7 and comes due here: both engines run before the tag, on Kenny's go                                                                                                                                  |
-| Open queue items    | Six, and not one is Claude's to close: `step-2` and `fix-9-M1` wait on a full verify run on Kenny's machine, `KT6-M1` on JobTracker, `HA4` on a freeze recurring, `gap-9` on the far edge stuttering where someone can see it, and `fix-16-M1` on the next document a phase writes |
-| AFK mode            | off                                                                                                                                                                                                                                                                                |
+| Field               | Value                                                                                                                                                                                                            |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round seven (6.0.0), Phase 9 — releasing.** The gate was answered on 2026-09-12: semver and field test signed, both faults Kenny found at the live page repaired, the second engine deferred to the next round |
+| Last completed gate | **Phase 9's report, 2026-09-12.** Kenny opened the documentation site and found two faults no assertion had thought to make — `fix-17` — and then gave the go: tag and publish                                   |
+| Next gate           | Phase 10, the retrospective, whose outcome is a reviewed diff on `~/Projects/dev-procedure`                                                                                                                      |
+| Open queue items    | Seven, and not one is Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1` and `fix-17-M1`                                                                                             |
+| AFK mode            | off                                                                                                                                                                                                              |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
