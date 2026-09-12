@@ -1177,4 +1177,20 @@
     [data-theme='sepia'] .kp-button:focus-visible::before {
         opacity: 1;
     }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='sepia'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='sepia'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
 }

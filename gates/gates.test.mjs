@@ -18,6 +18,7 @@ import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
+import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { CONCEPT_COPY, DEFAULT_COPY_THEME } from '../showcase/concept-copy.mjs';
@@ -1029,4 +1030,32 @@ test('S49: every theme with an approved demo has its own concept page, whole and
     }
     // Drill [KT3]: phantom's entry pointed at cyberpunk's headline →
     // "still carries cyberpunk's headline", red (2026-09-08).
+});
+
+test('fix-12: a register that cancels a pressed state without replacing it fails', () => {
+    const base = pressedInBase(`
+        .kp-button:active:not(:disabled) { background: var(--secondary-active); }
+        .kp-button--primary:active:not(:disabled) { background: var(--primary-active); }
+        .kp-button--ghost:hover:not(:disabled) { background: var(--kp-highlight); }
+    `);
+    assert.deepEqual([...base].sort(), ['.kp-button', '.kp-button--primary']);
+
+    // The fault: a hover ground in kp.register, no pressed rule of its own.
+    // kp.register is a later layer, and a layer beats a state.
+    const cancels = `[data-theme='x'] .kp-button--primary:hover { background: var(--kp-neon); }`;
+    assert.deepEqual(cancelledPressedStates(cancels, base), ['.kp-button--primary']);
+
+    // Replaced: whatever the register presses WITH, it presses.
+    const replaces = cancels + `\n[data-theme='x'] .kp-button--primary:active:not(:disabled) { box-shadow: var(--kp-pressed); }`;
+    assert.deepEqual(cancelledPressedStates(replaces, base), []);
+
+    // Not the gate's business: the base gives ghost no pressed state, so a
+    // hover on it cancels nothing. Kept narrow on purpose — a wider rule
+    // would demand a pressed state the package never promised.
+    const ghost = `[data-theme='x'] .kp-button--ghost:hover { background: var(--card); }`;
+    assert.deepEqual(cancelledPressedStates(ghost, base), []);
+
+    // And a hover that paints no ground outranks nothing.
+    const outline = `[data-theme='x'] .kp-button--primary:hover { border-color: var(--kp-neon); }`;
+    assert.deepEqual(cancelledPressedStates(outline, base), []);
 });

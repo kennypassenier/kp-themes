@@ -54,6 +54,9 @@ node gates/check-layers.mjs
 echo "→ a relative colour that resolves to nothing [fix-11]"
 node gates/check-relative-colour.mjs
 
+echo "→ a register that cancels the pressed state [fix-12]"
+node gates/check-pressed-state.mjs
+
 echo "→ the import closure of the modules chassis-rs vendors (AR28)"
 node gates/check-closure.mjs
 

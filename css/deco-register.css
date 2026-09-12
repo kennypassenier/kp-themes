@@ -1165,4 +1165,30 @@
         text-align: center;
         color: var(--primary);
     }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='deco'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    [data-theme='deco'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='deco'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
 }

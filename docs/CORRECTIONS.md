@@ -2118,3 +2118,67 @@ would have caught this one on the day it was written.
 
 **9 · When we review the measure.** At round seven's retrospective.
 
+
+## fix-12 · A register that cancelled the pressed state (2026-09-12)
+
+**1 · What went wrong.** Pressing a button did nothing visible. Not in
+one theme — in thirteen of the twenty-five, and in two more once the gate
+was written to see the variants as well as the roots.
+
+**2 · How it was found.** Kenny, reviewing the shade-dark quirk on
+2026-09-11: _"ik kan enkel de ingedruktheid zien als ik de knop indruk,
+blijf indrukken en dan zo mijn muis van de knop weghaal. Als ik gewoon
+blijf klikken op de knop zelf, dan gebeurt er precies niks... bij shade
+light werkt het wel precies."_ Dragging the pointer off the button showed
+the press — which is the whole diagnosis, stated before anyone knew it.
+
+**3 · The cause.** `@layer kp.base, kp.components, kp.register, kp.layout,
+kp.utilities`. A layer beats a state. A register writing
+`[data-theme='x'] .kp-button:hover { background: … }` in `kp.register`
+outranks `.kp-button:active { background: var(--secondary-active) }` in
+`kp.components`, whatever their specificity. So the pressed state existed
+and was unreachable — exactly while the pointer was on the button, which
+is the only time anyone presses one. Take the pointer away and the hover
+rule stops matching, and the pressed state reappears. That is why it
+looked like the press only worked after you left.
+
+**4 · Why nothing caught it.** Three gates looked straight at it. The
+token gate reads names, not the cascade. The contrast gate measures rest
+and hover, never the held-down state. The register-coverage gate asks
+whether a root is answered, not whether an answer destroys another. And
+no browser test pressed a button and read the paint: the specs that
+handle `:active` all check a theme whose press happens to survive.
+
+**5 · The measure, code-enforced.** `gates/check-pressed-state.mjs`, in
+`npm run gates` and in the commit hook. It reads which button selectors
+the components layer gives a pressed background — three today — and
+refuses a register that paints one of them on `:hover` without writing
+any `:active` rule of its own for the same selector. Deliberately narrow:
+it does not care WHAT the register presses with (retro inverts a bevel
+and shifts its padding, and that is a reaction), and it says nothing
+about `--ghost`, which the base layer never gave a pressed state.
+
+**6 · The measure, in the browser.** One test per theme in
+`tests/registers.spec.mjs`: hover a primary button, let the hover settle,
+hold it down, and require the paint to change — background, box-shadow,
+translate, both paddings, border and text colour in one vector. Reading
+only `background-color` called retro red on the first run, because that
+theme presses with its bevel; the narrower question could not see a
+reaction that was plainly there.
+
+**7 · The repair.** Twenty-one rules across thirteen registers, each one
+restating the components layer's own pressed values token for token.
+Nothing new was decided: what the base layer already said was put back
+where the cascade can reach it.
+
+**8 · The drills [KT3].** The source gate: the restored
+`[data-theme='terminal'] .kp-button--primary:active` rule removed → the
+gate refuses that file; restored → green. The browser test: the same
+removal → red on terminal alone; restored → green. The unit test covers
+the four shapes — cancelled, replaced, out of scope (`--ghost`), and a
+hover that paints no ground.
+
+**9 · When we review the measure.** At round seven's retrospective. The
+open question is whether the same collision exists for the other states a
+register overrides — `:focus-visible` is already known to (DI2 exists
+because of it), and `:disabled` has not been looked at.

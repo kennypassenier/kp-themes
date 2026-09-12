@@ -907,4 +907,14 @@
             inset 0.35rem 0 0 var(--background),
             inset -0.35rem 0 0 var(--background);
     }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
 }
