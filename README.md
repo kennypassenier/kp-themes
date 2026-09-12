@@ -609,6 +609,16 @@ Extracted from kp-soft at commit `2983abb`
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
 
+**A note on the demo links in `docs/`.** Several documents cite a concept
+demo as `https://claude.ai/code/artifact/…`. Those are Claude artifacts
+and they are private: unless you are this package's author, the link will
+show you nothing. They are kept because they are the only traceability
+for the rule that an approved demo is implemented exactly — read one as a
+dated record that a design was shown and signed off, not as a page you
+can open. What each demo actually produced is in the theme's own
+`themes/<name>/anatomy.md` and in its register, both of which you can
+read.
+
 ## What is NOT here
 
 - Inertia bits: `usePage`, `router.patch('theme.update')`, the server-side

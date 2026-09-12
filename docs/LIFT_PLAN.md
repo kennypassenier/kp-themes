@@ -8,6 +8,17 @@ references first, the themes that need a second research pass last. This
 document is the spine (TH134): one row per theme, the direction each
 round starts from, and three statuses that a round advances.
 
+> **About the demo links in this document.** Every `claude.ai/code/artifact/…`
+> link below points at a Claude artifact, and those are private by default:
+> if you are not Kenny, the link will show you nothing. They are kept
+> anyway, because they are the only traceability the rule of 2026-09-08
+> has — an approved demo is implemented exactly, and the demo is the thing
+> that was approved. Read a link here as a dated record that something was
+> shown and signed off, not as a page you can open. Decided by Kenny on
+> 2026-09-12 (Phase 8): traceability over tidiness, with this sentence as
+> the honest half. `gates/check-docs-private.mjs` holds the count where it
+> is, so no new one can arrive unnoticed.
+
 **The four steps every theme takes** (the same for all of them):
 
 1. **Research** — a sweep like the one in `docs/RESEARCH_2026-09.md`;

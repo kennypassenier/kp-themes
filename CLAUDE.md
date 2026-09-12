@@ -334,13 +334,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                              |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven (6.0.0), Phase 7 — closed 2026-09-12.** All nine gaps are answered: eight closed, one (`second-engine`) deferred to after the release and recorded verbatim in `docs/TEST_PLAN.md`                                   |
-| Last completed gate | **Phase 7, signed 2026-09-12.** Nineteen audit points, ten closed before the form and nine put to Kenny. 107 unit tests, 1,343 browser tests in firefox over 79 files, thirty-two gates, nothing red                               |
-| Next gate           | Phase 8 — documentation. Every document drafted from code and tests, one approval form per document                                                                                                                                |
-| Open queue items    | Five, and not one is Claude's to close: `step-2` and `fix-9-M1` wait on a full verify run on Kenny's machine, `KT6-M1` on JobTracker, `HA4` on a freeze recurring, and `gap-9` on the far edge stuttering where someone can see it |
-| AFK mode            | off                                                                                                                                                                                                                                |
+| Field               | Value                                                                                                                                                                                                                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round seven (6.0.0), Phase 9 — release and lifecycle.** Phase 8 closed on 2026-09-12 with all eight items approved                                                                                                                                                               |
+| Last completed gate | **Phase 8, signed 2026-09-12.** Six documents approved on spot-check, the demo links kept with an honest sentence, the document budget left at thirty-four with each extra one's reason recorded                                                                                   |
+| Next gate           | Phase 9's release gate. `second-engine` is the one thing deferred from Phase 7 and comes due here: both engines run before the tag, on Kenny's go                                                                                                                                  |
+| Open queue items    | Six, and not one is Claude's to close: `step-2` and `fix-9-M1` wait on a full verify run on Kenny's machine, `KT6-M1` on JobTracker, `HA4` on a freeze recurring, `gap-9` on the far edge stuttering where someone can see it, and `fix-16-M1` on the next document a phase writes |
+| AFK mode            | off                                                                                                                                                                                                                                                                                |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

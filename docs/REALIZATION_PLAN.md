@@ -774,3 +774,49 @@ red, and both are findings for Kenny rather than faults to repair.
 Phase 7 closes with 107 unit tests, 1,343 browser tests in firefox over
 79 files, thirty-two gates and nothing red. Eight of the nine gaps are
 closed; `second-engine` is deferred and recorded verbatim.
+
+## The Phase 8 gate, answered 2026-09-12
+
+Six documents approved on spot-check, and two choices answered.
+
+| Item | Answer |
+| ---- | ------ |
+| `docs/DEBUGGING_GUIDE.md`, new | Goedkeuren |
+| `docs/OPERATIONS_RUNBOOK.md`, new | Goedkeuren |
+| `README.md`, the honesty pass | Goedkeuren |
+| `docs/USER_GUIDE.md`, four new sections | Goedkeuren |
+| `CLAUDE.md`, the CI sentence that was not true | Goedkeuren |
+| `docs/legacy/`, the two copied documents | Goedkeuren |
+| The demo links | Laten staan met een zin erbij |
+| The document budget | Zo laten |
+
+### The document budget, and why each extra one is here
+
+The procedure's budget is the nine that recur across projects **plus
+whatever this project genuinely needs, where each extra one is named with
+its reason**. All nine are present. These are the extras, measured by how
+many other files cite them (`git grep -l` per document, 2026-09-12).
+
+| Document | Why it is here | Cited by |
+| -------- | -------------- | -------- |
+| `CORRECTIONS.md` | sixteen live-found faults with their measures. The project's memory of what has already gone wrong, and the thing Phase 7 and Phase 8 both mined for fault families | 9 |
+| `DESIGN_INVARIANTS.md` | the eleven rules every theme must keep, with the compliance table the gates write | 44 |
+| `MINI_ROUNDS.md` | the open measurements. A correction is not closed until its measurement happens, and this is the visible list that survives a compaction | 11 |
+| `INVENTORY.md` | the Phase 1 inventory, 99 units. Its own `INV-` namespace, because it documents units rather than decisions | 6 |
+| `THEME_VERDICTS.md` | what each theme was judged to need and why — the reasoning behind the lifts, which the lift plan's rows do not carry | 3 |
+| `THEME_CANDIDATES.md` | the twenty-one candidates the thirteen new themes came from. A record of what was rejected, which is the half a decision usually loses | 6 |
+| `RESEARCH_2026-09.md` | the measured references round six built from. Every lift cites it | 16 |
+| `LIFT_PLAN.md` | one row per theme, three statuses a round advances. The spine of round six | 5 |
+| `GENERIC_SWEEP.md` | the audit behind 3.0.0: every feature configurable, every state with a way out | 4 |
+| `COVERAGE_GAPS.md` | the question Kenny asked on 2026-09-04 and its answer. **Closed 2026-09-12** — every gap it named is now swept over every theme | 1 |
+| `REQUESTS_FROM_CONSUMERS.md` | what the three consuming projects asked for, measured rather than assumed | 5 |
+| `ADOPTION_PROMPTS.md` | the two consumer prompts, one per project | 2 |
+| `TROUBLESHOOTING.md` | the consumer's half of the debugging pair | 2 |
+| `LAYOUT.md`, `UTILITIES.md`, `MINIFIED.md` | the reference for three generated surfaces; `MINIFIED.md` is itself generated | 6, 8, 6 |
+| `ID_TRANSLATIONS.md` | the `KT10` renames, one row each. Small, and the thing a form's linter sends people to | 1 |
+| `legacy/` | two verbatim copies of kp-soft's documents, with a pointer saying what replaced each | 6 |
+
+Kenny's answer on 2026-09-12: **Zo laten.** Everything is cited at least
+once and nothing is demonstrably dead; dropping a document that is later
+missed costs more than keeping it. The measurement is worth repeating at
+the next round rather than the reasoning.
