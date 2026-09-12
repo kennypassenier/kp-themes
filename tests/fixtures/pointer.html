@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pointer bus fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <style>
+            /* The knob a theme sets [scope-16]. The two properties carry a
+               declared default so whatever reads them is valid before the
+               pointer has ever moved — the spectral instrument's conic
+               gradient would otherwise be an invalid declaration. */
+            html[data-kp-track] {
+                --kp-pointer: track;
+                --kp-px: 0.5;
+                --kp-py: 0.5;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Pointer bus</h1>
+            <p id="readout">idle</p>
+        </main>
+        <script type="module">
+            import { attachEffects } from '/js/effects.js';
+            if (new URLSearchParams(location.search).get('track') !== 'off') document.documentElement.setAttribute('data-kp-track', '');
+            window.kpEffects = attachEffects(document);
+        </script>
+    </body>
+</html>

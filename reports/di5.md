@@ -9,6 +9,8 @@ reported here in capitals and corrected by nobody but Kenny.
 
 | Effect | Property | Duration | Plays | Opacity steps | Rate | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
+| `kp-sidenav-backdrop` | opacity | 220 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-rake` | translate | 620 ms | 1× | — | 0.00/s | under |
 | `kp-tracking` | opacity | 700 ms | 1× | 1 → 0 | 1.00/s | under |
 | `kp-shine` | background-position | 1400 ms | 1× | — | 0.00/s | under |
 | `kp-tube-on` | color | 1100 ms | 1× | 0 → 1 → 0 → 1 | 0.00/s | under |
@@ -75,7 +77,4 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-mark-sweep` | color | 420 ms | 1× | 0 → 1 | 0.00/s | under |
 | `kp-sharpen-in` | filter | 640 ms | 1× | — | 0.00/s | under |
 | `kp-headline-fade` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-dim-draw` | transform | 500 ms | 1× | — | 0.00/s | under |
 | `kp-dim-label` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-elev-draw` | transform | 500 ms | 1× | — | 0.00/s | under |
-| `kp-elev-label` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |

@@ -4298,6 +4298,8 @@ __export(effects_exports, {
   MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
   MEASURE_KNOB: () => MEASURE_KNOB,
   MEMO_PREFIX: () => MEMO_PREFIX,
+  POINTER: () => POINTER,
+  POINTER_KNOB: () => POINTER_KNOB,
   REVEALS: () => REVEALS,
   REVEAL_EVENT: () => REVEAL_EVENT,
   REVEAL_STATE: () => REVEAL_STATE,
@@ -4415,6 +4417,8 @@ var BOOT_PROGRESS = "--kp-boot-progress";
 var MARQUEE_KNOB = "--kp-marquee";
 var MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 var MEASURE_KNOB = "--kp-measure";
+var POINTER_KNOB = "--kp-pointer";
+var POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var REVEAL_STATE = "data-kp-reveal-state";
@@ -5295,6 +5299,29 @@ function attachEffects(root = document, options = {}) {
     }
   };
   caret();
+  const pointerBus = () => {
+    const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : "";
+    if (routine !== "track" || !view || reduced()) return;
+    let frame = 0;
+    const onMove = (event) => {
+      if (frame) return;
+      frame = view.requestAnimationFrame(() => {
+        frames.delete(frame);
+        frame = 0;
+        const w = view.innerWidth || 1;
+        const h = view.innerHeight || 1;
+        html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
+        html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+      });
+      frames.add(frame);
+    };
+    doc.addEventListener("pointermove", onMove, { passive: true });
+    cleanups.push(() => {
+      doc.removeEventListener("pointermove", onMove);
+      html.style.removeProperty(POINTER.x);
+      html.style.removeProperty(POINTER.y);
+    });
+  };
   const measure = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
     if (routine !== "live" || !view) return;
@@ -5338,6 +5365,7 @@ function attachEffects(root = document, options = {}) {
       }
     }
   };
+  pointerBus();
   measure();
   const marquee = () => {
     for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
@@ -5993,6 +6021,8 @@ export {
   OPT_OUT,
   PAGE_SIZE,
   PICK_EVENT,
+  POINTER,
+  POINTER_KNOB,
   REJECT_EVENT,
   REMOVE_EVENT,
   REORDER_EVENT,

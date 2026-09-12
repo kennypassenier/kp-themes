@@ -10,7 +10,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
@@ -1058,4 +1058,33 @@ test('fix-12: a register that cancels a pressed state without replacing it fails
     // And a hover that paints no ground outranks nothing.
     const outline = `[data-theme='x'] .kp-button--primary:hover { border-color: var(--kp-neon); }`;
     assert.deepEqual(cancelledPressedStates(outline, base), []);
+});
+
+test('fix-13: a gate module that another module imports does not run on import', () => {
+    // The fault: `check-contrast.mjs` measured every theme at module top
+    // level and ended in `process.exit(1)`. `gates.test.mjs` imports
+    // `discoverThemesFromCss` from it, so a single failing contrast pair
+    // killed this whole file — with a message about a theme none of these
+    // tests touch, and no test name attached to it. It also made the
+    // accessibility floor a hard gate by accident, which is the opposite of
+    // Kenny's decision of 2026-09-09 that contrast is advice.
+    //
+    // The property, not the file: a gate that ANOTHER module imports must
+    // put its run behind an entry-point check. Searched across gates/ on
+    // 2026-09-12; check-contrast.mjs was the only instance.
+    const dir = new URL('./', import.meta.url);
+    const offenders = [];
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        if (!entry.isFile() || !entry.name.endsWith('.mjs')) continue;
+        const source = readFileSync(new URL(entry.name, dir), 'utf8');
+        if (!source.includes('process.exit')) continue;
+        // Is it imported by anything else in the repository?
+        let imported = false;
+        for (const other of readdirSync(dir)) {
+            if (other === entry.name || !other.endsWith('.mjs')) continue;
+            if (readFileSync(new URL(other, dir), 'utf8').includes(`from './${entry.name}'`)) imported = true;
+        }
+        if (imported && !source.includes('import.meta.url ===')) offenders.push(entry.name);
+    }
+    assert.deepEqual(offenders, [], 'these gates run their check on import, so importing one ends the importing process');
 });

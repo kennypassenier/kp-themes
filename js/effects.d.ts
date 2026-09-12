@@ -89,6 +89,27 @@ export declare const MARQUEE_KNOB = "--kp-marquee";
 export declare const MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export declare const MEASURE_KNOB = "--kp-measure";
+/**
+ * The knob a theme sets to have the pointer's position written to the page
+ * [scope-16]: `--kp-pointer: track`.
+ *
+ * The spectral instrument's approved demo paints its oxide film as a conic
+ * gradient whose start angle follows the pointer — anodising does not add
+ * pigment, it grows a film whose thickness decides which wavelength
+ * survives, so the colour really does shift with the angle you look from.
+ * A gradient cannot read a pointer; something has to write the number down.
+ *
+ * Off by default, and off under reduced motion: someone asking for less
+ * movement is not asking for a colour that follows their hand. The two
+ * properties keep whatever the stylesheet declared, so the gradient is
+ * valid before the pointer has ever moved and stays valid afterwards.
+ */
+export declare const POINTER_KNOB = "--kp-pointer";
+/** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
+export declare const POINTER: Readonly<{
+    x: "--kp-px";
+    y: "--kp-py";
+}>;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

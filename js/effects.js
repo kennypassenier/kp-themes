@@ -184,6 +184,26 @@ export const MARQUEE_PAUSE_KNOB = '--kp-marquee-pause';
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export const MEASURE_KNOB = '--kp-measure';
 
+/**
+ * The knob a theme sets to have the pointer's position written to the page
+ * [scope-16]: `--kp-pointer: track`.
+ *
+ * The spectral instrument's approved demo paints its oxide film as a conic
+ * gradient whose start angle follows the pointer — anodising does not add
+ * pigment, it grows a film whose thickness decides which wavelength
+ * survives, so the colour really does shift with the angle you look from.
+ * A gradient cannot read a pointer; something has to write the number down.
+ *
+ * Off by default, and off under reduced motion: someone asking for less
+ * movement is not asking for a colour that follows their hand. The two
+ * properties keep whatever the stylesheet declared, so the gradient is
+ * valid before the pointer has ever moved and stays valid afterwards.
+ */
+export const POINTER_KNOB = '--kp-pointer';
+
+/** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
+export const POINTER = Object.freeze({ x: '--kp-px', y: '--kp-py' });
+
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -1354,6 +1374,40 @@ export function attachEffects(root = document, options = {}) {
     // Runs once, after scan() has already put the headline at its rest
     // text, so nothing here fights the decipher/type/word routines for the
     // same child nodes.
+    // The pointer bus [scope-16]. One listener on the document, one write
+    // per animation frame, and nothing at all unless the theme asked for it.
+    //
+    // It writes to the root rather than to each element, because the demo's
+    // gradient is declared once on the theme and inherited: every surface
+    // that paints the oxide reads the same two numbers, so they must be one
+    // pair, not one pair per element.
+    const pointerBus = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : '';
+        if (routine !== 'track' || !view || reduced()) return;
+        let frame = 0;
+        /** @param {PointerEvent | MouseEvent} event */
+        const onMove = (event) => {
+            if (frame) return;
+            frame = view.requestAnimationFrame(() => {
+                frames.delete(frame);
+                frame = 0;
+                const w = view.innerWidth || 1;
+                const h = view.innerHeight || 1;
+                html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
+                html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+            });
+            frames.add(frame);
+        };
+        doc.addEventListener('pointermove', onMove, { passive: true });
+        cleanups.push(() => {
+            doc.removeEventListener('pointermove', onMove);
+            // The way out [KT6]: what the module wrote, the module removes,
+            // and the stylesheet's own declared value takes over again.
+            html.style.removeProperty(POINTER.x);
+            html.style.removeProperty(POINTER.y);
+        });
+    };
+
     const measure = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
         if (routine !== 'live' || !view) return;
@@ -1404,6 +1458,7 @@ export function attachEffects(root = document, options = {}) {
             }
         }
     };
+    pointerBus();
     measure();
 
     // ── The marquee [M1, M2]: a row that runs ──────────────────────────

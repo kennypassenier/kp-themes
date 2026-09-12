@@ -2187,3 +2187,72 @@ because of it), and `:disabled` has not been looked at.
 in field 7 — the next new quirk that writes a hover background — is
 queued in `docs/MINI_ROUNDS.md` as `fix-12-M1` and comes due when
 grotesk's quirk is built. The correction does not close until then.
+
+## fix-13 · A gate that measured on import (2026-09-12)
+
+**1 · What went wrong.** `node --test gates/` died on the whole of
+`gates/gates.test.mjs` with `4 contrast violation(s). A theme that fails
+AA cannot ship.` — a message about contrast, in a file that tests none,
+with no test name attached to it.
+
+**2 · How it was found.** Building the spectral instrument's tokens. The
+new dark has a pale signal, which the derivation turns into a pressed
+state too close to it, so the contrast check started reporting. That
+report should have been advice printed by `npm run advice`. Instead it
+ended the test run.
+
+**3 · The cause.** `gates/check-contrast.mjs` did its measuring at module
+top level and finished with `process.exit(1)`. `gates.test.mjs` imports
+`discoverThemesFromCss`, `EXPECTED_THEMES` and `STATUS_NAMES` from it, and
+an import runs the module. So importing a helper killed the importing
+process.
+
+Two consequences, and the second is the worse one. The visible one is a
+useless failure message. The invisible one is that the accessibility floor
+became a **hard gate by accident** — the exact opposite of Kenny's
+decision of 2026-09-09, which is that contrast, the invariants, the flash
+threshold and the texture ceiling are measured and printed, never refused.
+`check:contrast` is correctly absent from the `gates` chain; it leaked in
+through an import anyway.
+
+**4 · Where else the same fault sits.** The fault as a property: *a gate
+module that another module imports, which can call `process.exit` at
+module top level.* Searched on 2026-09-12 across `gates/`:
+
+```
+for f in gates/*.mjs; do
+  grep -q "process.exit" "$f" || continue
+  imp=$(grep -rl "from './$(basename $f)'" gates/ tests/ js/ | grep -v "$f" | wc -l)
+  [ "$imp" -eq 0 ] && continue
+  grep -q "import.meta.url ===" "$f" || echo "UNGUARDED: $f"
+done
+```
+
+Sixteen gate modules are imported by something else. Fifteen already put
+their run behind `import.meta.url === \`file://${process.argv[1]}\``.
+`check-contrast.mjs` was the only one that did not. The first search ran a
+wrong pattern and reported forty-one offenders, which is worth recording:
+a search that reports everything is as useless as one that reports nothing.
+
+**5 · The measure.** The same guard the other fifteen carry, and a unit
+test that asserts the **property** rather than the file — every gate in
+`gates/` that another gate imports and that can call `process.exit` must
+compare `import.meta.url` against the entry point. A sixteenth gate written
+tomorrow is covered without anyone remembering this.
+
+**6 · What the remedy costs.** Nothing. The guard is three lines and the
+test is thirty.
+
+**7 · Who enforces it.** Code: `npm test`, which the commit hook runs.
+
+**8 · How we measure that it works, and when.** Done at the moment of the
+fix: the guard was removed and the test went red, restored and green. And
+the behaviour itself was proved — with a deliberately failing theme in
+place, `import('./gates/check-contrast.mjs')` ends the process without the
+guard and returns four exports with it.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+**The four contrast findings stay findings.** They came from the spectral
+instrument's own approved values and are put to Kenny rather than quietly
+corrected [S49, S42]. They are not the subject of this correction.

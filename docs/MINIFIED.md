@@ -47,7 +47,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `css/woodblock-register.css` | 44.5 kB | 23.3 kB | 48% |
 | `dist/kp-themes.css` | 1341.2 kB | 712.3 kB | 47% |
-| `dist/kp-themes.js` | 228.7 kB | 122.5 kB | 46% |
+| `dist/kp-themes.js` | 229.8 kB | 123.2 kB | 46% |
 
 The loose stylesheets together weigh **1398.8 kB** authored and
 **747.7 kB** minified, 47% less. A page loading one theme's
