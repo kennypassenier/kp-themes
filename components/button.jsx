@@ -45,6 +45,7 @@ import { useControllable } from '../hooks/use-controllable.js';
  * @property {boolean} [disarmOnBlur]  Default true.
  * @property {(rule: 'DI10', message: string) => void} [onContractError]  Default: console.error.
  * @property {import('react').ElementType} [as]  Default 'button'.
+ * @property {import('react').ReactNode} [readout]  A small reading a theme may print beside the control [scope-16, scope-17]. The consumer's own text; nothing is written for it.
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  */
 
@@ -70,6 +71,7 @@ function ButtonInner(
         disarmOnBlur = true,
         onContractError,
         as: As = 'button',
+        readout,
         strings,
         className = '',
         children,
@@ -190,6 +192,24 @@ function ButtonInner(
                 }}
                 onClick={handle}
             >
+                {/* Two surfaces a theme may paint on, and nothing else
+                    [scope-16, scope-17, Kenny 2026-09-12]. Both approved
+                    concept demos of round seven put an oxide film along the
+                    control's edge AND a small reading above it, which is one
+                    surface more than a button's two pseudo-elements can
+                    carry — the spectral instrument already spends both on
+                    its brackets. They are empty, inert and invisible in
+                    every theme that does not style them.
+
+                    `readout` is a consumer's own text, so nothing is written
+                    here [KT5]: the element exists, and whoever wants a word
+                    in it passes one. */}
+                <span className="kp-button__edge" aria-hidden="true" />
+                {readout === undefined ? null : (
+                    <span className="kp-button__readout" aria-hidden="true">
+                        {readout}
+                    </span>
+                )}
                 {/* The label in its own element [S49, A7]: phantom's approved
                     demo skews the button itself and skews the label back,
                     which needs something around the words to skew. Inert

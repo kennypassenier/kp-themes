@@ -150,6 +150,12 @@ const TO_MARKUP = {
                 'data-kp-confirm': p.confirm,
                 'aria-busy': p['aria-busy'],
             },
+            // Two surfaces a theme may paint on, as components/button.jsx
+            // writes them [scope-16, scope-17]: the edge the oxide film
+            // runs along, and the small reading above the control. Empty
+            // and inert unless a register styles them.
+            el('span', { class: 'kp-button__edge', 'aria-hidden': 'true' }, []),
+            p.readout === undefined ? '' : el('span', { class: 'kp-button__readout', 'aria-hidden': 'true' }, [p.readout]),
             // The label in its own element, as components/button.jsx
             // writes it [S49, A7].
             el('span', { class: 'kp-button__label' }, kids),

@@ -54,6 +54,10 @@ export type ButtonProps = {
      * Default 'button'.
      */
     as?: import('react').ElementType;
+    /**
+     * A small reading a theme may print beside the control [scope-16, scope-17]. The consumer's own text; nothing is written for it.
+     */
+    readout?: import('react').ReactNode;
     strings?: Partial<import('../js/strings.js').Strings>;
 };
 declare const Button: import("react").ForwardRefExoticComponent<ButtonProps & import("react").ButtonHTMLAttributes<HTMLButtonElement> & import("react").RefAttributes<HTMLButtonElement>>;

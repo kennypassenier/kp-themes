@@ -5007,6 +5007,42 @@
         box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
+    /* Two surfaces a theme may paint on, and nothing else [scope-16,
+       scope-17, Kenny 2026-09-12]. Both approved concept demos of round
+       seven put an oxide film along the control's edge AND a small reading
+       above it, which is one surface more than a button's two
+       pseudo-elements can carry — the spectral instrument already spends
+       both on its brackets.
+
+       Out of flow, so neither can move the control; `inset: 0` so the edge
+       has the whole box to work with; and invisible until a register gives
+       them something. Twenty-four themes never notice they are there,
+       which is the same bargain `.kp-button__label` already makes. */
+    /* The control is the containing block for both, which is what makes
+       "out of flow" mean "inside this button" rather than "somewhere on
+       the page". Without it the edge measured 1280px wide — the viewport —
+       on the first run of tests/button-surfaces.spec.mjs. */
+    .kp-button {
+        position: relative;
+    }
+
+    .kp-button__edge,
+    .kp-button__readout {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .kp-button__edge {
+        inset: 0;
+    }
+
+    .kp-button__readout {
+        inset-block-end: 100%;
+        inset-inline-start: 0;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
     /* The button's own label, in its own element [S49, A7]: a theme that
        skews the button (phantom's demo does) sets the label upright
        again on this, and every other theme never notices it is there. */
