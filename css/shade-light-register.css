@@ -1069,8 +1069,28 @@
        primary, ghost and destructive variants FLAT, and its own test pins
        that — so the light stops at the variants until Kenny rules on the
        collision. Recorded as a finding, S49. */
+    /* Phase 7, `focus-ring`. The rule below paints this theme's own
+       elevation on a button, and it is a later layer than kp.components,
+       so it swallowed the ring that layer draws on `:focus-visible` — a
+       keyboard user got an outline and nothing behind it. Measured
+       before: `color(srgb 0.344 0.429867 0.456 / 0.18) 1px 2px 3px`. That is the theme's elevation, not the ring.
+
+       The elevation stays; what is added is the ring in front of it, in
+       the focused state only, spelled the way css/components.css spells
+       it. Third face of the same fault as `fix-12` and `gap-1`: a later
+       layer beating a state the earlier layer defines. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
         box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):focus-visible {
+        /* Both channels in DIFFERENT colours: this theme's own focus rule
+           paints the outline in a colour that can equal --focus-ring, and
+           two channels of one colour is what the ring test refuses. */
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     @media (prefers-reduced-motion: no-preference) {

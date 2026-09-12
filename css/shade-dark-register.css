@@ -988,8 +988,28 @@
        Scoped off the button variants for the same reason shade-light is:
        the approved round-six demo draws them flat and its own test pins
        that. A finding for Kenny, not a decision taken here [S49]. */
+    /* Phase 7, `focus-ring`. The rule below paints this theme's own
+       elevation on a button, and it is a later layer than kp.components,
+       so it swallowed the ring that layer draws on `:focus-visible` — a
+       keyboard user got an outline and nothing behind it. Measured
+       before: `color(srgb 0 0.176 0.22 / 0.9) 2px 3px 5px`. That is the theme's elevation, not the ring.
+
+       The elevation stays; what is added is the ring in front of it, in
+       the focused state only, spelled the way css/components.css spells
+       it. Third face of the same fault as `fix-12` and `gap-1`: a later
+       layer beating a state the earlier layer defines. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']) {
         box-shadow: 2px 3px 5px hsl(from var(--background) h s l / 0.9);
+    }
+
+    [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):focus-visible {
+        /* Both channels in DIFFERENT colours: this theme's own focus rule
+           paints the outline in a colour that can equal --focus-ring, and
+           two channels of one colour is what the ring test refuses. */
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            2px 3px 5px hsl(from var(--background) h s l / 0.9);
     }
 
     @media (prefers-reduced-motion: no-preference) {

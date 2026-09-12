@@ -696,3 +696,69 @@ all along. Found only because the removal made the family look orphaned.
 **Not in any stage:** counters are wanted rather than essential and land
 if the stages above leave room; carousels are refused; an icon set is a
 round of its own.
+
+## The Phase 6 gate, signed 2026-09-12
+
+Kenny answered all five items **Akkoord**: the repairs, the themes, the
+removals, the coverage and the question of going on.
+
+The evidence the gate carried: ninety-six commits since the last round,
+twenty-two themes and twenty-two registers, thirty-three gates in the
+chain all green, 102 unit tests and 1,257 browser tests in firefox, and
+five queue rows open of which none is Claude's. Four corrections opened
+and closed during the round — `fix-11` through `fix-14` — each with a
+gate or a test holding it and each driven red before it was allowed to be
+green.
+
+The visible surface went with it, as the procedure requires: screenshots
+of the two new themes and four of the six hover gestures as the package
+paints them. Gates measure what is measurable; whether a thing looks like
+what it claims to be is seen only by a person.
+
+**What is deliberately not built**, recorded at the gate rather than
+discovered later: lapis never got the second proposal it was waiting for
+and has no hover gesture, because the measurement did not put it among
+the six. Counters were "wanted if there is room" and there was none.
+Carousels are refused and an icon set is a round of its own.
+
+Round seven now enters **Phase 7**, hardening.
+
+## The Phase 7 gate, answered 2026-09-12
+
+Nine gaps went to Kenny. **Eight are to be closed; one is deferred.**
+
+| Gap | What | Answer |
+| --- | ---- | ------ |
+| `grotesk-press` | grotesk's plain button paints the same hovered and held down | Dichten |
+| `focus-ring` | light, shade-light and shade-dark paint one half of the ring | Dichten |
+| `blueprint-width` | blueprint's buttons overflow by six pixels at 320px | Dichten |
+| `readout` | `.kp-button__readout` is styled by two registers and rendered by no page | Dichten |
+| `data-surfaces` | six data surfaces and five browser hooks, ~130 register rules, no paint test | Dichten |
+| `sidenav-react` | the sidenav ships one channel where the frozen bar asks for two | Dichten |
+| `gone-themes` | the frozen list still describes four removed themes; one bar is unreachable | Dichten |
+| `counters` | counting numbers are on the list, unbuilt and unclosed | Dichten |
+| `second-engine` | the whole round's evidence comes from firefox alone | Later |
+
+Kenny chose to close two that came recommended as Later — the React
+sidenav and the counters — which lengthens the round by the two largest
+pieces of work in the list. `second-engine` is the one deferral: both
+engines run after this release rather than before it, so the round ships
+on one engine's evidence and that goes verbatim into `docs/TEST_PLAN.md`.
+
+### What closing them produced, 2026-09-12
+
+Six of the eight closed, each driven red before it was allowed green.
+
+| Gap | What was built | Where |
+| --- | -------------- | ----- |
+| `grotesk-press` | `:not(:active)` on the hover, and a gate that refuses a hover outranking its own press | `css/grotesk-register.css`, `gates/check-pressed-state.mjs` |
+| `focus-ring` | the ring restored in front of three themes' elevation and inside two themes' menu item; two shadow layers at rest so the transition is well-formed | five registers |
+| `readout` | the surface tested on a fixture of its own; the words are still Kenny's | `tests/fixtures/readout.html`, `tests/button-surfaces.spec.mjs` |
+| `data-surfaces` | eleven surfaces on one page, eight sweeps over every theme | `tests/fixtures/data-surfaces.html`, `tests/data-surfaces.spec.mjs` |
+| `sidenav-react` | the React channel, self-attaching with a way out, and a DOM-shape comparison of the two channels | `components/sidenav.jsx`, `tests/sidenav-react.spec.mjs` |
+| `gone-themes` | dated notes on the four rows, the unreachable bar moved, and a gate holding the list to the shipped themes | `docs/FEATURES.md`, `gates/gates.test.mjs` |
+| `counters` | `data-kp-count`, two knobs, a readable state, locale-driven parsing | `js/effects.js`, `tests/count.spec.mjs` |
+
+Measured after: 106 unit tests, 1,367 browser tests in firefox over 79
+files, 2,734 across both engines, thirty-two gates green. Two tests stay
+red, and both are findings for Kenny rather than faults to repair.

@@ -18027,6 +18027,21 @@
         font-size: 1.2rem;
     }
 
+    /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
+       row menu painted nothing at all in this theme — measured `outside:
+       0 focused, 0 at rest`. The popover rounds its corners and the item
+       fills it, so a ring drawn outside the item has nowhere to land;
+       cyberpunk hit the same wall when its bevel came back and answered
+       it the same way. Both channels go INSIDE, where nothing can clip
+       them: the ring colour first, the contrast colour behind it. */
+    [data-theme='titanium'] .kp-menu__item:focus-visible {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     [data-theme='titanium'] .kp-menu__item:hover {
         background: var(--accent);
     }
@@ -20826,8 +20841,28 @@
        primary, ghost and destructive variants FLAT, and its own test pins
        that — so the light stops at the variants until Kenny rules on the
        collision. Recorded as a finding, S49. */
+    /* Phase 7, `focus-ring`. The rule below paints this theme's own
+       elevation on a button, and it is a later layer than kp.components,
+       so it swallowed the ring that layer draws on `:focus-visible` — a
+       keyboard user got an outline and nothing behind it. Measured
+       before: `color(srgb 0.344 0.429867 0.456 / 0.18) 1px 2px 3px`. That is the theme's elevation, not the ring.
+
+       The elevation stays; what is added is the ring in front of it, in
+       the focused state only, spelled the way css/components.css spells
+       it. Third face of the same fault as `fix-12` and `gap-1`: a later
+       layer beating a state the earlier layer defines. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
         box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):focus-visible {
+        /* Both channels in DIFFERENT colours: this theme's own focus rule
+           paints the outline in a colour that can equal --focus-ring, and
+           two channels of one colour is what the ring test refuses. */
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -23982,8 +24017,24 @@
 
        Measured in firefox 2026-09-12: the blur goes from 14px to 5, the
        control settles 2px, label contrast 11.74, the box unchanged. */
+    /* Phase 7, `focus-ring`: two shadow layers at rest, the first empty.
+       This theme transitions box-shadow, and a one-layer-to-two-layer
+       transition interpolates by inserting a blank layer — so mid-flight
+       the ring reads as a nought-spread layer, which is exactly "half a
+       ring". Same shape in both states means the transition is a spread
+       growing from nought to two rather than a layer arriving from
+       nowhere. The ring itself is restored further down, inside this
+       theme's own focus gesture. */
     [data-theme='light'] .kp-button {
-        box-shadow: 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+        /* Two layers at rest, the first of them empty. light transitions
+           box-shadow, and a one-layer-to-two-layer transition interpolates
+           by inserting a blank layer — so mid-flight the ring reads as a
+           nought-spread layer, which is exactly "half a ring". Same shape
+           in both states, and the transition is a spread growing from 0
+           to 2 rather than a layer appearing from nowhere. */
+        box-shadow:
+            0 0 0 0 transparent,
+            0 6px 14px hsl(from var(--foreground) h s l / 0.12);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -23994,10 +24045,30 @@
         }
     }
 
-    [data-theme='light'] .kp-button:hover:not(:disabled),
+    [data-theme='light'] .kp-button:hover:not(:disabled) {
+        translate: 0 2px;
+        box-shadow:
+            0 0 0 0 transparent,
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* Phase 7, `focus-ring`. This selector used to sit beside the hover
+       above and set one shadow layer for both — which meant a keyboard
+       user got light's press-down gesture and no ring at all, because a
+       register is a later layer than the components layer that draws the
+       ring. Measured before: a 2px outline and one shadow layer, 2px down
+       and 5px wide — the gesture's own shadow, with no ring behind it.
+       The gesture is kept exactly — the same 2px drop, the same tighter
+       shadow — with the ring restored in front of it, and the outline in
+       the contrast colour so the two channels are not one colour twice.
+       Third face of `fix-12` and `gap-1`: a later layer beating a state
+       the earlier layer defines. */
     [data-theme='light'] .kp-button:focus-visible {
         translate: 0 2px;
-        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
     }
 }
 
@@ -24384,8 +24455,18 @@
        (W4's cross-theme test). The exclusions keep the demo's wash for the
        default button while leaving a coloured variant's own background,
        declared below, alone. */
-    [data-theme='grotesk'] .kp-button:hover:not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive),
-    [data-theme='grotesk'] .kp-button:focus-visible:not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive) {
+    /* Phase 7, `grotesk-press`: `:not(:active)` on the hover. The pressed
+       rule below was correct and had no effect — this selector carries
+       three `:not(.class)` clauses and so outranked it, and a pointer is
+       always hovering while it presses. Measured before: hovered and
+       held down both painted 96% lightness — the same grey twice. After:
+       the press lands on 79%, which is what --secondary-active always
+       held and never got to paint. The same shape as `fix-12` one storey down —
+       not a later layer beating a state, but a longer selector in the
+       same layer. high-contrast already wrote it this way, which is why
+       this is the idiom rather than a heavier press selector. */
+    [data-theme='grotesk'] .kp-button:hover:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive),
+    [data-theme='grotesk'] .kp-button:focus-visible:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive) {
         background: var(--muted);
     }
 
@@ -28399,6 +28480,21 @@
     [data-theme='dark'] .kp-dialog__title {
         font-weight: 700;
         font-size: 1.2rem;
+    }
+
+    /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
+       row menu painted nothing at all in this theme — measured `outside:
+       0 focused, 0 at rest`. The popover rounds its corners and the item
+       fills it, so a ring drawn outside the item has nowhere to land;
+       cyberpunk hit the same wall when its bevel came back and answered
+       it the same way. Both channels go INSIDE, where nothing can clip
+       them: the ring colour first, the contrast colour behind it. */
+    [data-theme='dark'] .kp-menu__item:focus-visible {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
     }
 
     [data-theme='dark'] .kp-menu__item:hover {
@@ -35003,8 +35099,28 @@
        Scoped off the button variants for the same reason shade-light is:
        the approved round-six demo draws them flat and its own test pins
        that. A finding for Kenny, not a decision taken here [S49]. */
+    /* Phase 7, `focus-ring`. The rule below paints this theme's own
+       elevation on a button, and it is a later layer than kp.components,
+       so it swallowed the ring that layer draws on `:focus-visible` — a
+       keyboard user got an outline and nothing behind it. Measured
+       before: `color(srgb 0 0.176 0.22 / 0.9) 2px 3px 5px`. That is the theme's elevation, not the ring.
+
+       The elevation stays; what is added is the ring in front of it, in
+       the focused state only, spelled the way css/components.css spells
+       it. Third face of the same fault as `fix-12` and `gap-1`: a later
+       layer beating a state the earlier layer defines. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']) {
         box-shadow: 2px 3px 5px hsl(from var(--background) h s l / 0.9);
+    }
+
+    [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):focus-visible {
+        /* Both channels in DIFFERENT colours: this theme's own focus rule
+           paints the outline in a colour that can equal --focus-ring, and
+           two channels of one colour is what the ring test refuses. */
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            2px 3px 5px hsl(from var(--background) h s l / 0.9);
     }
 
     @media (prefers-reduced-motion: no-preference) {

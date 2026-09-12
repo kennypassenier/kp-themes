@@ -381,8 +381,18 @@
        (W4's cross-theme test). The exclusions keep the demo's wash for the
        default button while leaving a coloured variant's own background,
        declared below, alone. */
-    [data-theme='grotesk'] .kp-button:hover:not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive),
-    [data-theme='grotesk'] .kp-button:focus-visible:not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive) {
+    /* Phase 7, `grotesk-press`: `:not(:active)` on the hover. The pressed
+       rule below was correct and had no effect — this selector carries
+       three `:not(.class)` clauses and so outranked it, and a pointer is
+       always hovering while it presses. Measured before: hovered and
+       held down both painted 96% lightness — the same grey twice. After:
+       the press lands on 79%, which is what --secondary-active always
+       held and never got to paint. The same shape as `fix-12` one storey down —
+       not a later layer beating a state, but a longer selector in the
+       same layer. high-contrast already wrote it this way, which is why
+       this is the idiom rather than a heavier press selector. */
+    [data-theme='grotesk'] .kp-button:hover:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive),
+    [data-theme='grotesk'] .kp-button:focus-visible:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive) {
         background: var(--muted);
     }
 

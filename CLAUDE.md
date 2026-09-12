@@ -322,13 +322,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven (6.0.0), Phase 6 — the development loop.** All three stages are built: the repairs, the themes and the removals                                                                                       |
-| Last completed gate | **Stage 3, closed 2026-09-12.** Twenty-two themes. academia, mono, ticker and woodblock left, with six font families and 2.78 MB behind them                                                                        |
-| Next gate           | Phase 7 onward for this round: the test-gap audit, the documentation pass and the field test, then the version. Kenny tells the consumers before the tag, not after                                                 |
-| Open queue items    | `fix-12-M1` (the pressed-state gate never fired on a register written without it in mind — both new registers were), plus `CP1`, `gap-1` to `gap-7`, `step-2`, `step-4`, `step-6` and `KT6-M1` carried from stage 1 |
-| AFK mode            | off                                                                                                                                                                                                                 |
+| Field               | Value                                                                                                                                                                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round seven (6.0.0), Phase 7 — hardening.** The gate was answered on 2026-09-12: eight gaps to close, one deferred. Six are closed and drilled; two are back with Kenny as findings                                              |
+| Last completed gate | **Phase 7's decision form, 2026-09-12.** The audit found nineteen points; ten were closed before the form, nine went to Kenny. Fifteen browser tests were already red on the branch and nobody could see them (`fix-15`)           |
+| Next gate           | The three open findings: `blueprint-width` (the gate form's diagnosis was wrong), the readout's words, and `shade-light`'s muted colour. Then Phase 8                                                                              |
+| Open queue items    | Five, and not one is Claude's to close: `step-2` and `fix-9-M1` wait on a full verify run on Kenny's machine, `KT6-M1` on JobTracker, `HA4` on a freeze recurring, and `gap-9` on the far edge stuttering where someone can see it |
+| AFK mode            | off                                                                                                                                                                                                                                |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

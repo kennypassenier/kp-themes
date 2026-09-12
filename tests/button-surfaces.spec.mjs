@@ -10,8 +10,15 @@
 //
 // Drilled 2026-09-12 in firefox: `position: absolute` removed from the
 // two-selector rule in css/components.css and the bundle regenerated ->
-// red on the control keeping its size; `opacity: 0` removed from the
-// readout -> red on it being invisible until a theme asks.
+// red on the control keeping its size.
+//
+// The second half of this record was false until Phase 7. It claimed a
+// red run on "`opacity: 0` removed from the readout", and no assertion on
+// the readout existed in this file or in any other — the record described
+// a drill of a test that was not there, which is the one thing KT3 exists
+// to prevent. The assertions are below now, on a fixture of their own,
+// with their own drills. The reason they could not live here: no page in
+// the package renders a readout at all.
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
@@ -27,7 +34,7 @@ for (const [channel, url] of CHANNELS) {
         await button.scrollIntoViewIfNeeded();
 
         const edge = button.locator('.kp-button__edge');
-        expect(await edge.count(), 'every button carries the edge').toBe(1);
+        expect(await edge.count(), 'this button carries the edge').toBe(1);
 
         // Out of flow: the label is the only thing setting the box.
         const box = await button.evaluate((el) => {
@@ -77,3 +84,57 @@ for (const [channel, url] of CHANNELS) {
         ).toBe('none | rgba(0, 0, 0, 0) | 0px | none');
     });
 }
+
+// ── the readout, on a fixture of its own ───────────────────────────────
+//
+// Phase 7 found the drill record at the top of this file claiming a red
+// run on an assertion that was never written — and then found the reason
+// it could not be written: `.kp-button__readout` is rendered by no page
+// in the package. Both channels build it (components/button.jsx:208,
+// showcase/examples.mjs:158) and two registers style it in full
+// (css/dark-register.css:180, css/titanium-register.css), but nothing
+// passes the text, so the element never exists and the CSS is inert.
+//
+// What words belong there is the consumer's business by design [KT5] and
+// the approved demo's business for these two themes [S49], so this file
+// does not invent them for the package. It renders the markup both
+// channels produce and holds the contract the registers depend on.
+//
+// Drilled 2026-09-12 in firefox: `opacity: 0` removed from the readout in
+// css/components.css and the bundle regenerated -> red on it being
+// invisible until a theme asks; the hover rule removed from
+// css/dark-register.css -> red on the reveal.
+test('the readout is invisible until a theme asks, and never announced [scope-16, KT5]', async ({ page }) => {
+    await page.goto('/tests/fixtures/readout.html');
+    const readout = page.locator('.kp-button__readout');
+
+    // It is decoration over a control that already has a name; announced
+    // beside the label it would read the button twice, differently.
+    expect(await readout.getAttribute('aria-hidden'), 'the readout is decoration, and says so').toBe('true');
+
+    // Out of flow and unseen at rest — opacity rather than display,
+    // because a theme reveals it by raising the opacity.
+    await measured(
+        readout,
+        (el) => {
+            const s = getComputedStyle(el);
+            return `${s.opacity} | ${s.position}`;
+        },
+        undefined,
+        'the readout is invisible and out of flow until a theme asks',
+    ).toBe('0 | absolute');
+
+    // And it costs the control nothing: the button without one is the
+    // same height as the button with one.
+    const heights = await page.evaluate(() => [...document.querySelectorAll('.kp-button')].map((b) => Math.round(b.getBoundingClientRect().height)));
+    expect(heights[0], 'a readout does not make its button taller').toBe(heights[1]);
+});
+
+test('a theme that styles the readout reveals it on hover [scope-16]', async ({ page }) => {
+    await page.goto('/tests/fixtures/readout.html');
+    const readout = page.locator('.kp-button__readout');
+    await page.locator('.kp-button--primary').hover();
+
+    // dark raises the opacity and paints the text with its oxide gradient.
+    await measured(readout, (el) => getComputedStyle(el).opacity, undefined, 'dark reveals the readout on hover').toBe('1');
+});

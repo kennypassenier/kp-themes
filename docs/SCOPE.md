@@ -1088,7 +1088,7 @@ frame of a control is not one line but four, and touching it adds the
 outermost. The ruling closes around the word instead of a colour
 changing. With it, all ten themes that needed a quirk have one.
 
-**scope-24 · A theme may write its own state.** Kenny, 2026-09-12,
+**scope-28 · A theme may write its own state.** Kenny, 2026-09-12,
 answering the pressed-state collision with "Het thema zet zijn eigen
 indruk". The derived states (`-hover`, `-active`, `-disabled`) stay the
 default for every surface of every theme; a theme that writes one itself

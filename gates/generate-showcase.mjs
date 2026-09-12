@@ -27,6 +27,30 @@ import { getStrings } from '../js/strings.js';
 const OUT = new URL('../showcase/', import.meta.url);
 const FIXTURES = new URL('themes/', OUT);
 
+/**
+ * Every register on disk, ordered as themes/order.json orders its themes
+ * so the cascade is the same on every page.
+ *
+ * Phase 7 replaced a hand-written list of link tags with this. dark's own
+ * register was missing from that list — added in round seven, never added
+ * here — so `showcase/themes/dark.html` styled dark with twenty-one other
+ * themes' registers and none of its own, and every every-theme sweep that
+ * reads those pages had been measuring dark undressed.
+ *
+ * @returns {string[]}
+ */
+function registerLinks(prefix = '../css/', indent = '        ') {
+    const present = new Set(
+        readdirSync(new URL('../css/', import.meta.url))
+            .filter((f) => f.endsWith('-register.css'))
+            .map((f) => f.slice(0, -'-register.css'.length)),
+    );
+    /** @type {string[]} */
+    const ordered = THEMES.map((t) => String(t.name)).filter((n) => present.has(n));
+    for (const name of [...present].sort()) if (!ordered.includes(name)) ordered.push(name);
+    return ordered.map((/** @type {string} */ n) => `${indent}<link rel="stylesheet" href="${prefix}${n}-register.css" />`);
+}
+
 const STYLE = readFileSync(new URL('showcase.css', OUT), 'utf8');
 
 /**
@@ -131,27 +155,7 @@ function showcase() {
         ${fontLinks([...new Set(THEMES.flatMap((t) => familiesOf(t.name)))])}
         <link rel="stylesheet" href="../css/themes.css" />
         <link rel="stylesheet" href="../css/components.css" />
-        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
-        <link rel="stylesheet" href="../css/retro-register.css" />
-        <link rel="stylesheet" href="../css/synthwave-register.css" />
-        <link rel="stylesheet" href="../css/phantom-register.css" />
-        <link rel="stylesheet" href="../css/terminal-register.css" />
-        <link rel="stylesheet" href="../css/brutalism-register.css" />
-        <link rel="stylesheet" href="../css/titanium-register.css" />
-        <link rel="stylesheet" href="../css/pastel-register.css" />
-        <link rel="stylesheet" href="../css/shade-light-register.css" />
-        <link rel="stylesheet" href="../css/forest-register.css" />
-        <link rel="stylesheet" href="../css/deco-register.css" />
-        <link rel="stylesheet" href="../css/light-register.css" />
-        <link rel="stylesheet" href="../css/grotesk-register.css" />
-        <link rel="stylesheet" href="../css/blueprint-register.css" />
-        <link rel="stylesheet" href="../css/nostromo-register.css" />
-        <link rel="stylesheet" href="../css/formal-register.css" />
-        <link rel="stylesheet" href="../css/sepia-register.css" />
-        <link rel="stylesheet" href="../css/solstice-register.css" />
-        <link rel="stylesheet" href="../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../css/lapis-register.css" />
-        <link rel="stylesheet" href="../css/shade-dark-register.css" />
+${registerLinks().join('\n')}
         <style>
 ${STYLE}        </style>
     </head>
@@ -247,27 +251,7 @@ function fixture(theme) {
         ${fontLinks(familiesOf(theme.name))}
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
-        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
-        <link rel="stylesheet" href="../../css/retro-register.css" />
-        <link rel="stylesheet" href="../../css/synthwave-register.css" />
-        <link rel="stylesheet" href="../../css/phantom-register.css" />
-        <link rel="stylesheet" href="../../css/terminal-register.css" />
-        <link rel="stylesheet" href="../../css/brutalism-register.css" />
-        <link rel="stylesheet" href="../../css/titanium-register.css" />
-        <link rel="stylesheet" href="../../css/pastel-register.css" />
-        <link rel="stylesheet" href="../../css/shade-light-register.css" />
-        <link rel="stylesheet" href="../../css/forest-register.css" />
-        <link rel="stylesheet" href="../../css/deco-register.css" />
-        <link rel="stylesheet" href="../../css/light-register.css" />
-        <link rel="stylesheet" href="../../css/grotesk-register.css" />
-        <link rel="stylesheet" href="../../css/blueprint-register.css" />
-        <link rel="stylesheet" href="../../css/nostromo-register.css" />
-        <link rel="stylesheet" href="../../css/formal-register.css" />
-        <link rel="stylesheet" href="../../css/sepia-register.css" />
-        <link rel="stylesheet" href="../../css/solstice-register.css" />
-        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../../css/lapis-register.css" />
-        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+${registerLinks('../../css/').join('\n')}
         <style>
 ${STYLE}        </style>
     </head>

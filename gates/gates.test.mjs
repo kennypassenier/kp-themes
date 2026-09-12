@@ -995,6 +995,22 @@ test('S46: every element of the approved demo is on the concept page [correction
 test('S49: every theme with an approved demo has its own concept page, whole and in its own words [A1]', () => {
     const inventory = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8'));
     const slots = Object.keys(CONCEPT_COPY[DEFAULT_COPY_THEME]);
+
+    // Phase 7: this swept the opt-in list, so a theme absent from
+    // concept-copy.mjs was not unchecked-and-reported but unchecked-and-
+    // silent. titanium was covered because someone remembered. The list
+    // to sweep is themes/order.json; anything it holds that has no copy
+    // is named here with its reason, the way the other exception lists
+    // in this project are.
+    const NO_CONCEPT_PAGE = ['synthwave']; // the twenty-fifth theme arrived without a demo of its own [S46]
+    const themes = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    const names = Array.isArray(themes) ? themes : Object.keys(themes);
+    assert.deepEqual(
+        names.filter((t) => !(t in CONCEPT_COPY)).sort(),
+        [...NO_CONCEPT_PAGE].sort(),
+        'a theme has no concept copy and no reason recorded for having none',
+    );
+
     for (const [theme, copy] of Object.entries(CONCEPT_COPY)) {
         // The same slots for every theme: that is what makes the pages
         // comparable, and what stops a demo's words from going missing.
@@ -1066,12 +1082,25 @@ test('fix-13: a gate module that another module imports does not run on import',
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
         if (!entry.isFile() || !entry.name.endsWith('.mjs')) continue;
         const source = readFileSync(new URL(entry.name, dir), 'utf8');
-        if (!source.includes('process.exit')) continue;
+        // Phase 7 widened this. The property fix-13 named is "runs on
+        // import"; the implementation asked only about `process.exit`, so
+        // a generator that writes files on import was invisible to it —
+        // and gates/generate-examples.mjs is exactly that, as the Phase 7
+        // audit found by importing it and watching eleven example pages
+        // get rewritten under the suite that was measuring them. Ending
+        // the process and rewriting tracked artefacts are the same fault
+        // wearing different clothes.
+        const sideEffects = ['process.exit', 'writeFileSync', 'mkdirSync', 'rmSync', 'execFileSync', 'spawnSync'];
+        if (!sideEffects.some((marker) => source.includes(marker))) continue;
         // Is it imported by anything else in the repository?
         let imported = false;
         for (const other of readdirSync(dir)) {
             if (other === entry.name || !other.endsWith('.mjs')) continue;
-            if (readFileSync(new URL(other, dir), 'utf8').includes(`from './${entry.name}'`)) imported = true;
+            // Both spellings: `from './x.mjs'` and the bare `import
+            // './x.mjs'` that exists precisely to run a module for its
+            // side effects — which is the shape this test is about.
+            const text = readFileSync(new URL(other, dir), 'utf8');
+            if (text.includes(`from './${entry.name}'`) || text.includes(`import './${entry.name}'`)) imported = true;
         }
         if (imported && !source.includes('import.meta.url ===')) offenders.push(entry.name);
     }
@@ -1137,4 +1166,128 @@ test('step-6: the compliance table and the motion gate rate the same animation t
     const row = table.split('\n').find((line) => line.includes('DI5 flash threshold'));
     assert.ok(row, 'the compliance table carries a DI5 row');
     assert.ok(!row.includes('FAIL'), `the table still publishes a DI5 failure the motion gate does not see: ${row.trim()}`);
+});
+
+// ── the no-flash snippet, which is text that becomes a <script> ─────────
+//
+// Phase 7 found this with no test of any kind. The snippet is built as a
+// string and inlined by the consumer inside <script>…</script>, so the
+// escaping it needs is not `JSON.stringify`'s: that escapes for a JS
+// string literal, and `</script>` is legal inside one while still ending
+// the element it sits in. Both values interpolated into the snippet are
+// the consumer's own, so this is a foot-gun rather than an injection —
+// which is why it is a test and not a correction.
+test('the no-flash snippet cannot break out of the script element it lives in', async () => {
+    const { noFlashSnippet } = await import('../js/no-flash.js');
+    const hostile = 'a</script><img src=x onerror=alert(1)>';
+
+    for (const snippet of [
+        noFlashSnippet({ key: hostile }),
+        noFlashSnippet({ attribute: hostile }),
+        noFlashSnippet({ key: hostile, effects: true }),
+    ]) {
+        assert.ok(!snippet.includes('</script'), 'the snippet closes the script element it is inlined in');
+    }
+
+    // The escape has to be inert, not merely absent: the engine must still
+    // read the very key the consumer asked for. Running the snippet is the
+    // only way to know — reading the text back would re-implement it.
+    let seen = null;
+    const storage = { getItem: (/** @type {string} */ k) => ((seen = k), null), setItem: () => {} };
+    const root = { setAttribute: () => {} };
+    new Function('localStorage', 'document', noFlashSnippet({ key: hostile }))(storage, { documentElement: root });
+    assert.equal(seen, hostile, 'escaping changed the key the snippet reads');
+
+    // And the attribute it writes survives the same trip.
+    let wrote = null;
+    new Function('localStorage', 'document', noFlashSnippet({ attribute: hostile }))(
+        { getItem: () => 'dark', setItem: () => {} },
+        { documentElement: { setAttribute: (/** @type {string} */ a) => (wrote = a) } },
+    );
+    assert.equal(wrote, hostile, 'escaping changed the attribute the snippet writes');
+});
+
+test('a register edit runs the sweeps that read every register, not only its own spec [Phase 7]', async () => {
+    const { affected, themeSweeps } = await import('./affected.mjs');
+
+    // The sweeps are found by reading the specs, so this asserts the
+    // finding works at all — an empty list would make the widening a
+    // no-op and leave the map exactly as narrow as it was.
+    const sweeps = themeSweeps();
+    assert.ok(sweeps.length >= 12, `only ${sweeps.length} specs sweep every theme, which cannot be right`);
+    assert.ok(sweeps.includes('tests/registers.spec.mjs'), 'the every-theme press and alert sweeps are not in the list');
+    assert.ok(sweeps.includes('tests/dashboard.spec.mjs'), 'the every-theme focus-ring sweeps are not in the list');
+
+    const forRegister = affected([{ file: 'css/dark-register.css', commentOnly: false }]);
+    assert.ok(Array.isArray(forRegister), 'a register edit should resolve to specs, not to "all" or "none"');
+    assert.ok(forRegister.includes('tests/register-dark.spec.mjs'), "the register's own spec is missing");
+    for (const sweep of sweeps) assert.ok(forRegister.includes(sweep), `${sweep} reads every register and is not run`);
+
+    // An anatomy edit is the same coupling by another route.
+    const forAnatomy = affected([{ file: 'themes/dark/anatomy.md', commentOnly: false }]);
+    assert.ok(Array.isArray(forAnatomy) && forAnatomy.includes('tests/registers.spec.mjs'), 'an anatomy edit skips the sweeps');
+});
+
+test("every showcase page carries its own theme's register [Phase 7]", () => {
+    // showcase/themes/<name>.html is the page fifteen every-theme sweeps
+    // read. The generator used to carry a hand-written list of link tags,
+    // and dark — added in round seven — was never added to it. So dark's
+    // page was styled by twenty-one other themes' registers and none of
+    // its own, and every sweep over it had been measuring the theme
+    // undressed: the pointer bus it declares, the quirk it presses with,
+    // the whole register. Found in Phase 7 by a pointer test that asked
+    // dark for a knob dark's own register declares.
+    const dir = new URL('../showcase/themes/', import.meta.url);
+    const pages = readdirSync(dir).filter((f) => f.endsWith('.html'));
+    assert.ok(pages.length >= 20, `only ${pages.length} showcase pages, which cannot be right`);
+
+    const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
+    const missing = [];
+    for (const page of pages) {
+        const theme = page.slice(0, -'.html'.length);
+        if (!registers.includes(`${theme}-register.css`)) continue; // a theme with no register of its own
+        const html = readFileSync(new URL(page, dir), 'utf8');
+        if (!html.includes(`/${theme}-register.css"`)) missing.push(theme);
+    }
+    assert.deepEqual(missing, [], 'these showcase pages do not load the register of the theme they exist to show');
+});
+
+test('the frozen list does not describe a theme the package no longer ships [Phase 7, gone-themes]', () => {
+    // Four themes left at scope-11 and four rows kept describing them,
+    // three of those as Essential — so the list the package is measured
+    // against had stopped describing the package. One frozen test bar
+    // named `mono` and became unreachable with it: a bar that can never
+    // be met can never fail either, which is the shape Phase 7 exists to
+    // find. A row may still name a departed theme — the history is worth
+    // keeping — but it says so in the row.
+    const features = readFileSync(new URL('../docs/FEATURES.md', import.meta.url), 'utf8');
+    const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    const live = new Set(Array.isArray(order) ? order : Object.keys(order));
+    assert.ok(live.size >= 20, `only ${live.size} themes, which cannot be right`);
+
+    const unmarked = [];
+    for (const line of features.split('\n')) {
+        if (!line.startsWith('|')) continue;
+        for (const [, name] of line.matchAll(/Theme `([a-z-]+)`/g)) {
+            if (live.has(name)) continue;
+            if (!line.includes('Removed 2026-')) unmarked.push(`${name}: ${line.slice(0, 60)}`);
+        }
+    }
+    assert.deepEqual(unmarked, [], 'these rows describe a theme the package does not ship, with no note saying so');
+
+    // And no test bar may rest on a theme that is gone — that is the half
+    // that silently stops being measurable.
+    const bars = [];
+    for (const line of features.split('\n')) {
+        const bar = /Test bar:(.*)$/.exec(line);
+        if (!bar) continue;
+        // An amendment explains why a bar moved and names the theme it
+        // moved off, which is the record working as intended — the bar
+        // itself is what has to be measurable, so read only up to it.
+        const stated = bar[1].split(/\*\*Amended /)[0];
+        for (const [, name] of stated.matchAll(/`([a-z-]+)`/g)) {
+            if (!live.has(name) && /^(academia|mono|ticker|woodblock)$/.test(name)) bars.push(`${name} in: ${bar[1].slice(0, 60)}`);
+        }
+    }
+    assert.deepEqual(bars, [], 'a frozen test bar names a theme the package does not ship, so it can never fail');
 });

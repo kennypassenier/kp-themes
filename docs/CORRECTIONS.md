@@ -2315,3 +2315,190 @@ untouched. A sweep that had REWRITTEN lines instead of deleting them would
 not have been separable like that.
 
 **10 · When we review the measure.** At round seven's retrospective.
+
+## fix-15 · Fifteen browser tests were red on the branch and nobody could see it (2026-09-12)
+
+**1 · What happened.** Phase 7's hardening audit ran the specs together
+for the first time since round seven began and found **fifteen failing
+browser tests already on the branch** — not introduced by the audit, and
+measured that way: `git stash`, run the seven spec files, `git stash pop`,
+run again. Fifteen before, sixteen after, and the one added was a real
+defect a widened test had just caught.
+
+Some of those fifteen had been red long enough that the thing they exist
+to prove had quietly stopped being proven. `tests/bare.spec.mjs` called
+`page.route()` with one argument — the signature is `route(pattern,
+handler)`, so the handler was taken as the pattern and every run died on
+`route.request is not a function` before the page loaded. That test is the
+whole framework-free channel's proof: the page readable with its register,
+its fonts and its module all refused. It had not actually run.
+
+**2 · Why nobody saw it.** `npm run test:affected` resolved a change to
+`css/<theme>-register.css` to `tests/register-<theme>.spec.mjs` and
+nothing else. Every quirk and every hover gesture of round seven is a
+register edit, so the inner loop ran twenty tests and printed green while
+the fifteen every-theme sweeps — press, alert contrast, focus ring,
+reflow, bundle — never ran at all. The whole suite is Kenny's to give
+(fix-2), so between one of his runs and the next there was nothing
+watching. Measured 2026-09-12: one register spec is 20 tests, that spec
+plus the sweeps is 446, the whole suite is 1,297.
+
+**3 · The four that were stale rather than broken.** Four themes were
+removed at `scope-11` and four tests still named them: `reflow.spec.mjs`
+asserted `THEMES.length === 25` and that its findings file held thirteen
+entries, three of which were for removed themes; `fallback.spec.mjs`
+proved "a name that IS a theme says nothing" by applying `woodblock`,
+which had stopped being one — so the test asserted the opposite of its own
+title; `marquee.spec.mjs` navigated to `/examples/concept-ticker.html`,
+which no longer exists. Each now derives from `themes/order.json` or from
+the theme's own copy instead of carrying a hand-written constant.
+
+**4 · The one that hid a whole theme.** `gates/generate-showcase.mjs`
+carried a hand-written list of `<link>` tags for the registers, in two
+places. `dark` was added in round seven and never added to that list, so
+`showcase/themes/dark.html` loaded twenty-one other themes' registers and
+none of its own. Fifteen every-theme sweeps read that page; all of them
+had been measuring dark undressed. Found by a Phase 7 pointer test that
+asked dark for a knob dark's own register declares and got nothing back.
+The list is now read off disk, and a unit test refuses a showcase page
+that does not load the register of the theme it exists to show.
+
+**5 · What the widened tests then found.** Ten tests stay red, and every
+one of them is a product finding rather than a test fault:
+
+| What | Where | Measured |
+| ---- | ----- | -------- |
+| The plain button does not react to being pressed | grotesk | hovered `rgb(245, 245, 245)`, held down `rgb(245, 245, 245)` — the same |
+| Only one half of the focus ring | light, shade-light, shade-dark | an outline, and a decorative shadow where the ring's second half should be (8 tests) |
+| Buttons overflow at a phone width | blueprint | content 195 wide in a box of 189, at 320px |
+
+Under `S49` a value an approved demo showed is not changed without Kenny's
+word, so these are put to him rather than repaired. The tests stay red
+until he answers.
+
+**6 · The gates that could not say no.** Six verdicts were widened in the
+same pass. `check-ids.mjs` saw none of round seven's vocabulary — the
+patterns wanted `[A-Z]{1,4}[0-9]+`, and `scope-`, `fix-`, `gap-`, `step-`
+and `feat-` are lowercase — and deduplicated within a file, so one
+document defining an ID twice could not collide with itself. It now sees
+463 IDs where it saw 342, and it caught `scope-24`, which named two
+different decisions on two consecutive days. That is `KT10` again, in the
+document `KT10`'s gate was written for, one ID series later.
+
+`check-pressed-state.mjs` and `check-variant-ground.mjs` printed a green
+line with a zero in it if their parser found nothing —
+`check-register-coverage.mjs` already guarded exactly that, for exactly
+this reason. `check-fonts.mjs` had a written "nothing promised" pass that
+fires when `fonts/` is gone, and `css/fonts.css` is generated from
+`fonts/`, so the two fall to zero together; the themes name their families
+in their own tokens and are now the independent witness. The `S49` sweep
+iterated the opt-in list rather than `themes/order.json`. And `fix-13`'s
+own guard was keyed on `process.exit` rather than on the property it
+names, so a generator that rewrites tracked files on import was invisible
+to it — which is how the audit came to rewrite eleven example pages while
+running.
+
+**7 · Two tests that could not fail.** `tests/effects.spec.mjs` proved
+`TH119` ("final text equals source") by comparing the headline's text
+against `data-kp-text` — an attribute `js/effects.js` writes itself, from
+the element's own text, every time it runs. Both sides of the assertion
+were the module's. Measured with the headline permanently scrambled: the
+old comparison answers `true`, the new one — against the authored copy in
+`showcase/concept-copy.mjs` — answers `false`.
+
+And `tests/button-surfaces.spec.mjs` carried a drill record for an
+assertion that did not exist: "`opacity: 0` removed from the readout ->
+red on it being invisible". No test anywhere named `.kp-button__readout`.
+That is a false drill record, which is the one thing `KT3` exists to
+prevent. The reason it could not be written is its own finding: no page in
+the package renders a readout at all, while two registers style it in
+full.
+
+**8 · The measure.** Three things, two of them already code:
+
+- `gates/affected.mjs` resolves a register or anatomy edit to its own spec
+  **plus every spec that sweeps all themes**, found by reading the specs
+  rather than by keeping a list. A unit test asserts the finding is not
+  empty, because a widening that finds nothing is the narrow map again.
+- A unit test refuses a showcase page that does not load its own theme's
+  register.
+- Discipline: a test that names a theme names it from `themes/order.json`
+  or from the theme's own copy, never as a literal. A literal theme name
+  in a spec outlives the theme.
+
+**9 · Gezocht met.** `git ls-files 'tests/*.spec.mjs' | xargs grep -l` for
+each removed theme name; `node gates/check-ids.mjs` after widening;
+`npx playwright test --project=firefox` whole, twice, once on a stash.
+
+**10 · When we review the measure.** At round seven's retrospective, with
+the question: did the widened `test:affected` catch anything before a full
+run did.
+
+### fix-15, what closing the eight gaps then found (2026-09-12)
+
+Kenny answered the Phase 7 gate with **Dichten** on eight of the nine gaps
+and **Later** on the ninth. Six closed; two came back as findings, and the
+reason is worth writing down in both cases.
+
+**`grotesk-press` was `fix-12` a third time, one storey down.** The
+register carried a correct `:active` rule with a correct token and it
+never painted: the hover rule above it carries three `:not(.class)`
+clauses, so it outranks the press by two steps of weight, and a pointer is
+always hovering while it presses. Not a later layer beating a state — a
+longer selector in the same layer doing it.
+`gates/check-pressed-state.mjs` now compares the weight of each control's
+hover rule against its own pressed rule and refuses the first being
+heavier, with `:not(:active)` on the hover as the recommended idiom;
+`css/high-contrast-register.css` already wrote it that way, which is how
+the gate knows what right looks like.
+
+**`focus-ring` was the same fault a fourth and fifth time.** Three themes
+painted their own elevation on a button from `kp.register`, which swallowed
+the ring `kp.components` draws on `:focus-visible` — a keyboard user got an
+outline and nothing behind it. Two more, `dark` and `titanium`, painted
+nothing at all on a menu item inside the row menu, because the popover
+rounds its corners and a ring drawn outside the item has nowhere to land.
+The elevations and the corners are what the demos showed and both stay;
+the ring is restored in front of the one and inside the other. A sixth
+thing came out of it: `light` transitions box-shadow, and a
+one-layer-to-two-layer transition interpolates by inserting a blank layer,
+so mid-flight the ring read as a nought-spread layer — which is exactly
+"half a ring". Both states carry two layers now.
+
+**`counters` met its frozen bar only after the test was rebuilt.** The bar
+is "at the reduced-motion setting the final number is there immediately,
+measured on what is painted", and the first version of that test read the
+text and found it correct — because the final number is what the HTML
+says. It reads correct when nothing counted and when the count has already
+finished. The recorder is armed before the module exists now, and the bar
+is "this list of changes is empty" [fix-1]. Two faults in the module came
+out of the same rebuild: `Number(knob) || 900` read a deliberate `0` as
+unset, the absence of a value taken for the value a fifth time in this
+package; and `1.204` is one thousand two hundred and four in Dutch and
+one-point-two-oh-four in English, which the string alone does not decide —
+the nearest `lang` does.
+
+**`sidenav-react` found a foot-gun rather than a missing component.**
+`js/auto.js` attaches on load and React mounts after it, so a consumer
+would have had to know to attach again by hand — and the first sign of not
+knowing is a navigation that renders perfectly and does nothing. The
+component attaches itself on mount, with `autoAttach={false}` as the way
+out. What the suite compares is the DOM the two channels PRODUCE, element
+by element, not a checklist of things each contains.
+
+**Two are back with Kenny, and one of those is a diagnosis that was
+wrong.** The gate form told him `blueprint-width` was the letter-spacing
+and the 600 weight, and that six pixels of padding would give it back.
+Both are false. Every blueprint button is exactly six pixels wider than
+its box at every width, because this theme's approved hover gesture puts
+two witness lines at `-0.35rem` outside the control and the right-hand one
+adds 5.6px plus its own pixel to the scroll area whether or not it is
+visible. `overflow: clip` with a clip margin was tried and does not help —
+Firefox counts the clip margin in `scrollWidth`. No repair preserves the
+approved appearance, so it goes back to him with the real cause.
+
+And the data-surface sweep found `shade-light` declaring
+`--muted-foreground` identical to its `--foreground`, both
+`hsl(194, 14%, 40%)`. Twenty-one of twenty-two themes differ. It reaches
+every caption, every timestamp, every disabled label and every
+placeholder in that theme, and it is a palette value, so it is his.

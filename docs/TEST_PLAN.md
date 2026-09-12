@@ -26,7 +26,7 @@ It is written here rather than left unsaid, because the reason the step
 exists is exactly this shape of confidence: latch 2.0.1 passed CI, a
 hardening round and an external security review and was still unusable in
 every real project — the first genuine use found it in one command. So
-what this release has instead is thirty gates, some 2500 browser tests
+what this release has instead is thirty-two gates, 2,594 browser tests
 over both engines, and Kenny's own look at the pages. What it does not
 have is one run through a consumer's own path: `npm pack`, install into
 an empty directory, build a page with a theme, a register and a component
@@ -144,3 +144,40 @@ a reason, written down; a silent hole is neither.
   `localStorage` (5) and three window functions. The procedure makes the
   review mandatory for anything touching secrets, network or auth; this
   package touches none of the three.
+
+## Not covered, by decision (Phase 7, 2026-09-12)
+
+Kenny answered the Phase 7 gate on 2026-09-12. Eight gaps were to be
+closed and one deferred; what stands here is the deferral, verbatim, plus
+what the closing work could not reach.
+
+**`second-engine` — the round's evidence comes from one engine.** Every
+test written in round seven was driven red and then green in **firefox
+only**: eight quirks, six hover gestures, two new registers, the pointer
+bus, the two button surfaces, the counters, the React side navigation and
+five corrections. Round six's drills each carried a chromium run beside
+the firefox one; round seven's do not. This is a consequence of the rule
+of 2026-09-11 — the inner loop is firefox, and the whole suite is Kenny's
+to give — and he chose **Later**: both engines run after this release
+rather than before it.
+
+What that costs is measurable from this package's own record. The reflow
+spec states that brutalism overflows in firefox only, and sepia and
+solstice in chromium only; `gates/run-affected.mjs` records firefox as the
+odd engine fourteen times against chromium's six. The properties this
+round measures are the engine-divergent kind: computed `clip-path` polygon
+serialisation, `scale` shorthand strings, pseudo-element `background-size`,
+`mix-blend-mode` on an absolutely positioned child, canvas
+`fontBoundingBoxAscent`, and `border-image` against a row background. The
+suite is 2,734 tests over 79 files across both engines and 1,367 in
+firefox alone; the second engine roughly doubles the wall-clock.
+
+**One engine-conditional skip, by design.** `tests/fixtures.spec.mjs`
+skips the themed select list where `appearance: base-select` is not
+supported, naming the engine. The support is probed, not assumed.
+
+**Two findings are open rather than uncovered.** `blueprint-width` and
+`shade-light`'s muted colour are both put to Kenny as findings, because
+each changes a value an approved demo showed and `S49` reserves that to
+him. Their tests stay red until he answers; they are not accepted
+limitations and are not recorded as such.

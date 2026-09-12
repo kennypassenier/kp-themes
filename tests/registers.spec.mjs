@@ -72,44 +72,91 @@ const THEMES = readdirSync(new URL('../showcase/themes/', import.meta.url))
     .filter((n) => n.endsWith('.html'))
     .map((n) => n.slice(0, -'.html'.length));
 
+// Phase 7 widened this from one selector to the three the gate names.
+// gates/check-pressed-state.mjs guards `.kp-button`, `.kp-button--primary`
+// and `.kp-button--destructive`; this read only the primary — while the
+// fault Kenny reported was the plain one: "als ik gewoon blijf klikken op
+// de knop zelf, dan gebeurt er precies niks". The gate is presence-only
+// (an `:active` rule that paints nothing satisfies it), so the paint half
+// was the only thing that could see a button that does not react, and it
+// was not looking at the button he meant.
+const PRESSED = ['.kp-button--primary', '.kp-button', '.kp-button--destructive'];
+
 for (const theme of THEMES) {
-    test(`a button reacts to being pressed under ${theme} [fix-12]`, async ({ page }) => {
-        await page.goto(`/showcase/themes/${theme}.html`);
-        const button = page.locator('.kp-button--primary').first();
-        await button.scrollIntoViewIfNeeded();
-        // Everything a press is allowed to change, in one vector. Reading
-        // only `background-color` called retro red on 2026-09-12: that theme
-        // presses by inverting its bevel and shifting its padding, which is
-        // a reaction the narrower question could not see.
-        const paint = () =>
-            button.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return [s.backgroundColor, s.boxShadow, s.translate, s.paddingBlockStart, s.paddingInlineStart, s.borderColor, s.color].join(' | ');
-            });
-        await button.hover();
-        // Let the hover settle before taking the baseline: read too early and
-        // the baseline is the RESTING paint, which the press then differs
-        // from for the wrong reason [fix-1].
-        await page.waitForTimeout(260);
-        const hovered = await paint();
-        await page.mouse.down();
-        try {
-            await measured(
-                button,
-                (el) => {
+    for (const selector of PRESSED) {
+        test(`${selector} reacts to being pressed under ${theme} [fix-12]`, async ({ page }) => {
+            await page.goto(`/showcase/themes/${theme}.html`);
+            // The plain selector matches the variants too, so take one that
+            // carries no variant class — that is the control Kenny pressed.
+            const button =
+                selector === '.kp-button' ? page.locator('.kp-button:not([class*="kp-button--"])').first() : page.locator(selector).first();
+            if ((await button.count()) === 0) test.skip(true, `${theme}'s showcase page carries no ${selector}`);
+            await button.scrollIntoViewIfNeeded();
+            // Everything a press is allowed to change, in one vector. Reading
+            // only `background-color` called retro red on 2026-09-12: that theme
+            // presses by inverting its bevel and shifting its padding, which is
+            // a reaction the narrower question could not see.
+            const paint = () =>
+                button.evaluate((el) => {
                     const s = getComputedStyle(el);
-                    return [s.backgroundColor, s.boxShadow, s.translate, s.paddingBlockStart, s.paddingInlineStart, s.borderColor, s.color].join(
-                        ' | ',
-                    );
-                },
-                undefined,
-                `${theme}: held down, the button paints exactly as it did hovered`,
-            ).not.toBe(hovered);
-        } finally {
-            await page.mouse.up();
-        }
-        void paint;
-    });
+                    // `transform` and `translate` are different properties
+                    // and a theme may press with either; a press may also
+                    // land on a pseudo-element or on the label rather than
+                    // on the control (nostromo lights a lamp, grotesk
+                    // thickens the baseline). Reading only `translate` on
+                    // the element called five themes red in Phase 7 that
+                    // press perfectly well — the absence of a value read as
+                    // the value, a fourth time in this round.
+                    const before = getComputedStyle(el, '::before');
+                    const label = el.querySelector('.kp-button__label');
+                    return [
+                        s.backgroundColor,
+                        s.boxShadow,
+                        s.translate,
+                        s.transform,
+                        s.paddingBlockStart,
+                        s.paddingInlineStart,
+                        s.borderColor,
+                        s.color,
+                        `${before.opacity} ${before.backgroundColor} ${before.transform}`,
+                        label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
+                    ].join(' | ');
+                });
+            await button.hover();
+            // Let the hover settle before taking the baseline: read too early and
+            // the baseline is the RESTING paint, which the press then differs
+            // from for the wrong reason [fix-1].
+            await page.waitForTimeout(260);
+            const hovered = await paint();
+            await page.mouse.down();
+            try {
+                await measured(
+                    button,
+                    (el) => {
+                        const s = getComputedStyle(el);
+                        const before = getComputedStyle(el, '::before');
+                        const label = el.querySelector('.kp-button__label');
+                        return [
+                            s.backgroundColor,
+                            s.boxShadow,
+                            s.translate,
+                            s.transform,
+                            s.paddingBlockStart,
+                            s.paddingInlineStart,
+                            s.borderColor,
+                            s.color,
+                            `${before.opacity} ${before.backgroundColor} ${before.transform}`,
+                            label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
+                        ].join(' | ');
+                    },
+                    undefined,
+                    `${theme}: held down, the button paints exactly as it did hovered`,
+                ).not.toBe(hovered);
+            } finally {
+                await page.mouse.up();
+            }
+        });
+    }
 }
 
 // gap-1 — the destructive alert's ink sits on the plate it was drawn for.

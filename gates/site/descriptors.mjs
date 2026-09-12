@@ -1260,6 +1260,48 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'count',
+        title: 'Counting number',
+        group: 'Feedback',
+        classes: [],
+        exports: [],
+        aliases: ['count', 'counter', 'odometer'],
+        intro: 'A number that counts up to what it already says. The page writes the final figure; the effects module reads it, counts to it and puts the same string back — so a page that never loads the module, and a reader who asked for less movement, both simply see the number.',
+        whenToUse:
+            'For one or two figures that are the point of a page — a total, a score, a count of things done. Not for a table of numbers, where the movement makes the column unreadable, and not for anything a reader needs at once. The final number is authored in the HTML, so nothing is ever hidden behind the animation.',
+        examples: [
+            {
+                title: 'A number that counts up to itself',
+                why: 'The text is the truth. The module reads the number out of it, counts, and restores exactly what was written — separators, currency and all.',
+                markup: `
+<span data-kp-count>1204</span>
+`,
+            },
+            {
+                title: 'The page decides which separator is which',
+                why: '`1.204` is one thousand two hundred and four in Dutch and one-point-two-oh-four in English, and the string alone does not say. The nearest `lang` decides, so the module never has to guess.',
+                markup: `
+<p lang="nl"><span data-kp-count>1.118.204,75</span></p>
+<p lang="en"><span data-kp-count>1,204.50</span></p>
+`,
+            },
+            {
+                title: 'The two knobs, and the state a test or a consumer can read',
+                why: 'How long the count takes and where it starts, both as custom properties. `--kp-count: 0` means no counting at all. The state attribute is written by the module and readable at any moment, so nothing has to have been listening.',
+                markup: `
+<span data-kp-count style="--kp-count: 1200; --kp-count-from: 100" data-kp-count-state="done">640</span>
+`,
+            },
+        ],
+        variants: [],
+        accessibility: [
+            'The final number is written in the HTML, so a page without the module and a reader with reduced motion both see the real figure — the count is decoration over content that is already there.',
+            'At the reduced-motion setting the number never changes at all: it is not counted quickly, it is not counted.',
+            'The number is not announced while it counts. A screen reader reads the element once, with the figure the page authored.',
+            'The nearest `lang` decides which separator groups and which one is the decimal point, so a number never counts through the wrong notation.',
+        ],
+    },
+    {
         id: 'marquee',
         title: 'Marquee',
         group: 'Feedback',
@@ -1585,12 +1627,37 @@ export const DESCRIPTORS = [
         title: 'Side navigation',
         group: 'Navigation',
         classes: ['kp-sidenav'],
-        exports: [],
+        exports: ['Sidenav', 'SidenavToggle'],
         aliases: ['sidenav'],
         intro: 'A navigation that stands beside the content instead of above it. Three modes — beside the page, over it, or pushing it aside — a slim rail that keeps the icons and drops the words, categories that fold, and either edge.',
         whenToUse:
             'For an application with more places than a bar can hold, or a hierarchy two levels deep. Not for the five links every page can reach — that is the bar at the top. Not as a drawer for content: a panel that slides in carrying a form is a dialog, and it wants a dialog’s focus handling and a dialog’s dismissal.',
         examples: [
+            {
+                title: 'The React channel',
+                why: 'Added 2026-09-12 (`sidenav-react`). The component renders the markup and the knobs; js/sidenav.js — attached by js/auto.js — does the behaviour, exactly as it does for the framework-free channel. Every data attribute the module reads is a prop, and one left out keeps the module\u2019s own default rather than restating it. The way out of the opened state is the handle: `sidenavOf(ref.current)`.',
+                markup: `
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="#a" aria-current="page"><span class="kp-sidenav__label">One</span></a></li>
+        </ul>
+    </div>
+</nav>
+`,
+                react: `
+<SidenavToggle controls="nav">Menu</SidenavToggle>
+<Sidenav
+    id="nav"
+    label="Sections"
+    title="Sections"
+    mode="over"
+    backdrop
+    items={[{ label: 'One', href: '#a', current: true }]}
+/>
+`,
+            },
             {
                 title: 'Beside the page',
                 why: 'The default mode is the one that is simply there: a column in the flow, no JavaScript needed to see it. The current page carries aria-current, which is what a screen reader announces and what every theme hangs its own mark on.',

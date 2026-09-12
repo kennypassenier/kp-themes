@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Data surfaces fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- The six surfaces of "showing data" and the browser's own hooks,
+             on one page so a sweep can read what every register paints on
+             them. The registers all carry rules for these; until Phase 7
+             nothing ever measured what those rules drew. -->
+        <main>
+            <p><span class="kp-id" data-test="id">c7f3a1e0-9b42-4d18-8a6f-0e5c2b7d91aa</span></p>
+            <p><span class="kp-masked" data-test="masked">•••• •••• •••• 4242</span></p>
+            <p><span class="kp-numeric" data-test="numeric">1 118 204,75</span></p>
+            <p><span class="kp-timestamp" data-test="timestamp">2026-09-12 14:07</span></p>
+            <div style="inline-size: 12rem">
+                <span class="kp-truncate" data-test="truncate" title="A title long enough that it cannot fit"
+                    >A title long enough that it cannot fit</span
+                >
+            </div>
+            <div class="kp-empty" data-test="empty">Nothing here yet</div>
+
+            <form>
+                <label class="kp-field">
+                    <span class="kp-field__label">Placeholder</span>
+                    <input class="kp-field__input" data-test="placeholder" placeholder="Type a name" />
+                </label>
+                <label class="kp-field">
+                    <span class="kp-field__label">Disabled</span>
+                    <input class="kp-field__input" data-test="disabled" value="Locked" disabled />
+                </label>
+                <label class="kp-field">
+                    <span class="kp-field__label">Invalid</span>
+                    <input class="kp-field__input" data-test="invalid" type="email" value="not-an-email" required />
+                </label>
+                <label><input type="checkbox" data-test="checkbox" checked /> Checked</label>
+            </form>
+
+            <ul data-test="marker-list">
+                <li data-test="marker">A list item with its own marker</li>
+            </ul>
+        </main>
+    </body>
+</html>

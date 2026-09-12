@@ -101,6 +101,16 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             );
         }
     }
+    // The check has to have something to check. Both of these parse
+    // css/components.css with line-anchored patterns, and a prettier
+    // reformat, a comma-grouped selector or a nested @media would defeat
+    // them — leaving the loop body unentered and this line printing a
+    // green nothing. gates/check-register-coverage.mjs guards the same
+    // way for the same reason (Phase 7).
+    if (grounds.size === 0) {
+        console.error('gate broke: css/components.css defines no variant grounds, which cannot be right.');
+        process.exit(1);
+    }
     if (failed) process.exit(1);
     const pairs = [...grounds].map(([b, v]) => `${b} (${v.length})`).join(', ');
     console.log(`Variant grounds: ${checked} registers swallow none of the pairs the components layer defines — ${pairs} [gap-1].`);

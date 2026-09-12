@@ -18,6 +18,7 @@ export default async function globalSetup() {
         'react-container',
         'react-dashboard',
         'react-nav-toggle',
+        'react-sidenav',
     ]) {
         await build({
             entryPoints: [new URL(`fixtures/${name}.jsx`, import.meta.url).pathname],

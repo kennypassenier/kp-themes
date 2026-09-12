@@ -83,7 +83,16 @@ test('light settles toward the paper instead of rising off it [gap-4]', async ({
     // tightening. The reverse of shade-light on purpose, so those two do
     // not share a gesture.
     const button = await open(page, 'light');
-    const blur = (shadow) => Number.parseFloat(shadow.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/)?.[3] ?? 'NaN');
+    // The LAST layer, which is where this theme puts its elevation. Reading
+    // the first one was right until Phase 7 gave the button an empty leading
+    // layer so the focus ring could transition into place — after which the
+    // first layer was a nought-blur placeholder in both states, and `0 < 0`
+    // is false. The gesture never changed; the reading had to become exact.
+    const blur = (shadow) => {
+        const layers = shadow.split(/,(?![^(]*\))/);
+        const last = layers[layers.length - 1] ?? '';
+        return Number.parseFloat(last.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/)?.[3] ?? 'NaN');
+    };
     const rest = await button.evaluate((el) => getComputedStyle(el).boxShadow);
     await button.hover();
     await style(button, 'translate', 'it settles toward the paper').toBe('0px 2px');

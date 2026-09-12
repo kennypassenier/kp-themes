@@ -12,6 +12,18 @@ export declare const HOOKS: Readonly<{
     /** Set on the container while the file is open. */
     openState: "data-kp-open";
     navSide: "data-kp-nav-side";
+    /**
+     * A number that counts up to what it already says [feat-count-1].
+     *
+     * The element's authored text is the truth and the module never
+     * invents one: it reads the number out of that text, counts to it,
+     * and puts the text back exactly as written. A page that never
+     * attaches this module, or a reader who asked for less movement,
+     * sees the final number and nothing else — which is the frozen bar.
+     */
+    count: "data-kp-count";
+    /** `armed` | `running` | `done`, readable at any moment [KT16]. */
+    countState: "data-kp-count-state";
 }>;
 /** The surfaces a section can stand on [TH116]. */
 export declare const SURFACES: readonly string[];
@@ -92,6 +104,15 @@ export declare const KNOBS: Readonly<{
      */
     arrivalDismiss: "--kp-arrival-dismiss";
 }>;
+/**
+ * How long a counting number takes, in milliseconds [feat-count-1].
+ * A theme sets `--kp-count: 1200`; the default is 900. `0` — or the
+ * reduced-motion setting, which always wins — puts the number there at
+ * once without ever having counted.
+ */
+export declare const COUNT_KNOB = "--kp-count";
+/** Where a counting number starts. Default 0; a theme or a page may set another. */
+export declare const COUNT_FROM_KNOB = "--kp-count-from";
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export declare const BOOT_PROGRESS = "--kp-boot-progress";
 /** How long one full pass of a marquee takes [M1, 2026-09-08]. */

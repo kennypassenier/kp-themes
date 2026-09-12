@@ -96,6 +96,7 @@
                         <ul class="sc-nav__list">
                             <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
@@ -151,6 +152,28 @@
                 </section>
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The React channel</figcaption>
+                        <p class="kp-text-muted">Added 2026-09-12 (`sidenav-react`). The component renders the markup and the knobs; js/sidenav.js — attached by js/auto.js — does the behaviour, exactly as it does for the framework-free channel. Every data attribute the module reads is a prop, and one left out keeps the module’s own default rather than restating it. The way out of the opened state is the handle: `sidenavOf(ref.current)`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="#a" aria-current="page"><span class="kp-sidenav__label">One</span></a></li>
+        </ul>
+    </div>
+</nav>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Sections&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-backdrop</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;Sections&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#a&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;One&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
+                    </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Beside the page</figcaption>
                         <p class="kp-text-muted">The default mode is the one that is simply there: a column in the flow, no JavaScript needed to see it. The current page carries aria-current, which is what a screen reader announces and what every theme hangs its own mark on.</p>
@@ -229,11 +252,43 @@
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
-                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Sidenav, SidenavToggle } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/sidenav.jsx</code>, <code>components/sidenav.jsx</code>; the package re-exports every component from its root.</p>
                 </section>
                 <section class="kp-section" data-sc-section="props" id="props">
                     <h2 class="kp-fw-semibold">Props</h2>
-                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                    <h3 class="kp-fw-semibold"><code>Sidenav</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Sidenav props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>items</code></td><td><code>SidenavItem[]</code></td><td>optional</td><td>The list. Omit and pass children to build it by hand.</td></tr>
+                            <tr><td><code>title</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The heading above the list. Omit for no header.</td></tr>
+                            <tr><td><code>mode</code></td><td><code>'over' | 'side' | 'push'</code></td><td>optional</td><td>How it sits beside the content. Default: the module's 'side'.</td></tr>
+                            <tr><td><code>position</code></td><td><code>'fixed' | 'absolute'</code></td><td>optional</td><td>Default: the module's own.</td></tr>
+                            <tr><td><code>side</code></td><td><code>'start' | 'end'</code></td><td>optional</td><td>Which edge it lives on. Default: the module's own.</td></tr>
+                            <tr><td><code>defaultOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Open on first render. The module owns it afterwards.</td></tr>
+                            <tr><td><code>slim</code></td><td><code>boolean</code></td><td>optional</td><td>Offer the narrow state at all.</td></tr>
+                            <tr><td><code>slimCollapsed</code></td><td><code>boolean</code></td><td>optional</td><td>Start narrow.</td></tr>
+                            <tr><td><code>expandOnHover</code></td><td><code>boolean</code></td><td>optional</td><td>Widen while the pointer is over it.</td></tr>
+                            <tr><td><code>accordion</code></td><td><code>boolean</code></td><td>optional</td><td>One nested list open at a time.</td></tr>
+                            <tr><td><code>backdrop</code></td><td><code>boolean</code></td><td>optional</td><td>Dim the page behind it in `over`.</td></tr>
+                            <tr><td><code>backdropClass</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>closeOnEsc</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>lockScroll</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>focusTrap</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>contentSelector</code></td><td><code>string</code></td><td>optional</td><td>What `push` moves over.</td></tr>
+                            <tr><td><code>remember</code></td><td><code>string</code></td><td>optional</td><td>A storage key, so the narrow state survives a reload.</td></tr>
+                            <tr><td><code>linkComponent</code></td><td><code>import('react').ElementType</code></td><td>optional</td><td>What renders a link [TH62]. Default 'a'.</td></tr>
+                            <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The accessible name of the navigation landmark.</td></tr>
+                            <tr><td><code>autoAttach</code></td><td><code>boolean</code></td><td>optional</td><td>Hand the rendered markup to js/sidenav.js on mount. Default true.</td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                    <h3 class="kp-fw-semibold"><code>SidenavToggle</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="SidenavToggle props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>controls</code></td><td><code>string</code></td><td>required</td><td>The `id` of the navigation this opens.</td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The consumer's own word for it [KT5].</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>

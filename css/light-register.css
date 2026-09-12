@@ -770,8 +770,24 @@
 
        Measured in firefox 2026-09-12: the blur goes from 14px to 5, the
        control settles 2px, label contrast 11.74, the box unchanged. */
+    /* Phase 7, `focus-ring`: two shadow layers at rest, the first empty.
+       This theme transitions box-shadow, and a one-layer-to-two-layer
+       transition interpolates by inserting a blank layer — so mid-flight
+       the ring reads as a nought-spread layer, which is exactly "half a
+       ring". Same shape in both states means the transition is a spread
+       growing from nought to two rather than a layer arriving from
+       nowhere. The ring itself is restored further down, inside this
+       theme's own focus gesture. */
     [data-theme='light'] .kp-button {
-        box-shadow: 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+        /* Two layers at rest, the first of them empty. light transitions
+           box-shadow, and a one-layer-to-two-layer transition interpolates
+           by inserting a blank layer — so mid-flight the ring reads as a
+           nought-spread layer, which is exactly "half a ring". Same shape
+           in both states, and the transition is a spread growing from 0
+           to 2 rather than a layer appearing from nowhere. */
+        box-shadow:
+            0 0 0 0 transparent,
+            0 6px 14px hsl(from var(--foreground) h s l / 0.12);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -782,9 +798,29 @@
         }
     }
 
-    [data-theme='light'] .kp-button:hover:not(:disabled),
+    [data-theme='light'] .kp-button:hover:not(:disabled) {
+        translate: 0 2px;
+        box-shadow:
+            0 0 0 0 transparent,
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* Phase 7, `focus-ring`. This selector used to sit beside the hover
+       above and set one shadow layer for both — which meant a keyboard
+       user got light's press-down gesture and no ring at all, because a
+       register is a later layer than the components layer that draws the
+       ring. Measured before: a 2px outline and one shadow layer, 2px down
+       and 5px wide — the gesture's own shadow, with no ring behind it.
+       The gesture is kept exactly — the same 2px drop, the same tighter
+       shadow — with the ring restored in front of it, and the outline in
+       the contrast colour so the two channels are not one colour twice.
+       Third face of `fix-12` and `gap-1`: a later layer beating a state
+       the earlier layer defines. */
     [data-theme='light'] .kp-button:focus-visible {
         translate: 0 2px;
-        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
     }
 }

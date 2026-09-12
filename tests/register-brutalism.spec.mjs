@@ -262,11 +262,22 @@ for (const [channel, url] of CHANNELS) {
         test('the tag reaches more than the buttons [scope-12, Kenny 2026-09-11]', async ({ page }) => {
             await open(page, url);
             const word = async (sel) => (await pseudo(page.locator(sel).first(), '::after', ['content']))['content'].replace(/^["']|["']$/g, '');
-            for (const [selector, expected] of [
+            // Phase 7: this skipped a selector the page did not carry,
+            // which meant a page carrying neither ran no assertion at all
+            // and reported pass. The same shape is named as a fault in
+            // this project's own comments (tests/registers.spec.mjs:197).
+            // The point of the test is that the tag reaches BEYOND the
+            // buttons, so the page must carry something beyond them.
+            const wanted = [
                 ['.kp-card', 'CARD'],
                 ['.kp-badge', 'BADGE'],
-            ]) {
-                if ((await page.locator(selector).count()) === 0) continue;
+            ];
+            const present = [];
+            for (const [selector] of wanted) if ((await page.locator(selector).count()) > 0) present.push(selector);
+            expect(present.length, 'the page carries neither a card nor a badge, so this test measures nothing').toBeGreaterThan(0);
+
+            for (const [selector, expected] of wanted) {
+                if (!present.includes(selector)) continue;
                 expect(await word(selector), `${selector} names itself`).toBe(expected);
             }
         });

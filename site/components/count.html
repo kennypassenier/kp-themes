@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Counting number — kp-themes</title>
+        <meta name="description" content="A number that counts up to what it already says. The page writes the final figure; the effects module reads it, counts to it and puts the same string back — so a page that never loads the module, and a reader who asked for less movement, both simply see the number." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html" aria-current="page">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Counting number</h1>
+                    <p class="kp-prose">A number that counts up to what it already says. The page writes the final figure; the effects module reads it, counts to it and puts the same string back — so a page that never loads the module, and a reader who asked for less movement, both simply see the number.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For one or two figures that are the point of a page — a total, a score, a count of things done. Not for a table of numbers, where the movement makes the column unreadable, and not for anything a reader needs at once. The final number is authored in the HTML, so nothing is ever hidden behind the animation.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A number that counts up to itself</figcaption>
+                        <p class="kp-text-muted">The text is the truth. The module reads the number out of it, counts, and restores exactly what was written — separators, currency and all.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<span data-kp-count>1204</span>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-count</span>&gt;1204&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The page decides which separator is which</figcaption>
+                        <p class="kp-text-muted">`1.204` is one thousand two hundred and four in Dutch and one-point-two-oh-four in English, and the string alone does not say. The nearest `lang` decides, so the module never has to guess.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<p lang="nl"><span data-kp-count>1.118.204,75</span></p>
+<p lang="en"><span data-kp-count>1,204.50</span></p>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;nl&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-count</span>&gt;1.118.204,75&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-count</span>&gt;1,204.50&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The two knobs, and the state a test or a consumer can read</figcaption>
+                        <p class="kp-text-muted">How long the count takes and where it starts, both as custom properties. `--kp-count: 0` means no counting at all. The state attribute is written by the module and readable at any moment, so nothing has to have been listening.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<span data-kp-count style="--kp-count: 1200; --kp-count-from: 100" data-kp-count-state="done">640</span>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-count</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-count: 1200; --kp-count-from: 100&quot;</span> <span class="kp-code__keyword">data-kp-count-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;640&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-count</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-count-state</code></td><td>written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <p class="kp-text-muted">This unit fires no events.</p>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <p class="kp-text-muted">This unit reads no knobs of its own.</p>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>The final number is written in the HTML, so a page without the module and a reader with reduced motion both see the real figure — the count is decoration over content that is already there.</li>
+                        <li>At the reduced-motion setting the number never changes at all: it is not counted quickly, it is not counted.</li>
+                        <li>The number is not announced while it counts. A screen reader reads the element once, with the figure the page authored.</li>
+                        <li>The nearest `lang` decides which separator groups and which one is the decimal point, so a number never counts through the wrong notation.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <p class="kp-text-muted">This unit has one appearance and no states.</p>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>
