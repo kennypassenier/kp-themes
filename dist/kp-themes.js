@@ -4408,7 +4408,18 @@ var KNOBS = Object.freeze({
   /** `block` builds the segmented bar retro's POST counts along. */
   arrivalBar: "--kp-arrival-bar",
   /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
-  arrivalCount: "--kp-arrival-count"
+  arrivalCount: "--kp-arrival-count",
+  /**
+   * Whether a click anywhere on the arrival overlay ends it [CP1].
+   *
+   * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+   * before. The overlay is `position: fixed; inset: 0`, so until now it
+   * ate every click for up to 1100ms and only the Skip button ended it —
+   * a click elsewhere did nothing and gave no sign it had been lost.
+   * JobTracker reported that as "the theme picker does not work on
+   * phantom"; the picker was fine.
+   */
+  arrivalDismiss: "--kp-arrival-dismiss"
 });
 var BOOT_PROGRESS = "--kp-boot-progress";
 var MARQUEE_KNOB = "--kp-marquee";
@@ -5470,6 +5481,7 @@ function attachEffects(root = document, options = {}) {
       else later(lineStep, 190);
     };
     skip.addEventListener("click", end);
+    if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== "skip-only") overlay.addEventListener("click", end);
     finishers.push(end);
     cleanups.push(() => overlay.remove());
     if (card) {

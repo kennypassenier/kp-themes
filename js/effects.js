@@ -172,6 +172,17 @@ export const KNOBS = Object.freeze({
     arrivalBar: '--kp-arrival-bar',
     /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
     arrivalCount: '--kp-arrival-count',
+    /**
+     * Whether a click anywhere on the arrival overlay ends it [CP1].
+     *
+     * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+     * before. The overlay is `position: fixed; inset: 0`, so until now it
+     * ate every click for up to 1100ms and only the Skip button ended it —
+     * a click elsewhere did nothing and gave no sign it had been lost.
+     * JobTracker reported that as "the theme picker does not work on
+     * phantom"; the picker was fine.
+     */
+    arrivalDismiss: '--kp-arrival-dismiss',
 });
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export const BOOT_PROGRESS = '--kp-boot-progress';
@@ -1597,6 +1608,13 @@ export function attachEffects(root = document, options = {}) {
             else later(lineStep, 190);
         };
         skip.addEventListener('click', end);
+        // CP1, Kenny 2026-09-09: "remember it for the next version". This is
+        // that version. A click anywhere on the overlay ends it, because an
+        // overlay that covers the whole viewport and answers one 90-pixel
+        // button is indistinguishable from a page that has stopped working.
+        // A theme that wants the old behaviour sets `--kp-arrival-dismiss:
+        // skip-only`.
+        if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== 'skip-only') overlay.addEventListener('click', end);
         finishers.push(end);
         cleanups.push(() => overlay.remove());
         if (card) {

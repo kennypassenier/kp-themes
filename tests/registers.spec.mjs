@@ -148,3 +148,41 @@ for (const theme of THEMES) {
         expect(contrast(parse(painted.fg), parse(painted.bg)), `${painted.fg} on ${painted.bg}`).toBeGreaterThanOrEqual(4.5);
     });
 }
+
+// CP1 — the arrival answers a click anywhere, not only on Skip.
+//
+// Four themes build one: phantom (`card`), retro, terminal and synthwave
+// (`boot`). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
+// ate every click for up to 1100ms and only the Skip button ended it — a
+// click elsewhere did nothing and gave no sign it had been lost.
+// JobTracker reported that as "the theme picker does not work on phantom";
+// the picker was fine. Kenny, 2026-09-09: remember it for the next
+// version. This is that version.
+//
+// Drilled 2026-09-12 in firefox: the overlay's own listener removed from
+// js/effects.js → red on all four, because the click lands and the
+// overlay stays. Restored green.
+for (const theme of ['phantom', 'retro', 'terminal', 'synthwave']) {
+    test(`the arrival lets go of a click anywhere under ${theme} [CP1]`, async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        // The showcase page, which exists for every theme — synthwave has no
+        // concept page, and pointing at one that 404s made this test measure
+        // an empty document and call it a pass for three of four.
+        await page.goto(`/showcase/themes/${theme}.html`);
+        const overlay = page.locator('.kp-boot');
+        await expect(overlay).toHaveCount(1);
+
+        // What is measured is that the CLICK arrives, not that the overlay
+        // eventually goes: every arrival ends on its own inside a second, so
+        // waiting for it to vanish passed with the listener removed. `end()`
+        // marks the overlay on the spot, and that mark is the click landing.
+        const marked = await overlay.evaluate((el) => {
+            const wasOff = el.classList.contains('is-off');
+            // Anywhere that is not Skip: the overlay's own top-left corner.
+            el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            return { wasOff, isOff: el.classList.contains('is-off') };
+        });
+        expect(marked.wasOff, 'the arrival is still running when the click lands').toBe(false);
+        expect(marked.isOff, 'and a click that is not on Skip ends it').toBe(true);
+    });
+}
