@@ -26249,6 +26249,83 @@
     [data-theme='grotesk'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
     }
+
+    /* ── The baseline appears [scope-12, approved 2026-09-12] ──────────
+       Grotesk is Swiss typography, and the instrument of Swiss typography
+       is the line the letters stand on. Touching a control draws that
+       line — not the control's bottom edge, the TYPE's baseline — from
+       the leading edge out past the word, in the theme's one red. The
+       letters end up standing ON it and the descenders cross it, which is
+       what a baseline rule does.
+
+       It says what the theme is about rather than decorating it, and it
+       never covers the letters, so there is no contrast question. The
+       press thickens the rule into the deeper red, downward, so its top
+       edge stays exactly on the baseline.
+
+       This replaces a first proposal that snapped `letter-spacing` from 0
+       to 0.12em: about 13.8px of extra label width on an eight-character
+       word, which grew the control and shifted everything beside it —
+       Kenny's rejection of 2026-09-11. Nothing here changes the box. The
+       rule is an absolutely positioned child, so it is out of flow even
+       inside `.kp-button__label`'s inline-flex.
+
+       `--kp-baseline-drop` is MEASURED, not guessed. Firefox, 2026-09-12,
+       from the label's own font metrics: Inter 700 at 16px in a 19.20px
+       line box reports ascent 16.00 and descent 4.00, so the baseline sits
+       (19.20 − 20.00) / 2 + 4.00 = 3.60px above the box bottom — 0.225em.
+       The first attempt measured it with a zero-width inline probe and got
+       9.60px, because `.kp-button__label` is an inline-flex container and
+       a probe inside it becomes a flex item, where `vertical-align` does
+       nothing at all. */
+    [data-theme='grotesk'] .kp-button__label,
+    [data-theme='grotesk'] .kp-nav__link,
+    [data-theme='grotesk'] .kp-sidenav__link {
+        position: relative;
+    }
+
+    [data-theme='grotesk'] .kp-button__label::after,
+    [data-theme='grotesk'] .kp-nav__link::after,
+    [data-theme='grotesk'] .kp-sidenav__link::after {
+        content: '';
+        position: absolute;
+        inset-inline: calc(-1 * var(--kp-baseline-reach, 0.5rem));
+        /* The rule's TOP edge on the baseline, so the letters stand on it. */
+        inset-block-end: calc(var(--kp-baseline-drop, 0.225em) - var(--kp-baseline-weight, 2px));
+        block-size: var(--kp-baseline-weight, 2px);
+        background: var(--kp-baseline-colour, var(--primary));
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-button__label::after,
+        [data-theme='grotesk'] .kp-nav__link::after,
+        [data-theme='grotesk'] .kp-sidenav__link::after {
+            transition: scale var(--fx-duration, 220ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='grotesk'] .kp-button:hover .kp-button__label::after,
+    [data-theme='grotesk'] .kp-button:focus-visible .kp-button__label::after,
+    [data-theme='grotesk'] .kp-nav__link:hover::after,
+    [data-theme='grotesk'] .kp-nav__link:focus-visible::after,
+    [data-theme='grotesk'] .kp-sidenav__link:hover::after,
+    [data-theme='grotesk'] .kp-sidenav__link:focus-visible::after {
+        scale: 1 1;
+    }
+
+    /* The press is instant: the rule is already out, and only its weight
+       and colour change. Nothing here is in the transition list, so a
+       click shorter than 220ms still shows — the reading that fixed
+       shade-light and shade-dark. */
+    [data-theme='grotesk'] .kp-button:active:not(:disabled) .kp-button__label,
+    [data-theme='grotesk'] .kp-nav__link:active,
+    [data-theme='grotesk'] .kp-sidenav__link:active {
+        --kp-baseline-weight: var(--kp-baseline-weight-pressed, 4px);
+        --kp-baseline-colour: var(--primary-active);
+    }
 }
 
 @layer kp.register {

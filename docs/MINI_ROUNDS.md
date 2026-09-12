@@ -126,9 +126,19 @@ after the fault, so it has only ever been run against registers that were
 already repaired. The honest measurement is whether it fires on a quirk
 written without it in mind.
 
-**When:** at the first commit that adds grotesk's quirk to
-`css/grotesk-register.css`. That quirk paints a ground on `:hover` by
-design, so it is exactly the shape the gate exists for.
+**When, as first named:** at the first commit that adds grotesk's quirk.
+That rested on Kenny choosing proposal C, which painted a ground on
+`:hover`.
+
+**Not measured there, 2026-09-12.** He chose D instead. The baseline rule
+paints a pseudo-element, never the button's own ground, so the gate had
+nothing to catch and stayed silent — correctly. Recording it rather than
+letting the queue item quietly look satisfied.
+
+**When, now:** at the first register written for a NEW theme — titanium,
+or the spectral instrument replacing dark. A new theme's register writes
+hover grounds for every button variant it styles, which is exactly the
+shape, and it will be written by someone not thinking about this gate.
 
 **What counts as passing:** the gate refuses the commit before an
 `:active` rule is written, and accepts it after. If it stays silent, the

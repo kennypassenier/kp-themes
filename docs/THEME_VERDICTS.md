@@ -216,3 +216,42 @@ behind them.
 So A was never seen. The next round shows two new proposals with their
 painted colours measured in the browser first, and says plainly that A's
 rejection rests on a demo that was broken.
+
+## All twenty-five carry a quirk, 2026-09-12
+
+Kenny chose **"De basislijn verschijnt"** for grotesk and **"Zo laten"**
+for the mirror button. Both are in.
+
+**Grotesk: the baseline appears.** One 2px rule in the theme's red, drawn
+from the leading edge out past the word, with its top edge exactly on the
+type's baseline — so the letters stand on it and the descenders cross it.
+It reaches `.kp-button__label`, `.kp-nav__link` and `.kp-sidenav__link`.
+The press thickens it to 4px in `--primary-active`, growing downward so
+the top edge stays put, and instantly, because a click is shorter than a
+transition.
+
+The placement is measured, not guessed. Firefox reports Inter 700 at 16px
+in a 19.20px line box with ascent 16.00 and descent 4.00, so the baseline
+sits 3.60px above the box bottom — `0.225em`. A first measurement said
+9.60px, because a zero-width inline probe inside `.kp-button__label`
+becomes a flex item, where `vertical-align` does nothing.
+
+Measured across all three states: the label is 102.65px wide at rest,
+hovered and pressed. That was the whole complaint the quirk replaces —
+the first proposal grew an eight-character label by about 13.8px.
+
+**The mirror button stays as it was.** The inversion of high-contrast
+excludes `.kp-button--mirror` and `:active`, so the demo's clean drop onto
+its own offset survives. This is Kenny's decision of 2026-09-12, not an
+omission.
+
+| Theme | Quirk | Settled |
+| --- | --- | --- |
+| high-contrast | nothing fades — the touched control inverts outright | 2026-09-12 |
+| nostromo | every control gets its own lamp | 2026-09-12 |
+| shade-light | one light at the top left, the press goes under | 2026-09-12 |
+| shade-dark | the same light on the other material | 2026-09-12 |
+| sepia | the marginal bracket, beside the control | 2026-09-12 |
+| solstice | the low sun rakes across, once | 2026-09-12 |
+| brutalism | the thing names itself, in English, through `--kp-label` | 2026-09-12 |
+| grotesk | the baseline appears under the label | 2026-09-12 |

@@ -26,7 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { pseudoStyle, style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
@@ -245,6 +245,60 @@ for (const [channel, url] of CHANNELS) {
             const link = menu.locator('a').first();
             await link.hover();
             await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--muted'));
+        });
+
+        test('the baseline appears under the label, and the box never moves [scope-12]', async ({ page }) => {
+            // The rule's TOP edge sits on the type's baseline, computed from
+            // the label's own font metrics rather than from a guessed em —
+            // a zero-width inline probe reads 9.60px here instead of 3.60,
+            // because `.kp-button__label` is an inline-flex container and a
+            // probe inside it becomes a flex item where `vertical-align`
+            // does nothing.
+            //
+            // Drilled 2026-09-12 in firefox: `inset-block-end` removed from
+            // the `::after` rule -> red on the rule meeting the baseline;
+            // the hover's `scale: 1 1` removed -> red on the rule arriving.
+            await open(page, url);
+            const btn = page.locator('.kp-button').first();
+            const label = btn.locator('.kp-button__label').first();
+            const read = () =>
+                label.evaluate((el) => {
+                    const s = getComputedStyle(el);
+                    const a = getComputedStyle(el, '::after');
+                    const box = el.getBoundingClientRect();
+                    const c = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
+                    c.font = `${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
+                    const m = c.measureText('Hg');
+                    const baseline = (box.height - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxDescent;
+                    return {
+                        baseline: Number(baseline.toFixed(2)),
+                        ruleTop: Number((Number.parseFloat(a.insetBlockEnd) + Number.parseFloat(a.height)).toFixed(2)),
+                        weight: a.height,
+                        colour: a.backgroundColor,
+                        scale: a.scale,
+                        width: Number(box.width.toFixed(2)),
+                    };
+                });
+
+            const rest = await read();
+            expect(rest.ruleTop, 'the rule stands the letters on it, to the hundredth').toBeCloseTo(rest.baseline, 2);
+            expect(rest.scale, 'nothing is drawn at rest').toBe('0 1');
+
+            await btn.hover();
+            // Polled: the rule scales out over the theme's own duration and
+            // a single read lands mid-draw [fix-1].
+            await pseudoStyle(label, '::after', 'scale', 'the rule draws itself').toBe('1');
+            const hover = await read();
+            expect(hover.width, 'the label is exactly as wide as it was — the fault this quirk replaces').toBe(rest.width);
+            expect(hover.ruleTop, 'and still on the baseline').toBeCloseTo(hover.baseline, 2);
+
+            await page.mouse.down();
+            const pressed = await read();
+            expect(Number.parseFloat(pressed.weight), 'the press thickens it').toBeGreaterThan(Number.parseFloat(rest.weight));
+            expect(pressed.colour, 'into the deeper red').not.toBe(rest.colour);
+            expect(pressed.ruleTop, 'growing downward, so the top edge stays put').toBeCloseTo(pressed.baseline, 2);
+            expect(pressed.width, 'and the box still does not move').toBe(rest.width);
+            await page.mouse.up();
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
