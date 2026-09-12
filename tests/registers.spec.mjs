@@ -224,3 +224,48 @@ test('the synthwave table header is one stripe, not one per cell [gap-3]', async
     const oneCell = await cells.first().evaluate((el) => el.getBoundingClientRect().width);
     expect(painted.width, 'and the row is wider than any one cell, which is the whole point').toBeGreaterThan(oneCell);
 });
+
+// gap-2 — the theme picker sits in the same place in every theme.
+//
+// Kenny, 2026-09-10: it moves along the top bar from theme to theme.
+// Measured 2026-09-12 in firefox at 1280px: 98px of vertical drift, from
+// 359 under titanium to 457 under terminal — nearly three times the
+// height of the control itself. A control reached by muscle memory should
+// not depend on which theme is showing.
+//
+// The cause was never the picker. The showcase's own header wraps in
+// whatever face and scale the document's theme sets, and everything below
+// it moved with it. Its prose is the page speaking rather than a specimen,
+// so it now carries the page's own measure and scale; the colours and the
+// title keep the theme, which is what makes switching visible.
+//
+// Drilled 2026-09-12: `block-size: 4rem` removed from `.sc-header h1` →
+// the spread goes back to 18px and this test is red.
+test('the theme picker rests in the same place in every theme [gap-2]', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    /** @type {Array<[string, number, number]>} */
+    const seen = [];
+    for (const theme of THEMES) {
+        await page.addInitScript((name) => {
+            try {
+                localStorage.setItem('theme', name);
+            } catch {
+                // no storage: the page keeps its served theme, and the
+                // assertion below reports it as an outlier rather than
+                // passing quietly
+            }
+        }, theme);
+        await page.goto('/showcase/index.html');
+        await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
+        const box = await page.locator('.kp-theme-menu').first().boundingBox();
+        expect(box, `${theme}: the picker is on the page`).not.toBeNull();
+        seen.push([theme, Math.round(box.y), Math.round(box.x)]);
+    }
+    const ys = seen.map(([, y]) => y);
+    const xs = seen.map(([, , x]) => x);
+    const drift = Math.max(...ys) - Math.min(...ys);
+    // Five pixels: retro's own type metrics put it four out, and a control
+    // four pixels from where it was is a control you still hit.
+    expect(drift, `vertical drift across ${seen.length} themes: ${JSON.stringify(seen)}`).toBeLessThanOrEqual(5);
+    expect(Math.max(...xs) - Math.min(...xs), 'and sideways').toBeLessThanOrEqual(5);
+});

@@ -106,8 +106,9 @@
             "marker": "kp-field--check"
         },
         {
-            "what": "the destructive wipe with its confirmation",
-            "marker": "data-kp-confirm"
+            "what": "the destructive wipe, opening a real confirmation dialog rather than arming itself",
+            "marker": "data-kp-confirm",
+            "behaviour": "tests/concept-confirm.spec.mjs presses it on every concept page and requires a <dialog class='kp-confirm'> to open with two actions and a sentence of explanation. The marker below is a static check and cannot see behaviour: a page carried this attribute with 3.x's arm-and-wait behind it and passed [gap-5, Kenny 2026-09-11]."
         },
         {
             "what": "the dossier card with the emphasis reveal",
