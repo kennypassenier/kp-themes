@@ -30,10 +30,22 @@
                     </ul>
                 </nav>
             </div>
+
+            <!-- gap-8: the two modules whose cleanup nothing pulled. A
+                 confirmation button and a skip link, both attached below
+                 with their handles kept, so a test can ask them the same
+                 two questions the nav toggle already answers. -->
+            <a class="kp-skip-link" href="#target" data-test="skip">Skip to content</a>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-confirm="Really?" data-test="wipe">
+                <span class="kp-button__label">Wipe</span>
+            </button>
+            <main id="target" tabindex="-1" data-test="target">
+                <p>The place the skip link goes.</p>
+            </main>
         </div>
 
         <script type="module">
-            import { attachNavToggles } from '/js/components.js';
+            import { attachConfirmations, attachNavToggles, attachSkipLinks } from '/js/components.js';
 
             // The page writes down what it heard, so a test reads a record
             // rather than having to have been listening at the right moment.
@@ -44,7 +56,10 @@
                 });
             }
 
-            const detaches = [attachNavToggles(document)];
+            // All three handles kept, in one list, so a test can pull them
+            // together or a drill can empty one loop and see which test
+            // notices [gap-8].
+            const detaches = [attachNavToggles(document), attachConfirmations(document), attachSkipLinks(document)];
             window.kpDetach = () => {
                 for (const detach of detaches) detach();
             };

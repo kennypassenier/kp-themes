@@ -106,7 +106,17 @@ function motionVerdicts() {
             // A calc() duration is bounded by the shortest any theme
             // declares; the motion gate does the same arithmetic and is
             // where the number lives.
-            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS) <= 3);
+            //
+            // WITH THE CYCLE COUNT [step-6]. This call had two arguments
+            // where the gate's has three, so `cycles` fell back to its
+            // default of Infinity and an animation that runs once was rated
+            // as though it looped forever. Measured 2026-09-11: fourteen of
+            // thirty-six animations came out over the threshold on the
+            // two-argument call and none on the three-argument one, which is
+            // why this table read FAIL on DI5 for every theme while the gate
+            // it quotes read pass. The same sum in two places is one sum too
+            // many; the test below now lays the two verdicts side by side.
+            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS, a.cycles) <= 3);
         }
         guard.push(unguardedMotion(source).length === 0);
     }

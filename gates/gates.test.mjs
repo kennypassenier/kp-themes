@@ -1107,3 +1107,34 @@ test("gap-1: a register that repaints a variant's ground without replacing it fa
     const elsewhere = `[data-theme='x'] .kp-alert { background: transparent; }`;
     assert.deepEqual(swallowedVariants(elsewhere, grounds), []);
 });
+
+test('step-6: the compliance table and the motion gate rate the same animation the same way', () => {
+    // The fault this closes: `gates/compliance.mjs` called
+    // `flashesPerSecond(stops, duration)` where `gates/check-motion.mjs`
+    // calls it `(stops, duration, cycles)`. With `cycles` left at its
+    // default of Infinity, an animation that runs once was rated as though
+    // it looped forever — so the table published FAIL on DI5 for every
+    // theme while the gate it quotes published pass. Measured 2026-09-11:
+    // fourteen of thirty-six animations over the threshold on the
+    // two-argument call, none on the three-argument one.
+    //
+    // The measure is not "call it with three arguments" — that is the fix.
+    // The measure is that the same sum computed in two places cannot drift
+    // again, which is what this asserts.
+    const stops = [
+        { stop: 0, opacity: 0 },
+        { stop: 0.5, opacity: 1 },
+        { stop: 1, opacity: 0 },
+    ];
+    // A one-shot: two opposing changes over 300ms, which is a rate only if
+    // you assume it repeats.
+    assert.ok(flashesPerSecond(stops, 300, 1) <= 3, 'once is not a rate');
+    assert.ok(flashesPerSecond(stops, 300) > 3, 'and forever is — the default the table was silently taking');
+    assert.notEqual(flashesPerSecond(stops, 300, 1), flashesPerSecond(stops, 300), 'the two answers really are different');
+
+    // And the shipped table says what the gate says.
+    const table = readFileSync(new URL('../docs/DESIGN_INVARIANTS.md', import.meta.url), 'utf8');
+    const row = table.split('\n').find((line) => line.includes('DI5 flash threshold'));
+    assert.ok(row, 'the compliance table carries a DI5 row');
+    assert.ok(!row.includes('FAIL'), `the table still publishes a DI5 failure the motion gate does not see: ${row.trim()}`);
+});
