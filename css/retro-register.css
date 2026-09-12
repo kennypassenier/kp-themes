@@ -936,7 +936,19 @@
        wash of the ink: KT8's review finding on this very theme (a highlight
        is not a plate, the text keeps its colour), held by the fixture test. */
 
-    [data-theme='retro'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='retro'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 0;
@@ -1703,5 +1715,103 @@
         font-family: var(--theme-font-mono);
         text-transform: none;
         border-block-end: 2px solid var(--border-strong);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Everything in this theme is a window on a desktop, and a column of
+       links is the one part of that desktop that was always a list box:
+       sunken, with the selection painted edge to edge. */
+    [data-theme='retro'] .kp-sidenav {
+        --kp-sidenav-surface: var(--input);
+        --kp-sidenav-list-pad: 0.15rem;
+        --kp-sidenav-gap: 0;
+        border: 2px solid;
+        border-color: var(--border-strong) var(--border) var(--border) var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-sidenav__header {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-block-end: none;
+        padding: 0.2rem 0.4rem;
+    }
+
+    [data-theme='retro'] .kp-sidenav__title {
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        text-transform: none;
+        color: inherit;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link,
+    [data-theme='retro'] .kp-sidenav__category-toggle {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Everything on this desktop is bevelled, and a picture is an image
+       control sunk into its dialog. */
+    [data-theme='retro'] .kp-to-top {
+        border: 2px solid;
+        border-color: var(--background) var(--border-strong) var(--border-strong) var(--background);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media {
+        border: 2px solid;
+        border-color: var(--border-strong) var(--background) var(--background) var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-media-figure > figcaption {
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='retro'] .kp-media-figure {
+        color: var(--foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='retro'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
+       Windows 95 underlined one letter in every label — the accelerator —
+       and showed it only once you held Alt. Touching a control does the
+       same here: the underline appears under the marked letter.
+
+       No movement, no colour, no shadow. That is precisely the feedback
+       those desktops gave, and retro is the theme where the quotation is
+       sharpest.
+
+       It asks something of the consumer, and it is the only one of the six
+       that does: the letter has to be marked, with `data-kp-key` on a span
+       inside the label. A consumer who marks nothing sees nothing, which
+       is the right failure — a theme may offer something that only works
+       when you use it. */
+    [data-theme='retro'] .kp-button [data-kp-key] {
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='retro'] .kp-button:hover:not(:disabled) [data-kp-key],
+    [data-theme='retro'] .kp-button:focus-visible [data-kp-key] {
+        border-block-end-color: currentcolor;
     }
 }

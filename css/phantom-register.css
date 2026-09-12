@@ -819,7 +819,19 @@
         background: hsl(from var(--foreground) h s l / 0.14);
     }
 
-    [data-theme='phantom'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='phantom'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 2px solid var(--border);
         border-left: 5px solid var(--accent);
@@ -1578,5 +1590,82 @@
         color: var(--primary-foreground);
         transform: skewX(-8deg);
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar grows a plate out from behind the current item. Down the
+       side it does the same thing sideways: the plate slides out of the
+       edge the panel is attached to. */
+    [data-theme='phantom'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link,
+    [data-theme='phantom'] .kp-sidenav__category-toggle {
+        position: relative;
+        z-index: 0;
+        padding: 0.5rem 0.95rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        z-index: -1;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav__link::before {
+            transition: inline-size var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link:hover::before {
+        inline-size: 0.35rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary-foreground);
+        background: none;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
+        inline-size: 100%;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The plate that slides out from behind things, held still: the frame
+       is offset from its own shadow rather than bordered. */
+    [data-theme='phantom'] .kp-to-top {
+        box-shadow: 0.25rem 0.25rem 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='phantom'] .kp-media {
+        border: 1px solid var(--border-strong);
+        box-shadow: 0.4rem 0.4rem 0 hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='phantom'] .kp-media-figure > figcaption {
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='phantom'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
     }
 }

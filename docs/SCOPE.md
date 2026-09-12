@@ -137,8 +137,8 @@ not merely "dark with pink". Colour roles, contrast behaviour, typography,
 motion, and explicitly what is not allowed.
 
 Measured in this repository: of the seven themes exactly one has such a
-document (`docs/CYBERPUNK_THEME_RESEARCH.md`, with its "five pillars"
-section). `docs/THEMING.md` explains the system, not the individual
+document (`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`, with its "five pillars"
+section). `docs/legacy/THEMING.md` explains the system, not the individual
 themes. Six themes have none: formal, light, dark, pastel, terminal, forest.
 
 These documents are written channel-neutrally — they describe character,
@@ -698,7 +698,7 @@ fell with S39: the theme is `cyberpunk`, a new major. The showcase
 question (R1) is closed: Kenny asked on 2026-09-07 whether a live site
 existed for the Dribbble design he remembered; none does — the search
 found the shot, the designer's two profiles and a Pinterest repin. The
-three CSS projects recorded in `docs/CYBERPUNK_THEME_RESEARCH.md` show
+three CSS projects recorded in `docs/legacy/CYBERPUNK_THEME_RESEARCH.md` show
 the same button language and were consulted, not used.
 
 **S46 · The concept demo is the gate for every new theme.** Kenny,
@@ -781,3 +781,323 @@ show (the dictionary's copy under KT5, the module's own hooks) is carried
 by the package's mechanism with the demo's appearance; that, too, is
 named in the ratification. The measured diff of the compare page (R6-Q4)
 is the mechanical half; the rest is discipline (KT15).
+
+## Round seven — hypertech, and a vocabulary for motion (opened 2026-09-11)
+
+Kenny opened the round by asking for a new theme called **hypertech** with
+"the full works" — not a colour scheme but high-tech effects over the whole
+page and nearly every element — and, in the same breath, what that would
+mean for the themes that are not so cool yet, naming pastel and asking for
+cute animations there. Seven items were decided on the scope form of
+2026-09-11. His answers are below, each with the measurement it rests on.
+The ID shape is the house scheme; the S-series above is closed.
+
+**scope-1 · Three candidates, judged on sight.** Measured first: all
+twenty-five themes pin their accent to a single hue, and the obvious
+hypertech colour is taken twice — blueprint at `hsl(190, 80%, 62%)` over
+`hsl(215, 65%, 12%)` and shade-dark at `hsl(205, 72%, 60%)` over
+`hsl(192, 100%, 11%)`. Rather than pick a direction in prose, three full
+concept demos are built on one markup and Kenny chooses from the rendered
+page: **A · Spectraal instrument** (an accent with no fixed hue, a
+dichroic ramp driven by the pointer, instrument white on cold black),
+**B · Schone kamer** (hypertech in the light: graphite hairlines, one
+electric blue, feedback that is mechanical rather than luminous) and
+**C · Dieptelaag** (layered glass over a drifting aurora, with depth on
+the pointer — no theme in the package has depth today).
+
+**scope-2 · A vocabulary for motion, not a routine per theme.** Round six
+gave each theme one routine and no shared grammar. Instead, three hooks
+join the six that exist — `react` (what happens under the pointer),
+`commit` (the confirmation of a press or a submission) and `ambient` (the
+page's idle life) — and every theme answers each of them in its own
+language or says quiet with a reason, which `gates/check-hooks.mjs`
+already enforces for the existing six. One shared piece of machinery makes
+it affordable: a single rAF-throttled pointer listener publishing the
+cursor position on the root, so no element carries a listener of its own.
+Every theme changes behaviour, so this is **6.0.0**.
+
+**scope-3 · All twenty-six arrive, and the overlay is repaired first.**
+Measured on `themes/hooks.json`: four of the six hooks are answered with a
+real rule by all twenty-five themes, `accent` is quiet in seven, and
+`arrival` is quiet in **twenty-one** — only phantom, retro, terminal and
+synthwave arrive at all. Before the other twenty-one get one, the overlay
+those four share stops swallowing clicks: today only its Skip button ends
+it, and a click anywhere else disappears without a sign.
+
+**scope-4 · Pastel answers in its own language.** Not a generic set of
+bounces shared between themes, but pastel's own risograph idiom extended:
+the second ink layer it already springs on headings, carried onto buttons,
+cards and fields, landing with a settle rather than a bounce.
+
+**scope-5 · Every gesture defaults to on.** The project rule that every
+feature is configurable with a default settles the knob; the choice was
+which way it points. It points on: a theme named hypertech with its
+effects off is not the theme, and all three consumers set a theme
+explicitly, so nobody gets this by accident. The system preference for
+reduced motion stays absolute above the knob.
+
+**scope-6 · The four waiting rows come along.** Four rows in
+`docs/MINI_ROUNDS.md` carried "at the next version" or "at the next
+round": the arrival overlay, the destructive alert whose text is
+unreadable in many themes, the theme picker that moves along the bar from
+theme to theme, and synthwave's per-cell gradient in a table header. This
+is that round, so all four are in it rather than shifting again.
+
+**scope-7 · The compliance table is corrected.** Found while surveying the
+motion machinery for this proposal: `docs/DESIGN_INVARIANTS.md` publishes
+FAIL for twenty-four of twenty-five themes on the flash threshold while
+the gate that measures it is green, because `gates/compliance.mjs` calls
+the rating function without its third argument and every one-shot
+animation is extrapolated as if it looped. Measured both ways over all
+thirty-six animations: fourteen cross the threshold on the two-argument
+call, all fourteen with exactly one cycle, and the verdict turns from FAIL
+to pass with the argument passed.
+
+**scope-8 · One ambient loop per theme.** (Kenny, 2026-09-11, on the first
+cut of the candidates.) "We moeten zien dat we niet teveel tegelijk tonen
+qua effecten." The pointer-driven haze and a band sweeping down the screen
+were both running in candidate A, and together they read as noise rather
+than as an instrument — his words: the pointer system is very good, the
+line that occasionally crosses the screen is a bit irritating beside it.
+So a theme gets one thing that moves on its own; everything else moves
+because something happened. The band is gone from candidate A. Two things
+he named as right are kept and extended: the colour transitions under the
+pointer, and buttons styled in a way characteristic of the theme.
+
+**scope-9 · A destructive control opens the theme's dialog.** (Kenny,
+2026-09-11.) The demos were still showing the arm-then-act confirmation
+of 3.x, which the package itself has not defaulted to since
+`attachConfirmations` took `mode = 'dialog'` — `js/components.js:274`
+builds a real `.kp-dialog.kp-confirm` with a title, a description and two
+actions, and `data-kp-confirm-mode` chooses per element. His instruction
+was to fix it for the future, so the concept demo now opens that dialog,
+built in the package's own shape, and the theme styles it. The inventory
+entry in `showcase/concept-demo.json` keeps its `data-kp-confirm` marker,
+because the attribute is the same; what changed is what the attribute
+does.
+
+**The candidate chosen, 2026-09-11.** Kenny picked **A · Spectraal
+instrument** — "de beste van de drie, maar het voelt nog altijd niet
+hightech genoeg aan". The second cut answers that without adding a loop:
+machined geometry (a cut corner on every control and panel), a data label
+above a control that lights in the theme's own ramp, brackets around the
+headline that report the box they hold, a character count per field, a
+nav marker that follows the pointer, and a fixed instrument rail reading
+six values the page measures about itself — pointer, viewport, scroll,
+frame time, the live contrast of ink on ground, and the candidate. Every
+one of the six was driven to at least two different values before it
+shipped, per the standing rule that a status field which cannot be shown
+to vary is decoration that lies; a field with no source prints two dashes
+rather than a zero.
+
+**scope-10 · The element list, answered 2026-09-11.** Kenny brought a
+list of twenty-seven things he had seen elsewhere. Measured against the
+code: twelve the package already has, six do not belong here with a
+reason each, and nine were a real question. His answers: the collapsible
+side navigation defaults to an **overlay** with the pushing variant as a
+knob; a navigation that collapses on a narrow screen, a bar that stays at
+the top, smooth scrolling with the offset that makes an anchor clear that
+bar, a back-to-top control and a component for a hero image are all
+**essential**; counters that count up are **wanted**; the three carousels
+are **not done**, with a scrollable row offered instead; an icon set is
+**later**, a round of its own. Two of the essentials are repairs rather
+than features: the package contains zero occurrences of `sticky` and zero
+of `scroll-behavior`, `scroll-padding` or `scroll-margin`, which is why
+the skip link every page carries lands underneath any bar that stays put.
+
+**scope-11 · Four themes leave the set.** Kenny, 2026-09-11: academia,
+ticker and woodblock "mogen verwijderd worden, die hebben we alle drie
+niet meer nodig vanaf nu", and mono "gaat eruit, niet meer nodig".
+Twenty-one remain and hypertech makes twenty-two. This is the first time
+this project removes a theme, and it sits against the rule that a
+released theme never changes: 5.0.0 and 5.1.0 shipped all twenty-five, so
+the removal is a change only a new major may make, which round seven
+already is. What cannot be measured from inside this repository is
+whether any consumer selects one of the four; the bundle every consumer
+vendors will simply stop carrying them, so each consumer is told before
+the tag rather than after.
+
+**scope-12 · Every theme earns a quirk of its own.** Kenny, 2026-09-11,
+naming the thing the whole round is actually about: what makes a theme
+cool is behaviour that belongs to it, like nostromo's dot in front of the
+active page. Measured the same day: the number of silhouettes a register
+cuts does not predict whether he finds it distinctive — terminal and
+brutalism cut none and he calls both very good, solstice cuts ten and he
+calls it sober. So the pass is about behaviour rather than decoration.
+The per-theme verdicts, the measurements behind them and the three
+observations that turned out differently than expected are in
+[THEME_VERDICTS.md](THEME_VERDICTS.md).
+
+**scope-13 · Six worlds refused, and what that says.** Kenny saw three
+concept worlds on 2026-09-11, called the spectral instrument the best but
+not hightech enough, then saw three more — a lithography bay, a detector
+screen, an interferometer — and refused all three. Six proposals, none
+chosen. What he wrote about instead, every single time, was the shape of
+a control: the buttons and the form fields in one, the mirrored round end
+in another, the doubled layer and the ghost button in the third. And the
+fallback he named himself is a **ground colour**, not a world.
+
+Two rounds in which the world did nothing and the shape did everything is
+a pattern, so the round stops leading with worlds. His answer on
+2026-09-11 was **"allemaal"**: three more worlds were built (Cherenkov,
+the light over a reactor pool, lit from below; Titanium, anodised metal
+over carbon weave, where the shifting colour is an oxide film and has a
+cause; and the command table, where a panel stands on a surface rather
+than lying on a page) and beside them a page that strips the world away
+entirely — the same button, field and card cut six different ways on one
+ground, in one typeface, with one accent, so the silhouette is the only
+variable left. Worlds: <https://claude.ai/code/artifact/c1e977c6-bab9-434f-90ea-6f3047ca6e2e>.
+Shapes: <https://claude.ai/code/artifact/e7a287f1-2b9c-4758-a81d-07b997e9f180>.
+
+**scope-14 · The fallback is the spectral instrument.** Kenny, 2026-09-11,
+resolving his own "de allereerste (die met donkerblauwe achtergrond)",
+which pointed at two different candidates: the spectral instrument was
+first in order on `hsl(220 16% 5%)`, the deep layer was third but was the
+only one on a genuinely blue ground at `hsl(234 34% 7%)`. He meant the
+first. It is restored beside the three new worlds so they can be judged
+against it rather than from memory, in the state he last saw it — the
+second cut, with the scanning band gone, the machined corners, the data
+label and the dialog.
+
+**scope-15 · Whether hypertech absorbs dark is deferred.** Kenny,
+2026-09-11: "beslissen we later, na de volgende ronde." Nothing about the
+merge is built or assumed meanwhile; dark keeps its name, loses its stars
+as already decided, and the question of whether a neutral dark theme and
+the loudest theme in the set can be one theme is left standing rather
+than answered by default.
+
+**scope-16 · The spectral instrument becomes dark.** Kenny, 2026-09-11:
+"Spectral instrument wordt de nieuwe dark en vervangt deze vanaf nu
+helemaal." So the fallback is not a fallback any more — it is the answer
+to what dark should be, and it replaces dark outright rather than sitting
+beside it. This also settles `scope-15`'s deferred merge question in the
+one direction nobody had proposed: dark keeps its name and loses
+everything else, including the stars that were already going.
+
+**scope-17 · Titanium becomes a theme of its own.** Kenny, 2026-09-11:
+"Titanium wordt een nieuw thema op zichzelf, het is heel mooi." Anodised
+metal over carbon weave, where the shifting blue-violet on every edge is
+an oxide film rather than a gradient, and where a press takes sixty
+milliseconds and runs linear because metal does not ease. What it is
+called is the one thing still open — the round set out to build a theme
+named hypertech, and this is the theme that round produced.
+
+**scope-18 · Two pieces of the command table survive it.** Kenny,
+2026-09-11: the command table as a whole is "te veel zoals blueprint" and
+does not become a theme — but its measurement frame, the brackets that
+report the box they hold in pixels, is better than the one blueprint has
+and **replaces it**. His words: "dan is de demo hier niet voor niks
+geweest."
+
+**scope-19 · Cherenkov is not a theme; its gesture is placed.** Kenny,
+2026-09-11: good ideas, especially the destructive button with the short
+visible bar that expands under the pointer, and the shape of the buttons.
+His question — whether it could be applied in another theme — is answered
+in the placement item below.
+
+**scope-20 · The chamfer is not crowded, which changes the question.**
+Kenny assumed the milled corner was already used a few times and asked
+whether some of those should be replaced. Measured on 2026-09-11 across
+all twenty-five registers: `clip-path: polygon` appears in six of them,
+and thirty-one of the thirty-nine uses are cyberpunk's own notch system.
+Of the rest, blueprint has one chamfer (on `.kp-button--mirror`, cut from
+`--kp-chamfer`), and every other polygon in the package is a **tear or a
+divider** — forest's contour, pastel's torn edges, phantom's slashes,
+synthwave's bands — not a control silhouette. So the milled corner exists
+twice, once of which is the theme he calls perfect, and there is no crowd
+to thin out. The field of control silhouettes is nearly empty, which is
+why the four shapes he liked all have somewhere to go.
+
+**scope-21 · The new theme is called titanium.** Kenny, 2026-09-11. The
+round opened asking for a theme named hypertech and closes with one named
+after its material, which is how every theme in this package is named:
+retro is the desktop, terminal is the tube, blueprint is the drawing,
+woodblock is the technique, lapis is the stone, nostromo is the ship,
+pastel is the ink. Not one is named after a category — and a category was
+the starting point that cost six refused worlds, because the first
+proposal was defined by the empty place on the colour wheel and it showed.
+"Hypertech" stays what it always was: the question the round opened with,
+not its answer.
+
+**scope-22 · The four placements are shown before they are approved.**
+Kenny, 2026-09-11, answering the placement proposal with "toon het mij" —
+the same answer he has given to every proposal made in prose this round,
+and by now the clearest standing preference in it. Each of the four is
+rendered in the real colours and faces of the theme it would go to, read
+out of that theme's own `tokens.json`, with the control as it is today
+beside the control with the shape on it and nothing else changed between
+them: <https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
+The proposals are the doubled edge to pastel as its second ink plate,
+cherenkov's under-lighting and expanding bar to solstice in amber, the
+moulded step to nostromo, and the rule that becomes an edge to grotesk.
+
+**scope-23 · Two placements approved, two sent back.** Kenny,
+2026-09-11, looking at the rendered pairs. **Nostromo and grotesk are
+approved** as shown. **Solstice is the right theme but the wrong
+drawing**: the expanding line was a straight bar across the bottom of a
+button whose bottom is round, so it hung over the corners, and the filled
+button had no gesture at all. Rebuilt so the line *is* the button's own
+outline — it inherits the radius and opens from a short piece under the
+middle to the whole edge, so it cannot miss the shape — and the filled
+button now carries the same line cut out of its own plate in the ink
+colour, inverted rather than absent. **Pastel is not a match for the
+doubled edge**: a thin outline is a technical gesture and that theme is
+not technical. Three alternatives are shown instead, each leaning on
+something pastel already declares — the sticker, the squish, and the
+second ink clicking into register — at
+<https://claude.ai/code/artifact/d4ffceb8-a346-41ab-998c-a31509d15ae6>.
+
+**scope-24 · The four placements are settled.** Kenny, 2026-09-11.
+Pastel takes **the sticker**: a flat offset shadow instead of a blurred
+one, a lift and a nudge under the pointer, pressed completely flat when
+it is used — because a riso print ends up on paper as a sticker, and
+because the overshoot it springs on is the easing the theme already
+declares. Solstice takes **the expanding line**, second cut, approved on
+both objections. Nostromo takes **the moulded step** and grotesk **the
+rule that becomes an edge**, both approved as first shown. The doubled
+edge, which pastel refused, stays in the demo as a shape without a home;
+a thin outline is a technical gesture and no theme in this round is
+asking for one.
+
+**scope-25 · Four of the five quirks are approved; lapis comes back.**
+Kenny, 2026-09-11. **high-contrast** takes the flip — a control turns
+into its own negative with no transition at all, because a theme whose
+own sentence says "nothing in between" should not fade, and the signal
+yellow exists only in the instant something is pressed. **sepia** takes
+the ink spreading into the paper on a press and the rule that is thickest
+in the middle. **shade-light and shade-dark** take the one mechanism that
+finally makes them a pair: the pointer is the light, and the light half
+throws its shade away from it while the dark half is lifted out of shade
+by it. **lapis is not approved** and gets a second idea before anything
+is built; the gold leaf catching the light was the one proposal of the
+five that did not land.
+
+**scope-26 · The build begins, repairs first.** Kenny, 2026-09-11. The
+order is his: the six essential pieces from the element list, then the
+themes, then the removal of the four. The reason it was worth choosing
+rather than letting happen is that removing four themes is the only part
+of this round that cannot be undone without rolling back a version, and
+it touches every consumer that vendors the bundle. Put last, everything
+before it has already run.
+
+**scope-27 · Lapis takes the fourfold ruling.** Kenny, 2026-09-11,
+against the recommendation, which is what a form is for. A page of tazhib
+is ruled before anything is written on it — concentric lines at unequal
+intervals, gold against blue, and what matters sits inside them — so the
+frame of a control is not one line but four, and touching it adds the
+outermost. The ruling closes around the word instead of a colour
+changing. With it, all ten themes that needed a quirk have one.
+
+**scope-28 · A theme may write its own state.** Kenny, 2026-09-12,
+answering the pressed-state collision with "Het thema zet zijn eigen
+indruk". The derived states (`-hover`, `-active`, `-disabled`) stay the
+default for every surface of every theme; a theme that writes one itself
+has the last word, exactly as it already did for `--link`. Recorded in
+`themes/known-asymmetry.json` for the four names two themes now write,
+with the measurement behind each.
+
+The reason is at the ends of the lightness scale rather than in any
+theme: one step off a 93% signal barely moves, so a rule that serves
+twenty-four themes well cannot serve the twenty-fifth at all. S47 already
+says the token contract is a floor and not a ceiling; this says the same
+of the derivation.

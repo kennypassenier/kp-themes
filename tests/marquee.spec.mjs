@@ -23,6 +23,7 @@
 //     painted, red on "a menu with a caption draws it".
 
 import { expect, test } from '@playwright/test';
+import { CONCEPT_COPY } from '../showcase/concept-copy.mjs';
 
 /** @param {import('@playwright/test').Page} page @param {string} body */
 async function open(page, body) {
@@ -192,30 +193,42 @@ test.describe('the band on a page [M1, G14]', () => {
         // "div|kp-marquee". Put back: green.
         await page.setViewportSize({ width: 1280, height: 900 });
         // Both channels in the same theme, or the two bands are measured
-        // in two different faces: the generated page wears ticker in its
-        // markup, and the React fixture takes it the way a consumer does,
-        // from the stored value the head snippet applies.
+        // in two different faces: the generated page wears the theme in
+        // its markup, and the React fixture takes it the way a consumer
+        // does, from the stored value the head snippet applies.
+        //
+        // Phase 7: this named `ticker`, a theme scope-11 removed — so it
+        // navigated to /examples/concept-deco.html, which no longer
+        // exists, and asserted `data-theme` was a theme the build does not
+        // know. It had been red on the branch, unseen.
         await page.addInitScript(() => {
             try {
-                localStorage.setItem('theme', 'ticker');
+                localStorage.setItem('theme', 'deco');
             } catch {
                 /* the assertion on data-theme is the check */
             }
         });
-        await page.goto('/examples/concept-ticker.html');
-        await expect(page.locator('html')).toHaveAttribute('data-theme', 'ticker');
+        await page.goto('/examples/concept-deco.html');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'deco');
         await expect(page.locator('[data-kp-marquee]')).toHaveAttribute('data-kp-marquee-ready', '');
         const free = await structure(page);
-        await page.goto('/tests/fixtures/examples.html?example=concept&copy=ticker');
-        await expect(page.locator('html')).toHaveAttribute('data-theme', 'ticker');
+        await page.goto('/tests/fixtures/examples.html?example=concept&copy=deco');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'deco');
         await expect(page.locator('[data-kp-marquee]')).toHaveAttribute('data-kp-marquee-ready', '');
         const react = await structure(page);
         expect(free).not.toBe(null);
         expect(react).toEqual(free);
         // And it is a band with something in it, not two empty runs that
         // would compare equal by being equally empty.
-        expect(free?.items[0].length).toBe(4);
-        expect(free?.items[0][0]).toBe('KP 412.75 +1.9%');
+        // Phase 7: the second of these named ticker's own words as a
+        // literal, so the assertion travelled with the theme and died
+        // with it. The words are the theme's copy; what this test is
+        // about is that both channels build the same band and that the
+        // band is not empty. The copy is the authority for the words.
+        expect(free?.items[0].length, 'the band carries the four items the demo gives it').toBe(4);
+        expect(free?.items[0][0], 'and the first of them has words in it').toEqual(
+            CONCEPT_COPY.deco.marqueeItems?.[0] ?? expect.stringMatching(/\S/),
+        );
     });
 
     test('the five props are five knobs, and the browser shows all five [M1, KT6]', async ({ page }) => {

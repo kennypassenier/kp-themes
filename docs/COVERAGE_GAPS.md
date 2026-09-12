@@ -138,3 +138,28 @@ violation of the kind TH20 is meant to end.
 3. The pattern behind F1 repeats here: `--ring` is declared, checked by
    nothing, and applied nowhere. A token the package does not itself apply
    is a token the package cannot rely on.
+
+---
+
+## Closed, 2026-09-12 (Phase 8)
+
+Every gap this document named is closed, and the case that prompted it —
+Kenny's displayed URL — is now swept over all twenty-two themes.
+
+| What this document asked for | Where it lives now |
+| ---------------------------- | ------------------ |
+| Group A, text-level primitives | `css/components.css`, `.kp-id` / `.kp-numeric` / `.kp-timestamp` / `.kp-masked` / `.kp-truncate` / `.kp-empty`, answered by all twenty-two registers |
+| Group B, the displayed URL | `.kp-url` with `overflow-wrap: anywhere`, and `tests/data-surfaces.spec.mjs` measures it in every theme |
+| Group C, forms | `components/form.jsx` and `FormField` render select, textarea, checkbox and radio (`TH61`) |
+| Group D, interactive and overlay | `components/overlays.jsx`, `components/flow.jsx`, `components/canvas.jsx` |
+| Group E, page chrome | the layout layer, the side navigation, the footer and the marquee |
+
+The gaps were measurable when this was written and none of them is now.
+What kept them closed is not this list but the register-coverage gate,
+which refuses a register that leaves a component root unanswered, and the
+sweep Phase 7 added — because until then the rules existed and nothing
+measured what they drew.
+
+This document stays as the record of the question and the answer. It is
+not a to-do list any more, and nothing should be added to it: a gap found
+today is a finding, and findings go to `docs/CORRECTIONS.md`.

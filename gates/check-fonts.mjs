@@ -178,6 +178,45 @@ export function declaredFamilies(source) {
     return out;
 }
 
+/**
+ * Every family named by a theme's own `theme-font-*` token, quotes
+ * stripped and the generic fallbacks dropped. The themes are written by
+ * hand and are not generated from `fonts/`, which is what makes them a
+ * witness the font pipeline cannot take down with it [Phase 7].
+ *
+ * @returns {string[]}
+ */
+export function themeFamilies() {
+    const generic = new Set([
+        'ui-monospace',
+        'ui-sans-serif',
+        'ui-serif',
+        'system-ui',
+        'monospace',
+        'sans-serif',
+        'serif',
+        'cursive',
+        'fantasy',
+        'inherit',
+    ]);
+    /** @type {Set<string>} */
+    const found = new Set();
+    for (const dir of readdirSync(new URL('themes/', root), { withFileTypes: true })) {
+        if (!dir.isDirectory()) continue;
+        const file = new URL(`themes/${dir.name}/tokens.json`, root);
+        if (!existsSync(file)) continue;
+        const { entries = [] } = JSON.parse(readFileSync(file, 'utf8'));
+        for (const { token, value } of entries) {
+            if (!String(token).startsWith('theme-font')) continue;
+            for (const part of String(value).split(',')) {
+                const name = part.trim().replace(/^['"]|['"]$/g, '');
+                if (name && !generic.has(name.toLowerCase())) found.add(name);
+            }
+        }
+    }
+    return [...found].sort();
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
     const fontsDir = new URL('fonts/', root);
     const declared = declaredFamilies(readFileSync(new URL('css/fonts.css', root), 'utf8'));
@@ -186,6 +225,21 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             console.error(
                 `css/fonts.css declares ${declared.length} families and fonts/ does not exist — the stylesheet promises files the package does not carry.`,
             );
+            process.exit(1);
+        }
+        // Phase 7: "nothing promised" was written when nothing was, and
+        // it stayed after the seven renamed OFL faces shipped in 5.0.0.
+        // css/fonts.css is generated FROM fonts/, so the two fall to zero
+        // together — delete the directory, regenerate, and both this gate
+        // and check:fonts-css pass on a package with no faces at all. The
+        // themes are the independent witness: they name the families in
+        // their own tokens, and they are not generated from fonts/.
+        const wanted = themeFamilies();
+        if (wanted.length > 0) {
+            console.error(
+                `no fonts/ directory and no declared families, but ${wanted.length} theme font(s) name a family: ${wanted.slice(0, 4).join(', ')}…`,
+            );
+            console.error('the font pipeline has gone missing, not become unnecessary.');
             process.exit(1);
         }
         console.log('Fonts: css/fonts.css declares 0 families and fonts/ does not exist yet (C4); 0 checked, nothing promised.');

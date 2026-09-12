@@ -365,10 +365,47 @@
 
     /* ── Buttons: the springy hover lift and press settle ──────────────── */
 
+    /* ── The sticker [scope-12, Kenny 2026-09-11: "A de sticker"] ──────
+       A risograph print lands on paper like a sticker, so a control here
+       behaves like one: a FLAT shadow beside it rather than a blurred one
+       underneath, a small lift and a nudge askew under the pointer, and
+       pressed completely flat. It is the one of the three proposals that
+       shows something at rest, which is why he took it.
+
+       The drop is a hard offset with no blur — that is the whole point,
+       and a soft shadow here would be the thing it is not. */
     [data-theme='pastel'] .kp-button {
         border-radius: 0.85rem;
         border: 1px solid transparent;
         font-weight: 600;
+        --kp-pastel-peel: 0 3px 0 color-mix(in srgb, var(--primary) 45%, black);
+        box-shadow: var(--kp-pastel-peel);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-button:hover:not(:disabled) {
+            translate: 0 -2px;
+            rotate: -1.2deg;
+            box-shadow:
+                0 5px 0 color-mix(in srgb, var(--primary) 45%, black),
+                0 8px 14px hsl(from var(--foreground) h s l / 0.14);
+        }
+    }
+
+    [data-theme='pastel'] .kp-button:active:not(:disabled) {
+        translate: 0 3px;
+        rotate: 0deg;
+        box-shadow: 0 0 0 color-mix(in srgb, var(--primary) 45%, black);
+    }
+
+    /* The ring first, then the sticker [AR30, DI2]: a box has one
+       box-shadow, and a peel written alone on :focus-visible paints over
+       the ring's inner half. Lapis made that mistake an hour ago and
+       eight tests caught it; this one is written the right way round. */
+    [data-theme='pastel'] .kp-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-pastel-peel);
     }
 
     /* The demo's own size, kept off the sm/lg variants it never drew
@@ -387,10 +424,11 @@
                 color var(--fx-duration) ease,
                 border-color var(--fx-duration) ease,
                 translate var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
                 scale var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='pastel'] .kp-button:active:not(:disabled),
         [data-theme='pastel'] .kp-icon-button:active:not(:disabled) {
             scale: 0.98;
         }
@@ -645,7 +683,19 @@
         gap: 0.6rem;
     }
 
-    [data-theme='pastel'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='pastel'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--muted);
         border: 1px solid var(--border);
         border-radius: 0.8rem;
@@ -1020,5 +1070,93 @@
         margin: 0.25rem;
         border-block-end: 0;
         text-transform: none;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.9rem;
+        padding: 0.55rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        rotate: -1.4deg;
+        box-shadow:
+            0 3px 0 color-mix(in srgb, var(--primary) 55%, black),
+            0 6px 12px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 color-mix(in srgb, var(--primary) 55%, black);
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.1rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='pastel'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='pastel'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

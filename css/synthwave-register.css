@@ -847,7 +847,19 @@
         background: hsl(from var(--foreground) h s l / 0.14);
     }
 
-    [data-theme='synthwave'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='synthwave'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--kp-hairline);
         border-left: 4px solid var(--accent);
@@ -1009,6 +1021,19 @@
         border-spacing: 0;
     }
 
+    /* One stripe across the whole header, not one per cell [gap-3, Kenny
+       2026-09-10]. A `border-image` is painted per element by definition,
+       so every `<th>` restarted the ramp and the seam he saw was the
+       mechanism working exactly as written. The stripe now belongs to the
+       row and runs the table's full width.
+
+       `background-image` on the row rather than a border-image: a row is
+       not a box that takes a border in every table layout, but it always
+       has a background, and a 2px band pinned to its bottom edge is the
+       same two pixels the border was. Measured across the register on
+       2026-09-11: `.kp-table th` was the only place this declaration
+       repeats side by side — the nav menu, form summary, card, theme menu,
+       wizard and spec list carry it too and never sit in a row. */
     [data-theme='synthwave'] .kp-table th {
         font-family: var(--kp-osd);
         font-size: 1rem;
@@ -1016,7 +1041,13 @@
         text-transform: uppercase;
         color: var(--kp-pink-text);
         border-bottom: 2px solid transparent;
-        border-image: var(--kp-stripe) 1;
+    }
+
+    [data-theme='synthwave'] .kp-table thead tr {
+        background-image: var(--kp-stripe);
+        background-size: 100% 2px;
+        background-position: 0 100%;
+        background-repeat: no-repeat;
     }
 
     [data-theme='synthwave'] .kp-table td {
@@ -1561,5 +1592,72 @@
         color: var(--primary);
         text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar lights its current item from underneath. A column has no
+       underneath, so the glow moves to the leading edge and becomes the
+       tube running down the side of the active row. */
+    [data-theme='synthwave'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__title {
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link,
+    [data-theme='synthwave'] .kp-sidenav__category-toggle {
+        padding: 0.6rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--kp-core);
+        background: none;
+        box-shadow:
+            inset 0.2rem 0 0 var(--primary),
+            inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Both get the tube: a ring of the primary that glows rather than
+       merely bounding. */
+    [data-theme='synthwave'] .kp-to-top {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-media {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='synthwave'] .kp-media-figure > figcaption {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='synthwave'] .kp-media-figure {
+        color: var(--primary);
+        text-align: start;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='synthwave'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
     }
 }

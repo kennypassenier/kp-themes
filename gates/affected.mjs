@@ -38,7 +38,7 @@
 // It prints one of: `none`, `all`, or a list of spec files.
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import process from 'node:process';
@@ -89,11 +89,35 @@ export function changes(ref) {
 }
 
 /**
+ * The specs that sweep every theme, found by reading them rather than by
+ * keeping a list. A spec that resolves its themes from `themes/order.json`
+ * or `showcase/themes/` is a spec any register edit can break.
+ *
+ * Phase 7 added this. The register branch below used to resolve to one
+ * spec file, which meant every quirk and every hover gesture of round
+ * seven — all register edits — ran twenty tests and reported green while
+ * the every-theme press, alert-contrast, focus-ring and reflow sweeps
+ * never ran at all. Measured 2026-09-12: one spec is 20 tests, one spec
+ * plus the sweeps is 446, the whole suite is 1,297.
+ *
+ * @returns {string[]}
+ */
+export function themeSweeps() {
+    const dir = join(ROOT, 'tests');
+    return readdirSync(dir)
+        .filter((f) => f.endsWith('.spec.mjs'))
+        .filter((f) => /order\.json|showcase\/themes|\bTHEMES\b/.test(readFileSync(join(dir, f), 'utf8')))
+        .map((f) => `tests/${f}`)
+        .sort();
+}
+
+/**
  * What those changes need run.
  *
  * @param {{ file: string, commentOnly: boolean }[]} touched
  * @returns {'none' | 'all' | string[]}
  */
+
 export function affected(touched) {
     const relevant = touched.filter(({ file, commentOnly }) => !commentOnly && !NO_BROWSER.some((rule) => rule.test(file)));
     if (relevant.length === 0) return 'none';
@@ -104,15 +128,26 @@ export function affected(touched) {
         const register = file.match(/^css\/([a-z-]+)-register\.css$/);
         const spec = file.match(/^tests\/([a-z-]+\.spec\.mjs)$/);
         const anatomy = file.match(/^themes\/([a-z-]+)\/anatomy\.md$/);
-        if (register) specs.add(`tests/register-${register[1]}.spec.mjs`);
-        else if (spec) specs.add(`tests/${spec[1]}`);
-        else if (anatomy) specs.add(`tests/register-${anatomy[1]}.spec.mjs`);
-        else return 'all';
+        if (register) {
+            specs.add(`tests/register-${register[1]}.spec.mjs`);
+            // A register is read by every theme sweep, not only by its own
+            // spec — see themeSweeps() above.
+            for (const sweep of themeSweeps()) specs.add(sweep);
+        } else if (spec) specs.add(`tests/${spec[1]}`);
+        else if (anatomy) {
+            specs.add(`tests/register-${anatomy[1]}.spec.mjs`);
+            for (const sweep of themeSweeps()) specs.add(sweep);
+        } else return 'all';
     }
     return [...specs].filter((s) => existsSync(join(ROOT, s)));
 }
 
-const ref = process.argv.find((a) => !a.startsWith('--') && a !== process.argv[0] && a !== process.argv[1]) ?? null;
-const result = affected(changes(ref));
-if (process.argv.includes('--spec-args')) console.log(result === 'all' ? '' : result === 'none' ? '--grep=$^' : result.join(' '));
-else console.log(result === 'all' || result === 'none' ? result : result.join('\n'));
+// Behind the entry-point check [fix-13]. This ran on import, and
+// gates/run-affected.mjs imports it — so every affected run asked git the
+// same question twice and printed the answer it was not going to use.
+if (import.meta.url === `file://${process.argv[1]}`) {
+    const ref = process.argv.find((a) => !a.startsWith('--') && a !== process.argv[0] && a !== process.argv[1]) ?? null;
+    const result = affected(changes(ref));
+    if (process.argv.includes('--spec-args')) console.log(result === 'all' ? '' : result === 'none' ? '--grep=$^' : result.join(' '));
+    else console.log(result === 'all' || result === 'none' ? result : result.join('\n'));
+}

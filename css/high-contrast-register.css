@@ -825,4 +825,96 @@
         font-weight: 700;
         border-block-end: 0;
     }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas, and its constraint is the idea:
+       nothing here may rely on a hue. So the row you are on is bracketed
+       — a solid bar the full height of the row on both sides, which reads
+       at any contrast setting and at any size. */
+    [data-theme='high-contrast'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__title {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-block-end: 2px solid transparent;
+    }
+
+    [data-theme='high-contrast'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--foreground);
+        font-weight: 700;
+        box-shadow:
+            inset 0.3rem 0 0 var(--foreground),
+            inset -0.3rem 0 0 var(--foreground);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Nothing here may rely on a hue, so both are bounded by a thick
+       rule that reads at any setting. */
+    [data-theme='high-contrast'] .kp-to-top {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='high-contrast'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='high-contrast'] .kp-media-figure > figcaption {
+        font-weight: 700;
+        color: var(--foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='high-contrast'] .kp-media-figure {
+        color: var(--foreground);
+    }
+
+    /* ── Nothing fades [scope-12, approved 2026-09-11] ─────────────────
+       The constraint of this theme is the idea. Nothing here may lean on
+       a hue, and a transition is by definition a run of half-contrasts —
+       every frame between two legible states is less legible than either.
+       So a state change is a switch, not a fade, and the touched control
+       inverts outright between the two solid bars its side navigation
+       already uses for the row you are on. */
+    [data-theme='high-contrast'] .kp-button,
+    [data-theme='high-contrast'] .kp-field__input,
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-nav__link {
+        transition: none;
+    }
+
+    /* Not the mirror variant, and not while pressed: the approved demo
+       draws that button dropping onto its own offset with NO shadow, and
+       these bars are a hover decoration. S49 — the demo is exact, and a
+       quirk does not quietly redraw a value it approved. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
 }

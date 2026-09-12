@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Back to top, and a picture with its space already there</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">To the content</a>
+
+        <!-- The picture first, because the thing under test is what happens
+             BEFORE it loads: the frame has to hold its shape from the first
+             paint. The source is a data URI so the test can measure the
+             frame with and without it arriving, rather than racing a
+             network that is not there. -->
+        <figure class="kp-media-figure" data-test="figure">
+            <div class="kp-media" data-test="media">
+                <img data-test="media-img" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
+                <p class="kp-media__overlay" data-test="media-overlay">Over the picture</p>
+            </div>
+            <figcaption data-test="media-caption">Under it</figcaption>
+        </figure>
+
+        <div class="kp-media kp-media--square" data-test="media-square"></div>
+
+        <!-- An empty frame: no image at all, which is the state every page
+             is in for the first moments of its life. -->
+        <div class="kp-media" data-test="media-empty"></div>
+
+        <main id="main" data-test="main">
+            <p>The content the skip link and the back-to-top control both aim at.</p>
+            <div style="block-size: 300vh">A page taller than the window.</div>
+        </main>
+
+        <button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="200" data-test="to-top"></button>
+
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

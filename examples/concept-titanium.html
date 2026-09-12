@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en" data-kp-theme-from-query data-theme="titanium">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — Concept demo</title>
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem("theme");
+                    if (t) document.documentElement.setAttribute("data-theme", t);
+                    document.documentElement.setAttribute("data-kp-effects", '');
+                } catch (e) {}
+            })();
+        </script>
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../css/retro-register.css" />
+        <link rel="stylesheet" href="../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../css/phantom-register.css" />
+        <link rel="stylesheet" href="../css/terminal-register.css" />
+        <link rel="stylesheet" href="../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../css/titanium-register.css" />
+        <link rel="stylesheet" href="../css/pastel-register.css" />
+        <link rel="stylesheet" href="../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../css/forest-register.css" />
+        <link rel="stylesheet" href="../css/deco-register.css" />
+        <link rel="stylesheet" href="../css/light-register.css" />
+        <link rel="stylesheet" href="../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../css/dark-register.css" />
+        <link rel="stylesheet" href="../css/formal-register.css" />
+        <link rel="stylesheet" href="../css/sepia-register.css" />
+        <link rel="stylesheet" href="../css/solstice-register.css" />
+        <link rel="stylesheet" href="../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../css/lapis-register.css" />
+        <link rel="stylesheet" href="../css/shade-dark-register.css" />
+    </head>
+    <body>
+        <div class="kp-row" data-kp-theme-picker data-example="concept-picker" aria-label="Choose a theme">
+            <button type="button" data-kp-theme="formal">
+                <span class="kp-swatch" data-theme="formal"></span>
+                 
+                Formal
+            </button>
+            <button type="button" data-kp-theme="light">
+                <span class="kp-swatch" data-theme="light"></span>
+                 
+                Light
+            </button>
+            <button type="button" data-kp-theme="dark">
+                <span class="kp-swatch" data-theme="dark"></span>
+                 
+                Dark
+            </button>
+            <button type="button" data-kp-theme="cyberpunk">
+                <span class="kp-swatch" data-theme="cyberpunk"></span>
+                 
+                Cyberpunk
+            </button>
+            <button type="button" data-kp-theme="synthwave">
+                <span class="kp-swatch" data-theme="synthwave"></span>
+                 
+                Synthwave
+            </button>
+            <button type="button" data-kp-theme="pastel">
+                <span class="kp-swatch" data-theme="pastel"></span>
+                 
+                Pastel
+            </button>
+            <button type="button" data-kp-theme="terminal">
+                <span class="kp-swatch" data-theme="terminal"></span>
+                 
+                Terminal
+            </button>
+            <button type="button" data-kp-theme="forest">
+                <span class="kp-swatch" data-theme="forest"></span>
+                 
+                Forest
+            </button>
+            <button type="button" data-kp-theme="high-contrast">
+                <span class="kp-swatch" data-theme="high-contrast"></span>
+                 
+                High contrast
+            </button>
+            <button type="button" data-kp-theme="sepia">
+                <span class="kp-swatch" data-theme="sepia"></span>
+                 
+                Sepia
+            </button>
+            <button type="button" data-kp-theme="blueprint">
+                <span class="kp-swatch" data-theme="blueprint"></span>
+                 
+                Blueprint
+            </button>
+            <button type="button" data-kp-theme="solstice">
+                <span class="kp-swatch" data-theme="solstice"></span>
+                 
+                Solstice
+            </button>
+            <button type="button" data-kp-theme="brutalism">
+                <span class="kp-swatch" data-theme="brutalism"></span>
+                 
+                Brutalism
+            </button>
+            <button type="button" data-kp-theme="deco">
+                <span class="kp-swatch" data-theme="deco"></span>
+                 
+                Art Deco
+            </button>
+            <button type="button" data-kp-theme="phantom">
+                <span class="kp-swatch" data-theme="phantom"></span>
+                 
+                Phantom
+            </button>
+            <button type="button" data-kp-theme="shade-light">
+                <span class="kp-swatch" data-theme="shade-light"></span>
+                 
+                Shade (light)
+            </button>
+            <button type="button" data-kp-theme="shade-dark">
+                <span class="kp-swatch" data-theme="shade-dark"></span>
+                 
+                Shade (dark)
+            </button>
+            <button type="button" data-kp-theme="retro">
+                <span class="kp-swatch" data-theme="retro"></span>
+                 
+                Retro
+            </button>
+            <button type="button" data-kp-theme="grotesk">
+                <span class="kp-swatch" data-theme="grotesk"></span>
+                 
+                Grotesk
+            </button>
+            <button type="button" data-kp-theme="lapis">
+                <span class="kp-swatch" data-theme="lapis"></span>
+                 
+                Lapis
+            </button>
+            <button type="button" data-kp-theme="nostromo">
+                <span class="kp-swatch" data-theme="nostromo"></span>
+                 
+                Nostromo
+            </button>
+            <button type="button" data-kp-theme="titanium">
+                <span class="kp-swatch" data-theme="titanium"></span>
+                 
+                Titanium
+            </button>
+        </div>
+        <p data-kp-theme-status hidden></p>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <div class="kp-nav-wrap">
+            <nav class="kp-nav" aria-label="Main navigation">
+                <span class="kp-nav__brand">
+                    kp-themes
+                     
+                    <small class="kp-nav__brand-tag">TI·26</small>
+                </span>
+                <ul class="kp-nav__links">
+                    <li>
+                        <a class="kp-nav__link" href="#try" data-kp-text="Themes" aria-haspopup="true">Themes</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-2">Titanium</a>
+                            </li>
+                            <li>
+                                <a href="#try-3">Dark</a>
+                            </li>
+                            <li>
+                                <a href="#try-4">Blueprint</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#try-5" data-kp-text="Components" aria-haspopup="true">Components</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-6">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="#try-7">Forms</a>
+                            </li>
+                            <li>
+                                <a href="#dossier">Dialogs</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#effects" data-kp-text="Effects">Effects</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#docs" data-kp-text="Docs">Docs</a>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link kp-nav__link--lang" href="#try-8" data-kp-text="EN" aria-haspopup="true">EN</a>
+                        <ul class="kp-nav__menu">
+                            <li>
+                                <a href="#try-9">Nederlands</a>
+                            </li>
+                            <li>
+                                <a href="#try-10">English</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link kp-nav__link--cta" href="#try-11" data-kp-text="Try it">Try it</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="kp-marquee" data-kp-marquee data-example="concept-band">
+            <span>Not a place, a material</span>
+            <span>10% ground, 94% ink</span>
+            <span>The colour has a cause</span>
+            <span>Metal does not ease</span>
+        </div>
+        <main id="main" class="kp-page" tabindex="-1">
+            <section class="kp-section kp-stack" data-kp-surface="hero" data-example="concept-hero">
+                <p class="kp-side-note" aria-hidden="true">ANODISED TITANIUM · CARBON TWILL · 60MS, LINEAR</p>
+                <div class="kp-autogrid" data-kp-hero-grid>
+                    <div class="kp-stack">
+                        <ul class="kp-laurels" aria-label="What this register is measured against">
+                            <li>
+                                <b>The colour has a cause</b>
+                                anodising grows an oxide film; the thickness decides the wavelength
+                            </li>
+                            <li>
+                                <b>Sixty milliseconds</b>
+                                linear, because an eased curve is the signature of something with give
+                            </li>
+                            <li>
+                                <b>DI5 safe</b>
+                                every reveal is one change, or bound to your own scroll
+                            </li>
+                        </ul>
+                        <p class="microlabel">theme 26 · titanium · anodised</p>
+                        <h1 class="kp-text-balance" data-kp-reveal="headline">The colour is not paint. It is thickness.</h1>
+                        <p class="kp-prose kp-lede">
+                            Anodising adds no pigment. It grows an oxide film, and the 
+                            <mark>thickness of that film</mark>
+                             decides which wavelength survives — so the blue-violet on every edge here really is interference, and it really does shift with the angle you look from. Underneath it, 
+                            <mark>carbon twill</mark>
+                            : two diagonals crossing, the weave of the cloth the part was laid up on.
+                        </p>
+                        <div class="kp-row">
+                            <button data-kp-reveal="emphasis" type="button" class="kp-button kp-button--primary kp-button--mirror">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__readout" aria-hidden="true">PART 26</span>
+                                <span class="kp-button__label">See the part</span>
+                            </button>
+                            <button type="button" class="kp-button">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Read the spec</span>
+                            </button>
+                            <button type="button" class="kp-button kp-button--ghost">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Ghost</span>
+                            </button>
+                        </div>
+                        <div class="kp-platforms" aria-label="Where it renders">
+                            <span>Chromium</span>
+                            <span>Firefox</span>
+                            <span>Framework-free</span>
+                            <span>React</span>
+                        </div>
+                    </div>
+                    <aside class="kp-spec" id="spec" aria-label="Palette and type">
+                        <dl>
+                            <dt>ground</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="surface-hero-bg"></i>
+                                --surface-hero-bg
+                            </dd>
+                            <dt>face</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="background"></i>
+                                --background
+                            </dd>
+                            <dt>hazard</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="destructive"></i>
+                                --destructive
+                            </dd>
+                            <dt>oxide</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="accent"></i>
+                                --accent
+                            </dd>
+                            <dt>edge</dt>
+                            <dd>
+                                <i class="kp-spec__swatch" data-token="chart-4"></i>
+                                --chart-4
+                            </dd>
+                            <dt>display</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="display">Aa Bb Cc</span>
+                                 --theme-font-display
+                            </dd>
+                            <dt>body</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="body">Aa Bb Cc</span>
+                                 --theme-font-body
+                            </dd>
+                            <dt>read</dt>
+                            <dd>
+                                <span class="kp-spec__font" data-font="mono">Aa Bb Cc</span>
+                                 --kp-mono
+                            </dd>
+                        </dl>
+                    </aside>
+                </div>
+            </section>
+            <div data-kp-divider></div>
+            <section class="kp-section kp-stack" data-kp-surface="app" id="try" data-example="concept-app">
+                <div class="kp-autogrid">
+                    <div class="kp-stack">
+                        <p class="microlabel">access.part_record</p>
+                        <h2 data-kp-reveal="rule">Open a part record</h2>
+                        <form class="kp-form kp-stack" data-kp-form novalidate>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-handle">
+                                    Machinist
+                                    <span class="kp-field__required">required</span>
+                                </label>
+                                <input id="concept-handle" class="kp-field__input" type="text" name="handle" placeholder="second shift" autocomplete="username" aria-describedby="concept-handle-help" required>
+                                <span class="kp-field__help" id="concept-handle-help">However you want the record to name the hand that cut it.</span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-mail">
+                                    Contact
+                                    <span class="kp-field__required">required</span>
+                                </label>
+                                <input id="concept-mail" class="kp-field__input" type="email" name="mail" placeholder="you@example.com" autocomplete="email" aria-describedby="concept-mail-help" required>
+                                <span class="kp-field__help" id="concept-mail-help">Only used if a tolerance needs checking before the part ships.</span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-district">Finish</label>
+                                <select class="kp-field__input" id="concept-district" name="district">
+                                    <option>Anodised, natural</option>
+                                    <option>Anodised, struck</option>
+                                    <option>Bead blast</option>
+                                    <option>As machined</option>
+                                </select>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="concept-why">What it is for</label>
+                                <textarea class="kp-field__input kp-field__input--multiline" id="concept-why" name="why" placeholder="Two lines. That's plenty."></textarea>
+                            </div>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" id="concept-terms" name="terms" type="checkbox">
+                                <label class="kp-field__label" for="concept-terms">I understand this theme ships no theme picker of its own.</label>
+                            </div>
+                            <div class="kp-row">
+                                <button type="submit" class="kp-button kp-button--primary">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Save the record</span>
+                                </button>
+                                <button type="reset" class="kp-button kp-button--destructive kp-button--mirror" data-kp-destructive data-kp-confirm="This clears every field above. It cannot be undone.">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Wipe the form</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="kp-stack" id="dossier">
+                        <p class="microlabel">record.kp-themes-26</p>
+                        <h2 data-kp-reveal="rule">The material, on record</h2>
+                        <div class="kp-card" data-slot="card" data-kp-reveal="emphasis" data-kp-label="Part 26" data-kp-label-open="Open" data-example="concept-dossier">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Titanium</h3>
+                            </div>
+                            <div class="kp-card__body">
+                                <p class="microlabel">PART 26 · STATUS: PREVIEW · FINISH: ANODISED</p>
+                                <p>
+                                    The round opened asking for a theme called hypertech — a category, defined by an empty place on the colour wheel — and it cost six refused worlds before the answer turned out to be 
+                                    <mark>a material</mark>
+                                    , which is how every theme here is named. Retro is the desktop, blueprint is the drawing, lapis is the stone. The corner is 
+                                    <mark>cut, never rounded</mark>
+                                    , with a bright line along the top where the tool left the face, and a press drops the whole control one pixel because metal has 
+                                    <mark>no give</mark>
+                                    .
+                                </p>
+                                <p>Open the log to clear the redactions. They lift right to left, one after another, the way a line settles once you have read enough of it to trust it.</p>
+                                <div class="kp-row">
+                                    <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                                        <span class="kp-button__edge" aria-hidden="true"></span>
+                                        <span class="kp-button__label">Open the record</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div data-kp-divider="alt"></div>
+            <footer class="kp-footer" data-example="concept-footer">
+                <div class="kp-autogrid kp-autogrid--tight">
+                    <div>
+                        <h4>kp-themes</h4>
+                        <p class="kp-prose">The house theme system. Twenty-six themes, twenty-six registers, one promise: a released theme never changes.</p>
+                    </div>
+                    <div>
+                        <h4>Registers</h4>
+                        <ul>
+                            <li>
+                                <a href="#try-12">Titanium</a>
+                            </li>
+                            <li>
+                                <a href="#try-13">Dark</a>
+                            </li>
+                            <li>
+                                <a href="#try-14">Blueprint</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Channels</h4>
+                        <ul>
+                            <li>
+                                <a href="#try-15">Framework-free</a>
+                            </li>
+                            <li>
+                                <a href="#try-16">React</a>
+                            </li>
+                            <li>
+                                <a href="#try-17">Home Assistant</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="microlabel">Build 6.0.0-preview · 96 tokens, anodised over twill · no hearts were harmed</p>
+            </footer>
+        </main>
+        <script type="module" src="../js/auto.js"></script>
+    </body>
+</html>

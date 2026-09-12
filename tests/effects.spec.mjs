@@ -23,6 +23,7 @@
 //     switch leaves a mark covered, red.
 
 import { expect, test } from '@playwright/test';
+import { CONCEPT_COPY } from '../showcase/concept-copy.mjs';
 import { TIMINGS } from '../js/effects.js';
 
 const CHANNELS = [
@@ -159,7 +160,14 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url, { reduced: true });
             await expect(page.locator('[data-kp-reveal="headline"]').first()).toHaveClass(/is-deciphered/);
             const h1 = page.locator('[data-kp-reveal="headline"]').first();
-            expect(await h1.textContent()).toBe(await h1.getAttribute('data-kp-text'));
+            // Phase 7: this compared textContent against `data-kp-text` —
+            // and js/effects.js writes that attribute itself, from the
+            // element's own text, every time headline() runs. Both sides
+            // of the assertion were the module's, so a headline left
+            // scrambled would have moved them together and passed. The
+            // frozen bar for TH119 is "final text equals SOURCE", and the
+            // source is the authored copy, which this file can read.
+            expect((await h1.textContent())?.trim()).toBe(CONCEPT_COPY.cyberpunk.headline);
             for (const mark of await page.locator('[data-kp-surface="hero"] mark').all()) await expect(mark).toHaveClass(/is-cleared/);
             await expect(page.locator('[data-kp-reveal="rule"]').first()).toHaveClass(/is-in/);
         });

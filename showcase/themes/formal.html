@@ -9,30 +9,28 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans&family=Fraunces&display=swap" data-sc-fonts />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
-        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
-        <link rel="stylesheet" href="../../css/retro-register.css" />
-        <link rel="stylesheet" href="../../css/synthwave-register.css" />
-        <link rel="stylesheet" href="../../css/phantom-register.css" />
-        <link rel="stylesheet" href="../../css/terminal-register.css" />
-        <link rel="stylesheet" href="../../css/brutalism-register.css" />
-        <link rel="stylesheet" href="../../css/woodblock-register.css" />
-        <link rel="stylesheet" href="../../css/pastel-register.css" />
-        <link rel="stylesheet" href="../../css/shade-light-register.css" />
-        <link rel="stylesheet" href="../../css/ticker-register.css" />
-        <link rel="stylesheet" href="../../css/forest-register.css" />
-        <link rel="stylesheet" href="../../css/deco-register.css" />
-        <link rel="stylesheet" href="../../css/light-register.css" />
-        <link rel="stylesheet" href="../../css/grotesk-register.css" />
-        <link rel="stylesheet" href="../../css/blueprint-register.css" />
-        <link rel="stylesheet" href="../../css/nostromo-register.css" />
-        <link rel="stylesheet" href="../../css/academia-register.css" />
         <link rel="stylesheet" href="../../css/formal-register.css" />
-        <link rel="stylesheet" href="../../css/sepia-register.css" />
-        <link rel="stylesheet" href="../../css/solstice-register.css" />
-        <link rel="stylesheet" href="../../css/mono-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
         <link rel="stylesheet" href="../../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
         <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
         <style>
 /* The showcase's own furniture — inlined into both generated
                pages so a fixture is one file plus the package's stylesheets.
@@ -68,12 +66,48 @@ body {
     color: var(--foreground);
 }
 
+/* The header's prose is the SHOWCASE speaking, not a specimen [gap-2,
+   Kenny 2026-09-12: "vastzetten op de pagina"].
+   
+   It used to wrap in whatever face and scale the document's theme set, so
+   its height ran from 347px under titanium to 445px under terminal —
+   and everything below it, the theme picker included, moved by those 98
+   pixels. A control you reach for by muscle memory should not depend on
+   which theme is showing.
+   
+   The colours and the heading still wear the theme, which is what makes
+   the picker visibly do something. Only the measure and the scale of the
+   two paragraphs are the page's own, so the geometry stands still. */
 .sc-header > p {
-    max-width: 60ch;
+    max-width: 48rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.55;
 }
 
+/* The title keeps the theme's own display face — that is half of what
+   makes switching visible — but not the theme's own share of the page's
+   height [gap-2]. Measured 2026-09-12 in firefox across the twenty-two:
+   the heading's own box runs from 30.4px under cyberpunk to 48px under
+   dark, and that 17.6px was the whole of the picker's remaining drift
+   once the prose was pinned.
+
+   Three rem held twenty-one of them and left retro 13px out on its own —
+   its display face measures 57.6px where dark's is 48. Four rem holds
+   every one, and the heading is centred in that box so a short face does
+   not sit high in it.
+
+   `box-sizing: border-box` because retro was STILL 13px out at four rem:
+   its base register paints a title bar behind every h1, and that padding
+   sat outside a content-box height. Measured 73.6px against a declared
+   64. The same trap the side navigation's width knob fell into in stage
+   one — a height that names the content is not a height. */
 .sc-header h1 {
     margin: 0;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    block-size: 4rem;
 }
 
 .sc-header__top {

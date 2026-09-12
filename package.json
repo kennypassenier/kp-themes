@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "5.1.0",
+    "version": "6.0.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -104,6 +104,10 @@
             "types": "./js/structure.d.ts",
             "default": "./js/structure.js"
         },
+        "./js/sidenav": {
+            "types": "./js/sidenav.d.ts",
+            "default": "./js/sidenav.js"
+        },
         "./js/datepicker": {
             "types": "./js/datepicker.d.ts",
             "default": "./js/datepicker.js"
@@ -157,15 +161,12 @@
         "./css/terminal-register": "./css/terminal-register.css",
         "./css/terminal-register/min": "./dist/css/terminal-register.min.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
+        "./css/titanium-register": "./css/titanium-register.css",
         "./css/brutalism-register/min": "./dist/css/brutalism-register.min.css",
-        "./css/woodblock-register": "./css/woodblock-register.css",
-        "./css/woodblock-register/min": "./dist/css/woodblock-register.min.css",
         "./css/pastel-register": "./css/pastel-register.css",
         "./css/pastel-register/min": "./dist/css/pastel-register.min.css",
         "./css/shade-light-register": "./css/shade-light-register.css",
         "./css/shade-light-register/min": "./dist/css/shade-light-register.min.css",
-        "./css/ticker-register": "./css/ticker-register.css",
-        "./css/ticker-register/min": "./dist/css/ticker-register.min.css",
         "./css/forest-register": "./css/forest-register.css",
         "./css/forest-register/min": "./dist/css/forest-register.min.css",
         "./css/deco-register": "./css/deco-register.css",
@@ -180,16 +181,12 @@
         "./css/nostromo-register/min": "./dist/css/nostromo-register.min.css",
         "./css/dark-register": "./css/dark-register.css",
         "./css/dark-register/min": "./dist/css/dark-register.min.css",
-        "./css/academia-register": "./css/academia-register.css",
-        "./css/academia-register/min": "./dist/css/academia-register.min.css",
         "./css/formal-register": "./css/formal-register.css",
         "./css/formal-register/min": "./dist/css/formal-register.min.css",
         "./css/sepia-register": "./css/sepia-register.css",
         "./css/sepia-register/min": "./dist/css/sepia-register.min.css",
         "./css/solstice-register": "./css/solstice-register.css",
         "./css/solstice-register/min": "./dist/css/solstice-register.min.css",
-        "./css/mono-register": "./css/mono-register.css",
-        "./css/mono-register/min": "./dist/css/mono-register.min.css",
         "./css/high-contrast-register": "./css/high-contrast-register.css",
         "./css/high-contrast-register/min": "./dist/css/high-contrast-register.min.css",
         "./css/lapis-register": "./css/lapis-register.css",
@@ -237,7 +234,7 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:layers && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:min && npm run check:migration && npm run check:wrappers && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:baseline && npm run check:ids && npm run check:hooks && npm run check:register-coverage && npm run check:fonts && npm run check:fonts-css && npm run check:tear && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "gates": "npm run check:generated && npm run check:tokens && npm run check:layers && npm run check:relative-colour && npm run check:pressed-state && npm run check:variant-ground && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:min && npm run check:migration && npm run check:wrappers && npm run check:docs-private && npm run check:docs-runnable && npm run check:doc-quotes && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:baseline && npm run check:ids && npm run check:hooks && npm run check:register-coverage && npm run check:fonts && npm run check:fonts-css && npm run check:tear && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
         "generate": "node gates/generate-themes.mjs",
         "generate:all": "npm run generate && npm run generate:fonts-css && npm run generate:utilities && npm run generate:tear && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:showcase && npm run generate:site && npm run generate:ha && node gates/generate-compare.mjs && npm run report:di5 && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
         "check:generated": "node gates/generate-themes.mjs --check",
@@ -266,6 +263,9 @@
         "consumer-tar": "node gates/consumer-tar.mjs",
         "check:types": "tsc --noEmit -p jsconfig.json",
         "check:layers": "node gates/check-layers.mjs",
+        "check:relative-colour": "node gates/check-relative-colour.mjs",
+        "check:pressed-state": "node gates/check-pressed-state.mjs",
+        "check:variant-ground": "node gates/check-variant-ground.mjs",
         "check:closure": "node gates/check-closure.mjs",
         "check:strings": "node gates/check-strings.mjs",
         "generate:ha": "node gates/generate-ha-themes.mjs",
@@ -290,7 +290,10 @@
         "test:affected": "node gates/run-affected.mjs",
         "test:firefox": "playwright test --project=firefox",
         "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants",
-        "verify": "node gates/verify.mjs"
+        "verify": "node gates/verify.mjs",
+        "check:docs-private": "node gates/check-docs-private.mjs",
+        "check:docs-runnable": "node gates/check-docs-runnable.mjs",
+        "check:doc-quotes": "node gates/check-doc-quotes.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",

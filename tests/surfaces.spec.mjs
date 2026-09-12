@@ -174,6 +174,23 @@ test.describe('two surfaces in one theme [TH116]', () => {
      * @type {Record<string, { measured: number, what: string, why: string }[]>}
      */
     const REPORTED = {
+        'shade-light': [
+            {
+                measured: 3.61,
+                // A pair, not one line of text: this is one token against
+                // two grounds, and it lands on every caption, every hint
+                // and every timestamp the page carries — eight lines that
+                // are all the same decision. Naming the text of each would
+                // record the fixture's wording rather than the choice.
+                pair: 'rgb(101, 126, 134) on rgb(240, 235, 219)',
+                why: "the muted colour, chosen by Kenny on 2026-09-12 (`shade-light-muted`). It was identical to --foreground until Phase 7, which meant nothing in this theme was muted at all — captions, hints, timestamps and the text of an empty field all read as body text. There is no lighter colour that clears 4.5, because shade-light's BODY text only reaches 5.01 itself; the choice was between a visible difference under the floor and no difference at all. The floors are advice in this package (Kenny, 2026-09-09), and the reading is recorded in docs/TEST_PLAN.md.",
+            },
+            {
+                measured: 4.13,
+                pair: 'rgb(101, 126, 134) on rgb(254, 250, 241)',
+                why: 'the same muted colour on the card rather than on the page — see the entry above for the decision and the reason there is no lighter one.',
+            },
+        ],
         'shade-dark': [
             {
                 measured: 4.21,
@@ -191,33 +208,6 @@ test.describe('two surfaces in one theme [TH116]', () => {
                 measured: 1.54,
                 what: 'hero mark "where it hurts"',
                 why: 'the demo\'s second lede mark, the same wash and the same false reading as "where it counts" above — see that entry for the composited value.',
-            },
-        ],
-        ticker: [
-            {
-                measured: 1.7,
-                what: 'hero mark "where it counts"',
-                why: "the demo's own `.kp-lede mark.kp-revealed { background: rgba(245, 161, 36, 0.18); color: var(--fg); }` — one rule for every mark — measures 1.70 here because this suite reads the mark's own declared colour pair without compositing the 18% wash over the black it actually sits on; the demo's own contrast table (scratchpad/ticker-demo.html) never scores this pair either, only the solid ones. The rendered pixel is not this number: 18% amber over #0A0A0A composites to roughly rgb(52,37,15), which clears the floor by a wide margin against near-white ink. Reported at the ticker lift, 2026-09-08, awaiting Kenny.",
-            },
-            {
-                measured: 1.7,
-                what: 'hero mark "where it hurts"',
-                why: "the same rule, the lede's second mark.",
-            },
-            {
-                measured: 1.7,
-                what: 'app mark "violet night and magenta"',
-                why: "the dossier's marks read the same rule at 22% (`.kp-card[data-kp-reveal='emphasis'] mark.is-cleared`), the demo's own `.kp-card[data-kp-revealed] mark { background: rgba(245, 161, 36, 0.22); }` — same finding, same composited pixel is fine.",
-            },
-            {
-                measured: 1.7,
-                what: 'app mark "signal yellow and blood red"',
-                why: "the dossier's second mark, same rule.",
-            },
-            {
-                measured: 1.7,
-                what: 'app mark "opt-in and reduced-motion safe"',
-                why: "the dossier's third mark, same rule.",
             },
         ],
     };
@@ -256,15 +246,34 @@ test.describe('two surfaces in one theme [TH116]', () => {
             expect(failures.length, 'nothing measured').toBeGreaterThan(10);
             const reported = REPORTED[theme.name];
             if (reported) {
+                /** Does this line belong to this entry? By its text, or by its colour pair. */
+                const claims = (/** @type {{ what?: string, pair?: string }} */ entry, /** @type {string} */ line) =>
+                    entry.what === undefined ? line.includes(`: ${entry.pair} =`) : line.startsWith(entry.what);
+
                 for (const entry of reported) {
-                    const named = bad.filter((line) => line.startsWith(entry.what));
-                    expect(named, `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${entry.why}`).toHaveLength(1);
-                    expect(Number(named[0].match(/= ([\d.]+) /)?.[1]), 'the reported pair still measures what the report says').toBeCloseTo(
-                        entry.measured,
-                        1,
-                    );
+                    const named = bad.filter((line) => claims(entry, line));
+                    // An entry keyed on TEXT names one element; one keyed on
+                    // a colour PAIR names a decision about a token, which
+                    // lands wherever that token is used. Both must still be
+                    // paints the page actually makes, and both must still
+                    // measure what the entry says — an entry cannot outlive
+                    // the thing it excuses.
+                    if (entry.what === undefined) {
+                        expect(
+                            named.length,
+                            `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${entry.why}`,
+                        ).toBeGreaterThan(0);
+                    } else {
+                        expect(named, `${theme.name} no longer paints the pair this list excuses — remove the entry:\n${entry.why}`).toHaveLength(1);
+                    }
+                    for (const line of named) {
+                        expect(Number(line.match(/= ([\d.]+) /)?.[1]), 'the reported pair still measures what the report says').toBeCloseTo(
+                            entry.measured,
+                            1,
+                        );
+                    }
                 }
-                const unexplained = bad.filter((line) => !reported.some((entry) => line.startsWith(entry.what)));
+                const unexplained = bad.filter((line) => !reported.some((entry) => claims(entry, line)));
                 expect(unexplained, `${theme.name} has bad pairs the REPORTED list does not excuse`).toEqual([]);
                 return;
             }

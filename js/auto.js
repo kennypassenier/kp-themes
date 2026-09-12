@@ -14,7 +14,7 @@
 import { applyStoredTheme } from './no-flash.js';
 import { applyTheme } from './theme-core.js';
 import { THEMES } from './theme-registry.js';
-import { attachConfirmations, attachSkipLinks, enforceContracts } from './components.js';
+import { attachConfirmations, attachNavToggles, attachSkipLinks, attachToTop, enforceContracts } from './components.js';
 import { attachDialogs, attachTabs } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes } from './combobox.js';
@@ -30,6 +30,7 @@ import { attachWizards } from './wizard.js';
 import { attachColorPickers } from './colorpicker.js';
 import { attachGrids } from './gridlayout.js';
 import { attachEffects } from './effects.js';
+import { attachSidenavs } from './sidenav.js';
 
 /**
  * Attach every behaviour under `root`. Returns one detach for all of it.
@@ -42,6 +43,9 @@ export function attachAll(root = document) {
         enforceContracts(root),
         attachConfirmations(root),
         attachSkipLinks(root),
+        attachToTop(root),
+        attachNavToggles(root),
+        attachSidenavs(root),
         attachDialogs(root),
         attachTabs(root),
         attachThemePickers(root),

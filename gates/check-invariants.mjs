@@ -263,7 +263,15 @@ export function checkStateVisibility(theme) {
         // ships rather than what an older version of the maths produced.
         // It therefore fails exactly when the colour space cannot deliver
         // a visible pressed state, which is the case worth knowing about.
-        const active = deriveVisible(base, config.derivation.active, { towardsLight: dark, stepL }, { floor, ink });
+        //
+        // And an authored state wins here exactly as it wins there [Kenny,
+        // 2026-09-12]. Until this line the check re-derived unconditionally,
+        // so a theme that wrote its own pressed colour was still measured
+        // on the one it had replaced — which is the whole point of writing
+        // it, and which would have made this gate report a fault that does
+        // not ship.
+        const active =
+            theme.tokens[`${surface}-active`] ?? deriveVisible(base, config.derivation.active, { towardsLight: dark, stepL }, { floor, ink });
         const seen = distance(hsl(base), hsl(active));
         if (seen < floor) {
             problems.push(
@@ -276,7 +284,8 @@ export function checkStateVisibility(theme) {
         const base = theme.tokens[surface];
         const ink = theme.tokens[`${surface}-foreground`];
         if (base === undefined || ink === undefined) continue;
-        const active = deriveVisible(base, config.derivation.active, { towardsLight: heroDark, stepL }, { floor, ink });
+        const active =
+            theme.tokens[`${surface}-active`] ?? deriveVisible(base, config.derivation.active, { towardsLight: heroDark, stepL }, { floor, ink });
         const seen = distance(hsl(base), hsl(active));
         if (seen < floor) {
             problems.push(

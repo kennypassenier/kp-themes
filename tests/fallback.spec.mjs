@@ -186,11 +186,16 @@ test('a name that is a theme, and no name at all, say nothing [TH97]', async ({ 
         // preference to write; it is not a fault.
         document.documentElement.setAttribute('data-theme', '');
         core.currentTheme();
-        core.applyTheme('woodblock');
+        // Phase 7: this named `woodblock`, which WAS a theme when the
+        // test was written and stopped being one at scope-11 — so the
+        // test that says "a name that IS a theme says nothing" began
+        // passing a name that is not, and went red unseen. Any real
+        // theme does; `formal` is the package's own fallback.
+        core.applyTheme('formal');
         core.storedTheme();
         return { warnings: window.__warnings, events: window.__unknown, worn: document.documentElement.getAttribute('data-theme') };
     });
     expect(result.warnings).toHaveLength(0);
     expect(result.events).toHaveLength(0);
-    expect(result.worn).toBe('woodblock');
+    expect(result.worn).toBe('formal');
 });

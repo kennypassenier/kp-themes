@@ -10,7 +10,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
@@ -18,6 +18,8 @@ import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
 import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
+import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
+import { swallowedVariants, variantGrounds } from './check-variant-ground.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
 import { leakedColours, documentRules } from './check-layers.mjs';
 import { CONCEPT_COPY, DEFAULT_COPY_THEME } from '../showcase/concept-copy.mjs';
@@ -363,26 +365,14 @@ test('KT5: API values and CSS are not text', () => {
     assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
 });
 
-test("TH86: mono's seven status plates are a lightness ladder, apart with hue removed", () => {
-    // Mono carries meaning by lightness, so every pair of plates must
-    // differ by at least 1.25:1 in luminance — the gap the eye reads as
-    // "a different grey" at badge size. Hue removed is the theme's own
-    // condition; there is none to remove. Drill: set two plates to the
-    // same value and the pair reads 1.00.
-    /** @type {{entries: Array<{token?: string, value?: string}>}} */
-    const source = JSON.parse(readFileSync(new URL('../themes/mono/tokens.json', import.meta.url), 'utf8'));
-    const plates = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'].map((name) => {
-        const entry = source.entries.find((e) => e.token === `status-${name}`);
-        assert.ok(entry, `status-${name}`);
-        return { name, rgb: hsl(entry.value ?? '') };
-    });
-    for (let i = 0; i < plates.length; i++) {
-        for (let j = i + 1; j < plates.length; j++) {
-            const ratio = contrast(plates[i].rgb, plates[j].rgb);
-            assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
-        }
-    }
-});
+// TH86 left with mono, 2026-09-12 [stage 3]. It measured that theme's seven
+// status plates stayed a lightness ladder — at least 1.25:1 between every
+// pair — because mono carried meaning by lightness alone and had no hue to
+// fall back on. No theme in the set does that any more, so there is nothing
+// left for the bar to hold. The reasoning is kept here rather than only in
+// the history, because "a theme that carries meaning by lightness needs its
+// plates measurably apart" is the sort of thing a future theme will want
+// back, and it is cheaper to find as a comment than as a deleted test.
 
 test('D3 and D4: two removals stay removed', () => {
     // The registry-coverage item of round five's AFK report, answered
@@ -874,7 +864,7 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
     }
-    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 25, 'all twenty-five registers travel in the tarball');
+    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 22, 'all twenty-two registers travel in the tarball');
     // A malformed manifest line must not smuggle an empty path into tar.
     assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
 });
@@ -1005,14 +995,40 @@ test('S46: every element of the approved demo is on the concept page [correction
 test('S49: every theme with an approved demo has its own concept page, whole and in its own words [A1]', () => {
     const inventory = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8'));
     const slots = Object.keys(CONCEPT_COPY[DEFAULT_COPY_THEME]);
+
+    // Phase 7: this swept the opt-in list, so a theme absent from
+    // concept-copy.mjs was not unchecked-and-reported but unchecked-and-
+    // silent. titanium was covered because someone remembered. The list
+    // to sweep is themes/order.json; anything it holds that has no copy
+    // is named here with its reason, the way the other exception lists
+    // in this project are.
+    const NO_CONCEPT_PAGE = ['synthwave']; // the twenty-fifth theme arrived without a demo of its own [S46]
+    const themes = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    const names = Array.isArray(themes) ? themes : Object.keys(themes);
+    assert.deepEqual(
+        names.filter((t) => !(t in CONCEPT_COPY)).sort(),
+        [...NO_CONCEPT_PAGE].sort(),
+        'a theme has no concept copy and no reason recorded for having none',
+    );
+
     for (const [theme, copy] of Object.entries(CONCEPT_COPY)) {
         // The same slots for every theme: that is what makes the pages
         // comparable, and what stops a demo's words from going missing.
         assert.deepEqual(Object.keys(copy).sort(), [...slots].sort(), `${theme}'s copy has different slots`);
         for (const [slot, text] of Object.entries(copy)) {
             assert.equal(typeof text, 'string', `${theme}.${slot} is not a string`);
-            if (slot !== 'arrivalLine' && slot !== 'arrivalReady' && slot !== 'brandTag')
-                assert.notEqual(text.trim(), '', `${theme}.${slot} is empty`);
+            // The slots that may be empty, each for a stated reason. An
+            // empty one is not a blank on the page: the renderer leaves
+            // the element out entirely, so the difference is between a
+            // theme having the thing and not having it.
+            //
+            // `readout` joined them in Phase 7: only the two registers
+            // that style the small reading above a control have words for
+            // it, and the others would otherwise carry text no theme ever
+            // paints. gates.test.mjs holds the two lists together further
+            // down, in both directions.
+            const MAY_BE_EMPTY = ['arrivalLine', 'arrivalReady', 'brandTag', 'readout'];
+            if (!MAY_BE_EMPTY.includes(slot)) assert.notEqual(text.trim(), '', `${theme}.${slot} is empty`);
         }
         if (theme === DEFAULT_COPY_THEME) continue;
         const page = readFileSync(new URL(`../examples/concept-${theme}.html`, import.meta.url), 'utf8');
@@ -1029,4 +1045,346 @@ test('S49: every theme with an approved demo has its own concept page, whole and
     }
     // Drill [KT3]: phantom's entry pointed at cyberpunk's headline →
     // "still carries cyberpunk's headline", red (2026-09-08).
+});
+
+test('fix-12: a register that cancels a pressed state without replacing it fails', () => {
+    const base = pressedInBase(`
+        .kp-button:active:not(:disabled) { background: var(--secondary-active); }
+        .kp-button--primary:active:not(:disabled) { background: var(--primary-active); }
+        .kp-button--ghost:hover:not(:disabled) { background: var(--kp-highlight); }
+    `);
+    assert.deepEqual([...base].sort(), ['.kp-button', '.kp-button--primary']);
+
+    // The fault: a hover ground in kp.register, no pressed rule of its own.
+    // kp.register is a later layer, and a layer beats a state.
+    const cancels = `[data-theme='x'] .kp-button--primary:hover { background: var(--kp-neon); }`;
+    assert.deepEqual(cancelledPressedStates(cancels, base), ['.kp-button--primary']);
+
+    // Replaced: whatever the register presses WITH, it presses.
+    const replaces = cancels + `\n[data-theme='x'] .kp-button--primary:active:not(:disabled) { box-shadow: var(--kp-pressed); }`;
+    assert.deepEqual(cancelledPressedStates(replaces, base), []);
+
+    // Not the gate's business: the base gives ghost no pressed state, so a
+    // hover on it cancels nothing. Kept narrow on purpose — a wider rule
+    // would demand a pressed state the package never promised.
+    const ghost = `[data-theme='x'] .kp-button--ghost:hover { background: var(--card); }`;
+    assert.deepEqual(cancelledPressedStates(ghost, base), []);
+
+    // And a hover that paints no ground outranks nothing.
+    const outline = `[data-theme='x'] .kp-button--primary:hover { border-color: var(--kp-neon); }`;
+    assert.deepEqual(cancelledPressedStates(outline, base), []);
+});
+
+test('fix-13: a gate module that another module imports does not run on import', () => {
+    // The fault: `check-contrast.mjs` measured every theme at module top
+    // level and ended in `process.exit(1)`. `gates.test.mjs` imports
+    // `discoverThemesFromCss` from it, so a single failing contrast pair
+    // killed this whole file — with a message about a theme none of these
+    // tests touch, and no test name attached to it. It also made the
+    // accessibility floor a hard gate by accident, which is the opposite of
+    // Kenny's decision of 2026-09-09 that contrast is advice.
+    //
+    // The property, not the file: a gate that ANOTHER module imports must
+    // put its run behind an entry-point check. Searched across gates/ on
+    // 2026-09-12; check-contrast.mjs was the only instance.
+    const dir = new URL('./', import.meta.url);
+    const offenders = [];
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        if (!entry.isFile() || !entry.name.endsWith('.mjs')) continue;
+        const source = readFileSync(new URL(entry.name, dir), 'utf8');
+        // Phase 7 widened this. The property fix-13 named is "runs on
+        // import"; the implementation asked only about `process.exit`, so
+        // a generator that writes files on import was invisible to it —
+        // and gates/generate-examples.mjs is exactly that, as the Phase 7
+        // audit found by importing it and watching eleven example pages
+        // get rewritten under the suite that was measuring them. Ending
+        // the process and rewriting tracked artefacts are the same fault
+        // wearing different clothes.
+        const sideEffects = ['process.exit', 'writeFileSync', 'mkdirSync', 'rmSync', 'execFileSync', 'spawnSync'];
+        if (!sideEffects.some((marker) => source.includes(marker))) continue;
+        // Is it imported by anything else in the repository?
+        let imported = false;
+        for (const other of readdirSync(dir)) {
+            if (other === entry.name || !other.endsWith('.mjs')) continue;
+            // Both spellings: `from './x.mjs'` and the bare `import
+            // './x.mjs'` that exists precisely to run a module for its
+            // side effects — which is the shape this test is about.
+            const text = readFileSync(new URL(other, dir), 'utf8');
+            if (text.includes(`from './${entry.name}'`) || text.includes(`import './${entry.name}'`)) imported = true;
+        }
+        if (imported && !source.includes('import.meta.url ===')) offenders.push(entry.name);
+    }
+    assert.deepEqual(offenders, [], 'these gates run their check on import, so importing one ends the importing process');
+});
+
+test("gap-1: a register that repaints a variant's ground without replacing it fails", () => {
+    const grounds = variantGrounds(`
+        .kp-alert--destructive { background: var(--destructive); color: var(--destructive-foreground); }
+        .kp-alert--success { background: var(--success); color: var(--success-foreground); }
+        .kp-badge--plain { background: var(--muted); }
+    `);
+    // Only the pairs: a ground with no ink of its own cannot orphan anything.
+    assert.deepEqual([...grounds.keys()], ['.kp-alert']);
+    assert.deepEqual(grounds.get('.kp-alert'), ['--destructive', '--success']);
+
+    // The fault Kenny saw: the base repainted for every flavour.
+    const swallows = `[data-theme='x'] .kp-alert { background: var(--background); }`;
+    assert.deepEqual(swallowedVariants(swallows, grounds), ['.kp-alert']);
+
+    // Scoped off the flavours, which is the repair.
+    const scoped = `[data-theme='x'] .kp-alert:not([class*='kp-alert--']) { background: var(--background); }`;
+    assert.deepEqual(swallowedVariants(scoped, grounds), []);
+
+    // The house indirection: the base reads a knob each flavour sets.
+    const knob = `[data-theme='x'] .kp-alert { background: var(--kp-plate); }
+        [data-theme='x'] .kp-alert--destructive { --kp-plate: var(--destructive); }
+        [data-theme='x'] .kp-alert--success { --kp-plate: var(--success); }`;
+    assert.deepEqual(swallowedVariants(knob, grounds), []);
+
+    // And the absence of a ground is not a ground — four registers say
+    // "I paint my plate on a pseudo-element" exactly this way.
+    const elsewhere = `[data-theme='x'] .kp-alert { background: transparent; }`;
+    assert.deepEqual(swallowedVariants(elsewhere, grounds), []);
+});
+
+test('step-6: the compliance table and the motion gate rate the same animation the same way', () => {
+    // The fault this closes: `gates/compliance.mjs` called
+    // `flashesPerSecond(stops, duration)` where `gates/check-motion.mjs`
+    // calls it `(stops, duration, cycles)`. With `cycles` left at its
+    // default of Infinity, an animation that runs once was rated as though
+    // it looped forever — so the table published FAIL on DI5 for every
+    // theme while the gate it quotes published pass. Measured 2026-09-11:
+    // fourteen of thirty-six animations over the threshold on the
+    // two-argument call, none on the three-argument one.
+    //
+    // The measure is not "call it with three arguments" — that is the fix.
+    // The measure is that the same sum computed in two places cannot drift
+    // again, which is what this asserts.
+    const stops = [
+        { stop: 0, opacity: 0 },
+        { stop: 0.5, opacity: 1 },
+        { stop: 1, opacity: 0 },
+    ];
+    // A one-shot: two opposing changes over 300ms, which is a rate only if
+    // you assume it repeats.
+    assert.ok(flashesPerSecond(stops, 300, 1) <= 3, 'once is not a rate');
+    assert.ok(flashesPerSecond(stops, 300) > 3, 'and forever is — the default the table was silently taking');
+    assert.notEqual(flashesPerSecond(stops, 300, 1), flashesPerSecond(stops, 300), 'the two answers really are different');
+
+    // And the shipped table says what the gate says.
+    const table = readFileSync(new URL('../docs/DESIGN_INVARIANTS.md', import.meta.url), 'utf8');
+    const row = table.split('\n').find((line) => line.includes('DI5 flash threshold'));
+    assert.ok(row, 'the compliance table carries a DI5 row');
+    assert.ok(!row.includes('FAIL'), `the table still publishes a DI5 failure the motion gate does not see: ${row.trim()}`);
+});
+
+// ── the no-flash snippet, which is text that becomes a <script> ─────────
+//
+// Phase 7 found this with no test of any kind. The snippet is built as a
+// string and inlined by the consumer inside <script>…</script>, so the
+// escaping it needs is not `JSON.stringify`'s: that escapes for a JS
+// string literal, and `</script>` is legal inside one while still ending
+// the element it sits in. Both values interpolated into the snippet are
+// the consumer's own, so this is a foot-gun rather than an injection —
+// which is why it is a test and not a correction.
+test('the no-flash snippet cannot break out of the script element it lives in', async () => {
+    const { noFlashSnippet } = await import('../js/no-flash.js');
+    const hostile = 'a</script><img src=x onerror=alert(1)>';
+
+    for (const snippet of [
+        noFlashSnippet({ key: hostile }),
+        noFlashSnippet({ attribute: hostile }),
+        noFlashSnippet({ key: hostile, effects: true }),
+    ]) {
+        assert.ok(!snippet.includes('</script'), 'the snippet closes the script element it is inlined in');
+    }
+
+    // The escape has to be inert, not merely absent: the engine must still
+    // read the very key the consumer asked for. Running the snippet is the
+    // only way to know — reading the text back would re-implement it.
+    let seen = null;
+    const storage = { getItem: (/** @type {string} */ k) => ((seen = k), null), setItem: () => {} };
+    const root = { setAttribute: () => {} };
+    new Function('localStorage', 'document', noFlashSnippet({ key: hostile }))(storage, { documentElement: root });
+    assert.equal(seen, hostile, 'escaping changed the key the snippet reads');
+
+    // And the attribute it writes survives the same trip.
+    let wrote = null;
+    new Function('localStorage', 'document', noFlashSnippet({ attribute: hostile }))(
+        { getItem: () => 'dark', setItem: () => {} },
+        { documentElement: { setAttribute: (/** @type {string} */ a) => (wrote = a) } },
+    );
+    assert.equal(wrote, hostile, 'escaping changed the attribute the snippet writes');
+});
+
+test('a register edit runs the sweeps that read every register, not only its own spec [Phase 7]', async () => {
+    const { affected, themeSweeps } = await import('./affected.mjs');
+
+    // The sweeps are found by reading the specs, so this asserts the
+    // finding works at all — an empty list would make the widening a
+    // no-op and leave the map exactly as narrow as it was.
+    const sweeps = themeSweeps();
+    assert.ok(sweeps.length >= 12, `only ${sweeps.length} specs sweep every theme, which cannot be right`);
+    assert.ok(sweeps.includes('tests/registers.spec.mjs'), 'the every-theme press and alert sweeps are not in the list');
+    assert.ok(sweeps.includes('tests/dashboard.spec.mjs'), 'the every-theme focus-ring sweeps are not in the list');
+
+    const forRegister = affected([{ file: 'css/dark-register.css', commentOnly: false }]);
+    assert.ok(Array.isArray(forRegister), 'a register edit should resolve to specs, not to "all" or "none"');
+    assert.ok(forRegister.includes('tests/register-dark.spec.mjs'), "the register's own spec is missing");
+    for (const sweep of sweeps) assert.ok(forRegister.includes(sweep), `${sweep} reads every register and is not run`);
+
+    // An anatomy edit is the same coupling by another route.
+    const forAnatomy = affected([{ file: 'themes/dark/anatomy.md', commentOnly: false }]);
+    assert.ok(Array.isArray(forAnatomy) && forAnatomy.includes('tests/registers.spec.mjs'), 'an anatomy edit skips the sweeps');
+});
+
+test("every showcase page carries its own theme's register [Phase 7]", () => {
+    // showcase/themes/<name>.html is the page fifteen every-theme sweeps
+    // read. The generator used to carry a hand-written list of link tags,
+    // and dark — added in round seven — was never added to it. So dark's
+    // page was styled by twenty-one other themes' registers and none of
+    // its own, and every sweep over it had been measuring the theme
+    // undressed: the pointer bus it declares, the quirk it presses with,
+    // the whole register. Found in Phase 7 by a pointer test that asked
+    // dark for a knob dark's own register declares.
+    const dir = new URL('../showcase/themes/', import.meta.url);
+    const pages = readdirSync(dir).filter((f) => f.endsWith('.html'));
+    assert.ok(pages.length >= 20, `only ${pages.length} showcase pages, which cannot be right`);
+
+    const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
+    const missing = [];
+    for (const page of pages) {
+        const theme = page.slice(0, -'.html'.length);
+        if (!registers.includes(`${theme}-register.css`)) continue; // a theme with no register of its own
+        const html = readFileSync(new URL(page, dir), 'utf8');
+        if (!html.includes(`/${theme}-register.css"`)) missing.push(theme);
+    }
+    assert.deepEqual(missing, [], 'these showcase pages do not load the register of the theme they exist to show');
+});
+
+test('the frozen list does not describe a theme the package no longer ships [Phase 7, gone-themes]', () => {
+    // Four themes left at scope-11 and four rows kept describing them,
+    // three of those as Essential — so the list the package is measured
+    // against had stopped describing the package. One frozen test bar
+    // named `mono` and became unreachable with it: a bar that can never
+    // be met can never fail either, which is the shape Phase 7 exists to
+    // find. A row may still name a departed theme — the history is worth
+    // keeping — but it says so in the row.
+    const features = readFileSync(new URL('../docs/FEATURES.md', import.meta.url), 'utf8');
+    const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    const live = new Set(Array.isArray(order) ? order : Object.keys(order));
+    assert.ok(live.size >= 20, `only ${live.size} themes, which cannot be right`);
+
+    const unmarked = [];
+    for (const line of features.split('\n')) {
+        if (!line.startsWith('|')) continue;
+        for (const [, name] of line.matchAll(/Theme `([a-z-]+)`/g)) {
+            if (live.has(name)) continue;
+            if (!line.includes('Removed 2026-')) unmarked.push(`${name}: ${line.slice(0, 60)}`);
+        }
+    }
+    assert.deepEqual(unmarked, [], 'these rows describe a theme the package does not ship, with no note saying so');
+
+    // And no test bar may rest on a theme that is gone — that is the half
+    // that silently stops being measurable.
+    const bars = [];
+    for (const line of features.split('\n')) {
+        const bar = /Test bar:(.*)$/.exec(line);
+        if (!bar) continue;
+        // An amendment explains why a bar moved and names the theme it
+        // moved off, which is the record working as intended — the bar
+        // itself is what has to be measurable, so read only up to it.
+        const stated = bar[1].split(/\*\*Amended /)[0];
+        for (const [, name] of stated.matchAll(/`([a-z-]+)`/g)) {
+            if (!live.has(name) && /^(academia|mono|ticker|woodblock)$/.test(name)) bars.push(`${name} in: ${bar[1].slice(0, 60)}`);
+        }
+    }
+    assert.deepEqual(bars, [], 'a frozen test bar names a theme the package does not ship, so it can never fail');
+});
+
+test('a register that styles the readout has words to put in it [readout-words, Phase 7]', () => {
+    // Phase 7 found `.kp-button__readout` styled in full by two registers
+    // — fifteen rules each, including a hover reveal — and rendered by no
+    // page in the package, because nothing supplied the text. Inert CSS
+    // for an element that never existed. Kenny chose the words on
+    // 2026-09-12; this holds the two halves together, in both directions.
+    const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
+    const styles = registers
+        .filter((f) => readFileSync(new URL(f, new URL('../css/', import.meta.url)), 'utf8').includes('.kp-button__readout'))
+        .map((f) => f.slice(0, -'-register.css'.length))
+        .sort();
+
+    const speaks = Object.entries(CONCEPT_COPY)
+        .filter(([, copy]) => (copy.readout ?? '') !== '')
+        .map(([theme]) => theme)
+        .sort();
+
+    assert.ok(styles.length > 0, 'no register styles the readout, which cannot be right after Phase 7');
+    assert.deepEqual(speaks, styles, 'a register styles the readout with no words to put in it, or gives words no register paints');
+});
+
+test('the README states the gate count the hook actually runs [Phase 8]', () => {
+    // Phase 8's honesty pass found the README saying "Thirty gates" and
+    // "some 2500 tests" while the hook ran thirty-four. A number a person
+    // has to keep true will drift, so this reads both ends: the hook is
+    // the source, the README is the claim, and they have to agree.
+    const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
+    const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+
+    const ran = hook.split('\n').filter((line) => line.startsWith('echo "→')).length;
+    assert.ok(ran >= 25, `only ${ran} gate headings in the hook, which cannot be right`);
+
+    /** @type {Record<string, number>} */
+    const WORDS = {
+        twenty: 20,
+        'twenty-five': 25,
+        thirty: 30,
+        'thirty-one': 31,
+        'thirty-two': 32,
+        'thirty-three': 33,
+        'thirty-four': 34,
+        'thirty-five': 35,
+        'thirty-six': 36,
+        forty: 40,
+    };
+    const stated = /\b([A-Za-z-]+) gates run in seconds\b/.exec(readme);
+    assert.ok(stated, 'the README no longer says how many gates run — put the sentence back, or this check has nothing to hold');
+    const claimed = WORDS[stated[1].toLowerCase()];
+    assert.ok(claimed !== undefined, `the README says "${stated[1]} gates" and this check does not know that number — add it to WORDS`);
+    assert.equal(claimed, ran, `the README claims ${claimed} gates and .claude/hooks/gates.sh runs ${ran}`);
+});
+
+test('the architecture reference names every module the package ships [Phase 8]', () => {
+    // It describes the system AS BUILT, so a module it does not mention is
+    // a hole in the map rather than a small omission. Phase 8 found it
+    // naming five of twenty-four: everything added since the reference was
+    // written — the side navigation, the strings dictionary, the locale,
+    // the no-flash snippet, twelve widgets — was simply absent.
+    const reference = readFileSync(new URL('../docs/ARCHITECTURE_REFERENCE.md', import.meta.url), 'utf8');
+    const modules = readdirSync(new URL('../js/', import.meta.url)).filter((f) => f.endsWith('.js'));
+    assert.ok(modules.length >= 20, `only ${modules.length} modules found, which cannot be right`);
+
+    const unnamed = modules.filter((f) => !reference.includes(`js/${f}`));
+    assert.deepEqual(unnamed, [], 'the reference does not name these modules, so its map of the system is incomplete');
+});
+
+test("the project's own document index names every document, and nothing that is gone [Phase 8]", () => {
+    // CLAUDE.md carries a table of what each document is for, and it is
+    // the first thing a session reads. Phase 8 found it missing two and
+    // still pointing at two that had moved. An index a person maintains
+    // will drift; this reads both ends.
+    const claude = readFileSync(new URL('../CLAUDE.md', import.meta.url), 'utf8');
+    const dir = new URL('../docs/', import.meta.url);
+    const docs = readdirSync(dir, { withFileTypes: true })
+        .filter((e) => e.isFile() && e.name.endsWith('.md'))
+        .map((e) => `docs/${e.name}`);
+    assert.ok(docs.length >= 15, `only ${docs.length} documents found, which cannot be right`);
+
+    const unlisted = docs.filter((d) => !claude.includes(d));
+    assert.deepEqual(unlisted, [], "these documents are not in CLAUDE.md's table, so a session starting fresh does not know they exist");
+
+    // And the other direction: a row naming a file that is not there.
+    const rows = [...claude.matchAll(/^\| (docs\/[A-Za-z_0-9/-]+\.md)\s*\|/gm)].map((m) => m[1]);
+    const gone = rows.filter((r) => !existsSync(new URL(`../${r}`, import.meta.url)));
+    assert.deepEqual(gone, [], 'these rows name a document this repository does not have');
 });

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Counting numbers fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <style>
+            /* The knob a theme sets. Long enough that a test can catch the
+               count mid-flight without racing it. */
+            #slow {
+                --kp-count: 3000;
+            }
+            #instant {
+                --kp-count: 0;
+            }
+            #from {
+                --kp-count: 3000;
+                --kp-count-from: 100;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <!-- The authored text is the oracle: whatever these say is what
+                 they must end up saying, separators and all. -->
+            <p><span data-kp-count id="plain">1204</span></p>
+            <p lang="nl"><span data-kp-count id="slow">1.118.204,75</span></p>
+            <p><span data-kp-count id="instant">98%</span></p>
+            <p><span data-kp-count id="from">640</span></p>
+            <p lang="nl"><span data-kp-count id="currency">€ 1.204</span></p>
+            <p><span data-kp-count id="english">1,204.50</span></p>
+            <p><span data-kp-count id="noNumber">no number here</span></p>
+        </main>
+        <script type="module">
+            import { attachEffects } from '/js/effects.js';
+            // Armed BEFORE the module exists [fix-1]: counting is a thing
+            // that passes, not one that settles, so a test that looks
+            // afterwards sees only where it stopped. Every change to a
+            // counting number is recorded here, and the reduced-motion bar
+            // is then "this list is empty" rather than "the number looks
+            // right when I get round to reading it" — which it always
+            // does, because the final number is what the HTML says.
+            window.__changes = [];
+            for (const el of document.querySelectorAll('[data-kp-count]')) {
+                const first = el.textContent;
+                new MutationObserver(() => {
+                    if (el.textContent !== first) window.__changes.push({ id: el.id, text: el.textContent });
+                }).observe(el, { childList: true, characterData: true, subtree: true });
+            }
+            window.__handle = attachEffects();
+            document.documentElement.setAttribute('data-attached', '');
+        </script>
+    </body>
+</html>

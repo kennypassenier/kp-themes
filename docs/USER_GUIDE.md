@@ -44,7 +44,42 @@ An unknown stored value is corrected to the default theme as soon as the
 picker is attached; `initializeTheme(fallback)` names another, and
 `applyTheme(name, { strict: true })` throws instead of substituting.
 
-## The twenty-five themes
+## The subpaths, because they are not the file names
+
+Found in the 2026-09-12 field test, by guessing wrong twice from a clean
+install. The export map names the things a consumer reaches for, and those
+names are shorter than the paths:
+
+| You want | Import or link | Not |
+| -------- | -------------- | --- |
+| the palette | `@kp-soft/themes/css` | `…/css/themes` |
+| the components layer | `@kp-soft/themes/css/components` | |
+| the layout layer | `@kp-soft/themes/css/layout` | |
+| the utilities | `@kp-soft/themes/css/utilities` | |
+| the minified palette | `@kp-soft/themes/css/min` | |
+| the theme list | `@kp-soft/themes/js/registry` | `…/js/theme-registry` |
+| the state | `@kp-soft/themes/js/core` | `…/js/theme-core` |
+| the picker | `@kp-soft/themes/js/picker` | |
+| a register | `@kp-soft/themes/themes/<name>/…`, or copy `css/<name>-register.css` | |
+
+Two things follow from that. A stylesheet is usually **linked by path**
+rather than imported — you copy the files you want into whatever your
+server serves, as the three lines above do — and the subpaths exist for
+bundlers and for tooling that resolves through `package.json`. And the
+React channel needs a bundler that understands JSX: the package ships
+`.jsx` sources on purpose, so plain Node cannot import the root entry.
+Vite, esbuild and webpack all handle it with no configuration beyond
+their own JSX setting.
+
+```sh
+# What the field test ran, from a clean install, to prove both channels:
+npm install @kp-soft/themes
+node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.length))"   # 22
+```
+
+---
+
+## The twenty-two themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -62,17 +97,14 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `solstice` | Solstice | yes |
 | `brutalism` | Brutalism | no |
 | `deco` | Art Deco | yes |
-| `academia` | Dark Academia | yes |
 | `phantom` | Phantom | yes |
-| `ticker` | Ticker | yes |
-| `woodblock` | Woodblock | no |
 | `shade-light` | Shade (light) | no |
 | `shade-dark` | Shade (dark) | yes |
-| `mono` | Mono | no |
 | `retro` | Retro | no |
 | `grotesk` | Grotesk | no |
 | `lapis` | Lapis | yes |
 | `nostromo` | Nostromo | no |
+| `titanium` | Titanium | yes |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `solstice`
 on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
@@ -83,7 +115,7 @@ is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
 (row 4); `brutalism` is the fifth, from "Hard Copy" (row 5); and the
 remaining nineteen were lifted the same way over 2026-09-08, each from
-its own approved demo, so all twenty-five now carry a register.
+its own approved demo, so all twenty-two now carry a register.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -96,7 +128,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those twenty-five names since 1.1.0,
+The `Theme` type is the union of exactly those twenty-two names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -542,6 +574,41 @@ to its contents; `--kp-grid-wrap-min` and `--kp-nav-wrap-min` are the
 same floor `--kp-table-wrap-min` is, defaulting to `auto` and doing
 nothing until you set one.
 
+### A bar that collapses [stage 1.3]
+
+Below that same 40rem the bar can fold its links into a toggle. It is
+opt-in by the button being there, so a nav without one behaves exactly as
+it did:
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <button type="button" data-kp-nav-toggle class="kp-nav__toggle"></button>
+        <ul class="kp-nav__links">…</ul>
+    </nav>
+</div>
+```
+
+`js/auto.js` wires it: the button gets `aria-expanded` and an
+`aria-controls` pointing at the list, the nav gets `data-kp-nav-open`
+while it is open, and every state has a way out — the button, Escape
+while the focus is inside the nav, and a click outside it. Each change
+fires `kp-nav-toggle` on the nav with `{ open }`.
+
+The button draws three bars itself, because this package ships type and
+not icons; put your own glyph inside it and yours is used instead. Its
+accessible name comes from the dictionary (`menu`, `closeMenu`) and says
+which way the press goes rather than what the control is. Knobs:
+`--kp-nav-toggle-size` (2.25rem) and `--kp-nav-menu-indent` (1rem), which
+is how far a dropdown is inset once it is a nested list rather than a
+floating panel.
+
+In React it is the `collapsible` prop, and `toggleIcon` for what goes in
+the button. That channel wires its own button and marks it
+`data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
+`ownedBy: ''` if you want the module over a React nav anyway.
+
 ## The page shell [TH36]
 
 ```html
@@ -584,11 +651,11 @@ its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 
 Every theme has a register — the opt-in stylesheet carrying its
 expression — and a page with a picker can end up on any of the
-twenty-five. There are two ways to handle that, and the package supports
+twenty-two. There are two ways to handle that, and the package supports
 both.
 
 The simple one is `dist/kp-themes.css`: twenty-nine stylesheets in one
-file, including all twenty-five registers, each scoped to
+file, including all twenty-two registers, each scoped to
 `[data-theme='name']`. Load it once and a theme change fetches nothing —
 `applyTheme()` sets the attribute and the right register is already
 there. It costs 693 kB minified.
@@ -702,6 +769,119 @@ reduced motion — a page without the script shows the rest states.
 `README.md` has the table of what each theme answers;
 `themes/hooks.json` is the matrix the gate reads.
 
+## The side navigation [feat-nav-3]
+
+A navigation that stands beside the content instead of above it: three
+modes, a slim rail that keeps the icons and drops the words, categories
+that fold, and either edge.
+
+Both channels render the same markup. The React component writes the
+element and the knobs; `js/sidenav.js` — which `js/auto.js` attaches —
+does the behaviour, so a page that never loads the module still shows a
+working list of links.
+
+```jsx
+import { Sidenav, SidenavToggle } from '@kp-soft/themes';
+
+<SidenavToggle controls="nav">Menu</SidenavToggle>
+<Sidenav
+    id="nav"
+    label="Sections"
+    title="Sections"
+    mode="over"
+    backdrop
+    items={[{ label: 'Overview', href: '/', current: true }]}
+/>;
+```
+
+Every attribute the module reads is a prop, and one you leave out keeps
+the module's own default rather than restating it. The component attaches
+itself on mount, because `js/auto.js` runs at load and React mounts after
+it — pass `autoAttach={false}` if you attach on your own schedule.
+
+The way out of the opened state is the handle:
+
+```js
+import { sidenavOf } from '@kp-soft/themes/js/sidenav';
+
+const handle = sidenavOf(ref.current);
+handle.open();
+handle.setMode('side');
+handle.isOpen();
+handle.destroy();
+```
+
+Without React, write the same markup and let `js/auto.js` find it:
+
+```html
+<button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav">Menu</button>
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="/"><span class="kp-sidenav__label">Overview</span></a></li>
+        </ul>
+    </div>
+</nav>
+```
+
+## Numbers that count up [feat-count-1]
+
+Write the final number. The module reads it, counts to it, and puts the
+same string back — so a page without the module, and a reader who asked
+for less movement, both simply see the number. Nothing is ever hidden
+behind the animation.
+
+```html
+<span data-kp-count>1204</span>
+```
+
+Which character groups the digits and which one is the decimal point is
+not decidable from the string: `1.204` is one thousand two hundred and
+four in Dutch and one-point-two-oh-four in English. The nearest `lang`
+decides, so the module never guesses.
+
+```html
+<p lang="nl"><span data-kp-count>1.118.204,75</span></p>
+<p lang="en"><span data-kp-count>1,204.50</span></p>
+```
+
+Two knobs, both custom properties, so a theme may answer them and you may
+override one without losing the other. `--kp-count` is how long it takes
+in milliseconds and `--kp-count-from` is where it starts. **`--kp-count: 0`
+means no counting at all** — a deliberate zero, not an absent value.
+
+The element carries `data-kp-count-state`: `running` while it counts,
+`done` afterwards. A `kp-count` event fires when it lands, with the value
+in `detail`.
+
+## Two surfaces a theme may paint on a button [scope-16, scope-17]
+
+Every button carries an empty `.kp-button__edge`, out of flow and inert
+unless a register styles it. Two themes run an oxide film along it; the
+rest never notice it is there. You do not have to do anything.
+
+The second is optional and is yours to fill: a small reading above the
+control.
+
+```jsx
+<Button variant="primary" readout="READY">
+    Send
+</Button>
+```
+
+It is decoration over a control that already has a name, so it carries
+`aria-hidden` and is never announced — put meaning in the label, not here.
+A theme that does not style it shows nothing, and a page that passes no
+`readout` renders no element at all.
+
+## The pointer, for a theme that wants it [scope-16]
+
+A theme that declares `--kp-pointer: track` has `--kp-px` and `--kp-py`
+written to the root as the pointer moves, both 0 to 1. That is all: the
+theme decides what to do with them, and a theme that does not ask pays
+nothing. The bus writes once per animation frame, does not run under
+reduced motion, and removes what it wrote when the module is detached.
+
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package
@@ -714,7 +894,7 @@ the flash threshold, so they are literals rather than knobs:
 | --- | --- |
 | `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in sepia, 240 ms in solstice |
 | `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-five answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
+| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-two answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
@@ -728,11 +908,10 @@ of the field a person is typing into in terminal (3.1.1), a
 badge that settles in pastel, a drifting contour layer in forest, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
-brutalism, a double gold rule in deco, a slower gold rule in academia, a
+brutalism, a double gold rule in deco, a
 badge that slides in in phantom (and since 5.0.0 its cut-paper register:
 the plate under a `<mark>`, the rail under a heading, the torn-paper
-divider, the calling card on arrival), a hanko seal after a heading in
-woodblock,
+divider, the calling card on arrival),
 the bevel register in retro (and since 5.0.0 the whole desktop: the
 dither a headline clears out of, the selection bar under a `<mark>`, the
 groove under a heading and as divider, the POST on arrival), and since

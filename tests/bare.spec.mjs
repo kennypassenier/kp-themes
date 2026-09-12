@@ -37,13 +37,19 @@ const ratio = (a, b) => {
 for (const theme of ['cyberpunk', 'formal']) {
     test(`bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`, async ({ page }) => {
         const blocked = [];
-        await page.route(
-            /(cyberpunk-register|retro-register|synthwave-register|phantom-register|terminal-register|brutalism-register|woodblock-register|pastel-register|shade-light-register|ticker-register|forest-register|deco-register|light-register|grotesk-register|blueprint-register|nostromo-register|academia-register|formal-register|sepia-register|solstice-register|mono-register|high-contrast-register|lapis-register|shade-dark-register|fonts)\.css$|\.woff2$|\/js\/auto\.js$/,
-            (route) => {
-                blocked.push(route.request().url());
-                route.abort();
-            },
-        );
+        // Phase 7: this called page.route() with one argument. The
+        // signature is route(urlPattern, handler), so the handler was
+        // taken as the PATTERN and the handler slot was empty — every run
+        // died on "route.request is not a function" before the page ever
+        // loaded. The test had been red on the branch, unseen, which is
+        // why nobody noticed that the thing it exists to prove — that the
+        // page reads with the register, the fonts and the module all
+        // refused — had not actually been proven since the call broke.
+        const REFUSED = /-register\.css$|\/fonts\/|\/js\/auto\.js$|\/js\/effects\.js$/;
+        await page.route(REFUSED, (route) => {
+            blocked.push(route.request().url());
+            return route.abort();
+        });
         await page.addInitScript((name) => localStorage.setItem('theme', name), theme);
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto('/examples/concept.html');

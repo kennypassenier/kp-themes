@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>What attach returns, and what it announces</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- A harness rather than a page. js/auto.js attaches everything and
+             throws the handle away, which is the right thing for a consumer
+             who wants one script tag and is exactly why the two things this
+             page exists for were reachable by no test: the event nobody
+             listened to, and the detach nobody held.
+
+             So this page does the attaching itself, keeps the handle, and
+             writes down every event it hears. Both behaviours, one harness,
+             because they are the same two questions asked of two modules. -->
+        <div style="inline-size: 360px">
+            <!-- The wrapper is the container the bar's narrow rule reads;
+                 without it the toggle is never painted at all. -->
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation" data-test="nav">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <button type="button" data-kp-nav-toggle data-test="nav-toggle" class="kp-nav__toggle"></button>
+                    <ul class="kp-nav__links" data-test="nav-links">
+                        <li><a class="kp-nav__link" href="#a">One</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- gap-8: the two modules whose cleanup nothing pulled. A
+                 confirmation button and a skip link, both attached below
+                 with their handles kept, so a test can ask them the same
+                 two questions the nav toggle already answers. -->
+            <a class="kp-skip-link" href="#target" data-test="skip">Skip to content</a>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-confirm="Really?" data-test="wipe">
+                <span class="kp-button__label">Wipe</span>
+            </button>
+            <main id="target" tabindex="-1" data-test="target">
+                <p>The place the skip link goes.</p>
+            </main>
+        </div>
+
+        <script type="module">
+            import { attachConfirmations, attachNavToggles, attachSkipLinks } from '/js/components.js';
+
+            // The page writes down what it heard, so a test reads a record
+            // rather than having to have been listening at the right moment.
+            window.kpHeard = [];
+            for (const name of ['kp-nav-toggle']) {
+                document.addEventListener(name, (event) => {
+                    window.kpHeard.push({ name, open: event.detail?.open, on: event.target.dataset.test });
+                });
+            }
+
+            // All three handles kept, in one list, so a test can pull them
+            // together or a drill can empty one loop and see which test
+            // notices [gap-8].
+            const detaches = [attachNavToggles(document), attachConfirmations(document), attachSkipLinks(document)];
+            window.kpDetach = () => {
+                for (const detach of detaches) detach();
+            };
+        </script>
+    </body>
+</html>

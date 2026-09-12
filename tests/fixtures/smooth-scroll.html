@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Smooth scrolling, and the guard it is read inside</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- A page that asks for smooth scrolling, the way a consumer does.
+             The default is `auto`, so a fixture that set nothing would only
+             prove that nothing happened.
+
+             Its own stylesheet sets the knob and a scrollable length, and
+             nothing else: the guard under test has to come out of
+             css/layout.css (rule 7e, KT3). -->
+        <style>
+            :root {
+                --kp-scroll-behavior: smooth;
+            }
+
+            #filler {
+                block-size: 220vh;
+            }
+        </style>
+
+        <div id="filler" data-case="filler"></div>
+    </body>
+</html>

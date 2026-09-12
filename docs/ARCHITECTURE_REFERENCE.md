@@ -11,7 +11,7 @@ themes/<name>/tokens.json   authored: the colours, one file per theme
         ├─ gates/generate-themes.mjs ──→ css/themes.css        (the palette)
         │                            └─→ js/theme-registry.js  (name, label, dark)
         │
-        └─ gates/generate-showcase.mjs ─→ showcase/index.html  (25 blocks)
+        └─ gates/generate-showcase.mjs ─→ showcase/index.html  (22 blocks)
                                       └─→ showcase/themes/*.html (one each, bare)
 
 css/_header.css  ─┐
@@ -20,16 +20,44 @@ css/components.css   separate: only for consumers who take the components
 css/layout.css       separate: nineteen classes for the shape of a page
 css/utilities.css    separate: 118 generated one-property classes
 css/fonts.css        separate: the @font-face block for the shipped faces
-css/<name>-register.css      opt-in, one per theme, 25 of them
+css/<name>-register.css      opt-in, one per theme, 22 of them
+
+css/_density.css     separate: the compact mode, one knob on the root
+css/_print.css       separate: what a page becomes on paper
+css/tailwind-bridge.css  separate: the tokens as Tailwind's own names
 
 js/theme-core.js     the state, in the document
+js/theme-registry.js the generated list: name, label, whether it is dark
+js/no-flash.js       the snippet for <head>, before the stylesheet
+js/strings.js        every user-visible string, English by default [KT5]
+js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one
 js/components.js     the DI4 and DI10 contracts │ attaches nothing. Only
 js/overlays.js       dialogs, tabs, toasts      │ js/auto.js has a side
-js/effects.js        the hooks, the marquee    ─┘ effect, by design
+js/effects.js        the hooks, the marquee,    │ effect, by design
+                     the pointer bus, the count │
+js/sidenav.js        the side navigation        │
+js/forms.js          validation and its wording │
+js/tables.js         sorting, regions           │
+js/datatable.js      search, paging             │
+js/listbox.js        the shared listbox         │
+js/combobox.js       typeahead over it          │
+js/palette.js        the command palette        │
+js/datepicker.js     a calendar                 │
+js/colorpicker.js    a colour field             │
+js/gridlayout.js     a resizable grid           │
+js/structure.js      tree, reorder, split       │
+js/wizard.js         a stepped flow             │
+js/upload.js         a file field               │
+js/patterns.js       copyable, and the rest     │
+js/diagnostics.js    what the page can tell you │
+js/contrast.js       the reading, for a consumer ┘
 
 hooks/use-theme.js   React, sitting on theme-core
+hooks/use-strings.jsx  React, the strings provider
 components/*.jsx     React, rendering the same classes as the CSS above
+                     — nineteen of them, including the side navigation,
+                     which has both channels since 2026-09-12
 fx/*.jsx             cyberpunk effects
 ```
 
@@ -157,7 +185,8 @@ no theme declares. That is why the drill is not optional.
 ## The browser tests
 
 Playwright, Chromium and Firefox, against a small static server
-(`tests/global-setup.mjs`). Some 2500 tests over 70 spec files, run when
+(`tests/global-setup.mjs`). 2,594 tests over 76 spec files — counted by `npx playwright test --list`
+on 2026-09-12, not by hand — run when
 Kenny runs them — `npm run test:affected` for what a change touches,
 `npm run test:browser` for all of it.
 They cover what Node cannot see: whether the browser received a

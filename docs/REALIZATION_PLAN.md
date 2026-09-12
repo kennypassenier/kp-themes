@@ -600,3 +600,261 @@ round-three Phase 10 form and the dev-procedure commit that waits on it.
 | R6-Q5 | C1, reading C0's CI | **A live-found process fault, Claude's own.** C0's commit `b6c5e5e` was pushed to `main` after the push chain reported CI green; CI was not green. The `gates` job passed and the `browser` job failed on one assertion (`tests/overflow.spec.mjs` still expected ten example pages), and the chain read the exit code of `gh run watch` — which had been moved to the background at its timeout and reported 0 — instead of the run's `conclusion` per job. Found at C1 when the whole browser suite was run locally before the push. Fixed in the same commit as C1's test fix, and the chain now reads `gh run view --json conclusion,jobs` for the sha and refuses to move `main` unless every job says success. Standing rule 36 was followed to the letter (wait on the checks of that sha) and still let this through, because it does not say which signal counts; a correction form is Kenny's (rule 29), queued here for the C5 report. **Closed 2026-09-08:** the correction is KT12 in `docs/CORRECTIONS.md`, all nine fields approved; field 7 was measured on `a02d31f` (the chain held `main` on a red browser job) and branch protection on `main` now requires both jobs. |
 | R6-Q6 | C4, the fonts budget | woodblock names two Japanese families; with a regular and a bold face each at the JIS level 1 subset it weighs 2.37 MB against `fontsBudgetBytes` 1.5 MB (AR39). Shipped now: the regular faces only, 1.2 MB, bold synthesised by the browser. Kenny decides: raise the budget for the CJK themes, accept the synthesised bold, or drop one of the two families from the theme.  **Answered by Kenny 2026-09-07 ("Synthetisch vet accepteren"), recorded 2026-09-08** in MIGRATION.md's 5.0.0 section as a known limitation. |
 | R6-Q4 | C0, Kenny's message | The compare page, MR-R6-COMPARE: 4.0.0 on the left, the current build on the right, for the theme in the query. Kenny asked for it during C0; it is recorded in `docs/MINI_ROUNDS.md` and built at C5. Nothing to decide unless the vendoring of the 4.0.0 stylesheets under `showcase/baseline/4.0.0/` is not what he meant. **Reopened 2026-09-08 on Kenny's second reading of the rebuilt page:** all 24 sections were visible (`.kp-stack`'s `display: flex` beats the `hidden` attribute, and the test checked the attribute, not the paint), and a theme whose only difference is typography showed a near-empty frame. His answer to the demo page (R6b) is Akkoord; the compare page is rebuilt on his V1 answer — one page per theme, the whole demo on both sides, the differing sections marked — and the visibility fault gets its own correction form after the rebuild. |
+
+## Round seven — the build order (2026-09-11)
+
+Kenny chose the order on the scope form: repairs first, then the themes,
+then the removals. What follows is that order written out, one stage at a
+time. Every stage runs `npm run gates` at its commit and the specs it
+touches; the whole browser suite stays Kenny's, with the standing
+agreement that Claude asks for it in a form before a release.
+
+**Stage 1 — the six pieces the element list calls essential.** They come
+first because three of them repair something that is broken today rather
+than adding something missing, and because all six touch every theme, so
+anything built after them lands on a floor that is already right.
+
+| # | What | Why it is first |
+| - | ---- | --------------- |
+| 1.1 | the scroll offset, and smooth scrolling behind a knob | The package has zero occurrences of `scroll-behavior`, `scroll-padding` or `scroll-margin`. Every page carries a skip link; the moment anything is sticky, that link lands underneath it and the person using it cannot see that it did. |
+| 1.2 | a navigation bar that can stay at the top | Zero occurrences of `sticky` anywhere in `css/`, `js/` or `components/`. Nothing in this package stays put while the page scrolls — not a bar, not a table header. |
+| 1.3 | a navigation that collapses on a narrow screen | No toggle of any kind exists. Today the links simply wrap, and on the demo at 462 px the chrome grew to 229 px tall before any of the page was visible. |
+| 1.4 | the side navigation that can be hidden | Built, then withdrawn on 2026-09-11 in favour of 1.7: the same reader's need, answered by a component a theme can style instead of by a layout class that none can. |
+| 1.5 | a back-to-top control | Nothing like it exists; it depends on 1.1 for where it lands. |
+| 1.6 | a component for a hero image | Of the component roots the package declares, not one is for a picture. |
+| 1.7 | the side navigation as a component | Added on 2026-09-11 after Kenny looked at 1.4 and asked whether it was a proof of concept. Measured: `grep -l "kp-sidebar" css/*-register.css \| wc -l` gives 0, and the register-coverage gate reads its roots from `css/components.css` — so no theme had ever been asked to style a sidebar, because it was never a component. Built to the feature list he named. |
+
+**Approved and waiting for stage 2.** Kenny approved the side navigation as nostromo, brutalism and pastel draw it — the bullet stepping in front of the active page, the plate sliding to its own shadow, the sticker set at an angle. They are not written into their registers yet, and cannot be one at a time: the coverage gate's pending list is one entry per root for all twenty-five themes, and it refuses an entry a register already covers. So all twenty-five land together where the quirks are decided, which is the order he chose.
+
+**Gate log — stages 1.1 to 1.3, reported 2026-09-11.** The report Phase 6
+asks for, given late: these three closed on commits and the gate came
+afterwards, which is the fault recorded as `fix-6`. Kenny signed all four
+criteria.
+
+| Criterion | Evidence | Outcome |
+| --------- | -------- | ------- |
+| The bar that stays put, and the anchor that clears it | 2 tests in `tests/sticky.spec.mjs`, both measuring the painted box; drill run in two halves, each turning exactly the other test red at `1238 passed, 1 failed` | Akkoord |
+| The navigation that folds into a toggle | 6 tests in `tests/nav-toggle.spec.mjs`, three per channel, one suite driving both; drill `1240 passed, 4 failed`, restored `1244 passed` | Akkoord |
+| Registry coverage | Smooth scrolling was rated essential, built, and covered by nothing: `grep -rn "scroll-behavior" tests/` returned one hit and it was a comment | Akkoord, gap accepted — **and then closed**: 2 tests added, `1246 passed`, drill `1245 passed, 1 failed` with the reduced-motion guard removed |
+| Deviations | A test deleted rather than reworded after its drill stayed green; the knob count 87 → 89; one bare playwright run and the false diagnosis that followed it; a form claiming a correction record that did not yet exist | Akkoord |
+
+**What the gate earned.** The coverage item found the missing test, which
+nothing else would have: the other two criteria were fully covered, every
+gate was green, and the feature worked. That is the argument for the gate
+that skipping it had quietly disproved.
+
+Kenny's order for what follows: close the gap first, then the sidebar.
+The gap is closed.
+
+**Gate log — stage 1, closed 2026-09-11.** The report Kenny asked for as
+one, covering 1.5 and 1.6 and the stage as a whole. He signed all four
+items.
+
+| Criterion | Evidence | Outcome |
+| --------- | -------- | ------- |
+| The six essential pieces, plus the component that grew out of them | 1.1 to 1.3 reported separately; 1.4 built and then withdrawn in favour of 1.7; 1.5 and 1.6 delivered with five tests, drilled in one pass at `2 passed, 3 failed`; 1.7 with nine tests and six drill passes | Akkoord |
+| Registry coverage | Four roots wait for stage 2 in `gates/register-pending.json`, each with its reason and each refused by the gate the moment a register covers it. `gap-8` (two untouched detaches) and `gap-9` (why the far edge stuttered was never measured) are in the queue | Akkoord |
+| Deviations | Three non-theme colours added to the DI9 exception list for the overlay caption; the worker cap; the picture frame having no width of its own; the back-to-top control aiming at the document rather than the main landmark | Akkoord |
+| How much gets tested | Measured rather than argued: 1293 tests in 75 files, 3.6 seconds for one file against 3.5 minutes for the affected set, which falls back to everything on any stylesheet or module change. Kenny chose the rhythm over the count | Minder vaak draaien |
+
+**What stage 1 cost and what it caught.** Eleven defects, of which eight
+were in code already committed and pushed: the stale announcement, the
+covered toggler, the spurious event on attach, the sideways scroll, the
+box-sizing on the rows, the panel giving away its width, the offset
+reading the wrong number, the backdrop covering a page nobody asked
+about. Two of those were found by Kenny looking at a page, and the rest
+by tests written afterwards. Twice the drill caught a test measuring its
+own scaffolding — once asking whether a panel was wider than 100px, once
+comparing two numbers that happened to be equal.
+
+**Stage 2 — the themes.** Titanium is added; dark is replaced outright by
+the spectral instrument; nine themes get the quirk settled for them in
+[THEME_VERDICTS.md](THEME_VERDICTS.md); blueprint takes the measurement
+frame from the command table. Lapis waits on its second proposal.
+
+**Stage 3 — the removals.** **Done, 2026-09-12.** academia, mono, ticker
+and woodblock left the set: four theme sources, four registers, four
+register specs, their concept pages, showcase fixtures, Home Assistant
+themes, site stories, hook rows and concept copy. Six font families went
+with them — Lora, Cormorant Garamond, IBM Plex Sans, Zen Kaku Gothic New,
+Shippori Mincho and Inter Tight, 2.78 MB over twelve faces. IBM Plex Mono
+stayed, because dark names it now.
+
+`docs/ADOPTION_PROMPTS.md` says plainly, in both consumer prompts, that
+the four are gone in 6.0.0. Telling the consumers themselves is Kenny's,
+at the tag.
+
+Two things came out of doing it. The sweep that stripped the register
+mentions walked into `.claude/worktrees/` and rewrote 138 files across
+sixteen other sessions' checkouts, all restored and recorded as `fix-14`.
+And dark's `--theme-font-mono` had been pointing at `'IBM Plex Mono'`
+since the day it was written, which is the UPSTREAM name: that family
+declares a Reserved Font Name, so the package ships it renamed as
+`'KP Ticker Mono'` and dark had been falling back to the system monospace
+all along. Found only because the removal made the family look orphaned.
+
+**Not in any stage:** counters are wanted rather than essential and land
+if the stages above leave room; carousels are refused; an icon set is a
+round of its own.
+
+## The Phase 6 gate, signed 2026-09-12
+
+Kenny answered all five items **Akkoord**: the repairs, the themes, the
+removals, the coverage and the question of going on.
+
+The evidence the gate carried: ninety-six commits since the last round,
+twenty-two themes and twenty-two registers, thirty-three gates in the
+chain all green, 102 unit tests and 1,257 browser tests in firefox, and
+five queue rows open of which none is Claude's. Four corrections opened
+and closed during the round — `fix-11` through `fix-14` — each with a
+gate or a test holding it and each driven red before it was allowed to be
+green.
+
+The visible surface went with it, as the procedure requires: screenshots
+of the two new themes and four of the six hover gestures as the package
+paints them. Gates measure what is measurable; whether a thing looks like
+what it claims to be is seen only by a person.
+
+**What is deliberately not built**, recorded at the gate rather than
+discovered later: lapis never got the second proposal it was waiting for
+and has no hover gesture, because the measurement did not put it among
+the six. Counters were "wanted if there is room" and there was none.
+Carousels are refused and an icon set is a round of its own.
+
+Round seven now enters **Phase 7**, hardening.
+
+## The Phase 7 gate, answered 2026-09-12
+
+Nine gaps went to Kenny. **Eight are to be closed; one is deferred.**
+
+| Gap | What | Answer |
+| --- | ---- | ------ |
+| `grotesk-press` | grotesk's plain button paints the same hovered and held down | Dichten |
+| `focus-ring` | light, shade-light and shade-dark paint one half of the ring | Dichten |
+| `blueprint-width` | blueprint's buttons overflow by six pixels at 320px | Dichten |
+| `readout` | `.kp-button__readout` is styled by two registers and rendered by no page | Dichten |
+| `data-surfaces` | six data surfaces and five browser hooks, ~130 register rules, no paint test | Dichten |
+| `sidenav-react` | the sidenav ships one channel where the frozen bar asks for two | Dichten |
+| `gone-themes` | the frozen list still describes four removed themes; one bar is unreachable | Dichten |
+| `counters` | counting numbers are on the list, unbuilt and unclosed | Dichten |
+| `second-engine` | the whole round's evidence comes from firefox alone | Later |
+
+Kenny chose to close two that came recommended as Later — the React
+sidenav and the counters — which lengthens the round by the two largest
+pieces of work in the list. `second-engine` is the one deferral: both
+engines run after this release rather than before it, so the round ships
+on one engine's evidence and that goes verbatim into `docs/TEST_PLAN.md`.
+
+### What closing them produced, 2026-09-12
+
+Six of the eight closed, each driven red before it was allowed green.
+
+| Gap | What was built | Where |
+| --- | -------------- | ----- |
+| `grotesk-press` | `:not(:active)` on the hover, and a gate that refuses a hover outranking its own press | `css/grotesk-register.css`, `gates/check-pressed-state.mjs` |
+| `focus-ring` | the ring restored in front of three themes' elevation and inside two themes' menu item; two shadow layers at rest so the transition is well-formed | five registers |
+| `readout` | the surface tested on a fixture of its own; the words are still Kenny's | `tests/fixtures/readout.html`, `tests/button-surfaces.spec.mjs` |
+| `data-surfaces` | eleven surfaces on one page, eight sweeps over every theme | `tests/fixtures/data-surfaces.html`, `tests/data-surfaces.spec.mjs` |
+| `sidenav-react` | the React channel, self-attaching with a way out, and a DOM-shape comparison of the two channels | `components/sidenav.jsx`, `tests/sidenav-react.spec.mjs` |
+| `gone-themes` | dated notes on the four rows, the unreachable bar moved, and a gate holding the list to the shipped themes | `docs/FEATURES.md`, `gates/gates.test.mjs` |
+| `counters` | `data-kp-count`, two knobs, a readable state, locale-driven parsing | `js/effects.js`, `tests/count.spec.mjs` |
+
+Measured after: 106 unit tests, 1,367 browser tests in firefox over 79
+files, 2,734 across both engines, thirty-two gates green. Two tests stay
+red, and both are findings for Kenny rather than faults to repair.
+
+### The last three, answered 2026-09-12
+
+| Finding | Kenny's answer | What it took |
+| ------- | -------------- | ------------ |
+| `blueprint-lines` | the lines come inside | the gap changes sign; every button measures `189 in 189` where it measured `195 in 189` |
+| `readout-words` | Claude's proposal | `READY` for dark, `PART 26` for titanium, the slot on every theme, and a gate holding words and registers together in both directions |
+| `shade-light-muted` | muted at 46% | the token, plus an advisory that had become a gate by accident and a browser test that enforced the same floor |
+
+Phase 7 closes with 107 unit tests, 1,343 browser tests in firefox over
+79 files, thirty-two gates and nothing red. Eight of the nine gaps are
+closed; `second-engine` is deferred and recorded verbatim.
+
+## The Phase 8 gate, answered 2026-09-12
+
+Six documents approved on spot-check, and two choices answered.
+
+| Item | Answer |
+| ---- | ------ |
+| `docs/DEBUGGING_GUIDE.md`, new | Goedkeuren |
+| `docs/OPERATIONS_RUNBOOK.md`, new | Goedkeuren |
+| `README.md`, the honesty pass | Goedkeuren |
+| `docs/USER_GUIDE.md`, four new sections | Goedkeuren |
+| `CLAUDE.md`, the CI sentence that was not true | Goedkeuren |
+| `docs/legacy/`, the two copied documents | Goedkeuren |
+| The demo links | Laten staan met een zin erbij |
+| The document budget | Zo laten |
+
+### The document budget, and why each extra one is here
+
+The procedure's budget is the nine that recur across projects **plus
+whatever this project genuinely needs, where each extra one is named with
+its reason**. All nine are present. These are the extras, measured by how
+many other files cite them (`git grep -l` per document, 2026-09-12).
+
+| Document | Why it is here | Cited by |
+| -------- | -------------- | -------- |
+| `CORRECTIONS.md` | sixteen live-found faults with their measures. The project's memory of what has already gone wrong, and the thing Phase 7 and Phase 8 both mined for fault families | 9 |
+| `DESIGN_INVARIANTS.md` | the eleven rules every theme must keep, with the compliance table the gates write | 44 |
+| `MINI_ROUNDS.md` | the open measurements. A correction is not closed until its measurement happens, and this is the visible list that survives a compaction | 11 |
+| `INVENTORY.md` | the Phase 1 inventory, 99 units. Its own `INV-` namespace, because it documents units rather than decisions | 6 |
+| `THEME_VERDICTS.md` | what each theme was judged to need and why — the reasoning behind the lifts, which the lift plan's rows do not carry | 3 |
+| `THEME_CANDIDATES.md` | the twenty-one candidates the thirteen new themes came from. A record of what was rejected, which is the half a decision usually loses | 6 |
+| `RESEARCH_2026-09.md` | the measured references round six built from. Every lift cites it | 16 |
+| `LIFT_PLAN.md` | one row per theme, three statuses a round advances. The spine of round six | 5 |
+| `GENERIC_SWEEP.md` | the audit behind 3.0.0: every feature configurable, every state with a way out | 4 |
+| `COVERAGE_GAPS.md` | the question Kenny asked on 2026-09-04 and its answer. **Closed 2026-09-12** — every gap it named is now swept over every theme | 1 |
+| `REQUESTS_FROM_CONSUMERS.md` | what the three consuming projects asked for, measured rather than assumed | 5 |
+| `ADOPTION_PROMPTS.md` | the two consumer prompts, one per project | 2 |
+| `TROUBLESHOOTING.md` | the consumer's half of the debugging pair | 2 |
+| `LAYOUT.md`, `UTILITIES.md`, `MINIFIED.md` | the reference for three generated surfaces; `MINIFIED.md` is itself generated | 6, 8, 6 |
+| `ID_TRANSLATIONS.md` | the `KT10` renames, one row each. Small, and the thing a form's linter sends people to | 1 |
+| `legacy/` | two verbatim copies of kp-soft's documents, with a pointer saying what replaced each | 6 |
+
+Kenny's answer on 2026-09-12: **Zo laten.** Everything is cited at least
+once and nothing is demonstrably dead; dropping a document that is later
+missed costs more than keeping it. The measurement is worth repeating at
+the next round rather than the reasoning.
+
+## The field test, 2026-09-12 (Phase 9)
+
+The package used once as a consumer would, from a clean install, with
+every step scripted rather than interactive — the procedure's rule, and
+the reason for it: a run that prints nothing when it succeeds is
+indistinguishable in a script from a run that did nothing.
+
+**What was run.** `npm pack` to get the tarball a consumer receives
+(4.99 MB), `npm install ../kp-soft-themes-6.0.0.tgz` into an empty
+project, then two scripts. The framework-free one imports the registry,
+the no-flash snippet, the strings dictionary, the effects hooks and the
+side navigation, applies a stored theme to a fake document element, and
+reads the export map and the bundle. The React one goes through esbuild —
+the way a consumer meets that channel — and renders a navigation, its
+toggle and a button to static markup.
+
+**What it produced.** Twenty checks in the first, ten in the second, all
+passing. 22 themes, the four removed ones gone, `titanium` present, the
+no-flash snippet 167 characters and unable to break out of its own
+`<script>`, 115 strings, and a 1,229 KB bundled stylesheet carrying every
+theme's selector. The React markup carries `kp-sidenav`,
+`data-kp-sidenav-mode="over"`, `data-kp-sidenav-toggle`,
+`aria-current="page"`, both button surfaces, and the readout's
+`aria-hidden` — and no `undefined` anywhere, which is what a component
+writing a string the consumer did not pass would look like.
+
+**What it found.** Nothing broken, and one thing missing: the export map's
+subpaths are not the file names, and a consumer guessing from the file
+name fails. The palette is `@kp-soft/themes/css`, not `…/css/themes`; the
+theme list is `…/js/registry`, not `…/js/theme-registry`. Claude guessed
+wrong twice writing this very test, from the same documents a consumer
+reads. `docs/USER_GUIDE.md` now carries the table.
+
+Two things the test tripped over that are not the package's: plain Node
+cannot import the `.jsx` root entry, which `README.md` already states,
+and `react-dom/server` does not bundle to ESM without help, which is
+react-dom's own shape.

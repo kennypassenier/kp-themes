@@ -53,6 +53,8 @@ const OUT_OF_SCOPE = {
     'kp-caret': 'a background layer of one character cell appearing and disappearing once a second; rated in TIMINGS at 1/s and under 341x256 px',
     'kp-slam': 'a word translating onto its text-shadow once; a transform on a word, under 341x256 px',
     'kp-marquee': 'a strip translating -50% over 42 seconds; the strip keeps its colours, only its position moves',
+    // The solstice register [scope-12]: the raking band.
+    'kp-rake': 'a 45%-wide band translating once across a control under the pointer; a transform, and the band is a 50% tint of the theme primary',
     // The synthwave register [SW1].
     'kp-shine':
         'a highlight band sliding across clipped text once (background-position); the text keeps its colours and the band is under 341x256 px',
@@ -237,7 +239,12 @@ export function unguardedMotion(source) {
     const guards = [...source.matchAll(/@media\s*\(prefers-reduced-motion:\s*no-preference\)\s*\{/g)].map((m) => m.index);
     /** @type {{line: number, declaration: string}[]} */
     const problems = [];
-    for (const m of source.matchAll(/^\s*(transition|animation):/gm)) {
+    // `transition: none` and `animation: none` are the ABSENCE of motion.
+    // High-contrast's quirk [scope-12] is exactly that — a state change is a
+    // switch, not a fade, because every frame between two legible states is
+    // less legible than either. Wrapping that in a no-preference guard would
+    // mean someone asking for less motion gets MORE of it.
+    for (const m of source.matchAll(/^\s*(transition|animation):(?!\s*none\s*;)/gm)) {
         // A declaration is guarded when it sits after a guard's opening brace
         // and before that block closes. Brace-count from each guard rather
         // than assume, since the register nests theme selectors inside.

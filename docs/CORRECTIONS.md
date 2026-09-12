@@ -1308,6 +1308,127 @@ diagnosing, destroying the traces Kenny's failing run had left behind —
 Phase 10: the evidence of a live-found fault is collected before anything
 is re-run.
 
+## fix-6 · The round ran on forms and stopped running on phases
+
+**What went wrong.** Kenny asked, on 2026-09-11: *"en waarom volg je de
+procedure niet meer?"* Measured before answering: `docs/FEATURES.md` had
+zero mentions of round seven, `docs/ARCHITECTURE_DECISIONS.md` had zero
+entries from that day and still ended at AR46, and both the status block
+in `CLAUDE.md` and the session title said "Phase 0" while feature code was
+being committed. The round had done its design in decision forms and had
+skipped the gates of Phases 2, 4 and 5 entirely.
+
+**Which gate let it through.** The phase-entry refresh — the rule that on
+entering any phase, that phase is re-read fresh from disk and the session
+is renamed. It was never run on the move from designing to building.
+Nothing mechanical watches a phase boundary, so that rule is the whole
+guard, and it is the one that was skipped.
+
+**Where the same fault still sits.** Searched across every document a
+phase is supposed to produce, against the commit before the repair:
+
+```
+git show 35b9ede~1:<doc> | grep -ci "round seven"
+```
+
+`docs/SCOPE.md` 2, `docs/REALIZATION_PLAN.md` 1, `docs/FEATURES.md` 0,
+`docs/ARCHITECTURE_DECISIONS.md` 0. (`docs/INVENTORY.md` is 0 and is not
+owed by a round.) So two of the four documents a round should fill were
+empty.
+
+**And it recurred inside this correction, within the hour.** The form
+that announced this record said the nine fields stood written out in this
+document. They did not: the commit message carried `[fix-6]` and the
+entry did not exist. A claim of evidence pointing at nothing is standing
+rule 11a, and the shape is identical to the fault above — a record the
+procedure asks for, absent, while everything around it spoke as though it
+were there. Kenny was not the one who caught it this time; the check that
+caught it was `grep -c "fix-6" docs/CORRECTIONS.md` returning zero,
+run because the claim had been made and had to be worth something.
+
+**How we prevent recurrence.** The session title becomes the trigger:
+before the first commit that adds a feature, the phase-entry refresh runs
+and the title is renamed. A title naming a design phase while code lands
+is the visible tell that something was skipped. Kenny chose this over the
+mechanical version.
+
+**What the remedy costs.** One re-read per phase boundary. Against it:
+a round that otherwise reaches a release with no frozen feature list and
+no architecture decisions.
+
+**Who enforces it.** Discipline, by Kenny's decision of 2026-09-11. The
+mechanical alternative was offered and refused: a commit hook reading the
+status block and refusing a `feat(` commit while it names a design phase.
+That would have blocked stage 1.1's commit, three commits before his
+question. It stays available as the fallback rather than being built now.
+
+**How we measure that it works, and when.** At stage 1.4: does it open
+with a phase check and close with a milestone report rather than with a
+commit?
+
+**The fallback if it fails.** The hook Kenny refused today gets built.
+
+**When we review it.** At the round-seven retrospective, where this is
+the round's most important fault.
+
+**Not repaired, recorded.** The `architecture-critic` never ran over the
+four decisions stage 1 rests on, and stages 1.1 to 1.3 closed on commits
+rather than on the milestone report Phase 6 asks for. That report is owed
+and is the round's next gate.
+
+## fix-5 · Showing Kenny something and then asking, in prose, what he thought
+
+**What went wrong.** Round seven is a chain of things built for Kenny to
+look at, and twice the turn that showed one of them ended in running text
+asking for his judgement instead of in a form. He said so himself on
+2026-09-11: *"volgens mij moest dit in een formulier, maar bon."* The
+second time was the four placements; the first was the deepened spectral
+instrument, where the reply described what had changed and left the
+verdict hanging in the prose.
+
+**Which gate let it through.** None, and that is the point — the rule is
+discipline-only. The form protocol says every choice Kenny makes is a
+form, however small, and standing rule 16a says a reply never ends on an
+open item. Nothing mechanical can see the end of a conversational turn,
+so the only guard is remembering, and under a long build it was the part
+that slipped.
+
+**Where the same fault still sits.** The property is not "a turn about a
+demo" but **a turn whose deliverable is something for Kenny to judge,
+ending without a form**. Counted over this round: the hypertech work has
+been put in front of him five times — the first cut, the deepened second
+cut, the three worlds, the four worlds beside the shapes page, and the
+four placements. Three of those five ended in a form; two did not, and
+they are the two named above. No other kind of turn in this round ends on
+a judgement, because the rest either ask nothing or already carry a form.
+
+**How we prevent recurrence.** The rule gets a trigger that is easy to
+see rather than easy to forget: *if this turn published or updated
+something Kenny is meant to look at, the turn ends with a form asking
+what he thinks of it.* Publishing is the trigger, and publishing is
+visible in the turn's own tool calls.
+
+**What the remedy costs.** Nothing but a form that would have been built
+anyway, one turn later, after a round trip.
+
+**Who enforces it.** Discipline. A gate cannot read a conversation. What
+makes this one different from a plain reminder is that the trigger is a
+tool call rather than a state of mind.
+
+**How we measure that it works, and when.** At the next turn in this
+round that publishes an artifact: does it end with a form? The round has
+several such turns left — the pastel choice, the concept page for
+titanium, the quirk pass on nine themes.
+
+**The fallback if it fails.** If a third turn ends on a judgement without
+a form, the trigger stops being a rule and becomes a habit with a shape:
+the form is written *before* the artifact is published, so the publish
+step cannot be the last thing in the turn.
+
+**When we review it.** At the round-seven retrospective, together with
+the question of whether a round built almost entirely out of things to
+look at needs its own rhythm.
+
 ## fix-3 · A check read a release artefact, so it was green here and red on a fresh checkout
 
 Found by the `v5.1.0` release job on 2026-09-10, minutes after a green
@@ -1719,3 +1840,855 @@ approval.
 exact" against "Houden" — if he keeps nearly every deviation, the rule
 costs more than it protects and gets rewritten.
 
+---
+
+## fix-7 · Three faults that nothing had ever looked at from outside (2026-09-11)
+
+Kenny answered **Klopt** on the correction form of 2026-09-11, after
+asking to see the sidebar and to close the coverage gap the stage 1.4
+gate had found. Both errands turned up defects in code already pushed.
+
+**1 · What went wrong.** Three of them, one cause.
+
+The button announced the moment it was wired rather than the width:
+`attachSidebars` read the paint once at attach and never again, so a
+window crossing the 40rem step — a phone turning sideways — moved the
+aside while `aria-expanded` went on saying the opposite. It fails
+silently, and only for the people who cannot see that it failed.
+
+The open drawer lay over the one button that closes it. Escape and an
+outside click still worked; the visible way out was the one that did
+not. Found by the test that presses the same button twice, and Kenny
+then saw the milder half of it on the demonstration page — the first
+link sitting partly behind the button.
+
+And attaching is not a toggle: `attachNavToggles` wrote its starting
+state *through* the dispatch, so every consumer listening heard a close
+nobody performed, on every page load. Two milestones old, in the
+published bundle.
+
+**2 · Which gate let it through.** None, and that is the point. The
+frozen test bars name states and channels; nothing in them asks whether
+anything ever observes the module from outside — no listener, no
+detach, no eyes on a page.
+
+**3 · Where else the same fault sits.** The property is "a module
+behaviour no test observes from the outside", and it was searched for
+twice. `grep -rn "NAV_TOGGLE_EVENT\|attachNavToggles" tests/` returned
+four hits, every one inside a generated bundle under
+`tests/fixtures/.build`. Then the drill: emptying *every* returned
+cleanup loop at once touched four modules and turned exactly two tests
+red, so `attachConfirmations` and `attachSkipLinks` are as unexercised
+as these two were. Queued as `gap-8` rather than quietly folded in.
+
+**4 · How we prevent recurrence.** A module that returns a detach or
+fires an event gets, in the same milestone, a test that pulls it and a
+test that listens. `tests/fixtures/attach-api.html` is the harness:
+it attaches by hand and keeps the handle, which `js/auto.js` correctly
+throws away — and which is why a detach could sit unexercised through
+two milestones.
+
+**5 · What it costs.** Two tests per module, about twenty lines each,
+plus a harness that already exists and takes a third and a fourth
+without changing shape.
+
+**6 · Who enforces it.** Discipline.
+
+**7 · How and when it is measured.** At `gap-8`'s closing, before round
+seven's stage 2 ends: if those two go in without anyone being reminded,
+the measure works.
+
+**8 · The fallback.** A gate that looks up every exported event constant
+and every `attach*` export in `tests/` and refuses what no spec names.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+---
+
+## fix-8 · Code in a form rendered white on white (2026-09-11)
+
+Kenny answered **Klopt**, and then reported that the measure did not
+work: *"maak een notitie dat je `<code>` blokken nog altijd wit op wit
+zijn en dus onleesbaar. Maar repareer dat volgende keer, goedgekeurd"*.
+So this entry records a fault AND a failed first measure.
+
+**1 · What went wrong.** Every piece of code inside a form's explanation
+sat in a bare `<code>` element with no colour of its own, and it rendered
+white on white on his screen. Part of the reasoning he was asked to
+decide on was unreadable.
+
+**2 · Which gate let it through.** `hooks/form-lint.py` counts pronouns,
+coinages, old-shape identifiers and missing examples. It reads the text
+and never how the text looks. Nothing in the protocol asks whether a
+form can be read.
+
+**3 · Where else the same fault sits.** The property is "a form surface
+whose colour I did not set myself". Searched with `grep -c "<code>"` over
+the four forms kept in the scratchpad: 6, 8, 14 and 12 — forty
+occurrences across this conversation alone.
+
+**4 · How we prevent recurrence — and why the first attempt failed.**
+The measure proposed was to give every such element its colour
+explicitly, from the widget's own variables, and the form proposing it
+did exactly that: `color: var(--text-primary)` and
+`background: var(--surface-1)` inline on each `<code>`. Kenny read that
+form and reported the blocks still unreadable.
+
+An inline declaration loses to nothing but `!important`, so either the
+host stylesheet marks its `code` rule that way, or those two variables
+resolve to the same colour in his rendering. The next attempt therefore
+does not style `<code>` at all: the same inline styles go on a `<span>`,
+which no element-name rule can reach. That is the repair he approved for
+next time rather than now.
+
+**5 · What it costs.** One inline style per fragment, written once and
+copied between forms.
+
+**6 · Who enforces it.** Discipline.
+
+**7 · How and when it is measured.** At the next form that carries code:
+Kenny can read it, or he cannot, and he finds out in the moment. This is
+the second attempt at the same measurement; the first is recorded as
+having failed.
+
+**8 · The fallback.** `hooks/form-lint.py` refuses a form containing a
+`<code>` element at all, the way it already refuses a correction with no
+search recorded.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+---
+
+## fix-9 · A settling value read once, under load (2026-09-11)
+
+**1 · What went wrong.** `tests/register-shade-dark.spec.mjs:182` failed
+in a full run and passed on its own seconds later: `1264 passed,
+1 failed`, then `20 passed` for that spec alone. Standing rule 8a — a
+test that fails and then passes is a defect until its cause has a name.
+
+The name: the test polls `opacity` until it is `1`, then reads `filter`
+ONCE. They are two properties of the same reveal, and opacity can finish
+while the blur is still running. Under a full suite the machine is slower
+and that gap opens.
+
+**2 · Which gate let it through.** None. `retries` is 0 by Kenny's rule,
+so the flake surfaced immediately rather than being papered over — that
+part worked. What no gate does is tell a settling read from a bare one.
+
+**3 · Where else the same fault sits.** The property is "a spec that
+reads a value once when something animates that property". Searched with
+`grep -rnE "expect\(await .*getComputedStyle" tests/*.spec.mjs`: 152
+bare reads, of which 86 are on a property something in this package
+animates. How many of those 86 are actually racy cannot be told by
+grepping — a border-radius read on a settled page is fine and a filter
+read mid-reveal is not, and the text of the two lines is identical. That
+is the honest limit of this search and it is why the measure below is
+what it is.
+
+**4 · How we prevent recurrence — Kenny chose discipline, 2026-09-11.**
+The wider gate was offered and declined: a check refusing
+`expect(await … getComputedStyle(…).<animatable>)` inside a spec, with
+86 sites to convert. His answer was **Alleen discipline**, and per the
+protocol a written "consciously nothing" is information rather than an
+invented measure, so it is written here.
+
+What stands instead: a value that SETTLES is polled — `expect.poll` or
+the readers in `tests/paint.mjs` — and the reads that matter are the ones
+after a load, a click, a hover or a scroll. The 86 bare reads are not
+swept; they are repaired where one is found, which is what fix-1 asked
+for and what this recurrence did not change his mind about.
+
+This is the third correction in this family (KT16, fix-1, this one), and
+each time the broad sweep has been declined for the same reason: it would
+push the animation half into a poll that waits the full timeout for a
+value that left before it started looking. That reason has not weakened.
+
+**5 · What it costs.** Nothing up front, and the honest price is that a
+flake of this shape can happen again — the search above says grep cannot
+tell which of the 86 are racy, so nobody can promise otherwise.
+
+**6 · Who enforces it.** Discipline, by Kenny's decision.
+
+**7 · How and when it is measured.** At round seven's last full run
+before the tag: if a spec fails and then passes, discipline was not
+enough and field 8 applies. Queued in `docs/MINI_ROUNDS.md` as `fix-9-M1`.
+
+**8 · The fallback.** If a flake of this shape survives the gate, the
+suite records `--repeat-each=3` for the register specs once before a
+release, so a racy read is found deliberately rather than by luck.
+
+**9 · When we review the measure.** At round seven's retrospective,
+against the count of bare reads remaining.
+
+---
+
+## fix-10 · A turn of hours with no word in it (2026-09-11)
+
+Kenny answered **Klopt**, after having to ask for it himself: *"je moet
+normaal ook je vooruitgangindicatie tonen in chats"*.
+
+**1 · What went wrong.** The turn he said it in ran eight commits from
+end to end with no message in between. He saw tool calls and nothing
+else, and could not tell where the work stood.
+
+**2 · Which gate let it through.** None. Standing rule 16 asks for a
+progress checklist in EVERY reply during multi-stage work, and nothing
+counts how long it has been since there was a reply at all.
+
+**3 · Where else the same fault sits.** The property is "a turn that runs
+long without a word". Searched by reading this conversation back: the
+last four turns before his remark were each a single unbroken block of
+tool calls, and the longest of them landed eight commits. He interrupted
+twice during it — once about his processor, once about the checklist —
+and those are exactly the two moments a stop would have stood.
+
+**4 · How we prevent recurrence.** The checklist goes at the FRONT of a
+reply rather than the end, and a turn that would run past one commit is
+cut into turns instead. Shorter turns are the measure; the checklist is
+what they carry.
+
+**5 · What it costs.** More turns, and a little repetition in each.
+Against that: Kenny stopped having to guess, and twice in one turn he
+paid for the guessing by interrupting.
+
+**6 · Who enforces it.** Discipline. No check can see how long somebody
+has been looking at an empty chat.
+
+**7 · How and when it is measured.** At the next turn that does more than
+one commit: the reply opens with the checklist, and he sees it or he does
+not. Queued in `docs/MINI_ROUNDS.md` as `fix-10-M1`.
+
+**8 · The fallback.** Every commit becomes its own turn, so the checklist
+cannot be skipped.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+---
+
+## fix-11 · A relative colour that resolved to nothing (2026-09-12)
+
+**1 · What went wrong.** `hsl(from var(--primary) h s calc(l + 8%))`
+paints TRANSPARENT. In a relative colour the `l` channel resolves to a
+number, so adding a percentage to it is a type error; the declaration is
+dropped and the element keeps no background at all. No engine warns.
+
+Kenny found it by hovering one button. Three separate themes came back
+with the same sentence — "de verstuur knop is onleesbaar bij hover" —
+and every one of them was this line.
+
+**2 · Which gate let it through.** None, and several looked straight at
+it. `check-layers.mjs` reads these declarations to police DI9 and cares
+only whether a colour is a token. The contrast advice reads tokens, not
+the states a register paints. And a browser test that reads a hover
+colour would have caught it, but no test hovers a primary button in
+every theme.
+
+**3 · Where else the same fault sits.** The property is "a channel
+keyword with a percentage added to it inside a relative colour". Searched
+with `grep -rn "calc(l " css/*.css`: 25 occurrences in 10 stylesheets, of
+which **20 in 7 registers** carried the percentage and were broken —
+blueprint, dark, nostromo, sepia, shade-dark, solstice and woodblock. The
+other five already used a valid form. Every one of the twenty was a hover
+or an active state, which is why nobody saw it: the resting state is
+correct and the fault only appears under the pointer.
+
+**4 · How we prevent recurrence.** `gates/check-relative-colour.mjs`,
+in `npm run gates` and in the commit hook. It refuses exactly this shape
+and nothing else, because everything else in the family works — measured
+the same day: `hsl(from … h s l)`, `calc(l + 8)`, `calc(l * 1.1)`,
+`oklch(from … calc(l + .05) c h)` and `color-mix()` all resolve, and only
+the percentage does not.
+
+**5 · What it costs.** One narrow gate of about forty lines. The risk of
+a wider rule — refusing relative colours, or auditing every state — would
+be a rule that fires on correct code, and this one cannot.
+
+**6 · Who enforces it.** Code.
+
+**7 · How and when it is measured.** It was measured before it was
+written: the gate was driven red by putting one percentage back, and it
+named the file and the line. The standing measurement is that it stays in
+the chain; the test that compares the gate list against the commit hook
+already refused this gate until it was in both.
+
+**8 · The fallback.** If a variant slips past the shape this gate knows,
+the browser suite gains one test that hovers a primary button in every
+theme and refuses a transparent background — which is the assertion that
+would have caught this one on the day it was written.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+
+## fix-12 · A register that cancelled the pressed state (2026-09-12)
+
+**1 · What went wrong.** Pressing a button did nothing visible. Not in
+one theme — in thirteen of the twenty-five, and in two more once the gate
+was written to see the variants as well as the roots.
+
+**2 · How it was found.** Kenny, reviewing the shade-dark quirk on
+2026-09-11: _"ik kan enkel de ingedruktheid zien als ik de knop indruk,
+blijf indrukken en dan zo mijn muis van de knop weghaal. Als ik gewoon
+blijf klikken op de knop zelf, dan gebeurt er precies niks... bij shade
+light werkt het wel precies."_ Dragging the pointer off the button showed
+the press — which is the whole diagnosis, stated before anyone knew it.
+
+**3 · The cause.** `@layer kp.base, kp.components, kp.register, kp.layout,
+kp.utilities`. A layer beats a state. A register writing
+`[data-theme='x'] .kp-button:hover { background: … }` in `kp.register`
+outranks `.kp-button:active { background: var(--secondary-active) }` in
+`kp.components`, whatever their specificity. So the pressed state existed
+and was unreachable — exactly while the pointer was on the button, which
+is the only time anyone presses one. Take the pointer away and the hover
+rule stops matching, and the pressed state reappears. That is why it
+looked like the press only worked after you left.
+
+**4 · Why nothing caught it.** Three gates looked straight at it. The
+token gate reads names, not the cascade. The contrast gate measures rest
+and hover, never the held-down state. The register-coverage gate asks
+whether a root is answered, not whether an answer destroys another. And
+no browser test pressed a button and read the paint: the specs that
+handle `:active` all check a theme whose press happens to survive.
+
+**5 · The measure, code-enforced.** `gates/check-pressed-state.mjs`, in
+`npm run gates` and in the commit hook. It reads which button selectors
+the components layer gives a pressed background — three today — and
+refuses a register that paints one of them on `:hover` without writing
+any `:active` rule of its own for the same selector. Deliberately narrow:
+it does not care WHAT the register presses with (retro inverts a bevel
+and shifts its padding, and that is a reaction), and it says nothing
+about `--ghost`, which the base layer never gave a pressed state.
+
+**6 · The measure, in the browser.** One test per theme in
+`tests/registers.spec.mjs`: hover a primary button, let the hover settle,
+hold it down, and require the paint to change — background, box-shadow,
+translate, both paddings, border and text colour in one vector. Reading
+only `background-color` called retro red on the first run, because that
+theme presses with its bevel; the narrower question could not see a
+reaction that was plainly there.
+
+**7 · The repair.** Twenty-one rules across thirteen registers, each one
+restating the components layer's own pressed values token for token.
+Nothing new was decided: what the base layer already said was put back
+where the cascade can reach it.
+
+**8 · The drills [KT3].** The source gate: the restored
+`[data-theme='terminal'] .kp-button--primary:active` rule removed → the
+gate refuses that file; restored → green. The browser test: the same
+removal → red on terminal alone; restored → green. The unit test covers
+the four shapes — cancelled, replaced, out of scope (`--ghost`), and a
+hover that paints no ground.
+
+**9 · When we review the measure.** At round seven's retrospective. The
+open question is whether the same collision exists for the other states a
+register overrides — `:focus-visible` is already known to (DI2 exists
+because of it), and `:disabled` has not been looked at.
+
+**Kenny approved fix-12 on 2026-09-12 ("Klopt").** The measurement named
+in field 7 — the next new quirk that writes a hover background — is
+queued in `docs/MINI_ROUNDS.md` as `fix-12-M1` and comes due when
+grotesk's quirk is built. The correction does not close until then.
+
+## fix-13 · A gate that measured on import (2026-09-12)
+
+**1 · What went wrong.** `node --test gates/` died on the whole of
+`gates/gates.test.mjs` with `4 contrast violation(s). A theme that fails
+AA cannot ship.` — a message about contrast, in a file that tests none,
+with no test name attached to it.
+
+**2 · How it was found.** Building the spectral instrument's tokens. The
+new dark has a pale signal, which the derivation turns into a pressed
+state too close to it, so the contrast check started reporting. That
+report should have been advice printed by `npm run advice`. Instead it
+ended the test run.
+
+**3 · The cause.** `gates/check-contrast.mjs` did its measuring at module
+top level and finished with `process.exit(1)`. `gates.test.mjs` imports
+`discoverThemesFromCss`, `EXPECTED_THEMES` and `STATUS_NAMES` from it, and
+an import runs the module. So importing a helper killed the importing
+process.
+
+Two consequences, and the second is the worse one. The visible one is a
+useless failure message. The invisible one is that the accessibility floor
+became a **hard gate by accident** — the exact opposite of Kenny's
+decision of 2026-09-09, which is that contrast, the invariants, the flash
+threshold and the texture ceiling are measured and printed, never refused.
+`check:contrast` is correctly absent from the `gates` chain; it leaked in
+through an import anyway.
+
+**4 · Where else the same fault sits.** The fault as a property: *a gate
+module that another module imports, which can call `process.exit` at
+module top level.* Searched on 2026-09-12 across `gates/`:
+
+```
+for f in gates/*.mjs; do
+  grep -q "process.exit" "$f" || continue
+  imp=$(grep -rl "from './$(basename $f)'" gates/ tests/ js/ | grep -v "$f" | wc -l)
+  [ "$imp" -eq 0 ] && continue
+  grep -q "import.meta.url ===" "$f" || echo "UNGUARDED: $f"
+done
+```
+
+Sixteen gate modules are imported by something else. Fifteen already put
+their run behind `import.meta.url === \`file://${process.argv[1]}\``.
+`check-contrast.mjs` was the only one that did not. The first search ran a
+wrong pattern and reported forty-one offenders, which is worth recording:
+a search that reports everything is as useless as one that reports nothing.
+
+**5 · The measure.** The same guard the other fifteen carry, and a unit
+test that asserts the **property** rather than the file — every gate in
+`gates/` that another gate imports and that can call `process.exit` must
+compare `import.meta.url` against the entry point. A sixteenth gate written
+tomorrow is covered without anyone remembering this.
+
+**6 · What the remedy costs.** Nothing. The guard is three lines and the
+test is thirty.
+
+**7 · Who enforces it.** Code: `npm test`, which the commit hook runs.
+
+**8 · How we measure that it works, and when.** Done at the moment of the
+fix: the guard was removed and the test went red, restored and green. And
+the behaviour itself was proved — with a deliberately failing theme in
+place, `import('./gates/check-contrast.mjs')` ends the process without the
+guard and returns four exports with it.
+
+**9 · When we review the measure.** At round seven's retrospective.
+
+**The four contrast findings stay findings.** They came from the spectral
+instrument's own approved values and are put to Kenny rather than quietly
+corrected [S49, S42]. They are not the subject of this correction.
+
+## fix-14 · A sweep that walked into other sessions' worktrees (2026-09-12)
+
+**1 · What went wrong.** Removing four themes meant stripping every
+mention of their registers from the files that name them. The sweep walked
+the repository, and `.claude/worktrees/` is inside the repository. It
+rewrote 138 files across sixteen worktrees belonging to other agent
+sessions.
+
+**2 · How it was found.** Immediately, in the sweep's own report: the list
+of edited files was mostly paths under `.claude/worktrees/`. The exclusion
+list it carried — `node_modules`, `.git`, `dist`, `site`, `examples`,
+`showcase/themes`, `ha`, `test-results` — had been written by thinking
+about GENERATED output, and a worktree is neither generated nor mine.
+
+**3 · The cause.** A directory walk with a deny-list. Every deny-list is
+a guess about what exists; this one was a guess made before those
+worktrees did.
+
+**4 · Where else the same fault sits.** The fault as a property: *a
+repository-wide walk that writes, filtered by a deny-list rather than by
+what git tracks in THIS worktree.* Searched on 2026-09-12:
+
+```
+grep -rln "os.walk\|readdirSync.*recursive\|find . -type f" gates/ hooks/ .claude/
+```
+
+Nothing else in the repository walks-and-writes; the generators all work
+from explicit file lists, and the gates only read. The offender was a
+one-off script in a shell heredoc, which is exactly the kind of code that
+carries no guard because it is expected to be thrown away.
+
+**5 · The measure.** A one-off sweep that writes takes its file list from
+`git ls-files`, never from a directory walk. `git ls-files` reports only
+what THIS worktree tracks, so another worktree cannot be in the list no
+matter where it sits. Discipline-enforced: there is no code to gate, and a
+hook that inspected every heredoc would be worse than the disease.
+
+**6 · What the remedy costs.** Nothing. `git ls-files | grep ...` is
+shorter than the walk it replaces.
+
+**7 · Who enforces it.** Discipline.
+
+**8 · How we measure that it works, and when.** At the next sweep that
+edits many files at once — stage 3 still has the documentation pass, which
+touches every document that names a removed theme. The check is that the
+command begins with `git ls-files`.
+
+**9 · The recovery, and what made it possible.** Every damaged file was
+restored, verified at zero. It worked only because the damage had one
+shape: the sweep removed lines and changed nothing else, so a file whose
+whole diff against HEAD was deletions of register lines could be restored
+outright, and a file carrying its own work could be told apart and left
+alone. 107 files restored that way and 31 more from HEAD where the
+worktree had unmerged paths; 232 files with their own changes were
+untouched. A sweep that had REWRITTEN lines instead of deleting them would
+not have been separable like that.
+
+**10 · When we review the measure.** At round seven's retrospective.
+
+## fix-15 · Fifteen browser tests were red on the branch and nobody could see it (2026-09-12)
+
+**1 · What happened.** Phase 7's hardening audit ran the specs together
+for the first time since round seven began and found **fifteen failing
+browser tests already on the branch** — not introduced by the audit, and
+measured that way: `git stash`, run the seven spec files, `git stash pop`,
+run again. Fifteen before, sixteen after, and the one added was a real
+defect a widened test had just caught.
+
+Some of those fifteen had been red long enough that the thing they exist
+to prove had quietly stopped being proven. `tests/bare.spec.mjs` called
+`page.route()` with one argument — the signature is `route(pattern,
+handler)`, so the handler was taken as the pattern and every run died on
+`route.request is not a function` before the page loaded. That test is the
+whole framework-free channel's proof: the page readable with its register,
+its fonts and its module all refused. It had not actually run.
+
+**2 · Why nobody saw it.** `npm run test:affected` resolved a change to
+`css/<theme>-register.css` to `tests/register-<theme>.spec.mjs` and
+nothing else. Every quirk and every hover gesture of round seven is a
+register edit, so the inner loop ran twenty tests and printed green while
+the fifteen every-theme sweeps — press, alert contrast, focus ring,
+reflow, bundle — never ran at all. The whole suite is Kenny's to give
+(fix-2), so between one of his runs and the next there was nothing
+watching. Measured 2026-09-12: one register spec is 20 tests, that spec
+plus the sweeps is 446, the whole suite is 1,297.
+
+**3 · The four that were stale rather than broken.** Four themes were
+removed at `scope-11` and four tests still named them: `reflow.spec.mjs`
+asserted `THEMES.length === 25` and that its findings file held thirteen
+entries, three of which were for removed themes; `fallback.spec.mjs`
+proved "a name that IS a theme says nothing" by applying `woodblock`,
+which had stopped being one — so the test asserted the opposite of its own
+title; `marquee.spec.mjs` navigated to `/examples/concept-ticker.html`,
+which no longer exists. Each now derives from `themes/order.json` or from
+the theme's own copy instead of carrying a hand-written constant.
+
+**4 · The one that hid a whole theme.** `gates/generate-showcase.mjs`
+carried a hand-written list of `<link>` tags for the registers, in two
+places. `dark` was added in round seven and never added to that list, so
+`showcase/themes/dark.html` loaded twenty-one other themes' registers and
+none of its own. Fifteen every-theme sweeps read that page; all of them
+had been measuring dark undressed. Found by a Phase 7 pointer test that
+asked dark for a knob dark's own register declares and got nothing back.
+The list is now read off disk, and a unit test refuses a showcase page
+that does not load the register of the theme it exists to show.
+
+**5 · What the widened tests then found.** Ten tests stay red, and every
+one of them is a product finding rather than a test fault:
+
+| What | Where | Measured |
+| ---- | ----- | -------- |
+| The plain button does not react to being pressed | grotesk | hovered `rgb(245, 245, 245)`, held down `rgb(245, 245, 245)` — the same |
+| Only one half of the focus ring | light, shade-light, shade-dark | an outline, and a decorative shadow where the ring's second half should be (8 tests) |
+| Buttons overflow at a phone width | blueprint | content 195 wide in a box of 189, at 320px |
+
+Under `S49` a value an approved demo showed is not changed without Kenny's
+word, so these are put to him rather than repaired. The tests stay red
+until he answers.
+
+**6 · The gates that could not say no.** Six verdicts were widened in the
+same pass. `check-ids.mjs` saw none of round seven's vocabulary — the
+patterns wanted `[A-Z]{1,4}[0-9]+`, and `scope-`, `fix-`, `gap-`, `step-`
+and `feat-` are lowercase — and deduplicated within a file, so one
+document defining an ID twice could not collide with itself. It now sees
+463 IDs where it saw 342, and it caught `scope-24`, which named two
+different decisions on two consecutive days. That is `KT10` again, in the
+document `KT10`'s gate was written for, one ID series later.
+
+`check-pressed-state.mjs` and `check-variant-ground.mjs` printed a green
+line with a zero in it if their parser found nothing —
+`check-register-coverage.mjs` already guarded exactly that, for exactly
+this reason. `check-fonts.mjs` had a written "nothing promised" pass that
+fires when `fonts/` is gone, and `css/fonts.css` is generated from
+`fonts/`, so the two fall to zero together; the themes name their families
+in their own tokens and are now the independent witness. The `S49` sweep
+iterated the opt-in list rather than `themes/order.json`. And `fix-13`'s
+own guard was keyed on `process.exit` rather than on the property it
+names, so a generator that rewrites tracked files on import was invisible
+to it — which is how the audit came to rewrite eleven example pages while
+running.
+
+**7 · Two tests that could not fail.** `tests/effects.spec.mjs` proved
+`TH119` ("final text equals source") by comparing the headline's text
+against `data-kp-text` — an attribute `js/effects.js` writes itself, from
+the element's own text, every time it runs. Both sides of the assertion
+were the module's. Measured with the headline permanently scrambled: the
+old comparison answers `true`, the new one — against the authored copy in
+`showcase/concept-copy.mjs` — answers `false`.
+
+And `tests/button-surfaces.spec.mjs` carried a drill record for an
+assertion that did not exist: "`opacity: 0` removed from the readout ->
+red on it being invisible". No test anywhere named `.kp-button__readout`.
+That is a false drill record, which is the one thing `KT3` exists to
+prevent. The reason it could not be written is its own finding: no page in
+the package renders a readout at all, while two registers style it in
+full.
+
+**8 · The measure.** Three things, two of them already code:
+
+- `gates/affected.mjs` resolves a register or anatomy edit to its own spec
+  **plus every spec that sweeps all themes**, found by reading the specs
+  rather than by keeping a list. A unit test asserts the finding is not
+  empty, because a widening that finds nothing is the narrow map again.
+- A unit test refuses a showcase page that does not load its own theme's
+  register.
+- Discipline: a test that names a theme names it from `themes/order.json`
+  or from the theme's own copy, never as a literal. A literal theme name
+  in a spec outlives the theme.
+
+**9 · Gezocht met.** `git ls-files 'tests/*.spec.mjs' | xargs grep -l` for
+each removed theme name; `node gates/check-ids.mjs` after widening;
+`npx playwright test --project=firefox` whole, twice, once on a stash.
+
+**10 · When we review the measure.** At round seven's retrospective, with
+the question: did the widened `test:affected` catch anything before a full
+run did.
+
+### fix-15, what closing the eight gaps then found (2026-09-12)
+
+Kenny answered the Phase 7 gate with **Dichten** on eight of the nine gaps
+and **Later** on the ninth. Six closed; two came back as findings, and the
+reason is worth writing down in both cases.
+
+**`grotesk-press` was `fix-12` a third time, one storey down.** The
+register carried a correct `:active` rule with a correct token and it
+never painted: the hover rule above it carries three `:not(.class)`
+clauses, so it outranks the press by two steps of weight — six against four,
+measured by calling `weight()` rather than by counting in prose — and a pointer is
+always hovering while it presses. Not a later layer beating a state — a
+longer selector in the same layer doing it.
+`gates/check-pressed-state.mjs` now compares the weight of each control's
+hover rule against its own pressed rule and refuses the first being
+heavier, with `:not(:active)` on the hover as the recommended idiom;
+`css/high-contrast-register.css` already wrote it that way, which is how
+the gate knows what right looks like.
+
+**`focus-ring` was the same fault a fourth and fifth time.** Three themes
+painted their own elevation on a button from `kp.register`, which swallowed
+the ring `kp.components` draws on `:focus-visible` — a keyboard user got an
+outline and nothing behind it. Two more, `dark` and `titanium`, painted
+nothing at all on a menu item inside the row menu, because the popover
+rounds its corners and a ring drawn outside the item has nowhere to land.
+The elevations and the corners are what the demos showed and both stay;
+the ring is restored in front of the one and inside the other. A sixth
+thing came out of it: `light` transitions box-shadow, and a
+one-layer-to-two-layer transition interpolates by inserting a blank layer,
+so mid-flight the ring read as a nought-spread layer — which is exactly
+"half a ring". Both states carry two layers now.
+
+**`counters` met its frozen bar only after the test was rebuilt.** The bar
+is "at the reduced-motion setting the final number is there immediately,
+measured on what is painted", and the first version of that test read the
+text and found it correct — because the final number is what the HTML
+says. It reads correct when nothing counted and when the count has already
+finished. The recorder is armed before the module exists now, and the bar
+is "this list of changes is empty" [fix-1]. Two faults in the module came
+out of the same rebuild: `Number(knob) || 900` read a deliberate `0` as
+unset, the absence of a value taken for the value a fifth time in this
+package; and `1.204` is one thousand two hundred and four in Dutch and
+one-point-two-oh-four in English, which the string alone does not decide —
+the nearest `lang` does.
+
+**`sidenav-react` found a foot-gun rather than a missing component.**
+`js/auto.js` attaches on load and React mounts after it, so a consumer
+would have had to know to attach again by hand — and the first sign of not
+knowing is a navigation that renders perfectly and does nothing. The
+component attaches itself on mount, with `autoAttach={false}` as the way
+out. What the suite compares is the DOM the two channels PRODUCE, element
+by element, not a checklist of things each contains.
+
+**Two are back with Kenny, and one of those is a diagnosis that was
+wrong.** The gate form told him `blueprint-width` was the letter-spacing
+and the 600 weight, and that six pixels of padding would give it back.
+Both are false. Every blueprint button is exactly six pixels wider than
+its box at every width, because this theme's approved hover gesture puts
+two witness lines at `-0.35rem` outside the control and the right-hand one
+adds 5.6px plus its own pixel to the scroll area whether or not it is
+visible. `overflow: clip` with a clip margin was tried and does not help —
+Firefox counts the clip margin in `scrollWidth`. No repair preserves the
+approved appearance, so it goes back to him with the real cause.
+
+And the data-surface sweep found `shade-light` declaring
+`--muted-foreground` identical to its `--foreground`, both
+`hsl(194, 14%, 40%)`. Twenty-one of twenty-two themes differ. It reaches
+every caption, every timestamp, every disabled label and every
+placeholder in that theme, and it is a palette value, so it is his.
+
+### fix-15, the last three, and one advisory that had become a gate (2026-09-12)
+
+Kenny answered the three open findings: the witness lines move inside,
+the readout takes `READY` and `PART 26`, and shade-light's muted colour
+goes to 46%.
+
+**The blueprint gap was six pixels of the theme's own gesture.** The gap
+changes sign — the lines sit the same distance from the boundary, on the
+inside of it — and every button measures `189 in 189` where it measured
+`195 in 189`. The vertical overhang is untouched; it never contributed to
+the width, and it is what makes them read as measurement marks.
+
+**The readout now exists.** Every theme has the slot because the
+slot-equality rule is what makes the concept pages comparable; only the
+two whose registers style the surface carry words, and a unit test holds
+those two lists together in both directions — a register that styles it
+with nothing to say fails, and words no register paints fail too.
+
+**Setting shade-light's muted colour found an advisory that had quietly
+become a gate.** `gates/compliance.mjs` shells out to `check-contrast.mjs`
+to quote its own output into `docs/DESIGN_INVARIANTS.md`, and let
+`execFileSync` throw. Contrast is advice in this package by Kenny's
+decision of 2026-09-09 — measured and printed, never refused — but a
+throw there failed `npm run gates` on a shortfall he had just chosen
+deliberately, with the number in front of him. That is `fix-13`'s shape a
+second time: an advisory becoming a gate through a back door. The call
+quotes both streams now and does not obey the exit code, and
+`check-contrast.mjs` no longer claims "a theme that fails AA cannot ship",
+which had not been true in this package since 2026-09-09.
+
+**And a browser test was enforcing the same floor.**
+`tests/surfaces.spec.mjs` already had a `REPORTED` list for a pair an
+approved demo puts under the floor. It could name one element by its
+text, which is the wrong shape for a decision about a TOKEN: shade-light's
+muted colour lands on eight lines across two grounds, and naming each
+would have recorded the fixture's wording rather than the choice. An
+entry may now name a colour pair instead, and it still has to measure
+what it says — an entry cannot outlive the thing it excuses, in either
+form. The stale entry for `ticker`, a theme `scope-11` removed, went with
+it.
+
+## fix-16 · The documents said things the code does not say (2026-09-12)
+
+**1 · What went wrong.** Phase 8's honesty pass found eleven claims in the
+project's own documents that the package does not keep. Four were quoted
+messages in shapes nothing prints — `theme discovery broke: expected 25,
+found 24` where the code says `expected N themes, found M [list]`; a flash
+message missing its `— SC 2.3.1 allows 3.` tail and naming a keyframe
+`fx-flicker` that does not exist among the `kp-*` ones; and twice "the
+twenty-five names" against a package that ships twenty-two. Three were
+counts: the README's "Thirty gates" against thirty-four, its "some 2500
+tests" against 2,736, and `docs/ARCHITECTURE_REFERENCE.md`'s "25 blocks".
+One was a decision record describing `fonts/LICENSES.md`, a file never
+made — the build chose `fonts/<family>/LICENSE` instead. One was the
+README claiming no theme carries a recorded shortfall while three do. One
+was `docs/TROUBLESHOOTING.md` claiming to replace two documents that now
+exist. And one was in `CLAUDE.md` itself: "nothing runs on a server",
+while `.github/workflows/release.yml` builds every release and
+`pages.yml` publishes the site. Only `ci.yml` was ever deleted.
+
+**2 · Which gate let it through.** None, and none could: thirty-four gates
+read the code and a person reads the prose, so nobody ran the prose. The
+procedure names this exact fault from HTTPSwitchboard, where a README
+showed an argument the binary had refused since its previous major.
+
+**3 · Where the same fault sits.** The property is **a document asserting
+something the package can be asked about**, and there are three kinds
+here. Searched with `git ls-files '*.md' | xargs grep -oE` for each:
+`npm run <script>` against `package.json`'s scripts (265 claims, all
+real); a backticked path that looks like a file this repository ships,
+in the thirteen documents a person FOLLOWS rather than the records
+(21 of the 23 first flagged were records correctly naming what was there
+at the time); and `from '@kp-soft/themes/…'` against the export map. The
+fourth kind — a quoted message — needed its own search, against the whole
+source as one body of text.
+
+**4 · How we prevent recurrence.** Three gates, all in `npm run gates`
+and in the commit hook:
+
+- `gates/check-docs-runnable.mjs` — every command, path and import subpath
+  a followed document names is real. 265 claims.
+- `gates/check-doc-quotes.mjs` — every message a followed document quotes
+  verbatim is a string the source really prints. A quote carrying a
+  placeholder is skipped, because `<file>:NN names …` is a claim about a
+  SHAPE and matching those turned out to need a comparison subtle enough
+  to be wrong quietly. Two attempts at it reported nineteen legitimate
+  rows before that was clear, and a gate that cries wolf is one people
+  learn to skip. It costs nothing: every one of the four real faults was
+  verbatim.
+- `gates/check-docs-private.mjs` — nothing of a refused shape in any
+  document, and the things already published held to their count.
+
+Plus two unit tests that bind a hand-written number to its source: the
+README's gate count against the hook's, and `CLAUDE.md`'s document table
+against `docs/`.
+
+**5 · What the remedy costs.** Three gates and two tests, seconds in the
+chain. The real cost was in the building: the quote gate passed its own
+drills twice before it worked, because its first matcher let 1,031
+template literals between them match every sentence, and its second parsed
+JavaScript strings with a regular expression and silently lost every
+message in a file containing an apostrophe — including one this very gate
+then reported as unprintable.
+
+**6 · Who enforces it.** Code, all three, in the chain and in the hook.
+
+**7 · How we measure that it works.** At the next document a phase
+writes: it either passes these three on the first run or it does not, and
+either answer is information. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** If a false positive ever
+makes someone reach for `--no-verify`, the quote gate narrows to an
+explicit list of messages worth holding rather than all of them.
+
+**9 · Gezocht met.** `git ls-files '*.md' | xargs grep -ohE '\bnpm run
+[a-z][a-z0-9:_-]*'` for the commands; the three gates themselves for the
+paths, imports and quotes; `gh repo view --json visibility` and
+`ls .github/workflows/` for the two claims about the repository itself.
+
+**10 · When we review the measure.** At round seven's retrospective, with
+the question: did a gate catch a documentation fault before a person did.
+
+## fix-17 · A theme's page furniture covered a page that only previewed it (2026-09-12)
+
+**1 · What went wrong.** Kenny opened the documentation site at the
+release gate and found two things. A dark frame around the whole page,
+present on load, over the left navigation — and a green stripe running
+across the screen that belongs to `terminal` alone. Measured: at a 1600px
+viewport the bezel resolves to 17.8px, the site's first navigation link
+starts at 8px, so 9.8px of it sat behind the frame. Clicks still landed,
+because the bezel takes no pointer events; his bar is higher than that —
+*"links moeten compleet en klikbaar zijn"*.
+
+**2 · Which gate let it through.** None, and none could. Thirty-five
+gates, 1,343 browser tests and a green field test all passed over it. The
+procedure names this exact case from round three and this is the third
+time the same rule has earned its place: a person opens the page and
+finds what nobody thought to assert.
+
+**3 · Where the same fault sits.** The property is **a register drawing
+`position: fixed` furniture on whatever carries `data-theme`**, which a
+nested preview then paints over the whole viewport. Searched with a
+regular expression over every register for a rule whose selector is the
+theme attribute itself and whose body sets `position: fixed`:
+`terminal-register.css` has two, and nothing else in the package does.
+The near miss is `phantom-register.css`, whose equivalent asks for a
+`body` underneath — a card has none, so it stays in its box.
+
+The second half is a different property — **content within `--kp-bezel`
+of the viewport edge** — and that one was in the approved demo too: it
+hid its own skip link and two picker buttons by ten pixels each.
+
+**4 · How we prevent recurrence.** Three things, all code:
+
+- The two rules are `:root[data-theme='terminal']`, so the furniture
+  belongs to the page rather than to any element wearing the theme.
+- The theme reserves the space its own frame occupies, with the skip link
+  — positioned rather than flowed, and the first thing a keyboard user
+  reaches — moved clear on both axes.
+- `tests/page-furniture.spec.mjs`: three assertions, each driven red
+  first. One reads every register for the loose selector shape; one opens
+  the site wearing `terminal` and refuses anything readable under the
+  frame; one opens the page of twenty-two preview cards and refuses fixed
+  furniture on any of them.
+
+**5 · What the remedy costs.** One real consequence: `terminal`'s picker
+now rests 18px further in than every other theme's, because the theme
+reserves the frame it draws. `tests/registers.spec.mjs`'s drift test names
+it with its measurement rather than widening its bar — a theme having a
+frame is not a control wandering, and the day terminal stops framing the
+page that line fails and someone reads it.
+
+**6 · Who enforces it.** Code, three assertions, in the browser suite.
+
+**7 · How we measure that it works.** At the next theme that draws
+page-level furniture: does the first assertion catch a loose selector
+before a person does. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** The selector check moves
+from the browser suite into `npm run gates`, where it costs milliseconds
+and refuses the commit rather than the run.
+
+**9 · Gezocht met.** A regular expression over `css/*-register.css` for
+`^\s*\[data-theme='…'\]::(before|after)` with `position: fixed` in the
+body; then the same for any descendant selector, which is what found
+phantom and cleared it.
+
+**10 · When we review the measure.** At round seven's retrospective.

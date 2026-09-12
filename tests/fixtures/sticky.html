@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Staying put, and where an anchor lands</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- Stage 1.1 and the CSS half of 1.2. No stylesheet of this page's
+             own beyond the two lines that give it a scrollable length and a
+             bar with a measurable height: everything under test has to come
+             out of css/layout.css (rule 7e, KT3).
+
+             The page asks for the behaviour the way a consumer would — the
+             attribute on the bar, and the offset set to the bar's height —
+             because the defaults deliberately change nothing, and a test
+             that measured the defaults would be measuring that nothing
+             happened. -->
+        <style>
+            :root {
+                --kp-scroll-offset: 64px;
+            }
+
+            #bar {
+                block-size: 64px;
+                background: var(--card);
+                border-block-end: 1px solid var(--border);
+            }
+
+            #filler {
+                block-size: 250vh;
+            }
+        </style>
+
+        <a class="kp-skip-link" href="#target" data-case="skip">Skip to the content</a>
+
+        <header id="bar" data-kp-sticky data-case="bar">a bar that stays</header>
+
+        <div id="filler"></div>
+
+        <h2 id="target" data-case="target">The target of the skip link</h2>
+
+        <div style="block-size: 150vh"></div>
+    </body>
+</html>

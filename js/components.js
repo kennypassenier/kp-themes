@@ -393,6 +393,201 @@ export function skipTo(href, root = document) {
     return true;
 }
 
+/** Fired on the control when it appears or goes away: `{ shown }`. */
+export const TO_TOP_EVENT = 'kp-to-top';
+
+/** The attribute that marks a back-to-top control [feat-page-1]. */
+export const TO_TOP = '[data-kp-to-top]';
+
+/**
+ * Wire every back-to-top control under `root` [feat-page-1].
+ *
+ * Two halves, and the second is the one usually missing: it takes the
+ * reader back, and it takes the FOCUS back. A control that only scrolls
+ * leaves a keyboard user at the bottom of the document with the view at
+ * the top, which is worse than not moving at all.
+ *
+ * Where the focus lands is `data-kp-to-top-target`, a selector, and it
+ * falls back to the document's own body — the top of the page, which is
+ * what the control is named after. It is NOT the skip link's target: on a
+ * page with anything tall above the content, focusing that landmark
+ * scrolls straight back down to it and undoes the journey. Scrolling is
+ * left to the browser: `scrollTo` follows the root's own scroll-behaviour,
+ * which is the knob feat-layout-2 already put there and which a reader who
+ * asked for less motion has already overruled.
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, after?: number }} [options]
+ * @returns {() => void} detach
+ */
+export function attachToTop(root = document, { strings, after } = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+
+    for (const el of root.querySelectorAll(TO_TOP)) {
+        const button = /** @type {HTMLElement} */ (el);
+        if (button.dataset.kpToTopAttached !== undefined) continue;
+        button.dataset.kpToTopAttached = '';
+        const doc = button.ownerDocument;
+        const view = doc.defaultView;
+        if (!view) continue;
+
+        const threshold = after ?? Number(button.getAttribute('data-kp-to-top-after') ?? '400');
+        const target = button.getAttribute('data-kp-to-top-target') ?? '';
+        const s = { ...getStrings(), ...strings };
+        if (button.getAttribute('aria-label') === null && button.textContent?.trim() === '') {
+            button.setAttribute('aria-label', s.backToTop);
+        }
+
+        let shown = false;
+        let queued = false;
+        const decide = () => {
+            queued = false;
+            const next = view.scrollY > threshold;
+            if (next === shown) return;
+            shown = next;
+            button.toggleAttribute('data-kp-to-top-shown', next);
+            button.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next } }));
+        };
+        const onScroll = () => {
+            // One decision per frame: a scroll fires far more often than a
+            // page can paint, and the answer cannot change in between.
+            if (queued) return;
+            queued = true;
+            view.requestAnimationFrame(decide);
+        };
+        const onClick = () => {
+            view.scrollTo({ top: 0 });
+            // The focus goes too, and it goes WITHOUT scrolling. Focusing an
+            // element normally brings it into view, which undid the journey:
+            // on a page whose main landmark starts 2737px down, "back to
+            // top" landed back at 3476. So the target is the top of the
+            // document unless the page names another, and either way the
+            // focus moves quietly while the scroll above does the travelling.
+            const to = /** @type {HTMLElement | null} */ (target === '' ? null : doc.querySelector(target)) ?? doc.body;
+            if (!to.hasAttribute('tabindex')) to.setAttribute('tabindex', '-1');
+            to.focus({ preventScroll: true });
+        };
+
+        decide();
+        view.addEventListener('scroll', onScroll, { passive: true });
+        button.addEventListener('click', onClick);
+
+        cleanups.push(() => {
+            view.removeEventListener('scroll', onScroll);
+            button.removeEventListener('click', onClick);
+            button.removeAttribute('data-kp-to-top-shown');
+            delete button.dataset.kpToTopAttached;
+        });
+    }
+
+    return () => {
+        for (const c of cleanups) c();
+    };
+}
+
+/** Fired on the nav when its toggle opens or closes it: `{ open }`. */
+export const NAV_TOGGLE_EVENT = 'kp-nav-toggle';
+
+/** The mark the React NavBar puts on a toggle it wires itself [AR29]. */
+export const NAV_OWNED = '[data-kp-nav-owner]';
+
+/**
+ * Wire the toggle a narrow navigation collapses into [scope-10, stage 1.3].
+ *
+ * Opt-in by the button being there: a nav without one keeps the behaviour
+ * it had, which is what makes this additive for every page already built.
+ * The CSS decides when the bar is narrow enough to collapse; this decides
+ * nothing about width at all, so the two cannot disagree.
+ *
+ * Every state it sets has a way out [KT6]: the toggle itself, Escape while
+ * the focus is inside the nav, a click outside it, and the `kp-nav-toggle`
+ * event for a consumer who wants to persist or veto nothing but observe.
+ * `detach` removes what attach stamped.
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string }} [options]
+ * @returns {() => void} detach
+ */
+export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+
+    for (const el of root.querySelectorAll('[data-kp-nav-toggle]')) {
+        const button = /** @type {HTMLElement} */ (el);
+        // AR29, and it is the fault that shipped once already: two channels
+        // wiring the same button re-armed each other's state forever. The
+        // React NavBar marks its own, and a consumer who wants this module
+        // over a React nav anyway passes `ownedBy: ''`.
+        if (ownedBy !== '' && button.matches(ownedBy)) continue;
+        if (button.dataset.kpNavToggleAttached !== undefined) continue;
+        button.dataset.kpNavToggleAttached = '';
+
+        const nav = button.closest('.kp-nav') ?? button.parentElement;
+        if (!nav) continue;
+        const links = nav.querySelector('.kp-nav__links');
+
+        // aria-controls needs an id, and a page that did not give one still
+        // deserves the association rather than silence.
+        if (links && !links.id) links.id = `kp-nav-links-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
+        if (links) button.setAttribute('aria-controls', links.id);
+
+        const label = () => {
+            const s = { ...getStrings(), ...strings };
+            return nav.hasAttribute('data-kp-nav-open') ? s.closeMenu : s.menu;
+        };
+        /** @param {boolean} open */
+        const write = (open) => {
+            nav.toggleAttribute('data-kp-nav-open', open);
+            button.setAttribute('aria-expanded', String(open));
+            button.setAttribute('aria-label', label());
+        };
+        /** @param {boolean} open */
+        const set = (open) => {
+            write(open);
+            nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+        };
+        // Attaching is not a toggle. This wrote the starting state THROUGH
+        // the dispatch, so every consumer listening heard a close that
+        // nobody performed, on every page load — found by the first test
+        // ever to listen.
+        write(nav.hasAttribute('data-kp-nav-open'));
+
+        const onClick = () => set(!nav.hasAttribute('data-kp-nav-open'));
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            if (event.key !== 'Escape' || !nav.hasAttribute('data-kp-nav-open')) return;
+            set(false);
+            button.focus();
+        };
+        /** @param {Event} event */
+        const onOutside = (event) => {
+            if (!nav.hasAttribute('data-kp-nav-open')) return;
+            if (nav.contains(/** @type {Node} */ (event.target))) return;
+            set(false);
+        };
+
+        button.addEventListener('click', onClick);
+        nav.addEventListener('keydown', /** @type {EventListener} */ (onKey));
+        document.addEventListener('click', onOutside, true);
+
+        cleanups.push(() => {
+            button.removeEventListener('click', onClick);
+            nav.removeEventListener('keydown', /** @type {EventListener} */ (onKey));
+            document.removeEventListener('click', onOutside, true);
+            nav.removeAttribute('data-kp-nav-open');
+            button.removeAttribute('aria-expanded');
+            button.removeAttribute('aria-label');
+            button.removeAttribute('aria-controls');
+            delete button.dataset.kpNavToggleAttached;
+        });
+    }
+
+    return () => {
+        for (const c of cleanups) c();
+    };
+}
+
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

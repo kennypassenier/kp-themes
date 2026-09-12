@@ -96,7 +96,7 @@ test.describe('the dist bundle', () => {
     // snapshot -- colour, background colour and border colour -- stayed
     // green under that drill and measured nothing [KT3].
     test('every theme paints the same in both setups [TH106]', async ({ page }) => {
-        // Each fixture is loaded once and walked through all 24 themes.
+        // Each fixture is loaded once and walked through every theme.
         // Reloading per theme meant 48 page loads, each waiting out its
         // theme's signature animation, and the test ran past 30 seconds.
         const walk = async (fixture) => {

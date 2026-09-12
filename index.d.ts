@@ -7,6 +7,7 @@ export { default as Field } from './components/field.jsx';
 export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
 export { default as Marquee } from './components/marquee.jsx';
+export { default as Sidenav, SidenavToggle } from './components/sidenav.jsx';
 export { CONFIRM_MODES, CONFIRM_OWNED, CONFIRM_WINDOW_MS, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, attachSkipLinks, enforceContracts, findViolations, openConfirmation, skipTo, } from './js/components.js';
 export { Accordion, Breadcrumb, Dialog, DropdownMenu, Pagination, Progress, Skeleton, Spinner, Tabs, Toasts, Tooltip, } from './components/overlays.jsx';
 export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';

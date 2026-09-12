@@ -33,17 +33,34 @@ export const EFFECTS_ATTRIBUTE = 'data-kp-effects';
  * @param {{ key?: string, attribute?: string, effects?: boolean }} [options]
  * @returns {string}
  */
+/**
+ * A string as a JS literal that is also safe inside a <script> element.
+ *
+ * `JSON.stringify` escapes for a JS string, not for HTML: the sequence
+ * `</script>` inside the literal still closes the element the snippet
+ * lives in, and everything after it becomes markup. Escaping `<` as
+ * `\\u003c` is the same string to the engine and inert to the parser.
+ * The key and the attribute are the consumer's own values, so this is a
+ * foot-gun rather than an injection — but the foot is the consumer's.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+function jsString(value) {
+    return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
 export function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false } = {}) {
     // `effects: true` also arms the reveals of js/effects.js before first
     // paint [AR34]: the register keys its start states on the attribute,
     // so a page that will attach the module never paints the rest state
     // first and snaps. A page that never attaches it leaves this off and
     // shows every reveal at rest.
-    const arm = effects ? `\n        document.documentElement.setAttribute(${JSON.stringify(EFFECTS_ATTRIBUTE)}, '');` : '';
+    const arm = effects ? `\n        document.documentElement.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : '';
     return `(function () {
     try {
-        var t = localStorage.getItem(${JSON.stringify(key)});
-        if (t) document.documentElement.setAttribute(${JSON.stringify(attribute)}, t);${arm}
+        var t = localStorage.getItem(${jsString(key)});
+        if (t) document.documentElement.setAttribute(${jsString(attribute)}, t);${arm}
     } catch (e) {}
 })();`;
 }

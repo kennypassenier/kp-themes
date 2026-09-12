@@ -5,6 +5,26 @@ export type Strings = {
     alertError: string;
     busy: string;
     close: string;
+    /**
+     * The accessible name of a collapsed navigation's toggle
+     */
+    menu: string;
+    /**
+     * The same toggle once the navigation is open
+     */
+    closeMenu: string;
+    /**
+     * The accessible name of a hidden side navigation's toggle
+     */
+    sidebar: string;
+    /**
+     * The same toggle once that side navigation is open
+     */
+    closeSidebar: string;
+    /**
+     * The control that returns the reader to the top of the page
+     */
+    backToTop: string;
     previous: string;
     next: string;
     finish: string;
@@ -109,13 +129,9 @@ export type Strings = {
      */
     measureLoading: string;
     /**
-     * The horizontal dimension label once measured (blueprint) [S48]
+     * The size of the box the measurement frame holds (blueprint) [scope-18]
      */
-    measureWidth: (px: number) => string;
-    /**
-     * The vertical dimension label once measured (blueprint) [S48]
-     */
-    measureHeight: (px: number) => string;
+    measureBox: (w: number, h: number) => string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -149,6 +165,11 @@ export type Strings = {
  * @property {string} alertError
  * @property {string} busy
  * @property {string} close
+ * @property {string} menu          The accessible name of a collapsed navigation's toggle
+ * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
+ * @property {string} closeSidebar  The same toggle once that side navigation is open
+ * @property {string} backToTop    The control that returns the reader to the top of the page
  * @property {string} previous
  * @property {string} next
  * @property {string} finish
@@ -228,8 +249,8 @@ export type Strings = {
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
- * @property {(px: number) => string} measureWidth  The horizontal dimension label once measured (blueprint) [S48]
- * @property {(px: number) => string} measureHeight  The vertical dimension label once measured (blueprint) [S48]
+ * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]
+
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker

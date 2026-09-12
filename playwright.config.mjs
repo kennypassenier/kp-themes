@@ -31,6 +31,14 @@ export default defineConfig({
     // Never. A test that passes on a retry is a test that failed
     // [Kenny, 2026-09-09].
     retries: 0,
+    // A quarter of the machine [Kenny, 2026-09-11]. Playwright's default is
+    // every core, and on his sixteen that made the desktop stutter. Half
+    // was not enough either: eight browsers, each with threads of its own,
+    // still filled sixteen cores — he reported the fan still at 100% with
+    // that setting in place. Four leaves the machine usable while a run
+    // goes, which is the whole point. KP_TEST_WORKERS overrides it for a
+    // machine with room to spare.
+    workers: Number(process.env.KP_TEST_WORKERS ?? 0) || '25%',
     reporter: 'line',
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,

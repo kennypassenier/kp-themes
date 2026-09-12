@@ -53,7 +53,7 @@
  */
 
 /** The navigation sections, in order. */
-export const GROUPS = ['Getting started', 'Theming', 'Layout', 'Forms', 'Data', 'Feedback', 'Navigation', 'Structure'];
+export const GROUPS = ['Getting started', 'Theming', 'Layout', 'Forms', 'Data', 'Feedback', 'Navigation', 'Content', 'Structure'];
 
 /** @type {Descriptor[]} */
 export const DESCRIPTORS = [
@@ -1260,6 +1260,48 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'count',
+        title: 'Counting number',
+        group: 'Feedback',
+        classes: [],
+        exports: [],
+        aliases: ['count', 'counter', 'odometer'],
+        intro: 'A number that counts up to what it already says. The page writes the final figure; the effects module reads it, counts to it and puts the same string back — so a page that never loads the module, and a reader who asked for less movement, both simply see the number.',
+        whenToUse:
+            'For one or two figures that are the point of a page — a total, a score, a count of things done. Not for a table of numbers, where the movement makes the column unreadable, and not for anything a reader needs at once. The final number is authored in the HTML, so nothing is ever hidden behind the animation.',
+        examples: [
+            {
+                title: 'A number that counts up to itself',
+                why: 'The text is the truth. The module reads the number out of it, counts, and restores exactly what was written — separators, currency and all.',
+                markup: `
+<span data-kp-count>1204</span>
+`,
+            },
+            {
+                title: 'The page decides which separator is which',
+                why: '`1.204` is one thousand two hundred and four in Dutch and one-point-two-oh-four in English, and the string alone does not say. The nearest `lang` decides, so the module never has to guess.',
+                markup: `
+<p lang="nl"><span data-kp-count>1.118.204,75</span></p>
+<p lang="en"><span data-kp-count>1,204.50</span></p>
+`,
+            },
+            {
+                title: 'The two knobs, and the state a test or a consumer can read',
+                why: 'How long the count takes and where it starts, both as custom properties. `--kp-count: 0` means no counting at all. The state attribute is written by the module and readable at any moment, so nothing has to have been listening.',
+                markup: `
+<span data-kp-count style="--kp-count: 1200; --kp-count-from: 100" data-kp-count-state="done">640</span>
+`,
+            },
+        ],
+        variants: [],
+        accessibility: [
+            'The final number is written in the HTML, so a page without the module and a reader with reduced motion both see the real figure — the count is decoration over content that is already there.',
+            'At the reduced-motion setting the number never changes at all: it is not counted quickly, it is not counted.',
+            'The number is not announced while it counts. A screen reader reads the element once, with the figure the page authored.',
+            'The nearest `lang` decides which separator groups and which one is the decimal point, so a number never counts through the wrong notation.',
+        ],
+    },
+    {
         id: 'marquee',
         title: 'Marquee',
         group: 'Feedback',
@@ -1578,6 +1620,169 @@ export const DESCRIPTORS = [
             'Yours — give the nav element a name; a page with two of them is otherwise “navigation” twice.',
             'Yours — use links, and give the reader a skip link past the bar.',
             'Yours — keep the list short. A bar that wraps to three rows on a laptop is a menu.',
+        ],
+    },
+    {
+        id: 'sidenav',
+        title: 'Side navigation',
+        group: 'Navigation',
+        classes: ['kp-sidenav'],
+        exports: ['Sidenav', 'SidenavToggle'],
+        aliases: ['sidenav'],
+        intro: 'A navigation that stands beside the content instead of above it. Three modes — beside the page, over it, or pushing it aside — a slim rail that keeps the icons and drops the words, categories that fold, and either edge.',
+        whenToUse:
+            'For an application with more places than a bar can hold, or a hierarchy two levels deep. Not for the five links every page can reach — that is the bar at the top. Not as a drawer for content: a panel that slides in carrying a form is a dialog, and it wants a dialog’s focus handling and a dialog’s dismissal.',
+        examples: [
+            {
+                title: 'The React channel',
+                why: 'Added 2026-09-12 (`sidenav-react`). The component renders the markup and the knobs; js/sidenav.js — attached by js/auto.js — does the behaviour, exactly as it does for the framework-free channel. Every data attribute the module reads is a prop, and one left out keeps the module\u2019s own default rather than restating it. The way out of the opened state is the handle: `sidenavOf(ref.current)`. This example uses the default mode on purpose: `over` slides the panel off-canvas until something opens it, so on a static page it would render as a sliver — which is exactly what it did before someone looked.',
+                markup: `
+<nav class="kp-sidenav" id="nav" aria-label="Sections">
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="#overview" aria-current="page"><span class="kp-sidenav__label">Overview</span></a></li>
+            <li><a class="kp-sidenav__link" href="#reports"><span class="kp-sidenav__label">Reports</span></a></li>
+            <li><a class="kp-sidenav__link" href="#settings"><span class="kp-sidenav__label">Settings</span></a></li>
+        </ul>
+    </div>
+</nav>
+`,
+                react: `
+<Sidenav
+    id="nav"
+    label="Sections"
+    title="Sections"
+    items={[
+        { label: 'Overview', href: '#overview', current: true },
+        { label: 'Reports', href: '#reports' },
+        { label: 'Settings', href: '#settings' },
+    ]}
+/>
+`,
+            },
+            {
+                title: 'Beside the page',
+                why: 'The default mode is the one that is simply there: a column in the flow, no JavaScript needed to see it. The current page carries aria-current, which is what a screen reader announces and what every theme hangs its own mark on.',
+                markup: `
+<nav class="kp-sidenav" aria-label="Sections">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">Reports</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__label">Daily</span></a></li>
+<li><a class="kp-sidenav__link" href="#example"><span class="kp-sidenav__label">Weekly</span><span class="kp-sidenav__badge">12</span></a></li>
+</ul>
+</div>
+</nav>
+`,
+            },
+            {
+                title: 'Over the page, with a toggler',
+                why: 'data-kp-sidenav-mode="over" puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.',
+                markup: `
+<button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="app-nav">Menu</button>
+<nav class="kp-sidenav" id="app-nav" data-kp-sidenav-mode="over" aria-label="Sections">
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Daily</span></a></li>
+</ul>
+</div>
+</nav>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-sidenav-mode', what: 'side (the default, in the flow), over (above the content, with a backdrop) or push (fixed, and the content named by data-kp-sidenav-content moves over).' },
+            { name: 'data-kp-sidenav-position', what: 'fixed or absolute. Absolute puts the panel inside a positioned box rather than against the window, which is what a page with two of them needs.' },
+            { name: 'data-kp-sidenav-side', what: 'end puts the panel on the other edge, logically: in a right-to-left page that is the left, and it still slides out of the side it came from.' },
+            { name: 'data-kp-sidenav-slim', what: 'Allows the rail. With data-kp-sidenav-slim-collapsed it starts collapsed; data-kp-sidenav-expand-on-hover gives the words back while the pointer is over it.' },
+            { name: 'data-kp-sidenav-slim-hide', what: 'On an element inside, hides it in the rail; data-kp-sidenav-slim-show is its other half, so a wordmark can become a monogram instead of only disappearing.' },
+            { name: 'data-kp-sidenav-accordion', what: 'One category open at a time. Without it they are independent.' },
+            { name: 'data-kp-sidenav-backdrop', what: 'false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.' },
+            { name: 'data-kp-sidenav-close-on-esc', what: 'false keeps Escape from closing it. data-kp-sidenav-focus-trap="false" lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.' },
+            { name: 'data-kp-sidenav-remember', what: 'A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.' },
+            { name: '--kp-sidenav-inset-block', what: 'Where a covering panel starts and ends, one value or two. A page that keeps its own bar says `3rem 0` and the panel begins under it instead of sliding beneath it.' },
+            { name: 'never sideways', what: 'The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.' },
+            { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },
+            { name: '.kp-sidenav__category', what: 'A heading that folds, with .kp-sidenav__category-toggle and .kp-sidenav__submenu inside it. The open height is a grid track, so it animates without anything measuring it.' },
+        ],
+        accessibility: [
+            'Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.',
+            'Built in — the current page carries aria-current, so it is announced and not only drawn.',
+            'Built in — the toggler says whether it is expanded and which panel it controls.',
+            'Yours — give the nav element a name; a page with a bar and a side navigation has two of them.',
+            'Yours — put a label in every link. A rail of bare icons reads as a column of nothing.',
+        ],
+    },
+    {
+        id: 'to-top',
+        title: 'Back to top',
+        group: 'Navigation',
+        classes: ['kp-to-top'],
+        exports: [],
+        intro: 'The control that appears once the reader is a way down the page and takes them back — the view and the focus both, which is the half usually left out.',
+        whenToUse:
+            'On a page long enough that getting back is work: an article, a log, a table of a few hundred rows. Not on a page that fits on a screen, where it is a button that does nothing. Not as a substitute for a navigation — going up is not the same as going somewhere.',
+        examples: [
+            {
+                title: 'A control that knows when it is needed',
+                why: 'It is invisible until the reader has scrolled past the threshold, and `visibility: hidden` keeps it out of the tab order while it is. Pressing it scrolls to the top and moves the focus to the top of the document, so the next Tab starts where the eye is.',
+                markup: `
+<button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-to-top-after', what: 'How far down it appears, in pixels. Default 400.' },
+            { name: 'data-kp-to-top-target', what: 'A selector for where the focus should land instead of the top of the document. The focus moves without scrolling either way, so naming a landmark cannot undo the journey.' },
+            { name: 'data-kp-to-top-shown', what: 'Written by the module while the control is on the screen. Read it, do not set it.' },
+            { name: 'kp-to-top', what: 'The event, on the control, whenever it appears or goes away: `{ shown }`.' },
+            { name: '--kp-to-top-offset', what: 'How far it sits from the corner, both ways at once. Default 1.5rem.' },
+        ],
+        accessibility: [
+            'Built in — the focus goes back with the view, and it moves without scrolling, so the control cannot undo its own journey.',
+            'Built in — while it is not on the screen it is not in the tab order either.',
+            'Built in — the scroll follows the page’s own scroll-behaviour, so a reader who asked for less motion gets none.',
+            'Yours — give it a name. A button with only an arrow in it is announced as “button”.',
+        ],
+    },
+    {
+        id: 'media',
+        title: 'Media',
+        group: 'Content',
+        classes: ['kp-media', 'kp-media-figure'],
+        exports: [],
+        intro: 'A frame for a picture or a video that has its final shape before the picture arrives, so the text below it does not jump when the bytes land.',
+        whenToUse:
+            'Wherever a page shows an image whose size it does not control — a hero, a card’s thumbnail, an avatar. Not for a decorative background, which is a background. Not for an icon, which has one size and needs no frame.',
+        examples: [
+            {
+                title: 'A hero that holds its space',
+                why: 'The ratio is on the frame and the fit is on the image, so the page is the right shape at the first paint and the picture fills that shape rather than stretching to it. The caption over the picture has a darkening ground under it, because the picture belongs to you and can be any brightness.',
+                markup: `
+<figure class="kp-media-figure">
+<div class="kp-media kp-media--wide">
+<img src="/hero.jpg" alt="" />
+<p class="kp-media__overlay">Where this was taken</p>
+</div>
+<figcaption>And what it shows</figcaption>
+</figure>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-media--wide', what: '21/9, for a hero that spans the page.' },
+            { name: '.kp-media--square', what: '1/1, for a grid of thumbnails.' },
+            { name: '.kp-media--portrait', what: '3/4, for a person.' },
+            { name: '--kp-media-ratio', what: 'Any other shape. Default 16/9.' },
+            { name: '--kp-media-fit', what: 'cover by default — the picture fills the frame and is cropped. `contain` fits it whole, with the frame’s ground showing around it.' },
+            { name: '--kp-media-position', what: 'Which part survives the crop. Default the middle; `50% 20%` keeps heads in the frame.' },
+            { name: '.kp-media__overlay', what: 'Text on the picture, with a gradient under it. Its ink and its ground are knobs for a consumer who knows their own picture.' },
+        ],
+        accessibility: [
+            'Yours — every image needs alt text, and a decorative one needs an empty alt rather than none.',
+            'Yours — a caption that repeats the alt text is read twice. Say different things, or leave one out.',
+            'Built in — the frame keeps its shape before and after loading, so nothing the reader is looking at moves under them.',
         ],
     },
     {

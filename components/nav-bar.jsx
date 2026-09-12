@@ -1,4 +1,4 @@
-import { forwardRef, Fragment } from 'react';
+import { forwardRef, Fragment, useId, useState } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { skipTo as jumpTo } from '../js/components.js';
 // Navigation bar [TH7, TH36].
@@ -47,7 +47,9 @@ import { skipTo as jumpTo } from '../js/components.js';
  * @property {boolean} [wrap]       Render the `.kp-nav-wrap` container the narrow rule needs. Default true.
  * @property {string} [wrapClassName]  Extra classes for that wrapper.
  * @property {string} [label]       The nav's accessible name. Default: the dictionary's.
- * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string }} [classNames]
+ * @property {boolean} [collapsible]  Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.
+ * @property {import('react').ReactNode} [toggleIcon]  What goes in that button. Empty draws three bars; this package ships type, not icons.
+ * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').ReactNode} [children]  Trailing slot.
@@ -73,6 +75,8 @@ function NavBarInner(
         wrapClassName = '',
         label,
         classNames = {},
+        collapsible = false,
+        toggleIcon,
         strings,
         className = '',
         children,
@@ -81,6 +85,8 @@ function NavBarInner(
     ref,
 ) {
     const s = useStrings(strings);
+    const [open, setOpen] = useState(false);
+    const listId = useId();
     const Brand = brandComponent ?? Link;
     const Item = List === 'ul' ? 'li' : 'div';
     // The wrapper is what the narrow rule reads [TH104, AR24]: a container
@@ -111,7 +117,19 @@ function NavBarInner(
                 </a>
             )}
             <Wrap {...wrapProps}>
-                <nav ref={ref} className={`kp-nav ${className}`.trim()} aria-label={label ?? s.mainNavigation} {...rest}>
+                <nav
+                    ref={ref}
+                    className={`kp-nav ${className}`.trim()}
+                    aria-label={label ?? s.mainNavigation}
+                    data-kp-nav-open={collapsible && open ? '' : undefined}
+                    onKeyDown={(event) => {
+                        // Escape closes it and gives the focus back, which is
+                        // the way out every state this component sets has [KT6].
+                        if (event.key !== 'Escape' || !open) return;
+                        setOpen(false);
+                    }}
+                    {...rest}
+                >
                     {brand !== undefined &&
                         (brandHref ? (
                             <Brand className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()} href={brandHref}>
@@ -120,7 +138,23 @@ function NavBarInner(
                         ) : (
                             <span className={`kp-nav__brand ${classNames.brand ?? ''}`.trim()}>{brand}</span>
                         ))}
-                    <List className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
+                    {collapsible && (
+                        <button
+                            type="button"
+                            data-kp-nav-toggle
+                            // AR29: this channel wires the button itself, so
+                            // the framework-free module has to leave it alone.
+                            data-kp-nav-owner
+                            className={`kp-nav__toggle ${classNames.toggle ?? ''}`.trim()}
+                            aria-expanded={open ? 'true' : 'false'}
+                            aria-controls={listId}
+                            aria-label={open ? s.closeMenu : s.menu}
+                            onClick={() => setOpen((was) => !was)}
+                        >
+                            {toggleIcon}
+                        </button>
+                    )}
+                    <List id={collapsible ? listId : undefined} className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
                         {links.map((l) => {
                             const current = l.current === true ? 'page' : l.current === false || l.current === undefined ? undefined : l.current;
                             const sub = Array.isArray(l.links) && l.links.length > 0 ? l.links : null;

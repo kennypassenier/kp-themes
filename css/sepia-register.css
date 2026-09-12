@@ -388,7 +388,7 @@
 
     [data-theme='sepia'] .kp-nav__link--cta:hover,
     [data-theme='sepia'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--primary) h s calc(l - 5%));
+        background: hsl(from var(--primary) h s calc(l - 5));
         color: var(--primary-foreground);
     }
 
@@ -447,8 +447,8 @@
     }
 
     [data-theme='sepia'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l - 4%));
-        border-color: hsl(from var(--primary) h s calc(l - 4%));
+        background: hsl(from var(--primary) h s calc(l - 4));
+        border-color: hsl(from var(--primary) h s calc(l - 4));
     }
 
     [data-theme='sepia'] .kp-button--ghost {
@@ -647,7 +647,19 @@
         background: var(--card);
     }
 
-    [data-theme='sepia'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='sepia'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border);
         border-inline-start: 3px solid var(--accent);
@@ -1071,5 +1083,126 @@
         text-transform: none;
         letter-spacing: 0;
         color: var(--primary);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny asked this one for ideas. The theme is aged paper, so the
+       column is a margin: the row you are on is annotated rather than
+       highlighted — a hand-drawn bracket in the gutter, the way a reader
+       marks the passage they are in. */
+    [data-theme='sepia'] .kp-sidenav {
+        --kp-sidenav-surface: var(--background);
+        --kp-sidenav-gap: 0.15rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__title {
+        font-style: italic;
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link,
+    [data-theme='sepia'] .kp-sidenav__category-toggle {
+        padding-inline-start: 1.3rem;
+        border-radius: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.45rem;
+        inset-block: 0.3rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link:hover::before {
+        opacity: 0.4;
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    [data-theme='sepia'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A pasted-in plate on aged paper: a keyline with a little air inside
+       it, and a hand-written caption. */
+    [data-theme='sepia'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] .kp-media {
+        border: 1px solid var(--border-strong);
+        outline: 4px solid var(--card);
+        outline-offset: -4px;
+    }
+
+    [data-theme='sepia'] .kp-media-figure > figcaption {
+        font-style: italic;
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='sepia'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* ── The marginal note [scope-12, approved 2026-09-11] ─────────────
+       This theme is aged paper, and on paper you mark what you are
+       reading in the margin. Touching a control draws a bracket to the
+       left of it — beside the thing, not on it, because that is where a
+       reader writes. The same gesture its side navigation already uses
+       for the row you are on. */
+    [data-theme='sepia'] .kp-button {
+        position: relative;
+        margin-inline-start: 0.8rem;
+    }
+
+    [data-theme='sepia'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -0.65rem;
+        inset-block: 0.1rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] .kp-button::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='sepia'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='sepia'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='sepia'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='sepia'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

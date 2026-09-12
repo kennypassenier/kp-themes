@@ -241,7 +241,7 @@
     }
 
     [data-theme='solstice'] .kp-nav__link--cta:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
         color: var(--primary-foreground);
     }
 
@@ -254,11 +254,11 @@
     }
 
     [data-theme='solstice'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
     }
 
     [data-theme='solstice'] .kp-button--secondary:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4%));
+        background: hsl(from var(--secondary) h s calc(l + 4));
     }
 
     [data-theme='solstice'] .kp-button--ghost {
@@ -869,5 +869,112 @@
         color: var(--primary);
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this one too sober. The theme is a low sun, so the
+       column carries the light it already has: the row you are on is warm
+       at its leading edge and cools across, which is the one gradient
+       this theme is allowed. */
+    [data-theme='solstice'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link,
+    [data-theme='solstice'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
+        box-shadow: inset 0.18rem 0 0 var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Less sober, as Kenny asked: the low sun catches the top edge of
+       both, and the caption keeps the warm accent. */
+    [data-theme='solstice'] .kp-to-top {
+        box-shadow: inset 0 1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 2px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='solstice'] .kp-media-figure > figcaption {
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='solstice'] .kp-media-figure {
+        color: var(--primary);
+    }
+
+    /* ── The low sun rakes across [scope-12, approved 2026-09-11] ──────
+       A low sun is the whole picture of this theme, and a low sun moves.
+       Touching a control draws a warm band across it once, from the
+       leading edge to the far one. Once, never in a loop: a loop would be
+       an animation demanding attention rather than light falling on a
+       thing. */
+    [data-theme='solstice'] .kp-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-theme='solstice'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -60%;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-button:hover:not(:disabled)::after {
+            animation: kp-rake 620ms ease-out both;
+        }
+    }
+
+    @keyframes kp-rake {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 340% 0;
+        }
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='solstice'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    [data-theme='solstice'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='solstice'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

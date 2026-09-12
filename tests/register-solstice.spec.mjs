@@ -29,6 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { animationsSeen, pseudoStyle, recordAnimations } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
@@ -249,6 +250,29 @@ for (const [channel, url] of CHANNELS) {
             expect(focused.outline, 'the outline channel').toBe('solid');
             expect(focused.boxShadow.match(/inset/g)?.length, 'the mirror highlight survives, both edges').toBe(2);
             expect(focused.boxShadow.replace(/inset[^,]*,?/g, '').trim(), 'a ring layer remains beside the highlight').not.toBe('');
+        });
+
+        test('a low sun rakes once across the touched control [scope-12]', async ({ page }) => {
+            // `kp-rake` is a value that PASSES, not one that settles: the
+            // animation name is the keyframe while it runs and nothing after
+            // [fix-1]. So the listener is armed before the page exists.
+            // Drilled 2026-09-12 in firefox: the hover's `animation:
+            // kp-rake ...` removed -> red on the sighting.
+            await recordAnimations(page);
+            await open(page, url);
+            const btn = page.locator('.kp-button').first();
+            const band = await pseudo(btn, '::after', ['background-image', 'width']);
+            expect(band['background-image'], 'the band is a gradient, so neither edge is a hard step').toContain('gradient');
+            await btn.hover();
+            await animationsSeen(page, 'the sun rakes across').toContain('kp-rake');
+        });
+
+        test('the rake runs once, and not at all for someone asking for less motion [DI7]', async ({ page }) => {
+            await recordAnimations(page);
+            await open(page, url, { reduced: true });
+            await page.locator('.kp-button').first().hover();
+            await page.waitForTimeout(200);
+            expect(await page.evaluate(() => window.__kpAnimations ?? []), 'no rake under reduced motion').not.toContain('kp-rake');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

@@ -1,4 +1,4 @@
-export type ThemeName = 'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'woodblock' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'lapis' | 'nostromo';
+export type ThemeName = 'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'phantom' | 'shade-light' | 'shade-dark' | 'retro' | 'grotesk' | 'lapis' | 'nostromo' | 'titanium';
 export type ThemeRecord = {
     name: ThemeName;
     label: string;
@@ -13,7 +13,7 @@ export type ThemeRecord = {
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'woodblock' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'lapis' | 'nostromo'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'phantom' | 'shade-light' | 'shade-dark' | 'retro' | 'grotesk' | 'lapis' | 'nostromo' | 'titanium'} ThemeName
  */
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
 /** @type {readonly ThemeRecord[]} */
@@ -36,4 +36,4 @@ export declare const STORAGE_KEY = "theme";
  * matters happens in the browser, on a page where the two files may
  * have arrived separately. js/diagnostics.js does it.
  */
-export declare const VERSION = "5.1.0";
+export declare const VERSION = "6.0.0";

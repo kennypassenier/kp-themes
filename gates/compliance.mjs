@@ -51,21 +51,18 @@ function motionScope() {
         '../css/shade-dark-register.css',
         '../css/lapis-register.css',
         '../css/high-contrast-register.css',
-        '../css/mono-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
         '../css/formal-register.css',
-        '../css/academia-register.css',
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/ticker-register.css',
         '../css/shade-light-register.css',
         '../css/pastel-register.css',
-        '../css/woodblock-register.css',
+        '../css/titanium-register.css',
     ]) {
         const css = readFileSync(new URL(rel, import.meta.url), 'utf8');
         names.push(...[...css.matchAll(/\[data-theme='([^']+)'\]/g)].map((m) => m[1]));
@@ -87,21 +84,18 @@ function motionVerdicts() {
         '../css/shade-dark-register.css',
         '../css/lapis-register.css',
         '../css/high-contrast-register.css',
-        '../css/mono-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
         '../css/formal-register.css',
-        '../css/academia-register.css',
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/ticker-register.css',
         '../css/shade-light-register.css',
         '../css/pastel-register.css',
-        '../css/woodblock-register.css',
+        '../css/titanium-register.css',
         '../css/_rules.css',
     ]) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
@@ -112,7 +106,17 @@ function motionVerdicts() {
             // A calc() duration is bounded by the shortest any theme
             // declares; the motion gate does the same arithmetic and is
             // where the number lives.
-            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS) <= 3);
+            //
+            // WITH THE CYCLE COUNT [step-6]. This call had two arguments
+            // where the gate's has three, so `cycles` fell back to its
+            // default of Infinity and an animation that runs once was rated
+            // as though it looped forever. Measured 2026-09-11: fourteen of
+            // thirty-six animations came out over the threshold on the
+            // two-argument call and none on the three-argument one, which is
+            // why this table read FAIL on DI5 for every theme while the gate
+            // it quotes read pass. The same sum in two places is one sum too
+            // many; the test below now lays the two verdicts side by side.
+            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS, a.cycles) <= 3);
         }
         guard.push(unguardedMotion(source).length === 0);
     }
@@ -138,21 +142,18 @@ function layersClean() {
         '../css/shade-dark-register.css',
         '../css/lapis-register.css',
         '../css/high-contrast-register.css',
-        '../css/mono-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
         '../css/formal-register.css',
-        '../css/academia-register.css',
         '../css/nostromo-register.css',
         '../css/blueprint-register.css',
         '../css/grotesk-register.css',
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/ticker-register.css',
         '../css/shade-light-register.css',
         '../css/pastel-register.css',
-        '../css/woodblock-register.css',
+        '../css/titanium-register.css',
         '../css/tailwind-bridge.css',
     ].every((rel) => leakedColours(readFileSync(new URL(rel, import.meta.url), 'utf8')).length === 0);
 }
@@ -191,7 +192,27 @@ export function table() {
     // them an authority they had not earned. They are the gates' own
     // output now [Phase 7, G2].
     /** @param {string} script */
-    const said = (script) => execFileSync(process.execPath, [new URL(script, import.meta.url).pathname], { encoding: 'utf8' }).trim();
+    // Phase 7: this used to let `execFileSync` throw. The accessibility
+    // floors are ADVICE in this package and never refuse (Kenny,
+    // 2026-09-09) — but check-contrast.mjs still exits 1 when a pair is
+    // short, and a throw here turned that advice into a hard gate through
+    // the back door: shade-light's muted colour, chosen deliberately at
+    // 3.99 with the reading recorded, failed `npm run gates`. The point of
+    // this call is to QUOTE what the advisory printed, so the exit code is
+    // not this function's business. fix-13's shape a second time: an
+    // advisory becoming a gate by accident.
+    const said = (script) => {
+        try {
+            return execFileSync(process.execPath, [new URL(script, import.meta.url).pathname], { encoding: 'utf8' }).trim();
+        } catch (error) {
+            // A failing advisory writes its findings to stderr and its
+            // count to stdout, so both are the thing to quote.
+            const said = /** @type {{ stdout?: string, stderr?: string }} */ (error);
+            const out = `${said.stdout ?? ''}${said.stderr ?? ''}`.trim();
+            if (out === '') throw error; // it did not run at all, which IS this function's business
+            return out;
+        }
+    };
 
     const notes = [
         `- ${said('check-contrast.mjs')}`,

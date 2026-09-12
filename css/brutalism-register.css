@@ -672,7 +672,19 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
     }
 
-    [data-theme='brutalism'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='brutalism'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
@@ -1262,5 +1274,184 @@
         font-weight: 700;
         letter-spacing: 0.02em;
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Not a panel but a column of slabs, each with its own hard shadow.
+       The current one does not tint: it slides into its shadow and the
+       shadow goes out from under it [approved by Kenny, 2026-09-11]. */
+    [data-theme='brutalism'] .kp-sidenav {
+        --kp-sidenav-surface: transparent;
+        --kp-sidenav-gap: 0.4rem;
+        border: none;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__header {
+        background: var(--foreground);
+        color: var(--background);
+        border: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link,
+    [data-theme='brutalism'] .kp-sidenav__category-toggle {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+        padding: 0.5rem 0.75rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-sidenav__link,
+        [data-theme='brutalism'] .kp-sidenav__category-toggle {
+            transition:
+                translate var(--fx-duration, 120ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 120ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link:hover {
+        translate: -1px -1px;
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Slabs. The control sits on its shadow and moves into it when
+       pressed; the frame has the same border and never rounds. */
+    [data-theme='brutalism'] .kp-to-top {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-to-top:active {
+        translate: 4px 4px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media-figure > figcaption {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='brutalism'] .kp-media-figure {
+        color: var(--foreground);
+        text-align: start;
+    }
+
+    /* ── The thing names itself [scope-12, approved 2026-09-11] ────────
+       Brutalism labels its own construction: services on the outside,
+       functions painted on the wall. So a control says what it IS when
+       you touch it, in a small block-letter tag beside it.
+
+       Kenny's two conditions, 2026-09-11: it reaches many elements rather
+       than only buttons, and the words are English by default and
+       replaceable. `--kp-label` is that door — a page or a single element
+       sets it and the tag says whatever it was given. The defaults below
+       are the fallbacks in that same declaration, which is why there is
+       no string here a consumer cannot reach. */
+    [data-theme='brutalism'] .kp-button,
+    [data-theme='brutalism'] .kp-field__input,
+    [data-theme='brutalism'] .kp-card,
+    [data-theme='brutalism'] .kp-alert,
+    [data-theme='brutalism'] .kp-badge,
+    [data-theme='brutalism'] .kp-sidenav {
+        position: relative;
+    }
+
+    [data-theme='brutalism'] .kp-button::after,
+    [data-theme='brutalism'] .kp-field__input::after,
+    [data-theme='brutalism'] .kp-card::after,
+    [data-theme='brutalism'] .kp-alert::after,
+    [data-theme='brutalism'] .kp-badge::after,
+    [data-theme='brutalism'] .kp-sidenav::after {
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+        background: var(--foreground);
+        color: var(--background);
+        padding: 0.1rem 0.3rem;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] .kp-button::after {
+        content: var(--kp-label, 'BUTTON');
+    }
+
+    [data-theme='brutalism'] .kp-field__input::after {
+        content: var(--kp-label, 'FIELD');
+    }
+
+    [data-theme='brutalism'] .kp-card::after {
+        content: var(--kp-label, 'CARD');
+    }
+
+    [data-theme='brutalism'] .kp-alert::after {
+        content: var(--kp-label, 'ALERT');
+    }
+
+    [data-theme='brutalism'] .kp-badge::after {
+        content: var(--kp-label, 'BADGE');
+    }
+
+    [data-theme='brutalism'] .kp-sidenav::after {
+        content: var(--kp-label, 'NAV');
+    }
+
+    [data-theme='brutalism'] .kp-button:hover::after,
+    [data-theme='brutalism'] .kp-button:focus-visible::after,
+    [data-theme='brutalism'] .kp-field__input:hover::after,
+    [data-theme='brutalism'] .kp-field__input:focus::after,
+    [data-theme='brutalism'] .kp-card:hover::after,
+    [data-theme='brutalism'] .kp-alert:hover::after,
+    [data-theme='brutalism'] .kp-badge:hover::after,
+    [data-theme='brutalism'] .kp-sidenav:hover::after {
+        opacity: 1;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='brutalism'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
     }
 }

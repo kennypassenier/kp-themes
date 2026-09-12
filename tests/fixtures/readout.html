@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Button readout fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/dark-register.css" />
+    </head>
+    <body>
+        <main>
+            <!-- The markup both channels produce for a button carrying a
+                 readout: components/button.jsx renders exactly this, and
+                 showcase/examples.mjs builds the same nodes. The word is
+                 this fixture's own, not the package's [KT5] — the readout
+                 is a consumer's text by design, and no page in the
+                 package passes one today. -->
+            <button type="button" class="kp-button kp-button--primary">
+                <span class="kp-button__edge" aria-hidden="true"></span>
+                <span class="kp-button__readout" aria-hidden="true">ready</span>
+                <span class="kp-button__label">Send</span>
+            </button>
+
+            <!-- And one without, which is every button in the package as
+                 it ships: the readout element is simply absent. -->
+            <button type="button" class="kp-button" id="bare">
+                <span class="kp-button__edge" aria-hidden="true"></span>
+                <span class="kp-button__label">Cancel</span>
+            </button>
+        </main>
+    </body>
+</html>

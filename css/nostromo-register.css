@@ -186,7 +186,7 @@
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,
     [data-theme='nostromo'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--selected) h s calc(l - 6%));
+        background: hsl(from var(--selected) h s calc(l - 6));
         color: var(--primary-foreground);
     }
 
@@ -380,7 +380,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--primary:hover:not(:disabled) {
-        background: hsl(from var(--primary) h s calc(l + 7%));
+        background: hsl(from var(--primary) h s calc(l + 7));
     }
 
     [data-theme='nostromo'] .kp-button--ghost {
@@ -401,7 +401,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--destructive:hover:not(:disabled) {
-        background: hsl(from var(--destructive) h s calc(l - 6%));
+        background: hsl(from var(--destructive) h s calc(l - 6));
     }
 
     [data-theme='nostromo'] .kp-button:disabled {
@@ -584,7 +584,19 @@
 
     /* ── Alert, badges, tags, status ──────────────────────────────────── */
 
-    [data-theme='nostromo'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='nostromo'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -1013,5 +1025,153 @@
         letter-spacing: 0.2em;
         color: var(--muted-foreground);
         border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The dot. It is the example the whole round is built on — Kenny's own
+       answer to what a quirk is — and a column is where it belongs even
+       more than a bar: the gutter is always there, and the lit one tells
+       you which deck you are on [approved 2026-09-11]. */
+    [data-theme='nostromo'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__header {
+        background: var(--muted);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 0.625rem;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link,
+    [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.6875rem;
+        border-radius: 0;
+        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-block-start: -0.2rem;
+        border-radius: 50%;
+        background: var(--primary);
+        opacity: 0;
+        translate: -0.35rem 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-sidenav__link::before {
+            transition:
+                opacity var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link:hover::before {
+        opacity: 0.45;
+        translate: 0 0;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Ship fittings: the control is a plate with a bevel, and a picture is
+       a viewport with a caption stencilled under it. */
+    [data-theme='nostromo'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='nostromo'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The dot becomes a lamp [scope-12, approved 2026-09-11] ────────
+       Kenny's own example of what a quirk is, carried through: the dot no
+       longer marks only the page you are on but every control there is.
+       Dark at rest, lit under the pointer, full when pressed — a console
+       where each switch has its own lamp. Same size and same gutter as
+       the one in the navigation, so the theme becomes more recognisable
+       rather than busier. */
+    [data-theme='nostromo'] .kp-button {
+        position: relative;
+        padding-inline-start: 1.7rem;
+    }
+
+    [data-theme='nostromo'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-block-start: -0.22rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-button::before {
+            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-button:hover:not(:disabled)::before {
+        opacity: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-button:active:not(:disabled)::before {
+        opacity: 1;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='nostromo'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='nostromo'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

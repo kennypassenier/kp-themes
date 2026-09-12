@@ -459,6 +459,42 @@
         box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
+    /* Two surfaces a theme may paint on, and nothing else [scope-16,
+       scope-17, Kenny 2026-09-12]. Both approved concept demos of round
+       seven put an oxide film along the control's edge AND a small reading
+       above it, which is one surface more than a button's two
+       pseudo-elements can carry — the spectral instrument already spends
+       both on its brackets.
+
+       Out of flow, so neither can move the control; `inset: 0` so the edge
+       has the whole box to work with; and invisible until a register gives
+       them something. Twenty-four themes never notice they are there,
+       which is the same bargain `.kp-button__label` already makes. */
+    /* The control is the containing block for both, which is what makes
+       "out of flow" mean "inside this button" rather than "somewhere on
+       the page". Without it the edge measured 1280px wide — the viewport —
+       on the first run of tests/button-surfaces.spec.mjs. */
+    .kp-button {
+        position: relative;
+    }
+
+    .kp-button__edge,
+    .kp-button__readout {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .kp-button__edge {
+        inset: 0;
+    }
+
+    .kp-button__readout {
+        inset-block-end: 100%;
+        inset-inline-start: 0;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
     /* The button's own label, in its own element [S49, A7]: a theme that
        skews the button (phantom's demo does) sets the label upright
        again on this, and every other theme never notices it is there. */
@@ -1125,6 +1161,92 @@
         list-style: none;
     }
 
+    /* The toggle a narrow bar collapses into [scope-10, stage 1.3].
+
+ * Measured before this existed: the package had no collapse of any kind,
+ * so a bar simply wrapped. On the round-seven demo at 462px that put the
+ * chrome at 229px tall before any of the page was visible.
+ *
+ * It is opt-in by the presence of the button, not by a width: a nav
+ * without a toggle behaves exactly as it did, which is what keeps this
+ * additive for every page already built. The width that decides is the
+ * 40rem container query the nav already steps at — the package steps at
+ * one width rather than at two [TH104].
+ *
+ * The three bars are drawn rather than fetched, because this package
+ * ships type and not icons; a consumer who puts their own glyph in the
+ * button gets theirs instead. The accessible name comes from the
+ * dictionary [KT5] and says which way the press goes. */
+    .kp-nav__toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--kp-nav-toggle-size, 2.25rem);
+        block-size: var(--kp-nav-toggle-size, 2.25rem);
+        margin-inline-start: auto;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-nav__toggle::before {
+        content: '';
+        inline-size: 1.05rem;
+        block-size: 2px;
+        background: currentColor;
+        box-shadow:
+            0 -0.36rem 0 currentColor,
+            0 0.36rem 0 currentColor;
+    }
+
+    /* A consumer's own glyph wins over the drawn one. */
+    .kp-nav__toggle:has(*)::before {
+        content: none;
+    }
+
+    /* DI3: open is a state, and a state is visible as one. The plate is the
+ * theme's own accent rather than a shape change, because three bars
+ * folding into a cross is geometry that twenty-one registers would each
+ * have to keep working. */
+    .kp-nav[data-kp-nav-open] > .kp-nav__toggle {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        border-color: var(--accent);
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+            display: inline-flex;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            display: none;
+            flex-basis: 100%;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        /* A 12rem panel floating over a 320px screen is the fault TH99
+     * already caught once. Collapsed, a dropdown is a nested list
+     * instead: in the flow, open, and indented. */
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            position: static;
+            display: block;
+            opacity: 1;
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+        }
+    }
+
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */
@@ -1279,6 +1401,459 @@
  * page's ordinary link rule, which is what says it is one. */
     a.kp-nav__brand {
         color: inherit;
+    }
+
+    /* --- Media [feat-media-1] --------------------------------------------
+       Of the component roots this package declares, not one was for a
+       picture, so every page that wanted one at the top invented its own —
+       and nearly all of them forgot the same thing.
+
+       The space is there before the picture is. `aspect-ratio` on the frame
+       and `object-fit` on the image mean the page has its final shape at
+       the first paint, so the text below it does not jump when the bytes
+       arrive. That is a layout bug a consumer cannot fix from the outside,
+       because it lives between the frame and the image.
+
+       No width of its own: a picture is as wide as what holds it, and
+       whoever placed it knows that better than this file does. */
+
+    .kp-media {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: var(--kp-media-ratio, 16 / 9);
+        background: var(--muted);
+        border-radius: var(--radius, 0);
+    }
+
+    .kp-media > img,
+    .kp-media > video,
+    .kp-media > picture,
+    .kp-media > picture > img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: var(--kp-media-fit, cover);
+        object-position: var(--kp-media-position, 50% 50%);
+        display: block;
+    }
+
+    /* Its own ratios, because a hero and a portrait are not the same
+       picture and a consumer should not have to remember the numbers. */
+    .kp-media--wide {
+        --kp-media-ratio: 21 / 9;
+    }
+
+    .kp-media--square {
+        --kp-media-ratio: 1;
+    }
+
+    .kp-media--portrait {
+        --kp-media-ratio: 3 / 4;
+    }
+
+    /* A caption belongs to the picture, so it sits with it rather than
+       floating below in whatever the page happens to give it. */
+    .kp-media-figure {
+        margin: 0;
+    }
+
+    .kp-media-figure > figcaption {
+        margin-block-start: 0.5rem;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        color: var(--muted-foreground);
+    }
+
+    /* Text over the picture, with a ground under it. A caption laid
+       straight on a photograph is legible until the day somebody uploads a
+       bright one [DI1]. */
+    .kp-media__overlay {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        padding: var(--kp-media-overlay-pad, 1rem);
+        color: var(--kp-media-overlay-ink, #fff);
+        background: var(--kp-media-overlay-ground, linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0)));
+    }
+
+    /* --- Back to top [feat-page-1] ---------------------------------------
+       The control that appears once the reader is a way down and takes them
+       back. It leans on the scroll offset built for the sticky bar: landing
+       at the top of a page whose bar covers the first line is not arriving.
+
+       Visibility is `visibility` rather than the hidden attribute, so the
+       button can fade rather than blink — and `visibility: hidden` keeps it
+       out of the tab order just as surely, which is the part that matters
+       for a control that is not there yet. */
+
+    .kp-to-top {
+        position: fixed;
+        inset-block-end: var(--kp-to-top-offset, 1.5rem);
+        inset-inline-end: var(--kp-to-top-offset, 1.5rem);
+        z-index: var(--kp-to-top-layer, 50);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .kp-to-top[data-kp-to-top-shown] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-to-top {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                visibility var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* --- Side navigation [feat-nav-3] ------------------------------------
+       A navigation that stands beside the content instead of above it,
+       built to the feature list Kenny pointed at (MDBootstrap's sidenav,
+       read 2026-09-11). Three modes, a slim rail, collapsible categories,
+       a backdrop, either edge, and a way out of every one of them [KT6].
+
+       What is deliberately NOT taken from that reference is its `color`
+       option. What the active link looks like is the theme's to say, and
+       that is the whole of this package: a register answers `.kp-sidenav`,
+       and a consumer picks a theme rather than a colour.
+
+       One thing CSS cannot do alone: `push` and `side` offset a content
+       element this component does not own, so the module sets that inset
+       and says so in an event. Everything else here is CSS, so a page
+       without JavaScript still gets a navigation rather than a pile of
+       links. */
+
+    .kp-sidenav {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+        /* The knob names the whole panel, border included. Without this it
+           named the content box, the panel painted a pixel wider than the
+           number, and the offset a push mode puts on the content — which
+           reads that same knob — left the text under the border. The
+           package does not set box-sizing globally, so a component that
+           has a width says so itself. */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        /* It has a width, so it does not give it up. In `side` mode the
+           panel is a flex item of the consumer's own layout, and the
+           default there is to shrink — which made a panel asked for 11rem
+           paint at 135px beside its content. */
+        flex-shrink: 0;
+        inline-size: var(--kp-sidenav-w);
+        max-inline-size: 100%;
+        background: var(--kp-sidenav-surface, var(--card));
+        color: var(--foreground);
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* The panel that is part of the page. This is the default because a
+       navigation that is there is a better starting point than one that
+       has to be summoned; `over` and `push` are the ones you ask for. */
+    .kp-sidenav[data-kp-sidenav-mode='over'],
+    .kp-sidenav[data-kp-sidenav-mode='push'] {
+        --kp-sidenav-away: -100%;
+        position: fixed;
+        /* One value or two, so a page with a bar it wants to keep can say
+           `--kp-sidenav-inset-block: 3rem 0` and have the panel start under
+           it instead of sliding beneath it. */
+        inset-block: var(--kp-sidenav-inset-block, 0);
+        inset-inline-start: 0;
+        z-index: var(--kp-sidenav-layer, 60);
+        translate: var(--kp-sidenav-away) 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-position='absolute'] {
+        position: absolute;
+    }
+
+    /* Either edge, and the edge is logical: in a right-to-left page the
+       start is the right, and the panel still slides out of the side it
+       came from. */
+    .kp-sidenav[data-kp-sidenav-side='end'] {
+        --kp-sidenav-away: 100%;
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav:dir(rtl) {
+        --kp-sidenav-away: 100%;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl) {
+        --kp-sidenav-away: -100%;
+    }
+
+    .kp-sidenav[data-kp-sidenav-open='true'] {
+        translate: 0 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'],
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'] + .kp-sidenav__backdrop {
+        display: none;
+    }
+
+    /* Its timing is the theme's, like everything else here: a slide on the
+       package's own `ease` keyword read as abrupt, and terminal steps where
+       pastel overshoots is the handwriting this file is for. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav {
+            transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+
+        /* Except from the far edge, where the slide stayed visibly rough
+           through two attempts at it [Kenny, 2026-09-11: "die is nog altijd
+           fucked up. Maar voorlopig laten we het er gewoon uit"]. The panel
+           still comes and goes from that side; it simply arrives rather than
+           travelling. Recorded as gap-9. */
+        .kp-sidenav[data-kp-sidenav-side='end'] {
+            transition: none;
+        }
+
+        /* Width is a layout property and animating it costs a reflow per
+           frame. Only a panel that actually has a rail pays for it. */
+        .kp-sidenav[data-kp-sidenav-slim] {
+            transition:
+                translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease)),
+                inline-size var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+    }
+
+    /* The slim rail: icons stay, labels go. `--slim-hide` and `--slim-show`
+       are the two halves of the same switch, so a consumer can swap a
+       wordmark for a monogram rather than only losing text. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed] {
+        --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) [data-kp-sidenav-slim-hide],
+    .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
+        display: none;
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover [data-kp-sidenav-slim-hide] {
+        display: none;
+    }
+
+    /* Hovering a rail that was told to expand gives the labels back without
+       changing the state anything else reads. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed][data-kp-sidenav-expand-on-hover]:hover {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+    }
+
+    .kp-sidenav__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav__title {
+        margin: 0;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        font-weight: 600;
+    }
+
+    /* The list scrolls, the header and footer do not. A long navigation in
+       a short window is the normal case, not the edge one. */
+    .kp-sidenav__scroll {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        /* Never sideways [Kenny, 2026-09-11]. A narrow panel measured 140px
+           of content in a 127px box and the count after a long label sat two
+           pixels past the edge, reachable only by scrolling. A navigation you
+           have to scroll sideways is a navigation you cannot read. */
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+    }
+
+    .kp-sidenav__list {
+        list-style: none;
+        margin: 0;
+        padding: var(--kp-sidenav-list-pad, 0.4rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-sidenav-gap, 0.1rem);
+    }
+
+    .kp-sidenav__link,
+    .kp-sidenav__category-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        /* Its width INCLUDING its padding. The package sets no global
+           box-sizing, so `inline-size: 100%` on a padded row made every row
+           19px wider than the list that held it — which is where the
+           sideways scroll came from. */
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
+        font: inherit;
+        font-size: var(--kp-font-size-sm, 0.875rem);
+        text-align: start;
+        text-decoration: none;
+        color: inherit;
+        background: none;
+        border: none;
+        border-radius: var(--radius, 0);
+        cursor: pointer;
+    }
+
+    .kp-sidenav__link:hover,
+    .kp-sidenav__category-toggle:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    /* The current page is marked by more than colour [DI4], the same way
+       the top bar marks it: aria-current is what a screen reader reads and
+       what every theme hangs its own mark on. */
+    .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        font-weight: 600;
+    }
+
+    .kp-sidenav__icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        inline-size: var(--kp-sidenav-icon-size, 1.25rem);
+        justify-content: center;
+    }
+
+    .kp-sidenav__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-sidenav__badge {
+        margin-inline-start: auto;
+        /* The label gives way, the count does not: a number cut in half is
+           worse than a name cut in half, because a name still reads. */
+        flex-shrink: 0;
+        font-size: var(--kp-font-size-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__divider {
+        block-size: 1px;
+        margin: var(--kp-sidenav-gap, 0.4rem) 0;
+        background: var(--border);
+        border: none;
+    }
+
+    .kp-sidenav__footer {
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* A category and its submenu. The open height is a grid track rather
+       than a measured pixel value, so the package animates it without
+       JavaScript having to know how tall the list is. */
+    .kp-sidenav__category-toggle::after {
+        content: '';
+        margin-inline-start: auto;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-inline-end: 1px solid currentcolor;
+        border-block-end: 1px solid currentcolor;
+        rotate: -45deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__category-toggle::after {
+            transition: rotate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+    }
+
+    .kp-sidenav__category-toggle[aria-expanded='true']::after {
+        rotate: 45deg;
+    }
+
+    .kp-sidenav__submenu {
+        display: grid;
+        grid-template-rows: 0fr;
+    }
+
+    .kp-sidenav__submenu > * {
+        overflow: hidden;
+        min-block-size: 0;
+        /* A zero track does not go below its child's own padding, so a
+           closed submenu measured 12.8px — the list's padding — and sat
+           there as a visible sliver. The inline inset stays; the block
+           inset comes from the items. */
+        padding-block: 0;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded] > .kp-sidenav__submenu {
+        grid-template-rows: 1fr;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__submenu {
+            transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+    }
+
+    .kp-sidenav__submenu .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* The backdrop is a dimming, not a tint: the same value the dialog
+       uses, for the same reason. */
+    .kp-sidenav__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        background: rgb(0 0 0 / 0.5);
+    }
+
+    /* It arrives with the panel instead of appearing on top of it. A
+       backdrop that snaps to full while the panel is still sliding is what
+       makes the whole movement read as jerky. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__backdrop {
+            /* A literal duration, unlike the panel's. The flash check has to
+               read this number to know the fade cannot strobe, and a chain of
+               fallbacks reads as zero to it — which is the worst case it then
+               has to assume. One fade from nothing to half-dark has nothing
+               worth tuning anyway. */
+            animation: kp-sidenav-backdrop 220ms var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+    }
+
+    @keyframes kp-sidenav-backdrop {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* The control that opens it. It draws nothing of its own: unlike the
+       bar's toggle this one is usually placed in a header the consumer
+       already has, with their own glyph in it. */
+    .kp-sidenav__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        min-block-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        /* Above the panel and above its backdrop. A control that opens
+           something and then disappears underneath it is the fault this
+           package already made once, in the bar's own drawer. A toggler
+           that does not take this class is the consumer's to place. */
+        position: relative;
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
     }
 
     /* --- Dialog ---------------------------------------------------------- */

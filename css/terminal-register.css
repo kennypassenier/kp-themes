@@ -74,7 +74,54 @@
        it costs no layout, above everything and under the pointer's reach
        of nothing. Both assume the theme on the document root, which is how
        the package applies it. */
-    [data-theme='terminal']::before {
+    /* The skip link is positioned against the page rather than flowed, so
+       the padding above does not move it — and it is the first thing a
+       keyboard user reaches, which makes it the worst one to hide. It
+       clears the bezel on both axes instead. */
+    :root[data-theme='terminal'] .kp-skip-link {
+        inset-inline-start: calc(0.5rem + var(--kp-bezel));
+    }
+
+    :root[data-theme='terminal'] .kp-skip-link:focus {
+        inset-block-start: calc(0.5rem + var(--kp-bezel));
+    }
+
+    /* The bezel takes its own space rather than sitting on the content
+       [Kenny, 2026-09-12: "links moeten compleet en klikbaar zijn"]. It is
+       `position: fixed` against the viewport, so anything the page puts
+       within `--kp-bezel` of the edge disappears behind it. Measured on a
+       1600px viewport, where the clamp resolves to 17.8px: the
+       documentation site's first navigation link starts at 8px and lost
+       9.8 of them, and the approved demo itself hid the skip link and two
+       picker buttons by ten pixels each. Clicks still landed — the bezel
+       takes no pointer events — but a link you cannot fully read is not a
+       link you can fully use.
+
+       Padding on the root pushes everything inside the frame; the bezel
+       stays where the demo drew it, over empty space. A page's own body
+       padding still applies, inside this. */
+    :root[data-theme='terminal'] {
+        box-sizing: border-box;
+        padding: var(--kp-bezel);
+    }
+
+    /* Scoped to the ROOT, not to whatever carries the attribute [Kenny,
+       2026-09-12, at the release gate]. These two are `position: fixed`,
+       and a fixed element escapes its container: a page that previews
+       terminal inside a box — the documentation site puts one story card
+       per theme, each with its own `data-theme` — got this bezel and this
+       sweep across the WHOLE viewport, over its own navigation, while the
+       page itself was wearing formal. Kenny found it by opening the page,
+       which is what that rule is for: no assertion anyone had written
+       could see it, because every one of them measured a page whose root
+       carried the theme.
+
+       `:root` costs nothing where the theme IS on the root, which is the
+       case the approved demo shows. It only stops a preview from taking
+       over the page around it. terminal is the only register with rules
+       of this shape; phantom's equivalent asks for a `body` underneath
+       and a card has none. */
+    :root[data-theme='terminal']::before {
         content: '';
         position: fixed;
         inset: 0;
@@ -97,7 +144,7 @@
 
     /* The sweep band: one pass every ten seconds, resting eight of them,
        transform-only; at rest it sits above the viewport. */
-    [data-theme='terminal']::after {
+    :root[data-theme='terminal']::after {
         content: '';
         position: fixed;
         left: 0;
@@ -721,7 +768,19 @@
         color: var(--primary-foreground);
     }
 
-    [data-theme='terminal'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='terminal'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 0;
@@ -1211,7 +1270,7 @@
        from them; the matching --kp-* knobs are what js/effects.js reads. A
        terminal does not ease: every timing function here steps. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='terminal']::after {
+        :root[data-theme='terminal']::after {
             animation: kp-sweep 10000ms linear infinite;
         }
 
@@ -1325,5 +1384,132 @@
         color: var(--primary);
         font-family: var(--theme-font-mono);
         border-block-end: 1px dashed currentColor;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column of paths with the prompt in front of the one you are in.
+       The bar fills its current item; here the fill stays and the caret
+       arrives in the gutter, which is where this theme puts every mark of
+       where you are. */
+    [data-theme='terminal'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.18em;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link,
+    [data-theme='terminal'] .kp-sidenav__category-toggle {
+        padding: 0.35rem 0.7rem 0.35rem 1.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link::before {
+        content: '>';
+        position: absolute;
+        inset-inline-start: 0.55rem;
+        color: var(--primary);
+        opacity: 0;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link:hover::before {
+        opacity: 0.5;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-sidenav__link[aria-current='page']::before {
+        color: var(--primary-foreground);
+        opacity: 1;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture in a terminal is an attachment, so it is framed the way
+       this theme frames everything it did not draw itself: a dashed rule
+       and a filename underneath. */
+    [data-theme='terminal'] .kp-to-top {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] .kp-media {
+        border: 1px dashed var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='terminal'] .kp-media-figure > figcaption::before {
+        content: '# ';
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='terminal'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='terminal'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='terminal'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── The cursor arrives [gap-4, approved 2026-09-12] ───────────────
+       A terminal puts a blinking block where it expects your input.
+       Touching a control puts that block after the label — the same block
+       this theme already draws inside its fields, on the same keyframe and
+       at the same rate, so there is one cursor in this theme and not two.
+
+       The only one of the six that moves in time, and therefore the only
+       one the motion rules have anything to say about. One blink a second
+       is far under the three-per-second threshold, and `kp-caret` is
+       already in the table at that rate. */
+    [data-theme='terminal'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-button-caret-inset, 0.55rem);
+        inset-inline-end: var(--kp-button-caret-gap, 0.5rem);
+        inline-size: 1ch;
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-size: 0 0;
+        pointer-events: none;
+    }
+
+    [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='terminal'] .kp-button:focus-visible::after {
+        background-size: 1ch 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+        [data-theme='terminal'] .kp-button:focus-visible::after {
+            animation: kp-caret 1s steps(1) infinite;
+        }
     }
 }

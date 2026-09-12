@@ -327,28 +327,96 @@
         color: var(--primary);
     }
 
+    /* ── The fourfold ruling [Kenny, 2026-09-11: "A de vierdubbele
+       liniëring"] ──────────────────────────────────────────────────────
+       A page of tazhib is ruled before it is written: concentric lines at
+       unequal intervals, gold against blue, and what matters sits inside
+       them. So the edge of a control is not one line but four, and
+       touching it adds the outermost — the ruling closing around the word
+       rather than a colour changing.
+
+       It is a stack of box-shadows rather than borders, because only one
+       border exists per box and the intervals have to be unequal: 1px of
+       gold, 2px of ground, 1px of dim gold, and on hover 2px of ground
+       and 1px of gold again. The border underneath goes transparent so
+       the two do not fight. */
+    [data-theme='lapis'] .kp-button,
+    [data-theme='lapis'] .kp-field__input,
+    [data-theme='lapis'] .kp-datatable__search,
+    [data-theme='lapis'] .kp-combobox__input,
+    [data-theme='lapis'] .kp-palette__input {
+        --kp-lapis-rule: 0 0 0 1px var(--primary), 0 0 0 3px var(--card), 0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+        --kp-lapis-rule-closed: var(--kp-lapis-rule), 0 0 0 6px var(--card), 0 0 0 7px var(--primary);
+        border-color: transparent;
+        box-shadow: var(--kp-lapis-rule);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-button,
+        [data-theme='lapis'] .kp-field__input,
+        [data-theme='lapis'] .kp-datatable__search,
+        [data-theme='lapis'] .kp-combobox__input,
+        [data-theme='lapis'] .kp-palette__input {
+            transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='lapis'] .kp-button:hover,
+    [data-theme='lapis'] .kp-field__input:focus,
+    [data-theme='lapis'] .kp-datatable__search:focus,
+    [data-theme='lapis'] .kp-combobox__input:focus,
+    [data-theme='lapis'] .kp-palette__input:focus {
+        box-shadow: var(--kp-lapis-rule-closed);
+    }
+
+    /* The keyboard ring goes FIRST and the ruling follows it [AR30, DI2].
+       A box has one box-shadow, and the ruling written alone on
+       :focus-visible painted over the ring's inner half — eight tests in
+       button.spec.mjs and dashboard.spec.mjs said so, which is exactly
+       what they are for. Both halves of the ring survive, and the ruling
+       closes around them. */
+    [data-theme='lapis'] .kp-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-lapis-rule-closed);
+    }
+
     /* ── Buttons: a ruled frame, or a filled gold plate ───────────────── */
 
     [data-theme='lapis'] .kp-button {
         font-family: var(--theme-font-body);
         font-weight: 600;
-        border: 1px solid var(--border-strong);
+        border: 1px solid transparent;
         border-radius: var(--radius);
         background: transparent;
         color: var(--foreground);
     }
 
     [data-theme='lapis'] .kp-button:hover {
-        border-color: var(--primary);
         color: var(--primary);
     }
 
     /* The mirror modifier: a burnished-metal gloss on the gold plate — a
-       pale highlight along the top edge, a deep shadow along the bottom. */
+       pale highlight along the top edge, a deep shadow along the bottom.
+       It ADDS to the ruling rather than replacing it: a box has one
+       box-shadow property, so a modifier that names its own wipes out
+       whatever the base rule put there, and the ruling simply vanished
+       from every mirror button until this composed the two. */
     [data-theme='lapis'] .kp-button--mirror {
+        --kp-lapis-gloss:
+            inset 0 1px 0 hsl(from var(--card-foreground) h s l / 0.45), inset 0 -8px 12px -8px hsl(from var(--primary-foreground) h s l / 0.55);
+        box-shadow: var(--kp-lapis-rule), var(--kp-lapis-gloss);
+    }
+
+    [data-theme='lapis'] .kp-button--mirror:hover {
+        box-shadow: var(--kp-lapis-rule-closed), var(--kp-lapis-gloss);
+    }
+
+    [data-theme='lapis'] .kp-button--mirror:focus-visible {
         box-shadow:
-            inset 0 1px 0 hsl(from var(--card-foreground) h s l / 0.45),
-            inset 0 -8px 12px -8px hsl(from var(--primary-foreground) h s l / 0.55);
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-lapis-rule-closed),
+            var(--kp-lapis-gloss);
     }
 
     [data-theme='lapis'] .kp-button--primary {
@@ -418,15 +486,8 @@
     [data-theme='lapis'] .kp-palette__input {
         background: var(--card);
         color: var(--foreground);
-        border: 1px solid var(--border-strong);
+        border: 1px solid transparent;
         caret-color: var(--primary);
-    }
-
-    [data-theme='lapis'] .kp-field__input:focus-visible,
-    [data-theme='lapis'] .kp-datatable__search:focus-visible,
-    [data-theme='lapis'] .kp-combobox__input:focus-visible,
-    [data-theme='lapis'] .kp-palette__input:focus-visible {
-        border-color: var(--primary);
     }
 
     [data-theme='lapis'] select.kp-field__input::picker-icon {
@@ -521,7 +582,19 @@
         color: var(--primary);
     }
 
-    [data-theme='lapis'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='lapis'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
@@ -908,5 +981,104 @@
         color: var(--primary);
         letter-spacing: 0.16em;
         border-block-end: 1px solid var(--primary);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The fourfold ruling Kenny chose for this theme. A page of tazhib is
+       ruled before it is written — concentric lines at unequal intervals,
+       gold against blue, and what matters sits inside them. So the row you
+       are on is not coloured but RULED, and the outermost line is the one
+       that closes around it. */
+    [data-theme='lapis'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.45rem;
+        --kp-sidenav-list-pad: 0.55rem;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link,
+    [data-theme='lapis'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-sidenav__link {
+            transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='lapis'] .kp-sidenav__link[aria-current='page'] {
+        background: none;
+        color: var(--primary);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45),
+            0 0 0 6px var(--card),
+            0 0 0 7px var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The ruling again: a picture in a manuscript is ruled before it is
+       placed, and the control carries the same gold hairline. */
+    [data-theme='lapis'] .kp-to-top {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 0 3px var(--card),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='lapis'] .kp-media {
+        border: 1px solid var(--primary);
+        outline: 1px solid hsl(from var(--primary) h s l / 0.45);
+        outline-offset: 3px;
+    }
+
+    [data-theme='lapis'] .kp-media-figure > figcaption {
+        text-align: center;
+        color: var(--primary);
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='lapis'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='lapis'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    [data-theme='lapis'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='lapis'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

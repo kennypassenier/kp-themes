@@ -87,15 +87,25 @@ if (uncoveredExports.length > 0) {
 // component reads them.
 const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status']);
 
+// The layout layer has a page of its own — site/layout.html, generated
+// from docs/LAYOUT.md rather than from a descriptor — so the slug rules
+// above cannot see it. This is that page standing in the mapping as what
+// it already is: the owner of the layout families. It loosens nothing,
+// because the bar is unchanged — a name is documented when a page prints
+// it, and `.kp-sidebar`'s hiding is documented there in full.
+/** @type {import('./site/selection.mjs').Page} */
+const LAYOUT_PAGE = { id: 'layout', classes: [...OWNED_ELSEWHERE] };
+const PAGES = [...DESCRIPTORS, LAYOUT_PAGE];
+
 const attributes = extractAttributes().attributes;
-const attributesOwned = attributeOwners(attributes, DESCRIPTORS);
+const attributesOwned = attributeOwners(attributes, PAGES);
 const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name)).map((a) => a.name);
 if (strayAttributes.length > 0) {
     failures.push(`${strayAttributes.length} data attributes are on no page: ${strayAttributes.join(', ')}`);
 }
 
 const events = extractEvents().events;
-const eventsOwned = eventOwners(events, DESCRIPTORS);
+const eventsOwned = eventOwners(events, PAGES);
 const strayEvents = events.filter((e) => !eventsOwned.has(e.name)).map((e) => e.name);
 if (strayEvents.length > 0) {
     failures.push(`${strayEvents.length} events are on no page: ${strayEvents.join(', ')}`);

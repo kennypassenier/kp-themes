@@ -34,7 +34,8 @@ beslissing, geen omissie.
 
 BREKENDE WIJZIGINGEN die je eerst afhandelt:
 - Drie thema's zijn hernoemd: topo → forest, tazhib → lapis, nishiki →
-  woodblock. Elke verwijzing verandert: tokens, register, export-pad, de
+  woodblock. Vier thema's zijn in 6.0.0 verdwenen — academia, mono,
+  ticker en woodblock. Elke verwijzing verandert: tokens, register, export-pad, de
   `Theme` union, opgeslagen voorkeuren van gebruikers. MIGRATION.md
   bevat de map.
 - `cyberpunk` is onder dezelfde naam een ander thema geworden: signaal-
@@ -110,7 +111,8 @@ controleer ze tegen `SHA256SUMS` van v5.0.0, zoals je eigen gate al doet.
 
 BREKENDE WIJZIGINGEN:
 - Drie thema's zijn hernoemd: topo → forest, tazhib → lapis, nishiki →
-  woodblock. Opgeslagen voorkeuren met een oude naam worden door de
+  woodblock, en die vier zijn er in 6.0.0 niet meer.
+  Opgeslagen voorkeuren met een oude naam worden door de
   picker gecorrigeerd naar de fallback, dus een gebruiker die `topo` had
   belandt op `formal` tenzij je migreert.
 - `cyberpunk` is onder dezelfde naam een ander thema: signaalgeel in
@@ -133,8 +135,8 @@ WAT ER TE HALEN VALT, EN WAT HET KOST:
   Meer is het niet.
 - De lettertypes: `css/fonts.css` declareert 73 faces onder `fonts/`.
   Bak je die niet in, dan valt elk thema terug op zijn fallback-stack —
-  dat werkt, maar de thema's die een echt gezicht hebben (woodblock,
-  lapis, deco, academia) verliezen precies dat gezicht.
+  dat werkt, maar de thema's die een echt gezicht hebben (titanium,
+  lapis, deco, cyberpunk) verliezen precies dat gezicht.
 - Er is een geminificeerde twin van elke stylesheet onder `dist/css/`,
   45% kleiner, met source map. Voor een binary die de bestanden zelf
   serveert is dat pure winst — let op dat de twin `url(../../fonts/)`

@@ -44,6 +44,11 @@
  * @property {string} alertError
  * @property {string} busy
  * @property {string} close
+ * @property {string} menu          The accessible name of a collapsed navigation's toggle
+ * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
+ * @property {string} closeSidebar  The same toggle once that side navigation is open
+ * @property {string} backToTop    The control that returns the reader to the top of the page
  * @property {string} previous
  * @property {string} next
  * @property {string} finish
@@ -123,8 +128,8 @@
  * @property {string} arrivalReady  The word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
- * @property {(px: number) => string} measureWidth  The horizontal dimension label once measured (blueprint) [S48]
- * @property {(px: number) => string} measureHeight  The vertical dimension label once measured (blueprint) [S48]
+ * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]
+
  * @property {string} breadcrumb
  * @property {string} pagination
  * @property {string} themePicker
@@ -165,6 +170,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     alertError: 'Error',
     busy: 'Working…',
     close: 'Close',
+    // The nav toggle carries no glyph of its own — this package ships
+    // type, not icons — so its accessible name is the whole of what a
+    // screen reader gets, and the two words have to say which way the
+    // press goes rather than what the control is.
+    menu: 'Open the navigation',
+    closeMenu: 'Close the navigation',
+    // Distinct from the two above on purpose: a page can carry both, and
+    // "Open the navigation" twice would leave a screen reader with two
+    // controls whose names do not tell them apart.
+    sidebar: 'Open the side navigation',
+    closeSidebar: 'Close the side navigation',
+    // A control that appears part-way down a page and has no text of its
+    // own beyond an arrow: the accessible name is the whole of what a
+    // screen reader gets.
+    backToTop: 'Back to top',
     previous: 'Previous',
     next: 'Next',
     finish: 'Finish',
@@ -264,8 +284,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     arrivalReady: 'OK',
     arrivalSkip: 'Skip',
     measureLoading: 'measuring…',
-    measureWidth: (px) => `${px}px measured · live`,
-    measureHeight: (px) => `${px}px`,
+    measureBox: (w, h) => `${w} × ${h} px`,
     breadcrumb: 'Breadcrumb',
     pagination: 'Pagination',
     themePicker: 'Choose a theme',

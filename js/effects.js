@@ -58,6 +58,18 @@ export const HOOKS = Object.freeze({
     /** Set on the container while the file is open. */
     openState: 'data-kp-open',
     navSide: 'data-kp-nav-side',
+    /**
+     * A number that counts up to what it already says [feat-count-1].
+     *
+     * The element's authored text is the truth and the module never
+     * invents one: it reads the number out of that text, counts to it,
+     * and puts the text back exactly as written. A page that never
+     * attaches this module, or a reader who asked for less movement,
+     * sees the final number and nothing else — which is the frozen bar.
+     */
+    count: 'data-kp-count',
+    /** `armed` | `running` | `done`, readable at any moment [KT16]. */
+    countState: 'data-kp-count-state',
 });
 
 /** The surfaces a section can stand on [TH116]. */
@@ -172,7 +184,28 @@ export const KNOBS = Object.freeze({
     arrivalBar: '--kp-arrival-bar',
     /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
     arrivalCount: '--kp-arrival-count',
+    /**
+     * Whether a click anywhere on the arrival overlay ends it [CP1].
+     *
+     * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+     * before. The overlay is `position: fixed; inset: 0`, so until now it
+     * ate every click for up to 1100ms and only the Skip button ended it —
+     * a click elsewhere did nothing and gave no sign it had been lost.
+     * JobTracker reported that as "the theme picker does not work on
+     * phantom"; the picker was fine.
+     */
+    arrivalDismiss: '--kp-arrival-dismiss',
 });
+/**
+ * How long a counting number takes, in milliseconds [feat-count-1].
+ * A theme sets `--kp-count: 1200`; the default is 900. `0` — or the
+ * reduced-motion setting, which always wins — puts the number there at
+ * once without ever having counted.
+ */
+export const COUNT_KNOB = '--kp-count';
+/** Where a counting number starts. Default 0; a theme or a page may set another. */
+export const COUNT_FROM_KNOB = '--kp-count-from';
+
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export const BOOT_PROGRESS = '--kp-boot-progress';
 
@@ -183,6 +216,26 @@ export const MARQUEE_PAUSE_KNOB = '--kp-marquee-pause';
 
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export const MEASURE_KNOB = '--kp-measure';
+
+/**
+ * The knob a theme sets to have the pointer's position written to the page
+ * [scope-16]: `--kp-pointer: track`.
+ *
+ * The spectral instrument's approved demo paints its oxide film as a conic
+ * gradient whose start angle follows the pointer — anodising does not add
+ * pigment, it grows a film whose thickness decides which wavelength
+ * survives, so the colour really does shift with the angle you look from.
+ * A gradient cannot read a pointer; something has to write the number down.
+ *
+ * Off by default, and off under reduced motion: someone asking for less
+ * movement is not asking for a colour that follows their hand. The two
+ * properties keep whatever the stylesheet declared, so the gradient is
+ * valid before the pointer has ever moved and stays valid afterwards.
+ */
+export const POINTER_KNOB = '--kp-pointer';
+
+/** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
+export const POINTER = Object.freeze({ x: '--kp-px', y: '--kp-py' });
 
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
@@ -253,6 +306,19 @@ export const TIMINGS = Object.freeze({
     // a button, the bar entering, the floor's drift and the CRT switching
     // the boot overlay off — every one once, except the drift, which moves
     // a pattern and never changes luminance.
+    // The side navigation's backdrop [feat-nav-3]: one fade in, at the
+    // theme's own duration, on a layer that is already a dimming. It runs
+    // once because the element is created when the panel opens and removed
+    // when it closes.
+    'kp-sidenav-backdrop': { durationMs: 220, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // Solstice's raking light [scope-12]: one pass of a warm band across a
+    // control, on hover. The band is a gradient that fades to transparent at
+    // both ends, so no edge of it is an opposing luminance change.
+    'kp-rake': { durationMs: 620, cycles: 1, property: 'translate', luminanceSteps: [] },
+    // Titanium's headline [scope-17]: one short linear pass as the word
+    // slides square. No blur and no chromatic split — those belong to the
+    // spectral instrument. Opacity 0 to 1 once, so no opposing change.
+    'kp-mill': { durationMs: 340, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-tracking': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
     'kp-shine': { durationMs: 1400, cycles: 1, property: 'background-position', luminanceSteps: [] },
     'kp-tube-on': { durationMs: 1100, cycles: 1, property: 'color', luminanceSteps: [0, 1, 0, 1] },
@@ -296,7 +362,7 @@ export const TIMINGS = Object.freeze({
     // both scroll-bound (animation-timeline: view()), not time-based, so
     // their duration is the demo's own measured pace across the range
     // rather than a clock the browser runs.
-    'kp-resolve': { durationMs: 640, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-resolve': { durationMs: 640, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 1] },
     'kp-ignite': { durationMs: 600, cycles: 1, property: 'color', luminanceSteps: [0, 1] },
     'kp-sweep-in': { durationMs: 600, cycles: 1, property: 'background-position', luminanceSteps: [] },
     // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
@@ -392,10 +458,9 @@ export const TIMINGS = Object.freeze({
     // on a later class toggle, not keyframes, so they carry no row here —
     // the same choice terminal's own redaction made [TM1].
     'kp-headline-fade': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-dim-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
+    // One fade, used twice: the brackets, then the readout behind them.
+    // The two dimension lines this replaced needed four rows [scope-18].
     'kp-dim-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-elev-draw': { durationMs: 500, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-elev-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
 });
 
 /**
@@ -1242,11 +1307,122 @@ export function attachEffects(root = document, options = {}) {
         else if (reveal === 'emphasis') emphasis(el);
         else rule(el);
     };
+
+    /**
+     * A number that counts up to what it already says [feat-count-1].
+     *
+     * The authored text is the oracle, the way the headline's is: the
+     * element already reads `1 118 204,75` or `€ 1.204` or `98%`, and
+     * this reads the number out of that, counts to it, and writes the
+     * same string back. It never formats a number of its own — the
+     * separators, the currency and the fraction digits are whatever the
+     * page wrote, so the page's own locale is preserved without this
+     * module having to know what it is.
+     *
+     * @param {Element} el
+     */
+    const countUp = (el) => {
+        const text = el.textContent ?? '';
+        // The first run of digits, with whatever separators sit inside it.
+        const match = /-?[\d][\d\s.,\u00a0\u202f]*/.exec(text);
+        if (match === null) {
+            el.setAttribute(HOOKS.countState, 'done');
+            return;
+        }
+        const whole = match[0].trim();
+        const before = text.slice(0, match.index);
+        const after = text.slice(match.index + match[0].length);
+
+        // Which character groups and which one is the decimal point is NOT
+        // decidable from the string: `1.204` is one thousand two hundred
+        // and four in Dutch and one-point-two-oh-four in English. So it is
+        // not guessed — the page's own language decides, the way every
+        // other locale-shaped thing in this package does. A page that says
+        // nothing gets the browser's default locale, which is what a
+        // reader's own browser would use anyway.
+        const locale = /** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || doc?.documentElement?.lang || undefined;
+        const parts = new Intl.NumberFormat(locale).formatToParts(12345.6);
+        const groupSep = parts.find((part) => part.type === 'group')?.value ?? '';
+        const decimalSep = parts.find((part) => part.type === 'decimal')?.value ?? '.';
+
+        const cut = decimalSep === '' ? -1 : whole.lastIndexOf(decimalSep);
+        const decimals = cut < 0 ? 0 : whole.length - cut - 1;
+        const digitsOnly = (/** @type {string} */ part) => part.replace(/[^\d-]/g, '');
+        const target = Number(cut < 0 ? digitsOnly(whole) : `${digitsOnly(whole.slice(0, cut))}.${digitsOnly(whole.slice(cut + 1))}`);
+        if (!Number.isFinite(target)) {
+            el.setAttribute(HOOKS.countState, 'done');
+            return;
+        }
+        /** Whether the authored text grouped its digits at all. */
+        const grouped = groupSep !== '' && whole.includes(groupSep);
+
+        /** Put a value back in the authored shape: same grouping, same decimals. */
+        const render = (/** @type {number} */ value) => {
+            const [int, frac] = value.toFixed(decimals).split('.');
+            const body = grouped ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSep) : int;
+            return `${before}${body}${decimals ? decimalSep + frac : ''}${after}`;
+        };
+
+        const style = view?.getComputedStyle(el);
+        // `|| 900` would read a deliberate `0` as "unset" and count
+        // anyway — the absence of a value is not the value, a fifth time
+        // in this package. An empty string is unset; `0` is a choice.
+        const asked = style?.getPropertyValue(COUNT_KNOB).trim() ?? '';
+        const duration = asked === '' || !Number.isFinite(Number(asked)) ? 900 : Number(asked);
+        const askedFrom = style?.getPropertyValue(COUNT_FROM_KNOB).trim() ?? '';
+        const from = askedFrom === '' || !Number.isFinite(Number(askedFrom)) ? 0 : Number(askedFrom);
+
+        // The rest state, and the only state a reader who asked for less
+        // movement ever sees. Setting it FIRST means every early return
+        // above and every failure below still leaves the real number.
+        const rest = () => {
+            el.textContent = render(target);
+            el.setAttribute(HOOKS.countState, 'done');
+            el.dispatchEvent(new CustomEvent('kp-count', { bubbles: true, detail: { value: target, counted: false } }));
+        };
+        if (reduced() || duration <= 0 || target === from) {
+            rest();
+            return;
+        }
+
+        el.setAttribute(HOOKS.countState, 'running');
+        const startedAt = view?.performance?.now?.() ?? Date.now();
+        let frame = 0;
+        const step = () => {
+            const now = view?.performance?.now?.() ?? Date.now();
+            const t = Math.min(1, (now - startedAt) / duration);
+            // Ease out: fast at first, settling onto the real number.
+            const eased = 1 - (1 - t) ** 3;
+            el.textContent = render(from + (target - from) * eased);
+            if (t < 1 && !reduced()) frame = view?.requestAnimationFrame?.(step) ?? 0;
+            else rest();
+        };
+        frame = view?.requestAnimationFrame?.(step) ?? 0;
+        // Mid-session reduced motion, and detaching: both land on the real
+        // number rather than wherever the count had got to [DI7, KT6].
+        cleanups.push(() => {
+            if (frame) view?.cancelAnimationFrame?.(frame);
+            rest();
+        });
+    };
+
     /** @param {ParentNode | Element} scope */
     const scan = (scope) => {
         if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
         if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
         for (const el of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el);
+        // Counting numbers [feat-count-1]. Armed once each: an element
+        // already counted keeps its number when the module is attached a
+        // second time, which js/auto.js does over React.
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
+            started.add(scope);
+            countUp(scope);
+        }
+        for (const el of scope.querySelectorAll(`[${HOOKS.count}]`)) {
+            if (started.has(el)) continue;
+            started.add(el);
+            countUp(el);
+        }
         looseMarks(scope);
         done();
     };
@@ -1330,17 +1506,56 @@ export function attachEffects(root = document, options = {}) {
     };
     caret();
 
-    // ── The measurement lines [S48, LIFT_PLAN row 6]: blueprint's own ──
+    // ── The measurement frame [scope-18]: blueprint's own ─────────────
     // A theme answers `--kp-measure: live` on the root. The module wraps
-    // its headline in a span it can measure and builds the two dimension
-    // lines beside it: the vertical one is sized by CSS containment alone
-    // (`top: 0; bottom: 0` inside the wrap the register gives a definite
-    // height), the horizontal one by a live pixel read set as the line's
-    // own `style.width` and printed into its label in the same breath —
-    // one measurement, two readouts, so the line is never a fixed width.
+    // its headline in a span it can measure and puts four corner brackets
+    // around that box with one readout under it, printing the box's true
+    // rendered size.
+    //
+    // It replaced two dimension lines on 2026-09-11. Kenny had asked for
+    // those in round four — "replace it entirely with our measurement
+    // lines" — and then saw the command-table demo's brackets and found
+    // them better: "dan is de demo hier niet voor niks geweest" (scope-18).
+    // The brackets report the box they hold rather than one edge of it,
+    // which is why one readout replaces two labels.
+    //
     // Runs once, after scan() has already put the headline at its rest
-    // text, so nothing here fights the decipher/type/word routines for
-    // the same child nodes.
+    // text, so nothing here fights the decipher/type/word routines for the
+    // same child nodes.
+    // The pointer bus [scope-16]. One listener on the document, one write
+    // per animation frame, and nothing at all unless the theme asked for it.
+    //
+    // It writes to the root rather than to each element, because the demo's
+    // gradient is declared once on the theme and inherited: every surface
+    // that paints the oxide reads the same two numbers, so they must be one
+    // pair, not one pair per element.
+    const pointerBus = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : '';
+        if (routine !== 'track' || !view || reduced()) return;
+        let frame = 0;
+        /** @param {PointerEvent | MouseEvent} event */
+        const onMove = (event) => {
+            if (frame) return;
+            frame = view.requestAnimationFrame(() => {
+                frames.delete(frame);
+                frame = 0;
+                const w = view.innerWidth || 1;
+                const h = view.innerHeight || 1;
+                html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
+                html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+            });
+            frames.add(frame);
+        };
+        doc.addEventListener('pointermove', onMove, { passive: true });
+        cleanups.push(() => {
+            doc.removeEventListener('pointermove', onMove);
+            // The way out [KT6]: what the module wrote, the module removes,
+            // and the stylesheet's own declared value takes over again.
+            html.style.removeProperty(POINTER.x);
+            html.style.removeProperty(POINTER.y);
+        });
+    };
+
     const measure = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
         if (routine !== 'live' || !view) return;
@@ -1350,44 +1565,29 @@ export function attachEffects(root = document, options = {}) {
             const wrap = doc.createElement('span');
             wrap.setAttribute('data-kp-measured', '');
             h1.replaceWith(wrap);
+            wrap.append(h1);
 
-            const elevLine = doc.createElement('span');
-            elevLine.setAttribute('data-kp-elev-line', '');
-            elevLine.setAttribute('aria-hidden', 'true');
-            const elevStart = doc.createElement('span');
-            elevStart.setAttribute('data-kp-elev-tick', '');
-            const elevEnd = doc.createElement('span');
-            elevEnd.setAttribute('data-kp-elev-tick', '');
-            const elevLabel = doc.createElement('span');
-            elevLabel.setAttribute('data-kp-elev-measure', '');
-            elevLabel.textContent = words.measureLoading;
-            elevLine.append(elevStart, elevEnd, elevLabel);
-            wrap.append(elevLine, h1);
+            for (const corner of ['tl', 'tr', 'bl', 'br']) {
+                const bracket = doc.createElement('i');
+                bracket.setAttribute('data-kp-measure-bracket', corner);
+                bracket.setAttribute('aria-hidden', 'true');
+                wrap.append(bracket);
+            }
 
-            const dim = doc.createElement('span');
-            dim.setAttribute('data-kp-dim', '');
-            dim.setAttribute('aria-hidden', 'true');
-            const dimLine = doc.createElement('span');
-            dimLine.setAttribute('data-kp-dim-line', '');
-            const dimStart = doc.createElement('span');
-            dimStart.setAttribute('data-kp-dim-tick', '');
-            const dimEnd = doc.createElement('span');
-            dimEnd.setAttribute('data-kp-dim-tick', '');
-            dimLine.append(dimStart, dimEnd);
-            const dimLabel = doc.createElement('span');
-            dimLabel.setAttribute('data-kp-measure', '');
-            dimLabel.textContent = words.measureLoading;
-            dim.append(dimLine, dimLabel);
-            wrap.after(dim);
+            const readout = doc.createElement('span');
+            readout.setAttribute('data-kp-measure', '');
+            readout.setAttribute('aria-hidden', 'true');
+            readout.textContent = words.measureLoading;
+            wrap.append(readout);
 
             /** @type {ReturnType<typeof setTimeout>} */
             let timer;
             const update = () => {
-                const w = Math.round(h1.getBoundingClientRect().width);
-                dimLine.style.width = `${w}px`;
-                dimLabel.textContent = words.measureWidth(w);
-                const h = Math.round(wrap.getBoundingClientRect().height);
-                elevLabel.textContent = words.measureHeight(h);
+                const box = h1.getBoundingClientRect();
+                readout.textContent = words.measureBox(Math.round(box.width), Math.round(box.height));
+                // The state a test or a consumer can read at any time, rather
+                // than a moment they had to be listening for [KT16].
+                wrap.setAttribute('data-kp-measured', 'live');
             };
             update();
             const schedule = () => {
@@ -1406,6 +1606,7 @@ export function attachEffects(root = document, options = {}) {
             }
         }
     };
+    pointerBus();
     measure();
 
     // ── The marquee [M1, M2]: a row that runs ──────────────────────────
@@ -1540,6 +1741,13 @@ export function attachEffects(root = document, options = {}) {
             else later(lineStep, 190);
         };
         skip.addEventListener('click', end);
+        // CP1, Kenny 2026-09-09: "remember it for the next version". This is
+        // that version. A click anywhere on the overlay ends it, because an
+        // overlay that covers the whole viewport and answers one 90-pixel
+        // button is indistinguishable from a page that has stopped working.
+        // A theme that wants the old behaviour sets `--kp-arrival-dismiss:
+        // skip-only`.
+        if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== 'skip-only') overlay.addEventListener('click', end);
         finishers.push(end);
         cleanups.push(() => overlay.remove());
         if (card) {

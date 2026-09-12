@@ -15,42 +15,39 @@ the selectors and their order are identical, which is what
 
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
-| `css/_rules.css` | 28.1 kB | 11.3 kB | 60% |
-| `css/academia-register.css` | 33.7 kB | 17.2 kB | 49% |
-| `css/blueprint-register.css` | 37.9 kB | 19.1 kB | 49% |
-| `css/brutalism-register.css` | 42.9 kB | 24.6 kB | 43% |
-| `css/components.css` | 95.5 kB | 40.2 kB | 58% |
-| `css/cyberpunk-register.css` | 53.7 kB | 31.5 kB | 41% |
-| `css/dark-register.css` | 68.7 kB | 42.9 kB | 37% |
-| `css/deco-register.css` | 36.3 kB | 18.8 kB | 48% |
-| `css/fonts.css` | 31.0 kB | 23.3 kB | 25% |
-| `css/forest-register.css` | 35.3 kB | 19.8 kB | 44% |
-| `css/formal-register.css` | 25.9 kB | 12.8 kB | 51% |
-| `css/grotesk-register.css` | 36.1 kB | 18.3 kB | 49% |
-| `css/high-contrast-register.css` | 28.8 kB | 14.2 kB | 50% |
-| `css/lapis-register.css` | 31.4 kB | 16.2 kB | 49% |
-| `css/layout.css` | 6.4 kB | 2.0 kB | 68% |
-| `css/light-register.css` | 25.2 kB | 11.5 kB | 54% |
-| `css/mono-register.css` | 32.1 kB | 15.3 kB | 52% |
-| `css/nostromo-register.css` | 33.1 kB | 18.9 kB | 43% |
-| `css/pastel-register.css` | 33.0 kB | 16.2 kB | 51% |
-| `css/phantom-register.css` | 50.7 kB | 28.4 kB | 44% |
-| `css/retro-register.css` | 59.4 kB | 31.2 kB | 47% |
-| `css/sepia-register.css` | 36.6 kB | 18.1 kB | 51% |
-| `css/shade-dark-register.css` | 30.3 kB | 15.6 kB | 49% |
-| `css/shade-light-register.css` | 34.3 kB | 17.9 kB | 48% |
-| `css/solstice-register.css` | 29.5 kB | 14.8 kB | 50% |
-| `css/synthwave-register.css` | 51.9 kB | 30.4 kB | 41% |
-| `css/terminal-register.css` | 42.2 kB | 23.9 kB | 43% |
-| `css/themes.css` | 192.1 kB | 132.3 kB | 31% |
-| `css/ticker-register.css` | 33.2 kB | 16.1 kB | 51% |
+| `css/_rules.css` | 27.6 kB | 10.6 kB | 62% |
+| `css/blueprint-register.css` | 44.0 kB | 20.7 kB | 53% |
+| `css/brutalism-register.css` | 50.2 kB | 27.9 kB | 44% |
+| `css/components.css` | 116.7 kB | 48.3 kB | 59% |
+| `css/cyberpunk-register.css` | 55.9 kB | 32.6 kB | 42% |
+| `css/dark-register.css` | 46.9 kB | 22.5 kB | 52% |
+| `css/deco-register.css` | 41.6 kB | 20.7 kB | 50% |
+| `css/fonts.css` | 27.0 kB | 20.2 kB | 25% |
+| `css/forest-register.css` | 38.4 kB | 20.6 kB | 46% |
+| `css/formal-register.css` | 28.3 kB | 13.7 kB | 52% |
+| `css/grotesk-register.css` | 44.2 kB | 20.8 kB | 53% |
+| `css/high-contrast-register.css` | 32.5 kB | 15.6 kB | 52% |
+| `css/lapis-register.css` | 39.0 kB | 19.0 kB | 51% |
+| `css/layout.css` | 8.2 kB | 2.3 kB | 72% |
+| `css/light-register.css` | 30.7 kB | 12.8 kB | 58% |
+| `css/nostromo-register.css` | 39.0 kB | 21.5 kB | 45% |
+| `css/pastel-register.css` | 38.6 kB | 18.3 kB | 53% |
+| `css/phantom-register.css` | 54.2 kB | 29.7 kB | 45% |
+| `css/retro-register.css` | 64.0 kB | 32.8 kB | 49% |
+| `css/sepia-register.css` | 41.5 kB | 20.0 kB | 52% |
+| `css/shade-dark-register.css` | 37.4 kB | 17.8 kB | 52% |
+| `css/shade-light-register.css` | 41.2 kB | 20.1 kB | 51% |
+| `css/solstice-register.css` | 33.5 kB | 16.4 kB | 51% |
+| `css/synthwave-register.css` | 56.1 kB | 31.7 kB | 44% |
+| `css/terminal-register.css` | 50.2 kB | 26.4 kB | 47% |
+| `css/themes.css` | 174.6 kB | 117.0 kB | 33% |
+| `css/titanium-register.css` | 46.8 kB | 22.2 kB | 53% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `css/woodblock-register.css` | 41.6 kB | 22.1 kB | 47% |
-| `dist/kp-themes.css` | 1267.0 kB | 693.6 kB | 45% |
-| `dist/kp-themes.js` | 212.7 kB | 114.2 kB | 46% |
+| `dist/kp-themes.css` | 1263.0 kB | 654.5 kB | 48% |
+| `dist/kp-themes.js` | 234.5 kB | 125.1 kB | 47% |
 
-The loose stylesheets together weigh **1325.1 kB** authored and
-**729.6 kB** minified, 45% less. A page loading one theme's
+The loose stylesheets together weigh **1316.8 kB** authored and
+**686.6 kB** minified, 48% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
@@ -60,4 +57,4 @@ carries, and a generated file that a gate compares must read the same on
 every machine. `npm run generate:min` prints it for the machine it runs
 on.
 
-Version 5.1.0.
+Version 6.0.0.

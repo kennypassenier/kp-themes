@@ -145,7 +145,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // ask-1 (2026-09-10) added one: --kp-badge-wrap, the way out of the
     // overflow floor for the one of its five components whose content is
     // usually a label rather than a value.
-    assert.equal(result.expected, 87, 'AR21 counted 87 --kp-* properties in css/components.css');
+    assert.equal(result.expected, 116, 'AR21 counted 116 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -177,7 +177,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    assert.equal(result.readCount, 87);
+    assert.equal(result.readCount, 116);
     assert.deepEqual(result.unread, []);
 });
 
@@ -213,4 +213,26 @@ test('AR21: the documented default and the destructured one are compared', () =>
         result.disagreed.map((c) => `${c.module} ${c.component}.${c.prop}: documented ${c.documented}, code has ${c.actual}`),
         [],
     );
+
+    // Phase 7: `missing` was an unasserted bucket. A documented default
+    // whose code has none is not always wrong — two of them keep the
+    // default somewhere the destructuring cannot show — but "not always
+    // wrong" is not "never looked at", and a third arriving because
+    // someone deleted a default would have landed here in silence. Named,
+    // with the reason, the way themes/known-asymmetry.json names its four.
+    assert.deepEqual(
+        result.missing.map((c) => `${c.component}.${c.prop}`).sort(),
+        ['Marquee.pause', 'SplitPane.defaultValue'],
+        'a documented default is not comparable; either the code lost it, or this list owes it a reason',
+    );
+    // Marquee.pause     — the default is the CSS custom property's own
+    //                     fallback, `--kp-marquee-pause: offscreen`, so
+    //                     the component passes the prop through untouched.
+    // SplitPane.defaultValue — `defaultValue ?? initial` keeps the 1.x
+    //                     alias working, so the 50 lives in useControllable.
+
+    // And the count that says the extractor is still finding things at
+    // all: without this, a broken extractor makes everything "missing"
+    // and the disagreement list stays honestly empty.
+    assert.ok(result.agreed >= 80, `only ${result.agreed} defaults could be compared and agreed`);
 });

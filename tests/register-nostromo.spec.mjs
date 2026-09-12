@@ -30,6 +30,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { pseudoStyle } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -232,6 +233,31 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const count = await marks.count();
             for (let i = 0; i < count; i++) await expect(marks.nth(i)).toHaveClass(/is-cleared/);
+        });
+
+        test('every control carries its own lamp, dark at rest and lit under the pointer [scope-12]', async ({ page }) => {
+            // Drilled 2026-09-12 in firefox: the hover's `opacity: 0.7`
+            // removed -> red on the lit reading. The concept pages load
+            // `css/<theme>-register.css` directly, so a register drill does
+            // not need a regenerated bundle — checked before trusting the
+            // red, because the opposite trap has cost this project three
+            // false greens [KT3].
+            await open(page, url);
+            const btn = page.locator('.kp-button').first();
+            const at = async (p) => (await pseudo(btn, '::before', [p]))[p];
+            // The lamp is `currentcolor` — the CONTROL's own label colour,
+            // not the page's. Measured 2026-09-12: this test first asked for
+            // `--foreground` and went red, because a primary button prints
+            // light on dark and its lamp goes with it. That is the design:
+            // every switch is lit in its own console's ink.
+            expect(await at('background-color'), "the lamp burns in the control's own ink").toBe(
+                await btn.evaluate((el) => getComputedStyle(el).color),
+            );
+            expect(Number(await at('opacity')), 'dark at rest').toBeCloseTo(0.25, 2);
+            await btn.hover();
+            // Polled, not read once: the lamp eases up over the theme's own
+            // duration and a single read lands mid-fade [fix-1].
+            await pseudoStyle(btn, '::before', 'opacity', 'lit under the pointer').toBe('0.7');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

@@ -12,6 +12,18 @@ export declare const HOOKS: Readonly<{
     /** Set on the container while the file is open. */
     openState: "data-kp-open";
     navSide: "data-kp-nav-side";
+    /**
+     * A number that counts up to what it already says [feat-count-1].
+     *
+     * The element's authored text is the truth and the module never
+     * invents one: it reads the number out of that text, counts to it,
+     * and puts the text back exactly as written. A page that never
+     * attaches this module, or a reader who asked for less movement,
+     * sees the final number and nothing else — which is the frozen bar.
+     */
+    count: "data-kp-count";
+    /** `armed` | `running` | `done`, readable at any moment [KT16]. */
+    countState: "data-kp-count-state";
 }>;
 /** The surfaces a section can stand on [TH116]. */
 export declare const SURFACES: readonly string[];
@@ -80,7 +92,27 @@ export declare const KNOBS: Readonly<{
     arrivalBar: "--kp-arrival-bar";
     /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
     arrivalCount: "--kp-arrival-count";
+    /**
+     * Whether a click anywhere on the arrival overlay ends it [CP1].
+     *
+     * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+     * before. The overlay is `position: fixed; inset: 0`, so until now it
+     * ate every click for up to 1100ms and only the Skip button ended it —
+     * a click elsewhere did nothing and gave no sign it had been lost.
+     * JobTracker reported that as "the theme picker does not work on
+     * phantom"; the picker was fine.
+     */
+    arrivalDismiss: "--kp-arrival-dismiss";
 }>;
+/**
+ * How long a counting number takes, in milliseconds [feat-count-1].
+ * A theme sets `--kp-count: 1200`; the default is 900. `0` — or the
+ * reduced-motion setting, which always wins — puts the number there at
+ * once without ever having counted.
+ */
+export declare const COUNT_KNOB = "--kp-count";
+/** Where a counting number starts. Default 0; a theme or a page may set another. */
+export declare const COUNT_FROM_KNOB = "--kp-count-from";
 /** The custom property the arrival bar's fill reads, 0 to 1. */
 export declare const BOOT_PROGRESS = "--kp-boot-progress";
 /** How long one full pass of a marquee takes [M1, 2026-09-08]. */
@@ -89,6 +121,27 @@ export declare const MARQUEE_KNOB = "--kp-marquee";
 export declare const MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 /** The knob blueprint sets to run its own live dimension lines [S48, LIFT_PLAN row 6]: `--kp-measure: live`. */
 export declare const MEASURE_KNOB = "--kp-measure";
+/**
+ * The knob a theme sets to have the pointer's position written to the page
+ * [scope-16]: `--kp-pointer: track`.
+ *
+ * The spectral instrument's approved demo paints its oxide film as a conic
+ * gradient whose start angle follows the pointer — anodising does not add
+ * pigment, it grows a film whose thickness decides which wavelength
+ * survives, so the colour really does shift with the angle you look from.
+ * A gradient cannot read a pointer; something has to write the number down.
+ *
+ * Off by default, and off under reduced motion: someone asking for less
+ * movement is not asking for a colour that follows their hand. The two
+ * properties keep whatever the stylesheet declared, so the gradient is
+ * valid before the pointer has ever moved and stays valid afterwards.
+ */
+export declare const POINTER_KNOB = "--kp-pointer";
+/** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
+export declare const POINTER: Readonly<{
+    x: "--kp-px";
+    y: "--kp-py";
+}>;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

@@ -1,33 +1,37 @@
 # @kp-soft/themes
 
-The house themes as a shared package: twenty-five `data-theme` palettes
-— thirteen light (formal, light, pastel, forest, high-contrast, sepia,
-brutalism, woodblock, shade-light, mono, retro, grotesk, nostromo) and
-twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
-deco, academia, phantom, ticker, shade-dark, lapis) — as plain CSS custom
-properties, the element-level rules that make a theme complete (links,
-code, selection, form fields, print), eighteen components, a theme
-picker, and a register for every one of the twenty-five themes — the
-opt-in stylesheet that carries a theme's own expression, from cyberpunk's
-notches and razor tear to academia's marginalia.
+The house themes as a shared package: twenty-two `data-theme` palettes
+— ten light (formal, light, pastel, forest, high-contrast, sepia,
+brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
+cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
+shade-dark, lapis, nostromo) — as plain CSS custom properties, the
+element-level rules that make a theme complete (links, code, selection,
+form fields, print), eighteen components, a theme picker, and a register
+for every one of the twenty-two themes — the opt-in stylesheet that
+carries a theme's own expression, from cyberpunk's notches and razor tear
+to titanium's oxide film.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty gates run in seconds and refuse a commit that breaks them: token
-parity, layer discipline, the hook vocabulary, the register coverage, the
-shipped fonts, the strings dictionary, the types, and whether every
-generated file still matches its source. A behaviour suite of some 2500
-tests runs in Chromium and Firefox on demand (`npm run test:browser`).
+Thirty-five gates run in seconds and refuse a commit that breaks them:
+token parity, layer discipline, the hook vocabulary, the register
+coverage, the shipped fonts, the strings dictionary, the types, whether
+every command, path and quoted message a document carries is real, and
+whether every generated file still matches its source. A behaviour suite of 2,736 tests
+runs in Chromium and Firefox on demand (`npm run test:browser`).
 
 Five checks are **advice, not gates** [Kenny, 2026-09-09]: contrast, the
 design invariants, the flash threshold and reduced-motion guards, and the
 texture ceiling. They are the accessibility floors, and they are still
 written down, still measured and still shipped — `npm run advice` prints
-what they find — but they no longer refuse a commit, and no theme carries
-a recorded exemption from one any more. If you consume this package and
+what they find — but they no longer refuse a commit. Three themes do
+carry a recorded shortfall, each with its measurement and the reason it
+was chosen: `tests/surfaces.spec.mjs` names them, and makes each one keep
+measuring what it claims, so an excuse cannot outlive the thing it
+excuses. If you consume this package and
 need those floors held, run `npm run advice` yourself and read it: the
 package tells you what it measures, and does not promise to have obeyed
 it.
@@ -88,9 +92,9 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the twenty-five themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the twenty-two themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
-@import '@kp-soft/themes/css/academia-register'; /* optional: and one like it for each of the other 24 */
+@import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -126,9 +130,7 @@ and the original after it, for a reader who has the original installed:
 | ------------------- | --------------- | ----------------------- |
 | `KP Tech Mono`      | Share Tech Mono | terminal, the registers |
 | `KP Deco Sans`      | Josefin Sans    | deco                    |
-| `KP Academia Serif` | Lora            | academia                |
-| `KP Ticker Sans`    | IBM Plex Sans   | ticker                  |
-| `KP Ticker Mono`    | IBM Plex Mono   | ticker                  |
+| `KP Ticker Mono`    | IBM Plex Mono   | dark                    |
 | `KP Shade Sans`     | Source Sans 3   | shade-light, shade-dark |
 | `KP Outrun Display` | Orbitron        | synthwave               |
 
@@ -166,8 +168,8 @@ refuses a theme that leaves a hook unanswered.
 
 A theme is active when `<html data-theme="…">` carries its name; without
 the attribute the `:root` fallback is `formal`. The twelve dark themes
-(`dark`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`, `solstice`,
-`deco`, `academia`, `phantom`, `ticker`, `shade-dark`, `lapis`)
+(`dark`, `titanium`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`,
+`solstice`, `deco`, `phantom`, `shade-dark`, `lapis`, `nostromo`)
 additionally need the `.dark` class on
 `<html>` so existing `dark:` variants keep working — `applyTheme()` sets
 both. To avoid a flash before React mounts, call `initializeTheme()`
@@ -215,13 +217,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Twenty-five themes, twenty-five registers, one picker: which of them does
+Twenty-two themes, twenty-two registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
 `dist/kp-themes.css` is twenty-nine stylesheets concatenated: the palette,
-the components, **all twenty-five registers**, layout and utilities. Every
+the components, **all twenty-two registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -567,7 +569,7 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 
 ## Home Assistant
 
-`ha/kp-*.yaml` is the same twenty-five themes as Home Assistant themes,
+`ha/kp-*.yaml` is the same twenty-two themes as Home Assistant themes,
 generated from the same token sources. Copy them into Home Assistant's
 `themes/` directory and reload; they appear under their Dutch names beside
 whatever you already have. The `kp-` prefix is there so a file called
@@ -602,10 +604,20 @@ Extracted from kp-soft at commit `2983abb`
 `resources/css/app.css`, `resources/js/hooks/use-appearance.tsx`,
 `resources/js/components/theme-switcher.tsx`,
 `resources/js/components/fx/{boot-sequence,decipher-text,digital-rain,scramble-number}.tsx`,
-`gates/check-contrast.mjs`, `docs/THEMING.md`,
-`docs/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
+`gates/check-contrast.mjs`, `docs/legacy/THEMING.md`,
+`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
+
+**A note on the demo links in `docs/`.** Several documents cite a concept
+demo as `https://claude.ai/code/artifact/…`. Those are Claude artifacts
+and they are private: unless you are this package's author, the link will
+show you nothing. They are kept because they are the only traceability
+for the rule that an approved demo is implemented exactly — read one as a
+dated record that a design was shown and signed off, not as a page you
+can open. What each demo actually produced is in the theme's own
+`themes/<name>/anatomy.md` and in its register, both of which you can
+read.
 
 ## What is NOT here
 

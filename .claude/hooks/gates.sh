@@ -51,6 +51,15 @@ node gates/check-tokens.mjs
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
 
+echo "→ a relative colour that resolves to nothing [fix-11]"
+node gates/check-relative-colour.mjs
+
+echo "→ a register that cancels the pressed state [fix-12]"
+node gates/check-pressed-state.mjs
+
+echo "→ a register that repaints a variant's ground [gap-1]"
+node gates/check-variant-ground.mjs
+
 echo "→ the import closure of the modules chassis-rs vendors (AR28)"
 node gates/check-closure.mjs
 
@@ -113,6 +122,15 @@ node gates/check-manifest.mjs
 
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
+
+echo "→ nothing private in a document of a public repository [Phase 8]"
+node gates/check-docs-private.mjs
+
+echo "→ every command, path and import a document names is real [Phase 8]"
+node gates/check-docs-runnable.mjs
+
+echo "→ a message a document quotes is the message the code prints [Phase 8]"
+node gates/check-doc-quotes.mjs
 
 echo "→ every user-visible string comes from the dictionary (KT5)"
 node gates/check-strings.mjs

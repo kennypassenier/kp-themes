@@ -6,7 +6,7 @@
 > name, and 4.0.0's theme stays what 4.0.0 shipped, retrievable from its
 > tag (S20). The research behind it is
 > [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the older
-> [CYBERPUNK_THEME_RESEARCH.md](../../docs/CYBERPUNK_THEME_RESEARCH.md)
+> [CYBERPUNK_THEME_RESEARCH.md](../../docs/legacy/CYBERPUNK_THEME_RESEARCH.md)
 > is the 4.x theme's.
 
 ## The idea

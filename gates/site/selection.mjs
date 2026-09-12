@@ -41,10 +41,18 @@
 /** @typedef {import('./descriptors.mjs').Descriptor} Descriptor */
 
 /**
+ * What owning a name actually takes: an id and the names it answers to.
+ * A component page is one of these; so is the layout page, which is
+ * generated from docs/LAYOUT.md and has no descriptor.
+ *
+ * @typedef {{ id: string, classes: string[], aliases?: string[] }} Page
+ */
+
+/**
  * The names a page answers to, each with whether it was declared
  * (an alias) or derived (a class family).
  *
- * @param {Descriptor} descriptor
+ * @param {Page} descriptor
  * @returns {{ slug: string, alias: boolean }[]}
  */
 export function slugsOf(descriptor) {
@@ -68,7 +76,7 @@ function claims(rest, slug) {
  * Which pages own which name, by the three rules above.
  *
  * @param {{ name: string }[]} rows what the extractor found
- * @param {Descriptor[]} descriptors every page
+ * @param {Page[]} descriptors every page
  * @param {RegExp} prefix what to strip before matching
  * @returns {Map<string, Set<string>>} name → the ids of the pages that own it
  */
@@ -98,7 +106,7 @@ export function owners(rows, descriptors, prefix) {
 
 /**
  * @param {{ name: string }[]} events every exported event
- * @param {Descriptor[]} descriptors
+ * @param {Page[]} descriptors
  */
 export function eventOwners(events, descriptors) {
     return owners(events, descriptors, /^kp-/);
@@ -106,7 +114,7 @@ export function eventOwners(events, descriptors) {
 
 /**
  * @param {{ name: string }[]} attributes every `data-kp-*` the modules read
- * @param {Descriptor[]} descriptors
+ * @param {Page[]} descriptors
  */
 export function attributeOwners(attributes, descriptors) {
     return owners(attributes, descriptors, /^data-kp-/);

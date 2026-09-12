@@ -567,7 +567,19 @@
         letter-spacing: 0.04em;
     }
 
-    [data-theme='shade-light'] .kp-alert {
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='shade-light'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -993,5 +1005,135 @@
         letter-spacing: 0;
         color: var(--muted-foreground);
         border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this theme sober, and the answer is not more colour
+       but more DEPTH: the column is a card, and the row you are on is the
+       one lifted off it. Light comes from the top, as it does everywhere
+       else here. */
+    [data-theme='shade-light'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.25rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='shade-light'] .kp-sidenav__link,
+    [data-theme='shade-light'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='shade-light'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--background);
+        color: var(--primary);
+        box-shadow:
+            0 1px 0 hsl(from var(--background) h s l / 0.9) inset,
+            0 2px 6px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Light from above: the control is lifted and the frame casts the
+       same soft shadow every raised thing here casts. */
+    [data-theme='shade-light'] .kp-to-top {
+        box-shadow: 0 2px 6px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-light'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='shade-light'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── One light, one direction [scope-12, approved 2026-09-11] ──────
+       Kenny called this theme sober, and its twin with it. The answer is
+       not a colour but a law: a single source at the top left that
+       everything obeys. At rest a control lies on the surface; under the
+       pointer it lifts and its shadow lengthens; pressed, it goes BELOW
+       the surface and the shadow turns inward.
+
+       On pale paper the shadow falls short and sharp — 1px against the
+       dark twin's 2, blurred 3 against 5. Same law, different material,
+       and that is what makes the two read as a pair. */
+    /* The plain control only. The approved demo (round six) draws the
+       primary, ghost and destructive variants FLAT, and its own test pins
+       that — so the light stops at the variants until Kenny rules on the
+       collision. Recorded as a finding, S49. */
+    /* Phase 7, `focus-ring`. The rule below paints this theme's own
+       elevation on a button, and it is a later layer than kp.components,
+       so it swallowed the ring that layer draws on `:focus-visible` — a
+       keyboard user got an outline and nothing behind it. Measured
+       before: `color(srgb 0.344 0.429867 0.456 / 0.18) 1px 2px 3px`. That is the theme's elevation, not the ring.
+
+       The elevation stays; what is added is the ring in front of it, in
+       the focused state only, spelled the way css/components.css spells
+       it. Third face of the same fault as `fix-12` and `gap-1`: a later
+       layer beating a state the earlier layer defines. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):focus-visible {
+        /* Both channels in DIFFERENT colours: this theme's own focus rule
+           paints the outline in a colour that can equal --focus-ring, and
+           two channels of one colour is what the ring test refuses. */
+        outline-color: var(--focus-ring-contrast);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+            transition:
+                box-shadow var(--fx-duration, 160ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 160ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
+        translate: -1px -1px;
+        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The press is instant on the way in. A click is shorter than a
+       transition, so a pressed state that eases never arrives before the
+       finger leaves — Kenny pressed the demo and saw nothing. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
+        transition-duration: 0s;
+        translate: 1px 1px;
+        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='shade-light'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='shade-light'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
     }
 }

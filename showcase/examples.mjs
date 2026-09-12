@@ -150,6 +150,12 @@ const TO_MARKUP = {
                 'data-kp-confirm': p.confirm,
                 'aria-busy': p['aria-busy'],
             },
+            // Two surfaces a theme may paint on, as components/button.jsx
+            // writes them [scope-16, scope-17]: the edge the oxide film
+            // runs along, and the small reading above the control. Empty
+            // and inert unless a register styles them.
+            el('span', { class: 'kp-button__edge', 'aria-hidden': 'true' }, []),
+            p.readout === undefined ? '' : el('span', { class: 'kp-button__readout', 'aria-hidden': 'true' }, [p.readout]),
             // The label in its own element, as components/button.jsx
             // writes it [S49, A7].
             el('span', { class: 'kp-button__label' }, kids),
@@ -493,7 +499,16 @@ export function conceptBody(c) {
                         el(
                             'div',
                             { class: 'kp-row' },
-                            el('Button', { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis' }, c.btnPrimary),
+                            el(
+                                'Button',
+                                // The small reading above the control
+                                // [readout-words, Kenny 2026-09-12]. Only the
+                                // two themes whose registers style the surface
+                                // carry words; the rest leave it empty and the
+                                // element is not rendered at all.
+                                { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis', readout: c.readout || undefined },
+                                c.btnPrimary,
+                            ),
                             el('Button', {}, c.btnSecondary),
                             el('Button', { variant: 'ghost' }, c.btnGhost),
                         ),

@@ -33,7 +33,7 @@ approved at L4.
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21).
 
-**Enforcement:** `npm run gates` — thirty checks — before every commit,
+**Enforcement:** `npm run gates` — thirty-two checks — before every commit,
 run by the git hook in `.claude/hooks/gates.sh`. No CI: Kenny runs the
 browser suite himself (see the rule of 2026-09-09 below). Node 26
 (`.nvmrc`). All artefact text in English.
@@ -151,19 +151,31 @@ Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
 ## Project rule from Kenny's decision of 2026-09-09 (no CI)
 
-There is no CI. `.github/workflows/ci.yml` is deleted, `main` requires no
-status check, and nothing runs on a server — 254 runs in five days and
-35.9 hours of waiting, on a project whose every change Kenny approves
-himself. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
+There is no CI. `.github/workflows/ci.yml` is deleted and `main` requires
+no status check — 254 runs in five days and 35.9 hours of waiting, on a
+project whose every change Kenny approves himself.
+
+**Amended 2026-09-12 (Phase 8).** This used to add "and nothing runs on a
+server", which is not true and has not been since the decision was made.
+Two workflows remain and both fire: `.github/workflows/release.yml` on a
+`v*` tag, which runs the gates, writes the checksums and creates the draft
+release — the answer to `KT9`, where a hand-built release published a
+`SHA256SUMS` covering three files instead of ten — and
+`.github/workflows/pages.yml` on a push to `main`, which publishes the
+documentation site. What was deleted is the CI that ran on every commit
+and made Kenny wait; what remains is the machinery that builds a release
+so a person does not build it by hand. A doc-writer drafting the runbook
+checked the claim instead of repeating it, which is the whole point of
+drafting from code. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
 the keyboard work need not be (see the rule from correction fix-2 below):
 
-| Command                 | What                                                             | When                                                                                                            |
-| ----------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook                                                                                       |
-| `npm run test:affected` | the specs a change touches, Firefox only                         | during work                                                                                                     |
-| `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks |
-| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                    |
-| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                     |
+| Command                 | What                                                             | When                                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `npm run gates`         | the thirty blocking checks, seconds                              | every commit, by the hook                                                                                                     |
+| `npm run test:affected` | the specs a change touches, Firefox only                         | once before each report or commit — during the building itself it is the single spec file, see the 2026-09-11 amendment below |
+| `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks               |
+| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                                  |
+| `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                                   |
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
 contrast, the design invariants, the flash threshold, the reduced-motion
@@ -223,6 +235,28 @@ runs the specs a change touches, in firefox alone, because Kenny's own
 browser is a firefox derivative and firefox has been the odd engine here
 fourteen times against chromium's six. Where a drill wants the second
 engine, Claude asks rather than decides.
+
+**Amended 2026-09-11, and this is the half that costs the time.**
+`test:affected` falls back to the whole suite for any change to a
+stylesheet or a module, by design — `gates/affected.mjs` says so in its
+own comment, because a map subtle enough to split them would be wrong
+where nobody looks. In practice that means nearly every step Claude takes
+runs everything: 1293 tests, three and a half minutes, dozens of times in
+one session, to check five. Kenny noticed from the other side — his
+machine stuttering while a run was going — and asked whether all of it
+was needed.
+
+The answer is the RHYTHM, not the count. While building, Claude runs the
+one spec file being worked on (`npx playwright test tests/<file>.spec.mjs
+--project=firefox`, measured at 3.6 seconds against 3.5 minutes), and
+runs `npm run test:affected` once before each report or commit. The bar
+on the tests themselves does not move: rule 7e still drives every
+assertion red, rule 8 still turns every live-found fault into a test
+first, and the milestone gate still carries its coverage item.
+
+Workers are capped at `50%` in `playwright.config.mjs` for the same
+reason — Playwright's default is every core, and on sixteen that makes
+the desktop unusable while a run goes. `KP_TEST_WORKERS` overrides it.
 
 Discipline-enforced. If it recurs, `test:browser` gains a guard that
 refuses unless an environment variable only Kenny sets is present. Full
@@ -289,7 +323,7 @@ notched buttons with a slit, a razor tear between sections, decipher,
 one-shot glitch, redactions that clear. It replaces the current theme
 under the same name in a new major; 4.0.0 stays what it shipped (S20).
 Scope S38–S46 in `docs/SCOPE.md`; the measured references in
-`docs/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
+`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
 DI5 findings are reported, not silently corrected (S42); meaning lives in
 the HTML and expression in the theme, through a hook vocabulary every
 theme must answer (S45); and the concept demo, same structure and
@@ -300,13 +334,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | Round six (5.0.0), Phase 6: **all twenty-five themes carry a register**. cyberpunk (C0–C6), synthwave (SW0–SW4), phantom, retro, terminal and brutalism were ratified 2026-09-08 with the S49 pass; the remaining nineteen were built by Sonnet agents in their own worktrees and integrated here on 2026-09-08, each with its gates and its own suite green at the commit. Three of those agents were killed by a rate limit before running anything (forest, shade-light, woodblock): their work was integrated, repaired and verified here, with a KT3 drill performed for each rather than inherited on trust. `main` stands at 022def1, moved with Kenny's explicit permission. Phase 7's sixteen gaps are closed; the documentation pass ran on 2026-09-09 against an audit of every present-tense claim in the documents |
-| Last completed gate | `v5.1.0` is published (2026-09-10) at <https://github.com/kennypassenier/kp-themes/releases/tag/v5.1.0>, nine assets, verified three ways and then once more anonymously. The release verify ran green under the new agreement — Claude asked, Kenny gave the go, Claude ran it: gates 0:12, browser 6:02, advice 0:01, total 6:15. chassis-rs has been told                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| Next gate           | Phase 10, the retrospective. It now also covers what the first outside adoption found, and the three corrections of 2026-09-10: two readings with one moment, a suite run nobody asked for, and a check that read a release artefact                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Open queue items    | PROC-H1 (a defect in the shared procedure repository) and KT6-M1 (waits on JobTracker's own test) — nothing else. Closed on 2026-09-09: MR-W4-1 (REL1, re-measured first), TH111-M1 (the amendment shipped), KT15-M1 (the combined ratification), D3 (`STRINGS_NL` left in 4.0.0). Closed earlier: Closed: R6-Q5 (KT12, measured on a02d31f); KT15-M1 (the next lift's audit finds zero unasked deviations) ; R6-Q8 (the concept pages' footer still counts "three/six/seven registers" and one says twenty-four themes — stale demo copy, S49 says Kenny decides)                                                                                                                                                                                                                                                              |
-| AFK mode            | on; 5.1.0 is released and the queue is down to five items                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Field               | Value                                                                                                                                                                                                            |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round seven (6.0.0), Phase 9 — releasing.** The gate was answered on 2026-09-12: semver and field test signed, both faults Kenny found at the live page repaired, the second engine deferred to the next round |
+| Last completed gate | **Phase 9's report, 2026-09-12.** Kenny opened the documentation site and found two faults no assertion had thought to make — `fix-17` — and then gave the go: tag and publish                                   |
+| Next gate           | Phase 10, the retrospective, whose outcome is a reviewed diff on `~/Projects/dev-procedure`                                                                                                                      |
+| Open queue items    | Seven, and not one is Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1` and `fix-17-M1`                                                                                             |
+| AFK mode            | off                                                                                                                                                                                                              |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
@@ -377,31 +411,36 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 
 ## Project documents
 
-| Doc                              | Purpose                                                   |
-| -------------------------------- | --------------------------------------------------------- |
-| README.md                        | how to consume the package, tokens, provenance            |
-| HANDOFF.md                       | start prompt for a procedure session (Dutch)              |
-| docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                   |
-| docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                  |
-| docs/REALIZATION_PLAN.md         | the eleven milestones, the enforcement, the gate log      |
-| docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)     |
-| docs/ARCHITECTURE_DECISIONS.md   | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
-| docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                  |
-| docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups          |
-| docs/CORRECTIONS.md              | live-found faults and their approved measures             |
-| docs/MINI_ROUNDS.md              | open measurements and mini-rounds                         |
-| docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                  |
-| docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
-| docs/USER_GUIDE.md               | how a consumer builds a page with this                    |
-| docs/ADOPTION_PROMPTS.md         | the two consumer prompts, one per project (Dutch)         |
-| docs/TROUBLESHOOTING.md          | when it looks wrong, or a check says no                   |
-| docs/ARCHITECTURE_REFERENCE.md   | the system as built, as opposed to as decided             |
-| docs/TEST_PLAN.md                | what is tested, where, and what deliberately is not       |
-| docs/LAYOUT.md                   | the nineteen layout classes and their eighteen knobs      |
-| docs/UTILITIES.md                | the 118 generated utility classes                         |
-| docs/MINIFIED.md                 | the minified build and its per-file sizes (generated)     |
-| docs/GENERIC_SWEEP.md            | the KT6 audit: every feature configurable                 |
-| docs/LIFT_PLAN.md                | the nineteen lifts of round six, one row each             |
-| docs/RESEARCH_2026-09.md         | the measured references the lifts were built from         |
-| docs/THEME_CANDIDATES.md         | the twenty-one candidates thirteen themes came from       |
-| docs/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |
+| Doc                                     | Purpose                                                   |
+| --------------------------------------- | --------------------------------------------------------- |
+| README.md                               | how to consume the package, tokens, provenance            |
+| HANDOFF.md                              | start prompt for a procedure session (Dutch)              |
+| docs/SCOPE.md                           | the approved Phase 0 scope (S1-S18, B1)                   |
+| docs/INVENTORY.md                       | the Phase 1 inventory, 99 units with IDs                  |
+| docs/REALIZATION_PLAN.md                | the eleven milestones, the enforcement, the gate log      |
+| docs/FEATURES.md                        | the frozen feature list with its test bars (TH1-TH36)     |
+| docs/ARCHITECTURE_DECISIONS.md          | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
+| docs/DESIGN_INVARIANTS.md               | what must hold in every theme (DI1-DI11)                  |
+| docs/COVERAGE_GAPS.md                   | what the themes do not reach yet, in five groups          |
+| docs/CORRECTIONS.md                     | live-found faults and their approved measures             |
+| docs/MINI_ROUNDS.md                     | open measurements and mini-rounds                         |
+| docs/REQUESTS_FROM_CONSUMERS.md         | what the consumers asked for, 2026-09-03                  |
+| docs/legacy/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
+| docs/USER_GUIDE.md                      | how a consumer builds a page with this                    |
+| docs/ADOPTION_PROMPTS.md                | the two consumer prompts, one per project (Dutch)         |
+| docs/TROUBLESHOOTING.md                 | when it looks wrong, or a check says no                   |
+| docs/ARCHITECTURE_REFERENCE.md          | the system as built, as opposed to as decided             |
+| docs/TEST_PLAN.md                       | what is tested, where, and what deliberately is not       |
+| docs/LAYOUT.md                          | the nineteen layout classes and their eighteen knobs      |
+| docs/UTILITIES.md                       | the 118 generated utility classes                         |
+| docs/MINIFIED.md                        | the minified build and its per-file sizes (generated)     |
+| docs/GENERIC_SWEEP.md                   | the KT6 audit: every feature configurable                 |
+| docs/LIFT_PLAN.md                       | the nineteen lifts of round six, one row each             |
+| docs/RESEARCH_2026-09.md                | the measured references the lifts were built from         |
+| docs/THEME_CANDIDATES.md                | the twenty-one candidates thirteen themes came from       |
+| docs/legacy/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |
+| docs/legacy/README.md                   | what the two copied documents are, and what replaced them |
+| docs/DEBUGGING_GUIDE.md                 | symptom to cause, and what to look at first               |
+| docs/OPERATIONS_RUNBOOK.md              | the numbered procedures a maintainer performs             |
+| docs/ID_TRANSLATIONS.md                 | the KT10 renames, one row each                            |
+| docs/THEME_VERDICTS.md                  | what each theme was judged to need, and why               |

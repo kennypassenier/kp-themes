@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The toggle a narrow bar collapses into</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- Both channels, one behaviour [AR7, rule 7g]. The framework-free
+             half is written out; the React half renders the same nav with
+             `collapsible`. The two mounts carry the same assertions under
+             names that differ only by their prefix.
+
+             Each nav sits in a 360px box because the collapse is decided by
+             the container query the nav already stepped at — 40rem — and a
+             container query reads the box, not the window. No stylesheet of
+             this page's own beyond that width (rule 7e, KT3). -->
+        <div style="inline-size: 360px">
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation" data-test="free-nav">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <button type="button" data-kp-nav-toggle data-test="free-toggle" class="kp-nav__toggle"></button>
+                    <ul class="kp-nav__links" data-test="free-links">
+                        <li><a class="kp-nav__link" href="#a">One</a></li>
+                        <li><a class="kp-nav__link" href="#b">Two</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div style="inline-size: 360px">
+            <div id="react-nav"></div>
+        </div>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-nav-toggle.js"></script>
+    </body>
+</html>
