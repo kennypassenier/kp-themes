@@ -769,11 +769,11 @@
     }
 
     [data-theme='woodblock'] .kp-footer p {
-        color: hsl(from var(--primary-foreground) h s calc(l - 15%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 15));
     }
 
     [data-theme='woodblock'] .kp-footer a {
-        color: hsl(from var(--primary-foreground) h s calc(l - 10%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 10));
         text-decoration: none;
     }
 
@@ -784,7 +784,7 @@
 
     /* The footer's fine print: the demo's own microlabel, dimmer, ruled off. */
     [data-theme='woodblock'] .kp-footer .microlabel {
-        color: hsl(from var(--primary-foreground) h s calc(l - 25%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 25));
         border-block-start: 1px solid hsl(from var(--primary-foreground) h s l / 0.18);
         padding-block-start: 0.6rem;
         display: block;

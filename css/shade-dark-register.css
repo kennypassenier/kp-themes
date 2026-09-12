@@ -282,7 +282,7 @@
     [data-theme='shade-dark'] .kp-nav__link--cta:hover,
     [data-theme='shade-dark'] .kp-nav__link--cta:focus-visible {
         color: var(--accent-foreground);
-        background: hsl(from var(--accent) h s calc(l + 8%));
+        background: hsl(from var(--accent) h s calc(l + 8));
     }
 
     /* The dropdown (KT14): a raised panel on the card ground, one boundary
@@ -317,7 +317,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4%));
+        background: hsl(from var(--secondary) h s calc(l + 4));
     }
 
     [data-theme='shade-dark'] .kp-button--primary {
@@ -326,7 +326,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 7%));
+        background: hsl(from var(--primary) h s calc(l + 7));
     }
 
     [data-theme='shade-dark'] .kp-button--ghost {
@@ -345,7 +345,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button--destructive:hover {
-        background: hsl(from var(--destructive) h s calc(l + 8%));
+        background: hsl(from var(--destructive) h s calc(l + 8));
     }
 
     [data-theme='shade-dark'] .kp-button:disabled {

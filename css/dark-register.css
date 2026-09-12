@@ -378,8 +378,8 @@
     }
 
     [data-theme='dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6%));
-        border-color: hsl(from var(--primary) h s calc(l + 6%));
+        background: hsl(from var(--primary) h s calc(l + 6));
+        border-color: hsl(from var(--primary) h s calc(l + 6));
     }
 
     [data-theme='dark'] .kp-button--ghost {

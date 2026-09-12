@@ -18147,11 +18147,11 @@
     }
 
     [data-theme='woodblock'] .kp-footer p {
-        color: hsl(from var(--primary-foreground) h s calc(l - 15%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 15));
     }
 
     [data-theme='woodblock'] .kp-footer a {
-        color: hsl(from var(--primary-foreground) h s calc(l - 10%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 10));
         text-decoration: none;
     }
 
@@ -18162,7 +18162,7 @@
 
     /* The footer's fine print: the demo's own microlabel, dimmer, ruled off. */
     [data-theme='woodblock'] .kp-footer .microlabel {
-        color: hsl(from var(--primary-foreground) h s calc(l - 25%));
+        color: hsl(from var(--primary-foreground) h s calc(l - 25));
         border-block-start: 1px solid hsl(from var(--primary-foreground) h s l / 0.18);
         padding-block-start: 0.6rem;
         display: block;
@@ -26469,9 +26469,9 @@
     }
 
     [data-theme='blueprint'] .kp-button--destructive:hover {
-        background: hsl(from var(--destructive) h s calc(l + 8%));
+        background: hsl(from var(--destructive) h s calc(l + 8));
         color: var(--destructive-foreground);
-        border-color: hsl(from var(--destructive) h s calc(l + 8%));
+        border-color: hsl(from var(--destructive) h s calc(l + 8));
     }
 
     /* The mirrored corner: a single mitred-corner construction mark, kept
@@ -27233,7 +27233,7 @@
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,
     [data-theme='nostromo'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--selected) h s calc(l - 6%));
+        background: hsl(from var(--selected) h s calc(l - 6));
         color: var(--primary-foreground);
     }
 
@@ -27427,7 +27427,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--primary:hover:not(:disabled) {
-        background: hsl(from var(--primary) h s calc(l + 7%));
+        background: hsl(from var(--primary) h s calc(l + 7));
     }
 
     [data-theme='nostromo'] .kp-button--ghost {
@@ -27448,7 +27448,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--destructive:hover:not(:disabled) {
-        background: hsl(from var(--destructive) h s calc(l - 6%));
+        background: hsl(from var(--destructive) h s calc(l - 6));
     }
 
     [data-theme='nostromo'] .kp-button:disabled {
@@ -28536,8 +28536,8 @@
     }
 
     [data-theme='dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6%));
-        border-color: hsl(from var(--primary) h s calc(l + 6%));
+        background: hsl(from var(--primary) h s calc(l + 6));
+        border-color: hsl(from var(--primary) h s calc(l + 6));
     }
 
     [data-theme='dark'] .kp-button--ghost {
@@ -31449,7 +31449,7 @@
 
     [data-theme='sepia'] .kp-nav__link--cta:hover,
     [data-theme='sepia'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--primary) h s calc(l - 5%));
+        background: hsl(from var(--primary) h s calc(l - 5));
         color: var(--primary-foreground);
     }
 
@@ -31508,8 +31508,8 @@
     }
 
     [data-theme='sepia'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l - 4%));
-        border-color: hsl(from var(--primary) h s calc(l - 4%));
+        background: hsl(from var(--primary) h s calc(l - 4));
+        border-color: hsl(from var(--primary) h s calc(l - 4));
     }
 
     [data-theme='sepia'] .kp-button--ghost {
@@ -32450,7 +32450,7 @@
     }
 
     [data-theme='solstice'] .kp-nav__link--cta:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
         color: var(--primary-foreground);
     }
 
@@ -32463,11 +32463,11 @@
     }
 
     [data-theme='solstice'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
     }
 
     [data-theme='solstice'] .kp-button--secondary:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4%));
+        background: hsl(from var(--secondary) h s calc(l + 4));
     }
 
     [data-theme='solstice'] .kp-button--ghost {
@@ -36328,7 +36328,7 @@
     [data-theme='shade-dark'] .kp-nav__link--cta:hover,
     [data-theme='shade-dark'] .kp-nav__link--cta:focus-visible {
         color: var(--accent-foreground);
-        background: hsl(from var(--accent) h s calc(l + 8%));
+        background: hsl(from var(--accent) h s calc(l + 8));
     }
 
     /* The dropdown (KT14): a raised panel on the card ground, one boundary
@@ -36363,7 +36363,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4%));
+        background: hsl(from var(--secondary) h s calc(l + 4));
     }
 
     [data-theme='shade-dark'] .kp-button--primary {
@@ -36372,7 +36372,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 7%));
+        background: hsl(from var(--primary) h s calc(l + 7));
     }
 
     [data-theme='shade-dark'] .kp-button--ghost {
@@ -36391,7 +36391,7 @@
     }
 
     [data-theme='shade-dark'] .kp-button--destructive:hover {
-        background: hsl(from var(--destructive) h s calc(l + 8%));
+        background: hsl(from var(--destructive) h s calc(l + 8));
     }
 
     [data-theme='shade-dark'] .kp-button:disabled {

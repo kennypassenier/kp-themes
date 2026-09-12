@@ -543,9 +543,9 @@
     }
 
     [data-theme='blueprint'] .kp-button--destructive:hover {
-        background: hsl(from var(--destructive) h s calc(l + 8%));
+        background: hsl(from var(--destructive) h s calc(l + 8));
         color: var(--destructive-foreground);
-        border-color: hsl(from var(--destructive) h s calc(l + 8%));
+        border-color: hsl(from var(--destructive) h s calc(l + 8));
     }
 
     /* The mirrored corner: a single mitred-corner construction mark, kept

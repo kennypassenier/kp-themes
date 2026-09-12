@@ -2063,3 +2063,58 @@ cannot be skipped.
 
 **9 · When we review the measure.** At round seven's retrospective.
 
+---
+
+## fix-11 · A relative colour that resolved to nothing (2026-09-12)
+
+**1 · What went wrong.** `hsl(from var(--primary) h s calc(l + 8%))`
+paints TRANSPARENT. In a relative colour the `l` channel resolves to a
+number, so adding a percentage to it is a type error; the declaration is
+dropped and the element keeps no background at all. No engine warns.
+
+Kenny found it by hovering one button. Three separate themes came back
+with the same sentence — "de verstuur knop is onleesbaar bij hover" —
+and every one of them was this line.
+
+**2 · Which gate let it through.** None, and several looked straight at
+it. `check-layers.mjs` reads these declarations to police DI9 and cares
+only whether a colour is a token. The contrast advice reads tokens, not
+the states a register paints. And a browser test that reads a hover
+colour would have caught it, but no test hovers a primary button in
+every theme.
+
+**3 · Where else the same fault sits.** The property is "a channel
+keyword with a percentage added to it inside a relative colour". Searched
+with `grep -rn "calc(l " css/*.css`: 25 occurrences in 10 stylesheets, of
+which **20 in 7 registers** carried the percentage and were broken —
+blueprint, dark, nostromo, sepia, shade-dark, solstice and woodblock. The
+other five already used a valid form. Every one of the twenty was a hover
+or an active state, which is why nobody saw it: the resting state is
+correct and the fault only appears under the pointer.
+
+**4 · How we prevent recurrence.** `gates/check-relative-colour.mjs`,
+in `npm run gates` and in the commit hook. It refuses exactly this shape
+and nothing else, because everything else in the family works — measured
+the same day: `hsl(from … h s l)`, `calc(l + 8)`, `calc(l * 1.1)`,
+`oklch(from … calc(l + .05) c h)` and `color-mix()` all resolve, and only
+the percentage does not.
+
+**5 · What it costs.** One narrow gate of about forty lines. The risk of
+a wider rule — refusing relative colours, or auditing every state — would
+be a rule that fires on correct code, and this one cannot.
+
+**6 · Who enforces it.** Code.
+
+**7 · How and when it is measured.** It was measured before it was
+written: the gate was driven red by putting one percentage back, and it
+named the file and the line. The standing measurement is that it stays in
+the chain; the test that compares the gate list against the commit hook
+already refused this gate until it was in both.
+
+**8 · The fallback.** If a variant slips past the shape this gate knows,
+the browser suite gains one test that hovers a primary button in every
+theme and refuses a transparent background — which is the assertion that
+would have caught this one on the day it was written.
+
+**9 · When we review the measure.** At round seven's retrospective.
+

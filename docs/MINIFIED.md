@@ -45,7 +45,7 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 191.6 kB | 131.6 kB | 31% |
 | `css/ticker-register.css` | 35.1 kB | 17.1 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `css/woodblock-register.css` | 43.4 kB | 22.9 kB | 47% |
+| `css/woodblock-register.css` | 43.3 kB | 22.9 kB | 47% |
 | `dist/kp-themes.css` | 1307.2 kB | 700.8 kB | 46% |
 | `dist/kp-themes.js` | 228.4 kB | 122.4 kB | 46% |
 

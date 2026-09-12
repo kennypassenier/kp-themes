@@ -388,7 +388,7 @@
 
     [data-theme='sepia'] .kp-nav__link--cta:hover,
     [data-theme='sepia'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--primary) h s calc(l - 5%));
+        background: hsl(from var(--primary) h s calc(l - 5));
         color: var(--primary-foreground);
     }
 
@@ -447,8 +447,8 @@
     }
 
     [data-theme='sepia'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l - 4%));
-        border-color: hsl(from var(--primary) h s calc(l - 4%));
+        background: hsl(from var(--primary) h s calc(l - 4));
+        border-color: hsl(from var(--primary) h s calc(l - 4));
     }
 
     [data-theme='sepia'] .kp-button--ghost {

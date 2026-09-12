@@ -241,7 +241,7 @@
     }
 
     [data-theme='solstice'] .kp-nav__link--cta:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
         color: var(--primary-foreground);
     }
 
@@ -254,11 +254,11 @@
     }
 
     [data-theme='solstice'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 8%));
+        background: hsl(from var(--primary) h s calc(l + 8));
     }
 
     [data-theme='solstice'] .kp-button--secondary:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4%));
+        background: hsl(from var(--secondary) h s calc(l + 4));
     }
 
     [data-theme='solstice'] .kp-button--ghost {

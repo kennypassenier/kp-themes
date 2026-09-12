@@ -186,7 +186,7 @@
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,
     [data-theme='nostromo'] .kp-nav__link--cta:focus-visible {
-        background: hsl(from var(--selected) h s calc(l - 6%));
+        background: hsl(from var(--selected) h s calc(l - 6));
         color: var(--primary-foreground);
     }
 
@@ -380,7 +380,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--primary:hover:not(:disabled) {
-        background: hsl(from var(--primary) h s calc(l + 7%));
+        background: hsl(from var(--primary) h s calc(l + 7));
     }
 
     [data-theme='nostromo'] .kp-button--ghost {
@@ -401,7 +401,7 @@
     }
 
     [data-theme='nostromo'] .kp-button--destructive:hover:not(:disabled) {
-        background: hsl(from var(--destructive) h s calc(l - 6%));
+        background: hsl(from var(--destructive) h s calc(l - 6));
     }
 
     [data-theme='nostromo'] .kp-button:disabled {

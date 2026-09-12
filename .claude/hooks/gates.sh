@@ -51,6 +51,9 @@ node gates/check-tokens.mjs
 echo "→ theme colour stays in the token layer (DI9)"
 node gates/check-layers.mjs
 
+echo "→ a relative colour that resolves to nothing [fix-11]"
+node gates/check-relative-colour.mjs
+
 echo "→ the import closure of the modules chassis-rs vendors (AR28)"
 node gates/check-closure.mjs
 
