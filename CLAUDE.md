@@ -340,6 +340,7 @@ until it becomes a template in the repository.
 | Last completed gate | **Phase 9's report, 2026-09-12.** Kenny opened the documentation site and found two faults no assertion had thought to make — `fix-17` — and then gave the go: tag and publish                                   |
 | Next gate           | Phase 10, the retrospective, whose outcome is a reviewed diff on `~/Projects/dev-procedure`                                                                                                                      |
 | Open queue items    | Seven, and not one is Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1` and `fix-17-M1`                                                                                             |
+| Next action         | open Phase 10, the retrospective                                                                                                                                                                                 |
 | AFK mode            | off                                                                                                                                                                                                              |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy

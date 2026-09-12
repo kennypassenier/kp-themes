@@ -2692,3 +2692,69 @@ body; then the same for any descendant selector, which is what found
 phantom and cleared it.
 
 **10 · When we review the measure.** At round seven's retrospective.
+
+## fix-18 · Stopping after a phase when no input was needed (2026-09-13)
+
+**1 · What went wrong.** Phase 9 closed — the release tagged, published
+and verified — and Claude ended the turn with "say when you want Phase
+10". Kenny's reply: *"dus je stopt weer na een fase, nadat ik vorige keer
+expliciet gezegd heb dat je moet doorgaan als je geen input van mij nodig
+hebt."* Fourth time.
+
+**2 · Which gate let it through.** None. The rule lives in the central
+memory and is read at every session start, and nothing enforces it at the
+moment it matters.
+
+**3 · Where the same fault sits.** The property is **a rule that only
+discipline holds, about something that happens at the END of a turn** —
+the one moment when attention is lowest and the work feels finished.
+Searched with `grep -rl` over the central memory store for entries of that
+shape: two already cover this exact rule, `auto-start-next-phase.md`
+(2026-09-02, from JobTracker) and `fases-vanzelf-starten.md` (2026-09-04,
+from this project). Both were broken. On 2026-09-12 Claude strengthened
+the second one with the failure pattern itself — and then broke it again
+the same evening, twice.
+
+**4 · How we prevent recurrence.** `~/.claude/hooks/may-i-stop.py`, wired
+as a `Stop` hook. It refuses to end a turn unless `CLAUDE.md`'s status
+block says, in a new `Next action` row, `waiting on Kenny: <what>`.
+Continuing becomes the default; stopping requires writing down what is
+awaited, by name.
+
+Only projects carrying a `Procedure status` block are touched, and the
+hook never blocks twice in one turn, so it cannot loop.
+
+**5 · What the remedy costs.** One hook and one row in a table Claude
+already maintains. The row has to be kept current — and if it is not, the
+hook blocks, so forgetting falls the safe way. The real cost is that a
+legitimate stop now needs a sentence naming what is awaited, which is a
+sentence worth writing anyway.
+
+**6 · Who enforces it.** Code. A `Stop` hook in `~/.claude/settings.json`,
+beside the `SessionStart` and `UserPromptSubmit` hooks already there.
+
+**7 · How we measure that it works.** At the next phase close: either the
+hook blocks, or it does not have to because the next phase had already
+begun. Both are information. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** The hook also blocks while
+a form is unanswered, so only Kenny's reply can end the turn.
+
+**9 · Gezocht met.** `grep -rl` over
+`~/.claude/projects/-home-kenny-homeassistant-mcp/memory/` for entries
+about continuing between phases; `python3 -c` over `~/.claude/settings.json`
+for the hook types already wired; and the hook itself run against five
+states before it was proposed — mid-phase, a named wait, an empty row, a
+missing row, and a directory with no procedure.
+
+**10 · When we review the measure.** At round eight's retrospective, or
+sooner if it ever blocks a turn that should have ended.
+
+**A note on the first proposal, which was wrong.** The first design
+inferred the state from two rows the status block already carries: when
+`Current phase` and `Last completed gate` name the same number, the phase
+is done. Measured against this round's own history, it fired at
+`2bbb2d9` — in the middle of Phase 7, with work still running — because
+the gate's answer is recorded while the work continues. A check that cries
+wolf is one people learn to skip, which is the lesson `check-doc-quotes`
+had already taught two days earlier. The explicit row replaced it.
