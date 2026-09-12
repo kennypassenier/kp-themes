@@ -762,3 +762,15 @@ Six of the eight closed, each driven red before it was allowed green.
 Measured after: 106 unit tests, 1,367 browser tests in firefox over 79
 files, 2,734 across both engines, thirty-two gates green. Two tests stay
 red, and both are findings for Kenny rather than faults to repair.
+
+### The last three, answered 2026-09-12
+
+| Finding | Kenny's answer | What it took |
+| ------- | -------------- | ------------ |
+| `blueprint-lines` | the lines come inside | the gap changes sign; every button measures `189 in 189` where it measured `195 in 189` |
+| `readout-words` | Claude's proposal | `READY` for dark, `PART 26` for titanium, the slot on every theme, and a gate holding words and registers together in both directions |
+| `shade-light-muted` | muted at 46% | the token, plus an advisory that had become a gate by accident and a browser test that enforced the same floor |
+
+Phase 7 closes with 107 unit tests, 1,343 browser tests in firefox over
+79 files, thirty-two gates and nothing red. Eight of the nine gaps are
+closed; `second-engine` is deferred and recorded verbatim.

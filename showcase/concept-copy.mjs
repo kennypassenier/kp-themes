@@ -20,6 +20,9 @@
 /** @type {Record<string, ConceptCopy>} */
 export const CONCEPT_COPY = {
     cyberpunk: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'SIG//06',
         navThemes: 'Themes',
@@ -119,6 +122,9 @@ export const CONCEPT_COPY = {
         arrivalReady: 'OK',
     },
     phantom: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'PH//15',
         navThemes: 'Themes',
@@ -218,6 +224,9 @@ export const CONCEPT_COPY = {
         arrivalReady: 'Delivered.',
     },
     retro: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes 95',
         brandTag: '— [Retro]',
         navThemes: 'Themes',
@@ -317,6 +326,9 @@ export const CONCEPT_COPY = {
         arrivalReady: 'OK',
     },
     terminal: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'TTY//06',
         navThemes: 'themes',
@@ -416,6 +428,9 @@ export const CONCEPT_COPY = {
         arrivalReady: 'READY.',
     },
     brutalism: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'THM//12',
         navThemes: 'Themes',
@@ -514,6 +529,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     'shade-dark': {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'SD//06',
         navThemes: 'Themes',
@@ -612,6 +630,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     lapis: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Lapis & Leaf',
         brandTag: 'MS//07',
         navThemes: 'Folios',
@@ -711,6 +732,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     'high-contrast': {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'AAA//21:1',
         navThemes: 'Theme',
@@ -809,6 +833,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     solstice: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Low Sun',
         brandTag: '',
         navThemes: 'Field guide',
@@ -907,6 +934,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     sepia: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'the sepia specimen',
         navThemes: 'themes',
@@ -1006,6 +1036,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     formal: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Fair Copy',
         brandTag: 'A kp-themes specimen',
         navThemes: 'Editions',
@@ -1105,6 +1138,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     dark: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: 'READY',
         brand: 'kp-themes',
         brandTag: 'SP·15',
         navThemes: 'Themes',
@@ -1209,6 +1245,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     titanium: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: 'PART 26',
         brand: 'kp-themes',
         brandTag: 'TI·26',
         navThemes: 'Themes',
@@ -1314,6 +1353,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     nostromo: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: 'REG//19',
         navThemes: 'Manifest',
@@ -1412,6 +1454,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     blueprint: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: '/ blueprint',
         navThemes: 'Sheets',
@@ -1510,6 +1555,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     grotesk: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Grotesk',
         brandTag: '',
         navThemes: 'Type',
@@ -1608,6 +1656,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     light: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         brandTag: '',
         navThemes: 'Themes',
@@ -1707,6 +1758,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     deco: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Aurelia',
         brandTag: 'REG//08',
         navThemes: 'Suites',
@@ -1806,6 +1860,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     forest: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'kp-themes',
         // invented: the demo's brand carries no file code; RDG//12 fits its side note's "RIDGE-12".
         brandTag: 'RDG//12',
@@ -1907,6 +1964,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     'shade-light': {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Quiet Margin',
         brandTag: 'SL//094',
         navThemes: 'Reading',
@@ -2006,6 +2066,9 @@ export const CONCEPT_COPY = {
         arrivalReady: '',
     },
     pastel: {
+        // The small reading above the primary control [readout-words, Kenny 2026-09-12].
+        // Empty where this theme's register does not style the surface.
+        readout: '',
         brand: 'Milkweed Press',
         brandTag: 'Riso & letterpress studio',
         navThemes: 'Work',

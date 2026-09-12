@@ -2502,3 +2502,44 @@ And the data-surface sweep found `shade-light` declaring
 `hsl(194, 14%, 40%)`. Twenty-one of twenty-two themes differ. It reaches
 every caption, every timestamp, every disabled label and every
 placeholder in that theme, and it is a palette value, so it is his.
+
+### fix-15, the last three, and one advisory that had become a gate (2026-09-12)
+
+Kenny answered the three open findings: the witness lines move inside,
+the readout takes `READY` and `PART 26`, and shade-light's muted colour
+goes to 46%.
+
+**The blueprint gap was six pixels of the theme's own gesture.** The gap
+changes sign — the lines sit the same distance from the boundary, on the
+inside of it — and every button measures `189 in 189` where it measured
+`195 in 189`. The vertical overhang is untouched; it never contributed to
+the width, and it is what makes them read as measurement marks.
+
+**The readout now exists.** Every theme has the slot because the
+slot-equality rule is what makes the concept pages comparable; only the
+two whose registers style the surface carry words, and a unit test holds
+those two lists together in both directions — a register that styles it
+with nothing to say fails, and words no register paints fail too.
+
+**Setting shade-light's muted colour found an advisory that had quietly
+become a gate.** `gates/compliance.mjs` shells out to `check-contrast.mjs`
+to quote its own output into `docs/DESIGN_INVARIANTS.md`, and let
+`execFileSync` throw. Contrast is advice in this package by Kenny's
+decision of 2026-09-09 — measured and printed, never refused — but a
+throw there failed `npm run gates` on a shortfall he had just chosen
+deliberately, with the number in front of him. That is `fix-13`'s shape a
+second time: an advisory becoming a gate through a back door. The call
+quotes both streams now and does not obey the exit code, and
+`check-contrast.mjs` no longer claims "a theme that fails AA cannot ship",
+which had not been true in this package since 2026-09-09.
+
+**And a browser test was enforcing the same floor.**
+`tests/surfaces.spec.mjs` already had a `REPORTED` list for a pair an
+approved demo puts under the floor. It could name one element by its
+text, which is the wrong shape for a decision about a TOKEN: shade-light's
+muted colour lands on eight lines across two grounds, and naming each
+would have recorded the fixture's wording rather than the choice. An
+entry may now name a colour pair instead, and it still has to measure
+what it says — an entry cannot outlive the thing it excuses, in either
+form. The stale entry for `ticker`, a theme `scope-11` removed, went with
+it.

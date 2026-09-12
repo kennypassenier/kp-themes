@@ -138,3 +138,31 @@ test('a theme that styles the readout reveals it on hover [scope-16]', async ({ 
     // dark raises the opacity and paints the text with its oxide gradient.
     await measured(readout, (el) => getComputedStyle(el).opacity, undefined, 'dark reveals the readout on hover').toBe('1');
 });
+
+// Drilled 2026-09-12 in firefox: `readout: c.readout || undefined`
+// in showcase/examples.mjs changed back to no readout at all -> red on
+// the element being on the page. Restored: green.
+test('the two themes that style the readout show it on their own page [readout-words]', async ({ page }) => {
+    // The fixture above proves the CSS contract; this proves the words
+    // actually reach the page the theme is judged on. Until Phase 7 the
+    // surface was styled in full by two registers and rendered nowhere,
+    // so both halves existed and never met.
+    for (const [theme, word] of [
+        ['dark', 'READY'],
+        ['titanium', 'PART 26'],
+    ]) {
+        await page.goto(`/examples/concept-${theme}.html`);
+        const readout = page.locator('.kp-button__readout').first();
+        expect(await readout.count(), `${theme}'s page carries the readout`).toBe(1);
+        expect((await readout.textContent())?.trim(), `${theme} shows its own word`).toBe(word);
+
+        // Still decoration, still invisible until the theme asks.
+        expect(await readout.getAttribute('aria-hidden')).toBe('true');
+        await measured(readout, (el) => getComputedStyle(el).opacity, undefined, `${theme} hides the readout at rest`).toBe('0');
+    }
+
+    // And a theme that does not style it renders nothing at all, rather
+    // than an empty element nobody can see.
+    await page.goto('/examples/concept-light.html');
+    expect(await page.locator('.kp-button__readout').count(), 'light styles no readout and renders none').toBe(0);
+});

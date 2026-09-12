@@ -1939,7 +1939,7 @@
     --secondary: hsl(46, 42%, 88%);
     --secondary-foreground: hsl(194, 25%, 22%);
     --muted: hsl(46, 40%, 90%);
-    --muted-foreground: hsl(194, 14%, 40%);
+    --muted-foreground: hsl(194, 14%, 46%);
     --accent: hsl(175, 60%, 36%);
     --accent-foreground: hsl(44, 87%, 96%);
     --destructive: hsl(1, 71%, 42%);

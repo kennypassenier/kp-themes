@@ -499,7 +499,16 @@ export function conceptBody(c) {
                         el(
                             'div',
                             { class: 'kp-row' },
-                            el('Button', { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis' }, c.btnPrimary),
+                            el(
+                                'Button',
+                                // The small reading above the control
+                                // [readout-words, Kenny 2026-09-12]. Only the
+                                // two themes whose registers style the surface
+                                // carry words; the rest leave it empty and the
+                                // element is not rendered at all.
+                                { variant: 'primary', class: 'kp-button--mirror', 'data-kp-reveal': 'emphasis', readout: c.readout || undefined },
+                                c.btnPrimary,
+                            ),
                             el('Button', {}, c.btnSecondary),
                             el('Button', { variant: 'ghost' }, c.btnGhost),
                         ),

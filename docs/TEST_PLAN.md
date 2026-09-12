@@ -176,8 +176,22 @@ firefox alone; the second engine roughly doubles the wall-clock.
 skips the themed select list where `appearance: base-select` is not
 supported, naming the engine. The support is probed, not assumed.
 
-**Two findings are open rather than uncovered.** `blueprint-width` and
-`shade-light`'s muted colour are both put to Kenny as findings, because
-each changes a value an approved demo showed and `S49` reserves that to
-him. Their tests stay red until he answers; they are not accepted
-limitations and are not recorded as such.
+**Two readings that stay under the floor, by decision.** Both were put to
+Kenny on 2026-09-12 and both are answered, so neither is an open finding
+any more — they are choices with their numbers written down.
+
+`shade-light`'s muted colour is `hsl(194, 14%, 46%)`, measured at 3.99 on
+the page ground, 4.13 on a card and 3.61 on a muted panel, against a 4.5
+floor. It was identical to `--foreground` before Phase 7, which meant
+nothing in the theme was muted at all: captions, hints, timestamps and
+the text of an empty field all read as body text. There is no lighter
+colour that clears the floor, because shade-light's BODY text only
+reaches 5.01 itself — the choice was between a visible difference under
+the floor and no difference at all, and Kenny took the difference. The
+readings are quoted into `docs/DESIGN_INVARIANTS.md` by the compliance
+table and named in `tests/surfaces.spec.mjs`, which requires them to keep
+measuring what they claim.
+
+`blueprint`'s witness lines moved inside the control rather than outside
+it, so the six pixels of scrollable overflow on every one of its buttons
+are gone. That one is closed rather than accepted.

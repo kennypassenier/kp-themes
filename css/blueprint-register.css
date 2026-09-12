@@ -1179,12 +1179,26 @@
         pointer-events: none;
     }
 
+    /* Phase 7, `blueprint-lines`, Kenny 2026-09-12: "De lijntjes komen
+       naar binnen". The witness lines stood at `-0.35rem` OUTSIDE the
+       control, and the right-hand one therefore added 5.6px plus its own
+       pixel to every blueprint button's scrollable area, visible or not —
+       measured `195 in 189`, `194 in 188`, `190 in 184`, `166 in 160`,
+       `114 in 108` on the concept page, the same six pixels every time.
+       `overflow: clip` with a clip margin was tried and does not help:
+       firefox counts the clip margin in `scrollWidth`.
+
+       So the gap changes sign. The lines now sit the same distance from
+       the boundary, on the inside of it, and the control no longer
+       carries six pixels nobody can reach. The vertical overhang is
+       untouched — it never contributed to the width, and it is what makes
+       them read as measurement marks rather than as a border. */
     [data-theme='blueprint'] .kp-button::before {
-        inset-inline-start: calc(-1 * var(--kp-witness-gap, 0.35rem));
+        inset-inline-start: var(--kp-witness-gap, 0.35rem);
     }
 
     [data-theme='blueprint'] .kp-button::after {
-        inset-inline-end: calc(-1 * var(--kp-witness-gap, 0.35rem));
+        inset-inline-end: var(--kp-witness-gap, 0.35rem);
     }
 
     @media (prefers-reduced-motion: no-preference) {

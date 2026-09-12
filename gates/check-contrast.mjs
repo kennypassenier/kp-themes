@@ -1,7 +1,14 @@
-// Every theme's declared colour pairs must meet WCAG AA (4.5:1; accent
-// surfaces 3:1 for large text). Parses a themes stylesheet, computes the
-// contrast per theme, exits non-zero on any violation. Wired into
-// `npm run gates` - a theme that fails cannot ship.
+// Every theme's declared colour pairs measured against WCAG AA (4.5:1;
+// accent surfaces 3:1 for large text). Parses a themes stylesheet,
+// computes the contrast per theme, and exits non-zero on any shortfall.
+//
+// This is ADVICE, not a gate (Kenny, 2026-09-09): it is in `npm run
+// advice`, not in `npm run gates`, and nothing refuses a release over it.
+// The exit code is for a person reading a terminal. gates/compliance.mjs
+// quotes what this prints into docs/DESIGN_INVARIANTS.md so the package
+// says plainly where it falls short rather than claiming it never does —
+// and Phase 7 had to teach that call not to die on the exit code, which
+// had quietly made this a gate again.
 //
 // Usage: node scripts/check-contrast.mjs [path/to/themes.css]
 //        (default: css/themes.css in this package)
@@ -327,7 +334,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
 
     if (failures > 0) {
-        console.error(`\n${failures} contrast violation(s). A theme that fails AA cannot ship.`);
+        console.error(`\n${failures} pair(s) short of the floor. This is advice: it is measured and printed, never refused [Kenny, 2026-09-09].`);
         process.exit(1);
     }
     console.log(

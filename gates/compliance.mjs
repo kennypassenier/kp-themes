@@ -192,7 +192,27 @@ export function table() {
     // them an authority they had not earned. They are the gates' own
     // output now [Phase 7, G2].
     /** @param {string} script */
-    const said = (script) => execFileSync(process.execPath, [new URL(script, import.meta.url).pathname], { encoding: 'utf8' }).trim();
+    // Phase 7: this used to let `execFileSync` throw. The accessibility
+    // floors are ADVICE in this package and never refuse (Kenny,
+    // 2026-09-09) — but check-contrast.mjs still exits 1 when a pair is
+    // short, and a throw here turned that advice into a hard gate through
+    // the back door: shade-light's muted colour, chosen deliberately at
+    // 3.99 with the reading recorded, failed `npm run gates`. The point of
+    // this call is to QUOTE what the advisory printed, so the exit code is
+    // not this function's business. fix-13's shape a second time: an
+    // advisory becoming a gate by accident.
+    const said = (script) => {
+        try {
+            return execFileSync(process.execPath, [new URL(script, import.meta.url).pathname], { encoding: 'utf8' }).trim();
+        } catch (error) {
+            // A failing advisory writes its findings to stderr and its
+            // count to stdout, so both are the thing to quote.
+            const said = /** @type {{ stdout?: string, stderr?: string }} */ (error);
+            const out = `${said.stdout ?? ''}${said.stderr ?? ''}`.trim();
+            if (out === '') throw error; // it did not run at all, which IS this function's business
+            return out;
+        }
+    };
 
     const notes = [
         `- ${said('check-contrast.mjs')}`,

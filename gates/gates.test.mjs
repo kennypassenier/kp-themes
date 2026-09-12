@@ -1017,8 +1017,18 @@ test('S49: every theme with an approved demo has its own concept page, whole and
         assert.deepEqual(Object.keys(copy).sort(), [...slots].sort(), `${theme}'s copy has different slots`);
         for (const [slot, text] of Object.entries(copy)) {
             assert.equal(typeof text, 'string', `${theme}.${slot} is not a string`);
-            if (slot !== 'arrivalLine' && slot !== 'arrivalReady' && slot !== 'brandTag')
-                assert.notEqual(text.trim(), '', `${theme}.${slot} is empty`);
+            // The slots that may be empty, each for a stated reason. An
+            // empty one is not a blank on the page: the renderer leaves
+            // the element out entirely, so the difference is between a
+            // theme having the thing and not having it.
+            //
+            // `readout` joined them in Phase 7: only the two registers
+            // that style the small reading above a control have words for
+            // it, and the others would otherwise carry text no theme ever
+            // paints. gates.test.mjs holds the two lists together further
+            // down, in both directions.
+            const MAY_BE_EMPTY = ['arrivalLine', 'arrivalReady', 'brandTag', 'readout'];
+            if (!MAY_BE_EMPTY.includes(slot)) assert.notEqual(text.trim(), '', `${theme}.${slot} is empty`);
         }
         if (theme === DEFAULT_COPY_THEME) continue;
         const page = readFileSync(new URL(`../examples/concept-${theme}.html`, import.meta.url), 'utf8');
@@ -1290,4 +1300,25 @@ test('the frozen list does not describe a theme the package no longer ships [Pha
         }
     }
     assert.deepEqual(bars, [], 'a frozen test bar names a theme the package does not ship, so it can never fail');
+});
+
+test('a register that styles the readout has words to put in it [readout-words, Phase 7]', () => {
+    // Phase 7 found `.kp-button__readout` styled in full by two registers
+    // — fifteen rules each, including a hover reveal — and rendered by no
+    // page in the package, because nothing supplied the text. Inert CSS
+    // for an element that never existed. Kenny chose the words on
+    // 2026-09-12; this holds the two halves together, in both directions.
+    const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
+    const styles = registers
+        .filter((f) => readFileSync(new URL(f, new URL('../css/', import.meta.url)), 'utf8').includes('.kp-button__readout'))
+        .map((f) => f.slice(0, -'-register.css'.length))
+        .sort();
+
+    const speaks = Object.entries(CONCEPT_COPY)
+        .filter(([, copy]) => (copy.readout ?? '') !== '')
+        .map(([theme]) => theme)
+        .sort();
+
+    assert.ok(styles.length > 0, 'no register styles the readout, which cannot be right after Phase 7');
+    assert.deepEqual(speaks, styles, 'a register styles the readout with no words to put in it, or gives words no register paints');
 });
