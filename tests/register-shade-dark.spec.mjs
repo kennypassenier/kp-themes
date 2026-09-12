@@ -268,6 +268,33 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => item.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--secondary'));
         });
 
+        test('the same light, the other material: the control lifts, and the press goes under [scope-12]', async ({ page }) => {
+            // shade-light's own test, read on the dark twin. Drilled
+            // 2026-09-12 in firefox: the rest `box-shadow` removed -> red on
+            // the offsets; the `:active` rule's `inset` removed -> red on
+            // the press turning inward.
+            // The PLAIN button, named explicitly: `.kp-button` with
+            // `.first()` reaches the hero's `--mirror` variant, which
+            // carries its own later rules [KT3].
+            const btn = page.locator('[class="kp-button"]').first();
+            await open(page, url);
+            const rest = await btn.evaluate((el) => getComputedStyle(el).boxShadow);
+            const offsets = rest.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/);
+            expect(offsets, 'a shadow at rest').not.toBeNull();
+            expect(Number(offsets[1]), 'it falls to the right of the source').toBeGreaterThan(0);
+            expect(Number(offsets[2]), 'and below it').toBeGreaterThan(Number(offsets[1]));
+            // Further and softer than the light twin's 1px 2px 3px: on a
+            // dark ground a short sharp shadow is not a shadow, it is a line.
+            expect(Number(offsets[3]), 'softer than the light twin').toBeGreaterThan(3);
+            expect(rest, 'away from the light, not into it').not.toContain('inset');
+            await btn.hover();
+            await style(btn, 'translate', 'the lift is toward the source').toBe('-1px -1px');
+            await page.mouse.down();
+            await style(btn, 'transition-duration', 'the press does not ease in').toBe('0s');
+            expect(await btn.evaluate((el) => getComputedStyle(el).boxShadow), 'and it turns inward').toContain('inset');
+            await page.mouse.up();
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');

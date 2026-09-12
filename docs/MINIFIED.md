@@ -37,7 +37,7 @@ the selectors and their order are identical, which is what
 | `css/phantom-register.css` | 53.4 kB | 29.7 kB | 44% |
 | `css/retro-register.css` | 62.2 kB | 32.5 kB | 48% |
 | `css/sepia-register.css` | 40.7 kB | 20.0 kB | 51% |
-| `css/shade-dark-register.css` | 33.4 kB | 16.9 kB | 49% |
+| `css/shade-dark-register.css` | 35.4 kB | 17.6 kB | 50% |
 | `css/shade-light-register.css` | 39.3 kB | 19.8 kB | 50% |
 | `css/solstice-register.css` | 33.5 kB | 16.4 kB | 51% |
 | `css/synthwave-register.css` | 54.4 kB | 31.5 kB | 42% |
@@ -46,11 +46,11 @@ the selectors and their order are identical, which is what
 | `css/ticker-register.css` | 36.3 kB | 17.4 kB | 52% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `css/woodblock-register.css` | 44.5 kB | 23.3 kB | 48% |
-| `dist/kp-themes.css` | 1335.4 kB | 710.2 kB | 47% |
+| `dist/kp-themes.css` | 1337.4 kB | 710.9 kB | 47% |
 | `dist/kp-themes.js` | 228.7 kB | 122.5 kB | 46% |
 
-The loose stylesheets together weigh **1393.0 kB** authored and
-**745.6 kB** minified, 46% less. A page loading one theme's
+The loose stylesheets together weigh **1395.0 kB** authored and
+**746.3 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
