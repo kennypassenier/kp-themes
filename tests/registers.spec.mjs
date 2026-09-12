@@ -186,3 +186,41 @@ for (const theme of ['phantom', 'retro', 'terminal', 'synthwave']) {
         expect(marked.isOff, 'and a click that is not on Skip ends it').toBe(true);
     });
 }
+
+// gap-3 — synthwave's header stripe runs once across the row.
+//
+// Kenny, 2026-09-10: the gradients are beautiful, but in a table each
+// `<th>` carried its own, and where two met the end of one butted against
+// the start of the next. A `border-image` is painted per element by
+// definition, so the seam was the mechanism working exactly as written.
+//
+// The showcase page, not the concept page: the concept demo carries no
+// table, so this test skipped silently there — which is a pass that
+// measures nothing.
+//
+// Drilled 2026-09-12 in firefox: the `thead tr` rule removed → red on the
+// row carrying the stripe. Restored green.
+test('the synthwave table header is one stripe, not one per cell [gap-3]', async ({ page }) => {
+    await page.goto('/showcase/themes/synthwave.html');
+    const table = page.locator('.kp-table').first();
+    await table.scrollIntoViewIfNeeded();
+
+    const cells = table.locator('th');
+    const count = await cells.count();
+    expect(count, 'a header with several cells is the case this is about').toBeGreaterThan(1);
+    for (let i = 0; i < count; i++) {
+        expect(await cells.nth(i).evaluate((el) => getComputedStyle(el).borderImageSource), `cell ${i} still paints its own ramp`).toBe('none');
+    }
+
+    const painted = await table
+        .locator('thead tr')
+        .first()
+        .evaluate((el) => {
+            const s = getComputedStyle(el);
+            return { image: s.backgroundImage, size: s.backgroundSize, width: el.getBoundingClientRect().width };
+        });
+    expect(painted.image, 'the row carries the stripe').toMatch(/linear-gradient/);
+    expect(painted.size, 'two pixels tall, the full width of the row').toBe('100% 2px');
+    const oneCell = await cells.first().evaluate((el) => el.getBoundingClientRect().width);
+    expect(painted.width, 'and the row is wider than any one cell, which is the whole point').toBeGreaterThan(oneCell);
+});
