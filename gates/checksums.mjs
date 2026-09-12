@@ -39,6 +39,7 @@ export const FILES = [
     'css/phantom-register.css',
     'css/terminal-register.css',
     'css/brutalism-register.css',
+    'css/titanium-register.css',
     'css/woodblock-register.css',
     'css/pastel-register.css',
     'css/shade-light-register.css',

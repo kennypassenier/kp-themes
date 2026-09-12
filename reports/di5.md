@@ -11,6 +11,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | --- | --- | --- | --- | --- | --- | --- |
 | `kp-sidenav-backdrop` | opacity | 220 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-rake` | translate | 620 ms | 1× | — | 0.00/s | under |
+| `kp-mill` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-tracking` | opacity | 700 ms | 1× | 1 → 0 | 1.00/s | under |
 | `kp-shine` | background-position | 1400 ms | 1× | — | 0.00/s | under |
 | `kp-tube-on` | color | 1100 ms | 1× | 0 → 1 → 0 → 1 | 0.00/s | under |
@@ -34,7 +35,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-dialog-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-backdrop-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-popdown` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-resolve` | opacity | 640 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-resolve` | opacity | 640 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
 | `kp-ignite` | color | 600 ms | 1× | 0 → 1 | 0.00/s | under |
 | `kp-sweep-in` | background-position | 600 ms | 1× | — | 0.00/s | under |
 | `kp-confirm-in` | opacity | 160 ms | 1× | 0 → 1 | 1.00/s | under |

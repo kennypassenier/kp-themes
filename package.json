@@ -161,6 +161,7 @@
         "./css/terminal-register": "./css/terminal-register.css",
         "./css/terminal-register/min": "./dist/css/terminal-register.min.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
+        "./css/titanium-register": "./css/titanium-register.css",
         "./css/brutalism-register/min": "./dist/css/brutalism-register.min.css",
         "./css/woodblock-register": "./css/woodblock-register.css",
         "./css/woodblock-register/min": "./dist/css/woodblock-register.min.css",

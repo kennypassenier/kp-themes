@@ -27,7 +27,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { pseudoStyle, style } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -139,7 +139,7 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
         });
 
-        test('the lede mark ignites: it settles to the violet ink [TH120]', async ({ page }) => {
+        test('the lede mark ignites: it settles to the signal [TH120]', async ({ page }) => {
             await open(page, url);
             const mark = page.locator('[data-kp-surface="hero"] mark').first();
             // Scroll-bound (animation-timeline: view()), not a timed
@@ -147,35 +147,58 @@ for (const [channel, url] of CHANNELS) {
             // never fire (an already-visible element can start past its
             // own entry range).
             await expect.poll(async () => mark.evaluate((el) => getComputedStyle(el).color), { timeout: 5000 }).toBe(await paint(page, '--primary'));
-            const decoration = await mark.evaluate((el) => getComputedStyle(el).textDecorationColor);
-            expect(decoration).toBe(await paint(page, '--border-strong'));
+            // Read from the mark's OWN context, not the page's. The hero
+            // remaps --border-strong onto --surface-hero-border, and the two
+            // happened to be the same value until 2026-09-12 — so this
+            // comparison was right by coincidence and went red the moment
+            // the hero's boundary moved on its own.
+            const decoration = await mark.evaluate((el) => {
+                const painted = getComputedStyle(el).textDecorationColor;
+                const probe = document.createElement('span');
+                probe.style.color = 'var(--border-strong)';
+                el.append(probe);
+                const expected = getComputedStyle(probe).color;
+                probe.remove();
+                return { painted, expected };
+            });
+            expect(decoration.painted, 'the strong boundary of the surface it stands on').toBe(decoration.expected);
         });
 
-        test('the rule sweeps in under a heading when it enters the viewport [TH122]', async ({ page }) => {
+        test('the rule is the oxide, drawn from the leading edge [TH122, scope-16]', async ({ page }) => {
+            // The spectral instrument replaced the old sweep of a gradient
+            // position with a band that scales out, because the band IS the
+            // film here — there is nothing to slide, only more or less of
+            // it. Scroll-bound, so poll rather than wait for an
+            // animationend that an already-visible element never fires.
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await open(page, url);
             await rule.scrollIntoViewIfNeeded();
-            const before = await pseudo(rule, '::after', ['background-image', 'height']);
-            expect(before['background-image'], 'a violet-to-border gradient').toMatch(/linear-gradient/);
-            expect(before.height).toBe('2px');
+            const band = await pseudo(rule, '::after', ['background-image', 'height', 'transform-origin']);
+            expect(band['background-image'], 'the oxide, not a two-stop gradient').toMatch(/conic-gradient/);
+            expect(band.height).toBe('2px');
+            expect(band['transform-origin'], 'it grows from the leading edge').toMatch(/^0px/);
             await settled(page);
-            await expect
-                .poll(async () => (await pseudo(rule, '::after', ['background-position']))['background-position'].trim(), { timeout: 5000 })
-                .toMatch(/^0(%|px)?( 0(%|px)?)?$/);
+            await expect.poll(async () => (await pseudo(rule, '::after', ['scale'])).scale.trim(), { timeout: 5000 }).toMatch(/^(1|none)$/);
         });
 
-        test('the dividers are a night seam: one step darker, a dense local sample, a violet centre line [TH121]', async ({ page }) => {
+        test("the dividers are the instrument's own scale: a hairline, ticks, the oxide at centre [TH121, scope-16]", async ({ page }) => {
+            // The starfield seam is gone with the stars it was made of. What
+            // stands here is the edge of a ruler: a hairline that fades at
+            // both ends, ticks standing on it, and the film across the
+            // middle third.
             await open(page, url);
             const dividers = page.locator('[data-kp-divider]');
             expect(await dividers.count()).toBe(2);
             const first = dividers.first();
-            expect(await first.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--sidebar-background'));
-            expect(await first.evaluate((el) => getComputedStyle(el).blockSize)).toBe('56px');
-            const stars = await pseudo(first, '::before', ['opacity', 'background-image']);
-            expect(Number(stars.opacity)).toBeCloseTo(0.09, 2);
-            expect(stars['background-image'], 'the dense local sample').toMatch(/radial-gradient/);
-            const line = await pseudo(first, '::after', ['background-image']);
-            expect(line['background-image'], 'the violet centre line').toMatch(/linear-gradient/);
+            const hairline = await first.evaluate((el) => getComputedStyle(el).backgroundImage);
+            expect(hairline, 'a hairline that fades at both ends').toMatch(/linear-gradient/);
+            expect(await first.evaluate((el) => getComputedStyle(el).blockSize)).toBe('64px');
+            const ticks = await pseudo(first, '::before', ['background-image', 'height']);
+            expect(ticks['background-image'], 'the ticks, repeated').toMatch(/repeating-linear-gradient/);
+            expect(ticks.height, 'they stand on the line, not across it').toBe('7px');
+            const centre = await pseudo(first, '::after', ['background-image', 'opacity']);
+            expect(centre['background-image'], 'the oxide across the middle').toMatch(/conic-gradient/);
+            expect(Number(centre.opacity)).toBeCloseTo(0.75, 2);
             const second = dividers.nth(1);
             expect(await second.evaluate((el) => getComputedStyle(el).transform), 'the alt divider mirrors').not.toBe('none');
         });
@@ -224,15 +247,33 @@ for (const [channel, url] of CHANNELS) {
             );
         });
 
-        test('the buttons are a flat panel with an edge, rounded, no bevel', async ({ page }) => {
+        test('the button is machined: a cut corner, brackets that close, the oxide along the edge [scope-16]', async ({ page }) => {
+            // Three things happen at once and none of them is a colour
+            // change — which is the theme. The brackets are the button's own
+            // pseudo-elements; the film is `.kp-button__edge`, which the
+            // component provides because both were needed at once.
+            //
+            // Drilled 2026-09-12 in firefox: the `clip-path` rule removed ->
+            // red on the cut corner; the hover's `opacity: 1` on the
+            // brackets removed -> red on them closing; the edge's
+            // `scale: 1 1` removed -> red on the film running out.
             await open(page, url);
             const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).not.toBe('0px');
-            // The base layer's own bevel shadow is offset 0 (--fx-shadow-offset:
-            // 0px, this theme's own token) and paints nothing; a real bevel would
-            // read a non-zero offset.
-            const shadow = await button.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'no bevel: the base shadow is offset to zero').toMatch(/\b0px 0px 0px 0px$/);
+            expect(await button.evaluate((el) => getComputedStyle(el).clipPath), 'the corner is cut, not rounded').toMatch(/polygon/);
+
+            const bracket = () => pseudoStyle(button, '::before', 'opacity');
+            await bracket().toBe('0');
+            const edge = button.locator('.kp-button__edge');
+            expect(await edge.evaluate((el) => getComputedStyle(el).backgroundImage), 'the edge carries the film').toMatch(/conic-gradient/);
+            await style(edge, 'scale', 'nothing is drawn at rest').toBe('0 1');
+
+            await button.hover();
+            // Polled: all three ease in over the theme's own duration and a
+            // single read lands mid-transition [fix-1].
+            await bracket().toBe('1');
+            await style(edge, 'scale', 'the film runs the width of the control').toMatch(/^(1|1 1)$/);
+            await pseudoStyle(button.locator('.kp-button__label'), '', 'scale', 'and the label draws itself in').toBe('0.94');
+
             const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
             expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
         });

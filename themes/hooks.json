@@ -582,6 +582,30 @@
                 "selector": "[data-theme='nostromo'] [data-kp-surface] h1"
             }
         },
-        "titanium": {}
+        "titanium": {
+            "surface": {
+                "css": "css/themes.css",
+                "selector": "[data-theme='titanium'] [data-kp-surface='hero']"
+            },
+            "emphasis": {
+                "css": "css/titanium-register.css",
+                "selector": "[data-theme='titanium'] mark"
+            },
+            "reveal": {
+                "css": "css/titanium-register.css",
+                "selector": "[data-theme='titanium'] [data-kp-reveal='headline'] [data-word]"
+            },
+            "divider": {
+                "css": "css/titanium-register.css",
+                "selector": "[data-theme='titanium'] [data-kp-divider]"
+            },
+            "accent": {
+                "css": "css/titanium-register.css",
+                "selector": "[data-theme='titanium'] [data-kp-surface] h1"
+            },
+            "arrival": {
+                "quiet": "no arrival; a machined part is simply there"
+            }
+        }
     }
 }

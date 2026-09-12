@@ -875,7 +875,7 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
     }
-    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 25, 'all twenty-five registers travel in the tarball');
+    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 26, 'all twenty-six registers travel in the tarball');
     // A malformed manifest line must not smuggle an empty path into tar.
     assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
 });

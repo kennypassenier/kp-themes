@@ -282,6 +282,10 @@ export const TIMINGS = Object.freeze({
     // control, on hover. The band is a gradient that fades to transparent at
     // both ends, so no edge of it is an opposing luminance change.
     'kp-rake': { durationMs: 620, cycles: 1, property: 'translate', luminanceSteps: [] },
+    // Titanium's headline [scope-17]: one short linear pass as the word
+    // slides square. No blur and no chromatic split — those belong to the
+    // spectral instrument. Opacity 0 to 1 once, so no opposing change.
+    'kp-mill': { durationMs: 340, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-tracking': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
     'kp-shine': { durationMs: 1400, cycles: 1, property: 'background-position', luminanceSteps: [] },
     'kp-tube-on': { durationMs: 1100, cycles: 1, property: 'color', luminanceSteps: [0, 1, 0, 1] },
@@ -325,7 +329,7 @@ export const TIMINGS = Object.freeze({
     // both scroll-bound (animation-timeline: view()), not time-based, so
     // their duration is the demo's own measured pace across the range
     // rather than a clock the browser runs.
-    'kp-resolve': { durationMs: 640, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-resolve': { durationMs: 640, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 1] },
     'kp-ignite': { durationMs: 600, cycles: 1, property: 'color', luminanceSteps: [0, 1] },
     'kp-sweep-in': { durationMs: 600, cycles: 1, property: 'background-position', luminanceSteps: [] },
     // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's

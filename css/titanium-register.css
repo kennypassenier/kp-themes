@@ -1,38 +1,32 @@
 @layer kp.register {
-    /* @kp-soft/themes — css/dark-register.css
-   The dark register, 5.0.0 [S48, LIFT_PLAN row 15]: the ordinary dark
-   theme, done properly. Scoped to [data-theme='dark'] and inert
-   elsewhere; opt-in, imported after themes.css. The approved concept
-   demo ("Small Hours", stars II, 2026-09-08) was the reference for every
-   value here.
+    /* @kp-soft/themes — css/titanium-register.css
+   The titanium register, 6.0.0 [scope-17, scope-21]. Scoped to
+   [data-theme='titanium'] and inert elsewhere; opt-in, imported after
+   themes.css. The approved concept demo is the third world of the
+   hypertech page (2026-09-11): "Titanium wordt een nieuw thema op
+   zichzelf, het is heel mooi."
 
-   THE STARFIELD IS GONE [Kenny, 2026-09-11]: "dark mag zijn sterren weer
-   kwijtspelen op de achtergrond". What stood here until that day was 112
-   individually-generated positions pasted verbatim from the demo's own
-   header — a 102-point field on the shared texture layer at 0.35, and
-   ten brighter stars on a layer of their own, their SVG shimmer rebuilt
-   as masked conic gradients. None of it was animated; it was a still
-   photograph, painted once. It is recorded here rather than only in the
-   history because the demo that approved it still shows it, and anyone
-   comparing the two deserves to know which way the difference runs.
+   Not a place but a MATERIAL: anodised titanium over carbon weave. The
+   colour has a cause. Anodising does not add pigment — it grows an oxide
+   film whose thickness decides which wavelength survives — so the
+   blue-violet on every edge really is interference, and it really does
+   shift with the angle you look from. That is why the film's start angle
+   follows the pointer rather than sitting still.
 
-   The divider keeps its own dense local sample. That is a seam between
-   sections, not the background he named, and it stays until he says
-   otherwise.
+   Three things separate it from the spectral instrument, which is its
+   nearest neighbour in the set and shares its shape:
 
-   What this file does, in order: the knobs; the two-channel focus ring,
-   reversed from the base default; the type; the hooks of S45 — the
-   headline that resolves word by word out of a blur, the mark as an
-   ignite (the lede's colour-only, scroll-bound; the dossier's a redact
-   bar that lifts on the trigger), the rule that sweeps in under a
-   heading, the divider as a night seam with its own dense local sample;
-   the nav as a quiet strip with its dropdown's own keyboard ring; the
-   buttons, fields and panels; and one answer per component root (TH124).
+     · the chamfer cuts the OTHER two corners, and carries a bright line
+       along the top where the tool left the surface;
+     · the ground is a carbon twill, two diagonals crossing, rather than
+       an instrument's square grid;
+     · metal does not ease. Sixty milliseconds, linear, and the film
+       catches rather than sweeps.
 
    Colour discipline (DI9): nothing here names a colour. Every stop is
    `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
 
-    [data-theme='dark'] {
+    [data-theme='titanium'] {
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -57,55 +51,60 @@
            The divider keeps its own dense local sample, which is a seam
            between sections rather than the background he named. */
 
-        /* ── The oxide film [scope-16] ─────────────────────────────────
-           The one mechanism this theme is really about. Anodising does not
-           add pigment: it grows a film whose thickness decides which
-           wavelength survives, so the colour shifts with the angle you
-           look from. The gradient's start angle follows the pointer, and
-           `js/effects.js` writes that angle down — a gradient cannot read
-           a pointer.
+        /* -- The oxide film [scope-17] ---------------------------------
+           Anodising grows a film whose thickness decides which wavelength
+           survives, so the colour shifts with the angle you look from. A
+           gradient cannot read a pointer; js/effects.js writes the angle
+           down when a theme asks for it.
 
-           `--kp-px` carries its own value so the gradient is valid before
-           anything has moved, and so it keeps working when the module is
-           detached or absent. Half a turn is the middle of the sweep. */
+           A LINEAR sweep here where the spectral instrument uses a conic
+           one: an oxide on a flat machined face runs across the surface,
+           it does not turn about a point. The pointer tilts it by sixty
+           degrees either way, which is the range of angles you get by
+           moving your head in front of a real anodised part. */
         --kp-pointer: track;
         --kp-px: 0.5;
         --kp-py: 0.5;
-        --kp-iris: conic-gradient(from calc(var(--kp-px) * 1turn), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
-        /* The machined corner: cut, never rounded. Two opposite corners,
-           the way a milled part is relieved. */
-        --kp-chamfer: var(--fx-notch, 0.55rem);
-        --kp-chamfer-panel: 1rem;
+        --kp-iris: linear-gradient(calc(70deg + var(--kp-px) * 60deg), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-1));
+        /* The milled corner, cut on the OTHER diagonal from the spectral
+           instrument's: leading-top and trailing-bottom, the way a part is
+           relieved to clear a fixture. */
+        --kp-chamfer: var(--fx-notch, 0.6rem);
+        --kp-chamfer-panel: 1.2rem;
+        /* The line the tool left along the top face. */
+        --kp-tool-edge: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14);
     }
 
     /* ── The chamfer [scope-16] ────────────────────────────────────────
        Controls take the small cut and panels the large one. `clip-path`
        rather than a border-radius, because the corner is a straight edge
        at forty-five degrees and a radius is an arc. */
-    [data-theme='dark'] .kp-button,
-    [data-theme='dark'] .kp-field__input,
-    [data-theme='dark'] .kp-badge {
+    [data-theme='titanium'] .kp-button,
+    [data-theme='titanium'] .kp-field__input,
+    [data-theme='titanium'] .kp-badge {
         clip-path: polygon(
-            0 0,
-            calc(100% - var(--kp-chamfer)) 0,
-            100% var(--kp-chamfer),
-            100% 100%,
-            var(--kp-chamfer) 100%,
-            0 calc(100% - var(--kp-chamfer))
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
         );
+        box-shadow: var(--kp-tool-edge);
     }
 
-    [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog,
-    [data-theme='dark'] .kp-alert {
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog,
+    [data-theme='titanium'] .kp-alert {
         clip-path: polygon(
-            0 0,
-            calc(100% - var(--kp-chamfer-panel)) 0,
-            100% var(--kp-chamfer-panel),
-            100% 100%,
-            var(--kp-chamfer-panel) 100%,
-            0 calc(100% - var(--kp-chamfer-panel))
+            var(--kp-chamfer-panel) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer-panel)),
+            calc(100% - var(--kp-chamfer-panel)) 100%,
+            0 100%,
+            0 var(--kp-chamfer-panel)
         );
+        box-shadow: var(--kp-tool-edge);
     }
 
     /* ── The instrument's own button [scope-16] ────────────────────────
@@ -117,67 +116,37 @@
 
        `content` here is a glyph, not a word: nothing to translate, and so
        nothing KT5 has to police. */
-    [data-theme='dark'] .kp-button::before,
-    [data-theme='dark'] .kp-button::after {
-        position: absolute;
-        inset-block: 0;
-        display: grid;
-        place-items: center;
-        font-family: var(--theme-font-mono);
-        font-size: 0.85em;
-        color: currentcolor;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 2;
-    }
+    /* No brackets. Those are the spectral instrument's notation — a
+       machine annotating what it has selected — and a material does not
+       annotate. Titanium's two pseudo-element slots stay free. */
 
-    [data-theme='dark'] .kp-button::before {
-        content: '[';
-        inset-inline-start: 0.55rem;
-        translate: -0.5rem 0;
-    }
-
-    [data-theme='dark'] .kp-button::after {
-        content: ']';
-        inset-inline-end: 0.55rem;
-        translate: 0.5rem 0;
-    }
-
-    [data-theme='dark'] .kp-button:hover::before,
-    [data-theme='dark'] .kp-button:hover::after,
-    [data-theme='dark'] .kp-button:focus-visible::before,
-    [data-theme='dark'] .kp-button:focus-visible::after {
-        opacity: 1;
-        translate: 0 0;
-    }
-
-    [data-theme='dark'] .kp-button__edge {
-        inset-block-start: auto;
-        block-size: 2px;
+    [data-theme='titanium'] .kp-button__edge {
         background: var(--kp-iris);
-        scale: 0 1;
-        transform-origin: left center;
+        mix-blend-mode: screen;
+        opacity: 0;
         z-index: 1;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__edge,
-    [data-theme='dark'] .kp-button:focus-visible .kp-button__edge {
-        scale: 1 1;
+    [data-theme='titanium'] .kp-button:hover .kp-button__edge,
+    [data-theme='titanium'] .kp-button:focus-visible .kp-button__edge {
+        opacity: 0.26;
     }
 
-    [data-theme='dark'] .kp-button__label {
+    [data-theme='titanium'] .kp-button__label {
         position: relative;
         z-index: 2;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__label,
-    [data-theme='dark'] .kp-button:focus-visible .kp-button__label {
-        scale: 0.94;
+    /* No give. The spectral instrument draws its label in on hover; metal
+       does not compress, so titanium answers a press by dropping the whole
+       control one pixel and nothing else. */
+    [data-theme='titanium'] .kp-button:active:not(:disabled) {
+        translate: 0 1px;
     }
 
     /* The reading above the control: the consumer's own word, in the
        theme's monospace, taking the oxide's colours through the text. */
-    [data-theme='dark'] .kp-button__readout {
+    [data-theme='titanium'] .kp-button__readout {
         inset-block-end: calc(100% + 0.2rem);
         font-family: var(--theme-font-mono);
         font-size: 0.5rem;
@@ -187,8 +156,8 @@
         translate: 0 0.2rem;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__readout,
-    [data-theme='dark'] .kp-button:focus-visible .kp-button__readout {
+    [data-theme='titanium'] .kp-button:hover .kp-button__readout,
+    [data-theme='titanium'] .kp-button:focus-visible .kp-button__readout {
         opacity: 1;
         translate: 0 0;
         background: var(--kp-iris);
@@ -197,34 +166,30 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='dark'] .kp-button::before,
-        [data-theme='dark'] .kp-button::after {
+        /* Metal does not ease. Sixty milliseconds -- the theme's own
+           --fx-duration -- and LINEAR, because an eased curve is the
+           signature of something with give in it. The film takes half as
+           long again, which is the one place a little softness belongs:
+           an interference colour arrives as the angle changes, not as a
+           switch closes. */
+        [data-theme='titanium'] .kp-button,
+        [data-theme='titanium'] .kp-button__edge,
+        [data-theme='titanium'] .kp-button__readout {
             transition:
-                opacity var(--fx-duration) var(--fx-ease),
-                translate calc(var(--fx-duration) * 1.3) var(--fx-ease);
-        }
-
-        [data-theme='dark'] .kp-button__edge {
-            transition: scale calc(var(--fx-duration) * 1.9) var(--fx-ease);
-        }
-
-        [data-theme='dark'] .kp-button__label {
-            transition: scale calc(var(--fx-duration) * 1.3) var(--fx-ease);
-        }
-
-        [data-theme='dark'] .kp-button__readout {
-            transition:
-                opacity var(--fx-duration) var(--fx-ease),
-                translate var(--fx-duration) var(--fx-ease);
+                background var(--fx-duration) linear,
+                border-color var(--fx-duration) linear,
+                color var(--fx-duration) linear,
+                translate var(--fx-duration) linear,
+                opacity calc(var(--fx-duration) * 1.5) linear;
         }
     }
 
     /* ── The field's own oxide line [scope-16] ─────────────────────────── */
-    [data-theme='dark'] .kp-field {
+    [data-theme='titanium'] .kp-field {
         position: relative;
     }
 
-    [data-theme='dark'] .kp-field::after {
+    [data-theme='titanium'] .kp-field::after {
         content: '';
         position: absolute;
         inset-inline: 0;
@@ -236,12 +201,12 @@
         pointer-events: none;
     }
 
-    [data-theme='dark'] .kp-field:focus-within::after {
+    [data-theme='titanium'] .kp-field:focus-within::after {
         scale: 1 1;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='dark'] .kp-field::after {
+        [data-theme='titanium'] .kp-field::after {
             transition: scale calc(var(--fx-duration) * 1.5) var(--fx-ease);
         }
     }
@@ -252,23 +217,23 @@
        does it the other way — the void touching the element, the ink
        outside it — and DI2's promise holds either way, since one of the
        two always clears 3:1 on the surface behind it. */
-    [data-theme='dark'] :focus-visible {
+    [data-theme='titanium'] :focus-visible {
         outline-color: var(--foreground);
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
 
-    [data-theme='dark'] h1,
-    [data-theme='dark'] h2,
-    [data-theme='dark'] h3 {
+    [data-theme='titanium'] h1,
+    [data-theme='titanium'] h2,
+    [data-theme='titanium'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
         line-height: 1.1;
         color: var(--foreground);
     }
 
-    [data-theme='dark'] [data-kp-surface] h1 {
+    [data-theme='titanium'] [data-kp-surface] h1 {
         font-size: var(--kp-text-display);
         line-height: 1.08;
         letter-spacing: -0.02em;
@@ -280,12 +245,12 @@
        (`[data-word]`, `--kp-i` its index); at rest — no script, or the
        reveal already ran — every word is already its own inline-block
        with nothing applied, which is the finished look. */
-    [data-theme='dark'] [data-kp-reveal='headline'] [data-word] {
+    [data-theme='titanium'] [data-kp-reveal='headline'] [data-word] {
         display: inline-block;
     }
 
     /* Microlabels: a quiet dot before the label, the theme's own violet. */
-    [data-theme='dark'] .microlabel {
+    [data-theme='titanium'] .microlabel {
         font-family: var(--theme-font-body);
         font-size: 0.7rem;
         letter-spacing: 0.2em;
@@ -294,7 +259,7 @@
         line-height: 1.3;
     }
 
-    [data-theme='dark'] .microlabel::before {
+    [data-theme='titanium'] .microlabel::before {
         content: '· ';
         color: var(--primary);
     }
@@ -305,7 +270,7 @@
        script, reduced motion, or a browser without scroll-driven
        animations — the words already stand in the finished signal: never
        an invisible or half-drawn state (DI7). */
-    [data-theme='dark'] mark {
+    [data-theme='titanium'] mark {
         background: none;
         color: var(--primary);
         font-weight: 600;
@@ -315,7 +280,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         @supports (animation-timeline: view()) {
-            [data-theme='dark'] mark {
+            [data-theme='titanium'] mark {
                 color: var(--muted-foreground);
                 text-decoration-color: var(--border);
                 animation: kp-ignite linear both;
@@ -330,12 +295,12 @@
        a scaleX on a two-pixel band rather than the old sweep of a gradient
        position, because the band IS the film here — there is nothing to
        slide, only more or less of it. At rest it stands fully drawn. */
-    [data-theme='dark'] [data-kp-reveal='rule'] {
+    [data-theme='titanium'] [data-kp-reveal='rule'] {
         position: relative;
         padding-block-end: 0.6rem;
     }
 
-    [data-theme='dark'] [data-kp-reveal='rule']::after {
+    [data-theme='titanium'] [data-kp-reveal='rule']::after {
         content: '';
         position: absolute;
         inset-inline: 0;
@@ -348,7 +313,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         @supports (animation-timeline: view()) {
-            [data-theme='dark'] [data-kp-reveal='rule']::after {
+            [data-theme='titanium'] [data-kp-reveal='rule']::after {
                 animation: kp-draw linear both;
                 animation-timeline: view();
                 animation-range: var(--kp-sweep-range-start) var(--kp-sweep-range-end);
@@ -360,30 +325,30 @@
        both ends, with tick marks standing on it every three rem — the
        edge of a ruler rather than a decorative seam. No starfield and no
        colour of its own: every stop is a token. */
-    [data-theme='dark'] [data-kp-divider] {
+    [data-theme='titanium'] [data-kp-divider] {
         position: relative;
         display: block;
-        block-size: var(--kp-divider-height, 4rem);
-        background: linear-gradient(90deg, transparent, var(--border) 12%, var(--border) 88%, transparent);
-        background-size: 100% 1px;
-        background-repeat: no-repeat;
-        background-position: 0 50%;
+        block-size: var(--kp-divider-height, 3.75rem);
         overflow: hidden;
     }
 
-    [data-theme='dark'] [data-kp-divider]::before {
+    /* A milled groove, not a drawn line: a dark channel with a bright lip
+       above and below it, which is what a cut in metal looks like. */
+    [data-theme='titanium'] [data-kp-divider]::before {
         content: '';
         position: absolute;
-        inset-inline: 0;
-        inset-block-start: calc(50% - 3px);
-        block-size: 7px;
-        background: repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px var(--kp-divider-tick, 3rem));
-        /* A mask reads the alpha channel and ignores the hue, so the token here
-           is a way of saying "fully opaque" without writing a colour (DI9). */
-        mask-image: linear-gradient(90deg, transparent, var(--foreground) 12%, var(--foreground) 88%, transparent);
+        inset-inline: var(--kp-divider-inset, 6%);
+        inset-block-start: 50%;
+        block-size: 3px;
+        border-radius: 2px;
+        background: hsl(from var(--background) h s calc(l * 0.7));
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.1),
+            0 1px 0 hsl(from var(--foreground) h s l / 0.07);
     }
 
-    [data-theme='dark'] [data-kp-divider]::after {
+    /* And the film sitting in the groove. */
+    [data-theme='titanium'] [data-kp-divider]::after {
         content: '';
         position: absolute;
         inset-inline: 22%;
@@ -393,25 +358,25 @@
         opacity: 0.75;
     }
 
-    [data-theme='dark'] [data-kp-divider='alt'] {
+    [data-theme='titanium'] [data-kp-divider='alt'] {
         transform: scaleX(-1);
     }
 
     /* ── The hero ──────────────────────────────────────────────────────── */
 
-    [data-theme='dark'] [data-kp-surface='hero'] {
+    [data-theme='titanium'] [data-kp-surface='hero'] {
         position: relative;
         padding-block: 3rem 4.5rem;
     }
 
-    [data-theme='dark'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+    [data-theme='titanium'] [data-kp-surface='hero'] [data-kp-hero-grid] {
         grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
         gap: 2.5rem;
         align-items: end;
     }
 
     @container (max-width: 54rem) {
-        [data-theme='dark'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        [data-theme='titanium'] [data-kp-surface='hero'] [data-kp-hero-grid] {
             grid-template-columns: 1fr;
         }
     }
@@ -423,7 +388,7 @@
        void 13.36, over the panel 11.72, over the glow itself only 2.19 —
        the reason it stays hidden from assistive tech rather than relied
        on). */
-    [data-theme='dark'] .kp-side-note {
+    [data-theme='titanium'] .kp-side-note {
         position: absolute;
         inset-inline-end: 0.35rem;
         inset-block-start: 2rem;
@@ -439,37 +404,37 @@
     }
 
     @media (max-width: 40rem) {
-        [data-theme='dark'] .kp-side-note {
+        [data-theme='titanium'] .kp-side-note {
             display: none;
         }
     }
 
     /* ── The navbar: quiet, no chrome of its own beyond the ground ─────── */
 
-    [data-theme='dark'] .kp-nav-wrap {
+    [data-theme='titanium'] .kp-nav-wrap {
         background: var(--card);
         position: relative;
         border-bottom: 1px solid var(--border-strong);
         z-index: var(--kp-z-nav, 30);
     }
 
-    [data-theme='dark'] .kp-nav {
+    [data-theme='titanium'] .kp-nav {
         background: var(--card);
         padding-block: 0.7rem;
     }
 
-    [data-theme='dark'] .kp-nav__brand {
+    [data-theme='titanium'] .kp-nav__brand {
         font-weight: 700;
         font-size: 1.25rem;
         letter-spacing: -0.01em;
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-nav__links {
+    [data-theme='titanium'] .kp-nav__links {
         gap: 0.15rem;
     }
 
-    [data-theme='dark'] .kp-nav__link {
+    [data-theme='titanium'] .kp-nav__link {
         padding: 0.5rem 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
@@ -477,34 +442,34 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-nav__link:hover,
-    [data-theme='dark'] .kp-nav__link:focus-visible,
-    [data-theme='dark'] .kp-nav__link[aria-current],
-    [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__link {
+    [data-theme='titanium'] .kp-nav__link:hover,
+    [data-theme='titanium'] .kp-nav__link:focus-visible,
+    [data-theme='titanium'] .kp-nav__link[aria-current],
+    [data-theme='titanium'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--foreground);
         background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-nav__link[aria-haspopup]::after {
+    [data-theme='titanium'] .kp-nav__link[aria-haspopup]::after {
         content: ' ⌄';
         font-size: 0.8em;
     }
 
-    [data-theme='dark'] .kp-nav__link--lang {
+    [data-theme='titanium'] .kp-nav__link--lang {
         border-inline-start: 1px solid var(--border);
         margin-inline-start: 0.5rem;
         padding-inline-start: 0.7rem;
     }
 
-    [data-theme='dark'] .kp-nav__link--cta {
+    [data-theme='titanium'] .kp-nav__link--cta {
         margin-inline-start: 0.25rem;
         background: var(--primary);
         color: var(--primary-foreground);
         font-weight: 600;
     }
 
-    [data-theme='dark'] .kp-nav__link--cta:hover,
-    [data-theme='dark'] .kp-nav__link--cta:focus-visible {
+    [data-theme='titanium'] .kp-nav__link--cta:hover,
+    [data-theme='titanium'] .kp-nav__link--cta:focus-visible {
         background: var(--foreground);
         color: var(--background);
     }
@@ -513,7 +478,7 @@
        thing every one of the first batch's demos left unstyled (KT14) —
        its own keyboard state, the theme's own violet rather than the
        page-wide ink outline. */
-    [data-theme='dark'] .kp-nav__menu {
+    [data-theme='titanium'] .kp-nav__menu {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -522,7 +487,7 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
-    [data-theme='dark'] .kp-nav__menu a {
+    [data-theme='titanium'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
@@ -530,11 +495,11 @@
         font-size: 0.92rem;
     }
 
-    [data-theme='dark'] .kp-nav__menu a:hover {
+    [data-theme='titanium'] .kp-nav__menu a:hover {
         background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-nav__menu a:focus-visible {
+    [data-theme='titanium'] .kp-nav__menu a:focus-visible {
         background: var(--accent);
         outline: 2px solid var(--primary);
         outline-offset: -2px;
@@ -543,8 +508,8 @@
 
     /* ── Buttons: a flat panel, an edge, no bevel ──────────────────────── */
 
-    [data-theme='dark'] .kp-button,
-    [data-theme='dark'] .kp-icon-button {
+    [data-theme='titanium'] .kp-button,
+    [data-theme='titanium'] .kp-icon-button {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
@@ -552,79 +517,79 @@
         font-weight: 600;
     }
 
-    [data-theme='dark'] .kp-button:hover {
+    [data-theme='titanium'] .kp-button:hover {
         background: var(--accent);
     }
 
-    [data-theme='dark'] [data-kp-surface='hero'] .kp-row > .kp-button {
+    [data-theme='titanium'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
         min-height: 2.5rem;
     }
 
-    [data-theme='dark'] .kp-button--primary,
-    [data-theme='dark'] .kp-button--primary:hover {
+    [data-theme='titanium'] .kp-button--primary,
+    [data-theme='titanium'] .kp-button--primary:hover {
         background: var(--primary);
         border-color: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-button--primary:hover {
+    [data-theme='titanium'] .kp-button--primary:hover {
         background: hsl(from var(--primary) h s calc(l + 6));
         border-color: hsl(from var(--primary) h s calc(l + 6));
     }
 
-    [data-theme='dark'] .kp-button--ghost {
+    [data-theme='titanium'] .kp-button--ghost {
         background: transparent;
         border-color: transparent;
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-button--ghost:hover {
+    [data-theme='titanium'] .kp-button--ghost:hover {
         background: var(--accent);
         border-color: var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-button--destructive {
+    [data-theme='titanium'] .kp-button--destructive {
         background: transparent;
         border-color: var(--destructive);
         color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-button--destructive:hover {
+    [data-theme='titanium'] .kp-button--destructive:hover {
         background: var(--destructive);
         color: var(--destructive-foreground);
     }
 
-    [data-theme='dark'] .kp-button:disabled {
+    [data-theme='titanium'] .kp-button:disabled {
         opacity: 0.45;
     }
 
     /* ── Fields: a panel and an edge, the violet as focus ──────────────── */
 
-    [data-theme='dark'] .kp-field__label {
+    [data-theme='titanium'] .kp-field__label {
         font-weight: 600;
         font-size: 0.9rem;
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-field__input,
-    [data-theme='dark'] .kp-datatable__search,
-    [data-theme='dark'] .kp-combobox__input,
-    [data-theme='dark'] .kp-palette__input {
+    [data-theme='titanium'] .kp-field__input,
+    [data-theme='titanium'] .kp-datatable__search,
+    [data-theme='titanium'] .kp-combobox__input,
+    [data-theme='titanium'] .kp-palette__input {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-field__input:focus,
-    [data-theme='dark'] .kp-datatable__search:focus,
-    [data-theme='dark'] .kp-combobox__input:focus,
-    [data-theme='dark'] .kp-palette__input:focus {
+    [data-theme='titanium'] .kp-field__input:focus,
+    [data-theme='titanium'] .kp-datatable__search:focus,
+    [data-theme='titanium'] .kp-combobox__input:focus,
+    [data-theme='titanium'] .kp-palette__input:focus {
         border-color: var(--primary);
     }
 
-    [data-theme='dark'] select.kp-field__input {
+    [data-theme='titanium'] select.kp-field__input {
         background-image:
             linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
             linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
@@ -637,20 +602,20 @@
         background-repeat: no-repeat;
     }
 
-    [data-theme='dark'] .kp-field__help {
+    [data-theme='titanium'] .kp-field__help {
         font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-field--invalid .kp-field__input {
+    [data-theme='titanium'] .kp-field--invalid .kp-field__input {
         border-color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-field__error {
+    [data-theme='titanium'] .kp-field__error {
         color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-field__check {
+    [data-theme='titanium'] .kp-field__check {
         appearance: none;
         inline-size: 1.15rem;
         block-size: 1.15rem;
@@ -661,12 +626,12 @@
         place-items: center;
     }
 
-    [data-theme='dark'] .kp-field__check:checked {
+    [data-theme='titanium'] .kp-field__check:checked {
         background: var(--primary);
         border-color: var(--primary);
     }
 
-    [data-theme='dark'] .kp-field__check:checked::before {
+    [data-theme='titanium'] .kp-field__check:checked::before {
         content: '';
         width: 0.5rem;
         height: 0.5rem;
@@ -674,12 +639,12 @@
         background: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-fieldset {
+    [data-theme='titanium'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-form__summary {
+    [data-theme='titanium'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -687,20 +652,20 @@
 
     /* ── Cards, the dossier: a quiet panel, the redact bar ─────────────── */
 
-    [data-theme='dark'] .kp-card {
+    [data-theme='titanium'] .kp-card {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: calc(var(--radius) * 1.5);
     }
 
-    [data-theme='dark'] .kp-card__title {
+    [data-theme='titanium'] .kp-card__title {
         font-weight: 700;
         font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
        css/cyberpunk-register.css already uses for the same slot. */
-    [data-theme='dark'] .kp-card[data-kp-label]::before {
+    [data-theme='titanium'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
         position: absolute;
         top: 1rem;
@@ -716,7 +681,7 @@
         border-radius: 999px;
     }
 
-    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] {
+    [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
@@ -726,7 +691,7 @@
        distinct from the lede's colour-only ignite the general rule above
        answers. The bar sits on the mark's own ::after so what a reader
        hears (the text itself) is never removed, only its paint. */
-    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+    [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         color: var(--foreground);
         background: none;
@@ -736,7 +701,7 @@
         border-radius: 0.2em;
     }
 
-    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+    [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark::after {
         content: '';
         position: absolute;
         inset: -0.05em -0.15em;
@@ -747,26 +712,26 @@
         pointer-events: none;
     }
 
-    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+    [data-theme='titanium'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
     }
 
-    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+    [data-theme='titanium'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
         transform: scaleX(1);
     }
 
     /* ── Panels: a quiet dark ground, the theme's own edge ─────────────── */
 
-    [data-theme='dark'] .kp-dialog,
-    [data-theme='dark'] .kp-popover,
-    [data-theme='dark'] .kp-menu,
-    [data-theme='dark'] .kp-toast,
-    [data-theme='dark'] .kp-tooltip,
-    [data-theme='dark'] .kp-confirm,
-    [data-theme='dark'] .kp-datepicker__panel,
-    [data-theme='dark'] .kp-combobox__list,
-    [data-theme='dark'] .kp-palette,
-    [data-theme='dark'] .kp-theme-menu {
+    [data-theme='titanium'] .kp-dialog,
+    [data-theme='titanium'] .kp-popover,
+    [data-theme='titanium'] .kp-menu,
+    [data-theme='titanium'] .kp-toast,
+    [data-theme='titanium'] .kp-tooltip,
+    [data-theme='titanium'] .kp-confirm,
+    [data-theme='titanium'] .kp-datepicker__panel,
+    [data-theme='titanium'] .kp-combobox__list,
+    [data-theme='titanium'] .kp-palette,
+    [data-theme='titanium'] .kp-theme-menu {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
@@ -774,294 +739,294 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
-    [data-theme='dark'] .kp-dialog__title {
+    [data-theme='titanium'] .kp-dialog__title {
         font-weight: 700;
         font-size: 1.2rem;
     }
 
-    [data-theme='dark'] .kp-menu__item:hover {
+    [data-theme='titanium'] .kp-menu__item:hover {
         background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-alert {
+    [data-theme='titanium'] .kp-alert {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-alert__label {
+    [data-theme='titanium'] .kp-alert__label {
         font-weight: 700;
     }
 
-    [data-theme='dark'] .kp-grid__tile,
-    [data-theme='dark'] .kp-split__pane {
+    [data-theme='titanium'] .kp-grid__tile,
+    [data-theme='titanium'] .kp-split__pane {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-split__separator {
+    [data-theme='titanium'] .kp-split__separator {
         background: var(--border);
     }
 
     /* ── The footer: one step darker than the ground ───────────────────── */
 
-    [data-theme='dark'] .kp-footer {
+    [data-theme='titanium'] .kp-footer {
         background: var(--sidebar-background);
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-footer h4 {
+    [data-theme='titanium'] .kp-footer h4 {
         font-size: 0.95rem;
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-footer a {
+    [data-theme='titanium'] .kp-footer a {
         color: var(--muted-foreground);
         font-size: 0.92rem;
     }
 
-    [data-theme='dark'] .kp-footer a:hover,
-    [data-theme='dark'] .kp-footer a:focus-visible {
+    [data-theme='titanium'] .kp-footer a:hover,
+    [data-theme='titanium'] .kp-footer a:focus-visible {
         color: var(--foreground);
     }
 
     /* ── Badges, tags, status ───────────────────────────────────────────── */
 
-    [data-theme='dark'] .kp-badge,
-    [data-theme='dark'] .kp-tag {
+    [data-theme='titanium'] .kp-badge,
+    [data-theme='titanium'] .kp-tag {
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-skeleton {
+    [data-theme='titanium'] .kp-skeleton {
         background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-progress {
+    [data-theme='titanium'] .kp-progress {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-progress__value {
+    [data-theme='titanium'] .kp-progress__value {
         background: var(--primary);
     }
 
-    [data-theme='dark'] .kp-spinner {
+    [data-theme='titanium'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
     }
 
-    [data-theme='dark'] .kp-empty {
+    [data-theme='titanium'] .kp-empty {
         border: 1px dashed var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-error {
+    [data-theme='titanium'] .kp-error {
         color: var(--destructive);
     }
 
     /* ── Text shapes ──────────────────────────────────────────────────── */
 
-    [data-theme='dark'] .kp-id,
-    [data-theme='dark'] .kp-url,
-    [data-theme='dark'] .kp-numeric,
-    [data-theme='dark'] .kp-timestamp,
-    [data-theme='dark'] .kp-masked,
-    [data-theme='dark'] .kp-copyable,
-    [data-theme='dark'] .kp-truncate,
-    [data-theme='dark'] .kp-cell-break,
-    [data-theme='dark'] .kp-cell-truncate {
+    [data-theme='titanium'] .kp-id,
+    [data-theme='titanium'] .kp-url,
+    [data-theme='titanium'] .kp-numeric,
+    [data-theme='titanium'] .kp-timestamp,
+    [data-theme='titanium'] .kp-masked,
+    [data-theme='titanium'] .kp-copyable,
+    [data-theme='titanium'] .kp-truncate,
+    [data-theme='titanium'] .kp-cell-break,
+    [data-theme='titanium'] .kp-cell-truncate {
         font-family: var(--theme-font-mono);
     }
 
-    [data-theme='dark'] .kp-timestamp,
-    [data-theme='dark'] .kp-id {
+    [data-theme='titanium'] .kp-timestamp,
+    [data-theme='titanium'] .kp-id {
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-copyable__button {
+    [data-theme='titanium'] .kp-copyable__button {
         border: 1px solid var(--border-strong);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
 
-    [data-theme='dark'] .kp-table th {
+    [data-theme='titanium'] .kp-table th {
         color: var(--muted-foreground);
         border-bottom: 1px solid var(--border-strong);
         font-weight: 600;
     }
 
-    [data-theme='dark'] .kp-table td {
+    [data-theme='titanium'] .kp-table td {
         border-bottom: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-table tbody tr:hover {
+    [data-theme='titanium'] .kp-table tbody tr:hover {
         background: var(--card);
     }
 
-    [data-theme='dark'] .kp-datatable {
+    [data-theme='titanium'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
     }
 
-    [data-theme='dark'] .kp-datatable__bar {
+    [data-theme='titanium'] .kp-datatable__bar {
         border-bottom: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-datatable__sort[aria-sort] {
+    [data-theme='titanium'] .kp-datatable__sort[aria-sort] {
         color: var(--primary);
     }
 
-    [data-theme='dark'] .kp-datatable__status,
-    [data-theme='dark'] .kp-datatable__page {
+    [data-theme='titanium'] .kp-datatable__status,
+    [data-theme='titanium'] .kp-datatable__page {
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-diff {
+    [data-theme='titanium'] .kp-diff {
         background: var(--card);
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-diff__line {
+    [data-theme='titanium'] .kp-diff__line {
         font-family: var(--theme-font-mono);
     }
 
-    [data-theme='dark'] .kp-timeline {
+    [data-theme='titanium'] .kp-timeline {
         border-inline-start: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-timeline__marker {
+    [data-theme='titanium'] .kp-timeline__marker {
         background: var(--primary);
     }
 
-    [data-theme='dark'] .kp-timeline__when {
+    [data-theme='titanium'] .kp-timeline__when {
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-tree {
+    [data-theme='titanium'] .kp-tree {
         font-family: var(--theme-font-mono);
     }
 
-    [data-theme='dark'] .kp-reorder {
+    [data-theme='titanium'] .kp-reorder {
         border: 1px solid var(--border-strong);
         background: var(--card);
     }
 
     /* ── Navigation and steps ───────────────────────────────────────────── */
 
-    [data-theme='dark'] .kp-tab {
+    [data-theme='titanium'] .kp-tab {
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-tab[aria-selected='true'] {
+    [data-theme='titanium'] .kp-tab[aria-selected='true'] {
         color: var(--foreground);
         font-weight: 600;
         border-bottom: 2px solid var(--primary);
     }
 
-    [data-theme='dark'] .kp-tabs__list {
+    [data-theme='titanium'] .kp-tabs__list {
         border-bottom: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-pagination a[aria-current],
-    [data-theme='dark'] .kp-pagination [aria-current] {
+    [data-theme='titanium'] .kp-pagination a[aria-current],
+    [data-theme='titanium'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-wizard {
+    [data-theme='titanium'] .kp-wizard {
         border: 1px solid var(--border-strong);
         background: var(--card);
     }
 
     /* ── Pickers and palettes ─────────────────────────────────────────── */
 
-    [data-theme='dark'] .kp-datepicker__day[aria-selected='true'] {
+    [data-theme='titanium'] .kp-datepicker__day[aria-selected='true'] {
         background: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-colorpicker__swatch {
+    [data-theme='titanium'] .kp-colorpicker__swatch {
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-shortcuts__row kbd {
+    [data-theme='titanium'] .kp-shortcuts__row kbd {
         border: 1px solid var(--border-strong);
         background: var(--card);
         display: inline-block;
         padding: 0 0.4em;
     }
 
-    [data-theme='dark'] .kp-shortcuts__group-label,
-    [data-theme='dark'] .kp-palette__group-label {
+    [data-theme='titanium'] .kp-shortcuts__group-label,
+    [data-theme='titanium'] .kp-palette__group-label {
         font-weight: 700;
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-theme-menu__status,
-    [data-theme='dark'] .kp-palette__status,
-    [data-theme='dark'] .kp-combobox__status {
+    [data-theme='titanium'] .kp-theme-menu__status,
+    [data-theme='titanium'] .kp-palette__status,
+    [data-theme='titanium'] .kp-combobox__status {
         color: var(--muted-foreground);
     }
 
     /* ── The roots the rules above reach only by their parts ───────────── */
 
-    [data-theme='dark'] .kp-field {
+    [data-theme='titanium'] .kp-field {
         gap: 0.3rem;
     }
 
-    [data-theme='dark'] .kp-form {
+    [data-theme='titanium'] .kp-form {
         gap: 1rem;
     }
 
-    [data-theme='dark'] .kp-breadcrumb,
-    [data-theme='dark'] .kp-pagination {
+    [data-theme='titanium'] .kp-breadcrumb,
+    [data-theme='titanium'] .kp-pagination {
         font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-combobox,
-    [data-theme='dark'] .kp-datepicker,
-    [data-theme='dark'] .kp-colorpicker,
-    [data-theme='dark'] .kp-shortcuts {
+    [data-theme='titanium'] .kp-combobox,
+    [data-theme='titanium'] .kp-datepicker,
+    [data-theme='titanium'] .kp-colorpicker,
+    [data-theme='titanium'] .kp-shortcuts {
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-grid {
+    [data-theme='titanium'] .kp-grid {
         gap: 0.75rem;
     }
 
-    [data-theme='dark'] .kp-split {
+    [data-theme='titanium'] .kp-split {
         gap: 0;
     }
 
-    [data-theme='dark'] .kp-toasts {
+    [data-theme='titanium'] .kp-toasts {
         gap: 0.6rem;
     }
 
-    [data-theme='dark'] .kp-health {
+    [data-theme='titanium'] .kp-health {
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-table {
+    [data-theme='titanium'] .kp-table {
         border-collapse: separate;
         border-spacing: 0;
     }
 
     /* ── The scrollbar joins the theme ──────────────────────────────────── */
 
-    [data-theme='dark'] {
+    [data-theme='titanium'] {
         scrollbar-color: var(--border-strong) var(--background);
     }
 
     /* ── The demo's own pieces [S46] ───────────────────────────────────── */
 
-    [data-theme='dark'] .kp-laurels {
+    [data-theme='titanium'] .kp-laurels {
         gap: 0.5rem;
         font-size: 0.75rem;
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-laurels li {
+    [data-theme='titanium'] .kp-laurels li {
         flex: 1 1 12rem;
         padding: 0.5rem 0.7rem;
         background: var(--card);
@@ -1069,7 +1034,7 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='dark'] .kp-laurels b {
+    [data-theme='titanium'] .kp-laurels b {
         display: block;
         font-weight: 700;
         font-size: 1rem;
@@ -1077,12 +1042,12 @@
         margin-block-end: 0.15rem;
     }
 
-    [data-theme='dark'] .kp-lede {
+    [data-theme='titanium'] .kp-lede {
         max-width: 38rem;
         font-size: 1.08rem;
     }
 
-    [data-theme='dark'] .kp-platforms {
+    [data-theme='titanium'] .kp-platforms {
         margin-block-start: 1.6rem;
         gap: 0.2rem 1.3rem;
         font-family: var(--theme-font-mono);
@@ -1092,12 +1057,12 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='dark'] .kp-platforms span::before {
+    [data-theme='titanium'] .kp-platforms span::before {
         content: '· ';
         color: var(--primary);
     }
 
-    [data-theme='dark'] .kp-spec {
+    [data-theme='titanium'] .kp-spec {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
@@ -1107,18 +1072,18 @@
         line-height: 1.75;
     }
 
-    [data-theme='dark'] .kp-spec dt {
+    [data-theme='titanium'] .kp-spec dt {
         color: var(--muted-foreground);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-size: 0.72rem;
     }
 
-    [data-theme='dark'] .kp-spec__swatch {
+    [data-theme='titanium'] .kp-spec__swatch {
         border: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-spec__font {
+    [data-theme='titanium'] .kp-spec__font {
         font-family: var(--theme-font-display);
     }
 
@@ -1128,31 +1093,31 @@
        the no-preference guard, so a reader who asked for reduced motion
        never receives one: the rest states above are what they get. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='dark'] [data-kp-reveal='headline'].is-words [data-word] {
-            animation: kp-resolve 640ms var(--kp-settle) both;
+        [data-theme='titanium'] [data-kp-reveal='headline'].is-words [data-word] {
+            animation: kp-mill 340ms linear both;
             animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
         }
 
-        [data-theme='dark'] .kp-nav__menu {
+        [data-theme='titanium'] .kp-nav__menu {
             transition: opacity var(--fx-duration) var(--fx-ease);
         }
 
         /* The redact bar: a size change, not a colour (KT8: no
            mid-transition colour can be read); the ink turns visible in
            the same instant the bar clears, staggered per redaction. */
-        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark::after {
             transition: transform 380ms var(--fx-ease);
         }
 
-        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 
-        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+        [data-theme='titanium'] .kp-card[data-kp-reveal='emphasis'] mark {
             transition: color 0s linear 0s;
         }
     }
@@ -1169,34 +1134,29 @@
 
        The split is a text-shadow rather than two copies of the word, so
        there is nothing for a screen reader to read twice. */
-    @keyframes kp-resolve {
+    /* The word is milled into place [scope-17]. It arrives a twelfth of an
+       em to the left and slides square — one short linear pass, the way a
+       tool finishes a face. No blur and no chromatic split: those belong to
+       the spectral instrument, which is bringing a line into register;
+       this is a part being cut.
+
+       Its own name rather than the shared `kp-resolve`, because a keyframe
+       name is global: two registers writing the same name would hand
+       whichever loaded last to BOTH themes. Five registers do share
+       `kp-dialog-in`, and that is correct — they share the shape. These
+       two do not. */
+    @keyframes kp-mill {
         0% {
             opacity: 0;
-            filter: blur(3px);
-            transform: translateY(0.22em);
-            text-shadow:
-                -0.22em 0 var(--chart-3),
-                0.22em 0 var(--chart-1);
-        }
-
-        60% {
-            opacity: 1;
-            filter: blur(0);
+            transform: translateX(-0.12em);
         }
 
         100% {
             opacity: 1;
-            filter: blur(0);
             transform: none;
-            text-shadow:
-                0 0 transparent,
-                0 0 transparent;
         }
     }
 
-    /* Scroll-bound, not time-based: the browser scrubs this by the
-       heading's own position, not a clock, so it cannot free-run and
-       cannot loop — see gates/check-motion.mjs's OUT_OF_SCOPE entry. */
     @keyframes kp-ignite {
         100% {
             color: var(--primary);
@@ -1218,7 +1178,7 @@
     }
     /* The band [M1, M4]: Kenny picked this theme's own version over the
        shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
-    [data-theme='dark'] .kp-marquee {
+    [data-theme='titanium'] .kp-marquee {
         border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
         background: color-mix(in srgb, var(--card) 60%, var(--background));
         --kp-marquee: 50000ms;
@@ -1226,7 +1186,7 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before {
+    [data-theme='titanium'] .kp-nav__menu[data-kp-menu-label]::before {
         color: var(--primary);
         border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
     }
@@ -1235,17 +1195,17 @@
        Quiet, the way this theme is quiet: the row you are on is a raised
        plate rather than a colour, and the accent shows only at its
        leading edge. */
-    [data-theme='dark'] .kp-sidenav {
+    [data-theme='titanium'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
         border-inline-end: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-sidenav__link,
-    [data-theme='dark'] .kp-sidenav__category-toggle {
+    [data-theme='titanium'] .kp-sidenav__link,
+    [data-theme='titanium'] .kp-sidenav__category-toggle {
         border-inline-start: 2px solid transparent;
     }
 
-    [data-theme='dark'] .kp-sidenav__link[aria-current='page'] {
+    [data-theme='titanium'] .kp-sidenav__link[aria-current='page'] {
         background: var(--accent);
         color: var(--foreground);
         border-inline-start-color: var(--primary);
@@ -1253,21 +1213,21 @@
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
        Quiet, like the rest of it. */
-    [data-theme='dark'] .kp-to-top {
+    [data-theme='titanium'] .kp-to-top {
         border: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-media {
+    [data-theme='titanium'] .kp-media {
         border: 1px solid var(--border);
     }
 
-    [data-theme='dark'] .kp-media-figure > figcaption {
+    [data-theme='titanium'] .kp-media-figure > figcaption {
         color: var(--muted-foreground);
     }
 
     /* The figure carries the caption's voice, so the decision sits with
        the picture rather than with the words under it. */
-    [data-theme='dark'] .kp-media-figure {
+    [data-theme='titanium'] .kp-media-figure {
         color: var(--muted-foreground);
     }
 
@@ -1283,42 +1243,43 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
-    [data-theme='dark'] .kp-button:active:not(:disabled) {
+    [data-theme='titanium'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
     }
 
-    [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
+    [data-theme='titanium'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
     }
 
-    [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
+    [data-theme='titanium'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
 
-    /* ── The ground [scope-16] ─────────────────────────────────────────
-       An instrument's grid, and a pool of light under the pointer. Both
-       are on the page's own texture layer, so nothing here paints over a
-       control. The light is the one thing on the page that moves without
-       being touched, and it moves only because a hand does. */
-    [data-theme='dark'] body {
+    /* -- The ground [scope-17] ----------------------------------------
+       Carbon weave: two diagonals crossing at forty-five degrees, which is
+       the twill of real woven cloth and not a square grid. The light under
+       the pointer is the same idea as the spectral instrument's, warmer
+       and tighter, because a metal face reflects where an instrument
+       screen glows. */
+    [data-theme='titanium'] body {
         background-image:
             radial-gradient(
-                46rem 34rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
-                hsl(from var(--chart-1) h s l / 0.13),
+                48rem 32rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.1),
                 transparent 62%
             ),
-            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem)),
-            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem));
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px var(--kp-weave, 9px)),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.04) 0 2px, transparent 2px var(--kp-weave, 9px));
         background-attachment: fixed;
     }
 
     /* ── The panels' edge is the film itself [scope-16] ────────────────
        A gradient border, drawn by painting the panel's own ground over
        the oxide and letting only the border box show through. */
-    [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog {
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog {
         border: 1px solid transparent;
         background:
             linear-gradient(var(--card), var(--card)) padding-box,
@@ -1326,12 +1287,12 @@
     }
 
     /* ── The small parts that carry the film [scope-16] ───────────────── */
-    [data-theme='dark'] .kp-nav__marker,
-    [data-theme='dark'] .kp-boot__bar i {
+    [data-theme='titanium'] .kp-nav__marker,
+    [data-theme='titanium'] .kp-boot__bar i {
         background: var(--kp-iris);
     }
 
-    [data-theme='dark'] .kp-measure__bracket {
+    [data-theme='titanium'] .kp-measure__bracket {
         border-color: hsl(from var(--chart-1) h s l / 0.55);
     }
 }

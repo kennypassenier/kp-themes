@@ -295,3 +295,44 @@ the option described as the smallest number that clears the floor, and
 **What is not built yet.** Neither register. Titanium's hooks row is
 empty, which says the base layer answers all six — true while it is a
 token layer and nothing more.
+
+## Both registers, 2026-09-12
+
+The two themes are no longer token layers. Each carries a register built
+from its own approved demo, and the two are near neighbours in the set —
+both dark, both chamfered, both carrying an oxide — so what separates them
+is written down here as well as in the files.
+
+**The spectral instrument (dark).** A near-black face, a pale signal, and
+every colour reserved for the film. Its button does three things at once
+and none of them is a colour change: two brackets close on the label, the
+label draws itself in to 0.94, and the film runs along the bottom edge.
+The rule under a heading is the film scaling out from the leading edge;
+the divider is the edge of a ruler — a hairline that fades at both ends,
+ticks standing on it, the film across the middle third. The headline
+converges: the word arrives split into two of the film's own wavelengths,
+out of focus, and the halves come together as the blur clears.
+
+**Titanium.** The corner is cut on the OTHER diagonal, with a bright line
+along the top where the tool left the face. The film is a linear sweep,
+not a conic one, because an oxide on a flat machined face runs across the
+surface rather than turning about a point — and it CATCHES rather than
+sweeps: it lies over the whole face at `mix-blend-mode: screen` and simply
+becomes visible, the way an anodised part does when it turns into the
+light. Sixty milliseconds, linear. No brackets, because those are an
+instrument annotating what it has selected and a material does not
+annotate. No label shrink, because metal has no give — a press drops the
+whole control one pixel. The ground is carbon twill, two diagonals
+crossing; the divider is a milled groove with a bright lip above and
+below, the film lying in it.
+
+**One hazard worth writing down.** A keyframe name is global. Both
+registers started from the same file, so both declared `kp-resolve`, and
+whichever loaded last would have handed its shape to BOTH themes.
+Titanium's headline is `kp-mill` for that reason. Five registers do share
+`kp-dialog-in`, and that is correct: they share the shape. These two do
+not.
+
+**Both themes' words were rewritten.** Dark's copy still described the old
+theme — "quiet hours", "112 irregular points", "a light unsaturated
+violet" — none of which is true of the theme that replaced it.
