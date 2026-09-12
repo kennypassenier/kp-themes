@@ -44,6 +44,41 @@ An unknown stored value is corrected to the default theme as soon as the
 picker is attached; `initializeTheme(fallback)` names another, and
 `applyTheme(name, { strict: true })` throws instead of substituting.
 
+## The subpaths, because they are not the file names
+
+Found in the 2026-09-12 field test, by guessing wrong twice from a clean
+install. The export map names the things a consumer reaches for, and those
+names are shorter than the paths:
+
+| You want | Import or link | Not |
+| -------- | -------------- | --- |
+| the palette | `@kp-soft/themes/css` | `…/css/themes` |
+| the components layer | `@kp-soft/themes/css/components` | |
+| the layout layer | `@kp-soft/themes/css/layout` | |
+| the utilities | `@kp-soft/themes/css/utilities` | |
+| the minified palette | `@kp-soft/themes/css/min` | |
+| the theme list | `@kp-soft/themes/js/registry` | `…/js/theme-registry` |
+| the state | `@kp-soft/themes/js/core` | `…/js/theme-core` |
+| the picker | `@kp-soft/themes/js/picker` | |
+| a register | `@kp-soft/themes/themes/<name>/…`, or copy `css/<name>-register.css` | |
+
+Two things follow from that. A stylesheet is usually **linked by path**
+rather than imported — you copy the files you want into whatever your
+server serves, as the three lines above do — and the subpaths exist for
+bundlers and for tooling that resolves through `package.json`. And the
+React channel needs a bundler that understands JSX: the package ships
+`.jsx` sources on purpose, so plain Node cannot import the root entry.
+Vite, esbuild and webpack all handle it with no configuration beyond
+their own JSX setting.
+
+```sh
+# What the field test ran, from a clean install, to prove both channels:
+npm install @kp-soft/themes
+node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.length))"   # 22
+```
+
+---
+
 ## The twenty-two themes
 
 | `data-theme` | Label | Dark |

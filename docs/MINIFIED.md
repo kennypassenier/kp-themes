@@ -57,4 +57,4 @@ carries, and a generated file that a gate compares must read the same on
 every machine. `npm run generate:min` prints it for the machine it runs
 on.
 
-Version 5.1.0.
+Version 6.0.0.

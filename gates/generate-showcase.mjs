@@ -1,5 +1,13 @@
 // Writes the showcase page and the bare per-theme fixtures [L5, AR14].
 //
+// The prose on this page is Dutch, and that is deliberate rather than a
+// slip against the project's "all artefact text in English" rule. The
+// showcase is not in package.json's `files`, so no consumer ever receives
+// it: it exists for Kenny to look at, which is the same reason HANDOFF.md
+// and docs/ADOPTION_PROMPTS.md are Dutch, stated in the latter's own
+// opening. Everything the page NAMES — classes, tokens, file names —
+// stays English, because those are the package's.
+//
 // Kenny chose the simple showcase: seven theme blocks on one page, because
 // looking and comparing is what that page is for. Three things cannot be
 // verified there, because they exist once per document — the light-or-dark

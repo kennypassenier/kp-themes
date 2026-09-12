@@ -820,3 +820,41 @@ Kenny's answer on 2026-09-12: **Zo laten.** Everything is cited at least
 once and nothing is demonstrably dead; dropping a document that is later
 missed costs more than keeping it. The measurement is worth repeating at
 the next round rather than the reasoning.
+
+## The field test, 2026-09-12 (Phase 9)
+
+The package used once as a consumer would, from a clean install, with
+every step scripted rather than interactive — the procedure's rule, and
+the reason for it: a run that prints nothing when it succeeds is
+indistinguishable in a script from a run that did nothing.
+
+**What was run.** `npm pack` to get the tarball a consumer receives
+(4.99 MB), `npm install ../kp-soft-themes-6.0.0.tgz` into an empty
+project, then two scripts. The framework-free one imports the registry,
+the no-flash snippet, the strings dictionary, the effects hooks and the
+side navigation, applies a stored theme to a fake document element, and
+reads the export map and the bundle. The React one goes through esbuild —
+the way a consumer meets that channel — and renders a navigation, its
+toggle and a button to static markup.
+
+**What it produced.** Twenty checks in the first, ten in the second, all
+passing. 22 themes, the four removed ones gone, `titanium` present, the
+no-flash snippet 167 characters and unable to break out of its own
+`<script>`, 115 strings, and a 1,229 KB bundled stylesheet carrying every
+theme's selector. The React markup carries `kp-sidenav`,
+`data-kp-sidenav-mode="over"`, `data-kp-sidenav-toggle`,
+`aria-current="page"`, both button surfaces, and the readout's
+`aria-hidden` — and no `undefined` anywhere, which is what a component
+writing a string the consumer did not pass would look like.
+
+**What it found.** Nothing broken, and one thing missing: the export map's
+subpaths are not the file names, and a consumer guessing from the file
+name fails. The palette is `@kp-soft/themes/css`, not `…/css/themes`; the
+theme list is `…/js/registry`, not `…/js/theme-registry`. Claude guessed
+wrong twice writing this very test, from the same documents a consumer
+reads. `docs/USER_GUIDE.md` now carries the table.
+
+Two things the test tripped over that are not the package's: plain Node
+cannot import the `.jsx` root entry, which `README.md` already states,
+and `react-dom/server` does not bundle to ESM without help, which is
+react-dom's own shape.

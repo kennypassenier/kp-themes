@@ -1,5 +1,99 @@
 # Changelog
 
+## 6.0.0 — 2026-09-12
+
+A major because four themes are gone and a fifth was replaced outright.
+Everything else in this release is additive, but those two are enough:
+a page wearing `academia`, `mono`, `ticker` or `woodblock` will fall back
+to `formal` and say so in the console, and a page wearing `dark` will
+look like a different theme, because it is one.
+
+**Breaking.**
+
+- **Four themes removed** (`scope-11`): `academia`, `mono`, `ticker`,
+  `woodblock`. Twenty-two remain. The registry no longer knows the names,
+  so `applyTheme('mono')` warns once and applies the fallback rather than
+  writing an attribute nothing styles.
+- **`dark` is a different theme** (`scope-16`): the spectral instrument,
+  rebuilt from its own approved demo. Same name, same token contract, an
+  entirely new register — and it now declares `--kp-pointer: track`, so a
+  page that loads its register also gets `--kp-px` and `--kp-py` written
+  to the root while the pointer moves.
+
+**New.**
+
+- **A side navigation, in both channels.** `js/sidenav.js` shipped first;
+  `components/sidenav.jsx` is the other half, rendering the same markup
+  and attaching itself on mount, because `js/auto.js` runs at load and
+  React mounts after it. `autoAttach={false}` is the way out. Three
+  modes, a slim rail, folding categories and either edge; every attribute
+  the module reads is a prop.
+- **Numbers that count up** (`feat-count-1`): `data-kp-count` on an
+  element whose text already holds the final figure. The module reads the
+  number out of that text, counts to it and puts the same string back, so
+  a page without the module — and a reader who asked for less movement —
+  simply sees the number. Which character groups the digits and which is
+  the decimal point is decided by the nearest `lang`, never guessed:
+  `1.204` is one thousand two hundred and four in Dutch and
+  one-point-two-oh-four in English.
+- **`titanium`**, the twenty-second theme: anodised metal and carbon
+  weave, the machined chamfer, and the oxide film that shifts with the
+  angle you look from.
+- **Two surfaces a theme may paint on a button** (`scope-16`,
+  `scope-17`): an empty `.kp-button__edge` over the whole control, and an
+  optional `.kp-button__readout` above it carrying the consumer's own
+  word. Both inert in every theme that does not style them.
+- **Eight per-theme gestures and six hover gestures**, each from its
+  theme's own approved demo.
+
+**Fixed, and each one is a fault that reached a person.**
+
+- **A button that did not react to being pressed** (`fix-12`, and twice
+  more in Phase 7). Three shapes of one fault: a later layer beating a
+  state, a variant's ground swallowing its flavours, and — the third — a
+  longer hover selector outranking the pressed rule in the _same_ layer.
+  grotesk carried a correct `:active` rule with a correct token for a
+  whole round and it never painted. `gates/check-pressed-state.mjs` now
+  compares the two weights.
+- **Half a focus ring.** Three themes painted their own elevation on a
+  button from the register layer, swallowing the ring the components
+  layer draws on `:focus-visible` — a keyboard user got an outline and
+  nothing behind it. Two more painted nothing at all on a menu item
+  inside a popover that rounds its corners. Both repaired without moving
+  what the demos showed.
+- **`shade-light` had no muted colour**: `--muted-foreground` was
+  identical to `--foreground`, the only theme of twenty-two where the two
+  matched, so captions, timestamps, disabled labels and the text of an
+  empty field all read as body text. Now 46%, measured at 3.99 against a
+  4.5 floor — there is no lighter colour that clears it, because the body
+  text only reaches 5.01 itself, and the reading is recorded rather than
+  hidden.
+- **`blueprint`'s buttons overflowed at a phone width.** Its own approved
+  hover gesture put two witness lines outside the control, and the
+  right-hand one added six pixels to every button's scrollable area
+  whether or not it was visible. The lines moved inside; the gesture is
+  unchanged in everything else.
+
+**Under it.**
+
+Thirty-five gates, up from thirty. Five are new and three of those are
+about the documents: every command, path and import subpath a document
+names is real; every message it quotes verbatim is a string the source
+prints; and nothing of a refused shape appears in any of them. The other
+two guard the pressed state and the variant grounds.
+
+110 unit tests and 1,343 browser tests in Firefox, 2,736 across both
+engines. Fifteen of those browser tests were red on the branch for most
+of this round and nobody could see them, because a register edit resolved
+to one spec file and skipped the fifteen sweeps that read every register.
+`gates/affected.mjs` now resolves a register edit to its own spec plus
+every spec that sweeps all themes, found by reading the specs rather than
+by keeping a list.
+
+`docs/DEBUGGING_GUIDE.md` and `docs/OPERATIONS_RUNBOOK.md` are new: the
+maintainer's half of the troubleshooting pair, and the numbered
+procedures this repository actually performs on itself.
+
 ## 5.1.0 — 2026-09-09
 
 The first release shaped by a consumer rather than by this project's own

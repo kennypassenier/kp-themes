@@ -1635,26 +1635,29 @@ export const DESCRIPTORS = [
         examples: [
             {
                 title: 'The React channel',
-                why: 'Added 2026-09-12 (`sidenav-react`). The component renders the markup and the knobs; js/sidenav.js — attached by js/auto.js — does the behaviour, exactly as it does for the framework-free channel. Every data attribute the module reads is a prop, and one left out keeps the module\u2019s own default rather than restating it. The way out of the opened state is the handle: `sidenavOf(ref.current)`.',
+                why: 'Added 2026-09-12 (`sidenav-react`). The component renders the markup and the knobs; js/sidenav.js — attached by js/auto.js — does the behaviour, exactly as it does for the framework-free channel. Every data attribute the module reads is a prop, and one left out keeps the module\u2019s own default rather than restating it. The way out of the opened state is the handle: `sidenavOf(ref.current)`. This example uses the default mode on purpose: `over` slides the panel off-canvas until something opens it, so on a static page it would render as a sliver — which is exactly what it did before someone looked.',
                 markup: `
-<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+<nav class="kp-sidenav" id="nav" aria-label="Sections">
     <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
     <div class="kp-sidenav__scroll">
         <ul class="kp-sidenav__list">
-            <li><a class="kp-sidenav__link" href="#a" aria-current="page"><span class="kp-sidenav__label">One</span></a></li>
+            <li><a class="kp-sidenav__link" href="#overview" aria-current="page"><span class="kp-sidenav__label">Overview</span></a></li>
+            <li><a class="kp-sidenav__link" href="#reports"><span class="kp-sidenav__label">Reports</span></a></li>
+            <li><a class="kp-sidenav__link" href="#settings"><span class="kp-sidenav__label">Settings</span></a></li>
         </ul>
     </div>
 </nav>
 `,
                 react: `
-<SidenavToggle controls="nav">Menu</SidenavToggle>
 <Sidenav
     id="nav"
     label="Sections"
     title="Sections"
-    mode="over"
-    backdrop
-    items={[{ label: 'One', href: '#a', current: true }]}
+    items={[
+        { label: 'Overview', href: '#overview', current: true },
+        { label: 'Reports', href: '#reports' },
+        { label: 'Settings', href: '#settings' },
+    ]}
 />
 `,
             },
