@@ -12,7 +12,7 @@
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'woodblock' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'lapis' | 'nostromo'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'high-contrast' | 'sepia' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'academia' | 'phantom' | 'ticker' | 'woodblock' | 'shade-light' | 'shade-dark' | 'mono' | 'retro' | 'grotesk' | 'lapis' | 'nostromo' | 'titanium'} ThemeName
  */
 
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
@@ -44,6 +44,7 @@ export const THEMES = Object.freeze([
     { name: 'grotesk', label: 'Grotesk', dark: false },
     { name: 'lapis', label: 'Lapis', dark: true },
     { name: 'nostromo', label: 'Nostromo', dark: false },
+    { name: 'titanium', label: 'Titanium', dark: true },
 ]);
 
 /**

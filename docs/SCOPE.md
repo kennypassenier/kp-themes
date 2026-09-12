@@ -1087,3 +1087,17 @@ intervals, gold against blue, and what matters sits inside them — so the
 frame of a control is not one line but four, and touching it adds the
 outermost. The ruling closes around the word instead of a colour
 changing. With it, all ten themes that needed a quirk have one.
+
+**scope-24 · A theme may write its own state.** Kenny, 2026-09-12,
+answering the pressed-state collision with "Het thema zet zijn eigen
+indruk". The derived states (`-hover`, `-active`, `-disabled`) stay the
+default for every surface of every theme; a theme that writes one itself
+has the last word, exactly as it already did for `--link`. Recorded in
+`themes/known-asymmetry.json` for the four names two themes now write,
+with the measurement behind each.
+
+The reason is at the ends of the lightness scale rather than in any
+theme: one step off a 93% signal barely moves, so a rule that serves
+twenty-four themes well cannot serve the twenty-fifth at all. S47 already
+says the token contract is a floor and not a ceiling; this says the same
+of the derivation.

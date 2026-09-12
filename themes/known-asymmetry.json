@@ -1,4 +1,11 @@
 {
-    "//": "TH20 ratchet — emptied in L3 (2026-09-04). Every theme now declares the same token names. The gate fails on any new name that is not here, and on any name here that has become symmetric.",
-    "tokens": []
+    "//": "TH20 ratchet - emptied in L3 (2026-09-04), reopened on 2026-09-12 for four names and no others. The gate fails on any new name that is not here, and on any name here that has become symmetric.",
+    "why": [
+        "All four are states every theme HAS: the generator derives them for all twenty-six. Two themes write their own instead, which is what these entries record.",
+        "The derivation takes one step off the resting colour for hover and two for the press. That is right almost everywhere and wrong at the ends of the lightness scale. The spectral instrument's signal is 93% lightness and titanium's is 87%, so two steps down off either barely move: measured 4.9 and 9.95 against a floor of 10, which means pressing the control would have changed nothing anyone could see - the exact fault KT2 exists about.",
+        "Both approved demos already write their own hover by hand rather than leave it derived, so the package was behind its own demos here. Kenny chose this over darkening the signals on 2026-09-12: 'Het thema zet zijn eigen indruk'.",
+        "Values: dark hover 86% and press 78% (measured 11.61 from its signal); titanium hover 80% and press 74% (measured 10.64). Neither demo's signal is touched.",
+        "No theme is missing an answer. Two give their own, and the reason is at the ends of the scale rather than in the themes."
+    ],
+    "tokens": ["primary-hover", "primary-active", "surface-hero-primary-hover", "surface-hero-primary-active"]
 }

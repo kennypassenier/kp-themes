@@ -581,6 +581,7 @@
                 "css": "css/nostromo-register.css",
                 "selector": "[data-theme='nostromo'] [data-kp-surface] h1"
             }
-        }
+        },
+        "titanium": {}
     }
 }

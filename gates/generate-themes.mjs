@@ -93,6 +93,22 @@ function derivedStates({ tokens, dark, stepL }) {
             ['active', d.active],
             ['disabled', d.disabled],
         ]) {
+            // A theme may write its own state, the way it may already write
+            // its own --link [Kenny, 2026-09-12]. The derivation takes one
+            // step per state from the resting colour, which is the right
+            // answer almost everywhere and the wrong one at the ends of the
+            // scale: a near-white signal has nowhere left to go, so two
+            // steps down off it look like no step at all. Both of round
+            // seven's new themes have exactly that — the spectral
+            // instrument's signal is 93% lightness and titanium's is 87% —
+            // and their own approved demos already write their hover by
+            // hand rather than leave it derived.
+            //
+            // Authored wins, and nothing is emitted here: the value is
+            // already in the theme's own entries, which are written before
+            // these. Parity is unaffected, because the generated block ends
+            // up with exactly one declaration of the name either way.
+            if (tokens[`${surface}-${state}`] !== undefined) continue;
             let value;
             if (state === 'disabled') {
                 value = derive(base, 1.5, { towardsLight: !dark, stepL });
@@ -204,11 +220,17 @@ function heroBlock(theme) {
     for (const [source, target] of HERO_INTERACTIVE) {
         const base = tokens[source];
         const ink = tokens[`${source}-foreground`];
-        out.push(`        --${target}-hover: ${derive(base, d.hover, { towardsLight: heroDark, stepL })};`);
+        // Authored wins here too [Kenny, 2026-09-12]. The hero remaps the
+        // theme's own tokens, so a theme that writes `--surface-hero-primary-active`
+        // is saying what the hero's press looks like, and that is the last
+        // word — see derivedStates() for why the derivation is not always
+        // the right answer at the ends of the lightness scale.
+        const authored = (/** @type {string} */ state) => tokens[`${source}-${state}`];
+        out.push(`        --${target}-hover: ${authored('hover') ?? derive(base, d.hover, { towardsLight: heroDark, stepL })};`);
         out.push(
-            `        --${target}-active: ${deriveVisible(base, d.active, { towardsLight: heroDark, stepL }, { floor: CONFIG.stateVisibilityFloor.value, ink })};`,
+            `        --${target}-active: ${authored('active') ?? deriveVisible(base, d.active, { towardsLight: heroDark, stepL }, { floor: CONFIG.stateVisibilityFloor.value, ink })};`,
         );
-        out.push(`        --${target}-disabled: ${derive(base, 1.5, { towardsLight: !heroDark, stepL })};`);
+        out.push(`        --${target}-disabled: ${authored('disabled') ?? derive(base, 1.5, { towardsLight: !heroDark, stepL })};`);
     }
     out.push('    }');
     return out.join('\n');

@@ -60,7 +60,8 @@ var THEMES = Object.freeze([
   { name: "retro", label: "Retro", dark: false },
   { name: "grotesk", label: "Grotesk", dark: false },
   { name: "lapis", label: "Lapis", dark: true },
-  { name: "nostromo", label: "Nostromo", dark: false }
+  { name: "nostromo", label: "Nostromo", dark: false },
+  { name: "titanium", label: "Titanium", dark: true }
 ]);
 var DEFAULT_THEME = "formal";
 var STORAGE_KEY = "theme";

@@ -255,3 +255,43 @@ omission.
 | solstice | the low sun rakes across, once | 2026-09-12 |
 | brutalism | the thing names itself, in English, through `--kp-label` | 2026-09-12 |
 | grotesk | the baseline appears under the label | 2026-09-12 |
+
+## The two new themes, tokens in, 2026-09-12
+
+Kenny answered the four values one by one. The two themes are in the
+package as token layers; their registers are the next step.
+
+**The pressed state: "Het thema zet zijn eigen indruk."** The derivation
+takes one step off the resting colour for hover and two for the press,
+which is right almost everywhere and wrong at the ends of the lightness
+scale. The spectral instrument's signal is 93% lightness and titanium's
+is 87%, so two steps down measured 4.9 and 9.95 against a floor of 10 —
+pressing either control would have changed nothing anyone could see,
+which is the fault KT2 exists about.
+
+Rather than darken two signals a demo had approved, a theme may now write
+its own state, the way it could already write its own `--link`. Authored
+wins in three places, all changed together: `gates/generate-themes.mjs`
+for the app surfaces, the same file for the hero, and
+`gates/check-invariants.mjs`, which until 2026-09-12 re-derived
+unconditionally and so would have measured a theme on the very value it
+had replaced.
+
+Both demos already wrote their own hover by hand, so the package was
+behind its own demos here.
+
+| Theme | Signal (untouched) | Hover | Press | Measured |
+| --- | --- | --- | --- | --- |
+| dark | 93% | 86%, as the demo writes it | 78% | 11.61 |
+| titanium | 87% | 80%, as the demo writes it | 74% | 10.64 |
+
+**The three colours.** Dark's muted text 50% → **53%**, dark's hero
+border 30% → **38%**, titanium's hero border 40% → **41%**. Kenny chose
+52% for the first on a figure that turned out to be two hundredths
+optimistic: the package's own maths reads 4.48 there, not 4.50. He chose
+the option described as the smallest number that clears the floor, and
+53% is the smallest number that actually does.
+
+**What is not built yet.** Neither register. Titanium's hooks row is
+empty, which says the base layer answers all six — true while it is a
+token layer and nothing more.

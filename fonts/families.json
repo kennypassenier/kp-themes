@@ -124,7 +124,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Share': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Tech Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Share': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Tech Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Tech Mono",
         "reservedWord": "Share"
     },
@@ -252,7 +252,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Josefin Sans': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Deco Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Josefin Sans': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Deco Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Deco Sans",
         "reservedWord": "Josefin Sans"
     },
@@ -298,7 +298,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Lora': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Academia Serif' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Lora': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Academia Serif' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Academia Serif",
         "reservedWord": "Lora"
     },
@@ -443,7 +443,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Ticker Sans",
         "reservedWord": "Plex"
     },
@@ -485,7 +485,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Plex': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Ticker Mono' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Ticker Mono",
         "reservedWord": "Plex"
     },
@@ -513,7 +513,7 @@
                 "scripts": ["latin", "japanese"]
             }
         ],
-        "why": "Regular and bold: with both faces woodblock weighs about 2.4 MB, over the 1.5 MB the budget allows a theme. Kenny raised the budget for this theme on 2026-09-08 (R6-Q6) rather than let the browser draw a fake bold \u2014 a synthesised bold thickens a Japanese stroke where a real bold face redraws it."
+        "why": "Regular and bold: with both faces woodblock weighs about 2.4 MB, over the 1.5 MB the budget allows a theme. Kenny raised the budget for this theme on 2026-09-08 (R6-Q6) rather than let the browser draw a fake bold — a synthesised bold thickens a Japanese stroke where a real bold face redraws it."
     },
     "shipporimincho": {
         "family": "Shippori Mincho",
@@ -539,7 +539,7 @@
                 "scripts": ["latin", "japanese"]
             }
         ],
-        "why": "Regular and bold: with both faces woodblock weighs about 2.4 MB, over the 1.5 MB the budget allows a theme. Kenny raised the budget for this theme on 2026-09-08 (R6-Q6) rather than let the browser draw a fake bold \u2014 a synthesised bold thickens a Japanese stroke where a real bold face redraws it."
+        "why": "Regular and bold: with both faces woodblock weighs about 2.4 MB, over the 1.5 MB the budget allows a theme. Kenny raised the budget for this theme on 2026-09-08 (R6-Q6) rather than let the browser draw a fake bold — a synthesised bold thickens a Japanese stroke where a real bold face redraws it."
     },
     "sourcesans3": {
         "family": "Source Sans 3",
@@ -565,7 +565,7 @@
                 "scripts": ["latin"]
             }
         ],
-        "why": "OFL with Reserved Font Name 'Source': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Shade Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Source': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Shade Sans' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "renamed": "KP Shade Sans",
         "reservedWord": "Source"
     },
@@ -806,7 +806,7 @@
         "themes": ["synthwave"],
         "scripts": ["latin"],
         "upstream": "ofl/orbitron",
-        "why": "OFL with Reserved Font Name 'Orbitron': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Outrun Display' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) \u2014 the tokens name the new family first and the original after it.",
+        "why": "OFL with Reserved Font Name 'Orbitron': a subset is a Modified Version and may not carry that word, so the shipped faces are renamed 'KP Outrun Display' at build (R6-Q1: renamed delivery, Kenny 2026-09-07) — the tokens name the new family first and the original after it.",
         "faces": [
             {
                 "file": "orbitron-variable",
@@ -833,6 +833,81 @@
                 "source": "VT323-Regular.ttf",
                 "weight": "400",
                 "style": "normal",
+                "scripts": ["latin"]
+            }
+        ]
+    },
+    "sora": {
+        "family": "Sora",
+        "licence": "OFL-1.1",
+        "reservedFontName": false,
+        "subset": true,
+        "themes": ["titanium"],
+        "scripts": ["latin"],
+        "upstream": "ofl/sora",
+        "faces": [
+            {
+                "file": "sora-variable",
+                "source": "Sora[wght].ttf",
+                "weight": "100 800",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ]
+    },
+    "martianmono": {
+        "family": "Martian Mono",
+        "licence": "OFL-1.1",
+        "reservedFontName": false,
+        "subset": true,
+        "themes": ["titanium"],
+        "scripts": ["latin"],
+        "upstream": "ofl/martianmono",
+        "faces": [
+            {
+                "file": "martianmono-variable",
+                "source": "MartianMono[wdth,wght].ttf",
+                "weight": "100 800",
+                "style": "normal",
+                "scripts": ["latin"]
+            }
+        ]
+    },
+    "bevietnampro": {
+        "family": "Be Vietnam Pro",
+        "licence": "OFL-1.1",
+        "reservedFontName": false,
+        "subset": true,
+        "themes": ["titanium"],
+        "scripts": ["latin"],
+        "upstream": "ofl/bevietnampro",
+        "faces": [
+            {
+                "file": "bevietnampro-400",
+                "source": "BeVietnamPro-Regular.ttf",
+                "weight": "400",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "bevietnampro-600",
+                "source": "BeVietnamPro-SemiBold.ttf",
+                "weight": "600",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "bevietnampro-700",
+                "source": "BeVietnamPro-Bold.ttf",
+                "weight": "700",
+                "style": "normal",
+                "scripts": ["latin"]
+            },
+            {
+                "file": "bevietnampro-italic-400",
+                "source": "BeVietnamPro-Italic.ttf",
+                "weight": "400",
+                "style": "italic",
                 "scripts": ["latin"]
             }
         ]

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Start — kp-themes</title>
-        <meta name="description" content="The kp-themes design system: 25 themes, two delivery channels, no runtime dependencies." />
+        <meta name="description" content="The kp-themes design system: 26 themes, two delivery channels, no runtime dependencies." />
         <link rel="stylesheet" href="../css/themes.css" />
         <link rel="stylesheet" href="../css/components.css" />
         <link rel="stylesheet" href="../css/layout.css" />
@@ -146,7 +146,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">kp-themes</h1>
-                    <p class="kp-prose">One design system, 25 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
+                    <p class="kp-prose">One design system, 26 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
                 </header>
                 <section class="kp-section" data-sc-section="install" id="install">
                     <h2 class="kp-fw-semibold">Install</h2>
@@ -157,7 +157,7 @@
 &lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/utilities.css&quot;</span> /&gt;</code></pre>
                 </section>
                 <section class="kp-section" data-sc-section="themes" id="themes">
-                    <h2 class="kp-fw-semibold">The 25 themes</h2>
+                    <h2 class="kp-fw-semibold">The 26 themes</h2>
                     <p class="kp-prose">Each theme answers the same questions differently. What follows is why each one exists, taken from its own anatomy document, with its live tokens beside it.</p>
                     <div class="kp-autogrid kp-gap-lg">
                     <article class="kp-card sc-story" data-sc-story="formal" data-theme="formal">
@@ -1282,6 +1282,54 @@ tag — is <code>--theme-font-mono</code>'s default system stack, five names
 deep starting with <code>ui-monospace</code>, not a bespoke face. A Dymo tape
 used whatever wheel was in the gun; this theme ships no display-mono
 face for the same reason.</li>
+</ol>
+                        </div>
+                    </article>
+                    <article class="kp-card sc-story" data-sc-story="titanium" data-theme="titanium">
+                        <h3 class="kp-fw-semibold kp-mb-sm">titanium</h3>
+                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
+                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
+                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
+                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
+                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
+                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
+                        </ul>
+                        <div class="kp-prose">
+<p>Not a place but a <strong>material</strong>: anodised titanium over carbon weave. The
+round that produced this theme opened asking for one called hypertech —
+a category, defined by an empty place on the colour wheel — and it cost
+six refused worlds before the answer turned out to be a material, which
+is how every theme in this package is named. Retro is the desktop,
+terminal is the tube, blueprint is the drawing, lapis is the stone.</p>
+<p>The colour has a <strong>cause</strong>, and that is the whole theme. Anodising does
+not add pigment: it grows an oxide film, and the film's thickness decides
+which wavelength survives. So the blue-violet on every edge really is
+interference, and it really does shift with the angle you look from. The
+register paints it as a gradient whose start angle follows the pointer
+(<code>--kp-pointer: track</code>, scope-16), because a fixed angle would make it a
+decoration rather than a property of the surface.</p>
+<ol>
+<li><strong>The metal is neutral; only the film has hue.</strong> Every token in this
+file sits between hue 206 and 216 at low saturation — ground
+<code>hsl(216, 16%, 10%)</code>, panel <code>hsl(214, 13%, 15%)</code>, ink
+<code>hsl(210, 16%, 94%)</code>. The signal is <code>hsl(212, 16%, 87%)</code>, a bright
+machined grey, not a colour. Everything that is actually coloured
+belongs to the oxide, and the oxide lives in the register.</li>
+<li><strong>The machined chamfer.</strong> Two corners cut at forty-five degrees, with
+a highlight along the top edge where the tool left the surface bright.
+<code>--radius: 0rem</code> and <code>--fx-notch: 0.6rem</code>: the corner is cut, never
+rounded.</li>
+<li><strong>Metal does not ease.</strong> <code>--fx-duration: 60ms</code>, and the controls run
+linear. A press is short and hard, and it arrives instantly, because a
+click is shorter than a transition.</li>
+<li><strong>The carbon weave.</strong> Two diagonals crossing at forty-five degrees,
+under the ambient light that follows the pointer.</li>
+<li><strong>Sora over Be Vietnam Pro, Martian Mono for the reads.</strong> Three
+families the package did not ship before; Kenny approved adding them
+on 2026-09-12 rather than substituting, because the voice of a theme
+is largely its letter. Measured at 129,804 bytes over six faces,
+8.7% of the per-theme budget.</li>
 </ol>
                         </div>
                     </article>
