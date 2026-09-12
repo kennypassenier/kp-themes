@@ -1352,4 +1352,78 @@
         color: var(--foreground);
         text-align: start;
     }
+
+    /* ── The thing names itself [scope-12, approved 2026-09-11] ────────
+       Brutalism labels its own construction: services on the outside,
+       functions painted on the wall. So a control says what it IS when
+       you touch it, in a small block-letter tag beside it.
+
+       Kenny's two conditions, 2026-09-11: it reaches many elements rather
+       than only buttons, and the words are English by default and
+       replaceable. `--kp-label` is that door — a page or a single element
+       sets it and the tag says whatever it was given. The defaults below
+       are the fallbacks in that same declaration, which is why there is
+       no string here a consumer cannot reach. */
+    [data-theme='brutalism'] .kp-button,
+    [data-theme='brutalism'] .kp-field__input,
+    [data-theme='brutalism'] .kp-card,
+    [data-theme='brutalism'] .kp-alert,
+    [data-theme='brutalism'] .kp-badge,
+    [data-theme='brutalism'] .kp-sidenav {
+        position: relative;
+    }
+
+    [data-theme='brutalism'] .kp-button::after,
+    [data-theme='brutalism'] .kp-field__input::after,
+    [data-theme='brutalism'] .kp-card::after,
+    [data-theme='brutalism'] .kp-alert::after,
+    [data-theme='brutalism'] .kp-badge::after,
+    [data-theme='brutalism'] .kp-sidenav::after {
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+        background: var(--foreground);
+        color: var(--background);
+        padding: 0.1rem 0.3rem;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] .kp-button::after {
+        content: var(--kp-label, 'BUTTON');
+    }
+
+    [data-theme='brutalism'] .kp-field__input::after {
+        content: var(--kp-label, 'FIELD');
+    }
+
+    [data-theme='brutalism'] .kp-card::after {
+        content: var(--kp-label, 'CARD');
+    }
+
+    [data-theme='brutalism'] .kp-alert::after {
+        content: var(--kp-label, 'ALERT');
+    }
+
+    [data-theme='brutalism'] .kp-badge::after {
+        content: var(--kp-label, 'BADGE');
+    }
+
+    [data-theme='brutalism'] .kp-sidenav::after {
+        content: var(--kp-label, 'NAV');
+    }
+
+    [data-theme='brutalism'] .kp-button:hover::after,
+    [data-theme='brutalism'] .kp-button:focus-visible::after,
+    [data-theme='brutalism'] .kp-field__input:hover::after,
+    [data-theme='brutalism'] .kp-field__input:focus::after,
+    [data-theme='brutalism'] .kp-card:hover::after,
+    [data-theme='brutalism'] .kp-alert:hover::after,
+    [data-theme='brutalism'] .kp-badge:hover::after,
+    [data-theme='brutalism'] .kp-sidenav:hover::after {
+        opacity: 1;
+    }
 }

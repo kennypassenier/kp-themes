@@ -21,7 +21,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { style } from './paint.mjs';
+import { pseudoStyle, style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -240,6 +240,35 @@ for (const [channel, url] of CHANNELS) {
             ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
             await expect.poll(async () => (await pseudo(mark, '::after', ['transform'])).transform, 'the bar slid off').toMatch(/^matrix\(0,/);
+        });
+
+        test('the thing names itself, in English, and the consumer can rename it [scope-12]', async ({ page }) => {
+            // Kenny's two conditions of 2026-09-11: the tag reaches many
+            // elements rather than only buttons, and the words are English
+            // by default and replaceable. `--kp-label` is that door.
+            // Drilled 2026-09-12 in firefox: the `.kp-button::after`
+            // `content` declaration removed -> red on the default word.
+            await open(page, url);
+            const btn = page.locator('.kp-button').first();
+            const word = async (sel) => (await pseudo(page.locator(sel).first(), '::after', ['content']))['content'].replace(/^["']|["']$/g, '');
+            expect(await word('.kp-button'), 'the English default').toBe('BUTTON');
+            expect(Number((await pseudo(btn, '::after', ['opacity']))['opacity']), 'silent until touched').toBe(0);
+            await btn.hover();
+            await pseudoStyle(btn, '::after', 'opacity', 'the tag appears on the thing you touch').toBe('1');
+            await btn.evaluate((el) => el.style.setProperty('--kp-label', "'VERZENDEN'"));
+            expect(await word('.kp-button'), 'the consumer replaces the word').toBe('VERZENDEN');
+        });
+
+        test('the tag reaches more than the buttons [scope-12, Kenny 2026-09-11]', async ({ page }) => {
+            await open(page, url);
+            const word = async (sel) => (await pseudo(page.locator(sel).first(), '::after', ['content']))['content'].replace(/^["']|["']$/g, '');
+            for (const [selector, expected] of [
+                ['.kp-card', 'CARD'],
+                ['.kp-badge', 'BADGE'],
+            ]) {
+                if ((await page.locator(selector).count()) === 0) continue;
+                expect(await word(selector), `${selector} names itself`).toBe(expected);
+            }
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

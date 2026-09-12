@@ -1042,4 +1042,44 @@
     [data-theme='shade-light'] .kp-media-figure {
         color: var(--muted-foreground);
     }
+
+    /* ── One light, one direction [scope-12, approved 2026-09-11] ──────
+       Kenny called this theme sober, and its twin with it. The answer is
+       not a colour but a law: a single source at the top left that
+       everything obeys. At rest a control lies on the surface; under the
+       pointer it lifts and its shadow lengthens; pressed, it goes BELOW
+       the surface and the shadow turns inward.
+
+       On pale paper the shadow falls short and sharp — 1px against the
+       dark twin's 2, blurred 3 against 5. Same law, different material,
+       and that is what makes the two read as a pair. */
+    /* The plain control only. The approved demo (round six) draws the
+       primary, ghost and destructive variants FLAT, and its own test pins
+       that — so the light stops at the variants until Kenny rules on the
+       collision. Recorded as a finding, S49. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+            transition:
+                box-shadow var(--fx-duration, 160ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 160ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
+        translate: -1px -1px;
+        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The press is instant on the way in. A click is shorter than a
+       transition, so a pressed state that eases never arrives before the
+       finger leaves — Kenny pressed the demo and saw nothing. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
+        transition-duration: 0s;
+        translate: 1px 1px;
+        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
+    }
 }

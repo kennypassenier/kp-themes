@@ -17374,6 +17374,80 @@
         color: var(--foreground);
         text-align: start;
     }
+
+    /* ── The thing names itself [scope-12, approved 2026-09-11] ────────
+       Brutalism labels its own construction: services on the outside,
+       functions painted on the wall. So a control says what it IS when
+       you touch it, in a small block-letter tag beside it.
+
+       Kenny's two conditions, 2026-09-11: it reaches many elements rather
+       than only buttons, and the words are English by default and
+       replaceable. `--kp-label` is that door — a page or a single element
+       sets it and the tag says whatever it was given. The defaults below
+       are the fallbacks in that same declaration, which is why there is
+       no string here a consumer cannot reach. */
+    [data-theme='brutalism'] .kp-button,
+    [data-theme='brutalism'] .kp-field__input,
+    [data-theme='brutalism'] .kp-card,
+    [data-theme='brutalism'] .kp-alert,
+    [data-theme='brutalism'] .kp-badge,
+    [data-theme='brutalism'] .kp-sidenav {
+        position: relative;
+    }
+
+    [data-theme='brutalism'] .kp-button::after,
+    [data-theme='brutalism'] .kp-field__input::after,
+    [data-theme='brutalism'] .kp-card::after,
+    [data-theme='brutalism'] .kp-alert::after,
+    [data-theme='brutalism'] .kp-badge::after,
+    [data-theme='brutalism'] .kp-sidenav::after {
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+        background: var(--foreground);
+        color: var(--background);
+        padding: 0.1rem 0.3rem;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] .kp-button::after {
+        content: var(--kp-label, 'BUTTON');
+    }
+
+    [data-theme='brutalism'] .kp-field__input::after {
+        content: var(--kp-label, 'FIELD');
+    }
+
+    [data-theme='brutalism'] .kp-card::after {
+        content: var(--kp-label, 'CARD');
+    }
+
+    [data-theme='brutalism'] .kp-alert::after {
+        content: var(--kp-label, 'ALERT');
+    }
+
+    [data-theme='brutalism'] .kp-badge::after {
+        content: var(--kp-label, 'BADGE');
+    }
+
+    [data-theme='brutalism'] .kp-sidenav::after {
+        content: var(--kp-label, 'NAV');
+    }
+
+    [data-theme='brutalism'] .kp-button:hover::after,
+    [data-theme='brutalism'] .kp-button:focus-visible::after,
+    [data-theme='brutalism'] .kp-field__input:hover::after,
+    [data-theme='brutalism'] .kp-field__input:focus::after,
+    [data-theme='brutalism'] .kp-card:hover::after,
+    [data-theme='brutalism'] .kp-alert:hover::after,
+    [data-theme='brutalism'] .kp-badge:hover::after,
+    [data-theme='brutalism'] .kp-sidenav:hover::after {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -20783,6 +20857,46 @@
        the picture rather than with the words under it. */
     [data-theme='shade-light'] .kp-media-figure {
         color: var(--muted-foreground);
+    }
+
+    /* ── One light, one direction [scope-12, approved 2026-09-11] ──────
+       Kenny called this theme sober, and its twin with it. The answer is
+       not a colour but a law: a single source at the top left that
+       everything obeys. At rest a control lies on the surface; under the
+       pointer it lifts and its shadow lengthens; pressed, it goes BELOW
+       the surface and the shadow turns inward.
+
+       On pale paper the shadow falls short and sharp — 1px against the
+       dark twin's 2, blurred 3 against 5. Same law, different material,
+       and that is what makes the two read as a pair. */
+    /* The plain control only. The approved demo (round six) draws the
+       primary, ghost and destructive variants FLAT, and its own test pins
+       that — so the light stops at the variants until Kenny rules on the
+       collision. Recorded as a finding, S49. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
+            transition:
+                box-shadow var(--fx-duration, 160ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 160ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
+        translate: -1px -1px;
+        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The press is instant on the way in. A click is shorter than a
+       transition, so a pressed state that eases never arrives before the
+       finger leaves — Kenny pressed the demo and saw nothing. */
+    [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
+        transition-duration: 0s;
+        translate: 1px 1px;
+        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
     }
 }
 
@@ -28154,6 +28268,45 @@
     [data-theme='nostromo'] .kp-media-figure {
         color: var(--muted-foreground);
     }
+
+    /* ── The dot becomes a lamp [scope-12, approved 2026-09-11] ────────
+       Kenny's own example of what a quirk is, carried through: the dot no
+       longer marks only the page you are on but every control there is.
+       Dark at rest, lit under the pointer, full when pressed — a console
+       where each switch has its own lamp. Same size and same gutter as
+       the one in the navigation, so the theme becomes more recognisable
+       rather than busier. */
+    [data-theme='nostromo'] .kp-button {
+        position: relative;
+        padding-inline-start: 1.7rem;
+    }
+
+    [data-theme='nostromo'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-block-start: -0.22rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-button::before {
+            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-button:hover:not(:disabled)::before {
+        opacity: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-button:active:not(:disabled)::before {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -32205,6 +32358,39 @@
         text-align: center;
         color: var(--primary);
     }
+
+    /* ── The marginal note [scope-12, approved 2026-09-11] ─────────────
+       This theme is aged paper, and on paper you mark what you are
+       reading in the margin. Touching a control draws a bracket to the
+       left of it — beside the thing, not on it, because that is where a
+       reader writes. The same gesture its side navigation already uses
+       for the row you are on. */
+    [data-theme='sepia'] .kp-button {
+        position: relative;
+        margin-inline-start: 0.8rem;
+    }
+
+    [data-theme='sepia'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -0.65rem;
+        inset-block: 0.1rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] .kp-button::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='sepia'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='sepia'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -33122,6 +33308,43 @@
        the picture rather than with the words under it. */
     [data-theme='solstice'] .kp-media-figure {
         color: var(--primary);
+    }
+
+    /* ── The low sun rakes across [scope-12, approved 2026-09-11] ──────
+       A low sun is the whole picture of this theme, and a low sun moves.
+       Touching a control draws a warm band across it once, from the
+       leading edge to the far one. Once, never in a loop: a loop would be
+       an animation demanding attention rather than light falling on a
+       thing. */
+    [data-theme='solstice'] .kp-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-theme='solstice'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -60%;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-button:hover:not(:disabled)::after {
+            animation: kp-rake 620ms ease-out both;
+        }
+    }
+
+    @keyframes kp-rake {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 340% 0;
+        }
     }
 }
 
@@ -34994,6 +35217,32 @@
        the picture rather than with the words under it. */
     [data-theme='high-contrast'] .kp-media-figure {
         color: var(--foreground);
+    }
+
+    /* ── Nothing fades [scope-12, approved 2026-09-11] ─────────────────
+       The constraint of this theme is the idea. Nothing here may lean on
+       a hue, and a transition is by definition a run of half-contrasts —
+       every frame between two legible states is less legible than either.
+       So a state change is a switch, not a fade, and the touched control
+       inverts outright between the two solid bars its side navigation
+       already uses for the row you are on. */
+    [data-theme='high-contrast'] .kp-button,
+    [data-theme='high-contrast'] .kp-field__input,
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-nav__link {
+        transition: none;
+    }
+
+    /* Not the mirror variant, and not while pressed: the approved demo
+       draws that button dropping onto its own offset with NO shadow, and
+       these bars are a hover decoration. S49 — the demo is exact, and a
+       quirk does not quietly redraw a value it approved. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
     }
 }
 

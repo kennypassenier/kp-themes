@@ -1144,4 +1144,37 @@
         text-align: center;
         color: var(--primary);
     }
+
+    /* ── The marginal note [scope-12, approved 2026-09-11] ─────────────
+       This theme is aged paper, and on paper you mark what you are
+       reading in the margin. Touching a control draws a bracket to the
+       left of it — beside the thing, not on it, because that is where a
+       reader writes. The same gesture its side navigation already uses
+       for the row you are on. */
+    [data-theme='sepia'] .kp-button {
+        position: relative;
+        margin-inline-start: 0.8rem;
+    }
+
+    [data-theme='sepia'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -0.65rem;
+        inset-block: 0.1rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] .kp-button::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='sepia'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='sepia'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
 }

@@ -145,3 +145,38 @@ itself, which is what scope-12 asked for. Two needed a second attempt —
 solstice, where the first drawing overflowed a rounded corner, and lapis,
 where gold leaf catching the light turned out to be a property of a
 material rather than something a manuscript does.
+
+## Six built into their registers, 2026-09-12 [scope-12]
+
+Kenny answered the eight-quirk form on 2026-09-11. Six were actionable
+without him and are in the package, each with a test in its register spec
+and a drill that drove that test red:
+
+| Theme | What it does | Where |
+| --- | --- | --- |
+| high-contrast | nothing fades — a state change is a switch, and the touched control inverts outright | `css/high-contrast-register.css` |
+| nostromo | the dot becomes a lamp on every control: dark at rest, lit under the pointer, full when pressed | `css/nostromo-register.css` |
+| shade-light | one light at the top left that everything obeys; pressed, the control goes under the surface | `css/shade-light-register.css` |
+| sepia | the marginal bracket, drawn beside the touched control, where a reader writes | `css/sepia-register.css` |
+| solstice | the low sun rakes once across the touched control, `kp-rake` | `css/solstice-register.css` |
+| brutalism | the thing names itself, in English, through `--kp-label` | `css/brutalism-register.css` |
+
+**Two still open.** Grotesk was rejected — "als ik hover dan
+vergroot/verkleint de knop zelf, dat is geen wenselijk gedrag" — and needs
+a proposal that does not change the control's size. Shade-dark's hover was
+the `fix-11` fault and is fixed; its press half is still to be measured
+against his reading that clicking the button shows nothing.
+
+**Two findings for Kenny [S49].** Both are places where a quirk he
+approved collides with a value an approved concept demo already pinned,
+and neither has been decided here:
+
+1. **shade-light's light stops at the button variants.** The round-six
+   demo draws the primary, ghost and destructive buttons FLAT and its own
+   test pins that. "One light everything obeys" and "the buttons are flat"
+   cannot both hold. The elevation reaches the plain control only, until
+   he rules.
+2. **high-contrast's inversion stops short of the mirror's press.** That
+   demo draws the mirrored button dropping onto its own offset with no
+   shadow; the inversion's two bars would have replaced it. The inversion
+   now excludes `.kp-button--mirror` and `:active`.

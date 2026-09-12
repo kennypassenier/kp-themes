@@ -881,4 +881,30 @@
     [data-theme='high-contrast'] .kp-media-figure {
         color: var(--foreground);
     }
+
+    /* ── Nothing fades [scope-12, approved 2026-09-11] ─────────────────
+       The constraint of this theme is the idea. Nothing here may lean on
+       a hue, and a transition is by definition a run of half-contrasts —
+       every frame between two legible states is less legible than either.
+       So a state change is a switch, not a fade, and the touched control
+       inverts outright between the two solid bars its side navigation
+       already uses for the row you are on. */
+    [data-theme='high-contrast'] .kp-button,
+    [data-theme='high-contrast'] .kp-field__input,
+    [data-theme='high-contrast'] .kp-sidenav__link,
+    [data-theme='high-contrast'] .kp-nav__link {
+        transition: none;
+    }
+
+    /* Not the mirror variant, and not while pressed: the approved demo
+       draws that button dropping onto its own offset with NO shadow, and
+       these bars are a hover decoration. S49 — the demo is exact, and a
+       quirk does not quietly redraw a value it approved. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+    }
 }

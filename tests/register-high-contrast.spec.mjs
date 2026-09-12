@@ -220,6 +220,27 @@ for (const [channel, url] of CHANNELS) {
             expect(style.borderColor).toBe(await paint(page, '--border-strong'));
         });
 
+        test('nothing fades: a state change is a switch, and the hover inverts [scope-12]', async ({ page }) => {
+            // Drilled 2026-09-12 in firefox: the four-selector
+            // `transition: none` rule removed -> red on the duration; the
+            // hover's `background: var(--foreground)` removed -> red on the
+            // inversion. The first attempt measured the hero's `--mirror`
+            // variant, which cancels its own transition for other reasons,
+            // and so stayed green over a removed rule [KT3].
+            await open(page, url);
+            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
+            // reaches the hero's `--mirror` variant, which carries its own
+            // later rules — so this test passed with the rule under it
+            // removed, until the drill of 2026-09-12 said so [KT3].
+            const btn = page.locator('[class="kp-button"]').first();
+            await style(btn, 'transition-duration', 'the switch has no run-up').toBe('0s');
+            await btn.hover();
+            const fg = await paint(page, '--foreground');
+            const bg = await paint(page, '--background');
+            await style(btn, 'background-color', 'the touched control takes the text colour').toBe(fg);
+            await style(btn, 'color', 'and prints in the ground colour').toBe(bg);
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');

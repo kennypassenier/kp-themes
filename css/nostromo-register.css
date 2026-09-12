@@ -1107,4 +1107,43 @@
     [data-theme='nostromo'] .kp-media-figure {
         color: var(--muted-foreground);
     }
+
+    /* ── The dot becomes a lamp [scope-12, approved 2026-09-11] ────────
+       Kenny's own example of what a quirk is, carried through: the dot no
+       longer marks only the page you are on but every control there is.
+       Dark at rest, lit under the pointer, full when pressed — a console
+       where each switch has its own lamp. Same size and same gutter as
+       the one in the navigation, so the theme becomes more recognisable
+       rather than busier. */
+    [data-theme='nostromo'] .kp-button {
+        position: relative;
+        padding-inline-start: 1.7rem;
+    }
+
+    [data-theme='nostromo'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-block-start: -0.22rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-button::before {
+            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-button:hover:not(:disabled)::before {
+        opacity: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-button:active:not(:disabled)::before {
+        opacity: 1;
+    }
 }

@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 27.6 kB | 10.6 kB | 62% |
 | `css/academia-register.css` | 35.4 kB | 18.0 kB | 49% |
 | `css/blueprint-register.css` | 39.4 kB | 19.4 kB | 51% |
-| `css/brutalism-register.css` | 45.9 kB | 26.3 kB | 43% |
+| `css/brutalism-register.css` | 48.6 kB | 27.8 kB | 43% |
 | `css/components.css` | 115.4 kB | 48.0 kB | 58% |
 | `css/cyberpunk-register.css` | 55.9 kB | 32.6 kB | 42% |
 | `css/dark-register.css` | 34.8 kB | 17.9 kB | 49% |
@@ -27,30 +27,30 @@ the selectors and their order are identical, which is what
 | `css/forest-register.css` | 36.8 kB | 20.5 kB | 44% |
 | `css/formal-register.css` | 27.0 kB | 13.2 kB | 51% |
 | `css/grotesk-register.css` | 38.1 kB | 19.3 kB | 49% |
-| `css/high-contrast-register.css` | 30.8 kB | 15.1 kB | 51% |
+| `css/high-contrast-register.css` | 32.1 kB | 15.5 kB | 52% |
 | `css/lapis-register.css` | 37.1 kB | 18.6 kB | 50% |
 | `css/layout.css` | 8.2 kB | 2.3 kB | 72% |
 | `css/light-register.css` | 26.6 kB | 12.1 kB | 55% |
 | `css/mono-register.css` | 33.6 kB | 15.9 kB | 53% |
-| `css/nostromo-register.css` | 36.2 kB | 20.6 kB | 43% |
+| `css/nostromo-register.css` | 37.5 kB | 21.2 kB | 43% |
 | `css/pastel-register.css` | 37.2 kB | 18.0 kB | 51% |
 | `css/phantom-register.css` | 52.9 kB | 29.6 kB | 44% |
 | `css/retro-register.css` | 61.6 kB | 32.4 kB | 48% |
-| `css/sepia-register.css` | 38.9 kB | 19.2 kB | 51% |
+| `css/sepia-register.css` | 40.0 kB | 19.7 kB | 51% |
 | `css/shade-dark-register.css` | 32.2 kB | 16.5 kB | 49% |
-| `css/shade-light-register.css` | 36.2 kB | 18.8 kB | 48% |
-| `css/solstice-register.css` | 31.3 kB | 15.6 kB | 50% |
+| `css/shade-light-register.css` | 38.2 kB | 19.5 kB | 49% |
+| `css/solstice-register.css` | 32.4 kB | 16.0 kB | 50% |
 | `css/synthwave-register.css` | 53.8 kB | 31.4 kB | 42% |
 | `css/terminal-register.css` | 44.8 kB | 25.2 kB | 44% |
 | `css/themes.css` | 191.6 kB | 131.6 kB | 31% |
 | `css/ticker-register.css` | 35.1 kB | 17.1 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `css/woodblock-register.css` | 43.3 kB | 22.9 kB | 47% |
-| `dist/kp-themes.css` | 1307.2 kB | 700.8 kB | 46% |
-| `dist/kp-themes.js` | 228.4 kB | 122.4 kB | 46% |
+| `dist/kp-themes.css` | 1316.8 kB | 705.0 kB | 46% |
+| `dist/kp-themes.js` | 228.7 kB | 122.5 kB | 46% |
 
-The loose stylesheets together weigh **1364.9 kB** authored and
-**736.2 kB** minified, 46% less. A page loading one theme's
+The loose stylesheets together weigh **1374.4 kB** authored and
+**740.4 kB** minified, 46% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

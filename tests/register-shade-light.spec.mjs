@@ -236,6 +236,40 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => await dialog.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
         });
 
+        test('one light at the top left: the control lifts, and the press goes under the surface [scope-12]', async ({ page }) => {
+            // Drilled 2026-09-12 in firefox: the rest `box-shadow` removed
+            // -> red on the shadow lying to the lower right; the `:active`
+            // rule's `inset` removed -> red on the press turning inward.
+            // The first attempt reported green: the assertion asked only
+            // that the shadow not be `none`, and the base layer leaves a
+            // `0px 0px 0px 0px` behind. It reads the offsets now [KT3].
+            await open(page, url);
+            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
+            // reaches the hero's `--mirror` variant, which carries its own
+            // later rules — so this test passed with the rule under it
+            // removed, until the drill of 2026-09-12 said so [KT3].
+            const btn = page.locator('[class="kp-button"]').first();
+            const rest = await btn.evaluate((el) => getComputedStyle(el).boxShadow);
+            // The OFFSETS, not merely "a shadow". Drilled 2026-09-12: with
+            // the rest rule removed the button still reports a box-shadow of
+            // `0px 0px 0px 0px` from the base layer, so `not.toBe('none')`
+            // stayed green over nothing at all [KT3].
+            const offsets = rest.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/);
+            expect(offsets, 'a shadow at rest').not.toBeNull();
+            expect(Number(offsets[1]), 'it falls to the right of the source').toBeGreaterThan(0);
+            expect(Number(offsets[2]), 'and below it').toBeGreaterThan(Number(offsets[1]));
+            expect(rest, 'away from the light, not into it').not.toContain('inset');
+            await btn.hover();
+            await style(btn, 'translate', 'the lift is toward the source').toBe('-1px -1px');
+            // The press is instant on the way in, so a short click still
+            // shows [Kenny, 2026-09-11, on shade-dark's twin].
+            await style(btn, 'transition-duration', 'the lift eases').not.toBe('0s');
+            await page.mouse.down();
+            await style(btn, 'transition-duration', 'the press does not ease in').toBe('0s');
+            expect(await btn.evaluate((el) => getComputedStyle(el).boxShadow), 'and it turns inward').toContain('inset');
+            await page.mouse.up();
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');

@@ -914,4 +914,41 @@
     [data-theme='solstice'] .kp-media-figure {
         color: var(--primary);
     }
+
+    /* ── The low sun rakes across [scope-12, approved 2026-09-11] ──────
+       A low sun is the whole picture of this theme, and a low sun moves.
+       Touching a control draws a warm band across it once, from the
+       leading edge to the far one. Once, never in a loop: a loop would be
+       an animation demanding attention rather than light falling on a
+       thing. */
+    [data-theme='solstice'] .kp-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-theme='solstice'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -60%;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-button:hover:not(:disabled)::after {
+            animation: kp-rake 620ms ease-out both;
+        }
+    }
+
+    @keyframes kp-rake {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 340% 0;
+        }
+    }
 }
