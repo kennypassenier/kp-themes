@@ -123,6 +123,15 @@ node gates/check-manifest.mjs
 echo "→ the compliance table still says what the gates measure"
 node gates/compliance.mjs --check
 
+echo "→ nothing private in a document of a public repository [Phase 8]"
+node gates/check-docs-private.mjs
+
+echo "→ every command, path and import a document names is real [Phase 8]"
+node gates/check-docs-runnable.mjs
+
+echo "→ a message a document quotes is the message the code prints [Phase 8]"
+node gates/check-doc-quotes.mjs
+
 echo "→ every user-visible string comes from the dictionary (KT5)"
 node gates/check-strings.mjs
 

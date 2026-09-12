@@ -400,7 +400,7 @@ moment a component needs `if (theme === …)`, the difference is modelled as
 a token instead.
 
 **Provenance.** This is house doctrine, already written in
-`docs/THEMING.md` before this round, and it is the reasoning behind
+`docs/legacy/THEMING.md` before this round, and it is the reasoning behind
 choosing shared components over per-theme components at S18.
 
 **Two companions from the same file, kept.** Texture opacity stays at or

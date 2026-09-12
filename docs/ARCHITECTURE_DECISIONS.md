@@ -1142,8 +1142,14 @@ Mincho; lapis: Vazirmatn, Markazi Text): those ship their script subset
 per package. **Critic #14:** subsetting is a Modified Version under the
 OFL; a family with a Reserved Font Name may not ship subset under it.
 **Revised:** `gates/check-fonts.mjs` records the RFN per family and
-refuses a subset under a reserved name; `fonts/LICENSES.md` lists every
-family with its licence; `package.json` notes the OFL tree beside MIT.
+refuses a subset under a reserved name; every family carries its licence
+verbatim beside its own files; `package.json` notes the OFL tree beside
+MIT. **Amended 2026-09-12 (Phase 8): this said `fonts/LICENSES.md`, one
+list for every family, and the build chose `fonts/<family>/LICENSE`
+instead — the licence beside the files it covers, which is what the OFL
+asks for and what `gates/check-fonts.mjs` verifies. The decision was
+right and the file it named was never made; the record said otherwise
+for a round, and a documentation gate found it.**
 `font-display: swap` stays (no invariant forbids it); tests await
 `document.fonts.ready` before any measurement (critic #18).
 

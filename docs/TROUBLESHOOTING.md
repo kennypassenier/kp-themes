@@ -1,10 +1,20 @@
 # Troubleshooting
 
-Symptom first, then where to look. This replaces the debugging guide and
-the operations runbook the procedure asks for: there is no server here, no
-database and no process to restart, so a runbook of numbered recovery
-procedures would describe something that does not exist. What a consumer
-of a stylesheet actually hits is "it looks wrong" and "the gate says no",
+Symptom first, then where to look. **This is the consumer's half** — you
+are using the package and something looks wrong.
+
+**Amended 2026-09-12 (Phase 8).** This paragraph used to say the document
+replaced both the debugging guide and the operations runbook the procedure
+asks for, on the reasoning that a package with no server has nothing to
+restart. The first half of that was wrong and the second was too broad.
+[DEBUGGING_GUIDE.md](DEBUGGING_GUIDE.md) is the maintainer's half — the
+evidence trail, what each diagnostic surface can and cannot see, and the
+fault families this project has hit more than once — and
+[OPERATIONS_RUNBOOK.md](OPERATIONS_RUNBOOK.md) turned out to have real
+procedures after all: adding a theme, adding a token, cutting a release.
+What is true is that neither describes recovering a running service,
+because there isn't one. What a consumer of a stylesheet actually hits is
+"it looks wrong" and "the gate says no",
 and that is what this covers.
 
 ---
@@ -23,11 +33,11 @@ first section.
 Check `document.documentElement.dataset.theme` in the console. If it is
 empty, nothing is applying the theme: either the snippet is absent or the
 picker module never loaded. If it says `formal` while `localStorage` says
-something else, the stored value is not one of the twenty-five names — the
+something else, the stored value is not one of the twenty-two names — the
 picker corrects an unknown value rather than putting it on the document.
 
 ```js
-localStorage.getItem('theme'); // must be one of the twenty-five
+localStorage.getItem('theme'); // must be one of the twenty-two
 ```
 
 ### One picker updates, another does not
@@ -143,13 +153,13 @@ token layer` down are gates and do.
 | `--input on --card is 2.10, under the 3.0 floor of SC 1.4.11` | a control's boundary disappears into its surface | DI1: raise the boundary, not the surface |
 | `--primary-active is only 4.9 from --primary (need >= 10)` | pressing the control changes nothing anyone can see | the base colour is near the edge of the space; the derivation gives up chroma first, so this means even that was not enough |
 | `--z is measured by nothing` | a new token belongs to no pair list | add it to a pair list, or to `EXEMPT` with the reason — the message says so too |
-| `fx-flicker makes 5.5 opposing luminance changes per second over 1100ms` | it is over the flash threshold, and that harms people | retime the keyframes or lengthen the duration |
+| `<theme>: kp-burnish makes 5.5 opposing luminance changes per second over 1100ms — SC 2.3.1 allows 3.` | it is over the flash threshold, and that harms people | retime the keyframes or lengthen the duration |
 | `transition sits outside a prefers-reduced-motion guard (DI7)` | it moves for someone who asked for stillness | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `hsl(…) is a colour written outside the token layer` | a colour is spelled out where a token should be | `var(--token)`, or `hsl(from var(--token) h s l / alpha)` if it needs transparency |
-| `css/themes.css does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
+| `<file> does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
 | `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `npm run generate:all` (or `node gates/compliance.mjs` alone) |
 | `<anything> does not match its source` | a generator ran and its neighbours did not | `npm run generate:all` — one command settles every generated file |
-| `theme discovery broke: expected 25, found 24` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
+| `theme discovery broke: expected 22 themes, found 21 [names]` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
 
 ## Working on the package itself
 

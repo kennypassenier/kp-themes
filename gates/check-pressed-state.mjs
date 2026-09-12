@@ -85,8 +85,11 @@ export function weight(selector) {
  * is a longer selector in the SAME layer. grotesk carried a correct
  * `:active` rule with a correct token for a full round and it did
  * nothing: the hover above it had three `:not(.class)` clauses and so
- * five steps of weight against the press's four. Measured before the
- * repair: hovered `rgb(245, 245, 245)`, held down the same.
+ * SIX steps of weight against the press's four — `weight()` counts the
+ * attribute, the class, the pseudo-class and each `:not()`'s contents,
+ * and the number here said five until a doc-writer called the function
+ * instead of believing the comment. Measured before the repair: hovered
+ * and held down both painted the same grey.
  *
  * @param {string} source one register
  * @param {Set<string>} base the selectors from pressedInBase

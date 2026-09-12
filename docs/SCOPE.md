@@ -137,8 +137,8 @@ not merely "dark with pink". Colour roles, contrast behaviour, typography,
 motion, and explicitly what is not allowed.
 
 Measured in this repository: of the seven themes exactly one has such a
-document (`docs/CYBERPUNK_THEME_RESEARCH.md`, with its "five pillars"
-section). `docs/THEMING.md` explains the system, not the individual
+document (`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`, with its "five pillars"
+section). `docs/legacy/THEMING.md` explains the system, not the individual
 themes. Six themes have none: formal, light, dark, pastel, terminal, forest.
 
 These documents are written channel-neutrally — they describe character,
@@ -698,7 +698,7 @@ fell with S39: the theme is `cyberpunk`, a new major. The showcase
 question (R1) is closed: Kenny asked on 2026-09-07 whether a live site
 existed for the Dribbble design he remembered; none does — the search
 found the shot, the designer's two profiles and a Pinterest repin. The
-three CSS projects recorded in `docs/CYBERPUNK_THEME_RESEARCH.md` show
+three CSS projects recorded in `docs/legacy/CYBERPUNK_THEME_RESEARCH.md` show
 the same button language and were consulted, not used.
 
 **S46 · The concept demo is the gate for every new theme.** Kenny,

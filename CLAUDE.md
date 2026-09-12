@@ -151,10 +151,22 @@ Full record: [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
 
 ## Project rule from Kenny's decision of 2026-09-09 (no CI)
 
-There is no CI. `.github/workflows/ci.yml` is deleted, `main` requires no
-status check, and nothing runs on a server — 254 runs in five days and
-35.9 hours of waiting, on a project whose every change Kenny approves
-himself. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
+There is no CI. `.github/workflows/ci.yml` is deleted and `main` requires
+no status check — 254 runs in five days and 35.9 hours of waiting, on a
+project whose every change Kenny approves himself.
+
+**Amended 2026-09-12 (Phase 8).** This used to add "and nothing runs on a
+server", which is not true and has not been since the decision was made.
+Two workflows remain and both fire: `.github/workflows/release.yml` on a
+`v*` tag, which runs the gates, writes the checksums and creates the draft
+release — the answer to `KT9`, where a hand-built release published a
+`SHA256SUMS` covering three files instead of ten — and
+`.github/workflows/pages.yml` on a push to `main`, which publishes the
+documentation site. What was deleted is the CI that ran on every commit
+and made Kenny wait; what remains is the machinery that builds a release
+so a person does not build it by hand. A doc-writer drafting the runbook
+checked the claim instead of repeating it, which is the whole point of
+drafting from code. Five commands replace it, and three of them are his to give — his to GIVE, amended 2026-09-10: the decision is his and
 the keyboard work need not be (see the rule from correction fix-2 below):
 
 | Command                 | What                                                             | When                                                                                                                          |
@@ -311,7 +323,7 @@ notched buttons with a slit, a razor tear between sections, decipher,
 one-shot glitch, redactions that clear. It replaces the current theme
 under the same name in a new major; 4.0.0 stays what it shipped (S20).
 Scope S38–S46 in `docs/SCOPE.md`; the measured references in
-`docs/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
+`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
 DI5 findings are reported, not silently corrected (S42); meaning lives in
 the HTML and expression in the theme, through a hook vocabulary every
 theme must answer (S45); and the concept demo, same structure and
@@ -399,31 +411,36 @@ widget was available here, contrary to what `HANDOFF.md` assumed.
 
 ## Project documents
 
-| Doc                              | Purpose                                                   |
-| -------------------------------- | --------------------------------------------------------- |
-| README.md                        | how to consume the package, tokens, provenance            |
-| HANDOFF.md                       | start prompt for a procedure session (Dutch)              |
-| docs/SCOPE.md                    | the approved Phase 0 scope (S1-S18, B1)                   |
-| docs/INVENTORY.md                | the Phase 1 inventory, 99 units with IDs                  |
-| docs/REALIZATION_PLAN.md         | the eleven milestones, the enforcement, the gate log      |
-| docs/FEATURES.md                 | the frozen feature list with its test bars (TH1-TH36)     |
-| docs/ARCHITECTURE_DECISIONS.md   | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
-| docs/DESIGN_INVARIANTS.md        | what must hold in every theme (DI1-DI11)                  |
-| docs/COVERAGE_GAPS.md            | what the themes do not reach yet, in five groups          |
-| docs/CORRECTIONS.md              | live-found faults and their approved measures             |
-| docs/MINI_ROUNDS.md              | open measurements and mini-rounds                         |
-| docs/REQUESTS_FROM_CONSUMERS.md  | what the consumers asked for, 2026-09-03                  |
-| docs/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
-| docs/USER_GUIDE.md               | how a consumer builds a page with this                    |
-| docs/ADOPTION_PROMPTS.md         | the two consumer prompts, one per project (Dutch)         |
-| docs/TROUBLESHOOTING.md          | when it looks wrong, or a check says no                   |
-| docs/ARCHITECTURE_REFERENCE.md   | the system as built, as opposed to as decided             |
-| docs/TEST_PLAN.md                | what is tested, where, and what deliberately is not       |
-| docs/LAYOUT.md                   | the nineteen layout classes and their eighteen knobs      |
-| docs/UTILITIES.md                | the 118 generated utility classes                         |
-| docs/MINIFIED.md                 | the minified build and its per-file sizes (generated)     |
-| docs/GENERIC_SWEEP.md            | the KT6 audit: every feature configurable                 |
-| docs/LIFT_PLAN.md                | the nineteen lifts of round six, one row each             |
-| docs/RESEARCH_2026-09.md         | the measured references the lifts were built from         |
-| docs/THEME_CANDIDATES.md         | the twenty-one candidates thirteen themes came from       |
-| docs/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |
+| Doc                                     | Purpose                                                   |
+| --------------------------------------- | --------------------------------------------------------- |
+| README.md                               | how to consume the package, tokens, provenance            |
+| HANDOFF.md                              | start prompt for a procedure session (Dutch)              |
+| docs/SCOPE.md                           | the approved Phase 0 scope (S1-S18, B1)                   |
+| docs/INVENTORY.md                       | the Phase 1 inventory, 99 units with IDs                  |
+| docs/REALIZATION_PLAN.md                | the eleven milestones, the enforcement, the gate log      |
+| docs/FEATURES.md                        | the frozen feature list with its test bars (TH1-TH36)     |
+| docs/ARCHITECTURE_DECISIONS.md          | the tech choices (T1-T9); Phase 4 adds AR* and freezes it |
+| docs/DESIGN_INVARIANTS.md               | what must hold in every theme (DI1-DI11)                  |
+| docs/COVERAGE_GAPS.md                   | what the themes do not reach yet, in five groups          |
+| docs/CORRECTIONS.md                     | live-found faults and their approved measures             |
+| docs/MINI_ROUNDS.md                     | open measurements and mini-rounds                         |
+| docs/REQUESTS_FROM_CONSUMERS.md         | what the consumers asked for, 2026-09-03                  |
+| docs/legacy/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)    |
+| docs/USER_GUIDE.md                      | how a consumer builds a page with this                    |
+| docs/ADOPTION_PROMPTS.md                | the two consumer prompts, one per project (Dutch)         |
+| docs/TROUBLESHOOTING.md                 | when it looks wrong, or a check says no                   |
+| docs/ARCHITECTURE_REFERENCE.md          | the system as built, as opposed to as decided             |
+| docs/TEST_PLAN.md                       | what is tested, where, and what deliberately is not       |
+| docs/LAYOUT.md                          | the nineteen layout classes and their eighteen knobs      |
+| docs/UTILITIES.md                       | the 118 generated utility classes                         |
+| docs/MINIFIED.md                        | the minified build and its per-file sizes (generated)     |
+| docs/GENERIC_SWEEP.md                   | the KT6 audit: every feature configurable                 |
+| docs/LIFT_PLAN.md                       | the nineteen lifts of round six, one row each             |
+| docs/RESEARCH_2026-09.md                | the measured references the lifts were built from         |
+| docs/THEME_CANDIDATES.md                | the twenty-one candidates thirteen themes came from       |
+| docs/legacy/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)  |
+| docs/legacy/README.md                   | what the two copied documents are, and what replaced them |
+| docs/DEBUGGING_GUIDE.md                 | symptom to cause, and what to look at first               |
+| docs/OPERATIONS_RUNBOOK.md              | the numbered procedures a maintainer performs             |
+| docs/ID_TRANSLATIONS.md                 | the KT10 renames, one row each                            |
+| docs/THEME_VERDICTS.md                  | what each theme was judged to need, and why               |

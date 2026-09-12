@@ -734,6 +734,119 @@ reduced motion — a page without the script shows the rest states.
 `README.md` has the table of what each theme answers;
 `themes/hooks.json` is the matrix the gate reads.
 
+## The side navigation [feat-nav-3]
+
+A navigation that stands beside the content instead of above it: three
+modes, a slim rail that keeps the icons and drops the words, categories
+that fold, and either edge.
+
+Both channels render the same markup. The React component writes the
+element and the knobs; `js/sidenav.js` — which `js/auto.js` attaches —
+does the behaviour, so a page that never loads the module still shows a
+working list of links.
+
+```jsx
+import { Sidenav, SidenavToggle } from '@kp-soft/themes';
+
+<SidenavToggle controls="nav">Menu</SidenavToggle>
+<Sidenav
+    id="nav"
+    label="Sections"
+    title="Sections"
+    mode="over"
+    backdrop
+    items={[{ label: 'Overview', href: '/', current: true }]}
+/>;
+```
+
+Every attribute the module reads is a prop, and one you leave out keeps
+the module's own default rather than restating it. The component attaches
+itself on mount, because `js/auto.js` runs at load and React mounts after
+it — pass `autoAttach={false}` if you attach on your own schedule.
+
+The way out of the opened state is the handle:
+
+```js
+import { sidenavOf } from '@kp-soft/themes/js/sidenav';
+
+const handle = sidenavOf(ref.current);
+handle.open();
+handle.setMode('side');
+handle.isOpen();
+handle.destroy();
+```
+
+Without React, write the same markup and let `js/auto.js` find it:
+
+```html
+<button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="nav">Menu</button>
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="/"><span class="kp-sidenav__label">Overview</span></a></li>
+        </ul>
+    </div>
+</nav>
+```
+
+## Numbers that count up [feat-count-1]
+
+Write the final number. The module reads it, counts to it, and puts the
+same string back — so a page without the module, and a reader who asked
+for less movement, both simply see the number. Nothing is ever hidden
+behind the animation.
+
+```html
+<span data-kp-count>1204</span>
+```
+
+Which character groups the digits and which one is the decimal point is
+not decidable from the string: `1.204` is one thousand two hundred and
+four in Dutch and one-point-two-oh-four in English. The nearest `lang`
+decides, so the module never guesses.
+
+```html
+<p lang="nl"><span data-kp-count>1.118.204,75</span></p>
+<p lang="en"><span data-kp-count>1,204.50</span></p>
+```
+
+Two knobs, both custom properties, so a theme may answer them and you may
+override one without losing the other. `--kp-count` is how long it takes
+in milliseconds and `--kp-count-from` is where it starts. **`--kp-count: 0`
+means no counting at all** — a deliberate zero, not an absent value.
+
+The element carries `data-kp-count-state`: `running` while it counts,
+`done` afterwards. A `kp-count` event fires when it lands, with the value
+in `detail`.
+
+## Two surfaces a theme may paint on a button [scope-16, scope-17]
+
+Every button carries an empty `.kp-button__edge`, out of flow and inert
+unless a register styles it. Two themes run an oxide film along it; the
+rest never notice it is there. You do not have to do anything.
+
+The second is optional and is yours to fill: a small reading above the
+control.
+
+```jsx
+<Button variant="primary" readout="READY">
+    Send
+</Button>
+```
+
+It is decoration over a control that already has a name, so it carries
+`aria-hidden` and is never announced — put meaning in the label, not here.
+A theme that does not style it shows nothing, and a page that passes no
+`readout` renders no element at all.
+
+## The pointer, for a theme that wants it [scope-16]
+
+A theme that declares `--kp-pointer: track` has `--kp-px` and `--kp-py`
+written to the root as the pointer moves, both 0 to 1. That is all: the
+theme decides what to do with them, and a theme that does not ask pays
+nothing. The bus writes once per animation frame, does not run under
+reduced motion, and removes what it wrote when the module is detached.
+
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package

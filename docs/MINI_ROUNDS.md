@@ -154,3 +154,5 @@ difference` was picked for its effect on the label and never evaluated
 against the ground. A demo page is a measurement instrument; the colours
 on it are read in the browser before it is published, the same way a
 register's colours are.
+
+| fix-16-M1 | Did a documentation gate catch a fault before a person did? Measured at the next document a phase writes: `check-docs-runnable`, `check-doc-quotes` and `check-docs-private` either pass it on the first run or they do not. | open |

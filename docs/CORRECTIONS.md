@@ -2443,7 +2443,8 @@ reason is worth writing down in both cases.
 **`grotesk-press` was `fix-12` a third time, one storey down.** The
 register carried a correct `:active` rule with a correct token and it
 never painted: the hover rule above it carries three `:not(.class)`
-clauses, so it outranks the press by two steps of weight, and a pointer is
+clauses, so it outranks the press by two steps of weight — six against four,
+measured by calling `weight()` rather than by counting in prose — and a pointer is
 always hovering while it presses. Not a later layer beating a state — a
 longer selector in the same layer doing it.
 `gates/check-pressed-state.mjs` now compares the weight of each control's
@@ -2543,3 +2544,84 @@ entry may now name a colour pair instead, and it still has to measure
 what it says — an entry cannot outlive the thing it excuses, in either
 form. The stale entry for `ticker`, a theme `scope-11` removed, went with
 it.
+
+## fix-16 · The documents said things the code does not say (2026-09-12)
+
+**1 · What went wrong.** Phase 8's honesty pass found eleven claims in the
+project's own documents that the package does not keep. Four were quoted
+messages in shapes nothing prints — `theme discovery broke: expected 25,
+found 24` where the code says `expected N themes, found M [list]`; a flash
+message missing its `— SC 2.3.1 allows 3.` tail and naming a keyframe
+`fx-flicker` that does not exist among the `kp-*` ones; and twice "the
+twenty-five names" against a package that ships twenty-two. Three were
+counts: the README's "Thirty gates" against thirty-four, its "some 2500
+tests" against 2,736, and `docs/ARCHITECTURE_REFERENCE.md`'s "25 blocks".
+One was a decision record describing `fonts/LICENSES.md`, a file never
+made — the build chose `fonts/<family>/LICENSE` instead. One was the
+README claiming no theme carries a recorded shortfall while three do. One
+was `docs/TROUBLESHOOTING.md` claiming to replace two documents that now
+exist. And one was in `CLAUDE.md` itself: "nothing runs on a server",
+while `.github/workflows/release.yml` builds every release and
+`pages.yml` publishes the site. Only `ci.yml` was ever deleted.
+
+**2 · Which gate let it through.** None, and none could: thirty-four gates
+read the code and a person reads the prose, so nobody ran the prose. The
+procedure names this exact fault from HTTPSwitchboard, where a README
+showed an argument the binary had refused since its previous major.
+
+**3 · Where the same fault sits.** The property is **a document asserting
+something the package can be asked about**, and there are three kinds
+here. Searched with `git ls-files '*.md' | xargs grep -oE` for each:
+`npm run <script>` against `package.json`'s scripts (265 claims, all
+real); a backticked path that looks like a file this repository ships,
+in the thirteen documents a person FOLLOWS rather than the records
+(21 of the 23 first flagged were records correctly naming what was there
+at the time); and `from '@kp-soft/themes/…'` against the export map. The
+fourth kind — a quoted message — needed its own search, against the whole
+source as one body of text.
+
+**4 · How we prevent recurrence.** Three gates, all in `npm run gates`
+and in the commit hook:
+
+- `gates/check-docs-runnable.mjs` — every command, path and import subpath
+  a followed document names is real. 265 claims.
+- `gates/check-doc-quotes.mjs` — every message a followed document quotes
+  verbatim is a string the source really prints. A quote carrying a
+  placeholder is skipped, because `<file>:NN names …` is a claim about a
+  SHAPE and matching those turned out to need a comparison subtle enough
+  to be wrong quietly. Two attempts at it reported nineteen legitimate
+  rows before that was clear, and a gate that cries wolf is one people
+  learn to skip. It costs nothing: every one of the four real faults was
+  verbatim.
+- `gates/check-docs-private.mjs` — nothing of a refused shape in any
+  document, and the things already published held to their count.
+
+Plus two unit tests that bind a hand-written number to its source: the
+README's gate count against the hook's, and `CLAUDE.md`'s document table
+against `docs/`.
+
+**5 · What the remedy costs.** Three gates and two tests, seconds in the
+chain. The real cost was in the building: the quote gate passed its own
+drills twice before it worked, because its first matcher let 1,031
+template literals between them match every sentence, and its second parsed
+JavaScript strings with a regular expression and silently lost every
+message in a file containing an apostrophe — including one this very gate
+then reported as unprintable.
+
+**6 · Who enforces it.** Code, all three, in the chain and in the hook.
+
+**7 · How we measure that it works.** At the next document a phase
+writes: it either passes these three on the first run or it does not, and
+either answer is information. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** If a false positive ever
+makes someone reach for `--no-verify`, the quote gate narrows to an
+explicit list of messages worth holding rather than all of them.
+
+**9 · Gezocht met.** `git ls-files '*.md' | xargs grep -ohE '\bnpm run
+[a-z][a-z0-9:_-]*'` for the commands; the three gates themselves for the
+paths, imports and quotes; `gh repo view --json visibility` and
+`ls .github/workflows/` for the two claims about the repository itself.
+
+**10 · When we review the measure.** At round seven's retrospective, with
+the question: did a gate catch a documentation fault before a person did.

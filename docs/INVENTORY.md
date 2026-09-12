@@ -131,8 +131,8 @@ file and, where useful, its line.
 | INV-D2 | CLAUDE.md | CLAUDE.md | present, stale |
 | INV-D3 | HANDOFF.md | HANDOFF.md | present |
 | INV-D4 | docs/SCOPE.md | docs/SCOPE.md | present, approved |
-| INV-D5 | docs/THEMING.md | docs/THEMING.md | verbatim copy, foreign paths |
-| INV-D6 | docs/CYBERPUNK_THEME_RESEARCH.md | docs/CYBERPUNK_THEME_RESEARCH.md | verbatim copy |
+| INV-D5 | docs/legacy/THEMING.md | docs/legacy/THEMING.md | verbatim copy, foreign paths |
+| INV-D6 | docs/legacy/CYBERPUNK_THEME_RESEARCH.md | docs/legacy/CYBERPUNK_THEME_RESEARCH.md | verbatim copy |
 | INV-D7 | docs/CORRECTIONS.md | docs/CORRECTIONS.md | present |
 | INV-D8 | docs/MINI_ROUNDS.md | docs/MINI_ROUNDS.md | present, one open item |
 | INV-D9 | docs/REQUESTS_FROM_CONSUMERS.md | docs/REQUESTS_FROM_CONSUMERS.md | present |
@@ -675,7 +675,7 @@ flicker that runs once. Needs the class.
 
 `:190-202` with `@keyframes fx-pulse` at :269-273. A pseudo-element
 carrying a static `box-shadow` whose **opacity** is animated on a 2.6 s
-infinite loop — the technique `docs/CYBERPUNK_THEME_RESEARCH.md`
+infinite loop — the technique `docs/legacy/CYBERPUNK_THEME_RESEARCH.md`
 prescribes. Needs the class.
 
 ### INV-F14 · `.fx-glitch`
@@ -1081,7 +1081,7 @@ several statements and a list of open questions carried into Phases 1
 and 2. Non-code artefact; treated here as a claim to check, not as
 evidence.
 
-### INV-D5 · docs/THEMING.md
+### INV-D5 · docs/legacy/THEMING.md
 
 78 lines, a verbatim copy of kp-soft's maintainer guide taken at commit
 `2983abb` (header line 1 says so). It describes kp-soft's file layout —
@@ -1093,7 +1093,7 @@ mental model, the register layer and the taste rules ("texture opacity at
 or under ~6 %", "a theme changes tokens, never component markup") does
 apply to the code in this package.
 
-### INV-D6 · docs/CYBERPUNK_THEME_RESEARCH.md
+### INV-D6 · docs/legacy/CYBERPUNK_THEME_RESEARCH.md
 
 83 lines, also verbatim from kp-soft. Live findings from cyberpunk.net,
 n-o-d-e.net, Arwes and Cyberpunk 2077, the "five pillars", and technique
@@ -1161,7 +1161,7 @@ the end of this section.
    `.microlabel` "belong to the React `fx/` components". No component in
    `fx/` or `components/` emits any of them (INV-F25); they are hooks for
    consumer markup.
-6. **`docs/THEMING.md` describes another repository.** Its "adding a
+6. **`docs/legacy/THEMING.md` describes another repository.** Its "adding a
    theme = two edits" instruction names `resources/css/app.css` and
    `resources/js/hooks/use-appearance.tsx`, and its gate table names a
    PHP test and a TypeScript gate. In this repository the equivalent
@@ -1433,7 +1433,7 @@ stylesheets, and `css/components.css` never writes `data-slot`.
 - INV-R17 · Motion block under `prefers-reduced-motion: no-preference` — `.fx-flicker` 2.2s once `:238-242`, `.fx-pulse` **infinite** opacity on `::after`, knob `--fx-pulse-duration` `:246-258`, `.fx-glitch` hover-only RGB split needing `data-text` `:262-286`, `.fx-media` `:289-292`, `.fx-cellpop` `:295-297` (`css/cyberpunk-register.css:236-298`)
 - INV-R18 · Keyframes `fx-flicker` (retimed after check-motion measured 5.5/s, `:300-304`), `fx-pulse`, `fx-glitch-a/b`, `fx-rgb-split`, `fx-cellflash` (`css/cyberpunk-register.css:305-397`)
 - INV-R19 · Cyberpunk rules in the base layer — `::selection` `:296-299` (identical to the global one at `:427-430`), `.glow-primary/.glow-accent/.glow-card` `:301-325`, `.gradient-text` `:328-333`; cyberpunk deliberately absent from the per-theme signature block `:534-535` (`css/_rules.css`)
-- INV-R20 · Research document — T1 sections `:3-84`; round six section `:85-178`: cyberpunk.net navbar `clip-path` verbatim `:101-103`, buttons and `--rotated` notch `:107-114`, tear as SVG `:115-120`, dossiers `:121-126`, Dribbble `:129-145`, webflow glitch (4s infinite, rejected) `:146-157`, heading lines `:158-166`, libraries `:167-178` (`docs/CYBERPUNK_THEME_RESEARCH.md`)
+- INV-R20 · Research document — T1 sections `:3-84`; round six section `:85-178`: cyberpunk.net navbar `clip-path` verbatim `:101-103`, buttons and `--rotated` notch `:107-114`, tear as SVG `:115-120`, dossiers `:121-126`, Dribbble `:129-145`, webflow glitch (4s infinite, rejected) `:146-157`, heading lines `:158-166`, libraries `:167-178` (`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`)
 - INV-R21 · Gate code that names cyberpunk — `check-motion.mjs:33` (three-file CSS list), `compliance.mjs:42-45` (DI5 scope = themes the register selects) and `:49-65`, `gates.test.mjs:114-118` (pins `fx-flicker` **by name** at 2200ms; breaks when the keyframe is renamed), `gates.test.mjs:142` (KT2 opt-out pair), `check-invariants.mjs:114,188`, `colour.mjs:144,183`, `config.json` `stateVisibilityFloor.why`, `check-layers.mjs:36`, `checksums.mjs:35`, `check-migration.mjs:45`, `generate-bundle.mjs:39`, `check-utilities.mjs:54`, `generate-examples.mjs:31`, `generate-showcase.mjs:134,231`, `gates/site/chrome.mjs:64-65`
 - INV-R22 · Home Assistant output — `ha/kp-cyberpunk.yaml` generated from the tokens; `accent-color` ← `fx-signal` (`gates/generate-ha-themes.mjs:44`), card transition ← `fx-duration`/`fx-ease` (`:106`); a palette change regenerates it (`npm run check:ha`)
 

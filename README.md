@@ -16,18 +16,22 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty gates run in seconds and refuse a commit that breaks them: token
-parity, layer discipline, the hook vocabulary, the register coverage, the
-shipped fonts, the strings dictionary, the types, and whether every
-generated file still matches its source. A behaviour suite of some 2500
-tests runs in Chromium and Firefox on demand (`npm run test:browser`).
+Thirty-five gates run in seconds and refuse a commit that breaks them:
+token parity, layer discipline, the hook vocabulary, the register
+coverage, the shipped fonts, the strings dictionary, the types, whether
+every command, path and quoted message a document carries is real, and
+whether every generated file still matches its source. A behaviour suite of 2,736 tests
+runs in Chromium and Firefox on demand (`npm run test:browser`).
 
 Five checks are **advice, not gates** [Kenny, 2026-09-09]: contrast, the
 design invariants, the flash threshold and reduced-motion guards, and the
 texture ceiling. They are the accessibility floors, and they are still
 written down, still measured and still shipped — `npm run advice` prints
-what they find — but they no longer refuse a commit, and no theme carries
-a recorded exemption from one any more. If you consume this package and
+what they find — but they no longer refuse a commit. Three themes do
+carry a recorded shortfall, each with its measurement and the reason it
+was chosen: `tests/surfaces.spec.mjs` names them, and makes each one keep
+measuring what it claims, so an excuse cannot outlive the thing it
+excuses. If you consume this package and
 need those floors held, run `npm run advice` yourself and read it: the
 package tells you what it measures, and does not promise to have obeyed
 it.
@@ -600,8 +604,8 @@ Extracted from kp-soft at commit `2983abb`
 `resources/css/app.css`, `resources/js/hooks/use-appearance.tsx`,
 `resources/js/components/theme-switcher.tsx`,
 `resources/js/components/fx/{boot-sequence,decipher-text,digital-rain,scramble-number}.tsx`,
-`gates/check-contrast.mjs`, `docs/THEMING.md`,
-`docs/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
+`gates/check-contrast.mjs`, `docs/legacy/THEMING.md`,
+`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
 
