@@ -810,4 +810,37 @@
     [data-theme='formal'] .kp-media-figure {
         color: var(--muted-foreground);
     }
+
+    /* ── The rule doubles [gap-4, approved 2026-09-12] ─────────────────
+       A formal document frames what it wants noticed twice: a thin line
+       inside a thicker one, the way a diploma, a certificate or a
+       letterhead does. Touching a control draws that second line just
+       inside the first, in the theme's own navy.
+
+       Formal is the package's default — what a consumer gets without
+       choosing anything — so the gesture must not draw attention. This is
+       the quietest of the six, and that is the point.
+
+       Measured in firefox 2026-09-12: two pixels in, label contrast 11.67,
+       the box unchanged. */
+    [data-theme='formal'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-button::after {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='formal'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='formal'] .kp-button:focus-visible::after {
+        opacity: 1;
+    }
 }

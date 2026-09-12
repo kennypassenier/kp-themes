@@ -10993,6 +10993,29 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
+       Windows 95 underlined one letter in every label — the accelerator —
+       and showed it only once you held Alt. Touching a control does the
+       same here: the underline appears under the marked letter.
+
+       No movement, no colour, no shadow. That is precisely the feedback
+       those desktops gave, and retro is the theme where the quotation is
+       sharpest.
+
+       It asks something of the consumer, and it is the only one of the six
+       that does: the letter has to be marked, with `data-kp-key` on a span
+       inside the label. A consumer who marks nothing sees nothing, which
+       is the right failure — a theme may offer something that only works
+       when you use it. */
+    [data-theme='retro'] .kp-button [data-kp-key] {
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='retro'] .kp-button:hover:not(:disabled) [data-kp-key],
+    [data-theme='retro'] .kp-button:focus-visible [data-kp-key] {
+        border-block-end-color: currentcolor;
+    }
 }
 
 @layer kp.register {
@@ -15763,6 +15786,40 @@
     [data-theme='terminal'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── The cursor arrives [gap-4, approved 2026-09-12] ───────────────
+       A terminal puts a blinking block where it expects your input.
+       Touching a control puts that block after the label — the same block
+       this theme already draws inside its fields, on the same keyframe and
+       at the same rate, so there is one cursor in this theme and not two.
+
+       The only one of the six that moves in time, and therefore the only
+       one the motion rules have anything to say about. One blink a second
+       is far under the three-per-second threshold, and `kp-caret` is
+       already in the table at that rate. */
+    [data-theme='terminal'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-button-caret-inset, 0.55rem);
+        inset-inline-end: var(--kp-button-caret-gap, 0.5rem);
+        inline-size: 1ch;
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-size: 0 0;
+        pointer-events: none;
+    }
+
+    [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='terminal'] .kp-button:focus-visible::after {
+        background-size: 1ch 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+        [data-theme='terminal'] .kp-button:focus-visible::after {
+            animation: kp-caret 1s steps(1) infinite;
+        }
     }
 }
 
@@ -23109,6 +23166,48 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The fan opens [gap-4, approved 2026-09-12] ────────────────────
+       The sunburst is the motif of this style — the Chrysler Building,
+       every lift door of 1930. Touching a control opens a fan of rays out
+       of its lower corner, clipped by the control itself, in the gold the
+       theme already has.
+
+       The loudest of the six gestures on purpose: deco is the theme that
+       draws a double gold rule under a heading. Quiet would sit stranger
+       here than loud.
+
+       Measured in firefox 2026-09-12: the rays sit behind the label at
+       34% and the label reads 10.36. */
+    [data-theme='deco'] .kp-button {
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    [data-theme='deco'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(
+            from var(--kp-fan-from, 200deg) at 0% 120%,
+            hsl(from var(--primary) h s l / var(--kp-fan-alpha, 0.34)) 0deg var(--kp-fan-ray, 3deg),
+            transparent var(--kp-fan-ray, 3deg) var(--kp-fan-step, 9deg)
+        );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-button::before {
+            transition: opacity calc(var(--fx-duration, 180ms) * 1.4) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='deco'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='deco'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
 }
 
 @layer kp.register {
@@ -23868,6 +23967,37 @@
        the picture rather than with the words under it. */
     [data-theme='light'] .kp-media-figure {
         color: var(--muted-foreground);
+    }
+
+    /* ── The shade tightens [gap-4, approved 2026-09-12] ───────────────
+       The only one of the six with no world of its own to draw on. Light
+       is the plain light theme, and that is deliberate — there is no era,
+       no material and no instrument to quote.
+
+       So physics rather than ornament: the control floats above the paper
+       and settles toward it when touched, which makes its shadow shorter
+       and harder. Exactly the reverse of shade-light, which rises — and
+       that is on purpose, because otherwise those two would share a
+       gesture.
+
+       Measured in firefox 2026-09-12: the blur goes from 14px to 5, the
+       control settles 2px, label contrast 11.74, the box unchanged. */
+    [data-theme='light'] .kp-button {
+        box-shadow: 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-button {
+            transition:
+                box-shadow var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='light'] .kp-button:hover:not(:disabled),
+    [data-theme='light'] .kp-button:focus-visible {
+        translate: 0 2px;
+        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
     }
 }
 
@@ -26264,6 +26394,51 @@
     [data-theme='blueprint'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── The dimension witness [gap-4, approved 2026-09-12] ────────────
+       A technical drawing calls out a length with two witness lines at its
+       ends. Touching a control sets them beside it, in the amber this
+       theme already reserves for its call-outs — the control becomes a
+       measured length for as long as you are on it.
+
+       The same instrument as the measurement frame this register took from
+       the command table in round six: four corner brackets reporting the
+       box they hold. This is that tool on a smaller thing.
+
+       Outside the control, so the box does not move: measured in firefox
+       2026-09-12, unchanged at rest and hovered, label contrast 9.33. */
+    [data-theme='blueprint'] .kp-button::before,
+    [data-theme='blueprint'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: calc(-1 * var(--kp-witness-overhang, 0.4rem));
+        inline-size: 1px;
+        background: var(--accent);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='blueprint'] .kp-button::before {
+        inset-inline-start: calc(-1 * var(--kp-witness-gap, 0.35rem));
+    }
+
+    [data-theme='blueprint'] .kp-button::after {
+        inset-inline-end: calc(-1 * var(--kp-witness-gap, 0.35rem));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-button::before,
+        [data-theme='blueprint'] .kp-button::after {
+            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='blueprint'] .kp-button:focus-visible::before,
+    [data-theme='blueprint'] .kp-button:focus-visible::after {
+        opacity: 1;
     }
 }
 
@@ -29606,6 +29781,39 @@
        the picture rather than with the words under it. */
     [data-theme='formal'] .kp-media-figure {
         color: var(--muted-foreground);
+    }
+
+    /* ── The rule doubles [gap-4, approved 2026-09-12] ─────────────────
+       A formal document frames what it wants noticed twice: a thin line
+       inside a thicker one, the way a diploma, a certificate or a
+       letterhead does. Touching a control draws that second line just
+       inside the first, in the theme's own navy.
+
+       Formal is the package's default — what a consumer gets without
+       choosing anything — so the gesture must not draw attention. This is
+       the quietest of the six, and that is the point.
+
+       Measured in firefox 2026-09-12: two pixels in, label contrast 11.67,
+       the box unchanged. */
+    [data-theme='formal'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-button::after {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='formal'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='formal'] .kp-button:focus-visible::after {
+        opacity: 1;
     }
 }
 

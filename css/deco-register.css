@@ -1203,4 +1203,46 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The fan opens [gap-4, approved 2026-09-12] ────────────────────
+       The sunburst is the motif of this style — the Chrysler Building,
+       every lift door of 1930. Touching a control opens a fan of rays out
+       of its lower corner, clipped by the control itself, in the gold the
+       theme already has.
+
+       The loudest of the six gestures on purpose: deco is the theme that
+       draws a double gold rule under a heading. Quiet would sit stranger
+       here than loud.
+
+       Measured in firefox 2026-09-12: the rays sit behind the label at
+       34% and the label reads 10.36. */
+    [data-theme='deco'] .kp-button {
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    [data-theme='deco'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(
+            from var(--kp-fan-from, 200deg) at 0% 120%,
+            hsl(from var(--primary) h s l / var(--kp-fan-alpha, 0.34)) 0deg var(--kp-fan-ray, 3deg),
+            transparent var(--kp-fan-ray, 3deg) var(--kp-fan-step, 9deg)
+        );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-button::before {
+            transition: opacity calc(var(--fx-duration, 180ms) * 1.4) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='deco'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='deco'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
 }

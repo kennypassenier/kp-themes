@@ -1791,4 +1791,27 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
+       Windows 95 underlined one letter in every label — the accelerator —
+       and showed it only once you held Alt. Touching a control does the
+       same here: the underline appears under the marked letter.
+
+       No movement, no colour, no shadow. That is precisely the feedback
+       those desktops gave, and retro is the theme where the quotation is
+       sharpest.
+
+       It asks something of the consumer, and it is the only one of the six
+       that does: the letter has to be marked, with `data-kp-key` on a span
+       inside the label. A consumer who marks nothing sees nothing, which
+       is the right failure — a theme may offer something that only works
+       when you use it. */
+    [data-theme='retro'] .kp-button [data-kp-key] {
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='retro'] .kp-button:hover:not(:disabled) [data-kp-key],
+    [data-theme='retro'] .kp-button:focus-visible [data-kp-key] {
+        border-block-end-color: currentcolor;
+    }
 }

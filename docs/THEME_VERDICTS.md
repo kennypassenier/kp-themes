@@ -336,3 +336,44 @@ not.
 **Both themes' words were rewritten.** Dark's copy still described the old
 theme — "quiet hours", "112 irregular points", "a light unsaturated
 violet" — none of which is true of the theme that replaced it.
+
+## Every theme answers a hover with something of its own, 2026-09-12
+
+Kenny's complaint of 2026-09-11: a hover on a button is not a simple
+colour change — a bracket may slide around the label, a progress sliver
+may fill along the edge, a data label may light up; it should feel like
+physical feedback from a console. He chose **per theme, like the quirks**,
+and approved all six.
+
+**Six, not twelve.** The count in the queue was taken before the quirks
+landed and included four themes that have since left. It took four
+measurements to get right and three of them were wrong because of the
+probe rather than the code: reading only the button's pseudo-elements and
+not the label's; splitting a string on a colon when the label itself
+carried two; and leaving the pointer where the previous navigation had
+put it, so the control was already hovered when the resting state was
+read — which reported "nothing" for two themes that invert completely.
+
+| Theme | The gesture | Where it comes from |
+| --- | --- | --- |
+| blueprint | two witness lines beside the control | a drawing calls out a length that way, and this register already has the measurement frame |
+| deco | a fan of rays out of the lower corner | the sunburst, the motif of the style |
+| formal | a second rule drawn just inside the first | a diploma or a letterhead frames twice |
+| light | the control settles toward the paper and its shade tightens | no world to quote, so physics — and the reverse of shade-light on purpose |
+| retro | the accelerator underline appears | Windows 95 showed it when you held Alt |
+| terminal | the theme's own caret arrives after the label | the same block it already draws in its fields, on the same keyframe |
+
+Measured in firefox before they were shown and again after they were
+built: label contrast between 9.38 and 17.12, and not one of the six
+changes the control's box.
+
+**Retro asks something of the consumer**, and it is the only one that
+does: the letter has to be marked with `data-kp-key` inside the label. A
+consumer who marks nothing sees nothing, which is the right failure, and
+`tests/fixtures/accelerator.html` holds both halves.
+
+**Terminal's drill reported false green first**, and the reason is worth
+keeping: the keyframe sets `background-size` itself, so with motion
+allowed the hover's own declaration is redundant and removing it changed
+nothing. It is the only thing putting the cursor there under reduced
+motion, which is what the second test measures.

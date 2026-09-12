@@ -756,4 +756,35 @@
     [data-theme='light'] .kp-media-figure {
         color: var(--muted-foreground);
     }
+
+    /* ── The shade tightens [gap-4, approved 2026-09-12] ───────────────
+       The only one of the six with no world of its own to draw on. Light
+       is the plain light theme, and that is deliberate — there is no era,
+       no material and no instrument to quote.
+
+       So physics rather than ornament: the control floats above the paper
+       and settles toward it when touched, which makes its shadow shorter
+       and harder. Exactly the reverse of shade-light, which rises — and
+       that is on purpose, because otherwise those two would share a
+       gesture.
+
+       Measured in firefox 2026-09-12: the blur goes from 14px to 5, the
+       control settles 2px, label contrast 11.74, the box unchanged. */
+    [data-theme='light'] .kp-button {
+        box-shadow: 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-button {
+            transition:
+                box-shadow var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='light'] .kp-button:hover:not(:disabled),
+    [data-theme='light'] .kp-button:focus-visible {
+        translate: 0 2px;
+        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
 }

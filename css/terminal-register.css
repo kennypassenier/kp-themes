@@ -1431,4 +1431,38 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The cursor arrives [gap-4, approved 2026-09-12] ───────────────
+       A terminal puts a blinking block where it expects your input.
+       Touching a control puts that block after the label — the same block
+       this theme already draws inside its fields, on the same keyframe and
+       at the same rate, so there is one cursor in this theme and not two.
+
+       The only one of the six that moves in time, and therefore the only
+       one the motion rules have anything to say about. One blink a second
+       is far under the three-per-second threshold, and `kp-caret` is
+       already in the table at that rate. */
+    [data-theme='terminal'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-button-caret-inset, 0.55rem);
+        inset-inline-end: var(--kp-button-caret-gap, 0.5rem);
+        inline-size: 1ch;
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-size: 0 0;
+        pointer-events: none;
+    }
+
+    [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='terminal'] .kp-button:focus-visible::after {
+        background-size: 1ch 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,
+        [data-theme='terminal'] .kp-button:focus-visible::after {
+            animation: kp-caret 1s steps(1) infinite;
+        }
+    }
 }

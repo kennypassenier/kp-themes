@@ -1155,4 +1155,49 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The dimension witness [gap-4, approved 2026-09-12] ────────────
+       A technical drawing calls out a length with two witness lines at its
+       ends. Touching a control sets them beside it, in the amber this
+       theme already reserves for its call-outs — the control becomes a
+       measured length for as long as you are on it.
+
+       The same instrument as the measurement frame this register took from
+       the command table in round six: four corner brackets reporting the
+       box they hold. This is that tool on a smaller thing.
+
+       Outside the control, so the box does not move: measured in firefox
+       2026-09-12, unchanged at rest and hovered, label contrast 9.33. */
+    [data-theme='blueprint'] .kp-button::before,
+    [data-theme='blueprint'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: calc(-1 * var(--kp-witness-overhang, 0.4rem));
+        inline-size: 1px;
+        background: var(--accent);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='blueprint'] .kp-button::before {
+        inset-inline-start: calc(-1 * var(--kp-witness-gap, 0.35rem));
+    }
+
+    [data-theme='blueprint'] .kp-button::after {
+        inset-inline-end: calc(-1 * var(--kp-witness-gap, 0.35rem));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-button::before,
+        [data-theme='blueprint'] .kp-button::after {
+            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::before,
+    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::after,
+    [data-theme='blueprint'] .kp-button:focus-visible::before,
+    [data-theme='blueprint'] .kp-button:focus-visible::after {
+        opacity: 1;
+    }
 }
