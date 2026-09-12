@@ -2182,3 +2182,8 @@ hover that paints no ground.
 open question is whether the same collision exists for the other states a
 register overrides — `:focus-visible` is already known to (DI2 exists
 because of it), and `:disabled` has not been looked at.
+
+**Kenny approved fix-12 on 2026-09-12 ("Klopt").** The measurement named
+in field 7 — the next new quirk that writes a hover background — is
+queued in `docs/MINI_ROUNDS.md` as `fix-12-M1` and comes due when
+grotesk's quirk is built. The correction does not close until then.

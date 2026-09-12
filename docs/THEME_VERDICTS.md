@@ -161,6 +161,11 @@ and a drill that drove that test red:
 | solstice | the low sun rakes once across the touched control, `kp-rake` | `css/solstice-register.css` |
 | brutalism | the thing names itself, in English, through `--kp-label` | `css/brutalism-register.css` |
 
+**Kenny's answers, 2026-09-12.** The six are signed off ("Klopt") and
+shade-dark is approved ("Goedkeuren"), so seven of the eight are closed.
+Grotesk is the one left, and his answer there was **neither** — see the
+note below, which also records that what he was shown was broken.
+
 **Two still open.** Grotesk was rejected — "als ik hover dan
 vergroot/verkleint de knop zelf, dat is geen wenselijk gedrag" — and needs
 a proposal that does not change the control's size. Shade-dark's hover was
@@ -180,3 +185,34 @@ and neither has been decided here:
    demo draws the mirrored button dropping onto its own offset with no
    shadow; the inversion's two bars would have replaced it. The inversion
    now excludes `.kp-button--mirror` and `:active`.
+
+## The shade collision, settled 2026-09-12 [S49]
+
+Kenny's answer to the first finding was **"De demo houdt gelijk"**: the
+approved round-six demo draws the primary, ghost and destructive buttons
+flat, and it keeps that. The light of shade-light and shade-dark reaches
+the plain control only — `:not([class*='kp-button--'])` in both registers
+— and the demo tests stay as they were. This is a decision, not an
+oversight, and it is written here so a later reader does not "fix" it.
+
+The second finding, the mirror button under high-contrast, he could not
+answer: _"geen idee wat je bedoelt, laat zien"_. It goes to a deep-dive
+round with the thing itself on screen.
+
+## Grotesk's first two proposals, and why one of them did not count
+
+Kenny answered **"allebei niet"** on 2026-09-12, and added: _"bij de
+grond komt aan was de achtergrondkleur van de knoppen helemaal fout btw,
+leek precies appelblauwzeegroen"_.
+
+He is right, and it was a defect in the demo rather than a matter of
+taste. Proposal A laid a block of the theme's red over the control with
+`mix-blend-mode: difference`. Difference subtracts, so on the white
+ground of grotesk the block painted `255-224, 255-6, 255-26` =
+`rgb(31, 249, 229)` — cyan, not red. The mechanism was chosen for what it
+does to the LETTERS and never checked for what it does to the GROUND
+behind them.
+
+So A was never seen. The next round shows two new proposals with their
+painted colours measured in the browser first, and says plainly that A's
+rejection rests on a demo that was broken.

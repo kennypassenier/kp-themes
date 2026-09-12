@@ -118,3 +118,29 @@ Kenny's answers at the release form, before the version was set:
 - **The version is 5.0.0, after the three procedure steps** that have not
   run for this round: the test-gap audit, the documentation pass and the
   field test. Not another alpha.
+
+## fix-12-M1 · Does the pressed-state gate actually catch the next one?
+
+**Open, queued 2026-09-12.** `gates/check-pressed-state.mjs` was written
+after the fault, so it has only ever been run against registers that were
+already repaired. The honest measurement is whether it fires on a quirk
+written without it in mind.
+
+**When:** at the first commit that adds grotesk's quirk to
+`css/grotesk-register.css`. That quirk paints a ground on `:hover` by
+design, so it is exactly the shape the gate exists for.
+
+**What counts as passing:** the gate refuses the commit before an
+`:active` rule is written, and accepts it after. If it stays silent, the
+fallback in the correction applies — widen the gate to every state a
+register overrides, not only the pressed one.
+
+## grotesk-demo · A proposal demo is measured before it is shown
+
+**Closed the moment it was opened, 2026-09-12.** Not a mini-round but a
+note, because the lesson is one line: proposal A for grotesk was shown to
+Kenny painting cyan, and nobody had looked at it. `mix-blend-mode:
+difference` was picked for its effect on the label and never evaluated
+against the ground. A demo page is a measurement instrument; the colours
+on it are read in the browser before it is published, the same way a
+register's colours are.
