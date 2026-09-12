@@ -322,13 +322,13 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                              |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven (6.0.0), Phase 6 — the development loop.** Stage 1 is closed. Stage 2 is closed: all twenty-five old themes carry their own quirk, and the two new ones are in with their registers                                                  |
-| Last completed gate | **Stage 2, closed 2026-09-12.** Twenty-six themes, twenty-six registers. The spectral instrument replaced dark and titanium joined, both built from their approved demos, both with their signals untouched                                        |
-| Next gate           | Stage 3, the removals: academia, mono, ticker and woodblock leave the set, and the consumers are told before the tag                                                                                                                               |
-| Open queue items    | `fix-12-M1` (does the pressed-state gate fire on a register written without it in mind — now waiting for one of the two new registers), plus the eight carried from stage 1: `CP1`, `gap-1` to `gap-7`, and `step-2`, `step-4`, `step-6`, `KT6-M1` |
-| AFK mode            | off                                                                                                                                                                                                                                                |
+| Field               | Value                                                                                                                                                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round seven (6.0.0), Phase 6 — the development loop.** All three stages are built: the repairs, the themes and the removals                                                                                       |
+| Last completed gate | **Stage 3, closed 2026-09-12.** Twenty-two themes. academia, mono, ticker and woodblock left, with six font families and 2.78 MB behind them                                                                        |
+| Next gate           | Phase 7 onward for this round: the test-gap audit, the documentation pass and the field test, then the version. Kenny tells the consumers before the tag, not after                                                 |
+| Open queue items    | `fix-12-M1` (the pressed-state gate never fired on a register written without it in mind — both new registers were), plus `CP1`, `gap-1` to `gap-7`, `step-2`, `step-4`, `step-6` and `KT6-M1` carried from stage 1 |
+| AFK mode            | off                                                                                                                                                                                                                 |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer

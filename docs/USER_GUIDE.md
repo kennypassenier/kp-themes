@@ -44,7 +44,7 @@ An unknown stored value is corrected to the default theme as soon as the
 picker is attached; `initializeTheme(fallback)` names another, and
 `applyTheme(name, { strict: true })` throws instead of substituting.
 
-## The twenty-five themes
+## The twenty-two themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -62,17 +62,14 @@ picker is attached; `initializeTheme(fallback)` names another, and
 | `solstice` | Solstice | yes |
 | `brutalism` | Brutalism | no |
 | `deco` | Art Deco | yes |
-| `academia` | Dark Academia | yes |
 | `phantom` | Phantom | yes |
-| `ticker` | Ticker | yes |
-| `woodblock` | Woodblock | no |
 | `shade-light` | Shade (light) | no |
 | `shade-dark` | Shade (dark) | yes |
-| `mono` | Mono | no |
 | `retro` | Retro | no |
 | `grotesk` | Grotesk | no |
 | `lapis` | Lapis | yes |
 | `nostromo` | Nostromo | no |
+| `titanium` | Titanium | yes |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `solstice`
 on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
@@ -83,7 +80,7 @@ is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
 (row 4); `brutalism` is the fifth, from "Hard Copy" (row 5); and the
 remaining nineteen were lifted the same way over 2026-09-08, each from
-its own approved demo, so all twenty-five now carry a register.
+its own approved demo, so all twenty-two now carry a register.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -96,7 +93,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those twenty-five names since 1.1.0,
+The `Theme` type is the union of exactly those twenty-two names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -619,11 +616,11 @@ its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 
 Every theme has a register — the opt-in stylesheet carrying its
 expression — and a page with a picker can end up on any of the
-twenty-five. There are two ways to handle that, and the package supports
+twenty-two. There are two ways to handle that, and the package supports
 both.
 
 The simple one is `dist/kp-themes.css`: twenty-nine stylesheets in one
-file, including all twenty-five registers, each scoped to
+file, including all twenty-two registers, each scoped to
 `[data-theme='name']`. Load it once and a theme change fetches nothing —
 `applyTheme()` sets the attribute and the right register is already
 there. It costs 693 kB minified.
@@ -749,7 +746,7 @@ the flash threshold, so they are literals rather than knobs:
 | --- | --- |
 | `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in sepia, 240 ms in solstice |
 | `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-five answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
+| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-two answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
@@ -763,11 +760,10 @@ of the field a person is typing into in terminal (3.1.1), a
 badge that settles in pastel, a drifting contour layer in forest, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
-brutalism, a double gold rule in deco, a slower gold rule in academia, a
+brutalism, a double gold rule in deco, a
 badge that slides in in phantom (and since 5.0.0 its cut-paper register:
 the plate under a `<mark>`, the rail under a heading, the torn-paper
-divider, the calling card on arrival), a hanko seal after a heading in
-woodblock,
+divider, the calling card on arrival),
 the bevel register in retro (and since 5.0.0 the whole desktop: the
 dither a headline clears out of, the selection bar under a `<mark>`, the
 groove under a heading and as divider, the POST on arrival), and since

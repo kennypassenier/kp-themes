@@ -6,7 +6,7 @@
 //   (a) the ring    — `.kp-button` set its own `box-shadow` in
 //                     @layer kp.components and the later layer replaced
 //                     the inner half of the ring `:focus-visible` paints
-//                     in @layer kp.base. Half a ring in all 24 themes.
+//                     in @layer kp.base. Half a ring in every theme.
 //   (b) the register— every button rule in css/cyberpunk-register.css
 //                     selected `[data-slot='button']`, which
 //                     css/components.css never writes, so the register
@@ -63,14 +63,14 @@ test.describe('the button', () => {
     // Drill [KT3]: the `.kp-button:focus-visible` rule removed from
     // css/components.css — the box-shadow falls back to the brutalist
     // offset alone, `rgb(127, 138, 159) 0px 0px 0px 0px` in formal, and all
-    // 24 themes are named. That is what the released package paints, and it
+    // every theme is named. That is what the released package paints, and it
     // is the state this test was watched failing in before the rule was
     // written (rule 8).
     for (const [channel, id] of [
         ['framework-free', 'plain-md'],
         ['React', 'react-md'],
     ]) {
-        test(`both halves of the focus ring reach .kp-button in all 24 themes, ${channel} [AR30]`, async ({ page }) => {
+        test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, async ({ page }) => {
             await tabTo(page, id);
             /** @type {string[]} */
             const broken = [];
@@ -149,13 +149,13 @@ test.describe('the button', () => {
     // ── (c) The size scale ────────────────────────────────────────────
     //
     // Drill [KT3]: the `.kp-button--sm` and `.kp-button--lg` blocks removed
-    // from css/components.css — "formal: 36.0 / 36.0 / 36.0", all 24 themes
+    // from css/components.css — "formal: 36.0 / 36.0 / 36.0", every theme
     // named, in both channels and both browsers.
     for (const [channel, prefix] of [
         ['framework-free', 'plain'],
         ['React', 'react'],
     ]) {
-        test(`the three sizes separate in all 24 themes, ${channel} [TH111]`, async ({ page }) => {
+        test(`the three sizes separate in every theme, ${channel} [TH111]`, async ({ page }) => {
             /** @type {string[]} */
             const flat = [];
             for (const theme of THEMES) {

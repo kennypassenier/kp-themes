@@ -344,7 +344,7 @@ export async function paintedFocusPixels(page, testId, { pad = 12, settleMs = 40
  * Not a sleep and not a retry: the reading is taken again until it is the
  * value, which is the rule KT16 wrote for every read after an action. The
  * last reading comes back either way, so a caller collecting a report
- * across twenty-five themes still names what it saw rather than only that
+ * across every theme still names what it saw rather than only that
  * it gave up.
  *
  * @param {import('@playwright/test').Page} page

@@ -672,10 +672,26 @@ the spectral instrument; nine themes get the quirk settled for them in
 [THEME_VERDICTS.md](THEME_VERDICTS.md); blueprint takes the measurement
 frame from the command table. Lapis waits on its second proposal.
 
-**Stage 3 — the removals.** academia, mono, ticker and woodblock leave
-the set, and every consumer is told before the tag rather than after.
-This is last on purpose: it is the only part of the round that cannot be
-undone without rolling back a version.
+**Stage 3 — the removals.** **Done, 2026-09-12.** academia, mono, ticker
+and woodblock left the set: four theme sources, four registers, four
+register specs, their concept pages, showcase fixtures, Home Assistant
+themes, site stories, hook rows and concept copy. Six font families went
+with them — Lora, Cormorant Garamond, IBM Plex Sans, Zen Kaku Gothic New,
+Shippori Mincho and Inter Tight, 2.78 MB over twelve faces. IBM Plex Mono
+stayed, because dark names it now.
+
+`docs/ADOPTION_PROMPTS.md` says plainly, in both consumer prompts, that
+the four are gone in 6.0.0. Telling the consumers themselves is Kenny's,
+at the tag.
+
+Two things came out of doing it. The sweep that stripped the register
+mentions walked into `.claude/worktrees/` and rewrote 138 files across
+sixteen other sessions' checkouts, all restored and recorded as `fix-14`.
+And dark's `--theme-font-mono` had been pointing at `'IBM Plex Mono'`
+since the day it was written, which is the UPSTREAM name: that family
+declares a Reserved Font Name, so the package ships it renamed as
+`'KP Ticker Mono'` and dark had been falling back to the system monospace
+all along. Found only because the removal made the family look orphaned.
 
 **Not in any stage:** counters are wanted rather than essential and land
 if the stages above leave room; carousels are refused; an icon set is a

@@ -1,15 +1,15 @@
 # @kp-soft/themes
 
-The house themes as a shared package: twenty-five `data-theme` palettes
-— thirteen light (formal, light, pastel, forest, high-contrast, sepia,
-brutalism, woodblock, shade-light, mono, retro, grotesk, nostromo) and
-twelve dark (dark, cyberpunk, synthwave, terminal, blueprint, solstice,
-deco, academia, phantom, ticker, shade-dark, lapis) — as plain CSS custom
-properties, the element-level rules that make a theme complete (links,
-code, selection, form fields, print), eighteen components, a theme
-picker, and a register for every one of the twenty-five themes — the
-opt-in stylesheet that carries a theme's own expression, from cyberpunk's
-notches and razor tear to academia's marginalia.
+The house themes as a shared package: twenty-two `data-theme` palettes
+— ten light (formal, light, pastel, forest, high-contrast, sepia,
+brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
+cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
+shade-dark, lapis, nostromo) — as plain CSS custom properties, the
+element-level rules that make a theme complete (links, code, selection,
+form fields, print), eighteen components, a theme picker, and a register
+for every one of the twenty-two themes — the opt-in stylesheet that
+carries a theme's own expression, from cyberpunk's notches and razor tear
+to titanium's oxide film.
 
 **Everything exists in two channels.** React, for a consumer with a build
 step; and framework-free — CSS classes plus a `<script type="module">`
@@ -88,9 +88,9 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the twenty-five themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the twenty-two themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
-@import '@kp-soft/themes/css/academia-register'; /* optional: and one like it for each of the other 24 */
+@import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
 
 Tailwind v4 (JobTracker, kp-soft): add the bridge so `bg-primary`,
@@ -126,9 +126,7 @@ and the original after it, for a reader who has the original installed:
 | ------------------- | --------------- | ----------------------- |
 | `KP Tech Mono`      | Share Tech Mono | terminal, the registers |
 | `KP Deco Sans`      | Josefin Sans    | deco                    |
-| `KP Academia Serif` | Lora            | academia                |
-| `KP Ticker Sans`    | IBM Plex Sans   | ticker                  |
-| `KP Ticker Mono`    | IBM Plex Mono   | ticker                  |
+| `KP Ticker Mono`    | IBM Plex Mono   | dark                    |
 | `KP Shade Sans`     | Source Sans 3   | shade-light, shade-dark |
 | `KP Outrun Display` | Orbitron        | synthwave               |
 
@@ -166,8 +164,8 @@ refuses a theme that leaves a hook unanswered.
 
 A theme is active when `<html data-theme="…">` carries its name; without
 the attribute the `:root` fallback is `formal`. The twelve dark themes
-(`dark`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`, `solstice`,
-`deco`, `academia`, `phantom`, `ticker`, `shade-dark`, `lapis`)
+(`dark`, `titanium`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`,
+`solstice`, `deco`, `phantom`, `shade-dark`, `lapis`, `nostromo`)
 additionally need the `.dark` class on
 `<html>` so existing `dark:` variants keep working — `applyTheme()` sets
 both. To avoid a flash before React mounts, call `initializeTheme()`
@@ -215,13 +213,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Twenty-five themes, twenty-five registers, one picker: which of them does
+Twenty-two themes, twenty-two registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
 `dist/kp-themes.css` is twenty-nine stylesheets concatenated: the palette,
-the components, **all twenty-five registers**, layout and utilities. Every
+the components, **all twenty-two registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -567,7 +565,7 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 
 ## Home Assistant
 
-`ha/kp-*.yaml` is the same twenty-five themes as Home Assistant themes,
+`ha/kp-*.yaml` is the same twenty-two themes as Home Assistant themes,
 generated from the same token sources. Copy them into Home Assistant's
 `themes/` directory and reload; they appear under their Dutch names beside
 whatever you already have. The `kp-` prefix is there so a file called

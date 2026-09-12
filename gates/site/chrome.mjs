@@ -68,10 +68,8 @@ ${section.links
         <link rel="stylesheet" href="${up}css/terminal-register.css" />
         <link rel="stylesheet" href="${up}css/brutalism-register.css" />
         <link rel="stylesheet" href="${up}css/titanium-register.css" />
-        <link rel="stylesheet" href="${up}css/woodblock-register.css" />
         <link rel="stylesheet" href="${up}css/pastel-register.css" />
         <link rel="stylesheet" href="${up}css/shade-light-register.css" />
-        <link rel="stylesheet" href="${up}css/ticker-register.css" />
         <link rel="stylesheet" href="${up}css/forest-register.css" />
         <link rel="stylesheet" href="${up}css/deco-register.css" />
         <link rel="stylesheet" href="${up}css/light-register.css" />
@@ -79,11 +77,9 @@ ${section.links
         <link rel="stylesheet" href="${up}css/blueprint-register.css" />
         <link rel="stylesheet" href="${up}css/nostromo-register.css" />
         <link rel="stylesheet" href="${up}css/dark-register.css" />
-        <link rel="stylesheet" href="${up}css/academia-register.css" />
         <link rel="stylesheet" href="${up}css/formal-register.css" />
         <link rel="stylesheet" href="${up}css/sepia-register.css" />
         <link rel="stylesheet" href="${up}css/solstice-register.css" />
-        <link rel="stylesheet" href="${up}css/mono-register.css" />
         <link rel="stylesheet" href="${up}css/high-contrast-register.css" />
         <link rel="stylesheet" href="${up}css/lapis-register.css" />
         <link rel="stylesheet" href="${up}css/shade-dark-register.css" />

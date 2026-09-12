@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Start — kp-themes</title>
-        <meta name="description" content="The kp-themes design system: 26 themes, two delivery channels, no runtime dependencies." />
+        <meta name="description" content="The kp-themes design system: 22 themes, two delivery channels, no runtime dependencies." />
         <link rel="stylesheet" href="../css/themes.css" />
         <link rel="stylesheet" href="../css/components.css" />
         <link rel="stylesheet" href="../css/layout.css" />
@@ -22,10 +22,8 @@
         <link rel="stylesheet" href="../css/terminal-register.css" />
         <link rel="stylesheet" href="../css/brutalism-register.css" />
         <link rel="stylesheet" href="../css/titanium-register.css" />
-        <link rel="stylesheet" href="../css/woodblock-register.css" />
         <link rel="stylesheet" href="../css/pastel-register.css" />
         <link rel="stylesheet" href="../css/shade-light-register.css" />
-        <link rel="stylesheet" href="../css/ticker-register.css" />
         <link rel="stylesheet" href="../css/forest-register.css" />
         <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
@@ -33,11 +31,9 @@
         <link rel="stylesheet" href="../css/blueprint-register.css" />
         <link rel="stylesheet" href="../css/nostromo-register.css" />
         <link rel="stylesheet" href="../css/dark-register.css" />
-        <link rel="stylesheet" href="../css/academia-register.css" />
         <link rel="stylesheet" href="../css/formal-register.css" />
         <link rel="stylesheet" href="../css/sepia-register.css" />
         <link rel="stylesheet" href="../css/solstice-register.css" />
-        <link rel="stylesheet" href="../css/mono-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
         <link rel="stylesheet" href="../css/lapis-register.css" />
         <link rel="stylesheet" href="../css/shade-dark-register.css" />
@@ -147,7 +143,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">kp-themes</h1>
-                    <p class="kp-prose">One design system, 26 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
+                    <p class="kp-prose">One design system, 22 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
                 </header>
                 <section class="kp-section" data-sc-section="install" id="install">
                     <h2 class="kp-fw-semibold">Install</h2>
@@ -158,7 +154,7 @@
 &lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/utilities.css&quot;</span> /&gt;</code></pre>
                 </section>
                 <section class="kp-section" data-sc-section="themes" id="themes">
-                    <h2 class="kp-fw-semibold">The 26 themes</h2>
+                    <h2 class="kp-fw-semibold">The 22 themes</h2>
                     <p class="kp-prose">Each theme answers the same questions differently. What follows is why each one exists, taken from its own anatomy document, with its live tokens beside it.</p>
                     <div class="kp-autogrid kp-gap-lg">
                     <article class="kp-card sc-story" data-sc-story="formal" data-theme="formal">
@@ -751,59 +747,6 @@ demo wants a corner removed rather than rounded, it is cut with
 </ol>
                         </div>
                     </article>
-                    <article class="kp-card sc-story" data-sc-story="academia" data-theme="academia">
-                        <h3 class="kp-fw-semibold kp-mb-sm">academia</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>Dark academia: the library at night. Ink and mahogany for the ground,
-parchment for the text, candle gold for what you can act on, oxblood and
-forest green for the blocks that mean something. Cormorant Garamond for
-the headings, Lora for the reading.</p>
-<p>This is sepia's darker counterpart — Kenny's own framing — and that is
-the reason it is dark. The style's own sources describe a parchment
-ground with oxblood and forest blocks, and that version sits within a
-step of sepia. Turn it over and it has no sibling: solstice is a sunset,
-this is a room.</p>
-<ol>
-<li><strong>The ground is ink with a trace of red.</strong> <code>--background</code>
-<code>hsl(24, 30%, 9%)</code>; the card is a leather brown a shade lighter, the
-popover a shade lighter again — three surfaces rising at 0.0087 →
-0.0153 → 0.0219 relative luminance (measured, <code>node gates/check-invariants.mjs</code>
-reads this theme clean). Take the hue out and it is dark; take the
-lightness down and it is phantom.</li>
-<li><strong>Gold acts, oxblood and forest mean.</strong> <code>--primary</code> is candle gold
-<code>hsl(38, 50%, 58%)</code> because the contrast gate holds primary at 7.49:1
-against the ground as a link and 7.32:1 as the button's own ink
-underneath it (the demo's own header comment, verbatim: both
-token values match this theme's <code>tokens.json</code> to the pixel — measured
-by converting every HSL token to hex and diffing against the demo's
-literal hex table, 2026-09-08). Oxblood at 1.74:1 cannot read on ink,
-so it is never a word — <code>--accent</code> is a plate only, with parchment ink
-on top at 8.79:1.</li>
-<li><strong>Serifs everywhere, but a readable one for the body.</strong> Cormorant
-Garamond is thin and lives on headings; Lora carries the body at
-normal weight. The house pattern that forbids a serif body is met
-halfway: this is the reading theme, and Lora was drawn for screens.</li>
-<li><strong>Radius 0, hairline rules.</strong> A rounded corner in a library is a
-modern intrusion — every panel, button, field and dialog in the
-register is square.</li>
-<li><strong>The one gesture is a rule drawing under a heading, slower than
-everyone else's.</strong> Other registers that answer this hook draw at
-<code>--fx-duration</code> multiples or a shared 900ms baseline (cyberpunk and
-synthwave both set <code>--kp-rule-draw: 900ms</code>); academia's section rule
-draws at that same 900ms, and its headline — the same mechanism,
-generalised to h1 — draws slower still, at 1100ms. A library is not in
-a hurry.</li>
-</ol>
-                        </div>
-                    </article>
                     <article class="kp-card sc-story" data-sc-story="phantom" data-theme="phantom">
                         <h3 class="kp-fw-semibold kp-mb-sm">phantom</h3>
                         <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
@@ -838,105 +781,6 @@ the first — the print misregistration of the reference.</li>
 <li><strong>Barlow Condensed, 900, italic, uppercase</strong> for the headings, Barlow
 for the body. The heading treatment is the theme; a regular heading
 would make this a dark grey theme with a red button.</li>
-</ol>
-                        </div>
-                    </article>
-                    <article class="kp-card sc-story" data-sc-story="ticker" data-theme="ticker">
-                        <h3 class="kp-fw-semibold kp-mb-sm">ticker</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>The trading screen — tabular figures, a running band, green and red that
-mean something, density as a virtue. Amber fields on black, numerals that
-line up every time, panel titles in reverse video. The temptation this
-theme invites is a flashing cell when a value changes, and it is refused:
-&quot;cuts, not dissolves&quot; is the demo's own thesis (Curio's Bloomberg
-Terminal style guide, quoted in the demo's header note) — every one-time
-reveal swaps state with no transition property at all, gated by an
-IntersectionObserver so it fires once, the instant the element scrolls
-into view. This is the theme a table wants: JobTracker's pipeline, a
-ledger, a log.</p>
-<ol>
-<li><strong>Amber acts, yellow labels.</strong> <code>--primary</code> is amber, <code>--accent</code> the
-paler label yellow; every other colour on the page is a grey, and the
-reverse-video treatment (amber field, black ink) is reserved for the
-controls that act — the primary button, the nav's call to action, the
-dossier's panel header — never for a whole surface.</li>
-<li><strong>No motion at all.</strong> <code>--fx-duration: 0ms</code> already makes every hover,
-focus and state transition in the whole base layer instantaneous for
-this theme, without a line of register code (<code>css/_rules.css</code> and
-<code>css/components.css</code> read the token generically). The register itself
-declares no <code>transition</code> or <code>animation</code> property anywhere: every
-reveal is a bare class swap the browser resolves in one frame, which
-is what &quot;cuts, not dissolves&quot; means mechanically, not just visually.</li>
-<li><strong>Tabular numerals, mono display.</strong>
-<code>font-variant-numeric: tabular-nums</code> on every identifier, timestamp, spec value and field —
-the theme's whole thesis is that a column of figures never reflows —
-and headings are the mono face in capitals.</li>
-<li><strong>Radius 0, hairlines at 100%.</strong> A rounded corner or a soft divider
-would say &quot;dashboard product&quot;; this says &quot;screen.&quot; Every divider is
-one flat pixel, dim, no blur, no torn edge — a printed rule, this
-theme's own refusal of the round's razor tear.</li>
-</ol>
-                        </div>
-                    </article>
-                    <article class="kp-card sc-story" data-sc-story="woodblock" data-theme="woodblock">
-                        <h3 class="kp-fw-semibold kp-mb-sm">woodblock</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>Ukiyo-e, the polychrome woodblock print: unbleached washi for the
-ground, Prussian blue — <em>bero-ai</em>, the imported pigment Hokusai's wave
-is printed in — for the water, safflower red for the seal, and the
-black key-block line that gives every shape its edge. A non-Western
-print tradition, the first in the set, and a flat, outlined, graphic
-one: nothing soft, nothing organic. v2 adds the vocabulary of the
-<strong>pull itself</strong> — the carved registration marks a printer squints at to
-line up six blocks, the uneven density a hand-rubbed baren leaves on
-every plate, the hand-cut edge of a knife rather than a ruler — so the
-page reads as a specific physical object, not only a palette.</p>
-<ol>
-<li><strong>The key-block line.</strong> <code>--border-strong</code>/<code>--input</code>/<code>--foreground</code>
-are the ink itself, <code>hsl(36, 10%, 10%)</code>. In a woodblock print the
-black block is printed first and every colour sits inside its lines;
-here every control shares the same edge, and DI1 is free instead of
-hard.</li>
-<li><strong>Prussian blue acts, beni marks.</strong> <code>--primary</code> at <code>hsl(215, 51%, 25%)</code>
-measures 9.99:1 on washi; <code>--accent</code> and the signal are beni red
-<code>hsl(1, 58%, 46%)</code> at 5.09:1, used as a plate with washi ink and as
-the hanko seal.</li>
-<li><strong>Washi, not white.</strong> The ground is <code>hsl(42, 52%, 92%)</code>, the card a
-step lighter, the popover lighter still (DI6 read the other way: the
-paper gets whiter as it rises).</li>
-<li><strong>Shippori Mincho for headings, Zen Kaku Gothic New for the body.</strong>
-Both carry Latin well and both are drawn for Japanese; the Mincho's
-contrast is the brush, the Gothic is the print shop. Both ship as the
-package's own subset (<code>fonts/shipporimincho</code>, <code>fonts/zenkakugothicnew</code>),
-regular weight only — see &quot;What the demo showed&quot; below.</li>
-<li><strong>kentō (見当), v2's own addition.</strong> The registration marks a real
-block carries — a kagi corner notch and a hikitsuke edge mark — appear
-as page furniture on the hero, the spec sheet, the dossier and the
-nav dropdown, and the headline's own reveal is named for the same
-mechanism: two ghost plates that converge and settle a pixel or two
-out of true, because a real pull is never perfectly registered.</li>
-<li><strong>The baren burnish, v2's second addition.</strong> A baren is rubbed by
-hand, not pressed by a machine, so every plate it pulls — every
-filled button, the hanko-adjacent stamp — carries a soft, uneven
-density: two low-alpha ink radials over the flat fill, always
-darkening, never lightening, so no baren-mottled pair can measure
-under its own flat figure.</li>
 </ol>
                         </div>
                     </article>
@@ -1043,53 +887,6 @@ surfaces (bg → card → popover, and the dossier card) comes from the
 tone ladder alone.</li>
 <li><strong>No texture.</strong> <code>--fx-texture</code> stays unset. No starfield, no grain —
 the register adds nothing to the ground.</li>
-</ol>
-                        </div>
-                    </article>
-                    <article class="kp-card sc-story" data-sc-story="mono" data-theme="mono">
-                        <h3 class="kp-fw-semibold kp-mb-sm">mono</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>Greyscale, and nothing else: the ink is the brand. Vercel's Geist is the
-living reference — near-white canvas, near-black ink, a mid grey, a
-hairline, and no accent colour anywhere — and the register it produces is
-the one that puts the content first because there is nothing else to look
-at. Different from high-contrast, which keeps a navy, a yellow and five
-chart hues for a safety reason; this theme drops hue for an aesthetic
-one. It reads as a well-set document, not a design.</p>
-<ol>
-<li><strong>Meaning by lightness.</strong> Every colour that means something elsewhere
-is a grey here, so the seven status plates are a <strong>ladder</strong>: 86% for
-offer, then 74, 62, 52, 34, 22, and 9% for rejected — each pair at
-least 1.25:1 apart, held by a unit test (<code>gates/gates.test.mjs</code>, TH86).</li>
-<li><strong>Charts get a pattern as well as a grey.</strong> <code>--chart-pattern-1..5</code> are
-five SVG fills — diagonal, dots, crosshatch, horizontal, vertical —
-drawn at 30–35% black over the series colour, so five greys between 9%
-and 55% lightness are told apart by texture before anyone squints at
-the shade. Every other theme answers <code>none</code>.</li>
-<li><strong>The ink is 9%, the action is 14%.</strong> <code>--primary</code> sits a step above
-the text because the visited-link derivation needs room to move: at
-9% the visited colour measured 11.3 from the link, under the floor of
-12, and at 14% it clears (12.7).</li>
-<li><strong>Inter Tight for the text, Geist Mono for headings and numerals.</strong> A
-grotesk set tight is the Geist gesture; the mono is where the theme
-allows itself a voice — headings, numerals, labels and code all read
-in it, and the register's <code>--theme-font-display</code> and
-<code>--theme-font-mono</code> are the same family for that reason.</li>
-<li><strong>One mechanism, two directions.</strong> rauno.me's mask-image fade — a
-hard-edge mask swept by <code>mask-position</code> across a 200%-wide two-stop
-gradient — reveals the headline (content emerging) and clears a
-dossier's redactions (a bar being hidden), the same keyframe
-(<code>kp-wipe</code>) run both ways. Adapted from the reference's opacity
-cross-fade specifically so nothing ever flashes (DI5): the mask moves,
-the content under it never changes colour.</li>
 </ol>
                         </div>
                     </article>

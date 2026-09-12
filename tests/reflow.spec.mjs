@@ -139,7 +139,7 @@ const urls = (theme) => ({
 });
 
 test.describe('every theme at a phone width [G12]', () => {
-    test('the sweep covers all twenty-five themes at both narrow widths [AR26]', () => {
+    test('the sweep covers every theme at both narrow widths [AR26]', () => {
         expect(THEMES.length).toBe(25);
         expect(WIDTHS).toEqual([320, 768]);
     });

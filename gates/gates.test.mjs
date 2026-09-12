@@ -364,26 +364,14 @@ test('KT5: API values and CSS are not text', () => {
     assert.deepEqual(loosePhrases("if (event.key === 'ArrowDown') return;"), []);
 });
 
-test("TH86: mono's seven status plates are a lightness ladder, apart with hue removed", () => {
-    // Mono carries meaning by lightness, so every pair of plates must
-    // differ by at least 1.25:1 in luminance — the gap the eye reads as
-    // "a different grey" at badge size. Hue removed is the theme's own
-    // condition; there is none to remove. Drill: set two plates to the
-    // same value and the pair reads 1.00.
-    /** @type {{entries: Array<{token?: string, value?: string}>}} */
-    const source = JSON.parse(readFileSync(new URL('../themes/mono/tokens.json', import.meta.url), 'utf8'));
-    const plates = ['draft', 'sent', 'screening', 'interview', 'offer', 'rejected', 'withdrawn'].map((name) => {
-        const entry = source.entries.find((e) => e.token === `status-${name}`);
-        assert.ok(entry, `status-${name}`);
-        return { name, rgb: hsl(entry.value ?? '') };
-    });
-    for (let i = 0; i < plates.length; i++) {
-        for (let j = i + 1; j < plates.length; j++) {
-            const ratio = contrast(plates[i].rgb, plates[j].rgb);
-            assert.ok(ratio >= 1.25, `${plates[i].name} and ${plates[j].name} are ${ratio.toFixed(2)} apart, under 1.25`);
-        }
-    }
-});
+// TH86 left with mono, 2026-09-12 [stage 3]. It measured that theme's seven
+// status plates stayed a lightness ladder — at least 1.25:1 between every
+// pair — because mono carried meaning by lightness alone and had no hue to
+// fall back on. No theme in the set does that any more, so there is nothing
+// left for the bar to hold. The reasoning is kept here rather than only in
+// the history, because "a theme that carries meaning by lightness needs its
+// plates measurably apart" is the sort of thing a future theme will want
+// back, and it is cheaper to find as a comment than as a deleted test.
 
 test('D3 and D4: two removals stay removed', () => {
     // The registry-coverage item of round five's AFK report, answered
@@ -875,7 +863,7 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
     }
-    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 26, 'all twenty-six registers travel in the tarball');
+    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 22, 'all twenty-two registers travel in the tarball');
     // A malformed manifest line must not smuggle an empty path into tar.
     assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
 });

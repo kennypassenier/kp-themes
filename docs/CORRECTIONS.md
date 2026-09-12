@@ -2256,3 +2256,62 @@ guard and returns four exports with it.
 **The four contrast findings stay findings.** They came from the spectral
 instrument's own approved values and are put to Kenny rather than quietly
 corrected [S49, S42]. They are not the subject of this correction.
+
+## fix-14 · A sweep that walked into other sessions' worktrees (2026-09-12)
+
+**1 · What went wrong.** Removing four themes meant stripping every
+mention of their registers from the files that name them. The sweep walked
+the repository, and `.claude/worktrees/` is inside the repository. It
+rewrote 138 files across sixteen worktrees belonging to other agent
+sessions.
+
+**2 · How it was found.** Immediately, in the sweep's own report: the list
+of edited files was mostly paths under `.claude/worktrees/`. The exclusion
+list it carried — `node_modules`, `.git`, `dist`, `site`, `examples`,
+`showcase/themes`, `ha`, `test-results` — had been written by thinking
+about GENERATED output, and a worktree is neither generated nor mine.
+
+**3 · The cause.** A directory walk with a deny-list. Every deny-list is
+a guess about what exists; this one was a guess made before those
+worktrees did.
+
+**4 · Where else the same fault sits.** The fault as a property: *a
+repository-wide walk that writes, filtered by a deny-list rather than by
+what git tracks in THIS worktree.* Searched on 2026-09-12:
+
+```
+grep -rln "os.walk\|readdirSync.*recursive\|find . -type f" gates/ hooks/ .claude/
+```
+
+Nothing else in the repository walks-and-writes; the generators all work
+from explicit file lists, and the gates only read. The offender was a
+one-off script in a shell heredoc, which is exactly the kind of code that
+carries no guard because it is expected to be thrown away.
+
+**5 · The measure.** A one-off sweep that writes takes its file list from
+`git ls-files`, never from a directory walk. `git ls-files` reports only
+what THIS worktree tracks, so another worktree cannot be in the list no
+matter where it sits. Discipline-enforced: there is no code to gate, and a
+hook that inspected every heredoc would be worse than the disease.
+
+**6 · What the remedy costs.** Nothing. `git ls-files | grep ...` is
+shorter than the walk it replaces.
+
+**7 · Who enforces it.** Discipline.
+
+**8 · How we measure that it works, and when.** At the next sweep that
+edits many files at once — stage 3 still has the documentation pass, which
+touches every document that names a removed theme. The check is that the
+command begins with `git ls-files`.
+
+**9 · The recovery, and what made it possible.** Every damaged file was
+restored, verified at zero. It worked only because the damage had one
+shape: the sweep removed lines and changed nothing else, so a file whose
+whole diff against HEAD was deletions of register lines could be restored
+outright, and a file carrying its own work could be told apart and left
+alone. 107 files restored that way and 31 more from HEAD where the
+worktree had unmerged paths; 232 files with their own changes were
+untouched. A sweep that had REWRITTEN lines instead of deleting them would
+not have been separable like that.
+
+**10 · When we review the measure.** At round seven's retrospective.

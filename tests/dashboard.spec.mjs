@@ -21,7 +21,7 @@
 //   5. Activate it again and confirm — the action runs EXACTLY ONCE and
 //      the row is gone [AR27].
 //
-// What runs over all 24 themes and what runs over one:
+// What runs over every theme and what runs over one:
 //
 //   Once (formal, plus a second pass under cyberpunk because the register
 //   rewrites `.kp-button` and the destructive control is one) — every
@@ -235,14 +235,14 @@ for (const channel of CHANNELS) {
         ).toBeLessThanOrEqual(sideways.wrap.clientWidth);
     });
 
-    // ── The focus indicator, all 24 themes ────────────────────────────
+    // ── The focus indicator, every theme ────────────────────────────
     //
     // Drill [KT3]: the `.kp-button:focus-visible` block removed from
     // css/components.css — the composed ring falls back to the brutalist
     // offset alone, `0px 0px 0px 0px` on the inner half, and all 24
     // themes are named, in both channels and both browsers. The same
     // removal takes the painted measurement below to 0 in 20 of them.
-    test(`both halves of the focus ring reach the destructive item in the row menu, all 24 themes — ${channel.name} [W4, AR30, DI2]`, async ({
+    test(`both halves of the focus ring reach the destructive item in the row menu, every theme — ${channel.name} [W4, AR30, DI2]`, async ({
         page,
     }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
@@ -271,12 +271,12 @@ for (const channel of CHANNELS) {
     //
     // And it is kept BESIDE the declared measurement rather than instead
     // of it, because it is the weaker of the two in one direction:
-    // drilling the ring away leaves 4 of the 24 themes still painting
+    // drilling the ring away leaves 4 of every theme still painting
     // something --focus-ring-coloured next to the item — high-contrast,
     // brutalism, grotesk and woodblock, whose `--border-strong` equals
     // their `--focus-ring`, so the popover's own 1px border is counted.
     // Neither measurement alone would have caught both faults.
-    test(`the focus indicator PAINTS on the destructive item inside the menu, all 24 themes — ${channel.name} [W4, AR30]`, async ({ page }) => {
+    test(`the focus indicator PAINTS on the destructive item inside the menu, every theme — ${channel.name} [W4, AR30]`, async ({ page }) => {
         test.slow();
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(PAGE);
@@ -303,7 +303,7 @@ for (const channel of CHANNELS) {
     // runtime and exist on no page any other suite measures per theme.
     // The keyboard lands on Cancel, so Cancel is the one that has to show
     // where it is.
-    test(`the confirmation's buttons carry both halves of the ring, all 24 themes — ${channel.name} [W4, TH107, DI2]`, async ({ page }) => {
+    test(`the confirmation's buttons carry both halves of the ring, every theme — ${channel.name} [W4, TH107, DI2]`, async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(PAGE);
         await ready(page);
