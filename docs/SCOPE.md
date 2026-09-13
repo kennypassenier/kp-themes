@@ -1248,3 +1248,41 @@ it approved all 13 again. The compare page (`catalogue/compare.html`) puts
 each theme in its own document — a theme nested in another leaks its
 register (`gap-10`) — and lines the rows up across the two by message:
 32 rows, none offset, before and after switching one column to brutalism.
+
+**The nostromo notes form, 2026-09-13.** Kenny's first full pass through
+one theme proved the review page; his 23 notes were answered in one form.
+
+**scope-54 · A drawn select, on request.** `data-kp-select` on a
+`<select>` lays a listbox in the combobox's style over it, built on
+`js/listbox.js`; a select without the attribute stays native, so no
+consumer's form changes unasked. Firefox cannot style a native select's
+list, which is why the note arose.
+
+**scope-55 · Badges rounder in nostromo only, for now.** Measured over 22
+themes: 8 pill, 7 small corner, 7 square. Kenny keeps the others for when
+he reaches them on the review page.
+
+**scope-56 · The palette matches literally by default.** `substring`
+becomes the default; "read" no longer finds "Report an incident", and
+"thm" no longer finds "Theme". Subsequence stays available per palette.
+
+**scope-57 · A marked accelerator letter never splits its label.** The
+package keeps `[data-kp-key]` in the button's text run in every theme.
+
+**scope-58 · A composition uses the styled components.** Every component
+is judged on its own block before it appears in a composition, and a
+catalogue composition carries the package's component wherever one exists
+(no bare date input outside a date picker); the catalogue gate refuses a
+bare control. Kenny's words: "elke component in een compositie moet het
+gestylede element zijn."
+
+**scope-59 · Nostromo's bar is put right**: readability of the site mark,
+the size and line of the current item, and the collapsed bar's spacing,
+without holding it to the concept demo first (Kenny: "Gewoon rechtzetten").
+
+**scope-60 · The direct fixes from the notes are approved**: progress label
+and fill shape, toast severity colours, the dialog title's distance from its
+close button, no dot on the current page in pagination, inner spacing in the
+wizard and the laurels, a theme menu scrollbar that follows its corners,
+adding a tag in the tag combobox, and dragging a reorder item across any
+number of rows.
