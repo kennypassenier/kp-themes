@@ -265,6 +265,20 @@
     }
 
     /* A pane that narrows to a few characters, for the short buttons only. */
+    .cat-to-top {
+        position: fixed;
+        inset-block-end: 1.25rem;
+        inset-inline-end: 1.25rem;
+        z-index: 45;
+    }
+
+    .cat-review-bar {
+        position: sticky;
+        inset-block-start: 3.5rem;
+        z-index: 35;
+        background: var(--background);
+    }
+
     .cat-resize.cat-resize--narrow {
         min-inline-size: 2.5rem;
         inline-size: 16rem;

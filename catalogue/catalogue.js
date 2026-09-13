@@ -7,14 +7,13 @@ import { applyTheme, currentTheme, initializeTheme, THEME_EVENT } from '../js/th
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { PAGES } from './pages.js';
+import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import './demos.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
 const ROOT = new URL('../', import.meta.url);
 
 const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
-// Written by review.js when a block is approved; read here so the prompt says what was approved too.
-const APPROVALS_KEY = 'kp-catalogue-approvals:v1';
 
 /* ------------------------------------------------------------- storage */
 
@@ -239,37 +238,36 @@ function sections() {
     return blocks.length ? blocks : [...document.querySelectorAll('main section[id]')];
 }
 
-/** The prompt a reviewer pastes into the conversation: notes and approvals. */
+/** The prompt a reviewer pastes into the conversation: verdicts and notes. */
 function promptText() {
     const page = allFeedback()[pagePath()] ?? {};
-    let approvals = {};
-    try {
-        approvals = JSON.parse(localStorage.getItem(APPROVALS_KEY) ?? '{}');
-    } catch {
-        /* unreadable storage: the notes still go out */
-    }
+    const judgements = loadJudgements();
     const notes = new Map();
     const approved = new Map();
+    const rejected = new Map();
+    const add = (map, theme, value) => {
+        if (!map.has(theme)) map.set(theme, []);
+        map.get(theme).push(value);
+    };
     for (const section of sections()) {
         for (const [theme, text] of Object.entries(page[section.id] ?? {})) {
-            if (!notes.has(theme)) notes.set(theme, []);
-            notes.get(theme).push(`- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
+            add(notes, theme, `- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
         }
-        // An approval counts only while the block still looks the way it did
-        // when it was approved; review.js marks that on the section.
-        for (const theme of Object.keys(approvals[section.id] ?? {})) {
-            if (theme === currentTheme() && section.dataset.catState !== 'approved') continue;
-            if (!approved.has(theme)) approved.set(theme, []);
-            approved.get(theme).push(blockTitle(section));
+        for (const [theme, { verdict }] of Object.entries(judgements[section.id] ?? {})) {
+            // In the theme on screen a verdict counts only while the block still
+            // looks the way it did when it was judged; review.js marks that.
+            if (theme === currentTheme() && section.dataset.catState === 'changed') continue;
+            add(verdict === 'rejected' ? rejected : approved, theme, blockTitle(section));
         }
     }
-    if (!notes.size && !approved.size) return '';
+    if (!notes.size && !approved.size && !rejected.size) return '';
     const order = THEMES.map((t) => t.name);
-    const themes = [...new Set([...notes.keys(), ...approved.keys()])].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const themes = [...new Set([...notes.keys(), ...approved.keys(), ...rejected.keys()])].sort((a, b) => order.indexOf(a) - order.indexOf(b));
     const lines = [`Catalogue feedback on ${pagePath()}`];
     for (const theme of themes) {
         lines.push('', `Theme ${themeLabel(theme)}:`);
         if (approved.has(theme)) lines.push(`Approved (${approved.get(theme).length}): ${approved.get(theme).join('; ')}`);
+        if (rejected.has(theme)) lines.push(`Not approved (${rejected.get(theme).length}): ${rejected.get(theme).join('; ')}`);
         if (notes.has(theme)) lines.push('Notes:', ...notes.get(theme));
     }
     return lines.join('\n');
@@ -368,7 +366,7 @@ function mountFeedback() {
 
     document.documentElement.addEventListener(THEME_EVENT, renderFields);
     // An approval changes the prompt as much as a note does.
-    document.addEventListener('cat-approval-change', renderSummary);
+    document.addEventListener(JUDGEMENT_EVENT, renderSummary);
     document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(renderSummary, 400));
     renderFields();
     renderSummary();
@@ -393,7 +391,32 @@ function mountDevtools() {
     });
 }
 
+/* -------------------------------------------------- page-level comforts */
+
+function mountComforts() {
+    // Always in reach, bottom right: the review page is thousands of pixels
+    // long (Kenny, 2026-09-13). The catalogue's own control, not the package's
+    // back-to-top, which is itself one of the things under review.
+    const up = document.createElement('button');
+    up.type = 'button';
+    up.className = 'kp-button kp-button--primary cat-to-top';
+    up.setAttribute('aria-label', 'Back to the top of the page');
+    up.textContent = '↑ Top';
+    up.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.body.append(up);
+
+    // A demo form must never navigate: a submit would reload the page and
+    // throw away the scroll position (notes and verdicts are stored as they are
+    // made, so those survive either way). A form that opts in to the package's
+    // own validation still gets it; only the navigation is stopped.
+    document.addEventListener('submit', (event) => {
+        const form = event.target;
+        if (form instanceof HTMLFormElement && form.method !== 'dialog') event.preventDefault();
+    });
+}
+
 const bar = mountShell();
+mountComforts();
 mountThemeMenu(bar);
 mountDevtools();
 // A page that gathers its blocks from elsewhere says so, and announces when

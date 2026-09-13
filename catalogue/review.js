@@ -13,9 +13,9 @@ import { THEMES } from '../js/theme-registry.js';
 import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
 import { themeOptionsMarkup } from '../js/theme-picker.js';
 import { COMPONENT_PAGES } from './pages.js';
+import { JUDGEMENT_EVENT, loadJudgements, saveJudgements, stateOf } from './judgements.js';
 
 const ROOT = new URL('../', import.meta.url);
-const APPROVALS_KEY = 'kp-catalogue-approvals:v1';
 
 /* ------------------------------------------------------------ gathering */
 
@@ -194,24 +194,7 @@ async function fingerprint(block, source) {
     return sha256(lines.join('\n'));
 }
 
-/* ------------------------------------------------------------ approvals */
-
-function loadApprovals() {
-    try {
-        return JSON.parse(localStorage.getItem(APPROVALS_KEY) ?? '{}');
-    } catch {
-        return {};
-    }
-}
-
-function saveApprovals(all) {
-    try {
-        localStorage.setItem(APPROVALS_KEY, JSON.stringify(all));
-        return true;
-    } catch {
-        return false;
-    }
-}
+/* ----------------------------------------------------------- judgements */
 
 const themeLabel = (name) => THEMES.find((t) => t.name === name)?.label ?? name;
 
@@ -228,15 +211,21 @@ async function composeAll(host) {
     const pages = await Promise.all(COMPONENT_PAGES.map(readPage));
     status.remove();
 
-    // The filter bar: every block, or only what needs approval in this theme.
+    // The review bar: what is left to judge, the way back from a mistaken
+    // click, and the notes controls that otherwise sit at the foot of a very
+    // long page (Kenny, 2026-09-13: "it takes a while to scroll down").
     const toolbar = document.createElement('div');
     toolbar.className = 'cat-review-bar';
     toolbar.innerHTML = `
+        <span class="cat-note" role="status" aria-live="polite" data-cat-review-count></span>
+        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-undo hidden>Undo</button>
+        <span class="cat-bar__spacer"></span>
         <div class="kp-field kp-field--check cat-review-toggle">
-            <input class="kp-field__check" type="checkbox" id="cat-only-changed" data-cat-only-changed />
-            <label class="kp-field__label" for="cat-only-changed">Only blocks that need approval in this theme</label>
+            <input class="kp-field__check" type="checkbox" id="cat-show-judged" data-cat-show-judged />
+            <label class="kp-field__label" for="cat-show-judged">Show blocks already judged</label>
         </div>
-        <span class="cat-note" role="status" aria-live="polite" data-cat-review-count></span>`;
+        <button type="button" class="kp-button kp-button--sm" data-cat-copy-top>Copy prompt</button>
+        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-clear-top>Clear this page's notes</button>`;
     host.append(toolbar);
 
     const toc = document.createElement('ul');
@@ -281,7 +270,8 @@ async function composeAll(host) {
             approval.className = 'cat-approval';
             approval.innerHTML = `
                 <span class="kp-badge" data-cat-approval-state>Checking…</span>
-                <button type="button" class="kp-button kp-button--secondary kp-button--sm" data-cat-approve>Approve</button>`;
+                <button type="button" class="kp-button kp-button--primary kp-button--sm" data-cat-verdict="approved">Approve</button>
+                <button type="button" class="kp-button kp-button--sm" data-cat-verdict="rejected">Not approved</button>`;
             section.append(approval);
             component.append(section);
             entries.push({
@@ -289,7 +279,8 @@ async function composeAll(host) {
                 source: block.source,
                 section,
                 badge: approval.querySelector('[data-cat-approval-state]'),
-                button: approval.querySelector('[data-cat-approve]'),
+                approve: approval.querySelector('[data-cat-verdict="approved"]'),
+                reject: approval.querySelector('[data-cat-verdict="rejected"]'),
             });
         }
         host.append(component);
@@ -298,12 +289,17 @@ async function composeAll(host) {
     attachAll(host);
     await document.fonts?.ready;
 
-    const only = toolbar.querySelector('[data-cat-only-changed]');
+    const showJudged = toolbar.querySelector('[data-cat-show-judged]');
     const count = toolbar.querySelector('[data-cat-review-count]');
+    const undo = toolbar.querySelector('[data-cat-undo]');
     let current = new Map(); // block id -> hash in the theme on screen
+    let last = null; // { id, theme, previous } for Undo
 
     async function measure() {
         const theme = currentTheme();
+        // A hidden block reads display:none on its own root, which would make
+        // every judged block look changed; they are all shown while reading.
+        for (const entry of entries) entry.section.hidden = false;
         const release = stillAnimations();
         const next = new Map();
         for (const entry of entries) next.set(entry.id, await fingerprint(entry.section, entry.source));
@@ -313,48 +309,76 @@ async function composeAll(host) {
         render();
     }
 
+    const WORDS = {
+        new: (t) => `Not yet judged in ${t}`,
+        approved: (t) => `Approved in ${t}`,
+        rejected: (t) => `Not approved in ${t}`,
+        changed: (t) => `Changed since it was judged in ${t}`,
+    };
+
     function render() {
         const theme = currentTheme();
-        const approvals = loadApprovals();
-        let needing = 0;
+        const label = themeLabel(theme);
+        const all = loadJudgements();
+        let open = 0;
         for (const entry of entries) {
-            const approved = approvals[entry.id]?.[theme];
             const hash = current.get(entry.id);
-            const state = !approved ? 'new' : approved === hash ? 'approved' : 'changed';
-            if (state !== 'approved') needing += 1;
-            entry.badge.textContent =
-                state === 'approved'
-                    ? `Approved in ${themeLabel(theme)}`
-                    : state === 'changed'
-                      ? `Changed since approval in ${themeLabel(theme)}`
-                      : `Not yet approved in ${themeLabel(theme)}`;
-            // The badge has no severity variants (only application statuses), so the
-            // state is carried by the words alone.
-            entry.badge.className = 'kp-badge';
-            entry.button.textContent = state === 'approved' ? 'Approved' : `Approve in ${themeLabel(theme)}`;
-            entry.button.disabled = state === 'approved' || !hash;
+            const state = stateOf(all, entry.id, theme, hash);
+            const judged = state === 'approved' || state === 'rejected';
+            if (!judged) open += 1;
+            entry.badge.textContent = WORDS[state](label);
+            entry.badge.className = `kp-badge${state === 'approved' ? ' kp-badge--success' : state === 'rejected' ? ' kp-badge--destructive' : state === 'changed' ? ' kp-badge--warning' : ''}`;
+            entry.approve.textContent = `Approve in ${label}`;
+            entry.reject.textContent = `Not approved in ${label}`;
+            entry.approve.disabled = state === 'approved' || !hash;
+            entry.reject.disabled = state === 'rejected' || !hash;
             entry.section.dataset.catState = state;
-            entry.section.hidden = only.checked && state === 'approved';
+            // Judged blocks leave the page, so the reviewer stays at the top and
+            // judges one block after another; a block that changed since comes back.
+            entry.section.hidden = judged && !showJudged.checked;
         }
         for (const component of host.querySelectorAll('.cat-component')) {
-            component.hidden = only.checked && !component.querySelector('.cat-block:not([hidden])');
+            component.hidden = !component.querySelector('.cat-block:not([hidden])');
         }
-        count.textContent = `${needing} of ${entries.length} block(s) need approval in ${themeLabel(theme)}.`;
-        document.dispatchEvent(new CustomEvent('cat-approval-change'));
+        count.textContent = open ? `${open} of ${entries.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
+        document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
     }
 
     host.addEventListener('click', (event) => {
-        const button = event.target instanceof Element ? event.target.closest('[data-cat-approve]') : null;
+        const button = event.target instanceof Element ? event.target.closest('[data-cat-verdict]') : null;
         if (!button) return;
-        const entry = entries.find((e) => e.button === button);
+        const entry = entries.find((e) => e.approve === button || e.reject === button);
         const hash = entry && current.get(entry.id);
         if (!hash) return;
-        const approvals = loadApprovals();
-        (approvals[entry.id] ??= {})[currentTheme()] = hash;
-        saveApprovals(approvals);
+        const theme = currentTheme();
+        const all = loadJudgements();
+        last = { id: entry.id, theme, previous: all[entry.id]?.[theme] ?? null, title: entry.section.dataset.catTitle };
+        (all[entry.id] ??= {})[theme] = { verdict: button.getAttribute('data-cat-verdict'), hash };
+        saveJudgements(all);
+        undo.hidden = false;
+        undo.textContent = `Undo: ${last.title}`;
         render();
     });
-    only.addEventListener('change', render);
+
+    undo.addEventListener('click', () => {
+        if (!last) return;
+        const all = loadJudgements();
+        if (last.previous) (all[last.id] ??= {})[last.theme] = last.previous;
+        else if (all[last.id]) delete all[last.id][last.theme];
+        saveJudgements(all);
+        const section = document.getElementById(last.id);
+        last = null;
+        undo.hidden = true;
+        render();
+        section?.scrollIntoView({ block: 'start' });
+    });
+
+    // The notes controls live at the foot of the page (catalogue.js); these
+    // two press them from the top.
+    toolbar.querySelector('[data-cat-copy-top]').addEventListener('click', () => document.querySelector('[data-cat-copy]')?.click());
+    toolbar.querySelector('[data-cat-clear-top]').addEventListener('click', () => document.querySelector('[data-cat-clear]')?.click());
+
+    showJudged.addEventListener('change', render);
     document.documentElement.addEventListener(THEME_EVENT, () => {
         for (const entry of entries) entry.badge.textContent = 'Checking…';
         // Give the register a moment to paint before reading it. A timer, not
