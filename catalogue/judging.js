@@ -118,6 +118,12 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     }
 
     let current = new Map(); // verdict key -> hash in the theme on screen
+    // The block a link points at (catalogue/button.html#variants,
+    // catalogue/index.html#button--variants) stays on the page even when it
+    // is judged, and is scrolled to: Claude links to blocks by anchor
+    // (Kenny, 2026-09-14: "je kan toch altijd links geven … een anchorlink").
+    const pinnedId = () => decodeURIComponent(location.hash.slice(1));
+    let pinned = pinnedId();
     let last = null; // { key, theme, previous, title } for Undo
 
     function render() {
@@ -144,7 +150,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             if (!judged) open += 1;
             // Judged blocks leave the page, so the reviewer stays at the top and
             // judges one block after another; a block that changed since comes back.
-            if (toolbar) item.entry.root.hidden = judged && !showJudged.checked;
+            if (toolbar) item.entry.root.hidden = judged && !showJudged.checked && item.entry.root.id !== pinned;
         }
         if (count) count.textContent = open ? `${open} of ${items.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
         onRender?.();
@@ -249,6 +255,18 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     });
     showJudged?.addEventListener('change', render);
 
+    /** Bring the linked block into view, once it is laid out. */
+    function goToPinned() {
+        if (!pinned) return;
+        const target = items.find((item) => item.entry.root.id === pinned)?.entry.root;
+        target?.scrollIntoView({ block: 'start' });
+    }
+    window.addEventListener('hashchange', () => {
+        pinned = pinnedId();
+        render();
+        goToPinned();
+    });
+
     // A verdict or a note written in another document — another tab, a compare
     // column, the page around one — shows here without a reload.
     window.addEventListener('storage', (event) => {
@@ -277,6 +295,9 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             await document.fonts?.ready;
             await new Promise((resolve) => setTimeout(resolve, 150));
             await measure();
+            // The review page is composed after the browser tried the anchor;
+            // measuring and hiding moved everything since. Go there now.
+            goToPinned();
         },
     };
 }

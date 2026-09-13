@@ -1352,3 +1352,17 @@ transcript; `hooks/form-lint.py` refuses a form without the item wherever a
 CLAUDE.md carries `step-timing: required`. Only kp-themes carries it; after
 round eight Claude asks whether other projects should.
 
+**scope-70 · Both filter designs, chosen per table.** Kenny, 2026-09-14, form
+item filter-design: "Allebei, per tabel". "+ Add filter" joins the filter panel
+in `.kp-datatable`; a table picks it with an attribute, the panel stays the
+default.
+
+**scope-71 · Grotesk keeps B, with a black label while pressed.** Kenny,
+2026-09-14, form item grotesk-hover. Option E stays a demo option.
+
+**scope-72 · Every reference carries its link, to the block.** Kenny,
+2026-09-14: "je kan toch altijd links geven als je naar iets refereert. Vaak kan
+een anchorlink zelfs … Zie dat de catalogus dit ondersteunt. Doe dit vanaf nu."
+Forms and replies link every page they mention, with an anchor to the block;
+a catalogue page keeps and scrolls to a linked block even when it is judged.
+

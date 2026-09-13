@@ -3003,3 +3003,48 @@ adds it to the test before changing the code again.
 
 **9 · When we review the measure.** At the end of round eight.
 
+## fix-25 · The side note lay over the review navigation (2026-09-13)
+
+Kenny found forest's vertical side note over the catalogue's side navigation:
+`.kp-side-note` is set absolutely in 14 registers and the block had no
+positioned container. The catalogue block is positioned and the long example
+removed (measured: the note stays inside its block in all 22 themes). The
+proposed package measure — the note positioning against its own section, or
+the guide requiring a positioned container — was **dropped by Kenny** in the
+form of 2026-09-14 ("Schrappen"): the package stays as it is.
+
+## fix-26 · Claude ended turns with prose where a form belonged (2026-09-14)
+
+**1 · What went wrong.** Kenny: "waarom gebruik je geen formulieren zoals
+afgesproken?" Two live-found faults (the ruler, the side note) got no
+correction form, and three choices (filter design, control heights, grotesk's
+hover) sat in prose under "nog open voor jou".
+
+**2 · Which gate let it through.** The Stop hook checks that the Next action
+row says Claude waits on Kenny, not that a form came in that turn.
+
+**3 · Where the same fault sits.** Of Kenny's 8 messages since the review site
+went live (2026-09-13 18:12 UTC), 5 were answered without a form: 18:30,
+19:20, 19:38, 20:23 and 22:39 UTC. Searched with a script over the session
+transcript that checks, per message of Kenny's, whether the answer carried a
+`show_widget` with `class="elicit"`.
+
+**4 · How we prevent recurrence.** The Stop hook refuses a turn that ends on
+"waiting on Kenny" without a form since his last message, where CLAUDE.md
+carries `forms-at-wait: required` (kp-themes only). A turn in which only an
+agent runs writes "waiting on agent: <what>" and may end without a form.
+
+**5 · What the remedy costs.** Claude can no longer end on "have a look"
+without a form that offers "nog niet gekeken".
+
+**6 · Who enforces it.** The Stop hook, code.
+
+**7 · How we measure it works, and when.** When built: the hook refuses one
+turn without a form. At the end of round eight: 0 turns on "waiting on Kenny"
+without a form.
+
+**8 · If the measurement fails.** Claude proposes it for every project, in a
+form.
+
+**9 · When we review the measure.** At the end of round eight.
+
