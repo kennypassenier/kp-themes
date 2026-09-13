@@ -503,6 +503,15 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: the rounded pill on the field's ground. */
+    [data-theme='forest'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='forest'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     [data-theme='forest'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

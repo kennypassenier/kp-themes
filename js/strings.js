@@ -77,6 +77,8 @@
  * @property {string} formSummaryOne
  * @property {(n: number) => string} formSummaryMany
  * @property {string} fieldFallbackName
+ * @property {string} switchOn   The word beside a switch that is on [gap-11]
+ * @property {string} switchOff  The word beside a switch that is off [gap-11]
  * @property {string} calendarOpen
  * @property {string} calendarButton
  * @property {string} dateFormatHint
@@ -223,6 +225,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     formSummaryOne: '1 field is not filled in correctly.',
     formSummaryMany: (n) => `${n} fields are not filled in correctly.`,
     fieldFallbackName: 'Field',
+    // Beside the track, so a switch's state never rests on colour or the
+    // thumb's position alone [DI4]. Hidden from a screen reader, which
+    // already hears "switch, on" from the role [gap-11].
+    switchOn: 'On',
+    switchOff: 'Off',
     calendarOpen: 'Open the calendar',
     calendarButton: 'Calendar',
     dateFormatHint: 'dd-mm-yyyy',

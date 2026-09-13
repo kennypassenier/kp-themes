@@ -386,6 +386,26 @@
         border: 2px solid var(--border-strong);
     }
 
+    /* The switch [gap-11]: the pill with the inputs' two-pixel boundary,
+       and no transition, as the fields here have none. */
+    [data-theme='high-contrast'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input {
+        border-width: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input:not(:checked) {
+        border-color: var(--border);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input,
+    [data-theme='high-contrast'] .kp-switch__input::before {
+        transition: none;
+    }
+
     [data-theme='high-contrast'] .kp-form__summary {
         border: 2px solid var(--border-strong);
     }

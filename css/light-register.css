@@ -319,6 +319,15 @@
         border-radius: var(--radius, 0.5rem);
     }
 
+    /* The switch [gap-11]: the pill, on the field's ground as the inputs are. */
+    [data-theme='light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='light'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     /* ── Card / dossier ──────────────────────────────────────────────────── */
 
     [data-theme='light'] .kp-card {

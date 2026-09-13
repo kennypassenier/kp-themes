@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Switch — both channels, every theme</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <!-- Every register, and no stylesheet of the page's own: everything
+             measured here comes from the package (rule 7e, KT3). -->
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="/css/retro-register.css" />
+        <link rel="stylesheet" href="/css/synthwave-register.css" />
+        <link rel="stylesheet" href="/css/phantom-register.css" />
+        <link rel="stylesheet" href="/css/terminal-register.css" />
+        <link rel="stylesheet" href="/css/brutalism-register.css" />
+        <link rel="stylesheet" href="/css/titanium-register.css" />
+        <link rel="stylesheet" href="/css/pastel-register.css" />
+        <link rel="stylesheet" href="/css/shade-light-register.css" />
+        <link rel="stylesheet" href="/css/forest-register.css" />
+        <link rel="stylesheet" href="/css/deco-register.css" />
+        <link rel="stylesheet" href="/css/light-register.css" />
+        <link rel="stylesheet" href="/css/grotesk-register.css" />
+        <link rel="stylesheet" href="/css/blueprint-register.css" />
+        <link rel="stylesheet" href="/css/nostromo-register.css" />
+        <link rel="stylesheet" href="/css/dark-register.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+        <link rel="stylesheet" href="/css/sepia-register.css" />
+        <link rel="stylesheet" href="/css/solstice-register.css" />
+        <link rel="stylesheet" href="/css/high-contrast-register.css" />
+        <link rel="stylesheet" href="/css/lapis-register.css" />
+        <link rel="stylesheet" href="/css/shade-dark-register.css" />
+    </head>
+    <body>
+        <!-- The framework-free half: the markup a server writes. The state
+             spans are empty on purpose — js/forms.js fills them from the
+             dictionary, which is the half under test. -->
+        <section id="plain">
+            <label class="kp-switch">
+                <input class="kp-switch__input" type="checkbox" role="switch" data-test="plain-off" />
+                <span class="kp-switch__state" aria-hidden="true"></span>
+                <span>Night alarms</span>
+            </label>
+            <label class="kp-switch">
+                <input class="kp-switch__input" type="checkbox" role="switch" disabled data-test="plain-disabled" />
+                <span class="kp-switch__state" aria-hidden="true"></span>
+                <span>Vendor hotline</span>
+            </label>
+            <div class="kp-field kp-field--check kp-field--invalid">
+                <label class="kp-switch">
+                    <input
+                        class="kp-switch__input"
+                        type="checkbox"
+                        role="switch"
+                        aria-invalid="true"
+                        aria-describedby="plain-invalid-error"
+                        data-test="plain-invalid"
+                    />
+                    <span class="kp-switch__state" aria-hidden="true"></span>
+                    <span>Line locked out</span>
+                </label>
+                <span class="kp-field__error" id="plain-invalid-error">Lock the line out first.</span>
+            </div>
+        </section>
+
+        <section id="react">
+            <div id="react-switch"></div>
+        </section>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-switch.js"></script>
+    </body>
+</html>

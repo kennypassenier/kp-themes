@@ -386,11 +386,12 @@ test('data-kp-layout="inline" lays a fieldset\'s options in a row [gap-11]', asy
     expect(boxes[2].left).toBeGreaterThan(boxes[1].left);
 });
 
-test('the switch concept flips with Space and paints the change [gap-11]', async ({ page }) => {
-    // gap-11: there was no switch at all, so a toggle had to be a checkbox; this holds the concept page Kenny judges before the package gets one.
+test('the switch page shows the package switch, and it flips with Space [gap-11]', async ({ page }) => {
+    // gap-11: there was no switch at all, so a toggle had to be a checkbox; the concept page Kenny approved now shows the package's .kp-switch.
+    // The behaviour in both channels and every theme is tests/switch.spec.mjs; this holds the catalogue page on the package class.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/catalogue/switch.html');
-    const control = page.locator('#states .cat-switch-concept__input').first();
+    const control = page.locator('#states .kp-switch__input').first();
     await expect(control).toHaveAttribute('role', 'switch');
     const paint = () =>
         control.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el, '::before').insetInlineStart].join(' | '));
@@ -402,5 +403,7 @@ test('the switch concept flips with Space and paints the change [gap-11]', async
     // Enter does not flip it: that is a checkbox's behaviour, and the reason the switch is one.
     await page.keyboard.press('Enter');
     await expect(control).toBeChecked();
-    await expect(page.locator('#states .cat-switch-concept__input[disabled]')).toHaveCount(2);
+    await expect(page.locator('#states .kp-switch__input[disabled]')).toHaveCount(2);
+    // No page-scoped concept styles are left: the paint comes from the package.
+    await expect(page.locator('.cat-switch-concept, .cat-switch-concept__input')).toHaveCount(0);
 });

@@ -484,6 +484,16 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11]: square, like every deco field, on its ground. */
+    [data-theme='deco'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     [data-theme='deco'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

@@ -206,6 +206,11 @@ var DEFAULT_STRINGS = Object.freeze({
   formSummaryOne: "1 field is not filled in correctly.",
   formSummaryMany: (n) => `${n} fields are not filled in correctly.`,
   fieldFallbackName: "Field",
+  // Beside the track, so a switch's state never rests on colour or the
+  // thumb's position alone [DI4]. Hidden from a screen reader, which
+  // already hears "switch, on" from the role [gap-11].
+  switchOn: "On",
+  switchOff: "Off",
   calendarOpen: "Open the calendar",
   calendarButton: "Calendar",
   dateFormatHint: "dd-mm-yyyy",
@@ -2564,6 +2569,7 @@ __export(forms_exports, {
   INVALID_EVENT: () => INVALID_EVENT,
   VALID_EVENT: () => VALID_EVENT,
   attachForms: () => attachForms,
+  attachSwitches: () => attachSwitches,
   clearError: () => clearError,
   form: () => form,
   nameOf: () => nameOf,
@@ -2822,6 +2828,26 @@ function attachForms(root = document, {
     for (const c of cleanups) c();
   };
   return Object.assign(detach, { handles: created });
+}
+var SWITCH = ".kp-switch";
+var SWITCH_STATE = ".kp-switch__state";
+function attachSwitches(root = document, { strings } = {}) {
+  const s = { ...getStrings(), ...strings };
+  const filled = [];
+  for (const state of root.querySelectorAll(`${SWITCH} ${SWITCH_STATE}`)) {
+    if (!(state instanceof HTMLElement) || state.childNodes.length > 0) continue;
+    const on = document.createElement("span");
+    on.className = "kp-switch__on";
+    on.textContent = s.switchOn;
+    const off = document.createElement("span");
+    off.className = "kp-switch__off";
+    off.textContent = s.switchOff;
+    state.append(on, off);
+    filled.push(state);
+  }
+  return () => {
+    for (const state of filled) state.replaceChildren();
+  };
 }
 
 // js/patterns.js
@@ -6115,6 +6141,7 @@ function attachAll(root = document) {
     attachDataTables(root),
     attachTableRegions(root),
     attachForms(root),
+    attachSwitches(root),
     attachPatterns(root),
     attachStructure(root),
     attachDatePickers(root),
@@ -6575,6 +6602,7 @@ export {
   attachSidenavs,
   attachSkipLinks,
   attachStructure,
+  attachSwitches,
   attachTableRegions,
   attachTabs,
   attachThemePickers,

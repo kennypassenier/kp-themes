@@ -53,6 +53,14 @@ export type Strings = {
     formSummaryOne: string;
     formSummaryMany: (n: number) => string;
     fieldFallbackName: string;
+    /**
+     * The word beside a switch that is on [gap-11]
+     */
+    switchOn: string;
+    /**
+     * The word beside a switch that is off [gap-11]
+     */
+    switchOff: string;
     calendarOpen: string;
     calendarButton: string;
     dateFormatHint: string;
@@ -202,6 +210,8 @@ export type Strings = {
  * @property {string} formSummaryOne
  * @property {(n: number) => string} formSummaryMany
  * @property {string} fieldFallbackName
+ * @property {string} switchOn   The word beside a switch that is on [gap-11]
+ * @property {string} switchOff  The word beside a switch that is off [gap-11]
  * @property {string} calendarOpen
  * @property {string} calendarButton
  * @property {string} dateFormatHint

@@ -743,6 +743,31 @@
             inset -2px -2px 0 0 var(--border-strong);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: a sunken square well on
+       the popover, a square thumb, and the title bar's primary once on.
+       The ring keeps the bevel under it, as the check's does. */
+    [data-theme='retro'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-switch__input:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            var(--kp-sunken);
+    }
+
     [data-theme='retro'] .kp-form__summary {
         background: var(--popover);
         border: 1px solid var(--border-strong);

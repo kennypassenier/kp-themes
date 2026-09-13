@@ -703,6 +703,25 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the skewed square with
+       the input's two-pixel edge, and the primary fill once on. */
+    [data-theme='phantom'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='phantom'] .kp-switch__input {
+        border: 2px solid var(--input);
+        background: var(--card);
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='phantom'] .kp-form__summary {
         border-left: 4px solid var(--primary);
         background: var(--card);

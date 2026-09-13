@@ -349,6 +349,17 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: formal keeps the pill, on the field's own ground
+       and boundary, so a switch sits in a form like the inputs beside it. */
+    [data-theme='formal'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
     /* ── Cards and the dossier: a file on the desk, redactions that clear
        left to right when the file is opened. ── */
 

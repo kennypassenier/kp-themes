@@ -85,6 +85,11 @@ export const HELPERS = {
  */
 export const REQUIRED_PARTS = {
     nav__menu: 'the dropdown: a theme that styles the bar and not the menu loses the reader the moment it opens (Kenny, 2026-09-08)',
+    // The `.kp-switch` root is required like every root, read from
+    // css/components.css at run time; this is its track. A register can
+    // answer the row with a knob and leave the part that changes when it
+    // is flipped in the package's neutral voice [gap-11].
+    switch__input: 'the switch track and thumb: the part that changes when it is flipped, so the theme has to be there when it does [gap-11]',
 };
 
 /**

@@ -476,6 +476,23 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the console's rounded
+       corner on the popover, and the selection colour once on. */
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--input);
+        background: var(--popover);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
+    }
+
     [data-theme='nostromo'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

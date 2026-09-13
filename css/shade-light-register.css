@@ -425,6 +425,15 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: the pill, on the card as the inputs are. */
+    [data-theme='shade-light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:not(:checked) {
+        background: var(--card);
+    }
+
     [data-theme='shade-light'] .kp-form {
         gap: 1rem;
     }

@@ -529,6 +529,37 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: square, two pixels of
+       ink, the ground inside — and inverted once on, an ink track and a
+       thumb in the ground. */
+    [data-theme='grotesk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='grotesk'] .kp-switch__input {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input::before {
+        background: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked {
+        background: var(--foreground);
+        border-color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked::before {
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:focus-visible {
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+    }
+
     [data-theme='grotesk'] .kp-form__summary {
         border-inline-start: 4px solid var(--primary);
         background: var(--muted);

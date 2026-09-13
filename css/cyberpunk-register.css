@@ -643,6 +643,37 @@
         border-color: var(--kp-hairline);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: a square track on the
+       card with a primary hairline, and a thumb that is the checkbox's
+       notched block — dim at rest, signal once on. The track keeps its
+       ground when on; the block carries the state, as the check does. */
+    [data-theme='cyberpunk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input {
+        border: 1px solid var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input::before {
+        clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked {
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked::before {
+        background: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
     [data-theme='cyberpunk'] .kp-fieldset > legend {
         font-family: var(--kp-mono);
         font-size: 0.72rem;

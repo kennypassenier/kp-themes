@@ -525,6 +525,34 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: a square slab with the
+       heavy line and the offset shadow, a square thumb in ink, and the
+       primary fill once on. */
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: var(--kp-line);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        background: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        background: var(--primary-foreground);
+    }
+
     [data-theme='brutalism'] .kp-form__summary {
         background: var(--card);
         border: var(--kp-line) solid var(--border-strong);

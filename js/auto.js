@@ -21,7 +21,7 @@ import { attachComboboxes } from './combobox.js';
 import { attachPalettes } from './palette.js';
 import { attachDataTables } from './datatable.js';
 import { attachTableRegions } from './tables.js';
-import { attachForms } from './forms.js';
+import { attachForms, attachSwitches } from './forms.js';
 import { attachPatterns } from './patterns.js';
 import { attachStructure } from './structure.js';
 import { attachDatePickers } from './datepicker.js';
@@ -56,6 +56,7 @@ export function attachAll(root = document) {
         attachDataTables(root),
         attachTableRegions(root),
         attachForms(root),
+        attachSwitches(root),
         attachPatterns(root),
         attachStructure(root),
         attachDatePickers(root),

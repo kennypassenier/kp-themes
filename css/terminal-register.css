@@ -669,6 +669,33 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: no rounding, no fill —
+       a slot in the border colour and a block cursor for the thumb, dim at
+       rest, phosphor with its bloom once on. */
+    [data-theme='terminal'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: transparent;
+    }
+
+    [data-theme='terminal'] .kp-switch__input:checked {
+        background: transparent;
+        border-color: var(--primary);
+    }
+
+    [data-theme='terminal'] .kp-switch__input:checked::before {
+        background: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+
+    [data-theme='terminal'] .kp-switch__state {
+        font-family: var(--theme-font-mono);
+    }
+
     [data-theme='terminal'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

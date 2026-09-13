@@ -1056,6 +1056,107 @@
         outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
     }
 
+    /* --- Switch [gap-11] ------------------------------------------------- */
+
+    /* A checkbox that says on and off instead of ticked: the real control is
+ * an <input type="checkbox" role="switch">, so it submits with a form,
+ * reads its state from `checked`, flips with Space and needs no script.
+ * The geometry and the states are the concept Kenny approved on
+ * 2026-09-13 ("Switch: Akkoord", catalogue/switch.html), moved onto knobs
+ * whose defaults are the concept's own values [KT6]. The label is the
+ * whole target: the row is a <label>. */
+    .kp-switch {
+        display: inline-flex;
+        /* The track stays on the first line of a label that wraps: the text
+     * lines are as tall as the track. */
+        align-items: flex-start;
+        line-height: var(--kp-switch-height, 1.5rem);
+        gap: var(--kp-switch-gap, 0.625rem);
+        max-inline-size: var(--kp-switch-max-width, 28rem);
+        cursor: pointer;
+    }
+
+    .kp-switch__input {
+        appearance: none;
+        position: relative;
+        flex: none;
+        inline-size: var(--kp-switch-width, 2.5rem);
+        block-size: var(--kp-switch-height, 1.5rem);
+        margin: 0;
+        border: var(--kp-switch-border, 1px) solid var(--border-strong);
+        /* A knob, so a register squares the track from the row without
+     * restating the track's own rule; the thumb has its own. */
+        border-radius: var(--kp-switch-radius, var(--kp-radius-pill, 999px));
+        background: var(--muted);
+        cursor: inherit;
+    }
+
+    /* The thumb: a disc that travels. Its position carries the state as well
+ * as the colour does [DI4]. Sized from the track, its inset and the
+ * border on both sides, so a register that thickens the border keeps the
+ * thumb inside. */
+    .kp-switch__input::before {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-switch-inset, 0.125rem);
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        inline-size: calc(var(--kp-switch-height, 1.5rem) - 2 * var(--kp-switch-inset, 0.125rem) - 2 * var(--kp-switch-border, 1px));
+        border-radius: var(--kp-switch-thumb-radius, 50%);
+        background: var(--muted-foreground);
+    }
+
+    .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .kp-switch__input:checked::before {
+        inset-inline-start: calc(100% - var(--kp-switch-height, 1.5rem) + var(--kp-switch-inset, 0.125rem) + 2 * var(--kp-switch-border, 1px));
+        background: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-switch__input,
+        .kp-switch__input::before {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* On and off in words beside the track, so the state never rests on
+ * colour or position alone. The words are two spans from js/strings.js —
+ * never a `content` literal, which no consumer could replace [KT5] — and
+ * the one that does not apply is not rendered. aria-hidden on the
+ * wrapper, because the role already announces the state. */
+    .kp-switch__state {
+        min-inline-size: var(--kp-switch-state-min, 2rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-switch__on,
+    .kp-switch:has(:checked) .kp-switch__off {
+        display: none;
+    }
+
+    .kp-switch:has(:checked) .kp-switch__on {
+        display: inline;
+    }
+
+    .kp-switch:has(:disabled) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The same mark an invalid checkbox takes, in the alarm colour; the
+ * message under it says what is wrong in words [DI4]. */
+    .kp-switch__input[aria-invalid='true'] {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: 2px;
+    }
+
     /* --- Table [TH3] ----------------------------------------------------- */
 
     .kp-table-wrap {

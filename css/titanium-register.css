@@ -644,6 +644,23 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the machined corner on
+       the card, a small square thumb, and the primary fill once on. */
+    [data-theme='titanium'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.1rem;
+    }
+
+    [data-theme='titanium'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='titanium'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

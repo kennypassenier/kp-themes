@@ -747,6 +747,30 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the theme's radius on a
+       primary-edged track over the sidebar's night with a faint glow, and
+       a thumb that lights in the accent with its own glow once on. */
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-radius: var(--radius);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        border: 2px solid var(--primary);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked {
+        background: var(--sidebar-background);
+        border-color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked::before {
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent);
+    }
+
     [data-theme='synthwave'] .kp-form__summary {
         border-left: 4px solid transparent;
         border-image: var(--kp-stripe) 1;

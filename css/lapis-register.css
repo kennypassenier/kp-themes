@@ -511,6 +511,16 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The switch [gap-11]: the pill, on the card with the fieldset's strong edge. */
+    [data-theme='lapis'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:not(:checked) {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
     [data-theme='lapis'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

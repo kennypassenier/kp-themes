@@ -528,6 +528,16 @@
         border-radius: 0.8rem;
     }
 
+    /* The switch [gap-11]: the pill stays, soft on the field's ground. */
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
     [data-theme='pastel'] .kp-form__summary {
         background: var(--muted);
         border: 1px solid var(--border);

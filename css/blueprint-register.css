@@ -583,6 +583,26 @@
         border-radius: 2px;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the drafting corner of
+       the inputs, and the selection colour the check uses once on. */
+    [data-theme='blueprint'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input {
+        background: var(--card);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked::before {
+        background: var(--card);
+    }
+
     [data-theme='blueprint'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);

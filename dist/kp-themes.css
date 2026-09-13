@@ -5198,6 +5198,107 @@
         outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
     }
 
+    /* --- Switch [gap-11] ------------------------------------------------- */
+
+    /* A checkbox that says on and off instead of ticked: the real control is
+ * an <input type="checkbox" role="switch">, so it submits with a form,
+ * reads its state from `checked`, flips with Space and needs no script.
+ * The geometry and the states are the concept Kenny approved on
+ * 2026-09-13 ("Switch: Akkoord", catalogue/switch.html), moved onto knobs
+ * whose defaults are the concept's own values [KT6]. The label is the
+ * whole target: the row is a <label>. */
+    .kp-switch {
+        display: inline-flex;
+        /* The track stays on the first line of a label that wraps: the text
+     * lines are as tall as the track. */
+        align-items: flex-start;
+        line-height: var(--kp-switch-height, 1.5rem);
+        gap: var(--kp-switch-gap, 0.625rem);
+        max-inline-size: var(--kp-switch-max-width, 28rem);
+        cursor: pointer;
+    }
+
+    .kp-switch__input {
+        appearance: none;
+        position: relative;
+        flex: none;
+        inline-size: var(--kp-switch-width, 2.5rem);
+        block-size: var(--kp-switch-height, 1.5rem);
+        margin: 0;
+        border: var(--kp-switch-border, 1px) solid var(--border-strong);
+        /* A knob, so a register squares the track from the row without
+     * restating the track's own rule; the thumb has its own. */
+        border-radius: var(--kp-switch-radius, var(--kp-radius-pill, 999px));
+        background: var(--muted);
+        cursor: inherit;
+    }
+
+    /* The thumb: a disc that travels. Its position carries the state as well
+ * as the colour does [DI4]. Sized from the track, its inset and the
+ * border on both sides, so a register that thickens the border keeps the
+ * thumb inside. */
+    .kp-switch__input::before {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-switch-inset, 0.125rem);
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        inline-size: calc(var(--kp-switch-height, 1.5rem) - 2 * var(--kp-switch-inset, 0.125rem) - 2 * var(--kp-switch-border, 1px));
+        border-radius: var(--kp-switch-thumb-radius, 50%);
+        background: var(--muted-foreground);
+    }
+
+    .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .kp-switch__input:checked::before {
+        inset-inline-start: calc(100% - var(--kp-switch-height, 1.5rem) + var(--kp-switch-inset, 0.125rem) + 2 * var(--kp-switch-border, 1px));
+        background: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-switch__input,
+        .kp-switch__input::before {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* On and off in words beside the track, so the state never rests on
+ * colour or position alone. The words are two spans from js/strings.js —
+ * never a `content` literal, which no consumer could replace [KT5] — and
+ * the one that does not apply is not rendered. aria-hidden on the
+ * wrapper, because the role already announces the state. */
+    .kp-switch__state {
+        min-inline-size: var(--kp-switch-state-min, 2rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-switch__on,
+    .kp-switch:has(:checked) .kp-switch__off {
+        display: none;
+    }
+
+    .kp-switch:has(:checked) .kp-switch__on {
+        display: inline;
+    }
+
+    .kp-switch:has(:disabled) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The same mark an invalid checkbox takes, in the alarm colour; the
+ * message under it says what is wrong in words [DI4]. */
+    .kp-switch__input[aria-invalid='true'] {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: 2px;
+    }
+
     /* --- Table [TH3] ----------------------------------------------------- */
 
     .kp-table-wrap {
@@ -8536,6 +8637,37 @@
         border-color: var(--kp-hairline);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: a square track on the
+       card with a primary hairline, and a thumb that is the checkbox's
+       notched block — dim at rest, signal once on. The track keeps its
+       ground when on; the block carries the state, as the check does. */
+    [data-theme='cyberpunk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input {
+        border: 1px solid var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input::before {
+        clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked {
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked::before {
+        background: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
     [data-theme='cyberpunk'] .kp-fieldset > legend {
         font-family: var(--kp-mono);
         font-size: 0.72rem;
@@ -10220,6 +10352,31 @@
             inset -1px -1px 0 0 var(--popover),
             inset 2px 2px 0 0 var(--popover),
             inset -2px -2px 0 0 var(--border-strong);
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: a sunken square well on
+       the popover, a square thumb, and the title bar's primary once on.
+       The ring keeps the bevel under it, as the check's does. */
+    [data-theme='retro'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-switch__input:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            var(--kp-sunken);
     }
 
     [data-theme='retro'] .kp-form__summary {
@@ -12056,6 +12213,30 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the theme's radius on a
+       primary-edged track over the sidebar's night with a faint glow, and
+       a thumb that lights in the accent with its own glow once on. */
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-radius: var(--radius);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        border: 2px solid var(--primary);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked {
+        background: var(--sidebar-background);
+        border-color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked::before {
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent);
+    }
+
     [data-theme='synthwave'] .kp-form__summary {
         border-left: 4px solid transparent;
         border-image: var(--kp-stripe) 1;
@@ -13686,6 +13867,25 @@
     [data-theme='phantom'] .kp-fieldset {
         border: 2px solid var(--border);
         border-radius: 0;
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: the skewed square with
+       the input's two-pixel edge, and the primary fill once on. */
+    [data-theme='phantom'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='phantom'] .kp-switch__input {
+        border: 2px solid var(--input);
+        background: var(--card);
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
     }
 
     [data-theme='phantom'] .kp-form__summary {
@@ -15338,6 +15538,33 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: no rounding, no fill —
+       a slot in the border colour and a block cursor for the thumb, dim at
+       rest, phosphor with its bloom once on. */
+    [data-theme='terminal'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: transparent;
+    }
+
+    [data-theme='terminal'] .kp-switch__input:checked {
+        background: transparent;
+        border-color: var(--primary);
+    }
+
+    [data-theme='terminal'] .kp-switch__input:checked::before {
+        background: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+
+    [data-theme='terminal'] .kp-switch__state {
+        font-family: var(--theme-font-mono);
+    }
+
     [data-theme='terminal'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -16720,6 +16947,34 @@
     [data-theme='brutalism'] .kp-fieldset {
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: a square slab with the
+       heavy line and the offset shadow, a square thumb in ink, and the
+       primary fill once on. */
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: var(--kp-line);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        background: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        background: var(--primary-foreground);
     }
 
     [data-theme='brutalism'] .kp-form__summary {
@@ -18311,6 +18566,23 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the machined corner on
+       the card, a small square thumb, and the primary fill once on. */
+    [data-theme='titanium'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.1rem;
+    }
+
+    [data-theme='titanium'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='titanium'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -19533,6 +19805,16 @@
         border-radius: 0.8rem;
     }
 
+    /* The switch [gap-11]: the pill stays, soft on the field's ground. */
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
     [data-theme='pastel'] .kp-form__summary {
         background: var(--muted);
         border: 1px solid var(--border);
@@ -20603,6 +20885,15 @@
     [data-theme='shade-light'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: the pill, on the card as the inputs are. */
+    [data-theme='shade-light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:not(:checked) {
+        background: var(--card);
     }
 
     [data-theme='shade-light'] .kp-form {
@@ -21835,6 +22126,15 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: the rounded pill on the field's ground. */
+    [data-theme='forest'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='forest'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     [data-theme='forest'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -22920,6 +23220,16 @@
     [data-theme='deco'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: 0;
+    }
+
+    /* The switch [gap-11]: square, like every deco field, on its ground. */
+    [data-theme='deco'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-switch__input:not(:checked) {
+        background: var(--background);
     }
 
     [data-theme='deco'] .kp-form__summary {
@@ -24018,6 +24328,15 @@
         border-radius: var(--radius, 0.5rem);
     }
 
+    /* The switch [gap-11]: the pill, on the field's ground as the inputs are. */
+    [data-theme='light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='light'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     /* ── Card / dossier ──────────────────────────────────────────────────── */
 
     [data-theme='light'] .kp-card {
@@ -25053,6 +25372,37 @@
     [data-theme='grotesk'] .kp-fieldset {
         border: 2px solid var(--border);
         border-radius: 0;
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: square, two pixels of
+       ink, the ground inside — and inverted once on, an ink track and a
+       thumb in the ground. */
+    [data-theme='grotesk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='grotesk'] .kp-switch__input {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input::before {
+        background: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked {
+        background: var(--foreground);
+        border-color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked::before {
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:focus-visible {
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
     }
 
     [data-theme='grotesk'] .kp-form__summary {
@@ -26368,6 +26718,26 @@
         border-radius: 2px;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the drafting corner of
+       the inputs, and the selection colour the check uses once on. */
+    [data-theme='blueprint'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input {
+        background: var(--card);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked::before {
+        background: var(--card);
+    }
+
     [data-theme='blueprint'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -27497,6 +27867,23 @@
     [data-theme='nostromo'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: the console's rounded
+       corner on the popover, and the selection colour once on. */
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--input);
+        background: var(--popover);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
     }
 
     [data-theme='nostromo'] .kp-form__summary {
@@ -28892,6 +29279,24 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the box's small corner
+       on a card-grounded track, a square-ish thumb, and the primary fill
+       once on. */
+    [data-theme='dark'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.1rem;
+    }
+
+    [data-theme='dark'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='dark'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -29939,6 +30344,17 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: formal keeps the pill, on the field's own ground
+       and boundary, so a switch sits in a form like the inputs beside it. */
+    [data-theme='formal'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
     /* ── Cards and the dossier: a file on the desk, redactions that clear
        left to right when the file is opened. ── */
 
@@ -30975,6 +31391,15 @@
     [data-theme='sepia'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: 0.375rem;
+    }
+
+    /* The switch [gap-11]: the pill, on the popover's paper as the inputs are. */
+    [data-theme='sepia'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='sepia'] .kp-switch__input:not(:checked) {
+        background: var(--popover);
     }
 
     [data-theme='sepia'] .kp-form__summary {
@@ -32015,6 +32440,16 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: the pill, on the page's ground with the inputs' edge. */
+    [data-theme='solstice'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='solstice'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
     [data-theme='solstice'] .kp-form__summary {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -33039,6 +33474,26 @@
 
     [data-theme='high-contrast'] .kp-fieldset {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The switch [gap-11]: the pill with the inputs' two-pixel boundary,
+       and no transition, as the fields here have none. */
+    [data-theme='high-contrast'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input {
+        border-width: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input:not(:checked) {
+        border-color: var(--border);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input,
+    [data-theme='high-contrast'] .kp-switch__input::before {
+        transition: none;
     }
 
     [data-theme='high-contrast'] .kp-form__summary {
@@ -34095,6 +34550,16 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The switch [gap-11]: the pill, on the card with the fieldset's strong edge. */
+    [data-theme='lapis'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:not(:checked) {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
     [data-theme='lapis'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -35087,6 +35552,15 @@
     [data-theme='shade-dark'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: the pill, on the card as the inputs are. */
+    [data-theme='shade-dark'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-dark'] .kp-switch__input:not(:checked) {
+        background: var(--card);
     }
 
     [data-theme='shade-dark'] .kp-form__summary {
