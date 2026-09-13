@@ -2808,3 +2808,43 @@ machine, with his permission for that occasion.
 **9 · When we review the measure.** When the catalogue is published by
 `pages.yml` and reviewing no longer needs a local server at all; then the
 command becomes optional and this record says so.
+
+## fix-20 · The office lamp flashed before the reply was finished (2026-09-13)
+
+**1 · What went wrong.** Kenny: *"de HA notificatie mag pas gestuurd worden
+als allerlaatste stap, zodat ik niet meer op iets moet wachten nadat mijn
+lampen flashen."* Measured over this session's transcript for 2026-09-13:
+the lamp flashed in 8 turns, and in 7 of them Claude wrote text after the
+last flash.
+
+**2 · Which gate let it through.** None. The global rule already says the
+lamp is the very last action of a turn (Kenny, 2026-09-08); nothing holds
+it, and the reply was written after the tool calls out of habit.
+
+**3 · Where the same fault sits.** The property is **a signal meaning
+"Claude is done" sent before Claude is done**. Searched with a pass over
+the transcript that splits it into turns at each human message and checks
+whether any assistant text follows the last `notify_color_lights` call:
+7 of 8 turns today. The PushNotification has the same property and was sent
+before the final text in the same turns.
+
+**4 · How we prevent recurrence.** Order of the end of a turn, written as
+the steps they are: the form rendered, the reply text written in full, then
+the PushNotification, then the lamp as the final tool call, with nothing
+after it. Consciously no hook: a Stop hook sees the order only once the
+text has already been shown, so it could not prevent a flash, only add a
+second one at the end.
+
+**5 · What the remedy costs.** Nothing but the order.
+
+**6 · Who enforces it.** Discipline, marked as such.
+
+**7 · How we measure it works, and when.** The same transcript pass, run at
+the end of this round over every turn after this record: zero turns with
+text after the last flash. Queued as `fix-20-M1`.
+
+**8 · If the measurement fails.** A Stop hook that refuses a turn whose last
+tool call is not the lamp when a lamp was called, accepting the double flash
+as the price, asked for as a global change.
+
+**9 · When we review the measure.** At that measurement.
