@@ -1327,3 +1327,14 @@ demos from round-six; Claude pushes round-six whenever it asks Kenny to look.
 Kenny's own answer on grotesk's pressed button waits until he has seen it
 there ("eerst zien op github pages").
 
+**scope-68 · Verdicts live in a register in the repository.** Kenny, 2026-09-13,
+form item verdict-ledger: "Register in de repository", after asking whether his
+judgements are kept for good ("dit mag nooit veranderen door een change").
+`catalogue/verdicts.json` holds every verdict with the hash and the commit it
+was given on; Claude records each pasted prompt and commits it; the hash recipe
+carries a version, and a gate refuses a recipe change until every entry is
+re-hashed on its own commit. A verdict only returns when the component itself
+looks different. Item verdict-import: "Terugzetten wat niet veranderde" — the
+131 verdicts of that day are restored where the block hashes alike at the
+commit they were given on and at the current one.
+
