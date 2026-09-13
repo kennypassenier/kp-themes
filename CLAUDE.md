@@ -334,14 +334,14 @@ until it becomes a template in the repository.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                     |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round seven closed.** 6.0.0 is released and Phase 10's retrospective is committed on `~/Projects/dev-procedure` (`eee3560`)                                                             |
-| Last completed gate | **Phase 10, 2026-09-13.** Five lessons adopted: rule 7e sharpened to "red against what", rule 7i and rule 48 added, the field-test rule sharpened, and the ecosystem entry moved to 6.0.0 |
-| Next gate           | None. The next round opens when Kenny brings one                                                                                                                                          |
-| Next action         | waiting on Kenny: the next round, and the FEATURE COMPLETE rename which is his to give                                                                                                    |
-| Open queue items    | Eight, and not one is Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1`, `fix-17-M1` and `fix-18-M1`                                                         |
-| AFK mode            | off                                                                                                                                                                                       |
+| Field               | Value                                                                                                                                                                                                                                                       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current phase       | **Round eight, Phase 0 (scope).** Kenny's brief of 2026-09-13 puts the working method itself under review: the dev cycle, the tests, the gates, the documents, CLAUDE.md, the tooling. The measurements and the sixteen-item scope form are in this session |
+| Last completed gate | **Phase 10, 2026-09-13.** Five lessons adopted: rule 7e sharpened to "red against what", rule 7i and rule 48 added, the field-test rule sharpened, and the ecosystem entry moved to 6.0.0                                                                   |
+| Next gate           | Phase 0: the scope form of round eight (sixteen items: order, route, catalogue, tests, triggers, gates, drift, purge, claudemd, agents, lexicon, parallel, research, devtools, visibility, tools)                                                           |
+| Next action         | waiting on Kenny: the answers to the round-eight scope form (sixteen items)                                                                                                                                                                                 |
+| Open queue items    | Eight, and not one is Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1`, `fix-17-M1` and `fix-18-M1`                                                                                                                           |
+| AFK mode            | off                                                                                                                                                                                                                                                         |
 
 Correction KT6 reopened the project a third time on 2026-09-05 — a busy
 button with no way back, found by JobTracker's login — and Kenny's answer
