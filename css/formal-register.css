@@ -932,6 +932,14 @@
         pointer-events: none;
     }
 
+    /* On a filled button a primary-coloured rule vanishes into its own
+       ground; there the rule takes the label's colour (Kenny, catalogue
+       note 2026-09-13). */
+    [data-theme='formal'] .kp-button--primary::after,
+    [data-theme='formal'] .kp-button--destructive::after {
+        border-color: currentColor;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-button::after {
             transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);

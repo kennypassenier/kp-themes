@@ -1290,3 +1290,10 @@ number of rows.
 **scope-61 · Only retro underlines the accelerator letter.** Kenny,
 2026-09-13, after asking whether every theme should: it stays retro's alone,
 as decided on 2026-09-12. Every theme keeps a marked label whole (scope-57).
+
+**scope-62 · The drawn select is the default.** Kenny, 2026-09-13, after
+asking why a field page showed two selects: every single `select.kp-field__input`
+gets the drawn list without opting in; `data-kp-select="native"` keeps the
+browser's own, and a `multiple` select always does. This replaces the opt-in
+half of scope-54; consumers see it on their next update, which raises the
+version as every change does.

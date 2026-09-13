@@ -2889,21 +2889,26 @@ markup at all and nests blocks under a component heading instead.
 ## fix-22 · A search command waited on input for eleven and a half hours (2026-09-13)
 
 **1 · What went wrong.** Kenny found a background task running for 11h28m.
-It was a Bash command of Claude's: a `grep` given an empty file name, because
-the file it looked for sits in `site/components/` and the search looked in
-`site/*.html`, so it waited on standard input; the tool moved it to the
-background after 120 seconds and nobody stopped it.
+It was a Bash command of Claude's; the tool moved it to the background after
+120 seconds and nobody stopped it. The first explanation — a `grep` given an
+empty file name, waiting on standard input — was refuted the same day: the
+tool's shell reads `/dev/null` (`readlink /proc/$$/fd/0`), and the same
+command with an empty name returns in 0.001 s. The real cause is not
+established; the processes were stopped before they were inspected.
 
 **2 · Which gate let it through.** None. A command that reads standard input
 is not refused, and a backgrounded shell has no lifetime.
 
-**3 · Where the same fault sits.** The property is **a shell command that can
-block on standard input**. Searched with `ps -eo pid,etime,args` for this
-session's shells older than an hour: one, this one. Every `$(...)`-captured
-file name passed to a reader without a check has the same exposure.
+**3 · Where the same fault sits.** The property is **a shell of this session
+that outlives its turn**, whatever blocks it. Searched by listing processes
+whose standard output is a file under the session's `tasks/` directory, with
+their age: one, the listing's own shell.
 
-**4 · How we prevent recurrence.** Decided by Kenny in the form of
-2026-09-13 (item `fix-22`).
+**4 · How we prevent recurrence.** Kenny chose a global hook prefixing every
+command with `exec </dev/null` (form of 2026-09-13); Claude did not build it,
+because stdin already is `/dev/null` and it would not have stopped this. A
+measure that does not depend on the cause is back in front of Kenny (form of
+2026-09-13, second pass).
 
 **5 · What the remedy costs.** Depends on that answer.
 
