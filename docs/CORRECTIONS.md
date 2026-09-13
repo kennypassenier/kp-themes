@@ -3041,7 +3041,11 @@ without a form that offers "nog niet gekeken".
 
 **7 · How we measure it works, and when.** When built: the hook refuses one
 turn without a form. At the end of round eight: 0 turns on "waiting on Kenny"
-without a form.
+without a form. Measured on the building turn (2026-09-14): a
+turn ending on "waiting on Kenny" without a form was refused with the message
+naming `forms-at-wait: required`; five drills on fake transcripts behaved as
+intended (no form → refused, form after Kenny's message → allowed, form only
+before it → refused, no marker → allowed, waiting on agent → allowed).
 
 **8 · If the measurement fails.** Claude proposes it for every project, in a
 form.
