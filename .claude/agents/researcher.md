@@ -29,3 +29,5 @@ Every deliverable is two files under `research/<topic>/`:
 
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
+
+Never run `pkill`, `killall` or `kill` on a process you did not start yourself, by its own PID: other agents and Kenny's own review server (`npm run catalogue`) run the same fixture server on this machine, and a pattern kill stops all of them (2026-09-13, it did).

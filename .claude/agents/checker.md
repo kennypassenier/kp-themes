@@ -28,3 +28,5 @@ measured Y`;
 
 Do not diagnose or propose fixes; the main conversation does that with
 the source in front of it.
+
+Never run `pkill`, `killall` or `kill` on a process you did not start yourself, by its own PID: other agents and Kenny's own review server (`npm run catalogue`) run the same fixture server on this machine, and a pattern kill stops all of them (2026-09-13, it did).

@@ -25,3 +25,5 @@ Rules that hold here:
 Before reporting, run `npm run gates` from the repository root and paste
 its last line. Report in five lines: files touched, the measured before and
 after, the gates result, anything you refused to decide.
+
+Never run `pkill`, `killall` or `kill` on a process you did not start yourself, by its own PID: other agents and Kenny's own review server (`npm run catalogue`) run the same fixture server on this machine, and a pattern kill stops all of them (2026-09-13, it did).
