@@ -90,6 +90,9 @@ node gates/check-ids.mjs
 echo "→ every component the package defines is shown somewhere in the catalogue [scope-31]"
 node gates/check-catalogue.mjs
 
+echo "→ the verdict register is well formed, names known blocks, and matches the hash recipe [scope-68]"
+node gates/check-verdicts.mjs
+
 echo "→ every theme answers every hook (S45, AR36)"
 node gates/check-hooks.mjs
 

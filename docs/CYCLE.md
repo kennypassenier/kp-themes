@@ -26,6 +26,54 @@ A fault found live — in a consumer, in Kenny's own browser — still ends in
 a correction form (standing rule 29); a test going red while building does
 not.
 
+## How a verdict reaches the register
+
+Kijken's verdicts are kept in the repository, in `catalogue/verdicts.json`,
+for good: a change to the tooling must never undo one (Kenny, 2026-09-13,
+form item verdict-ledger). A verdict belongs to a block, a theme and a
+browser engine — `firefox` for Gecko (Firefox, FireDragon), `chromium` for
+Blink (Chrome, Chromium, Edge) — which the page detects on its own; a block
+approved in FireDragon is still to be judged in Chrome. Each entry keeps the
+block's hash, the commit it was recorded on and the date.
+
+1. Kenny judges on the review site or a local server. Every Approve and Not
+   approved is kept in that browser first, and the panel says so ("In this
+   browser, not yet recorded").
+2. Kenny copies the prompt and pastes it into the conversation. Its last
+   block, `Verdict lines (hash version N):`, carries one line per verdict not
+   yet in the register: `block key · theme · engine · verdict · hash`.
+3. Claude saves the pasted text and runs
+   `node gates/verdicts.mjs record < prompt.txt`. The tool refuses a block
+   no page shows, a theme that does not exist, and lines taken with another hash version, and prints what it
+   added and changed. Claude commits the register and pushes `round-six`.
+4. From the published register on, the block counts as judged in every
+   browser of that engine ("In the register"). A verdict made later in a
+   browser, and different from the register's, wins until it is recorded in
+   turn.
+
+A block that changes after its verdict hashes differently and comes back to
+be judged; that is the point. A change to the hash recipe itself
+(`catalogue/block-hash.js`) is not a change to any block, so it must not
+bring anything back:
+
+1. The change raises `HASH_VERSION` in `catalogue/block-hash.js`.
+2. `npm run gates` then refuses (`gates/check-verdicts.mjs`): the register's
+   `hashVersion` differs — "run node gates/verdicts.mjs rehash".
+3. `node gates/verdicts.mjs rehash` measures every entry again at the commit
+   it was recorded on (a temporary git worktree, served on a free port with
+   the new `block-hash.js` injected), in its own engine (Playwright's Firefox
+   or Chromium), at 1920 px, and writes the new hashes and version. The
+   verdicts, commits and dates stay as they were.
+4. The register and the recipe are committed together.
+
+The recipe reads past what differs between two browsers of one engine or
+two window sizes, as measured on 2026-09-13 (lengths to the half pixel,
+`attr()` in `content` resolved, no translation in `transform`, lengths in
+viewport units read as "a length", a block still loading given time to
+finish); why is at the head of `catalogue/block-hash.js`. A window narrow
+enough to switch a component to another layout (a data table's cards below
+a 40rem container) is a different look and hashes differently.
+
 ## Research is a side stream
 
 A question that needs outside references — an alternative component, a

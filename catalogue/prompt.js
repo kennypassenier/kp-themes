@@ -31,7 +31,7 @@ export function mountPrompt({ bar, main }) {
     foot.setAttribute('aria-labelledby', 'cat-feedback-title');
     foot.innerHTML = `
         <h2 id="cat-feedback-title">The prompt, across every page</h2>
-        <p class="cat-note">Every note and verdict from every review page that was not in a prompt copied before, grouped per page and per theme, as one prompt to paste into the conversation. Both are kept in this browser only.</p>
+        <p class="cat-note">Every note and verdict from every review page that was not in a prompt copied before, grouped per page, per theme and per browser engine, as one prompt to paste into the conversation. Notes stay in this browser; a verdict is kept in this browser until the prompt is pasted and recorded into the register in the repository, and from then on counts as judged in every browser of its engine.</p>
         <pre class="cat-feedback-prompt" data-cat-prompt></pre>
         <div class="cat-feedback-actions">
             <div class="kp-field kp-field--check">

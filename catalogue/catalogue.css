@@ -260,8 +260,17 @@
     }
 
     .cat-judge__status {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.3rem 0.6rem;
         margin: 0;
         min-inline-size: 0;
+    }
+
+    /* Where the verdict is kept: in the register, or only in this browser so far. */
+    .cat-judge__source:empty {
+        display: none;
     }
 
     .cat-judge__glyph {

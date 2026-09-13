@@ -9,7 +9,9 @@
 import { THEMES } from '../js/theme-registry.js';
 import { currentTheme } from '../js/theme-core.js';
 import { COMPONENT_PAGES, PAGES } from './pages.js';
-import { JUDGEMENTS_KEY, loadJudgements } from './judgements.js';
+import { JUDGEMENTS_KEY, loadJudgements, verdictOf } from './judgements.js';
+import { HASH_VERSION } from './block-hash.js';
+import { ENGINE, engineLabel } from './engine.js';
 
 export const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
 /** The titles of blocks, stored as a page mounts them: { page: { block: title } }. */
@@ -137,13 +139,14 @@ export function verdictPlace(key) {
 
 function copiedSignatures() {
     const current = load(COPIED_KEY, null);
-    if (Array.isArray(current)) return new Set(current);
+    if (Array.isArray(current)) return new Set(current.map(withEngine));
     // One set per page before 2026-09-13. A note's signature then carried no
     // page, so the page is written into it; a component page's note moved to
     // the review page's key, and its signature moves with it.
     const legacy = load(COPIED_LEGACY, {});
     const set = new Set();
     for (const [page, signatures] of Object.entries(legacy)) {
+        if (!Array.isArray(signatures)) continue;
         const component = COMPONENT_PAGES.find((p) => p.href === page);
         for (const signature of signatures ?? []) {
             if (!signature.startsWith('note|')) {
@@ -164,10 +167,20 @@ function copiedSignatures() {
     return set;
 }
 
+// A verdict's signature carries its engine since verdicts are per engine
+// (2026-09-13); one written before was this browser's, so it gains this
+// browser's engine and a verdict already passed on is not passed on again.
+function withEngine(signature) {
+    const parts = signature.split('|');
+    if (parts[0] !== 'verdict' || parts.length !== 5) return signature;
+    return ['verdict', parts[1], parts[2], ENGINE, parts[3], parts[4]].join('|');
+}
+
 /**
  * Everything the prompt could say, from every page, each with the signature
  * that tells whether it was already in a copied prompt.
- * @returns {{ page: string, block: string, kind: 'note' | 'approved' | 'rejected', theme: string, text: string, signature: string }[]}
+ * A verdict already in the register is not: it is recorded.
+ * @returns {{ page: string, block: string, kind: 'note' | 'approved' | 'rejected', theme: string, engine?: string, text: string, signature: string, line?: string }[]}
  */
 export function promptItems() {
     const titles = load(TITLES_KEY, {});
@@ -188,21 +201,30 @@ export function promptItems() {
             }
         }
     }
-    for (const [key, themes] of Object.entries(loadJudgements())) {
+    const stored = loadJudgements();
+    for (const [key, themes] of Object.entries(stored)) {
         const { page, block } = verdictPlace(key);
         // A panel on screen knows whether its block still looks as judged; in
         // the theme on screen a verdict on a block that changed since is stale.
         const panel = document.querySelector(`.cat-judge[data-cat-block="${CSS.escape(key)}"]`);
-        for (const [theme, { verdict, hash }] of Object.entries(themes)) {
-            if (panel?.getAttribute('data-cat-state') === 'changed' && theme === currentTheme()) continue;
-            items.push({
-                page,
-                block,
-                kind: verdict === 'rejected' ? 'rejected' : 'approved',
-                theme,
-                text: titleOf(page, block),
-                signature: `verdict|${key}|${theme}|${verdict}|${hash}`,
-            });
+        for (const [theme, engines] of Object.entries(themes)) {
+            for (const [engine, entry] of Object.entries(engines ?? {})) {
+                const { verdict, hash, v } = entry;
+                if (engine === ENGINE && panel?.getAttribute('data-cat-state') === 'changed' && theme === currentTheme()) continue;
+                // Already kept in the register, or overruled by it: nothing to pass on.
+                if (verdictOf(key, theme, engine, stored)?.source !== 'browser') continue;
+                items.push({
+                    page,
+                    block,
+                    kind: verdict === 'rejected' ? 'rejected' : 'approved',
+                    theme,
+                    engine,
+                    text: titleOf(page, block),
+                    signature: `verdict|${key}|${theme}|${engine}|${verdict}|${hash}`,
+                    // Only a verdict taken with the recipe of now can be recorded.
+                    line: v === HASH_VERSION ? [key, theme, engine, verdict, hash].join(' · ') : undefined,
+                });
+            }
         }
     }
     return items;
@@ -229,14 +251,26 @@ export function buildPrompt({ includeCopied = false } = {}) {
         const onPage = items.filter((i) => i.page === page);
         const themes = [...new Set(onPage.map((i) => i.theme))].sort((a, b) => order.indexOf(a) - order.indexOf(b));
         for (const theme of themes) {
-            const of = (kind) => onPage.filter((i) => i.theme === theme && i.kind === kind).map((i) => i.text);
-            const [approved, rejected, notes] = [of('approved'), of('rejected'), of('note')];
+            const inTheme = onPage.filter((i) => i.theme === theme);
             lines.push('', `Theme ${themeLabel(theme)}:`);
-            if (approved.length) lines.push(`Approved (${approved.length}): ${approved.join('; ')}`);
-            if (rejected.length) lines.push(`Not approved (${rejected.length}): ${rejected.join('; ')}`);
+            const engines = [...new Set(inTheme.filter((i) => i.engine).map((i) => i.engine))].sort();
+            for (const engine of engines) {
+                const of = (kind) => inTheme.filter((i) => i.engine === engine && i.kind === kind).map((i) => i.text);
+                const [approved, rejected] = [of('approved'), of('rejected')];
+                lines.push(`In ${engineLabel(engine)}:`);
+                if (approved.length) lines.push(`Approved (${approved.length}): ${approved.join('; ')}`);
+                if (rejected.length) lines.push(`Not approved (${rejected.length}): ${rejected.join('; ')}`);
+            }
+            const notes = inTheme.filter((i) => i.kind === 'note').map((i) => i.text);
             if (notes.length) lines.push('Notes:', ...notes);
         }
     }
+    // What `node gates/verdicts.mjs record` reads: one verdict per line, in full.
+    const recordable = items
+        .filter((i) => i.line)
+        .map((i) => i.line)
+        .sort();
+    if (recordable.length) lines.push('', `Verdict lines (hash version ${HASH_VERSION}):`, ...recordable);
     return { text: lines.join('\n'), items: items.length, pages: pages.length, total: all.length };
 }
 

@@ -1,0 +1,1287 @@
+{
+    "hashVersion": 2,
+    "verdicts": {
+        "button--accelerator": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "fc3ff784c769ee4c8b719bdf313ce59280f024e503285ae22e8e197a78918e3b",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "787bc90f75f06fb7c7d610f71487f2a8d29f7bb8083c1dd369ee7440ae8f2ba8",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--extremes": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "30039c83fd315a0612d67642a2d2bfdcf50378e9c38db3ed9f40f8161bedc310",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c081ecd77e3485f379508cf3c326397d188221962e358505edcac21f754d9187",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--groups": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "59aa176912b9fd8cefb6a8a35492fa15408572c9fd3f5cb4a43c4a078abbad8a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "25511f96b8e4108280bc44b1693f6ab2ec33c2eac1673a72db117df2f9a6d357",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--icons": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ad3e202842bdecc03c0f2c73296dc3934935c3c7f95c4c681294df9e9de110d2",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f87adc5f7e8f9441018c2de96488c9e5ca4940f58e2b974a1c354f16d8c7e806",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--sizes": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f2a60c60574f79ee8900df6fdb2a800f490fcbce41c2b0e0e6c0dc369956d943",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cb98a52bd660300005bc770d196f405396f2169cde3877a5ecfecc12e2db9ccc",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--states": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9bf11cdfde799b77649dbe2b80adccbb5bc9e6126620c7f8719165194517be60",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0559c4d8728bae9e3fd4c05e1d5cdc58920d78774f8c21d582a4b49a42649b19",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "button--variants": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a75e852ae4d3d7bfaf856fa8c928044e25a5390f4e626d48b96b27f85781736f",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "914fcbd1398efeb15090ae5854c450ff5bff2b7decbb53f42fb4194b28637c16",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "colorpicker--against": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "71fa74a1a410c59b1752c3e7fe4faedb6c62e2c3e5d9f8961c7139fc84794bdd",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "colorpicker--default": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "83f8c0da539d9d6cc123b5eccd6a27a3b6002143ae40e530807529803d77676c",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "colorpicker--missing": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5b754997829b615855d10da0ae0b6f84036aac6c2dbc1cda516f9e9abe82a43d",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "colorpicker--narrow": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "705806649d98f3a376e7fa772c4cfbd996d7e90eb7a93d1df049280561d9d41a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "colorpicker--verdicts": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f22dd991d094212db2735701c7fa94bd8afe02a5b8198b85f14cf59a1ed2c268",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--closed": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e4fb4eb3cd5fbf4406d85d7ff6e9ab8fe8dbacc9212b2da7c7646f7af308bab2",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--keyboard": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b2f0693af573483a8b90fbfb1ce7cfe6849345dcf1141a3697912943142b4be0",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--long": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cad93b7b31eaa4c0143608efa37f910b7060d44214685c548fdeae0d18943542",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--many": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "8a65dbb01f836c2beb203a4298223c7bcc4ae4c40e1dea8b3726420f647057ae",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--nothing": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f525a4e230a7b32ff05d1dfc3cf983b00a9c6e01fe4b75e3c6c7b008e4a0f77a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--open": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "14b297d28538658a63b7e069bb106a929eace6542353498ff20d92019d0497e8",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "combobox--tags": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "bc1b3f40545f1abcd013ba62d251efb65f02ebbe5df83fafba8c96526a1cb2ae",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--col-low": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "6513127d7d57982ee8737b0ab56748c6b0b84a97de7f2a2f575f359b04fdc9ee",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--copyable": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7d74360943a4a0a4c147753fba957f391126b7538af81aeffe7635a975eb8f29",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--diff": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2d788b7cecfdd72482615db44030deeb02c1f6440aca7ce7cf84d87a4629e1fb",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--health": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "32f400931de3412c6899ea00e9d21513228ab2c42594d210092ad1048dcd4e9e",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--ids": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "75e532732b7ca67ad2207408a794a4ac1440e6b361ad90743bfb6976f6db5d52",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--shortcuts": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "73896998ea212b08280d6aa350cacda06e4ff99a0a4ea267f451ec72ccc46250",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--spec": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "48af4d40cc7348ee6773a81f714c518177b76478dc645525cd9b31404ca3c637",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "data--values": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5a18add92e7ad927cb5599c5f09d68a4c166185d4050b0fb49e02c0de3c0328b",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "datepicker--closed": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "32d493bd5b743de7c581529405f55726c5ae62805a5a2674e400148478f2b141",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "datepicker--keyboard": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "85c6e174eea447b465bc8825b1168a110214d6d5e845b1d3e92ed656ae18377c",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "datepicker--limits": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9e050aa2f4aac8eb281d37e5f81e9418495f1b21131b9844e096e2baf09fa083",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "datepicker--locale": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5b8070d71342196e9b9787bc510694b03bac6143b3e54fdd8186bd7cff630d20",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "datepicker--open": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5a29c90aa08f730027d1fe90d6f248905667b1dedcd451e3a83152f53333a224",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--alert-long": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4d0e7e9348e47a71964e172bbc57bb49d2bfa58ba0deffe98ed6f9387bba4ec7",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--alerts": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "92182f5873f60dbd321e013d7c006847897d2de58496e0f612c30fb6c2b51868",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--badge-long": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "06d912315da62d1dc5fc9cffc50d7ba43f84c370f20c83bdaca4d802e0f4cf62",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--badges": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ec0441b1223e97a6853c04b4feb2a5f8280ff7414cf748c84dd56461345b93ca",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--empty": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7c8685d5db49463d926e11630840f9b11f9a97063e7607db1e12f64da996b8ee",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--progress": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "359a976e214a94b717441eb9eed6d07fc554e9c283effbe510d7cc71b2d6bbd6",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--skeleton": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c4639d33512ad0b2a212aa9fcf2420724ddf52b5ba974abbbbc28981080eb844",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--spinner": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3e56f0d1fe477f0a125fda5f099a177c3f330fec4ac72c4baff01efa7cea5dd5",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--tags": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0d461127dda71e265c36b4ede9cc014d1a7075ee328e8ca4160f1343234a1f0f",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "feedback--toasts": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "3afafd3b06f623f56cb5487bc191a52e37296476ea515a3a54ea475cadc5822d",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--choices": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "259f3acfa971e73a30a1eb983232f8d8ab9242e149ceb3c0e29cf0cfeafa830d",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "42088aaf0aa88901ecf5428ef57cc275f9acf9265e2c50b34970a0b5eacdd29e",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--error-page": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5c11633d87fa86dde2f4ffbc0642762245958c081c0b069460ec2164bac61bfa",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--extremes": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0e6b487b8d53e6ee3c5c1d828fe1e9f54afa8be5fc5ee24acbd40e9cde2d0777",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--help": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f6a319c93869a8fd48762f8fe3452ac1e81609830fd3850fdbc76d357d3b0545",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--invalid": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1db19366f13984cb73163ad7f3953b630531456782588140acfde59c58d33402",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--multiline": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ce3a365605c266bc3c305f1ed2133d5ebaffcd253e7f76a9cbe1ab02063194e1",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "d032c293b8b8d4e5ed08dad2a76e9a1e8b68010591c26fd6b4ff109a66c7887a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--narrow": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c1cf472dc46b9b3127025a4dea74a6239e81cba02adc24b4c89e21ecb1aabac0",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--summary": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cb00baf20a4bd9cd2a32d604bcf32374424d5ba216b6276cf462b30054a88c9d",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--text": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d2ae29838f4c38d7ab5a317957c684e207a62cbd40302efa906da40f1b325a96",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "59bb41c0ab69b1b16eb1c4fccc11f044aaebd60ba8fc241c964522a906333b86",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "field--unavailable": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f3d8fcf4e8182c63edd0b3790ee4aa5abd133e6c6f24d53f0a82369c2f7ad048",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--empty": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "572c69cf8185f4ed6261e1f18a2357b5696d679b327f2efddf3d7db2afc580e3",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--figure": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "6ae15c6efbd88815754fe5571b99e610ff3b7780680dab11e02bee05f223900e",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--grid": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d25649e10f9fd18becb6864a8ba79163e7ec49b0eaafd3d3f95097087acf9513",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--grid-narrow": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a037d1648c853ecdc2559b2954891ac45fe94428fe783d7353652d00c2bd0c2c",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--laurels": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5e2cb166938a0a6dba181e72023bef499854ffbf87766eab70138e1700d69ee1",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--marquee": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d0d78f02e53279b2a2975a39990c27397d3cafd9f8ee95e521ae8b922476457a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "media--ratios": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "04c4bc4902d24ad4fdee66d8492720e9185f3780f0d0b2d0ff1591430e36059f",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--bar": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3892d91f7d148d4ab536ca2a8ed48d67f79a6348f6064dd9ded538d2c30a6acb",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--bar-collapsed": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "fe351b929afe93134abc872e19a441b0ae88ef323e20b9e63c513197e18923da",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--bar-long": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0088842a7ffa8fd68c041e0050b6d3b9cf4ea0a18403059e079da8d2bcd16317",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--breadcrumb": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "eaf62c66aa996de6092bcf5730ea753fffbc5776a4560ded6f585e81c55894a4",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--dropdown": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "443b06ad6f3d43ea7fc877197ae3507cc7157559e9d3d9c9aef97a0b131259c1",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--pagination": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4cca3e20ea93053f654d4214eeda9f5f251f79a5262b44e080204e95dde9c9ef",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--sidenav-over": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f893941bd7a77704b760f607fb3de563e74785f4bba735ae200467dfc1a16512",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--sidenav-side": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e4ac2ed5498b4a6432a9586fb0c750bdd517098638b53586690dc37a94c2eec1",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--sidenav-slim": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7a1f474d552ef36cc630e28ff087be324a28bc5cae6d041e858f1cc113aa9f44",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--tabs": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "02a099d98e7995125c1eb356e2ba09c9e8035f59d156e430abffcbf07c20cebb",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--tabs-many": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c55eaa90c995056a86ac345f028543cbcc05f87c3b8cbe36a7da0eddf5d90bad",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "navigation--to-top": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5f1cb514668baf2d7e15535221ea44624fcd143c4956df0c14235862c9ff9d77",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--confirm": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4b3405ecc3c46e5fc1c628275b6ccd6c01f816d5cbf88dd76b8a5502d3cd0207",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--dialog": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "02eb9d2bbff86087585f833dd40ec0ae78c68fc661838f745053f882f197b132",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--dialog-long": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0ea77689edce697cf5628ed5aae6bb7c6f8282bb03a590271f719c8386c15ffa",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--dialog-parts": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "fa7e2a39d40208cd495f850da065d1099364e1b7bb8c32a71f815908b264c515",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--menu": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7c055afd24827ddfd3391ef8ce18cf1c40abbcc45ff2842d7eac67131d01c92f",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--menu-extremes": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4f8a805ca153c12fe17e87e106795906af003790110ccc6bb229ca565c96e50f",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "overlays--tooltip": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4afd0c2edfddf21eb40fdac625c26cdca8f788a3119961d3067460c0c528e410",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--footer": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c0a3ee0abbd2fb1cc5fd4be5f68c697601a0de2d1b2b1716a1b512a0fe0eb482",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--palette": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c2bc6a9b18a2065a3ae62933463492b931182e154fc3ce7227506a7162b3be71",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--palette-empty": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "05a1ca2a5677e8802279327bba1f2d25a72c4b14a61c4b6bd8c22e296fc1bd61",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--theme-buttons": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "230868483fec2f8550bb155e15175e6860b294009c5f997d3c0722b21165c6f4",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--theme-menu": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "703ead794aad20d0d74b0f4c407457d1ee3f8715bb6e2699af627f4c0d4bfb1b",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "page--theme-menu-react": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "571bd0f2d3503307a996c09adff4ad7e1d9baccbc956e96c4e252fec8258e930",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--accordion": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dcb139e924430c0049bb7cd3bb0bafcee6b191339ca601cf3404f69ce7e47753",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--reorder": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1a3afe448accc47e7109173c0dce753edb33c235e702133268c1b5542cab4dbb",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--split": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7101728233f18101801ba31fcd968932ddeddcd16b340d2ef7e23535078cd9de",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--timeline": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "be63fd3f193a0c2a463bf4908c8f26df43151b45d614d6a60770822e7ac9d071",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--tree": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2e5f0c326fa7a93566429d1a72c92a3e5d94dec403fd2ed7a09d9ed7ed6122a4",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--tree-deep": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a29361841137f24c22d324e1a58f08795a8561de401da113f85a13b7fbeab358",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--wizard": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a410c0dff3f5b5b79bd2a3eb7979ba0151b56b1f3357aec87a7d12b1d5184857",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "structure--wizard-live": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "35a740a3540fb655202417f9b6258c38e2b5b1546f5d699c9985374593a57bbb",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "switch--extremes": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9adaea7c19fc3cdea0035fda8c656c04aca708d0ca50cd470c3cda42de1f2f67",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "switch--invalid": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7148ccfd8210d567e9cdecbac3b1c3933b8614da6488453cc68617e6a35e08a5",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "switch--keyboard": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c3166b4d052ee6fae4dd37965cbafed25195c1b6a36cb3745305557948b89075",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "switch--states": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "500c35021c4463d9e9c2f22362370b96f49ab6722f0b8ff73a19cb111d1fee42",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--datatable-states": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2cdd0c101c471ac0261f9b9c4f94865d9e08e9f663655ddfcbb9ce75bd5149f4",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4d9fba2dd8bcc394e41961b789af01c63643333e97012109a5db524b040f3c3a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--datatable-sticky": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "da0049d9fc729f24cbd2572a1135d90c71ff9d8fde159b4d0560819dac9d3188",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "befe4f164b7c8afa9a154c3e0bb0a94c1cb1bd71a1bc1de67a1dd3ba972cef29",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--empty": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dc61ce6bf9dac2008f0e8898e508991e4e3648e42eb629a8d7b0556f9b13481a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4144b3017d7702bd51c79edb0bf5fccca1f0944ad08eabb7ce7f52b828c6fbc7",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b1c19b71daede325014ce11f6f4f5a39b604d828901117d21e1aa414d221e352",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--long": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "16631fc292f6d7f7502216f9cfc2259c2eca7fda8cb3884edd2a6650a6e371ef",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d3224ba51bbb444fa2a24e309c5caa43e8bcd734e6e996120cb07f8dc9acd309",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0c4ed956e123ca64a865c6af0a1dd185eb6d1b89587649605e312069c274a5f0",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--many": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "86167bc737162d3f83b95671e6cc3dca90ac7cdaa6674913c2252ae7b0b9cbb4",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f4322affac6cb00df46783ea15de534afa038ce4f207c5e6e6ea56997bc93fab",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2bd24fd8b1b0d296c0b18e7d7fb1414d205dee82a48b9af700312dd5f26814b5",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--numbers": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "edbd073da4fcd4622480750f87a7c5c71ec0d4dcc5aa75a44f033af0d5d02b0a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a81982ff86022f3a8af122dafc33247673e2e4ee8aa7716c78bbf0f113a1d0e0",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ce17aa7d0954c0b2996e521a520a5c5e9fc0e23aa1bf1296b3e07a75838fc86e",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--plain": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e99961e1c0ae75ab8b79694ef0888e2717705827db8bb35ead1686c76bf12a14",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d93c7ee376b15354868e65538c495d085d03fbb2c86cc15807d6631705f955ab",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a96540184bc1d9064e4a8793142a0ac7457ef7ca52bf9e2c8074f74c65b51153",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "table--wide": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "bb63d3729ccb7467233d54b69306585056ae3f90af98d4a52baa45d5864bb84c",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "09e975640f8997cb53873b817354056377e9c2beb598894c3a655070876c26ae",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            },
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4c44ec76b7f2e2e1bdca2a8e01f2b68cc79b7bc483432f9602216933928b52b1",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "upload--dragging": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "6c4894a117a119b990aec7c4b0d96fe22d81e876b9c788e36847834cdfe1d06b",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "upload--empty": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5f17ca009bb1e6f7d7cc080b439d7e0295e5910610816b26eba7b0fdcba237ad",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "upload--errors": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "35b4f7d4ca08e394eccd16e370a7d95c4536367b53e59cf05e3a591aa80901ea",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "upload--list": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "aae6da8024af18145ba1aef47680c06c221435a482c2a4c49744ace7e4008590",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        },
+        "upload--narrow": {
+            "nostromo": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c13ed3f15a21070702658ebcf19d7ce8db5a8ef0a75edc1f8641dc04b1eff79a",
+                    "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
+                    "given": "2026-09-13"
+                }
+            }
+        }
+    }
+}

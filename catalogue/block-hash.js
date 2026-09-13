@@ -11,7 +11,37 @@
 // page's. So the reviewed elements are the descendants of the block's
 // `.cat-stage` elements, in document order; a block with no stage (a research
 // demo) gives every descendant but its own heading, look text and panel.
-const PROPS = [
+//
+// The same in every browser of one engine (version 2, 2026-09-13): a verdict
+// is only durable if the reviewer's browser reads the hash the tools read.
+// Measured over all 154 blocks in six themes at 1400 and 1920 px, FireDragon
+// 155 against Playwright's Firefox 153 differed in 704 of 924 readings and
+// Chrome 152 against Playwright's Chromium 151 in 63, for three reasons the
+// recipe now reads past:
+//   - lengths: Gecko 155 keeps a font size to 1/64 px (13.3281px where 153
+//     says 13.3333px), and every length taken from it in em moves with it.
+//     Lengths are read to the half pixel; no difference that small is seen.
+//   - `content: attr(x)`: Gecko 155 gives the attribute's text, 153 the
+//     function. The function is resolved here, so both read the text.
+//   - `transform`: a percentage translate (cyberpunk's sheen) is resolved in
+//     pixels of the element's width, which follows the text's width, which
+//     follows the browser's font rendering and the window. The translation
+//     is left out of the matrix; scale, rotation and skew stay.
+// And two that follow the moment and the window rather than the browser:
+//   - a length in viewport units (the palette's `margin: 10vh`, fluid type
+//     in `clamp(…vw…)`) moved with the window's height or width; such
+//     lengths are read as "a length" (viewportDependence below).
+//   - a block still loading its rows read differently in two runs; a block
+//     busy beyond its markup is given up to three seconds (readBlocks).
+/**
+ * The version of this recipe. catalogue/verdicts.json names the version its
+ * hashes were taken with; any change to what is read below raises this, and
+ * gates/check-verdicts.mjs refuses until `node gates/verdicts.mjs rehash` has
+ * brought the register to it.
+ */
+export const HASH_VERSION = 2;
+
+export const PROPS = [
     'color',
     'background-color',
     'background-image',
@@ -109,6 +139,184 @@ export function reviewedElements(block) {
  * @param {Element[]} [reviewed] the component's elements, where the block is not one element (a compare column)
  */
 export async function fingerprint(block, source, reviewed = reviewedElements(block)) {
+    return sha256(blockLines(block, source, reviewed).join('\n'));
+}
+
+/** A length to the half pixel, without a negative zero. */
+function halfPixel(number) {
+    const rounded = Math.round(Number(number) * 2) / 2;
+    return String(rounded === 0 ? 0 : rounded);
+}
+
+/** A CSS string, quoted the way a computed value serialises it. */
+const cssString = (text) => `"${text.replace(/["\\]/g, (c) => `\\${c}`)}"`;
+
+const QUOTED = '"(?:[^"\\\\]|\\\\.)*"';
+const ATTR = new RegExp(`attr\\(\\s*([^\\s,)]+)\\s*(?:,\\s*(${QUOTED}))?\\s*\\)`, 'g');
+const ADJACENT = new RegExp(`"((?:[^"\\\\]|\\\\.)*)"\\s+"((?:[^"\\\\]|\\\\.)*)"`);
+
+/**
+ * A computed value as the recipe reads it: engine-version noise taken out
+ * (see the head of this file), everything a reviewer can see kept.
+ * @param {string} prop
+ * @param {string} value
+ * @param {Element} el the element, or a pseudo element's originating element
+ */
+export function normalised(prop, value, el) {
+    let out = value;
+    if (prop === 'transform') {
+        out = out
+            .replace(/matrix\(([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^)]+\)/, 'matrix($1,$2,$3,$4)')
+            .replace(/matrix3d\(((?:[^,]+,){12})[^,]+,[^,]+,[^,]+,([^)]+)\)/, 'matrix3d($1$2)');
+    }
+    if (prop === 'content' && out.includes('attr(')) {
+        out = out.replace(ATTR, (_, name, fallback) => {
+            const text = el.getAttribute(name);
+            return text === null ? (fallback ?? '""') : cssString(text);
+        });
+        // "a" "b" is the one string "ab" once the attribute is in.
+        for (let joined = out.replace(ADJACENT, '"$1$2"'); joined !== out; joined = out.replace(ADJACENT, '"$1$2"')) out = joined;
+    }
+    return out.replace(/(-?\d*\.?\d+(?:e[-+]?\d+)?)px/g, (_, number) => `${halfPixel(number)}px`);
+}
+
+/* ---------------------------------------------- lengths that follow the window */
+
+// A length written in viewport or container units (`clamp(1rem, 4vw, 3rem)`,
+// `10vh`, a custom property holding one) resolves to other pixels in another
+// window, and no reviewer sees a block change by resizing the browser.
+// Measured 2026-09-13: at 1920×700 the palette dialog's `margin: 10vh` moved
+// three blocks; at 1100 px wide the footer's padding and the futuristic demo's
+// display type moved two more. So the rules that use such a unit are found in
+// the stylesheets, and on an element they match the lengths of the properties
+// they set are read as "a length". Where the font size follows the window,
+// every length in that element and below it does (em follows the font size).
+const VIEWPORT_UNIT = /\d(?:[dsl]?v(?:w|h|i|b|min|max)|cq(?:w|h|i|b|min|max))\b/i;
+const FAMILIES = {
+    'font-size': ['font', 'font-size'],
+    'line-height': ['font', 'line-height'],
+    'letter-spacing': ['letter-spacing'],
+    'padding-top': ['padding', 'padding-top', 'padding-block', 'padding-block-start'],
+    'padding-bottom': ['padding', 'padding-bottom', 'padding-block', 'padding-block-end'],
+    'padding-left': ['padding', 'padding-left', 'padding-inline', 'padding-inline-start'],
+    'padding-right': ['padding', 'padding-right', 'padding-inline', 'padding-inline-end'],
+    'margin-top': ['margin', 'margin-top', 'margin-block', 'margin-block-start'],
+    'margin-bottom': ['margin', 'margin-bottom', 'margin-block', 'margin-block-end'],
+    'row-gap': ['gap', 'row-gap'],
+    'column-gap': ['gap', 'column-gap'],
+    'border-top-width': ['border', 'border-width', 'border-top', 'border-top-width', 'border-block', 'border-block-start'],
+    'border-bottom-width': ['border', 'border-width', 'border-bottom', 'border-bottom-width', 'border-block', 'border-block-end'],
+    'border-left-width': ['border', 'border-width', 'border-left', 'border-left-width', 'border-inline', 'border-inline-start'],
+    'border-right-width': ['border', 'border-width', 'border-right', 'border-right-width', 'border-inline', 'border-inline-end'],
+    'border-top-left-radius': ['border-radius', 'border-top-left-radius', 'border-start-start-radius'],
+    'border-top-right-radius': ['border-radius', 'border-top-right-radius', 'border-start-end-radius'],
+    'border-bottom-right-radius': ['border-radius', 'border-bottom-right-radius', 'border-end-end-radius'],
+    'border-bottom-left-radius': ['border-radius', 'border-bottom-left-radius', 'border-end-start-radius'],
+    'outline-width': ['outline', 'outline-width'],
+    'box-shadow': ['box-shadow'],
+    'text-shadow': ['text-shadow'],
+    filter: ['filter'],
+    'clip-path': ['clip-path'],
+    transform: ['transform', 'translate', 'perspective'],
+    'background-image': ['background', 'background-image'],
+};
+
+/** @type {WeakMap<CSSStyleSheet, { selector: string, plain: [string, string][], vars: [string, string][] }[]>} */
+const SHEETS = new WeakMap();
+
+function rulesOf(sheet) {
+    if (SHEETS.has(sheet)) return SHEETS.get(sheet);
+    const found = [];
+    const walk = (rules) => {
+        for (const rule of rules) {
+            if (rule instanceof CSSKeyframesRule) continue;
+            // The catalogue's deps.css brings the package in by @import.
+            if (rule instanceof CSSImportRule) {
+                if (rule.styleSheet) found.push(...rulesOf(rule.styleSheet));
+                continue;
+            }
+            if (rule instanceof CSSStyleRule) {
+                const text = rule.style.cssText;
+                const declared = [...text.matchAll(/(?:^|;)\s*([-\w]+)\s*:\s*([^;]*)/g)].map((m) => [m[1], m[2]]);
+                const vars = declared.filter(([name]) => name.startsWith('--'));
+                const plain = declared.filter(([name]) => !name.startsWith('--'));
+                const candidates = plain.filter(([, value]) => VIEWPORT_UNIT.test(value) || value.includes('var('));
+                if (candidates.length || vars.length) found.push({ selector: rule.selectorText, plain: candidates, vars });
+            }
+            if (rule.cssRules) walk(rule.cssRules);
+        }
+    };
+    try {
+        walk(sheet.cssRules);
+    } catch {
+        /* a stylesheet from another origin cannot be read; none is linked here */
+    }
+    SHEETS.set(sheet, found);
+    return found;
+}
+
+/**
+ * Which properties of which elements follow the window, for the stylesheets
+ * on the page now. `of(el)` answers per element.
+ */
+export function viewportDependence(doc = document) {
+    const rules = [...doc.styleSheets].flatMap(rulesOf);
+    // Custom properties that hold a viewport unit, directly or through another.
+    const following = new Set();
+    const follows = (value) => VIEWPORT_UNIT.test(value) || [...value.matchAll(/var\(\s*(--[\w-]+)/g)].some((m) => following.has(m[1]));
+    for (let grew = true; grew;) {
+        grew = false;
+        for (const rule of rules) {
+            for (const [name, value] of rule.vars) {
+                if (following.has(name)) continue;
+                if (follows(value)) {
+                    following.add(name);
+                    grew = true;
+                }
+            }
+        }
+    }
+    /** @type {Map<Element, Set<string>>} */
+    const marks = new Map();
+    for (const rule of rules) {
+        // Only the declarations that hold such a unit, not the whole rule.
+        const moving = rule.plain.filter(([, value]) => follows(value)).map(([name]) => name);
+        if (!moving.length) continue;
+        const props = PROPS.filter((prop) => (FAMILIES[prop] ?? []).some((family) => moving.includes(family)));
+        if (!props.length) continue;
+        // A pseudo element's rule counts for the element it belongs to.
+        const selector = rule.selector.replace(/::?(before|after|marker|placeholder|backdrop|first-line|first-letter|selection)\b/g, '');
+        let matched = [];
+        try {
+            matched = doc.querySelectorAll(selector || '*');
+        } catch {
+            continue;
+        }
+        for (const el of matched) {
+            const set = marks.get(el) ?? new Set();
+            for (const prop of props) set.add(prop);
+            marks.set(el, set);
+        }
+    }
+    const fluid = [...marks.entries()].filter(([, set]) => set.has('font-size')).map(([el]) => el);
+    const none = new Set();
+    return {
+        of(el) {
+            const all = fluid.some((root) => root === el || root.contains(el));
+            return { all, props: marks.get(el) ?? none };
+        },
+    };
+}
+
+/**
+ * What the hash is taken over, one line per element and pseudo element after
+ * the markup — exported so a measurement can say which property differed.
+ * @param {Element} block
+ * @param {string} source
+ * @param {Element[]} [reviewed]
+ * @returns {string[]}
+ */
+export function blockLines(block, source, reviewed = reviewedElements(block), viewport = viewportDependence()) {
     const lines = [source];
     const elements = reviewed.slice(0, MAX_ELEMENTS);
     // A control whose look follows the scroll position rather than the theme
@@ -121,12 +329,64 @@ export async function fingerprint(block, source, reviewed = reviewedElements(blo
     // would catch the first frame of it, so the fade is run to its end first.
     for (const el of volatile) for (const animation of el.getAnimations({ subtree: true })) animation.finish();
     for (const el of elements) {
+        const follows = viewport.of(el);
         for (const pseudo of [null, '::before', '::after']) {
             const cs = getComputedStyle(el, pseudo);
             if (pseudo && (cs.content === 'none' || cs.content === 'normal')) continue;
-            lines.push(PROPS.map((prop) => cs.getPropertyValue(prop)).join('|'));
+            lines.push(
+                PROPS.map((prop) => {
+                    const value = normalised(prop, cs.getPropertyValue(prop), el);
+                    // A length that follows the window is read as "a length".
+                    return follows.all || follows.props.has(prop) ? value.replace(/-?[\d.]+(?:e[-+]?\d+)?px/g, '~px') : value;
+                }).join('|'),
+            );
         }
     }
     for (const el of volatile) el.setAttribute('data-kp-to-top-shown', '');
-    return sha256(lines.join('\n'));
+    return lines;
+}
+
+/**
+ * Read every block the way a review page does: lay out, wait for the fonts,
+ * hold every animation still, hash each block in order, let them run again.
+ * One procedure for the pages (judging.js) and for the tools that hash a
+ * block outside them (gates/verdicts.mjs), so both read the same thing.
+ * @param {{ root: Element, source: string, elements?: () => Element[] }[]} items
+ * @param {{ lines?: boolean }} [options] lines: also return what each hash was taken over
+ * @returns {Promise<{ hash: string, lines?: string[] }[]>}
+ */
+export async function readBlocks(items, { lines = false } = {}) {
+    // The theme's own typeface arrives only once a layout asks for it, and
+    // until then a width-derived value reads the fallback's: cyberpunk's
+    // sheen is a percentage translate, resolved in pixels of the button's
+    // width, and the review page stored a hash taken before Rajdhani was in
+    // (measured 2026-09-13). So: lay out, then wait for the fonts.
+    void document.body.offsetWidth;
+    await document.fonts?.ready;
+    // A block still waiting for its rows (a data table on a mock server that
+    // answers in 250 to 900 ms) reads as its loading state in one browser and
+    // its rows in the next: measured 2026-09-13, the data table demo's
+    // server block differed between two runs of one Chromium. So a block busy
+    // beyond what its markup says (a loading state shown on purpose is busy
+    // as written) is given up to three seconds to finish.
+    // A data table written as `data-kp-state="loading"` stays busy for good.
+    const busy = (item) =>
+        (item.elements?.() ?? reviewedElements(item.root)).filter(
+            (el) => el.getAttribute('aria-busy') === 'true' && !el.closest('[data-kp-state="loading"]'),
+        ).length > (item.source.match(/aria-busy="true"/g) ?? []).length;
+    for (const started = performance.now(); items.some(busy) && performance.now() - started < 3000;) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    const release = stillAnimations();
+    try {
+        const out = [];
+        const viewport = viewportDependence();
+        for (const item of items) {
+            const read = blockLines(item.root, item.source, item.elements?.() ?? reviewedElements(item.root), viewport);
+            out.push(lines ? { hash: await sha256(read.join('\n')), lines: read } : { hash: await sha256(read.join('\n')) });
+        }
+        return out;
+    } finally {
+        release();
+    }
 }

@@ -18,11 +18,37 @@
 // and measures every block, so these tests carry a long timeout.
 
 import { expect, test } from '@playwright/test';
+import { HASH_VERSION } from '../catalogue/block-hash.js';
 
 test.describe.configure({ timeout: 180_000 });
 
-const JUDGEMENTS = 'kp-catalogue-judgements:v2';
+const JUDGEMENTS = 'kp-catalogue-judgements:v3';
 const FEEDBACK = 'kp-catalogue-feedback:v1';
+
+/** The engine a Playwright project runs, as catalogue/engine.js names it. */
+const engineOf = (browserName) => browserName;
+const ENGINE_LABEL = { firefox: 'Firefox', chromium: 'Chromium', webkit: 'WebKit' };
+
+/**
+ * Serve a register of our own in place of catalogue/verdicts.json, so the
+ * verdicts recorded in the repository do not decide what these tests can press.
+ * @param {import('@playwright/test').BrowserContext} context
+ */
+async function useRegister(context, verdicts = {}) {
+    await context.route('**/catalogue/verdicts.json', (route) => route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts } }));
+}
+
+test.beforeEach(async ({ context }) => {
+    await useRegister(context);
+});
+
+/** The hash this browser stored for a block in a theme. */
+function storedHash(page, id, theme, engine) {
+    return page.evaluate(
+        ([key, block, name, eng]) => JSON.parse(localStorage.getItem(key) ?? '{}')[block]?.[name]?.[eng]?.hash,
+        [JUDGEMENTS, id, theme, engine],
+    );
+}
 
 /** @param {import('@playwright/test').Page} page */
 async function setTheme(page, theme) {
@@ -38,6 +64,7 @@ async function openReview(page) {
 
 /** Approve a block on the review page in the theme on screen; returns the stored hash. */
 async function approveOnReview(page, id, theme) {
+    const engine = engineOf(page.context().browser()?.browserType().name() ?? 'firefox');
     await setTheme(page, theme);
     const section = page.locator(`[id="${id}"]`);
     // Unhide everything, so an already judged block is still pressable.
@@ -46,7 +73,7 @@ async function approveOnReview(page, id, theme) {
     const approve = section.locator('[data-cat-verdict="approved"]');
     await expect(approve).toBeEnabled({ timeout: 60_000 });
     await approve.click();
-    return page.evaluate(([key, block, name]) => JSON.parse(localStorage.getItem(key) ?? '{}')[block]?.[name]?.hash, [JUDGEMENTS, id, theme]);
+    return storedHash(page, id, theme, engine);
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -62,12 +89,17 @@ async function openCompare(page, component, a = 'formal', b = 'cyberpunk') {
     return { a: page.frameLocator('iframe.cat-compare__frame >> nth=0'), b: page.frameLocator('iframe.cat-compare__frame >> nth=1') };
 }
 
-test('the same block in the same theme hashes the same on the review page, its component page and in a compare column', async ({ browser }) => {
+test('the same block in the same theme hashes the same on the review page, its component page and in a compare column', async ({
+    browser,
+    browserName,
+}) => {
+    const engine = engineOf(browserName);
     const blocks = [
         ['button', 'button--variants'],
         ['table', 'table--datatable'],
     ];
     const review = await browser.newContext();
+    await useRegister(review);
     const reviewPage = await review.newPage();
     await openReview(reviewPage);
     const expected = {};
@@ -79,6 +111,7 @@ test('the same block in the same theme hashes the same on the review page, its c
 
     // A fresh browser: nothing judged, so the column measures on its own.
     const compare = await browser.newContext();
+    await useRegister(compare);
     const page = await compare.newPage();
     for (const [component, id] of blocks) {
         const columns = await openCompare(page, component);
@@ -91,13 +124,14 @@ test('the same block in the same theme hashes the same on the review page, its c
             await approve.click();
         }
         const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-        expect.soft(stored[id]?.formal?.hash, `${id} in formal`).toBe(expected[`${id}|formal`]);
-        expect.soft(stored[id]?.cyberpunk?.hash, `${id} in cyberpunk`).toBe(expected[`${id}|cyberpunk`]);
+        expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal`).toBe(expected[`${id}|formal`]);
+        expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk`).toBe(expected[`${id}|cyberpunk`]);
     }
     await compare.close();
 
     // And on the component page itself, a third fresh browser.
     const own = await browser.newContext();
+    await useRegister(own);
     const ownPage = await own.newPage();
     await ownPage.setViewportSize({ width: 1400, height: 900 });
     for (const [component, id] of blocks) {
@@ -107,7 +141,7 @@ test('the same block in the same theme hashes the same on the review page, its c
             await setTheme(ownPage, theme);
             const panel = ownPage.locator(`#${block} .cat-judge`);
             await expect(panel.locator('[data-cat-approval-state]')).toContainText(
-                `Not yet judged · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'}`,
+                `Not yet judged · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'} · ${ENGINE_LABEL[engine]}`,
                 {
                     timeout: 60_000,
                 },
@@ -116,8 +150,8 @@ test('the same block in the same theme hashes the same on the review page, its c
             await ownPage.locator('[data-cat-show-judged]').check();
         }
         const stored = await ownPage.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-        expect.soft(stored[id]?.formal?.hash, `${id} in formal on its own page`).toBe(expected[`${id}|formal`]);
-        expect.soft(stored[id]?.cyberpunk?.hash, `${id} in cyberpunk on its own page`).toBe(expected[`${id}|cyberpunk`]);
+        expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal on its own page`).toBe(expected[`${id}|formal`]);
+        expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk on its own page`).toBe(expected[`${id}|cyberpunk`]);
     }
     await own.close();
 });
@@ -171,12 +205,15 @@ test('a note on one page and a verdict on the review page share one prompt on a 
     await expect(page.locator('.cat-feedback [data-cat-prompt]')).toContainText('Approved (1)');
 });
 
-test('a verdict made in a compare column shows as that verdict on the review page', async ({ page }) => {
+test('a verdict made in a compare column shows as that verdict on the review page', async ({ page, browserName }) => {
+    const label = ENGINE_LABEL[engineOf(browserName)];
     const columns = await openCompare(page, 'button', 'formal', 'cyberpunk');
     const reject = columns.b.locator('[data-cat-block="button--variants"] [data-cat-verdict="rejected"]');
     await expect(reject).toBeEnabled({ timeout: 60_000 });
     await reject.click();
-    await expect(columns.b.locator('[data-cat-block="button--variants"] [data-cat-approval-state]')).toHaveText('Not approved · Cyberpunk');
+    await expect(columns.b.locator('[data-cat-block="button--variants"] [data-cat-approval-state]')).toHaveText(
+        `Not approved · Cyberpunk · ${label}`,
+    );
     const note = columns.a.locator('[data-cat-block="button--variants"] textarea');
     await note.fill('formal variants: fine');
 
@@ -185,7 +222,7 @@ test('a verdict made in a compare column shows as that verdict on the review pag
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('cyberpunk');
     await expect(page.locator('#button--variants')).toHaveAttribute('data-cat-state', 'rejected', { timeout: 60_000 });
     await page.locator('[data-cat-show-judged]').check();
-    await expect(page.locator('#button--variants [data-cat-approval-state]')).toHaveText('Not approved · Cyberpunk');
+    await expect(page.locator('#button--variants [data-cat-approval-state]')).toHaveText(`Not approved · Cyberpunk · ${label}`);
     // The note from the formal column is the review page's note for that block in formal.
     await setTheme(page, 'formal');
     await expect(page.locator('[id="cat-feedback-button--variants"]')).toHaveValue('formal variants: fine');
@@ -209,4 +246,119 @@ test('a note stored under a component page moves to the review page key, and a n
     const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), FEEDBACK);
     expect(Object.keys(stored)).toEqual(['catalogue/index.html']);
     expect(stored['catalogue/index.html']['button--sizes'].formal).toBe('second');
+});
+
+/* ------------------------------------------------------ the verdict register */
+
+test('the page detects its own browser engine, without being told', async ({ page, browserName }) => {
+    await page.goto('/catalogue/switch.html');
+    expect(await page.evaluate(() => import('/catalogue/engine.js').then((m) => m.ENGINE))).toBe(engineOf(browserName));
+    await expect(page.locator('#states [data-cat-approval-state]')).toContainText(`· ${ENGINE_LABEL[engineOf(browserName)]}`, { timeout: 60_000 });
+});
+
+test('a verdict in the register shows as judged in a fresh browser, only in its own engine', async ({ browser, browserName }) => {
+    const engine = engineOf(browserName);
+    const other = engine === 'firefox' ? 'chromium' : 'firefox';
+    // The hashes this engine reads for two blocks, taken in a browser of its own.
+    const first = await browser.newContext();
+    await useRegister(first);
+    const measuring = await first.newPage();
+    await measuring.setViewportSize({ width: 1400, height: 900 });
+    await measuring.goto('/catalogue/switch.html');
+    const hashes = {};
+    for (const block of ['states', 'invalid']) {
+        const approve = measuring.locator(`#${block} [data-cat-verdict="approved"]`);
+        await expect(approve).toBeEnabled({ timeout: 60_000 });
+        await approve.click();
+        hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
+        expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
+    }
+    await first.close();
+
+    // A fresh browser, nothing in storage; the register holds one verdict in
+    // this engine and one given in the other engine.
+    const entry = (hash, verdict) => ({ verdict, hash, commit: '2a32791', given: '2026-09-13' });
+    const fresh = await browser.newContext();
+    await useRegister(fresh, {
+        'switch--states': { formal: { [engine]: entry(hashes.states, 'approved') } },
+        'switch--invalid': { formal: { [other]: entry(hashes.invalid, 'approved') } },
+    });
+    const page = await fresh.newPage();
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/catalogue/switch.html');
+    expect(await page.evaluate((key) => localStorage.getItem(key), JUDGEMENTS)).toBeNull();
+    await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'approved', { timeout: 60_000 });
+    // Judged, so it leaves the page like a block judged in this browser.
+    await expect(page.locator('#states')).toBeHidden();
+    await page.locator('[data-cat-show-judged]').check();
+    await expect(page.locator('#states [data-cat-approval-state]')).toHaveText(`Approved · Formal · ${ENGINE_LABEL[engine]}`);
+    await expect(page.locator('#states [data-cat-verdict-source]')).toHaveText('In the register');
+    // The other engine's verdict is a separate test: here the block is not judged.
+    await expect(page.locator('#invalid')).toHaveAttribute('data-cat-state', 'new');
+    await expect(page.locator('#invalid [data-cat-approval-state]')).toHaveText(`Not yet judged · Formal · ${ENGINE_LABEL[engine]}`);
+    // A recorded verdict is not passed on again.
+    await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing');
+    await fresh.close();
+});
+
+test('a new verdict in this browser carries a verdict line in the prompt that record can read', async ({ page, browserName }) => {
+    const engine = engineOf(browserName);
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/catalogue/button.html');
+    const reject = page.locator('#sizes [data-cat-verdict="rejected"]');
+    await expect(reject).toBeEnabled({ timeout: 60_000 });
+    await reject.click();
+    const hash = await storedHash(page, 'button--sizes', 'formal', engine);
+    await expect(page.locator('#sizes [data-cat-verdict-source]')).toHaveText('In this browser, not yet recorded');
+    const prompt = page.locator('.cat-feedback [data-cat-prompt]');
+    await expect(prompt).toContainText(`In ${ENGINE_LABEL[engine]}:`);
+    await expect(prompt).toContainText('Not approved (1): Buttons › Sizes');
+    await expect(prompt).toContainText(`Verdict lines (hash version ${HASH_VERSION}):\nbutton--sizes · formal · ${engine} · rejected · ${hash}`);
+
+    // The record tool reads exactly that text.
+    const { parseVerdictLines } = await import('../gates/verdicts.mjs');
+    const parsed = parseVerdictLines((await prompt.textContent()) ?? '');
+    expect(parsed.faults).toEqual([]);
+    expect(parsed.version).toBe(HASH_VERSION);
+    expect(parsed.lines).toEqual([expect.objectContaining({ key: 'button--sizes', theme: 'formal', engine, verdict: 'rejected', hash })]);
+});
+
+test('a verdict stored before engines counts for this browser’s engine, and is not passed on twice', async ({ page, browserName }) => {
+    const engine = engineOf(browserName);
+    const old = 'f'.repeat(64);
+    await page.goto('/catalogue/switch.html');
+    await page.evaluate((hash) => {
+        localStorage.clear();
+        localStorage.setItem('kp-catalogue-judgements:v2', JSON.stringify({ 'switch--states': { cyberpunk: { verdict: 'approved', hash } } }));
+        localStorage.setItem('kp-catalogue-copied:v2', JSON.stringify([`verdict|switch--states|cyberpunk|approved|${hash}`]));
+    }, old);
+    await page.goto('/catalogue/switch.html');
+    await expect(page.locator('#states [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 60_000 });
+    const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
+    expect(stored['switch--states'].cyberpunk[engine]).toEqual({ verdict: 'approved', hash: old });
+    await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
+});
+
+test('a block hashes the same in a short window and a tall one, a narrow one and a wide one', async ({ browser }) => {
+    // The palette's `margin: 10vh` and the footer's `clamp(…4vw…)` padding
+    // moved these hashes with the window before version 2 (measured 2026-09-13).
+    const read = async (width, height) => {
+        const context = await browser.newContext({ viewport: { width, height } });
+        await useRegister(context);
+        const page = await context.newPage();
+        await page.goto('/catalogue/page.html');
+        await expect(page.locator('#palette [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 60_000 });
+        const hashes = await page.evaluate(async () => {
+            const { readBlocks } = await import('/catalogue/block-hash.js');
+            const raw = new DOMParser().parseFromString(await (await fetch(location.href)).text(), 'text/html');
+            const ids = ['palette', 'palette-empty', 'footer'];
+            const read = await readBlocks(ids.map((id) => ({ root: document.getElementById(id), source: raw.getElementById(id).outerHTML })));
+            return Object.fromEntries(ids.map((id, i) => [id, read[i].hash]));
+        });
+        await context.close();
+        return hashes;
+    };
+    const tall = await read(1920, 1000);
+    expect(await read(1920, 700)).toEqual(tall);
+    expect(await read(1100, 900)).toEqual(tall);
 });

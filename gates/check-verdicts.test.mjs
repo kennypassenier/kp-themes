@@ -1,0 +1,120 @@
+// The verdict register's gate and its record tool, without a browser.
+//
+// Run: node --test gates/
+
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { blockIds, knownBlocks, registerFaults } from './check-verdicts.mjs';
+import { applyVerdictLines, parseVerdictLines, sortedRegister } from './verdicts.mjs';
+
+const HASH = 'a'.repeat(64);
+const context = (overrides = {}) => ({
+    hashVersion: 2,
+    known: new Set(['button--variants', 'research/navbar/demo.html#current']),
+    themes: ['formal', 'nostromo'],
+    ...overrides,
+});
+const entry = (extra = {}) => ({ verdict: 'approved', hash: HASH, commit: '2a32791', given: '2026-09-13', ...extra });
+
+test('a register at another hash version is refused, with the command that brings it level', () => {
+    const faults = registerFaults({ hashVersion: 1, verdicts: {} }, context());
+    assert.equal(faults.length, 1);
+    assert.match(faults[0], /version 1, catalogue\/block-hash\.js reads version 2: run node gates\/verdicts\.mjs rehash/);
+    assert.deepEqual(registerFaults({ hashVersion: 2, verdicts: {} }, context()), []);
+});
+
+test('a key no review page shows, a theme that does not exist and a malformed entry are refused', () => {
+    const faults = registerFaults(
+        {
+            hashVersion: 2,
+            verdicts: {
+                'button--gone': { formal: { firefox: entry() } },
+                'button--variants': {
+                    plaid: { firefox: entry() },
+                    formal: { Firefox: entry({ verdict: 'fine', hash: 'abc', given: '13-09-2026' }) },
+                },
+            },
+        },
+        context(),
+    );
+    assert.ok(faults.some((f) => /button--gone: not a block/.test(f)));
+    assert.ok(faults.some((f) => /plaid: not a theme/.test(f)));
+    assert.ok(faults.some((f) => /Firefox: an engine name/.test(f)));
+    assert.ok(faults.some((f) => /verdict "fine"/.test(f)));
+    assert.ok(faults.some((f) => /not a full SHA-256/.test(f)));
+    assert.ok(faults.some((f) => /given is not a YYYY-MM-DD/.test(f)));
+    assert.deepEqual(registerFaults('[]', context()), ['the register is not a JSON object']);
+    assert.ok(registerFaults({ hashVersion: 2 }, context()).includes('verdicts is missing or not an object'));
+});
+
+test('a well-formed register passes, per engine', () => {
+    const register = {
+        hashVersion: 2,
+        verdicts: { 'button--variants': { formal: { firefox: entry(), chromium: entry({ verdict: 'rejected' }) } } },
+    };
+    assert.deepEqual(registerFaults(register, context()), []);
+});
+
+test('block ids are read the way the catalogue mounts them', () => {
+    assert.deepEqual(blockIds('<main><section class="cat-block" id="a"></section><section id="b"></section></main>'), ['a']);
+    assert.deepEqual(blockIds('<header><section id="x"></section></header><main><section id="b"><section id="c"></section></section></main>'), [
+        'b',
+        'c',
+    ]);
+    assert.deepEqual(blockIds('<main><!-- <section class="cat-block" id="gone"> --><section class="cat-block" id="kept"></section></main>'), [
+        'kept',
+    ]);
+});
+
+test('the repository knows its component and demo blocks by the keys the pages use', async () => {
+    const known = await knownBlocks();
+    assert.ok(known.has('button--variants'));
+    assert.ok(known.has('table--datatable'));
+    assert.ok([...known.keys()].some((key) => key.startsWith('research/navbar/demo.html#')));
+});
+
+test('record: verdict lines become register entries; a refused line records nothing', () => {
+    const prompt = [
+        'Catalogue feedback',
+        '',
+        'Verdict lines (hash version 2):',
+        `button--variants · formal · firefox · approved · ${HASH}`,
+        `button--variants · formal · chromium · rejected · ${'b'.repeat(64)}`,
+        '',
+    ].join('\n');
+    /** @type {any} */
+    const register = { hashVersion: 2, verdicts: {} };
+    const parsed = parseVerdictLines(prompt);
+    assert.deepEqual(parsed.faults, []);
+    const report = applyVerdictLines(register, parsed, { ...context(), commit: 'abc1234', given: '2026-09-14' });
+    assert.deepEqual(report.faults, []);
+    assert.equal(report.added.length, 2);
+    assert.deepEqual(register.verdicts['button--variants'].formal.firefox, {
+        verdict: 'approved',
+        hash: HASH,
+        commit: 'abc1234',
+        given: '2026-09-14',
+    });
+
+    const again = applyVerdictLines(register, parsed, { ...context(), commit: 'def5678', given: '2026-09-15' });
+    assert.equal(again.unchanged.length, 2);
+    assert.equal(register.verdicts['button--variants'].formal.firefox.commit, 'abc1234');
+
+    const unknown = parseVerdictLines(`Verdict lines (hash version 2):\nbutton--nope · formal · firefox · approved · ${HASH}`);
+    const empty = { hashVersion: 2, verdicts: {} };
+    const refused = applyVerdictLines(empty, unknown, { ...context(), commit: 'abc1234', given: '2026-09-14' });
+    assert.match(refused.faults[0], /button--nope · formal · firefox: not a block/);
+    assert.deepEqual(empty.verdicts, {});
+
+    const old = parseVerdictLines(`Verdict lines (hash version 1):\nbutton--variants · formal · firefox · approved · ${HASH}`);
+    assert.match(applyVerdictLines({ hashVersion: 2, verdicts: {} }, old, { ...context(), commit: 'a', given: 'b' }).faults[0], /hash version 1/);
+});
+
+test('the register is written in a fixed order', () => {
+    const sorted = sortedRegister({
+        hashVersion: 2,
+        verdicts: { b: { nostromo: { firefox: { given: 'd', commit: 'c', hash: 'h', verdict: 'v' } } }, a: { formal: {} } },
+    });
+    assert.deepEqual(Object.keys(sorted.verdicts), ['a', 'b']);
+    assert.deepEqual(Object.keys(sorted.verdicts.b.nostromo.firefox), ['verdict', 'hash', 'commit', 'given']);
+});

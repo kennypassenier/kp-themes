@@ -4,13 +4,18 @@
 // demos and the compare columns (Kenny, 2026-09-13), so a verdict or a note
 // made in one shows in all of them.
 //
+// Every verdict is per block, per theme and per browser engine (engine.js,
+// detected, never asked), and counts from the register (verdicts.json) as
+// well as from this browser's storage (judgements.js).
+//
 // Keys: a component block is `slug--block` for its verdicts and page
 // `catalogue/index.html` + `slug--block` for its notes, wherever it is on
 // screen; a research demo's block is `research/x/demo.html#block` and its
 // notes stay under its own page.
 import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
-import { JUDGEMENT_EVENT, JUDGEMENTS_KEY, loadJudgements, saveJudgements, stateOf } from './judgements.js';
-import { fingerprint, stillAnimations } from './block-hash.js';
+import { JUDGEMENT_EVENT, JUDGEMENTS_KEY, loadJudgements, registerReady, restoreVerdict, stateOf, storeVerdict, verdictOf } from './judgements.js';
+import { readBlocks } from './block-hash.js';
+import { ENGINE, engineLabel } from './engine.js';
 import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
 
 /**
@@ -45,6 +50,7 @@ function panelFor(entry) {
                     <span class="cat-judge__glyph" aria-hidden="true" data-cat-approval-glyph></span>
                     <span data-cat-approval-state></span>
                 </span>
+                <span class="cat-note cat-judge__source" data-cat-verdict-source></span>
             </p>
             <div class="cat-judge__actions">
                 <button type="button" class="kp-button kp-button--primary kp-button--sm" data-cat-verdict="approved">Approve</button>
@@ -84,6 +90,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             badge: panel.querySelector('[data-cat-approval-tone]'),
             glyph: panel.querySelector('[data-cat-approval-glyph]'),
             state: panel.querySelector('[data-cat-approval-state]'),
+            source: panel.querySelector('[data-cat-verdict-source]'),
             approve: panel.querySelector('[data-cat-verdict="approved"]'),
             reject: panel.querySelector('[data-cat-verdict="rejected"]'),
             label: panel.querySelector('label'),
@@ -115,16 +122,20 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
 
     function render() {
         const theme = currentTheme();
-        const label = themeLabel(theme);
+        const label = `${themeLabel(theme)} · ${engineLabel(ENGINE)}`;
         const all = loadJudgements();
         let open = 0;
         for (const item of items) {
             const hash = current.get(item.entry.key);
-            const state = stateOf(all, item.entry.key, theme, hash);
+            const state = stateOf(item.entry.key, theme, hash, ENGINE, all);
             const shown = hash ? STATES[state] : STATES.checking;
             item.badge.className = `kp-badge cat-judge__badge${shown.tone}`;
             item.glyph.textContent = shown.glyph;
             item.state.textContent = `${shown.words} · ${label}`;
+            // Where the verdict comes from: kept in the repository, or only in this browser so far.
+            const verdict = verdictOf(item.entry.key, theme, ENGINE, all);
+            item.source.textContent = verdict ? (verdict.recorded ? 'In the register' : 'In this browser, not yet recorded') : '';
+            item.panel.dataset.catSource = verdict?.source ?? '';
             item.approve.disabled = state === 'approved' || !hash;
             item.reject.disabled = state === 'rejected' || !hash;
             item.entry.root.dataset.catState = state;
@@ -176,17 +187,9 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
         const theme = currentTheme();
         // A hidden block reads display:none on its own root; all are shown while reading.
         if (toolbar) for (const item of items) item.entry.root.hidden = false;
-        // The theme's own typeface arrives only once a layout asks for it, and
-        // until then a width-derived value reads the fallback's: cyberpunk's
-        // sheen is a percentage translate, resolved in pixels of the button's
-        // width, and the review page stored a hash taken before Rajdhani was in
-        // (measured 2026-09-13). So: lay out, then wait for the fonts.
-        void document.body.offsetWidth;
-        await document.fonts?.ready;
-        const release = stillAnimations();
-        const next = new Map();
-        for (const { entry } of items) next.set(entry.key, await fingerprint(entry.root, entry.source, entry.elements?.()));
-        release();
+        // Laid out, fonts in, animations held still: block-hash.js's readBlocks.
+        const hashes = await readBlocks(items.map(({ entry }) => ({ root: entry.root, source: entry.source, elements: entry.elements })));
+        const next = new Map(items.map(({ entry }, i) => [entry.key, hashes[i].hash]));
         if (theme !== currentTheme()) return; // the theme moved while reading; the next pass counts
         current = next;
         render();
@@ -212,10 +215,8 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
                 const hash = current.get(item.entry.key);
                 if (!hash) return;
                 const theme = currentTheme();
-                const all = loadJudgements();
-                last = { key: item.entry.key, theme, previous: all[item.entry.key]?.[theme] ?? null, item };
-                (all[item.entry.key] ??= {})[theme] = { verdict: button.getAttribute('data-cat-verdict'), hash };
-                saveJudgements(all);
+                const previous = storeVerdict(item.entry.key, theme, button.getAttribute('data-cat-verdict'), hash);
+                last = { key: item.entry.key, theme, previous, item };
                 if (undo) {
                     undo.hidden = false;
                     undo.textContent = `Undo: ${item.entry.title}`;
@@ -227,10 +228,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
 
     undo?.addEventListener('click', () => {
         if (!last) return;
-        const all = loadJudgements();
-        if (last.previous) (all[last.key] ??= {})[last.theme] = last.previous;
-        else if (all[last.key]) delete all[last.key][last.theme];
-        saveJudgements(all);
+        restoreVerdict(last.key, last.theme, last.previous);
         const { root } = last.item.entry;
         last = null;
         undo.hidden = true;
@@ -257,9 +255,13 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
 
     render();
     renderNotes();
+    // The register arrives after the first paint; a block judged in it is
+    // judged in every browser of its engine.
+    registerReady.then(render);
     return {
         /** Measure every block in the theme on screen, once fonts are in. */
         async start() {
+            await registerReady;
             await document.fonts?.ready;
             await new Promise((resolve) => setTimeout(resolve, 150));
             await measure();
