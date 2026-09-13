@@ -48,6 +48,80 @@ export type Strings = {
     tableRowsFiltered: (shown: number, total: number) => string;
     tablePage: (at: number, of: number) => string;
     tableRegion: string;
+    /**
+     * The name of the "In" choice beside the search box
+     */
+    tableSearchScope: string;
+    /**
+     * The "In" choice's first option
+     */
+    tableSearchAllColumns: string;
+    /**
+     * The filter panel's toggle, with the number of active filters
+     */
+    tableFilters: (active: number) => string;
+    /**
+     * The filter panel's group name
+     */
+    tableFiltersLabel: string;
+    /**
+     * The list of removable filter pills
+     */
+    tableActiveFilters: string;
+    /**
+     * A choice filter's pill
+     */
+    tableFilterValue: (column: string, value: string) => string;
+    /**
+     * A range or date filter's pill; an open end is `tableFilterOpenEnd`
+     */
+    tableFilterRange: (column: string, from: string, to: string) => string;
+    /**
+     * The open end of a range in its pill
+     */
+    tableFilterOpenEnd: string;
+    /**
+     * The lower bound's accessible name
+     */
+    tableFilterFrom: (column: string) => string;
+    /**
+     * The upper bound's accessible name
+     */
+    tableFilterTo: (column: string) => string;
+    /**
+     * A pill's remove button
+     */
+    tableRemoveFilter: (label: string) => string;
+    tableClearFilters: string;
+    /**
+     * The way out of the no-match state
+     */
+    tableClearSearch: string;
+    tableDensity: string;
+    tableDensityComfortable: string;
+    tableDensityCompact: string;
+    tableRowsPerPage: string;
+    /**
+     * The status line: "Showing 1–25 of 60"
+     */
+    tableShowing: (from: number, to: number, count: number, total: number) => string;
+    /**
+     * The action bar's count
+     */
+    tableSelected: (n: number) => string;
+    tableClearSelection: string;
+    /**
+     * The card layout's sort control
+     */
+    tableSortBy: string;
+    /**
+     * Its first option
+     */
+    tableSortNone: string;
+    tableSortAscending: string;
+    tableSortDescending: string;
+    tableFailed: string;
+    tableRetry: string;
     formRequired: string;
     formInvalid: string;
     formSummaryOne: string;
@@ -205,6 +279,32 @@ export type Strings = {
  * @property {(shown: number, total: number) => string} tableRowsFiltered
  * @property {(at: number, of: number) => string} tablePage
  * @property {string} tableRegion
+ * @property {string} tableSearchScope      The name of the "In" choice beside the search box
+ * @property {string} tableSearchAllColumns The "In" choice's first option
+ * @property {(active: number) => string} tableFilters  The filter panel's toggle, with the number of active filters
+ * @property {string} tableFiltersLabel     The filter panel's group name
+ * @property {string} tableActiveFilters    The list of removable filter pills
+ * @property {(column: string, value: string) => string} tableFilterValue  A choice filter's pill
+ * @property {(column: string, from: string, to: string) => string} tableFilterRange  A range or date filter's pill; an open end is `tableFilterOpenEnd`
+ * @property {string} tableFilterOpenEnd    The open end of a range in its pill
+ * @property {(column: string) => string} tableFilterFrom  The lower bound's accessible name
+ * @property {(column: string) => string} tableFilterTo    The upper bound's accessible name
+ * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
+ * @property {string} tableClearFilters
+ * @property {string} tableClearSearch      The way out of the no-match state
+ * @property {string} tableDensity
+ * @property {string} tableDensityComfortable
+ * @property {string} tableDensityCompact
+ * @property {string} tableRowsPerPage
+ * @property {(from: number, to: number, count: number, total: number) => string} tableShowing  The status line: "Showing 1–25 of 60"
+ * @property {(n: number) => string} tableSelected  The action bar's count
+ * @property {string} tableClearSelection
+ * @property {string} tableSortBy           The card layout's sort control
+ * @property {string} tableSortNone         Its first option
+ * @property {string} tableSortAscending
+ * @property {string} tableSortDescending
+ * @property {string} tableFailed
+ * @property {string} tableRetry
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne

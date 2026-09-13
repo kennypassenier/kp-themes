@@ -847,27 +847,33 @@ export const DESCRIPTORS = [
         group: 'Data',
         classes: ['kp-datatable'],
         exports: ['DataTable'],
-        aliases: ['sort', 'select', 'page', 'row', 'debounce', 'locale'],
+        aliases: ['sort', 'select', 'page', 'row', 'debounce', 'locale', 'cards', 'filter', 'filters', 'search', 'state', 'max'],
         intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data.',
         whenToUse:
             'For a table a reader will interrogate — hundreds of rows, a search box, a sort. Not for thousands: there is no virtualisation, no in-cell editing and no export here, and a grid is a different product. Not for a handful of rows either, where a search box over six lines is furniture.',
         examples: [
             {
                 title: 'Search, sort, page and select',
-                why: 'Everything is markup the server wrote, so the table is readable before any script runs. The status paragraph says how many rows are showing after each change, which is what makes the filtering audible.',
+                why: 'Everything is markup the server wrote, so the table is readable before any script runs. The status paragraph says which rows are showing after each change, which is what makes the filtering audible. A filter is declared on its header (`data-kp-filter="choice"`, `range` or `date`) and leaves a removable pill; `data-kp-sort-order` sorts a column by meaning; the "In" choice limits the search to one column; `data-kp-max-height` keeps the header in view; `data-kp-state="loading"` or `"failed"` shows those states, and `data-kp-cards` turns rows into cards with a sort control of their own.',
                 markup: `
-<div class="kp-datatable" data-kp-datatable data-kp-page-size="3">
+<div class="kp-datatable" data-kp-datatable data-kp-page-size="3" data-kp-cards>
 <div class="kp-datatable__bar">
 <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" placeholder="Search…" />
+<select class="kp-field__input kp-datatable__select" data-kp-datatable-scope></select>
+<select class="kp-field__input kp-datatable__select" data-kp-datatable-density></select>
+</div>
+<div class="kp-datatable__actions" data-kp-datatable-actions hidden>
+<span data-kp-datatable-selected-count></span>
+<button type="button" class="kp-button kp-button--ghost" data-kp-datatable-clear-selection>Clear selection</button>
 </div>
 <div class="kp-table-wrap">
 <table class="kp-table">
 <caption>Orders</caption>
 <thead><tr>
-<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th>
-<th scope="col" data-kp-sort="text">Customer</th>
-<th scope="col" data-kp-sort="number">Amount</th>
-<th scope="col" data-kp-sort="date">Date</th>
+<th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every row on this page" /></th>
+<th scope="col" data-kp-sort="text" data-kp-filter="choice">Customer</th>
+<th scope="col" data-kp-sort="number" data-kp-filter="range">Amount</th>
+<th scope="col" data-kp-sort="date" data-kp-filter="date">Date</th>
 </tr></thead>
 <tbody>
 <tr data-kp-row-key="r0"><td><input type="checkbox" data-kp-select-row aria-label="Select Acme" /></td><td>Acme</td><td class="kp-numeric">100.00</td><td class="kp-timestamp">2026-03-01</td></tr>
@@ -888,7 +894,11 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: '.kp-datatable__bar', what: 'A row of controls above or below the table: the search box, the status line, the pager.' },
-            { name: '.kp-datatable__sort', what: 'The sort control inside a header cell. It takes the whole cell, so a click anywhere in the header sorts.' },
+            { name: '.kp-datatable__sort', what: 'The sort control inside a header cell. It wears the header’s own case and spacing, and a click anywhere in the header sorts.' },
+            { name: '.kp-datatable__filters / __pills', what: 'The filter panel the headers declare, and the removable pills of the filters that are set.' },
+            { name: '.kp-datatable__actions', what: 'The action bar a selection shows, with the count; the buttons in it are the app’s.' },
+            { name: '.kp-datatable__card-sort', what: 'The sort control of the card layout, where the headers that sort are hidden.' },
+            { name: '.kp-datatable__select / __label', what: 'A choice in a bar: the "In" choice, the density, the rows per page.' },
             { name: 'sorted ascending / descending', what: 'An arrow after the header text and the sort state on the header itself; the arrow is the second carrier, the state is what is announced.' },
             { name: '.kp-datatable__pager / __page', what: 'The page controls and the “page m of n” label, in same-width digits.' },
             { name: '.kp-datatable__page-size', what: 'The rows-per-page control, before the pager.' },

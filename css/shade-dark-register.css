@@ -595,6 +595,8 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='shade-dark'] .kp-datatable__bar {

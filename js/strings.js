@@ -72,6 +72,32 @@
  * @property {(shown: number, total: number) => string} tableRowsFiltered
  * @property {(at: number, of: number) => string} tablePage
  * @property {string} tableRegion
+ * @property {string} tableSearchScope      The name of the "In" choice beside the search box
+ * @property {string} tableSearchAllColumns The "In" choice's first option
+ * @property {(active: number) => string} tableFilters  The filter panel's toggle, with the number of active filters
+ * @property {string} tableFiltersLabel     The filter panel's group name
+ * @property {string} tableActiveFilters    The list of removable filter pills
+ * @property {(column: string, value: string) => string} tableFilterValue  A choice filter's pill
+ * @property {(column: string, from: string, to: string) => string} tableFilterRange  A range or date filter's pill; an open end is `tableFilterOpenEnd`
+ * @property {string} tableFilterOpenEnd    The open end of a range in its pill
+ * @property {(column: string) => string} tableFilterFrom  The lower bound's accessible name
+ * @property {(column: string) => string} tableFilterTo    The upper bound's accessible name
+ * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
+ * @property {string} tableClearFilters
+ * @property {string} tableClearSearch      The way out of the no-match state
+ * @property {string} tableDensity
+ * @property {string} tableDensityComfortable
+ * @property {string} tableDensityCompact
+ * @property {string} tableRowsPerPage
+ * @property {(from: number, to: number, count: number, total: number) => string} tableShowing  The status line: "Showing 1–25 of 60"
+ * @property {(n: number) => string} tableSelected  The action bar's count
+ * @property {string} tableClearSelection
+ * @property {string} tableSortBy           The card layout's sort control
+ * @property {string} tableSortNone         Its first option
+ * @property {string} tableSortAscending
+ * @property {string} tableSortDescending
+ * @property {string} tableFailed
+ * @property {string} tableRetry
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -206,7 +232,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     shortcutsLabel: 'Keyboard shortcuts',
     tableSearch: 'Search…',
     tableSearchLabel: 'Search the table',
-    tableSelectAll: 'Select every visible row',
+    // "On this page", because that is what it does [gap-13]: the header box
+    // used to tick every filtered row on every page while saying "visible".
+    tableSelectAll: 'Select every row on this page',
     tableSelectRow: (key) => `Select row ${key}`,
     tableEmpty: 'Nothing found.',
     tableRows: (n) => `${n} rows`,
@@ -220,6 +248,37 @@ export const DEFAULT_STRINGS = Object.freeze({
      * nothing about what they just tabbed into.
      */
     tableRegion: 'Table',
+    tableSearchScope: 'Search in',
+    tableSearchAllColumns: 'All columns',
+    tableFilters: (active) => (active > 0 ? `Filters (${active})` : 'Filters'),
+    tableFiltersLabel: 'Filters',
+    tableActiveFilters: 'Active filters',
+    tableFilterValue: (column, value) => `${column}: ${value}`,
+    tableFilterRange: (column, from, to) => `${column}: ${from}–${to}`,
+    tableFilterOpenEnd: 'any',
+    tableFilterFrom: (column) => `${column}, from`,
+    tableFilterTo: (column) => `${column}, to`,
+    tableRemoveFilter: (label) => `Remove filter ${label}`,
+    tableClearFilters: 'Clear all filters',
+    tableClearSearch: 'Clear the search and filters',
+    tableDensity: 'Density',
+    tableDensityComfortable: 'Comfortable',
+    tableDensityCompact: 'Compact',
+    tableRowsPerPage: 'Rows per page',
+    /** "Showing 1–25 of 60", and where a search or filter hides rows, how many. */
+    tableShowing: (from, to, count, total) => {
+        if (count === 0) return `Showing 0 of ${total}`;
+        if (count === total) return `Showing ${from}–${to} of ${total}`;
+        return `Showing ${from}–${to} of ${count} (filtered from ${total})`;
+    },
+    tableSelected: (n) => `${n} selected`,
+    tableClearSelection: 'Clear selection',
+    tableSortBy: 'Sort by',
+    tableSortNone: 'None',
+    tableSortAscending: 'Ascending',
+    tableSortDescending: 'Descending',
+    tableFailed: 'The rows could not be loaded.',
+    tableRetry: 'Try again',
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',

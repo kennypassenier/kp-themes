@@ -910,6 +910,8 @@
     [data-theme='titanium'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='titanium'] .kp-datatable__bar {

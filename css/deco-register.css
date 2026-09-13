@@ -788,6 +788,15 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    /* Compact reaches the search box [gap-13]: the well's padding above is
+     * a literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='deco'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='deco'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.35rem;
     }
 
     [data-theme='deco'] .kp-datatable__bar {

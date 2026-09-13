@@ -7063,30 +7063,146 @@
 
     /* The sort control is a button inside the header, so it is reachable
  * from the keyboard [KT6]; it wears the header's own text and nothing of
- * a button's. */
-    .kp-table th:has(> .kp-datatable__sort) {
-        padding: 0;
-    }
-
+ * a button's.
+ *
+ * Inline, and the header keeps its own padding [gap-13]. The first cut
+ * made the button a block that took the header's padding, and three
+ * things followed: the arrow the header draws after its content dropped
+ * to a line of its own (nostromo 65 px against 32 px), the button reset
+ * the case and the letter-spacing a register gives its headers, and the
+ * padding read a cell-pad knob that nothing else had. The whole
+ * cell still sorts: the React header listens for the click itself, and
+ * the button's own click reaches it. */
     .kp-datatable__sort {
-        /* The whole cell: the button takes the header's padding, so a click
-     * anywhere in the header sorts — the first cut was an 18 px strip at
-     * the top of a 52 px cell, and a click in the middle hit nothing. */
-        display: block;
-        inline-size: 100%;
-        padding: var(--kp-table-cell-pad, 0.5rem 0.625rem);
+        display: inline;
+        margin: 0;
+        padding: 0;
         border: 0;
         background: none;
         color: inherit;
         font: inherit;
-        font-weight: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
         text-align: inherit;
         cursor: pointer;
     }
 
     .kp-datatable__page-size {
-        margin-inline-end: var(--kp-space-sm);
         font: inherit;
+    }
+
+    /* A select in a bar — the "In" choice, the density, the page size, the
+ * card layout's sort — wears `.kp-field__input` for the theme and this
+ * for its width: a field fills its row, a choice in a toolbar does not. */
+    .kp-datatable__select {
+        flex: 0 0 auto;
+        inline-size: auto;
+    }
+
+    .kp-datatable__label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The filter panel, the pills, the action bar, the loading slot and the
+ * card layout's sort control sit between the bars and the table, and take
+ * the bars' inset, so nothing touches the frame a register draws
+ * [gap-11]. */
+    .kp-datatable__filters,
+    .kp-datatable__pills,
+    .kp-datatable__actions,
+    .kp-datatable__loading,
+    .kp-datatable__card-sort {
+        padding: var(--kp-datatable-bar-padding, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-datatable__filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-datatable__range {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__range > input {
+        flex: 1 1 7rem;
+        min-inline-size: 0;
+    }
+
+    .kp-datatable__pills {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-datatable__loading {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The card layout's sort control is for the card layout only: in the
+ * table shape the headers sort, and a second control would be a second
+ * way to say the same thing [gap-13]. */
+    .kp-datatable__card-sort {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A refresh keeps the old rows, dimmed, so the page does not jump; a
+ * first load has no rows and shows the loading slot instead. */
+    .kp-datatable[aria-busy='true'] .kp-table tbody {
+        opacity: var(--kp-datatable-busy-opacity, 0.55);
+    }
+
+    /* A header that stays whenever the table has a max height [Kenny,
+ * 2026-09-13]: `data-kp-max-height` on the data table, which the script
+ * carries into the knob. The ground is opaque so rows do not show through
+ * the header; a register whose data table stands on another surface
+ * names it in `--kp-datatable-head-ground`, and a register that paints its
+ * headers keeps its own paint, because it is a later layer. */
+    .kp-datatable[data-kp-max-height] > .kp-table-wrap {
+        max-block-size: var(--kp-datatable-max-height, 24rem);
+        overflow: auto;
+    }
+
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 1;
+        background-color: var(--kp-datatable-head-ground, var(--background));
+    }
+
+    /* A status label in a table keeps its word whole [gap-13]: the badge's
+ * default `anywhere` broke "WATCHING" into WATCHI / NG in nostromo, in a
+ * column squeezed by a long note. The knob is the badge's own. */
+    .kp-datatable,
+    .kp-table {
+        --kp-badge-wrap: normal;
     }
 
     .kp-table tr[data-kp-clickable] {
@@ -7126,7 +7242,10 @@
     .kp-datatable__search {
         box-sizing: border-box;
         flex: 1 1 12rem;
-        padding: 0.5rem 0.75rem;
+        /* The spacing steps rather than their comfortable values [gap-13]:
+     * the same 0.5rem and 0.75rem in the default density, and the density
+     * switch reaches the search box as it reaches the rows. */
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
@@ -7168,6 +7287,7 @@
 
     .kp-datatable__pager {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
     }
@@ -7204,6 +7324,12 @@
      * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
      * the same number as the one this block used as a media query up to
      * 3.1.1, so no table changes shape at a width it did not before. */
+        /* The headers are the sort control and they are hidden, so the
+     * control that stands in for them shows [gap-13]. */
+        .kp-datatable[data-kp-cards] > .kp-datatable__card-sort {
+            display: flex;
+        }
+
         .kp-datatable[data-kp-cards] .kp-table thead,
         .kp-table[data-kp-cards] thead {
             position: absolute;
@@ -17334,6 +17460,13 @@
         background: var(--card);
     }
 
+    /* Compact reaches the search box [gap-13]: the well's padding is a
+     * literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='brutalism'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='brutalism'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.4rem;
+    }
+
     [data-theme='brutalism'] .kp-datatable__bar {
         border-bottom: var(--kp-line) solid var(--border-strong);
     }
@@ -18832,6 +18965,8 @@
     [data-theme='titanium'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='titanium'] .kp-datatable__bar {
@@ -23526,6 +23661,15 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    /* Compact reaches the search box [gap-13]: the well's padding above is
+     * a literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='deco'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='deco'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.35rem;
     }
 
     [data-theme='deco'] .kp-datatable__bar {
@@ -29546,6 +29690,8 @@
     [data-theme='dark'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='dark'] .kp-datatable__bar {
@@ -35750,6 +35896,8 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='shade-dark'] .kp-datatable__bar {

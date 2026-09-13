@@ -13,6 +13,7 @@ export default async function globalSetup() {
         'react-mount',
         'react-components',
         'react-tables',
+        'react-datatable',
         'examples-react',
         'react-button',
         'react-container',

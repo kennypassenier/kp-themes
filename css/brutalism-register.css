@@ -910,6 +910,13 @@
         background: var(--card);
     }
 
+    /* Compact reaches the search box [gap-13]: the well's padding is a
+     * literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='brutalism'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='brutalism'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.4rem;
+    }
+
     [data-theme='brutalism'] .kp-datatable__bar {
         border-bottom: var(--kp-line) solid var(--border-strong);
     }

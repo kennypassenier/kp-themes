@@ -187,7 +187,9 @@ var DEFAULT_STRINGS = Object.freeze({
   shortcutsLabel: "Keyboard shortcuts",
   tableSearch: "Search\u2026",
   tableSearchLabel: "Search the table",
-  tableSelectAll: "Select every visible row",
+  // "On this page", because that is what it does [gap-13]: the header box
+  // used to tick every filtered row on every page while saying "visible".
+  tableSelectAll: "Select every row on this page",
   tableSelectRow: (key) => `Select row ${key}`,
   tableEmpty: "Nothing found.",
   tableRows: (n) => `${n} rows`,
@@ -201,6 +203,37 @@ var DEFAULT_STRINGS = Object.freeze({
    * nothing about what they just tabbed into.
    */
   tableRegion: "Table",
+  tableSearchScope: "Search in",
+  tableSearchAllColumns: "All columns",
+  tableFilters: (active) => active > 0 ? `Filters (${active})` : "Filters",
+  tableFiltersLabel: "Filters",
+  tableActiveFilters: "Active filters",
+  tableFilterValue: (column, value) => `${column}: ${value}`,
+  tableFilterRange: (column, from, to) => `${column}: ${from}\u2013${to}`,
+  tableFilterOpenEnd: "any",
+  tableFilterFrom: (column) => `${column}, from`,
+  tableFilterTo: (column) => `${column}, to`,
+  tableRemoveFilter: (label) => `Remove filter ${label}`,
+  tableClearFilters: "Clear all filters",
+  tableClearSearch: "Clear the search and filters",
+  tableDensity: "Density",
+  tableDensityComfortable: "Comfortable",
+  tableDensityCompact: "Compact",
+  tableRowsPerPage: "Rows per page",
+  /** "Showing 1–25 of 60", and where a search or filter hides rows, how many. */
+  tableShowing: (from, to, count, total) => {
+    if (count === 0) return `Showing 0 of ${total}`;
+    if (count === total) return `Showing ${from}\u2013${to} of ${total}`;
+    return `Showing ${from}\u2013${to} of ${count} (filtered from ${total})`;
+  },
+  tableSelected: (n) => `${n} selected`,
+  tableClearSelection: "Clear selection",
+  tableSortBy: "Sort by",
+  tableSortNone: "None",
+  tableSortAscending: "Ascending",
+  tableSortDescending: "Descending",
+  tableFailed: "The rows could not be loaded.",
+  tableRetry: "Try again",
   formRequired: "required",
   formInvalid: "This field is not filled in correctly.",
   formSummaryOne: "1 field is not filled in correctly.",
@@ -2055,12 +2088,18 @@ function attachPalettes(root = document, {
 var datatable_exports = {};
 __export(datatable_exports, {
   PAGE_SIZE: () => PAGE_SIZE,
+  PAGE_SIZES: () => PAGE_SIZES,
+  RETRY_EVENT: () => RETRY_EVENT,
   SELECT_EVENT: () => SELECT_EVENT,
   SORT_EVENT: () => SORT_EVENT,
   VIEW_EVENT: () => VIEW_EVENT,
   attachDataTables: () => attachDataTables,
   compare: () => compare,
-  dataTable: () => dataTable
+  compareByOrder: () => compareByOrder,
+  dataTable: () => dataTable,
+  filterActive: () => filterActive,
+  filterPills: () => filterPills,
+  matchesFilter: () => matchesFilter
 });
 
 // js/locale.js
@@ -2242,15 +2281,31 @@ function attachTableRegions(root = document, { label, selector = WRAP_SELECTOR }
 // js/datatable.js
 var TABLE = "[data-kp-datatable]";
 var SEARCH = "[data-kp-datatable-search]";
+var SCOPE = "[data-kp-datatable-scope]";
+var DENSITY = "[data-kp-datatable-density]";
 var STATUS4 = "[data-kp-datatable-status]";
 var PAGER = "[data-kp-datatable-pager]";
 var EMPTY2 = "[data-kp-datatable-empty]";
+var CLEAR = "[data-kp-datatable-clear]";
+var LOADING = "[data-kp-datatable-loading]";
+var FAILED = "[data-kp-datatable-failed]";
+var RETRY = "[data-kp-datatable-retry]";
+var ACTIONS = "[data-kp-datatable-actions]";
+var SELECTED_COUNT = "[data-kp-datatable-selected-count]";
+var CLEAR_SELECTION = "[data-kp-datatable-clear-selection]";
+var FILTERS = "[data-kp-datatable-filters]";
+var FILTER_TOGGLE = "[data-kp-datatable-filter-toggle]";
+var PILLS = "[data-kp-datatable-pills]";
+var CARD_SORT = "[data-kp-datatable-card-sort]";
 var SELECT_ALL = "[data-kp-select-all]";
 var SELECT_ROW = "[data-kp-select-row]";
+var CHECK_CLASS = "kp-field__check";
 var VIEW_EVENT = "kp-datatable-view";
 var SELECT_EVENT = "kp-datatable-select";
 var SORT_EVENT = "kp-datatable-sort";
-var PAGE_SIZE = 10;
+var RETRY_EVENT = "kp-datatable-retry";
+var PAGE_SIZE = 25;
+var PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
 function compare(a, b, kind, locale) {
   if (kind === "number") {
     const left = parseNumber(a, locale);
@@ -2266,11 +2321,67 @@ function compare(a, b, kind, locale) {
   }
   return collator(locale).compare(a, b);
 }
+function compareByOrder(order, a, b, fallback2) {
+  const rank = (value) => {
+    const at = order.findIndex((entry) => entry.trim().toLowerCase() === value.trim().toLowerCase());
+    return at === -1 ? order.length : at;
+  };
+  return rank(a) - rank(b) || fallback2(a, b);
+}
+var splitList = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
+function filterActive(kind, value) {
+  if (value === void 0) return false;
+  if (kind === "choice") return Array.isArray(value) && value.length > 0;
+  const range = (
+    /** @type {{ from?: string, to?: string }} */
+    value
+  );
+  return (range.from ?? "") !== "" || (range.to ?? "") !== "";
+}
+function matchesFilter(kind, value, text, locale) {
+  if (!filterActive(kind, value)) return true;
+  if (kind === "choice") return (
+    /** @type {string[]} */
+    value.includes(text.trim())
+  );
+  const { from = "", to = "" } = (
+    /** @type {{ from?: string, to?: string }} */
+    value
+  );
+  if (kind === "range") {
+    const n = parseNumber(text, locale);
+    if (Number.isNaN(n)) return false;
+    if (from !== "" && n < Number(from)) return false;
+    if (to !== "" && n > Number(to)) return false;
+    return true;
+  }
+  const at = Date.parse(text.trim());
+  if (Number.isNaN(at)) return false;
+  if (from !== "" && at < Date.parse(from)) return false;
+  if (to !== "" && at > Date.parse(to) + (/^\d{4}-\d{2}-\d{2}$/.test(to) ? 86399999 : 0)) return false;
+  return true;
+}
+function filterPills(kind, column, value, s) {
+  if (!filterActive(kind, value)) return [];
+  if (kind === "choice") {
+    const list = (
+      /** @type {string[]} */
+      value
+    );
+    return list.map((item) => ({ label: s.tableFilterValue(column, item), without: list.filter((other) => other !== item) }));
+  }
+  const { from = "", to = "" } = (
+    /** @type {{ from?: string, to?: string }} */
+    value
+  );
+  return [{ label: s.tableFilterRange(column, from || s.tableFilterOpenEnd, to || s.tableFilterOpenEnd), without: void 0 }];
+}
 var defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
 var handles4 = /* @__PURE__ */ new WeakMap();
 function dataTable(element) {
   return handles4.get(element) ?? null;
 }
+var instances = 0;
 function attachDataTables(root = document, {
   locale: localeOption,
   compare: compareFn = compare,
@@ -2279,7 +2390,9 @@ function attachDataTables(root = document, {
   sortCycle = "two",
   pagerClassName = "kp-button kp-button--ghost",
   pageLabel,
-  regions = true
+  regions = true,
+  pageSizes: pageSizesOption = PAGE_SIZES,
+  removeGlyph = "\xD7"
 } = {}) {
   const cleanups = [];
   const created = [];
@@ -2296,10 +2409,22 @@ function attachDataTables(root = document, {
     const body = table?.tBodies[0];
     if (table === void 0 || table === null || body === void 0) continue;
     wrap.dataset.kpDatatableAttached = "";
+    instances += 1;
+    const id = `kp-datatable-${instances}`;
+    const added = [];
+    const undo = [];
     if (regions) cleanups.push(attachTableRegions(wrap));
     const search = (
       /** @type {HTMLInputElement | null} */
       wrap.querySelector(SEARCH)
+    );
+    const scopeSelect = (
+      /** @type {HTMLSelectElement | null} */
+      wrap.querySelector(SCOPE)
+    );
+    const densitySelect = (
+      /** @type {HTMLSelectElement | null} */
+      wrap.querySelector(DENSITY)
     );
     const status = (
       /** @type {HTMLElement | null} */
@@ -2313,48 +2438,365 @@ function attachDataTables(root = document, {
       /** @type {HTMLElement | null} */
       wrap.querySelector(EMPTY2)
     );
+    const loadingSlot = (
+      /** @type {HTMLElement | null} */
+      wrap.querySelector(LOADING)
+    );
+    const failedSlot = (
+      /** @type {HTMLElement | null} */
+      wrap.querySelector(FAILED)
+    );
+    const actions = (
+      /** @type {HTMLElement | null} */
+      wrap.querySelector(ACTIONS)
+    );
     const selectAll = (
       /** @type {HTMLInputElement | null} */
       wrap.querySelector(SELECT_ALL)
     );
-    const size = Number.parseInt(wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
+    let size = Number.parseInt(wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
     const locale = resolveLocale(wrap.dataset.kpLocale ?? localeOption, wrap);
     const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs;
     const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
+    const sizesAttribute = wrap.dataset.kpPageSizes;
+    const sizes = sizesAttribute === "none" ? [] : [
+      .../* @__PURE__ */ new Set([
+        ...sizesAttribute ? splitList(sizesAttribute).map(Number).filter((n) => n > 0) : pageSizesOption,
+        size
+      ])
+    ].sort((a, b) => a - b);
     let all = (
       /** @type {HTMLTableRowElement[]} */
       [...body.rows]
     );
     const rendered = [...all];
     let shown = [...all];
+    let pageRows = [...all];
     let page = 0;
     let query = "";
+    let scope = null;
+    const filters = /* @__PURE__ */ new Map();
     let sort = null;
+    let state = (
+      /** @type {State} */
+      ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready"
+    );
     const emptyWasHidden = empty?.hidden ?? false;
+    const densityWas = wrap.getAttribute("data-density");
+    const busyWas = wrap.getAttribute("aria-busy");
     const headers = (
       /** @type {HTMLTableCellElement[]} */
       [...table.tHead?.rows[0]?.cells ?? []]
     );
     const headerSort = headers.map((h) => h.getAttribute("aria-sort"));
     const headerTab = headers.map((h) => h.getAttribute("tabindex"));
+    const headerLabel = (header) => (header?.textContent ?? "").trim();
+    const orders = headers.map((h) => h.dataset.kpSortOrder === void 0 ? null : splitList(h.dataset.kpSortOrder));
+    const filterKinds = headers.map((h) => {
+      const kind = h.dataset.kpFilter;
+      return kind === "choice" || kind === "range" || kind === "date" ? (
+        /** @type {FilterKind} */
+        kind
+      ) : null;
+    });
     const cellText = (row, at) => (row.cells[at]?.textContent ?? "").trim();
-    const view = () => ({ shown: shown.length, total: all.length, page, pages: Math.max(1, Math.ceil(shown.length / size)), query, sort });
+    const keyOf = (row) => row.dataset.kpRowKey ?? row.id ?? "";
+    const themeBox = (box) => {
+      if (box === null || box.classList.contains(CHECK_CLASS)) return;
+      box.classList.add(CHECK_CLASS);
+      undo.push(() => box.classList.remove(CHECK_CLASS));
+    };
+    const themeBoxes = () => {
+      themeBox(selectAll);
+      for (const row of all) themeBox(row.querySelector(SELECT_ROW));
+    };
+    themeBoxes();
+    if (selectAll !== null && !selectAll.hasAttribute("aria-label") && selectAll.labels?.length === 0) {
+      selectAll.setAttribute("aria-label", getStrings().tableSelectAll);
+      undo.push(() => selectAll.removeAttribute("aria-label"));
+    }
+    const maxHeight = wrap.dataset.kpMaxHeight;
+    if (maxHeight !== void 0 && maxHeight !== "") {
+      wrap.style.setProperty("--kp-datatable-max-height", maxHeight);
+      undo.push(() => wrap.style.removeProperty("--kp-datatable-max-height"));
+    }
+    let tableBlock = (
+      /** @type {Element} */
+      table
+    );
+    while (tableBlock.parentElement !== null && tableBlock.parentElement !== wrap) tableBlock = tableBlock.parentElement;
+    const topBar = (
+      /** @type {HTMLElement | null} */
+      [...wrap.children].find(
+        (child) => child.classList.contains("kp-datatable__bar") && child.compareDocumentPosition(tableBlock) & Node.DOCUMENT_POSITION_FOLLOWING
+      ) ?? null
+    );
+    const add = (node) => {
+      added.push(node);
+      return node;
+    };
+    const make = (tag, className) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      return node;
+    };
+    const s0 = getStrings();
+    if (scopeSelect !== null) {
+      if (scopeSelect.options.length === 0) {
+        const every = make("option");
+        every.setAttribute("value", "");
+        every.textContent = s0.tableSearchAllColumns;
+        scopeSelect.append(add(every));
+        headers.forEach((header, at) => {
+          if (header.dataset.kpSearch === "false" || header.querySelector(SELECT_ALL) !== null || headerLabel(header) === "") return;
+          const option = (
+            /** @type {HTMLOptionElement} */
+            make("option")
+          );
+          option.value = String(at);
+          option.textContent = headerLabel(header);
+          scopeSelect.append(add(option));
+        });
+      }
+      if (!scopeSelect.hasAttribute("aria-label") && scopeSelect.labels?.length === 0) {
+        scopeSelect.setAttribute("aria-label", s0.tableSearchScope);
+        undo.push(() => scopeSelect.removeAttribute("aria-label"));
+      }
+      scope = scopeSelect.value === "" ? null : Number(scopeSelect.value);
+    }
+    if (densitySelect !== null) {
+      if (densitySelect.options.length === 0) {
+        for (const [value, text] of [
+          ["comfortable", s0.tableDensityComfortable],
+          ["compact", s0.tableDensityCompact]
+        ]) {
+          const option = (
+            /** @type {HTMLOptionElement} */
+            make("option")
+          );
+          option.value = value ?? "";
+          option.textContent = text ?? "";
+          densitySelect.append(add(option));
+        }
+      }
+      if (!densitySelect.hasAttribute("aria-label") && densitySelect.labels?.length === 0) {
+        densitySelect.setAttribute("aria-label", s0.tableDensity);
+        undo.push(() => densitySelect.removeAttribute("aria-label"));
+      }
+      densitySelect.value = wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable";
+    }
+    const filterColumns = filterKinds.flatMap((kind, at) => kind === null ? [] : [at]);
+    let panel = null;
+    let toggle = null;
+    let pills = null;
+    if (filterColumns.length > 0) {
+      panel = /** @type {HTMLElement | null} */
+      wrap.querySelector(FILTERS);
+      if (panel === null) {
+        panel = add(make("div", "kp-datatable__filters"));
+        panel.dataset.kpDatatableFilters = "";
+        panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
+        wrap.insertBefore(panel, tableBlock);
+      }
+      if (panel.id === "") {
+        panel.id = `${id}-filters`;
+        const node = panel;
+        undo.push(() => node.removeAttribute("id"));
+      }
+      panel.setAttribute("role", "group");
+      panel.setAttribute("aria-label", s0.tableFiltersLabel);
+      for (const at of filterColumns) {
+        const kind = (
+          /** @type {FilterKind} */
+          filterKinds[at]
+        );
+        const label = headerLabel(headers[at]);
+        const set = add(make("fieldset", "kp-fieldset kp-datatable__filter"));
+        set.dataset.kpFilterColumn = String(at);
+        const legend = make("legend", "kp-field__label");
+        legend.textContent = label;
+        set.append(legend);
+        if (kind === "choice") {
+          const header = headers[at];
+          const declared = splitList(header?.dataset.kpFilterOptions);
+          const values = declared.length > 0 ? declared : [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
+          const order = orders[at];
+          if (declared.length === 0)
+            values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
+          for (const value of values) {
+            const option = make("label", "kp-field__option");
+            const box = (
+              /** @type {HTMLInputElement} */
+              make("input", CHECK_CLASS)
+            );
+            box.type = "checkbox";
+            box.value = value;
+            option.append(box, ` ${value}`);
+            set.append(option);
+          }
+        } else {
+          const range = make("div", "kp-datatable__range");
+          for (const bound of ["from", "to"]) {
+            const input = (
+              /** @type {HTMLInputElement} */
+              make("input", "kp-field__input")
+            );
+            input.type = kind === "range" ? "number" : "date";
+            input.dataset.kpFilterBound = bound;
+            input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
+            range.append(input);
+          }
+          set.append(range);
+        }
+        panel.append(set);
+      }
+      toggle = /** @type {HTMLButtonElement | null} */
+      wrap.querySelector(FILTER_TOGGLE);
+      if (toggle === null) {
+        toggle = /** @type {HTMLButtonElement} */
+        add(make("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
+        toggle.type = "button";
+        toggle.dataset.kpDatatableFilterToggle = "";
+        if (topBar !== null) topBar.append(toggle);
+        else wrap.insertBefore(toggle, panel);
+      }
+      toggle.setAttribute("aria-controls", panel.id);
+      toggle.setAttribute("aria-expanded", String(!panel.hidden));
+      pills = /** @type {HTMLElement | null} */
+      wrap.querySelector(PILLS);
+      if (pills === null) {
+        pills = add(make("div", "kp-datatable__pills"));
+        pills.dataset.kpDatatablePills = "";
+        wrap.insertBefore(pills, tableBlock);
+      }
+    }
+    const sortable = headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
+    let sortBy = null;
+    let sortDirection = null;
+    if (wrap.dataset.kpCards !== void 0 && sortable.length > 0 && wrap.querySelector(CARD_SORT) === null) {
+      const control = add(make("div", "kp-datatable__card-sort"));
+      control.dataset.kpDatatableCardSort = "";
+      const label = make("label", "kp-datatable__label");
+      label.append(s0.tableSortBy, " ");
+      sortBy = /** @type {HTMLSelectElement} */
+      make("select", "kp-field__input kp-datatable__select");
+      sortBy.dataset.kpDatatableSortBy = "";
+      sortBy.setAttribute("aria-label", s0.tableSortBy);
+      const none = (
+        /** @type {HTMLOptionElement} */
+        make("option")
+      );
+      none.value = "";
+      none.textContent = s0.tableSortNone;
+      sortBy.append(none);
+      for (const at of sortable) {
+        const option = (
+          /** @type {HTMLOptionElement} */
+          make("option")
+        );
+        option.value = String(at);
+        option.textContent = headerLabel(headers[at]);
+        sortBy.append(option);
+      }
+      label.append(sortBy);
+      sortDirection = /** @type {HTMLButtonElement} */
+      make("button", "kp-button kp-button--ghost");
+      sortDirection.type = "button";
+      sortDirection.dataset.kpDatatableSortDirection = "";
+      control.append(label, sortDirection);
+      wrap.insertBefore(control, tableBlock);
+    }
+    let sizeLabel = null;
+    let sizeSelect = null;
+    if (pager !== null && sizes.length > 0) {
+      sizeLabel = /** @type {HTMLLabelElement} */
+      make("label", "kp-datatable__label");
+      sizeSelect = /** @type {HTMLSelectElement} */
+      make("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
+      sizeSelect.dataset.kpDatatablePageSize = "";
+      sizeSelect.setAttribute("aria-label", s0.tableRowsPerPage);
+      for (const n of sizes) {
+        const option = (
+          /** @type {HTMLOptionElement} */
+          make("option")
+        );
+        option.value = String(n);
+        option.textContent = String(n);
+        sizeSelect.append(option);
+      }
+      sizeSelect.value = String(size);
+      sizeLabel.append(s0.tableRowsPerPage, " ", sizeSelect);
+    }
+    const view = () => ({
+      shown: shown.length,
+      total: all.length,
+      page,
+      pages: Math.max(1, Math.ceil(shown.length / size)),
+      pageSize: size,
+      query,
+      scope,
+      filters: Object.fromEntries(filters),
+      sort,
+      density: wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable",
+      state,
+      keys: shown.map(keyOf),
+      pageKeys: pageRows.map(keyOf)
+    });
+    const selectedRows = () => all.filter((row) => {
+      const box = (
+        /** @type {HTMLInputElement | null} */
+        row.querySelector(SELECT_ROW)
+      );
+      return box !== null && box.checked;
+    });
+    const syncSelectAll = () => {
+      if (selectAll === null) return;
+      const boxes = pageRows.map((row) => (
+        /** @type {HTMLInputElement | null} */
+        row.querySelector(SELECT_ROW)
+      )).filter((b) => b !== null);
+      const checked = boxes.filter((b) => b.checked).length;
+      selectAll.checked = boxes.length > 0 && checked === boxes.length;
+      selectAll.indeterminate = checked > 0 && checked < boxes.length;
+    };
+    const syncActions = () => {
+      if (actions === null) return;
+      const count = selectedRows().length;
+      actions.hidden = count === 0;
+      const counter2 = actions.querySelector(SELECTED_COUNT);
+      if (counter2 !== null) counter2.textContent = getStrings().tableSelected(count);
+    };
+    const syncStateParts = () => {
+      if (state === "loading") wrap.setAttribute("aria-busy", "true");
+      else if (busyWas === null) wrap.removeAttribute("aria-busy");
+      else wrap.setAttribute("aria-busy", busyWas);
+      wrap.dataset.kpState = state;
+      if (loadingSlot !== null) loadingSlot.hidden = !(state === "loading" && all.length === 0);
+      if (failedSlot !== null) failedSlot.hidden = state !== "failed";
+    };
+    const syncCardSort = () => {
+      if (sortBy === null || sortDirection === null) return;
+      const s = getStrings();
+      sortBy.value = sort === null || sort.direction === "none" ? "" : String(sort.column);
+      const direction = sort?.direction === "descending" ? "descending" : "ascending";
+      sortDirection.textContent = direction === "descending" ? s.tableSortDescending : s.tableSortAscending;
+      sortDirection.disabled = sortBy.value === "";
+    };
     const render = () => {
       const pages = Math.max(1, Math.ceil(shown.length / size));
       page = Math.min(page, pages - 1);
       const from = page * size;
-      const slice = pager === null ? shown : shown.slice(from, from + size);
+      pageRows = pager === null ? shown : shown.slice(from, from + size);
       for (const row of all) row.hidden = true;
-      for (const row of slice) row.hidden = false;
+      for (const row of pageRows) row.hidden = false;
       for (const row of shown) body.append(row);
       const s = getStrings();
       if (status !== null) {
-        const total = all.length;
-        const count = shown.length;
-        status.textContent = count === total ? s.tableRows(total) : s.tableRowsFiltered(count, total);
+        status.textContent = state === "loading" ? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, shown.length, all.length);
       }
       if (pager !== null) {
         pager.textContent = "";
+        if (sizeLabel !== null) pager.append(sizeLabel);
         pager.append(pagerButton(s.previous, page > 0, () => page -= 1));
         const label = document.createElement("span");
         label.className = "kp-datatable__page";
@@ -2362,8 +2804,12 @@ function attachDataTables(root = document, {
         pager.append(label);
         pager.append(pagerButton(s.next, page < pages - 1, () => page += 1));
       }
-      if (empty !== null) empty.hidden = shown.length > 0;
-      wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: view() }));
+      if (empty !== null) empty.hidden = shown.length > 0 || state !== "ready";
+      syncSelectAll();
+      syncActions();
+      syncStateParts();
+      syncCardSort();
+      wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...shown], pageRows: [...pageRows] } }));
     };
     const pagerButton = (text, enabled, go) => {
       const button = document.createElement("button");
@@ -2377,9 +2823,128 @@ function attachDataTables(root = document, {
       });
       return button;
     };
+    const pillsList = add(make("ul", "kp-tag-list"));
+    const clearButton = (
+      /** @type {HTMLButtonElement} */
+      add(make("button", "kp-button kp-button--ghost kp-datatable__clear-filters"))
+    );
+    clearButton.type = "button";
+    clearButton.addEventListener("click", () => {
+      clearFilters();
+      toggle?.focus();
+    });
+    if (pills !== null) {
+      pills.textContent = "";
+      pills.append(pillsList, clearButton);
+    }
+    const renderPills = () => {
+      if (pills === null) return;
+      const s = getStrings();
+      const list = pillsList;
+      list.textContent = "";
+      list.setAttribute("aria-label", s.tableActiveFilters);
+      clearButton.textContent = s.tableClearFilters;
+      let count = 0;
+      for (const at of filterColumns) {
+        const kind = (
+          /** @type {FilterKind} */
+          filterKinds[at]
+        );
+        for (const pill of filterPills(kind, headerLabel(headers[at]), filters.get(at), s)) {
+          count += 1;
+          const item = make("li", "kp-tag");
+          const remove = (
+            /** @type {HTMLButtonElement} */
+            make("button", "kp-tag__remove")
+          );
+          remove.type = "button";
+          remove.setAttribute("aria-label", s.tableRemoveFilter(pill.label));
+          remove.textContent = removeGlyph;
+          remove.addEventListener("click", () => {
+            setFilter(at, pill.without ?? null);
+            const next = (
+              /** @type {HTMLElement | null} */
+              pills?.querySelector(".kp-tag__remove") ?? null
+            );
+            (next ?? toggle)?.focus();
+          });
+          item.append(pill.label, remove);
+          list.append(item);
+        }
+      }
+      pills.hidden = count === 0;
+      if (toggle !== null) toggle.textContent = s.tableFilters(count);
+    };
+    const writeControls = () => {
+      if (panel === null) return;
+      for (const set of panel.querySelectorAll("[data-kp-filter-column]")) {
+        const at = Number(
+          /** @type {HTMLElement} */
+          set.dataset.kpFilterColumn
+        );
+        const value = filters.get(at);
+        for (const box of set.querySelectorAll('input[type="checkbox"]')) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            box
+          );
+          input.checked = Array.isArray(value) && value.includes(input.value);
+        }
+        for (const bound of set.querySelectorAll("[data-kp-filter-bound]")) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            bound
+          );
+          const range = (
+            /** @type {{ from?: string, to?: string } | undefined} */
+            Array.isArray(value) ? void 0 : value
+          );
+          input.value = (input.dataset.kpFilterBound === "from" ? range?.from : range?.to) ?? "";
+        }
+      }
+    };
+    const readControls = () => {
+      if (panel === null) return;
+      filters.clear();
+      for (const set of panel.querySelectorAll("[data-kp-filter-column]")) {
+        const at = Number(
+          /** @type {HTMLElement} */
+          set.dataset.kpFilterColumn
+        );
+        const kind = filterKinds[at];
+        let value;
+        if (kind === "choice")
+          value = [...set.querySelectorAll('input[type="checkbox"]:checked')].map((b) => (
+            /** @type {HTMLInputElement} */
+            b.value
+          ));
+        else {
+          const from = (
+            /** @type {HTMLInputElement | null} */
+            set.querySelector('[data-kp-filter-bound="from"]')?.value ?? ""
+          );
+          const to = (
+            /** @type {HTMLInputElement | null} */
+            set.querySelector('[data-kp-filter-bound="to"]')?.value ?? ""
+          );
+          value = { from, to };
+        }
+        if (kind !== null && kind !== void 0 && filterActive(kind, value)) filters.set(at, value);
+      }
+    };
     const applyFilter = () => {
       const needle = query.trim().toLowerCase();
-      shown = all.filter((row) => needle === "" || filterFn(row, needle));
+      shown = all.filter((row) => {
+        if (needle !== "") {
+          const hit = scope === null ? filterFn(row, needle) : cellText(row, scope).toLowerCase().includes(needle);
+          if (!hit) return false;
+        }
+        for (const [at, value] of filters) {
+          const kind = filterKinds[at];
+          if (kind && !matchesFilter(kind, value, cellText(row, at), locale)) return false;
+        }
+        return true;
+      });
       if (sort !== null && sort.direction !== "none") applySort(sort.column, sort.direction);
       page = 0;
       render();
@@ -2391,6 +2956,59 @@ function attachDataTables(root = document, {
       if (debounce > 0) pending = window.setTimeout(applyFilter, debounce);
       else applyFilter();
     };
+    const onScope = () => {
+      scope = scopeSelect === null || scopeSelect.value === "" ? null : Number(scopeSelect.value);
+      applyFilter();
+    };
+    const onDensity = () => {
+      if (densitySelect === null) return;
+      setDensity(densitySelect.value === "compact" ? "compact" : "comfortable");
+    };
+    const setDensity = (next) => {
+      if (next === "compact") wrap.setAttribute("data-density", "compact");
+      else wrap.removeAttribute("data-density");
+      if (densitySelect !== null) densitySelect.value = next;
+      render();
+    };
+    const onPanel = () => {
+      const before = JSON.stringify([...filters]);
+      readControls();
+      if (JSON.stringify([...filters]) === before) return;
+      renderPills();
+      applyFilter();
+    };
+    const onToggle = () => {
+      if (panel === null || toggle === null) return;
+      panel.hidden = !panel.hidden;
+      toggle.setAttribute("aria-expanded", String(!panel.hidden));
+    };
+    const setFilter = (at, value) => {
+      const kind = filterKinds[at];
+      if (!kind) return;
+      if (value === null || !filterActive(kind, value)) filters.delete(at);
+      else filters.set(at, value);
+      writeControls();
+      renderPills();
+      applyFilter();
+    };
+    const clearFilters = () => {
+      filters.clear();
+      writeControls();
+      renderPills();
+      applyFilter();
+    };
+    const onClear = () => {
+      query = "";
+      if (search !== null) search.value = "";
+      filters.clear();
+      writeControls();
+      renderPills();
+      applyFilter();
+      search?.focus();
+    };
+    const onRetry = () => {
+      wrap.dispatchEvent(new CustomEvent(RETRY_EVENT, { bubbles: true }));
+    };
     const applySort = (at, direction) => {
       const kind = headers[at]?.dataset.kpSort ?? "text";
       if (direction === "none") {
@@ -2398,7 +3016,13 @@ function attachDataTables(root = document, {
         shown = rendered.filter((row) => keep.has(row));
       } else {
         const sign = direction === "ascending" ? 1 : -1;
-        shown = [...shown].sort((a, b) => sign * compareFn(cellText(a, at), cellText(b, at), kind, locale));
+        const order = orders[at];
+        const by = (a, b) => compareFn(a, b, kind, locale);
+        shown = [...shown].sort((a, b) => {
+          const left = cellText(a, at);
+          const right = cellText(b, at);
+          return sign * (order ? compareByOrder(order, left, right, by) : by(left, right));
+        });
       }
       headers.forEach((header, i) => {
         if (header.dataset.kpSort === void 0) return;
@@ -2444,37 +3068,42 @@ function attachDataTables(root = document, {
       if (header.dataset.kpSort !== void 0 && header.querySelector("button, a") === null && !header.hasAttribute("tabindex"))
         header.tabIndex = 0;
     }
-    const selectedRows = () => all.filter((row) => {
-      const box = (
-        /** @type {HTMLInputElement | null} */
-        row.querySelector(SELECT_ROW)
-      );
-      return box !== null && box.checked;
-    });
-    const syncSelectAll = () => {
-      if (selectAll === null) return;
-      const boxes = shown.map((row) => (
-        /** @type {HTMLInputElement | null} */
-        row.querySelector(SELECT_ROW)
-      )).filter((b) => b !== null);
-      const checked = boxes.filter((b) => b.checked).length;
-      selectAll.checked = boxes.length > 0 && checked === boxes.length;
-      selectAll.indeterminate = checked > 0 && checked < boxes.length;
+    const onSortBy = () => {
+      if (sortBy === null) return;
+      if (sortBy.value === "") setSort(null);
+      else setSort({ column: Number(sortBy.value), direction: sort?.direction === "descending" ? "descending" : "ascending" });
+    };
+    const onSortDirection = () => {
+      if (sort === null || sort.direction === "none") return;
+      setSort({ column: sort.column, direction: sort.direction === "ascending" ? "descending" : "ascending" });
+    };
+    const onPageSize = () => {
+      if (sizeSelect === null) return;
+      setPageSize(Number(sizeSelect.value));
+    };
+    const setPageSize = (next) => {
+      if (!(next > 0)) return;
+      const first = page * size;
+      size = next;
+      if (sizeSelect !== null) sizeSelect.value = String(next);
+      page = Math.floor(first / size);
+      render();
     };
     const announceSelection = () => {
       const rows = selectedRows();
-      const keys = rows.map((row) => row.dataset.kpRowKey ?? row.id ?? "");
+      const keys = rows.map(keyOf);
       wrap.dispatchEvent(new CustomEvent(SELECT_EVENT, { bubbles: true, detail: { keys, rows } }));
     };
     const onBodyChange = (event) => {
       if (!/** @type {HTMLElement} */
       event.target.matches(SELECT_ROW)) return;
       syncSelectAll();
+      syncActions();
       announceSelection();
     };
     const onSelectAll = () => {
       if (selectAll === null) return;
-      for (const row of shown) {
+      for (const row of pageRows) {
         const box = (
           /** @type {HTMLInputElement | null} */
           row.querySelector(SELECT_ROW)
@@ -2482,9 +3111,53 @@ function attachDataTables(root = document, {
         if (box !== null) box.checked = selectAll.checked;
       }
       selectAll.indeterminate = false;
+      syncActions();
       announceSelection();
     };
+    const select = (keys) => {
+      const want = new Set(keys);
+      for (const row of all) {
+        const box = (
+          /** @type {HTMLInputElement | null} */
+          row.querySelector(SELECT_ROW)
+        );
+        if (box !== null) box.checked = want.has(keyOf(row));
+      }
+      syncSelectAll();
+      syncActions();
+      announceSelection();
+    };
+    const onClearSelection = () => select([]);
+    const onActionsClick = (event) => {
+      if (
+        /** @type {HTMLElement} */
+        event.target.closest(CLEAR_SELECTION) !== null
+      ) onClearSelection();
+    };
+    const onEmptyClick = (event) => {
+      if (
+        /** @type {HTMLElement} */
+        event.target.closest(CLEAR) !== null
+      ) onClear();
+    };
+    const onFailedClick = (event) => {
+      if (
+        /** @type {HTMLElement} */
+        event.target.closest(RETRY) !== null
+      ) onRetry();
+    };
     search?.addEventListener("input", onSearch);
+    scopeSelect?.addEventListener("change", onScope);
+    densitySelect?.addEventListener("change", onDensity);
+    panel?.addEventListener("input", onPanel);
+    panel?.addEventListener("change", onPanel);
+    toggle?.addEventListener("click", onToggle);
+    sortBy?.addEventListener("change", onSortBy);
+    sortDirection?.addEventListener("click", onSortDirection);
+    sizeSelect?.addEventListener("change", onPageSize);
+    actions?.addEventListener("click", onActionsClick);
+    empty?.addEventListener("click", onEmptyClick);
+    failedSlot?.addEventListener("click", onFailedClick);
     table.tHead?.addEventListener("click", onHeadClick);
     table.tHead?.addEventListener("keydown", onHeadKey);
     body.addEventListener("change", onBodyChange);
@@ -2495,6 +3168,18 @@ function attachDataTables(root = document, {
       /** @type {Direction} */
       headers[presorted]?.getAttribute("aria-sort")
     ) };
+    for (const at of filterColumns) {
+      const declared = headers[at]?.dataset.kpFilterValue;
+      if (declared === void 0) continue;
+      const kind = filterKinds[at];
+      if (kind === "choice") filters.set(at, splitList(declared));
+      else {
+        const [from = "", to = ""] = declared.split(",").map((part) => part.trim());
+        filters.set(at, { from, to });
+      }
+    }
+    writeControls();
+    renderPills();
     applyFilter();
     const handle = {
       element: wrap,
@@ -2504,27 +3189,31 @@ function attachDataTables(root = document, {
         page = Math.max(0, next);
         render();
       },
+      pageSize: setPageSize,
       query: (next) => {
         query = next;
         if (search !== null) search.value = next;
         applyFilter();
       },
-      selected: () => selectedRows().map((row) => row.dataset.kpRowKey ?? row.id ?? ""),
-      select: (keys) => {
-        const want = new Set(keys);
-        for (const row of all) {
-          const box = (
-            /** @type {HTMLInputElement | null} */
-            row.querySelector(SELECT_ROW)
-          );
-          if (box !== null) box.checked = want.has(row.dataset.kpRowKey ?? row.id ?? "");
-        }
-        syncSelectAll();
-        announceSelection();
+      scope: (column) => {
+        scope = column;
+        if (scopeSelect !== null) scopeSelect.value = column === null ? "" : String(column);
+        applyFilter();
       },
+      filter: setFilter,
+      clearFilters,
+      density: setDensity,
+      state: (next) => {
+        state = next;
+        render();
+      },
+      rows: (which = "view") => which === "page" ? [...pageRows] : [...shown],
+      selected: () => selectedRows().map(keyOf),
+      select,
       refresh: () => {
         all = [...body.rows];
         for (const row of all) if (!rendered.includes(row)) rendered.push(row);
+        themeBoxes();
         applyFilter();
       }
     };
@@ -2533,6 +3222,17 @@ function attachDataTables(root = document, {
     cleanups.push(() => {
       clearTimeout(pending);
       search?.removeEventListener("input", onSearch);
+      scopeSelect?.removeEventListener("change", onScope);
+      densitySelect?.removeEventListener("change", onDensity);
+      panel?.removeEventListener("input", onPanel);
+      panel?.removeEventListener("change", onPanel);
+      toggle?.removeEventListener("click", onToggle);
+      sortBy?.removeEventListener("change", onSortBy);
+      sortDirection?.removeEventListener("click", onSortDirection);
+      sizeSelect?.removeEventListener("change", onPageSize);
+      actions?.removeEventListener("click", onActionsClick);
+      empty?.removeEventListener("click", onEmptyClick);
+      failedSlot?.removeEventListener("click", onFailedClick);
       table.tHead?.removeEventListener("click", onHeadClick);
       table.tHead?.removeEventListener("keydown", onHeadKey);
       body.removeEventListener("change", onBodyChange);
@@ -2551,6 +3251,16 @@ function attachDataTables(root = document, {
       });
       if (pager !== null) pager.textContent = "";
       if (empty !== null) empty.hidden = emptyWasHidden;
+      if (loadingSlot !== null) loadingSlot.hidden = true;
+      if (failedSlot !== null) failedSlot.hidden = true;
+      if (actions !== null) actions.hidden = true;
+      for (const node of added) node.remove();
+      for (const step of undo) step();
+      if (densityWas === null) wrap.removeAttribute("data-density");
+      else wrap.setAttribute("data-density", densityWas);
+      if (busyWas === null) wrap.removeAttribute("aria-busy");
+      else wrap.setAttribute("aria-busy", busyWas);
+      delete wrap.dataset.kpState;
       handles4.delete(wrap);
       delete wrap.dataset.kpDatatableAttached;
     });
@@ -6525,6 +7235,7 @@ export {
   OPTION_SELECTOR,
   OPT_OUT,
   PAGE_SIZE,
+  PAGE_SIZES,
   PENDING_THEME_ATTRIBUTE,
   PICK_EVENT,
   POINTER,
@@ -6537,6 +7248,7 @@ export {
   REJECT_EVENT,
   REMOVE_EVENT,
   REORDER_EVENT,
+  RETRY_EVENT,
   REVEALS,
   REVEAL_EVENT,
   REVEAL_STATE,
@@ -6618,6 +7330,7 @@ export {
   combobox,
   combobox_exports as comboboxExports,
   compare,
+  compareByOrder,
   compareVersions,
   components_exports as componentsExports,
   configureTheme,
@@ -6635,6 +7348,8 @@ export {
   effects_exports as effectsExports,
   enforceContracts,
   ensureRegister,
+  filterActive,
+  filterPills,
   findViolations,
   form,
   formatHsl,
@@ -6651,6 +7366,7 @@ export {
   lazy_register_exports as lazyRegisterExports,
   listbox_exports as listboxExports,
   luminance,
+  matchesFilter,
   meets,
   nameOf,
   no_flash_exports as noFlashExports,
