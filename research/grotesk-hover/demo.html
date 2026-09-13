@@ -6,7 +6,7 @@
         <title>Grotesk hover options · kp-themes research</title>
         <link rel="stylesheet" href="../../catalogue/deps.css" />
         <style>
-            /* Each option is scoped to its own column so the four can be
+            /* Each option is scoped to its own column so the five can be
                hovered side by side. Option A is the package as it is and adds
                nothing. The rules are written the way the grotesk register
                would carry them, on its own tokens. */
@@ -82,6 +82,32 @@
                 .gh-d .kp-button--mirror:not(.kp-button--primary):not(.kp-button--destructive):hover:not(:active) {
                     background: var(--muted);
                 }
+
+                /* E · everything inverts: a coloured button turns to the ground
+                   with its colour on the label and the edge; every other
+                   variant (default, secondary, ghost, a bare mirror) turns to
+                   ink with the ground on the label, its edge in ink too. Never
+                   while pressed, so the press keeps the register's own value. */
+                .gh-e .kp-button--primary:hover:not(:active),
+                .gh-e .kp-button--primary:focus-visible:not(:active) {
+                    background: var(--background);
+                    color: var(--primary);
+                    border-color: var(--primary);
+                }
+
+                .gh-e .kp-button--destructive:hover:not(:active),
+                .gh-e .kp-button--destructive:focus-visible:not(:active) {
+                    background: var(--background);
+                    color: var(--destructive);
+                    border-color: var(--destructive);
+                }
+
+                .gh-e .kp-button:not(.kp-button--primary):not(.kp-button--destructive):hover:not(:active),
+                .gh-e .kp-button:not(.kp-button--primary):not(.kp-button--destructive):focus-visible:not(:active) {
+                    background: var(--foreground);
+                    color: var(--background);
+                    border-color: var(--foreground);
+                }
             }
         </style>
     </head>
@@ -98,24 +124,26 @@
             <p class="cat-intro">
                 Measured on 2026-09-13: in grotesk a <code>--primary</code>, <code>--destructive</code> or bare <code>--mirror</code> button changes
                 nothing on hover. The approved grotesk demo inverted a coloured button (fill becomes the page ground, the label takes the colour), but
-                only when it also carried <code>--mirror</code>. The four columns below are the same six buttons under four rules. Hover each, then
+                only when it also carried <code>--mirror</code>. The five columns below are the same six buttons under five rules. Hover each, then
                 hold the mouse down: the press must still differ from the hover in every option. This page stays in grotesk; the theme menu is there
                 if you want to see the others unchanged.
             </p>
 
             <section class="cat-block" id="options">
-                <h2>Four options, side by side</h2>
+                <h2>Five options, side by side</h2>
                 <div class="cat-look">
                     <b>Look at:</b> hover each button in each column, and Tab through them — focus shows the same change as hover. <b>A</b> is the
                     package today. <b>B</b> gives every coloured button the demo's invert. <b>C</b> gives every variant the grey wash of the default
                     button. <b>D</b> deepens the red to the theme's own hover value (<code>--primary-hover</code> hsl(0 100% 40%),
-                    <code>--destructive-hover</code> hsl(0 100% 35%)). Decide by which one still reads as grotesk: one red, black, white, and identity
-                    by letter rather than by effect.
+                    <code>--destructive-hover</code> hsl(0 100% 35%)). <b>E</b> inverts every variant, not only the red ones: a coloured button turns
+                    white with its red on the label and the edge, and the default, <code>--secondary</code>, ghost and bare mirror buttons turn black
+                    with a white label and a black edge. Decide by which one still reads as grotesk: one red, black, white, and identity by letter
+                    rather than by effect.
                 </div>
                 <div class="gh-grid">
                     <div class="gh-option gh-a">
-                        <h3>A · today</h3>
-                        <p>Coloured buttons and a bare mirror do nothing on hover.</p>
+                        <h3>A · before scope-63</h3>
+                        <p>Coloured buttons and a bare mirror did nothing on hover. The register now ships B, so this column shows B too.</p>
                         <div class="gh-row">
                             <button type="button" class="kp-button kp-button--primary">Save</button>
                             <button type="button" class="kp-button kp-button--destructive">Delete</button>
@@ -152,6 +180,21 @@
                     <div class="gh-option gh-d">
                         <h3>D · a deeper red</h3>
                         <p>A coloured button keeps its fill, one step darker; a bare mirror takes the grey wash.</p>
+                        <div class="gh-row">
+                            <button type="button" class="kp-button kp-button--primary">Save</button>
+                            <button type="button" class="kp-button kp-button--destructive">Delete</button>
+                            <button type="button" class="kp-button kp-button--mirror">Back</button>
+                            <button type="button" class="kp-button">Draft</button>
+                            <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                            <button type="button" class="kp-button kp-button--primary kp-button--mirror">Save (mirror)</button>
+                        </div>
+                    </div>
+                    <div class="gh-option gh-e">
+                        <h3>E · everything inverts</h3>
+                        <p>
+                            Every variant swaps ground and ink while hovered: red buttons go white with a red label, the rest go black with a white
+                            label.
+                        </p>
                         <div class="gh-row">
                             <button type="button" class="kp-button kp-button--primary">Save</button>
                             <button type="button" class="kp-button kp-button--destructive">Delete</button>

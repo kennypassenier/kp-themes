@@ -10,21 +10,25 @@
 //                               two versions always start side by side
 import { attachAll } from '../js/auto.js';
 import { THEMES } from '../js/theme-registry.js';
-import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
 import { themeOptionsMarkup } from '../js/theme-picker.js';
 import { COMPONENT_PAGES } from './pages.js';
-import { JUDGEMENT_EVENT, loadJudgements, saveJudgements, stateOf } from './judgements.js';
-import { fingerprint, stillAnimations } from './block-hash.js';
+import { REVIEW_PAGE, slugOf, themeLabel } from './review-state.js';
+import { mountJudging } from './judging.js';
 
 const ROOT = new URL('../', import.meta.url);
 
 /* ------------------------------------------------------------ gathering */
 
-export const slugOf = (href) =>
-    href
-        .split('/')
-        .pop()
-        .replace(/\.html$/, '');
+export { slugOf };
+
+/** A block's own heading, without a label set inside it (the data table demo's "mock"). */
+export function headingText(block) {
+    const heading = block.querySelector('h2, h3');
+    if (!heading) return block.id;
+    const copy = /** @type {HTMLElement} */ (heading.cloneNode(true));
+    for (const tag of copy.querySelectorAll('[class*="-tag"]')) tag.remove();
+    return copy.textContent.trim() || block.id;
+}
 
 /**
  * Fetch one component page and return its title and blocks, each block with
@@ -38,7 +42,7 @@ export async function readPage(page) {
     const blocks = [...doc.querySelectorAll('.cat-main .cat-block[id]')].map((block) => ({
         id: `${slug}--${block.id}`,
         source: block.outerHTML,
-        title: `${page.label} › ${block.querySelector('h2')?.textContent.trim() ?? block.id}`,
+        title: `${page.label} › ${headingText(block)}`,
         node: block,
     }));
     return { page, slug, title: doc.querySelector('.cat-main h1')?.textContent.trim() ?? page.label, blocks };
@@ -92,10 +96,6 @@ export function suffixIds(root, suffix, prefix = '') {
     }
 }
 
-/* ----------------------------------------------------------- judgements */
-
-const themeLabel = (name) => THEMES.find((t) => t.name === name)?.label ?? name;
-
 /* ------------------------------------------------------ the review page */
 
 async function composeAll(host) {
@@ -110,27 +110,16 @@ async function composeAll(host) {
     status.remove();
 
     // The review bar: what is left to judge, the way back from a mistaken
-    // click, and the notes controls that otherwise sit at the foot of a very
-    // long page (Kenny, 2026-09-13: "it takes a while to scroll down").
+    // click, and whether judged blocks stay on the page (judging.js fills it).
+    // The prompt controls sit in the bar every page carries (prompt.js).
     const toolbar = document.createElement('div');
     toolbar.className = 'cat-review-bar';
-    toolbar.innerHTML = `
-        <span class="cat-note" role="status" aria-live="polite" data-cat-review-count></span>
-        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-undo hidden>Undo</button>
-        <span class="cat-bar__spacer"></span>
-        <div class="kp-field kp-field--check cat-review-toggle">
-            <input class="kp-field__check" type="checkbox" id="cat-show-judged" data-cat-show-judged />
-            <label class="kp-field__label" for="cat-show-judged">Show blocks already judged</label>
-        </div>
-        <button type="button" class="kp-button kp-button--sm" data-cat-copy-top>Copy prompt</button>
-        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-clear-top>Clear this page's notes</button>`;
     host.append(toolbar);
 
     const toc = document.createElement('ul');
     toc.className = 'cat-toc';
     host.append(toc);
 
-    /** @type {{ id: string, source: string, section: HTMLElement, badge: HTMLElement, button: HTMLButtonElement }[]} */
     const entries = [];
     for (const { page, slug, title, blocks } of pages) {
         const component = document.createElement('section');
@@ -168,128 +157,35 @@ async function composeAll(host) {
             suffixIds(section, '', `${slug}--`);
             section.id = block.id;
 
-            const approval = document.createElement('div');
-            approval.className = 'cat-approval';
-            approval.innerHTML = `
-                <span class="kp-badge" data-cat-approval-state>Checking…</span>
-                <button type="button" class="kp-button kp-button--primary kp-button--sm" data-cat-verdict="approved">Approve</button>
-                <button type="button" class="kp-button kp-button--sm" data-cat-verdict="rejected">Not approved</button>`;
-            section.append(approval);
             component.append(section);
             entries.push({
-                id: block.id,
+                key: block.id,
+                notePage: REVIEW_PAGE,
+                noteBlock: block.id,
+                title: block.title,
                 source: block.source,
-                section,
-                badge: approval.querySelector('[data-cat-approval-state]'),
-                approve: approval.querySelector('[data-cat-verdict="approved"]'),
-                reject: approval.querySelector('[data-cat-verdict="rejected"]'),
+                root: section,
+                fieldId: `cat-feedback-${block.id}`,
+                place: (panel) => section.append(panel),
             });
         }
         host.append(component);
     }
 
+    // Attached before the panels go in: the panels are the catalogue's, not
+    // components under review.
     attachAll(host);
-    await document.fonts?.ready;
-
-    const showJudged = toolbar.querySelector('[data-cat-show-judged]');
-    const count = toolbar.querySelector('[data-cat-review-count]');
-    const undo = toolbar.querySelector('[data-cat-undo]');
-    let current = new Map(); // block id -> hash in the theme on screen
-    let last = null; // { id, theme, previous } for Undo
-
-    async function measure() {
-        const theme = currentTheme();
-        // A hidden block reads display:none on its own root, which would make
-        // every judged block look changed; they are all shown while reading.
-        for (const entry of entries) entry.section.hidden = false;
-        const release = stillAnimations();
-        const next = new Map();
-        for (const entry of entries) next.set(entry.id, await fingerprint(entry.section, entry.source));
-        release();
-        if (theme !== currentTheme()) return; // the theme moved while reading; the next pass counts
-        current = next;
-        render();
-    }
-
-    const WORDS = {
-        new: (t) => `Not yet judged in ${t}`,
-        approved: (t) => `Approved in ${t}`,
-        rejected: (t) => `Not approved in ${t}`,
-        changed: (t) => `Changed since it was judged in ${t}`,
-    };
-
-    function render() {
-        const theme = currentTheme();
-        const label = themeLabel(theme);
-        const all = loadJudgements();
-        let open = 0;
-        for (const entry of entries) {
-            const hash = current.get(entry.id);
-            const state = stateOf(all, entry.id, theme, hash);
-            const judged = state === 'approved' || state === 'rejected';
-            if (!judged) open += 1;
-            entry.badge.textContent = WORDS[state](label);
-            entry.badge.className = `kp-badge${state === 'approved' ? ' kp-badge--success' : state === 'rejected' ? ' kp-badge--destructive' : state === 'changed' ? ' kp-badge--warning' : ''}`;
-            entry.approve.textContent = `Approve in ${label}`;
-            entry.reject.textContent = `Not approved in ${label}`;
-            entry.approve.disabled = state === 'approved' || !hash;
-            entry.reject.disabled = state === 'rejected' || !hash;
-            entry.section.dataset.catState = state;
-            // Judged blocks leave the page, so the reviewer stays at the top and
-            // judges one block after another; a block that changed since comes back.
-            entry.section.hidden = judged && !showJudged.checked;
-        }
-        for (const component of host.querySelectorAll('.cat-component')) {
-            component.hidden = !component.querySelector('.cat-block:not([hidden])');
-        }
-        count.textContent = open ? `${open} of ${entries.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
-        document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
-    }
-
-    host.addEventListener('click', (event) => {
-        const button = event.target instanceof Element ? event.target.closest('[data-cat-verdict]') : null;
-        if (!button) return;
-        const entry = entries.find((e) => e.approve === button || e.reject === button);
-        const hash = entry && current.get(entry.id);
-        if (!hash) return;
-        const theme = currentTheme();
-        const all = loadJudgements();
-        last = { id: entry.id, theme, previous: all[entry.id]?.[theme] ?? null, title: entry.section.dataset.catTitle };
-        (all[entry.id] ??= {})[theme] = { verdict: button.getAttribute('data-cat-verdict'), hash };
-        saveJudgements(all);
-        undo.hidden = false;
-        undo.textContent = `Undo: ${last.title}`;
-        render();
+    const judging = mountJudging({
+        entries,
+        toolbar,
+        // A component whose every block left the page leaves with them.
+        onRender() {
+            for (const component of host.querySelectorAll('.cat-component')) {
+                component.hidden = !component.querySelector('.cat-block:not([hidden])');
+            }
+        },
     });
-
-    undo.addEventListener('click', () => {
-        if (!last) return;
-        const all = loadJudgements();
-        if (last.previous) (all[last.id] ??= {})[last.theme] = last.previous;
-        else if (all[last.id]) delete all[last.id][last.theme];
-        saveJudgements(all);
-        const section = document.getElementById(last.id);
-        last = null;
-        undo.hidden = true;
-        render();
-        section?.scrollIntoView({ block: 'start' });
-    });
-
-    // The notes controls live at the foot of the page (catalogue.js); these
-    // two press them from the top.
-    toolbar.querySelector('[data-cat-copy-top]').addEventListener('click', () => document.querySelector('[data-cat-copy]')?.click());
-    toolbar.querySelector('[data-cat-clear-top]').addEventListener('click', () => document.querySelector('[data-cat-clear]')?.click());
-
-    showJudged.addEventListener('change', render);
-    document.documentElement.addEventListener(THEME_EVENT, () => {
-        for (const entry of entries) entry.badge.textContent = 'Checking…';
-        // Give the register a moment to paint before reading it. A timer, not
-        // requestAnimationFrame: a tab in the background never runs a frame,
-        // and the badges then stayed on "Checking…" for good.
-        setTimeout(() => measure(), 120);
-    });
-
-    await measure();
+    await judging.start();
     document.dispatchEvent(new CustomEvent('cat-composed'));
 }
 

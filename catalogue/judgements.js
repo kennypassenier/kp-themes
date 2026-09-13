@@ -7,7 +7,8 @@
 // The hash is what makes a verdict safe to act on later: a judged block stays
 // hidden only while it still looks the way it did when it was judged, so a
 // block that changed comes back to be judged again (Kenny, 2026-09-13).
-const KEY = 'kp-catalogue-judgements:v2';
+export const JUDGEMENTS_KEY = 'kp-catalogue-judgements:v2';
+const KEY = JUDGEMENTS_KEY;
 const LEGACY_APPROVALS = 'kp-catalogue-approvals:v1';
 
 function read(key) {

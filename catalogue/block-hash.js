@@ -1,9 +1,16 @@
 // What a block looks like, in the theme on screen, as a hash — shared by the
-// review page and the research demos. The markup as
-// written plus the computed style of every element and its two pseudo
-// elements, over properties that do not depend on the window's width — so
-// resizing the browser does not mark a block changed, and a colour, a
-// border, a font or a spacing that moved does.
+// review page, the component pages, the research demos and the compare
+// columns. The block's markup as written plus the computed style of the
+// component under review and its two pseudo elements, over properties that do
+// not depend on the window's width — so resizing the browser does not mark a
+// block changed, and a colour, a border, a font or a spacing that moved does.
+//
+// Only the component, not the block around it (2026-09-13): the compare
+// column lays a block out as separate rows with its own wrappers, and a hash
+// over headings, look text and stage container could never match the review
+// page's. So the reviewed elements are the descendants of the block's
+// `.cat-stage` elements, in document order; a block with no stage (a research
+// demo) gives every descendant but its own heading, look text and panel.
 const PROPS = [
     'color',
     'background-color',
@@ -78,14 +85,37 @@ export function stillAnimations() {
     };
 }
 
-export async function fingerprint(block, source) {
+/** Not the component: the block's reading aids and the reviewer's own panel. */
+const AROUND = '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge';
+
+/** The descendants of every outermost stage in `stages`, in document order. */
+export function stageElements(stages) {
+    return stages
+        .filter((stage) => !stages.some((other) => other !== stage && other.contains(stage)))
+        .flatMap((stage) => [...stage.querySelectorAll('*')]);
+}
+
+/** The elements of a block that are the component under review. */
+export function reviewedElements(block) {
+    const stages = [...block.querySelectorAll('.cat-stage')];
+    if (stages.length) return stageElements(stages);
+    const headings = [...block.querySelectorAll(':scope > h2, :scope > h3')];
+    return [...block.querySelectorAll('*')].filter((el) => !el.closest(AROUND) && !headings.some((h) => h.contains(el)));
+}
+
+/**
+ * @param {Element} block the block as it stands on this page
+ * @param {string} source the block's markup as written
+ * @param {Element[]} [reviewed] the component's elements, where the block is not one element (a compare column)
+ */
+export async function fingerprint(block, source, reviewed = reviewedElements(block)) {
     const lines = [source];
-    const elements = [block, ...block.querySelectorAll('*')].filter((el) => !el.closest('.cat-feedback-field, .cat-approval')).slice(0, MAX_ELEMENTS);
+    const elements = reviewed.slice(0, MAX_ELEMENTS);
     // A control whose look follows the scroll position rather than the theme
     // (back-to-top shows itself past a threshold) would mark its block changed
     // whenever the page was scrolled differently. Its state attribute is
     // lifted while reading, so the block is compared at rest.
-    const volatile = [...block.querySelectorAll('[data-kp-to-top-shown]')];
+    const volatile = reviewed.filter((el) => el.hasAttribute('data-kp-to-top-shown'));
     for (const el of volatile) el.removeAttribute('data-kp-to-top-shown');
     // Lifting the attribute starts the control's own fade; a reading taken now
     // would catch the first frame of it, so the fade is run to its end first.

@@ -1,12 +1,17 @@
 // One column of the compare page: one component, one theme, on this
-// document's own root. Every heading, note and stage element becomes a row;
-// the parent page tells each row how tall to be so it lines up with the
-// same row in the other column.
+// document's own root. Every heading, note and stage element becomes a row,
+// and each block ends in a row with its judging panel, for this column's
+// theme, under the review page's keys (judging.js); the parent page tells
+// each row how tall to be so it lines up with the same row in the other
+// column.
 import { attachAll } from '../../js/auto.js';
 import { applyTheme } from '../../js/theme-core.js';
 import { THEMES } from '../../js/theme-registry.js';
-import { readPage, suffixIds } from '../review.js';
+import { headingText, readPage, suffixIds } from '../review.js';
 import { COMPONENT_PAGES } from '../pages.js';
+import { stageElements } from '../block-hash.js';
+import { REVIEW_PAGE } from '../review-state.js';
+import { mountJudging } from '../judging.js';
 import '../demos.js';
 
 const params = new URLSearchParams(location.search);
@@ -32,10 +37,12 @@ const { title, blocks } = await readPage(page);
 const heading = document.createElement('h2');
 heading.textContent = title;
 row(heading);
+const entries = [];
 for (const block of blocks) {
     const h3 = document.createElement('h3');
-    h3.textContent = block.node.querySelector('h2')?.textContent.trim() ?? block.id;
+    h3.textContent = headingText(block.node);
     row(h3);
+    const cells = [];
     const look = block.node.querySelector('.cat-look');
     if (look) row(document.importNode(look, true));
     for (const [index, stage] of [...block.node.querySelectorAll('.cat-stage')].entries()) {
@@ -47,10 +54,29 @@ for (const block of blocks) {
             if (child === stage) cell.replaceChildren(...cell.firstChild.childNodes);
             suffixIds(cell, `-${index}-${part}`, `${block.id}--`);
             row(cell);
+            cells.push(cell);
         }
     }
+    // Each cell carries its stage's class, so the component's elements are the
+    // descendants of the cells in order — what the review page hashes.
+    const review = document.createElement('div');
+    review.className = 'cat-frame__review';
+    row(review);
+    entries.push({
+        key: block.id,
+        notePage: REVIEW_PAGE,
+        noteBlock: block.id,
+        title: block.title,
+        source: block.source,
+        root: review,
+        fieldId: `cat-feedback-${block.id}`,
+        place: (panel) => review.append(panel),
+        elements: () => stageElements(cells),
+    });
 }
 attachAll(main);
+const judging = mountJudging({ entries });
+judging.start().then(report);
 
 /** The natural height of every row, with no alignment applied. */
 function natural() {
