@@ -34,12 +34,24 @@ function pages() {
     return found;
 }
 
-const server = spawn(process.execPath, [new URL('./server.mjs', import.meta.url).pathname], {
-    env: { ...process.env, PORT: String(PORT) },
-    stdio: ['ignore', 'ignore', 'inherit'],
-});
-server.on('exit', (code) => process.exit(code ?? 1));
-for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => server.kill(signal));
+// A server already answering on the port (a preview pane, a second
+// terminal) is used as it is: starting another would only fail on the
+// port, and the person would see an error instead of the links.
+let alreadyServed = false;
+try {
+    alreadyServed = (await fetch(`http://localhost:${PORT}/catalogue/index.html`)).ok;
+} catch {
+    /* nothing answers yet: start one below */
+}
+
+if (!alreadyServed) {
+    const server = spawn(process.execPath, [new URL('./server.mjs', import.meta.url).pathname], {
+        env: { ...process.env, PORT: String(PORT) },
+        stdio: ['ignore', 'ignore', 'inherit'],
+    });
+    server.on('exit', (code) => process.exit(code ?? 1));
+    for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => server.kill(signal));
+}
 
 // Print a link only once the server has answered for it, so a link on the
 // screen is a link that works.
@@ -60,6 +72,10 @@ async function announce() {
             lines.push(`  ✗ no answer  ${url}`);
         }
     }
-    console.log(`\nkp-themes review pages, served from this terminal (Ctrl+C stops it):\n\n${lines.join('\n')}\n`);
+    const where = alreadyServed
+        ? `already served on port ${PORT} by another process; this terminal started nothing`
+        : 'served from this terminal (Ctrl+C stops it)';
+    console.log(`\nkp-themes review pages, ${where}:\n\n${lines.join('\n')}\n`);
+    if (alreadyServed) process.exit(0);
 }
 setTimeout(announce, 150);
