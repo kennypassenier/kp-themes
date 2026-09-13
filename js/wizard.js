@@ -30,6 +30,7 @@
 // server check was missing; labels can be made navigable; the validation
 // gate and the focus move are options; and detach restores everything.
 
+import { clearError, showError } from './forms.js';
 import { getStrings } from './strings.js';
 const WIZARD = '[data-kp-wizard]';
 
@@ -133,19 +134,44 @@ export function attachWizards(root = document, { validate = true, focusStep = tr
             }
         };
 
+        /**
+         * Whether js/forms.js is looking after this field. Only then does
+         * its own focusout handler write the message; everywhere else the
+         * wizard writes it, or a refused Next says nothing at all [gap-12].
+         *
+         * @param {HTMLInputElement} field
+         */
+        const formOwns = (field) => field.form?.dataset.kpFormAttached !== undefined;
+
         /** @returns {boolean} whether the current step's fields are all valid */
         const stepIsValid = () => {
             const current = steps[at];
             if (current === undefined) return true;
             const fields = /** @type {HTMLInputElement[]} */ ([...current.querySelectorAll('input, select, textarea')]);
             return fields.every((field) => {
-                if (field.checkValidity()) return true;
+                if (field.checkValidity()) {
+                    if (!formOwns(field)) clearError(field);
+                    return true;
+                }
                 // The form module's own handler shows the message; this is
                 // the click that has to stop rather than the submit.
-                field.dispatchEvent(new Event('focusout', { bubbles: true }));
+                if (formOwns(field)) field.dispatchEvent(new Event('focusout', { bubbles: true }));
+                else showError(field, field.validationMessage || getStrings().formInvalid);
                 field.focus();
                 return false;
             });
+        };
+
+        /**
+         * The way out of a message the wizard wrote [KT6]: a field it marked
+         * is checked again as it changes, and the mark goes once it is valid.
+         *
+         * @param {Event} event
+         */
+        const onFieldInput = (event) => {
+            const field = /** @type {HTMLInputElement} */ (event.target);
+            if (!(field instanceof HTMLElement) || !('checkValidity' in field) || formOwns(field)) return;
+            if (field.getAttribute('aria-invalid') === 'true' && field.checkValidity()) clearError(field);
         };
 
         /** @param {number} to @returns {Promise<boolean>} */
@@ -190,6 +216,7 @@ export function attachWizards(root = document, { validate = true, focusStep = tr
         back?.addEventListener('click', onBack);
         wizard.addEventListener('click', onLabel);
         wizard.addEventListener('keydown', onLabelKey);
+        wizard.addEventListener('input', onFieldInput);
         // Rendered silently: the first version announced a step change
         // at attach, before anyone had done anything.
         show({ announce: false });
@@ -204,6 +231,7 @@ export function attachWizards(root = document, { validate = true, focusStep = tr
             back?.removeEventListener('click', onBack);
             wizard.removeEventListener('click', onLabel);
             wizard.removeEventListener('keydown', onLabelKey);
+            wizard.removeEventListener('input', onFieldInput);
             steps.forEach((step, i) => {
                 step.hidden = before.hidden[i] ?? false;
                 const tab = before.tabindex[i];

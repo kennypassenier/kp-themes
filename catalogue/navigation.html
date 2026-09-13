@@ -64,13 +64,12 @@
             <section class="cat-block" id="dropdown">
                 <h2>Dropdown</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> hover <b>Readings</b>, or Tab onto it: the dropdown opens under the link on the popover surface with a strong
-                    boundary, its caption ("Readings · line 2") above a hairline in small capitals, and its links each on a full-width row. It must
-                    sit <i>over</i> the stage, not push it down, and must not be cut by the bar's edge. Tab on: the next stop is the first link inside
-                    the dropdown, and the dropdown stays open while focus is in it. Every register styles this panel, so switch themes with it open —
-                    hover keeps it open while you use the theme menu with the keyboard. There is no copy frozen open in the wide bar: the package
-                    opens this panel only on <code>:hover</code> and <code>:focus-within</code>, and has no attribute or class a page could set to
-                    show it open without page CSS. The collapsed bar in the next block is the only place the package itself shows it open.
+                    <b>Look at:</b> the dropdown under <b>Readings</b> is frozen open with <code>data-kp-nav-menu-open</code> on its item, so switch
+                    themes and judge it in each: it sits under the link on the popover surface with a strong boundary, its caption ("Readings · line
+                    2") above a hairline in small capitals, and its links each on a full-width row. It must sit <i>over</i> the stage, not push it
+                    down, and must not be cut by the bar's edge. The second bar is the same dropdown with nothing declared: hover <b>Incidents</b> or
+                    Tab onto it and it opens the same way, and the next Tab lands on the first link inside it, which keeps it open while focus is
+                    there.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 16rem">
                     <div class="kp-nav-wrap">
@@ -79,13 +78,31 @@
                             <ul class="kp-nav__links">
                                 <li><a class="kp-nav__link" href="#dropdown">Overview</a></li>
                                 <li><a class="kp-nav__link" href="#dropdown">Incidents</a></li>
-                                <li>
+                                <li data-kp-nav-menu-open>
                                     <a class="kp-nav__link" href="#dropdown" aria-haspopup="true" aria-current="page">Readings</a>
                                     <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
                                         <li><a href="#dropdown">Pressure</a></li>
                                         <li><a href="#dropdown">Flow rate</a></li>
                                         <li><a href="#dropdown">Pump cycles</a></li>
                                         <li><a href="#dropdown">Valve positions</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 16rem; margin-block-start: 1rem">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Site operations, with a dropdown on hover">
+                            <a class="kp-nav__brand" href="#dropdown">Pump house 4</a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#dropdown">Overview</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#dropdown" aria-haspopup="true">Incidents</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Incidents · open">
+                                        <li><a href="#dropdown">INC-4471</a></li>
+                                        <li><a href="#dropdown">INC-4468</a></li>
                                     </ul>
                                 </li>
                                 <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
@@ -101,10 +118,10 @@
                     <b>Look at:</b> both bars sit in a box narrower than 40rem, so they collapse behind their three-bar toggle. The first is frozen
                     open: the toggle wears the theme's accent as a plate (open is a state, and a state is visible), the links stack in a column under
                     the brand, and the dropdown under <b>Readings</b> is no longer a floating panel but an indented list in the flow — no frame, no
-                    ground. Judge whether a register that dresses the floating panel still leaves this indented list readable. The second bar is live:
-                    press its toggle, press Escape with focus inside, or click anywhere outside it — each must close it, and the toggle's accessible
-                    name must change between "Open the navigation" and "Close the navigation". Drag the panes' edges wider than 40rem and both must
-                    turn back into a plain bar.
+                    ground and no shadow in any theme, while the register's own type and item marks stay. Judge whether the indented list still reads
+                    as belonging to <b>Readings</b>. The second bar is live: press its toggle, press Escape with focus inside, or click anywhere
+                    outside it — each must close it, and the toggle's accessible name must change between "Open the navigation" and "Close the
+                    navigation". Drag the panes' edges wider than 40rem and both must turn back into a plain bar.
                 </div>
                 <div class="cat-stage">
                     <div class="cat-resize" style="inline-size: 22rem">
@@ -357,10 +374,11 @@
             <section class="cat-block" id="tabs-many">
                 <h2>Many tabs in a narrow pane</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> nine tabs, one with a long label, in a pane narrower than their row. <code>.kp-tabs__list</code> does not wrap, so
-                    the tabs must either shrink and break their labels onto two lines or run past the pane's dashed edge — see which one this theme
-                    does, and whether the selected tab's rule still sits on the list's bottom edge when the labels break. Drag the pane wider until
-                    they fit on one line. A row of tabs that pushes the page sideways is the fault to report.
+                    <b>Look at:</b> nine tabs, one with a long label, in a pane narrower than their row. The row scrolls sideways inside the pane
+                    (<code>data-kp-tabs-overflow</code> is written while it does) and never past its dashed edge; each label stays on one line and the
+                    selected tab's rule stays on the list's bottom edge. Click into the row and press End: the last tab is selected and scrolled into
+                    view, and Home brings the first back. Tab onto the row: in a scrolling row the focus ring is drawn inside the tab. Drag the pane
+                    wider until the tabs fit — the row must stop being a scroller and look exactly like the rows in the block above.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="cat-resize" style="inline-size: 24rem">
@@ -524,8 +542,9 @@
                     accessible name, the wordmark swapped for the monogram "N". Hover it — it must <i>not</i> widen, because it was not asked to. The
                     middle rail has <code>data-kp-sidenav-expand-on-hover</code>: hover it and the labels must come back without the rail pushing the
                     content beside it. The right panel is the same rail expanded. Press <b>Collapse or expand the right rail</b>: the width must
-                    change with the theme's own timing, and the labels must not overflow while it narrows. The package has no attribute for this
-                    button; the catalogue calls the rail's handle.
+                    change with the theme's own timing, and the labels must not overflow while it narrows. The button is wired by the package alone
+                    (<code>data-kp-sidenav-slim-toggle</code> with <code>aria-controls</code>), and a screen reader hears it as expanded while the
+                    rail is wide.
                 </div>
                 <div class="cat-stage" style="padding: 0; align-items: stretch">
                     <nav class="kp-sidenav" id="nv-slim-a" aria-label="Rail, collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
@@ -615,7 +634,9 @@
                     </nav>
                 </div>
                 <div class="cat-stage" style="margin-block-start: 1rem">
-                    <button type="button" class="kp-button kp-button--secondary" data-cat-slim="nv-slim-c">Collapse or expand the right rail</button>
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-sidenav-slim-toggle aria-controls="nv-slim-c">
+                        Collapse or expand the right rail
+                    </button>
                 </div>
             </section>
 
@@ -703,14 +724,17 @@
                 <div class="cat-look">
                     <b>Look at:</b> <code>.kp-to-top</code> is fixed to the corner of the window and invisible until the reader has scrolled; the two
                     in the box are frozen in their shown state (<code>data-kp-to-top-shown</code>) and pinned to the box's corner instead. The left
-                    one is written the way the package documents it — an empty button with only an accessible name — and the package draws no glyph
-                    for it: judge whether an empty box in the corner tells anyone what it does. The right one carries its own words. The live control
-                    is in the real corner of the window: it must fade in once you are 600 px down, sit above the page without covering the feedback
-                    field you are typing in, and on press scroll to the top <i>and</i> move focus there.
+                    one is written the way the package documents it — an empty button with only an accessible name — and holds the glyph the package
+                    puts in such a button (<code>.kp-to-top__glyph</code>, drawn from <code>--kp-glyph-to-top</code>): judge whether the arrow reads
+                    in every theme. The right one carries its own words. The live control is in the real corner of the window: it must fade in once
+                    you are 600 px down, sit above the page without covering the feedback field you are typing in, and on press scroll to the top
+                    <i>and</i> move focus there.
                 </div>
                 <div class="cat-stage">
                     <div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
-                        <button type="button" class="kp-button kp-to-top" aria-label="Back to top" data-kp-to-top-shown></button>
+                        <button type="button" class="kp-button kp-to-top" aria-label="Back to top" data-kp-to-top-shown>
+                            <span class="kp-to-top__glyph" aria-hidden="true"></span>
+                        </button>
                     </div>
                     <div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
                         <button type="button" class="kp-button kp-to-top" data-kp-to-top-shown>↑ Back to top</button>

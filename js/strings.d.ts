@@ -22,6 +22,14 @@ export type Strings = {
      */
     closeSidebar: string;
     /**
+     * The accessible name of an empty slim-rail toggle while the rail is expanded
+     */
+    collapseRail: string;
+    /**
+     * The same toggle while the rail is collapsed to its icons
+     */
+    expandRail: string;
+    /**
      * The control that returns the reader to the top of the page
      */
     backToTop: string;
@@ -255,6 +263,8 @@ export type Strings = {
  * @property {string} closeMenu     The same toggle once the navigation is open
  * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
  * @property {string} closeSidebar  The same toggle once that side navigation is open
+ * @property {string} collapseRail  The accessible name of an empty slim-rail toggle while the rail is expanded
+ * @property {string} expandRail    The same toggle while the rail is collapsed to its icons
  * @property {string} backToTop    The control that returns the reader to the top of the page
  * @property {string} previous
  * @property {string} next

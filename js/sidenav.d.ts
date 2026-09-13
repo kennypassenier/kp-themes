@@ -29,6 +29,7 @@ export declare const OPTIONS: {
     content: string;
     remember: string;
     toggle: string;
+    slimToggle: string;
     slimHide: string;
     slimShow: string;
     expanded: string;

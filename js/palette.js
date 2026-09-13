@@ -41,6 +41,13 @@
 // hide when every command in them is filtered out; `data-kp-keys` is
 // finally rendered, three versions after it was documented; and the
 // sheet dispatches events like everything else.
+//
+// Since gap-12: a button opens either one without a line of script —
+// `<button data-kp-palette-open="commands">` — through the same open the
+// hotkey uses, so the list is filtered and `kp-palette-open` fires. A
+// page that opened the dialog with `data-kp-dialog` instead got a modal
+// with a stale list and no event. An empty value means the palette that
+// answers the key.
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
@@ -51,6 +58,22 @@ const INPUT = 'input[role="combobox"]';
 const LIST = '[role="listbox"]';
 const STATUS = '[role="status"]';
 const GROUP = '[data-kp-group]';
+/** The attribute that opens a palette or a sheet on a press [gap-12]. */
+export const OPENER = '[data-kp-palette-open]';
+
+/**
+ * Whether a click landed on an opener meant for this dialog.
+ *
+ * @param {Event} event
+ * @param {HTMLDialogElement} dialog
+ * @param {boolean} answersKey  whether this dialog is the one an empty value means
+ */
+function openerFor(event, dialog, answersKey) {
+    const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
+    if (opener === null) return false;
+    const name = opener.getAttribute('data-kp-palette-open') ?? '';
+    return name === '' ? answersKey : name === dialog.id;
+}
 
 /** Fired on the palette when a command is chosen. A contract value [TH26]: `{ value, option }`. */
 export const RUN_EVENT = 'kp-palette-run';
@@ -241,6 +264,13 @@ export function attachPalettes(
         };
         if (key !== null) document.addEventListener('keydown', onKey);
 
+        /** @param {Event} event */
+        const onOpener = (event) => {
+            if (!openerFor(event, dialog, answers(PALETTE, dialog))) return;
+            openWith();
+        };
+        document.addEventListener('click', onOpener);
+
         filter();
         /** @type {PaletteHandle} */
         const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
@@ -251,6 +281,7 @@ export function attachPalettes(
             input.removeEventListener('input', onInput);
             dialog.removeEventListener('close', onClose);
             document.removeEventListener('keydown', onKey);
+            document.removeEventListener('click', onOpener);
             for (const el of list.querySelectorAll(OPTION_SELECTOR)) /** @type {HTMLElement} */ (el).hidden = false;
             for (const el of list.querySelectorAll(GROUP)) /** @type {HTMLElement} */ (el).hidden = false;
             for (const el of list.querySelectorAll('kbd[data-kp-generated]')) el.remove();
@@ -284,6 +315,11 @@ export function attachPalettes(
             else openSheet();
         };
         if (key !== null) document.addEventListener('keydown', onKey);
+        /** @param {Event} event */
+        const onOpener = (event) => {
+            if (openerFor(event, sheet, false)) openSheet();
+        };
+        document.addEventListener('click', onOpener);
         sheet.addEventListener('close', onClose);
         /** @type {PaletteHandle} */
         const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {} };
@@ -291,6 +327,7 @@ export function attachPalettes(
         created.push(handle);
         cleanups.push(() => {
             document.removeEventListener('keydown', onKey);
+            document.removeEventListener('click', onOpener);
             sheet.removeEventListener('close', onClose);
             if (sheet.open) sheet.close();
             handles.delete(sheet);

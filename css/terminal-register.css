@@ -396,6 +396,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='terminal'] .kp-nav__menu a {
         display: block;
         padding: 0.3rem 0.8rem;
@@ -838,6 +851,13 @@
         inline-size: 1px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='terminal'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 1px;
+    }
+
     /* The footer: one step down from the void. */
     [data-theme='terminal'] .kp-footer {
         background: var(--sidebar-background);
@@ -951,6 +971,22 @@
         background: transparent;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='terminal'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='terminal'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='terminal'] .kp-table {
@@ -1020,6 +1056,20 @@
 
     [data-theme='terminal'] .kp-tree {
         letter-spacing: 0.02em;
+    }
+
+    /* The accordion [gap-12]: spaced capitals like its tabs, the phosphor for what is open. */
+    [data-theme='terminal'] .kp-accordion__summary {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='terminal'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='terminal'] .kp-reorder {

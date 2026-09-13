@@ -477,6 +477,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='retro'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='retro'] .kp-nav__menu a {
         display: block;
         position: relative;
@@ -1007,6 +1020,13 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='retro'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
     /* The footer: the chrome, and the fine print as a status bar. */
     [data-theme='retro'] .kp-footer {
         background: var(--background);
@@ -1160,6 +1180,22 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: Explorer's column headers are buttons ───────────────────── */
 
     [data-theme='retro'] .kp-table {
@@ -1236,6 +1272,19 @@
     [data-theme='retro'] .kp-tree {
         font-family: var(--kp-dos);
         font-size: 1.05rem;
+    }
+
+    /* The accordion [gap-12]: the plain system weight of its category toggle, bold once open. */
+    [data-theme='retro'] .kp-accordion__summary {
+        font-weight: 500;
+    }
+
+    [data-theme='retro'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-accordion__item[open] > .kp-accordion__summary {
+        font-weight: 700;
     }
 
     [data-theme='retro'] .kp-reorder {

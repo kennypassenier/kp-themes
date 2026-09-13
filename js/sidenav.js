@@ -55,6 +55,7 @@ export const OPTIONS = {
     content: 'data-kp-sidenav-content',
     remember: 'data-kp-sidenav-remember',
     toggle: 'data-kp-sidenav-toggle',
+    slimToggle: 'data-kp-sidenav-slim-toggle',
     slimHide: 'data-kp-sidenav-slim-hide',
     slimShow: 'data-kp-sidenav-slim-show',
     expanded: 'data-kp-sidenav-expanded',
@@ -245,11 +246,39 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         const close = () => set(false);
         const open = () => set(true);
 
+        /**
+         * The buttons that collapse and expand this rail without a line of
+         * script [gap-12]: `data-kp-sidenav-slim-toggle`, pointed at the panel
+         * by `aria-controls` — or at every rail, when it names none, the way
+         * `data-kp-sidenav-toggle` does.
+         */
+        const slimTogglers = () =>
+            [...doc.querySelectorAll(`[${OPTIONS.slimToggle}]`)].filter(
+                (t) => (t.getAttribute('aria-controls') ?? '') === panel.id || t.getAttribute('aria-controls') === null,
+            );
+
+        /** @param {boolean} collapsed */
+        const saySlim = (collapsed) => {
+            if (read(OPTIONS.slim) === null) return;
+            const s = { ...getStrings(), ...strings };
+            for (const toggler of slimTogglers()) {
+                if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
+                // Expanded is the state a button reports: pressed, a
+                // collapsed rail widens [ARIA disclosure].
+                toggler.setAttribute('aria-expanded', String(!collapsed));
+                toggler.setAttribute('aria-controls', panel.id);
+                if (toggler.getAttribute('aria-label') !== null || toggler.textContent?.trim() === '') {
+                    toggler.setAttribute('aria-label', collapsed ? s.expandRail : s.collapseRail);
+                }
+            }
+        };
+
         /** @param {boolean} [collapsed] */
         const setSlim = (collapsed) => {
             if (read(OPTIONS.slim) === null) return;
             const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
             panel.toggleAttribute(OPTIONS.slimCollapsed, next);
+            saySlim(next);
             if (key && memory) {
                 try {
                     memory.setItem(`${key}:slim`, String(next));
@@ -297,6 +326,16 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             set(!isOpen());
         };
 
+        /** @param {Event} event */
+        const onSlimClick = (event) => {
+            const toggler = /** @type {Element | null} */ (event.target instanceof Element ? event.target.closest(`[${OPTIONS.slimToggle}]`) : null);
+            if (!toggler) return;
+            if (ownedBy !== '' && toggler.matches(ownedBy)) return;
+            const controls = toggler.getAttribute('aria-controls');
+            if (controls !== null && controls !== panel.id) return;
+            setSlim();
+        };
+
         /** @param {KeyboardEvent} event */
         const onEsc = (event) => {
             if (event.key !== 'Escape' || !on(OPTIONS.closeOnEsc, true) || mode() === 'side' || !isOpen()) return;
@@ -319,6 +358,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         }
         if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, '');
         set(start, false);
+        saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
 
         for (const toggle of panel.querySelectorAll('.kp-sidenav__category-toggle')) {
             const category = toggle.closest('.kp-sidenav__category');
@@ -326,6 +366,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         }
 
         doc.addEventListener('click', onToggleClick);
+        doc.addEventListener('click', onSlimClick);
         panel.addEventListener('click', onCategory);
         doc.addEventListener('keydown', /** @type {EventListener} */ (onEsc));
         panel.addEventListener('keydown', /** @type {EventListener} */ (onTrap));
@@ -344,6 +385,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
 
         const detach = () => {
             doc.removeEventListener('click', onToggleClick);
+            doc.removeEventListener('click', onSlimClick);
             panel.removeEventListener('click', onCategory);
             doc.removeEventListener('keydown', /** @type {EventListener} */ (onEsc));
             panel.removeEventListener('keydown', /** @type {EventListener} */ (onTrap));
@@ -354,6 +396,13 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             for (const toggler of togglers()) {
                 toggler.removeAttribute('aria-expanded');
                 toggler.removeAttribute('aria-label');
+            }
+            if (read(OPTIONS.slim) !== null) {
+                for (const toggler of slimTogglers()) {
+                    if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
+                    toggler.removeAttribute('aria-expanded');
+                    toggler.removeAttribute('aria-label');
+                }
             }
             delete panel.dataset.kpSidenavAttached;
             handles.delete(panel);

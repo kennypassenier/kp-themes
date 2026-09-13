@@ -152,10 +152,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // height, the indeterminate progress stripe and the data table bar's
     // padding.
     // The switch (gap-11, approved 2026-09-13) added nine, the concept's
-    // geometry on knobs, and gap-13 the same day added four to the data table
-    // and took one away (--kp-table-cell-pad, which nothing else read):
-    // 123 + 9 + 3.
-    assert.equal(result.expected, 135, 'AR21 counted 135 --kp-* properties in css/components.css');
+    // geometry on knobs; gap-13 the same day added four to the data table and
+    // took one away (--kp-table-cell-pad, which nothing else read); gap-12
+    // added four (the back-to-top glyph, the overhang above a scrolling tab
+    // row, the tree's selected wash and bar): 123 + 9 + 3 + 4.
+    assert.equal(result.expected, 139, 'AR21 counted 139 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -187,8 +188,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    // Every one of them is read through var(), the switch's and the data table's included.
-    assert.equal(result.readCount, 135);
+    // Every one of them is read through var(), the switch's, the data table's and gap-12's included.
+    assert.equal(result.readCount, 139);
     assert.deepEqual(result.unread, []);
 });
 

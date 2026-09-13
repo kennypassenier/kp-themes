@@ -31,6 +31,15 @@
         gap: var(--kp-picker-gap, 0.25rem);
     }
 
+    /* A picker written as a list is a list of options, not a bulleted list
+       [gap-12]: the options lose the browser's 40px indent and its markers.
+       `:where` keeps this at one attribute's weight, so .kp-menu — which is
+       a list too, later in this file — still sets its own padding. */
+    :where(ul, ol)[data-kp-theme-picker] {
+        padding-inline-start: 0;
+        list-style: none;
+    }
+
     /* Grouped light and dark [TH63]. A group is a list item that presents a
  * small label and its own list, so a flat picker becomes two short rows
  * with a title each, and a menu becomes two sections with a rule between
@@ -1407,6 +1416,11 @@
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
             border: 0;
             background: transparent;
+            /* No frame, no ground, and no shadow either: a shadow under a
+             * list with no ground is a panel's ghost [gap-12]. Every register
+             * dresses the floating panel in kp.register, which beats this
+             * layer, so each register restates this reset for itself. */
+            box-shadow: none;
         }
     }
 
@@ -1523,8 +1537,13 @@
         opacity: 0;
     }
 
+    /* `data-kp-nav-menu-open` on the item declares the panel open [gap-12]:
+     * for a page that shows it open (a catalogue, a screenshot, a guided
+     * tour) or a script that opens it on a press. Hover and focus still
+     * open it too; taking the attribute away is the way back [KT6]. */
     .kp-nav__links > li:hover > .kp-nav__menu,
-    .kp-nav__links > li:focus-within > .kp-nav__menu {
+    .kp-nav__links > li:focus-within > .kp-nav__menu,
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
         display: block;
         opacity: 1;
     }
@@ -1538,7 +1557,8 @@
 
         @starting-style {
             .kp-nav__links > li:hover > .kp-nav__menu,
-            .kp-nav__links > li:focus-within > .kp-nav__menu {
+            .kp-nav__links > li:focus-within > .kp-nav__menu,
+            .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
                 opacity: 0;
             }
         }
@@ -1660,6 +1680,18 @@
     .kp-to-top[data-kp-to-top-shown] {
         opacity: 1;
         visibility: visible;
+    }
+
+    /* The glyph an empty control gets [gap-12]. Written the documented way —
+       a button with only a name — the control painted as an empty box in
+       every theme. js/components.js puts this element in a button that has
+       nothing of its own, and takes it out again on detach; the arrow is
+       drawn here rather than typed there, like the tree's twisty, so a theme
+       or a consumer changes it with one knob. Its own element rather than
+       the button's pseudo-elements, because those are the two surfaces a
+       register paints a button on [scope-16]. */
+    .kp-to-top__glyph::before {
+        content: var(--kp-glyph-to-top, '↑');
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -2274,6 +2306,44 @@
         display: flex;
         gap: 0.25rem;
         border-bottom: 1px solid var(--border-strong);
+    }
+
+    /* A row longer than its box scrolls inside the box [gap-12]. It ran past
+     * a 384px pane by 344px and widened the page; wrapping was the other
+     * answer, and it was not taken because a wrapped row puts the selected
+     * tab's rule in the middle of the list rather than on its edge.
+     *
+     * Only a row that does not fit becomes a scroller: js/overlays.js (and
+     * the React Tabs) write `data-kp-tabs-overflow` while it does, and keep
+     * the selected tab in view. A scroller clips whatever paints outside
+     * it, and several registers draw their selected tab past the row — a
+     * rule above it, a raised tab two pixels up — so a row that fits keeps
+     * exactly the look it had. */
+    .kp-tabs__list[data-kp-tabs-overflow] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        /* Room above the tabs for what a register draws there, given back by
+         * a margin so nothing around the row moves. Upward only: a negative
+         * margin at the row's ends would widen the pane it sits in. */
+        padding-block-start: var(--kp-tabs-overhang, 0.5rem);
+        margin-block-start: calc(-1 * var(--kp-tabs-overhang, 0.5rem));
+    }
+
+    /* In a scroller the tabs keep their width rather than squeezing their
+     * labels onto two lines. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab {
+        flex: none;
+    }
+
+    /* The base focus ring paints outside the control, where the scroller
+     * clips it, so in a scrolling row the ring is drawn inside the tab: the
+     * same two parts, the contrast outline and the inner ring, turned
+     * inward [DI2]. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
     .kp-tab {
@@ -3352,11 +3422,25 @@
     }
 
     /* Confirmed in words on the button, not by colour: a green flash is
- * invisible to a screen reader and to anyone who looked away. */
+ * invisible to a screen reader and to anyone who looked away.
+ *
+ * Both states are restated in every register [gap-12]: a register paints
+ * its buttons in kp.register, which beats this layer, and 19 of 22 themes
+ * painted their own ghost ground over the success plate. */
     .kp-copyable__button[data-kp-copied] {
         border-color: var(--success);
         color: var(--success-foreground);
         background: var(--success);
+    }
+
+    /* A copy the clipboard refused says so on the button as well as in the
+     * toast [gap-12]: the destructive ink and a dashed frame, so the two
+     * carriers are a colour and a shape. The word stays "Copy", because
+     * pressing it again is the way out [KT6]. */
+    .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* Status parts [TH52] */
@@ -3501,10 +3585,33 @@
         /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
         padding-inline-start: calc(var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* A file name with nowhere to break wraps inside its pane rather than
+         * pushing it wider: 64 characters made a 320px pane 632px wide
+         * [gap-12, DI11]. Inherited, so every level below has it too. */
+        overflow-wrap: anywhere;
     }
 
     .kp-tree [role='treeitem']:hover {
         background: var(--muted);
+    }
+
+    /* The selected item is marked, and marked twice [gap-12, DI4]: a bar at
+     * its start edge and a wash of the primary colour, plus the weight. It
+     * painted exactly like its unselected sibling in all 22 themes.
+     *
+     * A branch holds its children inside its own element, so a background
+     * would paint the whole subtree as selected. Both marks are gradients
+     * sized to the item's own row instead — one line plus the row's block
+     * padding — and the weight is handed back to the group below. */
+    .kp-tree [role='treeitem'][aria-selected='true'] {
+        background:
+            linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0) no-repeat 0 0 / 3px calc(1lh + 0.5rem),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0) no-repeat 0 0 / 100% calc(1lh + 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-tree [role='treeitem'][aria-selected='true'] [role='group'] {
+        font-weight: 400;
     }
 
     /* The twisty is a second carrier beside aria-expanded, and it points the
@@ -3554,6 +3661,21 @@
         cursor: grab;
     }
 
+    /* The row under a held handle [gap-12]. js/structure.js writes
+     * data-kp-dragging for as long as the pointer holds it, and nothing
+     * answered it: in all 22 themes the row you held looked like the rows
+     * you did not. The frame turns primary and dashed (a colour and a shape)
+     * and the row lifts off the list; releasing takes all of it away. */
+    .kp-reorder [data-kp-item][data-kp-dragging] {
+        border-color: var(--primary);
+        border-style: dashed;
+        box-shadow: 0 6px 16px -8px hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    .kp-reorder [data-kp-item][data-kp-dragging] [data-kp-handle] {
+        cursor: grabbing;
+    }
+
     .kp-split {
         display: grid;
         /* One custom property drives the whole layout, so the keyboard and
@@ -3582,6 +3704,25 @@
     .kp-split__separator:focus-visible {
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
         outline-offset: -2px;
+    }
+
+    /* Top and bottom [gap-12]. js/structure.js has moved a horizontal split
+     * with Up and Down since 3.0.0, but this stylesheet only ever set
+     * columns, so data-kp-orientation="horizontal" drew a second left and
+     * right split. The same custom property drives the rows. A register that
+     * sets the separator's thickness as an inline size restates it here as
+     * a block size, in its own value. */
+    .kp-split[data-kp-orientation='horizontal'] {
+        grid-template-columns: none;
+        grid-template-rows: var(--kp-split, 50%) auto 1fr;
+    }
+
+    .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        width: auto;
+        block-size: 0.5rem;
+        border-inline: 0;
+        border-block: 1px solid var(--border);
+        cursor: row-resize;
     }
 
     /* --- Date picker [TH43] ---------------------------------------------- */

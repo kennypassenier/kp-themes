@@ -350,6 +350,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='pastel'] .kp-nav__menu a {
         padding: 0.45rem 0.6rem;
         border-radius: 0.5rem;
@@ -817,6 +830,22 @@
         border-radius: 0.5rem;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='pastel'] .kp-table {
@@ -870,6 +899,16 @@
 
     [data-theme='pastel'] .kp-tree {
         font-size: 0.92rem;
+    }
+
+    /* The accordion [gap-12]: the primary ink its selected tab takes, on the
+       marker and on what is open. */
+    [data-theme='pastel'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     /* ── Navigation and steps ─────────────────────────────────────────── */

@@ -1,3 +1,5 @@
+/** The attribute that opens a palette or a sheet on a press [gap-12]. */
+export declare const OPENER = "[data-kp-palette-open]";
 /** Fired on the palette when a command is chosen. A contract value [TH26]: `{ value, option }`. */
 export declare const RUN_EVENT = "kp-palette-run";
 /** Fired on the palette or the sheet when it opens or closes: `{ open }`. */

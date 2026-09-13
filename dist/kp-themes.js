@@ -165,6 +165,10 @@ var DEFAULT_STRINGS = Object.freeze({
   // controls whose names do not tell them apart.
   sidebar: "Open the side navigation",
   closeSidebar: "Close the side navigation",
+  // The slim rail's own toggle [gap-12]: it narrows the panel rather
+  // than hiding it, so it must not borrow the open and close names.
+  collapseRail: "Collapse the side navigation to its icons",
+  expandRail: "Expand the side navigation",
   // A control that appears part-way down a page and has no text of its
   // own beyond an arrow: the accessible name is the whole of what a
   // screen reader gets.
@@ -730,6 +734,13 @@ function attachToTop(root = document, { strings, after } = {}) {
     if (button.getAttribute("aria-label") === null && button.textContent?.trim() === "") {
       button.setAttribute("aria-label", s.backToTop);
     }
+    let glyph = null;
+    if (button.children.length === 0 && button.textContent?.trim() === "") {
+      glyph = doc.createElement("span");
+      glyph.className = "kp-to-top__glyph";
+      glyph.setAttribute("aria-hidden", "true");
+      button.append(glyph);
+    }
     let shown = false;
     let queued = false;
     const decide = () => {
@@ -761,6 +772,7 @@ function attachToTop(root = document, { strings, after } = {}) {
       view.removeEventListener("scroll", onScroll);
       button.removeEventListener("click", onClick);
       button.removeAttribute("data-kp-to-top-shown");
+      glyph?.remove();
       delete button.dataset.kpToTopAttached;
     });
   }
@@ -868,6 +880,7 @@ __export(overlays_exports, {
   ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
   DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
   DISMISS_OWNED: () => DISMISS_OWNED,
+  TABS_OVERFLOW: () => TABS_OVERFLOW,
   TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
   TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
   TOAST_MS: () => TOAST_MS,
@@ -879,9 +892,11 @@ __export(overlays_exports, {
   attachTabs: () => attachTabs,
   attachTooltips: () => attachTooltips,
   closeLabel: () => closeLabel,
+  revealTab: () => revealTab,
   selectTab: () => selectTab,
   toast: () => toast,
-  toastRegion: () => toastRegion
+  toastRegion: () => toastRegion,
+  watchTabOverflow: () => watchTabOverflow
 });
 var TOAST_MS = 5e3;
 var DIALOG_OPEN_EVENT = "kp-dialog-open";
@@ -938,6 +953,31 @@ function selectTab(list, which) {
   if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
 }
 var handles = /* @__PURE__ */ new WeakMap();
+function revealTab(list, tab) {
+  if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
+  const row = list.getBoundingClientRect();
+  const box = tab.getBoundingClientRect();
+  if (box.left < row.left) list.scrollLeft -= row.left - box.left;
+  else if (box.right > row.right) list.scrollLeft += box.right - row.right;
+}
+var TABS_OVERFLOW = "data-kp-tabs-overflow";
+function watchTabOverflow(list, selected) {
+  const measure = () => {
+    const over = list.scrollWidth > list.clientWidth + 1;
+    if (over === list.hasAttribute(TABS_OVERFLOW)) return;
+    list.toggleAttribute(TABS_OVERFLOW, over);
+    if (over) revealTab(list, selected());
+  };
+  measure();
+  if (typeof ResizeObserver === "undefined") return () => list.removeAttribute(TABS_OVERFLOW);
+  const observer = new ResizeObserver(measure);
+  observer.observe(list);
+  for (const tab of list.children) observer.observe(tab);
+  return () => {
+    observer.disconnect();
+    list.removeAttribute(TABS_OVERFLOW);
+  };
+}
 function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
   const cleanups = [];
   for (const el of root.querySelectorAll('[role="tablist"]')) {
@@ -971,6 +1011,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
         if (panel) panel.hidden = !selected;
       });
       if (focus) all[index]?.focus();
+      revealTab(list, all[index]);
       if (previous !== index) {
         const tab = all[index];
         list.dispatchEvent(
@@ -1028,12 +1069,15 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
     tabs().forEach((tab, i) => {
       tab.tabIndex = i === initial ? 0 : -1;
     });
+    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
+    revealTab(list, tabs()[initial]);
     list.addEventListener("keydown", onKey);
     list.addEventListener("click", onClick);
     handles.set(list, { tabs, select });
     cleanups.push(() => {
       list.removeEventListener("keydown", onKey);
       list.removeEventListener("click", onClick);
+      stopWatching();
       handles.delete(list);
       delete list.dataset.kpTabsAttached;
       for (const b of before) {
@@ -1886,6 +1930,7 @@ function attachComboboxes(root = document, {
 var palette_exports = {};
 __export(palette_exports, {
   MATCHERS: () => MATCHERS2,
+  OPENER: () => OPENER,
   OPEN_EVENT: () => OPEN_EVENT2,
   RUN_EVENT: () => RUN_EVENT,
   attachPalettes: () => attachPalettes,
@@ -1897,6 +1942,13 @@ var INPUT2 = 'input[role="combobox"]';
 var LIST2 = '[role="listbox"]';
 var STATUS3 = '[role="status"]';
 var GROUP = "[data-kp-group]";
+var OPENER = "[data-kp-palette-open]";
+function openerFor(event, dialog, answersKey) {
+  const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
+  if (opener === null) return false;
+  const name = opener.getAttribute("data-kp-palette-open") ?? "";
+  return name === "" ? answersKey : name === dialog.id;
+}
 var RUN_EVENT = "kp-palette-run";
 var OPEN_EVENT2 = "kp-palette-open";
 var RESULTS_TEXT2 = (n) => {
@@ -2028,6 +2080,11 @@ function attachPalettes(root = document, {
       else openWith();
     };
     if (key !== null) document.addEventListener("keydown", onKey);
+    const onOpener = (event) => {
+      if (!openerFor(event, dialog, answers(PALETTE, dialog))) return;
+      openWith();
+    };
+    document.addEventListener("click", onOpener);
     filter();
     const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
     handles3.set(dialog, handle);
@@ -2037,6 +2094,7 @@ function attachPalettes(root = document, {
       input.removeEventListener("input", onInput);
       dialog.removeEventListener("close", onClose);
       document.removeEventListener("keydown", onKey);
+      document.removeEventListener("click", onOpener);
       for (const el of list.querySelectorAll(OPTION_SELECTOR)) el.hidden = false;
       for (const el of list.querySelectorAll(GROUP)) el.hidden = false;
       for (const el of list.querySelectorAll("kbd[data-kp-generated]")) el.remove();
@@ -2065,6 +2123,10 @@ function attachPalettes(root = document, {
       else openSheet();
     };
     if (key !== null) document.addEventListener("keydown", onKey);
+    const onOpener = (event) => {
+      if (openerFor(event, sheet, false)) openSheet();
+    };
+    document.addEventListener("click", onOpener);
     sheet.addEventListener("close", onClose);
     const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {
     } };
@@ -2072,6 +2134,7 @@ function attachPalettes(root = document, {
     created.push(handle);
     cleanups.push(() => {
       document.removeEventListener("keydown", onKey);
+      document.removeEventListener("click", onOpener);
       sheet.removeEventListener("close", onClose);
       if (sheet.open) sheet.close();
       handles3.delete(sheet);
@@ -4728,6 +4791,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
         );
       }
     };
+    const formOwns = (field) => field.form?.dataset.kpFormAttached !== void 0;
     const stepIsValid = () => {
       const current2 = steps[at];
       if (current2 === void 0) return true;
@@ -4736,11 +4800,23 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
         [...current2.querySelectorAll("input, select, textarea")]
       );
       return fields.every((field) => {
-        if (field.checkValidity()) return true;
-        field.dispatchEvent(new Event("focusout", { bubbles: true }));
+        if (field.checkValidity()) {
+          if (!formOwns(field)) clearError(field);
+          return true;
+        }
+        if (formOwns(field)) field.dispatchEvent(new Event("focusout", { bubbles: true }));
+        else showError(field, field.validationMessage || getStrings().formInvalid);
         field.focus();
         return false;
       });
+    };
+    const onFieldInput = (event) => {
+      const field = (
+        /** @type {HTMLInputElement} */
+        event.target
+      );
+      if (!(field instanceof HTMLElement) || !("checkValidity" in field) || formOwns(field)) return;
+      if (field.getAttribute("aria-invalid") === "true" && field.checkValidity()) clearError(field);
     };
     const goTo = async (to) => {
       if (to < 0 || to >= steps.length || to === at) return false;
@@ -4781,6 +4857,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
     back?.addEventListener("click", onBack);
     wizard2.addEventListener("click", onLabel);
     wizard2.addEventListener("keydown", onLabelKey);
+    wizard2.addEventListener("input", onFieldInput);
     show({ announce: false });
     const handle = { element: wizard2, step: () => at, goTo, next: () => goTo(at + 1), back: () => goTo(at - 1) };
     handles9.set(wizard2, handle);
@@ -4790,6 +4867,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
       back?.removeEventListener("click", onBack);
       wizard2.removeEventListener("click", onLabel);
       wizard2.removeEventListener("keydown", onLabelKey);
+      wizard2.removeEventListener("input", onFieldInput);
       steps.forEach((step, i) => {
         step.hidden = before.hidden[i] ?? false;
         const tab = before.tabindex[i];
@@ -6586,6 +6664,7 @@ var OPTIONS = {
   content: "data-kp-sidenav-content",
   remember: "data-kp-sidenav-remember",
   toggle: "data-kp-sidenav-toggle",
+  slimToggle: "data-kp-sidenav-slim-toggle",
   slimHide: "data-kp-sidenav-slim-hide",
   slimShow: "data-kp-sidenav-slim-show",
   expanded: "data-kp-sidenav-expanded"
@@ -6711,10 +6790,26 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     };
     const close = () => set(false);
     const open = () => set(true);
+    const slimTogglers = () => [...doc.querySelectorAll(`[${OPTIONS.slimToggle}]`)].filter(
+      (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
+    );
+    const saySlim = (collapsed) => {
+      if (read(OPTIONS.slim) === null) return;
+      const s = { ...getStrings(), ...strings };
+      for (const toggler of slimTogglers()) {
+        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+        toggler.setAttribute("aria-expanded", String(!collapsed));
+        toggler.setAttribute("aria-controls", panel.id);
+        if (toggler.getAttribute("aria-label") !== null || toggler.textContent?.trim() === "") {
+          toggler.setAttribute("aria-label", collapsed ? s.expandRail : s.collapseRail);
+        }
+      }
+    };
     const setSlim = (collapsed) => {
       if (read(OPTIONS.slim) === null) return;
       const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
       panel.toggleAttribute(OPTIONS.slimCollapsed, next);
+      saySlim(next);
       if (key && memory) {
         try {
           memory.setItem(`${key}:slim`, String(next));
@@ -6756,6 +6851,17 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (controls !== null && controls !== panel.id) return;
       set(!isOpen());
     };
+    const onSlimClick = (event) => {
+      const toggler = (
+        /** @type {Element | null} */
+        event.target instanceof Element ? event.target.closest(`[${OPTIONS.slimToggle}]`) : null
+      );
+      if (!toggler) return;
+      if (ownedBy !== "" && toggler.matches(ownedBy)) return;
+      const controls = toggler.getAttribute("aria-controls");
+      if (controls !== null && controls !== panel.id) return;
+      setSlim();
+    };
     const onEsc = (event) => {
       if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode() === "side" || !isOpen()) return;
       close();
@@ -6772,11 +6878,13 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     }
     if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, "");
     set(start, false);
+    saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
     for (const toggle of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
       const category = toggle.closest(".kp-sidenav__category");
       toggle.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
     }
     doc.addEventListener("click", onToggleClick);
+    doc.addEventListener("click", onSlimClick);
     panel.addEventListener("click", onCategory);
     doc.addEventListener(
       "keydown",
@@ -6801,6 +6909,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     };
     const detach = () => {
       doc.removeEventListener("click", onToggleClick);
+      doc.removeEventListener("click", onSlimClick);
       panel.removeEventListener("click", onCategory);
       doc.removeEventListener(
         "keydown",
@@ -6819,6 +6928,13 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       for (const toggler of togglers()) {
         toggler.removeAttribute("aria-expanded");
         toggler.removeAttribute("aria-label");
+      }
+      if (read(OPTIONS.slim) !== null) {
+        for (const toggler of slimTogglers()) {
+          if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+          toggler.removeAttribute("aria-expanded");
+          toggler.removeAttribute("aria-label");
+        }
       }
       delete panel.dataset.kpSidenavAttached;
       handles12.delete(panel);
@@ -7231,6 +7347,7 @@ export {
   NAV_OWNED,
   NAV_TOGGLE_EVENT,
   NO_FLASH_SNIPPET,
+  OPENER,
   OPTIONS,
   OPTION_SELECTOR,
   OPT_OUT,
@@ -7266,6 +7383,7 @@ export {
   STEP_EVENT,
   STORAGE_KEY,
   SURFACES,
+  TABS_OVERFLOW,
   TAB_CHANGE_EVENT,
   TEXT_ATTRIBUTE,
   THEMES,
@@ -7386,6 +7504,7 @@ export {
   registersPresent,
   renderDiagnostics,
   resolveStrings,
+  revealTab,
   rgbToHsl,
   scriptSide,
   selectTab,
@@ -7419,6 +7538,7 @@ export {
   upload,
   upload_exports as uploadExports,
   visibleItems,
+  watchTabOverflow,
   wizard,
   wizard_exports as wizardExports
 };

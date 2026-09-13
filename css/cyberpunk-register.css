@@ -371,8 +371,24 @@
         translate: 0 -6px;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+            translate: none;
+        }
+    }
+
     [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__menu,
-    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu {
+    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+    [data-theme='cyberpunk'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
         translate: 0 0;
     }
 
@@ -884,6 +900,22 @@
         border-color: var(--kp-hairline);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='cyberpunk'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='cyberpunk'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     [data-theme='cyberpunk'] .kp-timestamp {
         color: var(--muted-foreground);
         text-transform: uppercase;
@@ -943,6 +975,22 @@
 
     [data-theme='cyberpunk'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: mono capitals, spaced like its tabs, with the signal yellow for what is open. */
+    [data-theme='cyberpunk'] .kp-accordion__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='cyberpunk'] .kp-reorder {

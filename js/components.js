@@ -438,6 +438,18 @@ export function attachToTop(root = document, { strings, after } = {}) {
         if (button.getAttribute('aria-label') === null && button.textContent?.trim() === '') {
             button.setAttribute('aria-label', s.backToTop);
         }
+        // An empty control gets the package's glyph [gap-12]: written the
+        // documented way it painted as an empty box. The element is empty
+        // and hidden from the accessibility tree — the arrow is drawn by
+        // css/components.css and the name above is what is read.
+        /** @type {HTMLElement | null} */
+        let glyph = null;
+        if (button.children.length === 0 && button.textContent?.trim() === '') {
+            glyph = doc.createElement('span');
+            glyph.className = 'kp-to-top__glyph';
+            glyph.setAttribute('aria-hidden', 'true');
+            button.append(glyph);
+        }
 
         let shown = false;
         let queued = false;
@@ -477,6 +489,7 @@ export function attachToTop(root = document, { strings, after } = {}) {
             view.removeEventListener('scroll', onScroll);
             button.removeEventListener('click', onClick);
             button.removeAttribute('data-kp-to-top-shown');
+            glyph?.remove();
             delete button.dataset.kpToTopAttached;
         });
     }

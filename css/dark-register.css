@@ -522,6 +522,19 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='dark'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.7rem;
@@ -927,6 +940,22 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='dark'] .kp-table th {
@@ -986,6 +1015,20 @@
 
     [data-theme='dark'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the rule at the start edge its category toggle and current page carry. */
+    [data-theme='dark'] .kp-accordion__summary {
+        padding-inline-start: 0.5rem;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        border-inline-start-color: var(--primary);
     }
 
     [data-theme='dark'] .kp-reorder {

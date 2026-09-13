@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { TOAST_MS } from '../js/overlays.js';
+import { revealTab, TOAST_MS, watchTabOverflow } from '../js/overlays.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -558,6 +558,19 @@ function TabsInner(
     const list = useRef(null);
     useEffect(() => {
         setMounted((was) => (was.has(active) ? was : new Set([...was, active])));
+    }, [active]);
+    // A row that does not fit scrolls, and the selected tab is kept inside
+    // it [gap-12]. The ref reads the index at the moment the row starts to
+    // scroll, not the one the effect was created with.
+    const activeRef = useRef(active);
+    activeRef.current = active;
+    useEffect(() => {
+        const row = list.current;
+        if (!row) return undefined;
+        return watchTabOverflow(row, () => row.querySelectorAll('[role="tab"]')[activeRef.current]);
+    }, []);
+    useEffect(() => {
+        if (list.current) revealTab(list.current, list.current.querySelectorAll('[role="tab"]')[active]);
     }, [active]);
 
     /** @param {number} index */

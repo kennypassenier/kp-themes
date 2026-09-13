@@ -351,6 +351,19 @@
         padding-block: 0.4rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='grotesk'] .kp-nav__menu a {
         color: var(--popover-foreground);
         font-size: 0.88rem;
@@ -643,6 +656,13 @@
         inline-size: 2px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='grotesk'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 2px;
+    }
+
     [data-theme='grotesk'] .kp-footer {
         background: var(--background);
         color: var(--muted-foreground);
@@ -776,6 +796,22 @@
         border-radius: 0;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='grotesk'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='grotesk'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='grotesk'] .kp-table {
@@ -844,6 +880,20 @@
 
     [data-theme='grotesk'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: the display face its tabs are set in. */
+    [data-theme='grotesk'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='grotesk'] .kp-reorder {

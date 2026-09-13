@@ -214,6 +214,19 @@
         box-shadow: none;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='high-contrast'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='high-contrast'] .kp-nav__menu a:hover,
     [data-theme='high-contrast'] .kp-nav__menu a:focus-visible {
         background: var(--muted);
@@ -532,6 +545,13 @@
         inline-size: 2px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='high-contrast'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 2px;
+    }
+
     /* ── The footer ────────────────────────────────────────────────────── */
 
     [data-theme='high-contrast'] .kp-footer {
@@ -619,6 +639,22 @@
 
     [data-theme='high-contrast'] .kp-copyable__button {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -781,6 +817,20 @@
 
     [data-theme='high-contrast'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavier, and open is underlined — a shape, not a shade. */
+    [data-theme='high-contrast'] .kp-accordion__summary {
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
     }
 
     /* ── The scrollbar joins the theme ────────────────────────────────── */

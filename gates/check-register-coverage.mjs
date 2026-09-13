@@ -90,6 +90,11 @@ export const REQUIRED_PARTS = {
     // answer the row with a knob and leave the part that changes when it
     // is flipped in the package's neutral voice [gap-11].
     switch__input: 'the switch track and thumb: the part that changes when it is flipped, so the theme has to be there when it does [gap-11]',
+    // `.kp-accordion` itself carries no rule in css/components.css, so it is
+    // not a root the audit above could ask for; its summary is the control
+    // a reader presses and the place the open-and-closed marker lives.
+    accordion__summary:
+        'the accordion: no register answered it, so in every theme it was the browser’s own triangle on a bold line (gap-12, Kenny 2026-09-13)',
 };
 
 /**

@@ -308,6 +308,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.9rem;
@@ -746,6 +759,13 @@
         inline-size: var(--kp-line);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='brutalism'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: var(--kp-line);
+    }
+
     /* The footer: the ink, the paper, the yellow. */
     [data-theme='brutalism'] .kp-footer {
         background: var(--sidebar-background);
@@ -877,6 +897,22 @@
         box-shadow: 2px 2px 0 0 var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='brutalism'] .kp-table {
@@ -962,6 +998,23 @@
 
     [data-theme='brutalism'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
+    [data-theme='brutalism'] .kp-accordion__summary {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: var(--kp-line);
     }
 
     [data-theme='brutalism'] .kp-reorder {

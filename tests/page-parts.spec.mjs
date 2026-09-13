@@ -13,6 +13,7 @@
 // `2 passed, 3 failed`, and the three are the three tests those changes
 // belong to. Restored, five green in 3.3 seconds.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
@@ -60,6 +61,51 @@ test.describe('the last two pieces of the page', () => {
         await expect
             .poll(() => page.evaluate(() => document.activeElement?.tagName), { message: 'and so did the focus, without moving the view back' })
             .toBe('BODY');
+    });
+
+    test('back to top: an empty control draws the package glyph in every theme, and gives it back on detach [gap-12]', async ({ page }) => {
+        // Before: the control written as documented — an empty button with
+        // only a name — painted as an empty 30px box in all 22 themes.
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto('/catalogue/navigation.html');
+        await page.evaluate(async () => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'kp-button kp-to-top';
+            button.id = 'test-to-top';
+            button.setAttribute('data-kp-to-top', '');
+            button.setAttribute('data-kp-to-top-after', '0');
+            document.body.append(button);
+            const { attachToTop } = await import('/js/components.js');
+            /** @type {any} */ (window).detachTestToTop = attachToTop(document.body);
+            window.scrollTo(0, 50);
+        });
+        const button = page.locator('#test-to-top');
+        await measured(button, (el) => getComputedStyle(el).visibility, undefined, 'shown').toBe('visible');
+        const themes = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+        const empty = [];
+        for (const theme of themes) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+            const painted = await button.evaluate((el) => {
+                const glyph = el.querySelector('[aria-hidden="true"]');
+                return glyph !== null && glyph.getBoundingClientRect().width > 0;
+            });
+            if (!painted) empty.push(theme);
+        }
+        expect(empty, 'themes whose control is an empty box').toEqual([]);
+
+        // What attach added, detach takes away [KT6].
+        await page.evaluate(() => /** @type {any} */ (window).detachTestToTop());
+        await expect(button.locator('[aria-hidden="true"]')).toHaveCount(0);
+    });
+
+    test('back to top: the docs page and the fixture write the button class that exists [gap-12]', async () => {
+        // Before: both wrote `kp-btn`, a class the package never declared, so
+        // the documented control had no button look at all.
+        for (const file of ['../site/components/to-top.html', 'fixtures/page-parts.html', '../gates/site/descriptors.mjs']) {
+            const text = readFileSync(new globalThis.URL(file, import.meta.url), 'utf8');
+            expect(text.includes('kp-btn'), `${file} still writes kp-btn`).toBe(false);
+        }
     });
 
     test('a picture holds its space before it has a picture in it [feat-media-1]', async ({ page }) => {

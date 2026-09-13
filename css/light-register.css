@@ -283,6 +283,19 @@
         box-shadow: var(--kp-shadow-md);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='light'] .kp-nav__menu a:hover,
     [data-theme='light'] .kp-nav__menu a:focus-visible {
         background: var(--muted);
@@ -444,6 +457,22 @@
         border-radius: var(--kp-radius-pill, 999px);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: tables, timelines, trees ─────────────────────────────────── */
 
     [data-theme='light'] .kp-table th {
@@ -486,6 +515,15 @@
     [data-theme='light'] .kp-tree {
         font-family: var(--theme-font-mono);
         font-size: 0.9em;
+    }
+
+    /* The accordion [gap-12]: quiet at rest; open takes the primary ink its side navigation gives the current page. */
+    [data-theme='light'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='light'] .kp-reorder {

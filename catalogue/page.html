@@ -95,8 +95,9 @@
                     under it, and the list below scrolls inside the palette. Group labels are small capitals in the muted ink. The first command is
                     the highlighted one (<code>is-active</code>, the keyboard's position): a soft wash of the ink across the whole row, not the accent
                     colour. Descriptions are smaller and muted, and key hints sit at the row's end without competing with the label. The status line
-                    under the list says how many commands match. Press <b>Open the commands</b>, or Ctrl+K: the live palette opens modal near the top
-                    of the window with focus in the input; type "lk" and the list must filter to <b>Lock out a line</b> and the status must say "1
+                    under the list says how many commands match. Press <b>Open the commands</b> (<code>data-kp-palette-open</code>, so it opens
+                    through the palette's own open and fires <code>kp-palette-open</code>), or Ctrl+K: the live palette opens modal near the top of
+                    the window with focus in the input; type "lk" and the list must filter to <b>Lock out a line</b> and the status must say "1
                     command"; Escape closes it and clears the query.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 27rem">
@@ -139,7 +140,7 @@
                     </dialog>
                 </div>
                 <div class="cat-stage" style="margin-block-start: 1rem">
-                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="pg-pal-live">Open the commands</button>
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-palette-open="pg-pal-live">Open the commands</button>
                     <dialog class="kp-palette" id="pg-pal-live" data-kp-palette data-kp-primary aria-label="Commands">
                         <input
                             class="kp-palette__input"
@@ -490,7 +491,7 @@
                     surface, each with its swatch before the name. The theme on screen is marked twice, by a border in the selected colour and by a
                     check after its name. Hover a button: a wash of the ink, not a colour. The groups wrap as rows with their labels above them and a
                     rule between. Press any button to switch the page's theme. The picker is a list here because the grouped options are list items;
-                    the indent before the first row is the browser's own list padding, which nothing in the package takes away.
+                    the package takes the browser's list indent and markers away, so the first row starts at the list's own edge.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <ul data-kp-theme-picker aria-label="Choose a theme, as buttons">

@@ -4173,6 +4173,15 @@
         gap: var(--kp-picker-gap, 0.25rem);
     }
 
+    /* A picker written as a list is a list of options, not a bulleted list
+       [gap-12]: the options lose the browser's 40px indent and its markers.
+       `:where` keeps this at one attribute's weight, so .kp-menu — which is
+       a list too, later in this file — still sets its own padding. */
+    :where(ul, ol)[data-kp-theme-picker] {
+        padding-inline-start: 0;
+        list-style: none;
+    }
+
     /* Grouped light and dark [TH63]. A group is a list item that presents a
  * small label and its own list, so a flat picker becomes two short rows
  * with a title each, and a menu becomes two sections with a rule between
@@ -5549,6 +5558,11 @@
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
             border: 0;
             background: transparent;
+            /* No frame, no ground, and no shadow either: a shadow under a
+             * list with no ground is a panel's ghost [gap-12]. Every register
+             * dresses the floating panel in kp.register, which beats this
+             * layer, so each register restates this reset for itself. */
+            box-shadow: none;
         }
     }
 
@@ -5665,8 +5679,13 @@
         opacity: 0;
     }
 
+    /* `data-kp-nav-menu-open` on the item declares the panel open [gap-12]:
+     * for a page that shows it open (a catalogue, a screenshot, a guided
+     * tour) or a script that opens it on a press. Hover and focus still
+     * open it too; taking the attribute away is the way back [KT6]. */
     .kp-nav__links > li:hover > .kp-nav__menu,
-    .kp-nav__links > li:focus-within > .kp-nav__menu {
+    .kp-nav__links > li:focus-within > .kp-nav__menu,
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
         display: block;
         opacity: 1;
     }
@@ -5680,7 +5699,8 @@
 
         @starting-style {
             .kp-nav__links > li:hover > .kp-nav__menu,
-            .kp-nav__links > li:focus-within > .kp-nav__menu {
+            .kp-nav__links > li:focus-within > .kp-nav__menu,
+            .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
                 opacity: 0;
             }
         }
@@ -5802,6 +5822,18 @@
     .kp-to-top[data-kp-to-top-shown] {
         opacity: 1;
         visibility: visible;
+    }
+
+    /* The glyph an empty control gets [gap-12]. Written the documented way —
+       a button with only a name — the control painted as an empty box in
+       every theme. js/components.js puts this element in a button that has
+       nothing of its own, and takes it out again on detach; the arrow is
+       drawn here rather than typed there, like the tree's twisty, so a theme
+       or a consumer changes it with one knob. Its own element rather than
+       the button's pseudo-elements, because those are the two surfaces a
+       register paints a button on [scope-16]. */
+    .kp-to-top__glyph::before {
+        content: var(--kp-glyph-to-top, '↑');
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -6416,6 +6448,44 @@
         display: flex;
         gap: 0.25rem;
         border-bottom: 1px solid var(--border-strong);
+    }
+
+    /* A row longer than its box scrolls inside the box [gap-12]. It ran past
+     * a 384px pane by 344px and widened the page; wrapping was the other
+     * answer, and it was not taken because a wrapped row puts the selected
+     * tab's rule in the middle of the list rather than on its edge.
+     *
+     * Only a row that does not fit becomes a scroller: js/overlays.js (and
+     * the React Tabs) write `data-kp-tabs-overflow` while it does, and keep
+     * the selected tab in view. A scroller clips whatever paints outside
+     * it, and several registers draw their selected tab past the row — a
+     * rule above it, a raised tab two pixels up — so a row that fits keeps
+     * exactly the look it had. */
+    .kp-tabs__list[data-kp-tabs-overflow] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        /* Room above the tabs for what a register draws there, given back by
+         * a margin so nothing around the row moves. Upward only: a negative
+         * margin at the row's ends would widen the pane it sits in. */
+        padding-block-start: var(--kp-tabs-overhang, 0.5rem);
+        margin-block-start: calc(-1 * var(--kp-tabs-overhang, 0.5rem));
+    }
+
+    /* In a scroller the tabs keep their width rather than squeezing their
+     * labels onto two lines. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab {
+        flex: none;
+    }
+
+    /* The base focus ring paints outside the control, where the scroller
+     * clips it, so in a scrolling row the ring is drawn inside the tab: the
+     * same two parts, the contrast outline and the inner ring, turned
+     * inward [DI2]. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
     .kp-tab {
@@ -7494,11 +7564,25 @@
     }
 
     /* Confirmed in words on the button, not by colour: a green flash is
- * invisible to a screen reader and to anyone who looked away. */
+ * invisible to a screen reader and to anyone who looked away.
+ *
+ * Both states are restated in every register [gap-12]: a register paints
+ * its buttons in kp.register, which beats this layer, and 19 of 22 themes
+ * painted their own ghost ground over the success plate. */
     .kp-copyable__button[data-kp-copied] {
         border-color: var(--success);
         color: var(--success-foreground);
         background: var(--success);
+    }
+
+    /* A copy the clipboard refused says so on the button as well as in the
+     * toast [gap-12]: the destructive ink and a dashed frame, so the two
+     * carriers are a colour and a shape. The word stays "Copy", because
+     * pressing it again is the way out [KT6]. */
+    .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* Status parts [TH52] */
@@ -7643,10 +7727,33 @@
         /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
         padding-inline-start: calc(var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* A file name with nowhere to break wraps inside its pane rather than
+         * pushing it wider: 64 characters made a 320px pane 632px wide
+         * [gap-12, DI11]. Inherited, so every level below has it too. */
+        overflow-wrap: anywhere;
     }
 
     .kp-tree [role='treeitem']:hover {
         background: var(--muted);
+    }
+
+    /* The selected item is marked, and marked twice [gap-12, DI4]: a bar at
+     * its start edge and a wash of the primary colour, plus the weight. It
+     * painted exactly like its unselected sibling in all 22 themes.
+     *
+     * A branch holds its children inside its own element, so a background
+     * would paint the whole subtree as selected. Both marks are gradients
+     * sized to the item's own row instead — one line plus the row's block
+     * padding — and the weight is handed back to the group below. */
+    .kp-tree [role='treeitem'][aria-selected='true'] {
+        background:
+            linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0) no-repeat 0 0 / 3px calc(1lh + 0.5rem),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0) no-repeat 0 0 / 100% calc(1lh + 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-tree [role='treeitem'][aria-selected='true'] [role='group'] {
+        font-weight: 400;
     }
 
     /* The twisty is a second carrier beside aria-expanded, and it points the
@@ -7696,6 +7803,21 @@
         cursor: grab;
     }
 
+    /* The row under a held handle [gap-12]. js/structure.js writes
+     * data-kp-dragging for as long as the pointer holds it, and nothing
+     * answered it: in all 22 themes the row you held looked like the rows
+     * you did not. The frame turns primary and dashed (a colour and a shape)
+     * and the row lifts off the list; releasing takes all of it away. */
+    .kp-reorder [data-kp-item][data-kp-dragging] {
+        border-color: var(--primary);
+        border-style: dashed;
+        box-shadow: 0 6px 16px -8px hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    .kp-reorder [data-kp-item][data-kp-dragging] [data-kp-handle] {
+        cursor: grabbing;
+    }
+
     .kp-split {
         display: grid;
         /* One custom property drives the whole layout, so the keyboard and
@@ -7724,6 +7846,25 @@
     .kp-split__separator:focus-visible {
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
         outline-offset: -2px;
+    }
+
+    /* Top and bottom [gap-12]. js/structure.js has moved a horizontal split
+     * with Up and Down since 3.0.0, but this stylesheet only ever set
+     * columns, so data-kp-orientation="horizontal" drew a second left and
+     * right split. The same custom property drives the rows. A register that
+     * sets the separator's thickness as an inline size restates it here as
+     * a block size, in its own value. */
+    .kp-split[data-kp-orientation='horizontal'] {
+        grid-template-columns: none;
+        grid-template-rows: var(--kp-split, 50%) auto 1fr;
+    }
+
+    .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        width: auto;
+        block-size: 0.5rem;
+        border-inline: 0;
+        border-block: 1px solid var(--border);
+        cursor: row-resize;
     }
 
     /* --- Date picker [TH43] ---------------------------------------------- */
@@ -8491,8 +8632,24 @@
         translate: 0 -6px;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+            translate: none;
+        }
+    }
+
     [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__menu,
-    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu {
+    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+    [data-theme='cyberpunk'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
         translate: 0 0;
     }
 
@@ -9004,6 +9161,22 @@
         border-color: var(--kp-hairline);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='cyberpunk'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='cyberpunk'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     [data-theme='cyberpunk'] .kp-timestamp {
         color: var(--muted-foreground);
         text-transform: uppercase;
@@ -9063,6 +9236,22 @@
 
     [data-theme='cyberpunk'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: mono capitals, spaced like its tabs, with the signal yellow for what is open. */
+    [data-theme='cyberpunk'] .kp-accordion__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='cyberpunk'] .kp-reorder {
@@ -10214,6 +10403,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='retro'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='retro'] .kp-nav__menu a {
         display: block;
         position: relative;
@@ -10744,6 +10946,13 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='retro'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
     /* The footer: the chrome, and the fine print as a status bar. */
     [data-theme='retro'] .kp-footer {
         background: var(--background);
@@ -10897,6 +11106,22 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: Explorer's column headers are buttons ───────────────────── */
 
     [data-theme='retro'] .kp-table {
@@ -10973,6 +11198,19 @@
     [data-theme='retro'] .kp-tree {
         font-family: var(--kp-dos);
         font-size: 1.05rem;
+    }
+
+    /* The accordion [gap-12]: the plain system weight of its category toggle, bold once open. */
+    [data-theme='retro'] .kp-accordion__summary {
+        font-weight: 500;
+    }
+
+    [data-theme='retro'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-accordion__item[open] > .kp-accordion__summary {
+        font-weight: 700;
     }
 
     [data-theme='retro'] .kp-reorder {
@@ -12107,6 +12345,19 @@
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='synthwave'] .kp-nav__menu a {
         display: block;
         padding: 0.55rem 1rem;
@@ -12516,6 +12767,13 @@
         width: 3px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='synthwave'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 3px;
+    }
+
     [data-theme='synthwave'] .kp-footer {
         background: var(--sidebar-background);
         color: var(--muted-foreground);
@@ -12630,6 +12888,22 @@
         color: var(--accent);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='synthwave'] .kp-table {
@@ -12715,6 +12989,21 @@
 
     [data-theme='synthwave'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: spaced capitals, and the hot core its selected tab burns with. */
+    [data-theme='synthwave'] .kp-accordion__summary {
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--kp-core);
     }
 
     [data-theme='synthwave'] .kp-reorder {
@@ -13721,6 +14010,20 @@
         box-shadow: none;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+        }
+    }
+
     [data-theme='phantom'] .kp-nav__menu a {
         display: block;
         position: relative;
@@ -14185,6 +14488,13 @@
         transform: skewX(var(--kp-skew));
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='phantom'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
     [data-theme='phantom'] .kp-footer {
         background: var(--background);
         color: var(--muted-foreground);
@@ -14328,6 +14638,22 @@
         transform: skewX(var(--kp-skew));
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='phantom'] .kp-table {
@@ -14396,6 +14722,22 @@
 
     [data-theme='phantom'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: the display capitals its tabs shout in. */
+    [data-theme='phantom'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='phantom'] .kp-reorder {
@@ -15391,6 +15733,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='terminal'] .kp-nav__menu a {
         display: block;
         padding: 0.3rem 0.8rem;
@@ -15833,6 +16188,13 @@
         inline-size: 1px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='terminal'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 1px;
+    }
+
     /* The footer: one step down from the void. */
     [data-theme='terminal'] .kp-footer {
         background: var(--sidebar-background);
@@ -15946,6 +16308,22 @@
         background: transparent;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='terminal'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='terminal'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='terminal'] .kp-table {
@@ -16015,6 +16393,20 @@
 
     [data-theme='terminal'] .kp-tree {
         letter-spacing: 0.02em;
+    }
+
+    /* The accordion [gap-12]: spaced capitals like its tabs, the phosphor for what is open. */
+    [data-theme='terminal'] .kp-accordion__summary {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='terminal'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='terminal'] .kp-reorder {
@@ -16858,6 +17250,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.9rem;
@@ -17296,6 +17701,13 @@
         inline-size: var(--kp-line);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='brutalism'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: var(--kp-line);
+    }
+
     /* The footer: the ink, the paper, the yellow. */
     [data-theme='brutalism'] .kp-footer {
         background: var(--sidebar-background);
@@ -17427,6 +17839,22 @@
         box-shadow: 2px 2px 0 0 var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='brutalism'] .kp-table {
@@ -17512,6 +17940,23 @@
 
     [data-theme='brutalism'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
+    [data-theme='brutalism'] .kp-accordion__summary {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: var(--kp-line);
     }
 
     [data-theme='brutalism'] .kp-reorder {
@@ -18542,6 +18987,19 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='titanium'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.7rem;
@@ -18946,6 +19404,22 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='titanium'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='titanium'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='titanium'] .kp-table th {
@@ -19005,6 +19479,19 @@
 
     [data-theme='titanium'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='titanium'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='titanium'] .kp-reorder {
@@ -19762,6 +20249,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='pastel'] .kp-nav__menu a {
         padding: 0.45rem 0.6rem;
         border-radius: 0.5rem;
@@ -20229,6 +20729,22 @@
         border-radius: 0.5rem;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='pastel'] .kp-table {
@@ -20282,6 +20798,16 @@
 
     [data-theme='pastel'] .kp-tree {
         font-size: 0.92rem;
+    }
+
+    /* The accordion [gap-12]: the primary ink its selected tab takes, on the
+       marker and on what is open. */
+    [data-theme='pastel'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     /* ── Navigation and steps ─────────────────────────────────────────── */
@@ -20921,6 +21447,19 @@
         box-shadow: var(--kp-shadow-2);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='shade-light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='shade-light'] .kp-nav__menu a {
         color: var(--foreground);
         border-radius: calc(var(--radius) - 2px);
@@ -21260,6 +21799,22 @@
         border-radius: var(--radius);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='shade-light'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='shade-light'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: tables, diffs, timelines, trees ────────────────────────── */
 
     [data-theme='shade-light'] .kp-table {
@@ -21330,6 +21885,19 @@
     [data-theme='shade-light'] .kp-tree {
         font-family: var(--theme-font-mono);
         font-size: 0.9rem;
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='shade-light'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='shade-light'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='shade-light'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='shade-light'] .kp-reorder {
@@ -22127,6 +22695,19 @@
         box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--foreground) 25%, transparent);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='forest'] .kp-nav__menu a {
         color: var(--foreground);
     }
@@ -22487,6 +23068,22 @@
         border: 1px solid var(--border);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='forest'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='forest'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ────────────────────────────────────────────────────────── */
 
     [data-theme='forest'] .kp-table th {
@@ -22546,6 +23143,19 @@
 
     [data-theme='forest'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the display face its tabs are set in. */
+    [data-theme='forest'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='forest'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='forest'] .kp-reorder {
@@ -23170,6 +23780,19 @@
         min-width: 11rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='deco'] .kp-nav__menu a {
         display: block;
         padding: 0.4rem 0.5rem;
@@ -23631,6 +24254,22 @@
         border-radius: 0;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='deco'] .kp-table {
@@ -23714,6 +24353,20 @@
 
     [data-theme='deco'] .kp-tree {
         font-family: var(--theme-font-body);
+    }
+
+    /* The accordion [gap-12]: the spaced capitals of its tabs, the primary colour for what is open. */
+    [data-theme='deco'] .kp-accordion__summary {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-accordion__summary::marker {
+        color: var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='deco'] .kp-reorder {
@@ -24436,6 +25089,19 @@
         box-shadow: var(--kp-shadow-md);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='light'] .kp-nav__menu a:hover,
     [data-theme='light'] .kp-nav__menu a:focus-visible {
         background: var(--muted);
@@ -24597,6 +25263,22 @@
         border-radius: var(--kp-radius-pill, 999px);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: tables, timelines, trees ─────────────────────────────────── */
 
     [data-theme='light'] .kp-table th {
@@ -24639,6 +25321,15 @@
     [data-theme='light'] .kp-tree {
         font-family: var(--theme-font-mono);
         font-size: 0.9em;
+    }
+
+    /* The accordion [gap-12]: quiet at rest; open takes the primary ink its side navigation gives the current page. */
+    [data-theme='light'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='light'] .kp-reorder {
@@ -25340,6 +26031,19 @@
         padding-block: 0.4rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='grotesk'] .kp-nav__menu a {
         color: var(--popover-foreground);
         font-size: 0.88rem;
@@ -25632,6 +26336,13 @@
         inline-size: 2px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='grotesk'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 2px;
+    }
+
     [data-theme='grotesk'] .kp-footer {
         background: var(--background);
         color: var(--muted-foreground);
@@ -25765,6 +26476,22 @@
         border-radius: 0;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='grotesk'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='grotesk'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='grotesk'] .kp-table {
@@ -25833,6 +26560,20 @@
 
     [data-theme='grotesk'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: the display face its tabs are set in. */
+    [data-theme='grotesk'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='grotesk'] .kp-reorder {
@@ -26730,6 +27471,19 @@
         counter-reset: kp-menu-item;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='blueprint'] .kp-nav__menu::before {
         content: '';
         display: block;
@@ -27090,6 +27844,22 @@
         border-radius: 2px;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: hairline tables and panels ─────────────────────────────── */
 
     [data-theme='blueprint'] .kp-table th {
@@ -27136,6 +27906,20 @@
     [data-theme='blueprint'] .kp-tree {
         font-family: var(--theme-font-mono);
         font-size: 0.9rem;
+    }
+
+    /* The accordion [gap-12]: the drafting mono its category toggle and tree use. */
+    [data-theme='blueprint'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+    }
+
+    [data-theme='blueprint'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='blueprint'] .kp-reorder {
@@ -27736,6 +28520,19 @@
         box-shadow: 0 8px 20px hsl(from var(--sidebar-background) h s l / 0.35);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='nostromo'] .kp-nav__menu a {
         color: var(--sidebar-foreground);
         border-radius: 0.2rem;
@@ -28245,6 +29042,22 @@
         background: transparent;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: table, datatable, diff, timeline, tree, reorder ────────── */
 
     [data-theme='nostromo'] .kp-table {
@@ -28316,6 +29129,21 @@
     [data-theme='nostromo'] .kp-tree {
         font-family: var(--theme-font-mono);
         font-size: 0.85rem;
+    }
+
+    /* The accordion [gap-12]: the console mono capitals its tabs use. */
+    [data-theme='nostromo'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='nostromo'] .kp-reorder {
@@ -28440,6 +29268,13 @@
     [data-theme='nostromo'] .kp-split__separator {
         background: var(--border-strong);
         inline-size: 1px;
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='nostromo'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 1px;
     }
 
     [data-theme='nostromo'] .kp-grid {
@@ -29266,6 +30101,19 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='dark'] .kp-nav__menu a {
         display: block;
         padding: 0.45rem 0.7rem;
@@ -29671,6 +30519,22 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='dark'] .kp-table th {
@@ -29730,6 +30594,20 @@
 
     [data-theme='dark'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the rule at the start edge its category toggle and current page carry. */
+    [data-theme='dark'] .kp-accordion__summary {
+        padding-inline-start: 0.5rem;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        border-inline-start-color: var(--primary);
     }
 
     [data-theme='dark'] .kp-reorder {
@@ -30389,6 +31267,19 @@
         box-shadow: 0 8px 24px -12px hsl(from var(--foreground) h s l / 0.28);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='formal'] .kp-nav__menu a {
         color: var(--foreground);
         border-radius: calc(var(--radius) - 2px);
@@ -30741,6 +31632,22 @@
         border-radius: calc(var(--radius) / 2);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='formal'] .kp-table {
@@ -30786,6 +31693,20 @@
     [data-theme='formal'] .kp-tree {
         font-family: var(--theme-font-body);
         color: var(--foreground);
+    }
+
+    /* The accordion [gap-12]: the body face and the ink, and the primary colour for what is open, as its tabs mark the selected one. */
+    [data-theme='formal'] .kp-accordion__summary {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     /* ── Navigation and steps ──────────────────────────────────────────── */
@@ -31410,6 +32331,19 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='sepia'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='sepia'] .kp-nav__menu a {
         padding: 0.4rem 0.9rem;
         font-size: 0.86rem;
@@ -31826,6 +32760,22 @@
         border-radius: 0.25rem;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='sepia'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='sepia'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: the table, the diff, the timeline, the tree ──────────────── */
 
     [data-theme='sepia'] .kp-table {
@@ -31895,6 +32845,15 @@
     [data-theme='sepia'] .kp-tree {
         font-family: var(--kp-mono);
         font-size: 0.9rem;
+    }
+
+    /* The accordion [gap-12]: the sienna its selected tab and its links carry. */
+    [data-theme='sepia'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='sepia'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='sepia'] .kp-reorder {
@@ -32459,6 +33418,19 @@
         box-shadow: 0 12px 28px var(--kp-shadow-soft);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='solstice'] .kp-nav__menu a {
         border-radius: calc(var(--radius) - 3px);
         padding: 0.5rem 0.6rem;
@@ -32810,6 +33782,22 @@
         border-radius: calc(var(--radius) - 3px);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: table, datatable, diff, timeline, tree, reorder ─────────── */
 
     [data-theme='solstice'] .kp-table {
@@ -32858,6 +33846,15 @@
 
     [data-theme='solstice'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the warm primary its selected tab wears. */
+    [data-theme='solstice'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='solstice'] .kp-reorder {
@@ -33450,6 +34447,19 @@
         box-shadow: none;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='high-contrast'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='high-contrast'] .kp-nav__menu a:hover,
     [data-theme='high-contrast'] .kp-nav__menu a:focus-visible {
         background: var(--muted);
@@ -33768,6 +34778,13 @@
         inline-size: 2px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='high-contrast'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 2px;
+    }
+
     /* ── The footer ────────────────────────────────────────────────────── */
 
     [data-theme='high-contrast'] .kp-footer {
@@ -33855,6 +34872,22 @@
 
     [data-theme='high-contrast'] .kp-copyable__button {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -34017,6 +35050,20 @@
 
     [data-theme='high-contrast'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavier, and open is underlined — a shape, not a shade. */
+    [data-theme='high-contrast'] .kp-accordion__summary {
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
     }
 
     /* ── The scrollbar joins the theme ────────────────────────────────── */
@@ -34501,6 +35548,19 @@
         min-width: 180px;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='lapis'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='lapis'] .kp-nav__menu a {
         color: var(--popover-foreground);
         border-radius: calc(var(--radius) - 2px);
@@ -34906,6 +35966,22 @@
         background: transparent;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='lapis'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='lapis'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='lapis'] .kp-table th {
@@ -34955,6 +36031,19 @@
 
     [data-theme='lapis'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest like its tabs, the full ink once open. */
+    [data-theme='lapis'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='lapis'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='lapis'] .kp-reorder {
@@ -35595,6 +36684,19 @@
         box-shadow: none;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='shade-dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='shade-dark'] .kp-nav__menu a {
         color: var(--muted-foreground);
         border-radius: var(--radius);
@@ -35871,6 +36973,22 @@
         border-radius: var(--radius);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='shade-dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='shade-dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ──────────────────────────────────────────────────────────── */
 
     [data-theme='shade-dark'] .kp-table {
@@ -35925,6 +37043,19 @@
 
     [data-theme='shade-dark'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, with the accent its selected tab is ruled in. */
+    [data-theme='shade-dark'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='shade-dark'] .kp-accordion__summary::marker {
+        color: var(--accent);
+    }
+
+    [data-theme='shade-dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='shade-dark'] .kp-reorder {

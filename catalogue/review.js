@@ -64,6 +64,7 @@ export function suffixIds(root, suffix, prefix = '') {
         'form',
         'data-kp-dialog',
         'data-kp-copy',
+        'data-kp-palette-open',
     ];
     for (const el of root.querySelectorAll('*')) {
         for (const attr of refAttrs) {

@@ -206,6 +206,7 @@
                             <tr><td><code>data-kp-activation</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-loop</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-tabs-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-tabs-overflow</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -239,7 +240,10 @@
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
-                    <p class="kp-text-muted">This unit reads no knobs of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
+                            <tr><td><code>--kp-tabs-overhang</code></td><td><code>0.5rem</code></td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
                     <h2 class="kp-fw-semibold">Accessibility</h2>

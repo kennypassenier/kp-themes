@@ -515,6 +515,19 @@
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='synthwave'] .kp-nav__menu a {
         display: block;
         padding: 0.55rem 1rem;
@@ -924,6 +937,13 @@
         width: 3px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='synthwave'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 3px;
+    }
+
     [data-theme='synthwave'] .kp-footer {
         background: var(--sidebar-background);
         color: var(--muted-foreground);
@@ -1038,6 +1058,22 @@
         color: var(--accent);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='synthwave'] .kp-table {
@@ -1123,6 +1159,21 @@
 
     [data-theme='synthwave'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: spaced capitals, and the hot core its selected tab burns with. */
+    [data-theme='synthwave'] .kp-accordion__summary {
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--kp-core);
     }
 
     [data-theme='synthwave'] .kp-reorder {

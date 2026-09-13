@@ -36,10 +36,11 @@
                 <h2>Accordion</h2>
                 <div class="cat-look">
                     <b>Look at:</b> each item is a native <code>&lt;details&gt;</code>: the summary is bold, the body is in the muted ink, and a
-                    hairline separates the items. The first item is open. The open and closed marker is the browser's own triangle — the package draws
-                    none and no register answers <code>.kp-accordion</code>, so check whether the triangle is visible and on the summary's baseline in
-                    the dark themes. Press Enter or Space on a summary to toggle it. The third summary is a whole question: it must wrap with its
-                    marker staying at the start of the first line.
+                    hairline separates the items. The first item is open. The open and closed marker is the browser's own triangle, and every register
+                    now answers the summary in its own voice — the marker's colour, the summary's type, and a mark on the open one — so switch themes
+                    and judge whether each still reads as a disclosure, with the triangle visible on the summary's baseline in the dark themes. Press
+                    Enter or Space on a summary to toggle it. The third summary is a whole question: it must wrap with its marker staying at the start
+                    of the first line.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-accordion">
@@ -75,10 +76,11 @@
                 <div class="cat-look">
                     <b>Look at:</b> a selectable tree (<code>data-kp-selectable</code>). The twisty before each branch points the way the branch
                     <i>will</i> go and sits in the muted ink; leaves have none and must still line up with the branch labels. <b>Line 2</b> is open,
-                    <b>Line 1</b> is closed, and <b>readings-0240.csv</b> is written as selected (<code>aria-selected="true"</code>): check whether
-                    anything on screen says so. Click once into the tree and use the keyboard: Down skips the closed branch's children, Right opens a
-                    branch and then steps into it, Left closes it and then steps out, Home and End jump, and typing "pu" finds <b>pump-log.txt</b>.
-                    Enter selects the focused item. The focus ring must hug one row, not the whole branch under it.
+                    <b>Line 1</b> is closed, and <b>readings-0240.csv</b> is written as selected (<code>aria-selected="true"</code>): it must carry a
+                    bar at its start edge, a wash of the primary colour over its own row only, and a heavier weight, in every theme. Click once into
+                    the tree and use the keyboard: Down skips the closed branch's children, Right opens a branch and then steps into it, Left closes
+                    it and then steps out, Home and End jump, and typing "pu" finds <b>pump-log.txt</b>. Enter selects the focused item. The focus
+                    ring must hug one row, not the whole branch under it.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <ul class="kp-tree" role="tree" data-kp-tree data-kp-selectable aria-label="Pump house 4 files">
@@ -111,8 +113,9 @@
                 <h2>Tree extremes</h2>
                 <div class="cat-look">
                     <b>Look at:</b> six levels deep, in a narrow pane. Each level must step in by the same amount; by the sixth the label still needs
-                    room to read. The deepest file has a name with no space to break at: it must wrap or stay inside the pane — never push the pane
-                    wider or hide under its edge. The branch with a long name must wrap under its own twisty, not under the twisty of its parent.
+                    room to read. The deepest file has a name with no space to break at: it wraps inside the pane (the package breaks it anywhere
+                    rather than let it push the pane wider). The branch with a long name must wrap under its own twisty, not under the twisty of its
+                    parent.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="cat-resize" style="inline-size: 18rem">
@@ -205,9 +208,9 @@
                     <b>Look at:</b> two panes and a separator you can grab. The separator is a narrow bar on the muted ground with a rule on each
                     side; the pointer turns into a column-resize arrow over it. Drag it, then Tab to it and use Left and Right (Shift for big steps,
                     Home and End for the limits of 20 % and 80 %): the focus ring must be drawn <i>inside</i> the bar so the panes do not cover it.
-                    Each pane scrolls on its own when its content is taller. The second split asks for <code>data-kp-orientation="horizontal"</code> —
-                    a top and bottom split. The module moves it with Up and Down, but <code>.kp-split</code> only ever sets columns, so what you see
-                    is a second left and right split whose separator does not follow the arrows the way it looks: that is the fault to see.
+                    Each pane scrolls on its own when its content is taller. The second split is <code>data-kp-orientation="horizontal"</code> — a top
+                    and bottom split: the panes stack, the separator is a bar across the full width with a rule above and below it and a row-resize
+                    pointer, and Up and Down (or a drag) move it. Registers that give the separator a thickness keep that thickness here.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div style="display: grid; block-size: 14rem">
@@ -262,9 +265,9 @@
                 <div class="cat-look">
                     <b>Look at:</b> each row is on the card surface with a boundary, and its handle is a real button with a boundary of its own and a
                     grab pointer. Tab to a handle and press Down: the row moves, focus stays on the <i>same</i> handle, and a screen reader hears
-                    "Pressure moved to position 2 of 5". Drag a handle with the mouse: nothing marks the row being dragged — the module writes
-                    <code>data-kp-dragging</code> and the stylesheet does not answer it, so judge whether you can tell which row you hold. The fourth
-                    row's label is long: it must wrap beside the handle, with the handle staying at the top of the row.
+                    "Pressure moved to position 2 of 5". Drag a handle with the mouse: the row you hold (<code>data-kp-dragging</code>) turns its
+                    frame to the primary colour, dashed, and lifts off the list with a shadow; letting go takes all of it away. The fourth row's label
+                    is long: it must wrap beside the handle, with the handle staying at the top of the row.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div style="max-inline-size: 28rem">
@@ -338,11 +341,11 @@
                 <h2>Wizard, live</h2>
                 <div class="cat-look">
                     <b>Look at:</b> the wizard exactly as the package documents it, with no form around it. Press <b>Next</b> with the reference
-                    empty: the wizard must refuse, keep the step list where it is, and put focus on the field. It does not say why: the message comes
-                    from <code>js/forms.js</code>, which listens only inside a <code>form[data-kp-form]</code>, so the error under the field stays
-                    empty — that silence is the fault to see. Fill it in and press <b>Next</b>: the second label turns current, the first gets its
-                    check, focus moves to the new step, and the status line announces "Step 2 of 3". <b>Back</b> on the first step must be
-                    unavailable, and on the last step the <b>Next</b> button must read <b>Finish</b>.
+                    empty: the wizard must refuse, keep the step list where it is, put focus on the field, and say why under it — the wizard writes
+                    the message itself when no <code>form[data-kp-form]</code> is around it. Type into the field and the message goes. Fill it in and
+                    press <b>Next</b>: the second label turns current, the first gets its check, focus moves to the new step, and the status line
+                    announces "Step 2 of 3". <b>Back</b> on the first step must be unavailable, and on the last step the <b>Next</b> button must read
+                    <b>Finish</b>.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-wizard" data-kp-wizard>

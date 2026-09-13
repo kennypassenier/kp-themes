@@ -1685,6 +1685,7 @@ export const DESCRIPTORS = [
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
             { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
+            { name: 'data-kp-nav-menu-open', what: 'On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.' },
         ],
         accessibility: [
             'Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.',
@@ -1800,7 +1801,7 @@ export const DESCRIPTORS = [
                 title: 'A control that knows when it is needed',
                 why: 'It is invisible until the reader has scrolled past the threshold, and `visibility: hidden` keeps it out of the tab order while it is. Pressing it scrolls to the top and moves the focus to the top of the document, so the next Tab starts where the eye is.',
                 markup: `
-<button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
+<button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
 `,
             },
         ],
@@ -1810,6 +1811,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-to-top-shown', what: 'Written by the module while the control is on the screen. Read it, do not set it.' },
             { name: 'kp-to-top', what: 'The event, on the control, whenever it appears or goes away: `{ shown }`.' },
             { name: '--kp-to-top-offset', what: 'How far it sits from the corner, both ways at once. Default 1.5rem.' },
+            { name: '--kp-glyph-to-top', what: 'The arrow an empty control draws. The module puts an empty `.kp-to-top__glyph` in a button that has nothing of its own and takes it out again on detach; a button with its own words or icon gets none. Default ↑.' },
         ],
         accessibility: [
             'Built in — the focus goes back with the view, and it moves without scrolling, so the control cannot undo its own journey.',
