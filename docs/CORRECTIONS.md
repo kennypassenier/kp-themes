@@ -2848,3 +2848,71 @@ tool call is not the lamp when a lamp was called, accepting the double flash
 as the price, asked for as a global change.
 
 **9 · When we review the measure.** At that measurement.
+
+## fix-21 · The review page restyled what it was showing (2026-09-13)
+
+**1 · What went wrong.** Kenny marked "Dialog with description and close"
+not approved in nostromo: the close button still touched the word "shift".
+On the component page the gap measured 59.7px; on the review page the
+dialog title had lost its class and its 52px right padding. The review page
+rewrote every `h2` in a gathered block to `h3` without its attributes, and
+17 headings inside the stages lost their styling.
+
+**2 · Which gate let it through.** None. The review page's fingerprint hashed
+what it rendered, so a block drawn wrongly was hashed wrongly and could be
+approved; nothing compared the gathered block with its component page.
+
+**3 · Where the same fault sits.** The property is **the review page drawing a
+block differently from its component page**. Searched with a count of
+headings inside `.cat-stage` that carry no class on the review page, and a
+comparison of the dialog title's computed padding on both pages: 17 headings,
+all from the one rewrite; nothing else found by that search.
+
+**4 · How we prevent recurrence.** Only the block's own heading steps down,
+keeping its attributes. A test compares each gathered block's computed style
+with the same block on its component page — queued as `fix-21-M1`, to be
+written with the next change to `catalogue/review.js`.
+
+**5 · What the remedy costs.** One comparison test over 109 blocks.
+
+**6 · Who enforces it.** The fix is code; the comparison test is queued.
+
+**7 · How we measure it works, and when.** At the next change to
+`catalogue/review.js`: the comparison test passes for every block in formal
+and nostromo.
+
+**8 · If the measurement fails.** The review page stops rewriting gathered
+markup at all and nests blocks under a component heading instead.
+
+**9 · When we review the measure.** When the comparison test exists.
+
+## fix-22 · A search command waited on input for eleven and a half hours (2026-09-13)
+
+**1 · What went wrong.** Kenny found a background task running for 11h28m.
+It was a Bash command of Claude's: a `grep` given an empty file name, because
+the file it looked for sits in `site/components/` and the search looked in
+`site/*.html`, so it waited on standard input; the tool moved it to the
+background after 120 seconds and nobody stopped it.
+
+**2 · Which gate let it through.** None. A command that reads standard input
+is not refused, and a backgrounded shell has no lifetime.
+
+**3 · Where the same fault sits.** The property is **a shell command that can
+block on standard input**. Searched with `ps -eo pid,etime,args` for this
+session's shells older than an hour: one, this one. Every `$(...)`-captured
+file name passed to a reader without a check has the same exposure.
+
+**4 · How we prevent recurrence.** Decided by Kenny in the form of
+2026-09-13 (item `fix-22`).
+
+**5 · What the remedy costs.** Depends on that answer.
+
+**6 · Who enforces it.** Depends on that answer.
+
+**7 · How we measure it works, and when.** At the end of round eight:
+`ps -eo etime,args` shows no Claude shell older than its own turn.
+
+**8 · If the measurement fails.** A Stop hook that lists background shells
+older than 30 minutes and refuses the turn until they are stopped.
+
+**9 · When we review the measure.** At that measurement.
