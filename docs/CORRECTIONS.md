@@ -2904,20 +2904,25 @@ that outlives its turn**, whatever blocks it. Searched by listing processes
 whose standard output is a file under the session's `tasks/` directory, with
 their age: one, the listing's own shell.
 
-**4 · How we prevent recurrence.** Kenny chose a global hook prefixing every
-command with `exec </dev/null` (form of 2026-09-13); Claude did not build it,
-because stdin already is `/dev/null` and it would not have stopped this. A
-measure that does not depend on the cause is back in front of Kenny (form of
-2026-09-13, second pass).
+**4 · How we prevent recurrence.** Kenny first chose a global hook
+prefixing every command with `exec </dev/null` (form of 2026-09-13); Claude did
+not build it, because stdin already is `/dev/null` and it would not have stopped
+this. His second answer ("Klopt", same day): the global Stop hook
+(`~/.claude/hooks/may-i-stop.py`, committed in dev-procedure `abedf8c`) lists
+this session's shells older than ten minutes — any process whose output still
+goes to the session's `tasks/` files — and refuses the turn once per shell.
 
-**5 · What the remedy costs.** Depends on that answer.
+**5 · What the remedy costs.** One pass over `/proc` per turn: 25 ms measured;
+a deliberately long background run is reported once too.
 
-**6 · Who enforces it.** Depends on that answer.
+**6 · Who enforces it.** The Stop hook, code.
 
-**7 · How we measure it works, and when.** At the end of round eight:
-`ps -eo etime,args` shows no Claude shell older than its own turn.
+**7 · How we measure it works, and when.** On the turn that built it: a
+`sleep 900` started in the background must be refused at that turn's end, with
+the shell named in the message. At the end of round eight: the count of times
+the hook reported.
 
-**8 · If the measurement fails.** A Stop hook that lists background shells
-older than 30 minutes and refuses the turn until they are stopped.
+**8 · If the measurement fails.** Claude puts `timeout 600` before every command
+of its own that can run long, as discipline, and says so.
 
 **9 · When we review the measure.** At that measurement.

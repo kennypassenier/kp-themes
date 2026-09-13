@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" data-theme="nostromo" data-cat-theme="nostromo">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Control heights · kp-themes research</title>
+        <link rel="stylesheet" href="../../catalogue/deps.css" />
+        <style>
+            /* The same row of controls four times. Option A is the package as it
+               is and adds nothing; B, C and D force a height the way a register
+               would, so the difference can be seen before anything is built. */
+            @layer research {
+                .ch-option {
+                    border: 1px dashed var(--border);
+                    padding: 1rem;
+                    display: grid;
+                    gap: 0.75rem;
+                }
+
+                .ch-option h3,
+                .ch-option p {
+                    margin: 0;
+                }
+
+                .ch-option p {
+                    font-size: 0.85rem;
+                    color: var(--muted-foreground);
+                }
+
+                .ch-row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: flex-start;
+                    gap: 0.5rem;
+                }
+
+                .ch-row > * {
+                    margin: 0;
+                }
+
+                .ch-row .kp-field__input,
+                .ch-row .kp-combobox__input {
+                    inline-size: 11rem;
+                }
+
+                .ch-row .kp-datepicker {
+                    display: flex;
+                    gap: 0.25rem;
+                    align-items: flex-start;
+                }
+
+                .ch-heights {
+                    font-family: var(--font-mono, monospace);
+                    font-size: 0.8rem;
+                    font-variant-numeric: tabular-nums;
+                    color: var(--muted-foreground);
+                }
+
+                .ch-heights b {
+                    color: var(--foreground);
+                    font-weight: 600;
+                }
+
+                /* B and C: every control takes one height. */
+                .ch-fixed :is(.kp-button, .kp-field__input, .kp-combobox__input) {
+                    box-sizing: border-box;
+                    block-size: var(--ch-height);
+                    min-height: var(--ch-height);
+                    padding-block: 0;
+                }
+
+                .ch-all {
+                    --ch-height: 2.25rem;
+                }
+
+                /* D: only the combobox follows the field. */
+                .ch-combobox-only .kp-combobox__input {
+                    box-sizing: border-box;
+                    block-size: var(--ch-height);
+                    min-height: var(--ch-height);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Control heights: one row, four rules</h1>
+            <p class="cat-intro">
+                Measured on 2026-09-13 in firefox: in 13 themes a button, a field, a select, a combobox and a date field already share one height
+                (brutalism at 48 px, the rest at 36). In nine they do not — nostromo, phantom, synthwave, pastel, deco, terminal, lapis, shade-dark
+                and shade-light. The page opens in nostromo; use the theme menu to see the others. Under each row the page measures what it drew.
+            </p>
+
+            <section class="cat-block" id="options">
+                <h2>Four options, one above the other</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the bottom edges of each row. In <b>A</b> they step wherever the heights differ. <b>B</b> gives every control the
+                    field's height in this theme, so each theme keeps its own size. <b>C</b> gives every control 36 px in every theme. <b>D</b> only
+                    makes the combobox follow the field. Switch to phantom and synthwave to see the biggest differences, and to brutalism to see what
+                    C takes away from a theme that is large on purpose. The forced heights here are drawn with <code>block-size</code> for the demo;
+                    the package would keep <code>min-height</code> so enlarged text still grows.
+                </div>
+
+                <div class="ch-option" data-ch-option="today">
+                    <h3>A · today</h3>
+                    <p>The package as it is.</p>
+                    <div class="ch-row" data-ch-row></div>
+                    <div class="ch-heights" data-ch-heights></div>
+                </div>
+
+                <div class="ch-option ch-fixed" data-ch-option="per-theme">
+                    <h3>B · one height per theme</h3>
+                    <p>Every control takes the field's height in this theme.</p>
+                    <div class="ch-row" data-ch-row></div>
+                    <div class="ch-heights" data-ch-heights></div>
+                </div>
+
+                <div class="ch-option ch-fixed ch-all" data-ch-option="all">
+                    <h3>C · one height for every theme</h3>
+                    <p>Every control is 36 px, whichever theme is on.</p>
+                    <div class="ch-row" data-ch-row></div>
+                    <div class="ch-heights" data-ch-heights></div>
+                </div>
+
+                <div class="ch-option ch-combobox-only" data-ch-option="combobox">
+                    <h3>D · only the combobox</h3>
+                    <p>The combobox follows the field; the button keeps its own height.</p>
+                    <div class="ch-row" data-ch-row></div>
+                    <div class="ch-heights" data-ch-heights></div>
+                </div>
+            </section>
+        </main>
+
+        <template id="ch-controls">
+            <input class="kp-field__input" type="text" aria-label="Search" placeholder="Search sites" data-ch="field" />
+            <select class="kp-field__input" aria-label="Severity" data-ch="select" data-kp-select="native">
+                <option>Any severity</option>
+                <option>Critical</option>
+            </select>
+            <div class="kp-combobox" data-kp-combobox>
+                <input
+                    class="kp-combobox__input"
+                    type="text"
+                    role="combobox"
+                    aria-label="Site"
+                    aria-expanded="false"
+                    autocomplete="off"
+                    placeholder="Site"
+                    data-ch="combobox"
+                />
+                <ul class="kp-combobox__list" role="listbox" hidden>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                    <li class="kp-combobox__option" role="option" data-kp-option data-value="ws2">Water store 2</li>
+                </ul>
+                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+            </div>
+            <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                <input
+                    class="kp-field__input"
+                    type="text"
+                    inputmode="numeric"
+                    aria-label="Opened on"
+                    data-kp-date-input
+                    value="13/09/2026"
+                    data-ch="date"
+                />
+                <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
+                    <span aria-hidden="true">▦</span>
+                </button>
+                <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+            </div>
+            <button type="button" class="kp-button kp-button--primary" data-ch="button">Search</button>
+        </template>
+
+        <script type="module">
+            const template = document.getElementById('ch-controls');
+            let n = 0;
+            for (const row of document.querySelectorAll('[data-ch-row]')) {
+                const copy = template.content.cloneNode(true);
+                // Each copy needs its own ids for the combobox and its list.
+                for (const list of copy.querySelectorAll('[role="listbox"]')) {
+                    list.id = `ch-list-${++n}`;
+                    list.closest('[data-kp-combobox]').querySelector('[role="combobox"]').setAttribute('aria-controls', list.id);
+                }
+                row.append(copy);
+            }
+
+            const LABELS = { button: 'button', field: 'field', select: 'select', combobox: 'combobox', date: 'date' };
+            const height = (el) => Math.round(el.getBoundingClientRect().height * 10) / 10;
+
+            function measure() {
+                const today = document.querySelector('[data-ch-option="today"] [data-ch="field"]');
+                const fieldHeight = `${height(today)}px`;
+                for (const name of ['per-theme', 'combobox']) {
+                    document.querySelector(`[data-ch-option="${name}"]`).style.setProperty('--ch-height', fieldHeight);
+                }
+                for (const option of document.querySelectorAll('[data-ch-option]')) {
+                    const values = Object.entries(LABELS).map(([key, label]) => [label, height(option.querySelector(`[data-ch="${key}"]`))]);
+                    const all = values.map(([, v]) => v);
+                    const equal = Math.max(...all) - Math.min(...all) < 1;
+                    option.querySelector('[data-ch-heights]').innerHTML =
+                        values.map(([label, v]) => `${label} ${v}`).join(' · ') +
+                        ` — <b>${equal ? 'one height' : `${Math.round((Math.max(...all) - Math.min(...all)) * 10) / 10} px apart`}</b>`;
+                }
+            }
+
+            // The theme loads its register lazily: measure after every theme change.
+            new MutationObserver(() => setTimeout(measure, 150)).observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme', 'data-theme-pending'],
+            });
+            window.addEventListener('load', () => setTimeout(measure, 300));
+            document.fonts?.ready.then(() => setTimeout(measure, 100));
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
