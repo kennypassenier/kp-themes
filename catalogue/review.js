@@ -14,7 +14,7 @@ import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
 import { themeOptionsMarkup } from '../js/theme-picker.js';
 import { COMPONENT_PAGES } from './pages.js';
 import { JUDGEMENT_EVENT, loadJudgements, saveJudgements, stateOf } from './judgements.js';
-import { fingerprint, stillAnimations } from './fingerprint.js';
+import { fingerprint, stillAnimations } from './block-hash.js';
 
 const ROOT = new URL('../', import.meta.url);
 

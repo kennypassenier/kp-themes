@@ -276,7 +276,28 @@ function main() {
         );
     }
 
+    // A file name an ad or privacy blocklist refuses never reaches a reviewer
+    // whose browser runs one, and a module the catalogue imports then takes
+    // the whole page down with it: `catalogue/fingerprint.js` matched
+    // EasyPrivacy's `/fingerprint.js^$domain=~github.com`, and FireDragon ships
+    // uBlock Origin with that list on (fix-23, Kenny 2026-09-13).
+    const PUBLISHED = ['catalogue', 'research', 'css', 'js', 'fonts'];
+    const BLOCKED_WORDS = /fingerprint|analytics|tracking|tracker|beacon|telemetry|advert/i;
+    const blockable = PUBLISHED.flatMap((dir) =>
+        readdirSync(new URL(`${dir}/`, root), { recursive: true })
+            .map(String)
+            .filter((name) => BLOCKED_WORDS.test(name.split('/').pop() ?? ''))
+            .map((name) => `${dir}/${name}`),
+    ).sort();
+    if (blockable.length) {
+        console.error(
+            `${blockable.length} published file name(s) an ad or privacy blocklist refuses, so the page breaks for a reviewer running one [fix-23]:\n  ` +
+                blockable.join('\n  '),
+        );
+    }
+
     if (
+        blockable.length ||
         invisible.length ||
         stale.length ||
         gone.length ||

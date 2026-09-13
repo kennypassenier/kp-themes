@@ -8,7 +8,7 @@ import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { PAGES } from './pages.js';
 import { JUDGEMENT_EVENT, loadJudgements, saveJudgements, stateOf } from './judgements.js';
-import { fingerprint, stillAnimations } from './fingerprint.js';
+import { fingerprint, stillAnimations } from './block-hash.js';
 import './demos.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */

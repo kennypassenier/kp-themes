@@ -2928,3 +2928,43 @@ stopped with TaskStop.
 of its own that can run long, as discipline, and says so.
 
 **9 · When we review the measure.** At that measurement.
+
+## fix-23 · A blocklist took the review page down in Kenny's browser (2026-09-13)
+
+**1 · What went wrong.** In Kenny's browser the review page lost its
+navigation and every block, locally and on GitHub Pages, after a hard reload;
+the page's own boot check reported "Could not load
+https://kennypassenier.github.io/kp-themes/review/catalogue/catalogue.js".
+The module `catalogue/fingerprint.js`, added that day, matches EasyPrivacy's
+rule `/fingerprint.js^$domain=~github.com`, and FireDragon, his default
+browser, ships uBlock Origin (`/usr/lib/firedragon/distribution/policies.json`).
+One blocked import fails the whole module graph.
+
+**2 · Which gate let it through.** None. Claude's checks ran in Playwright's
+Firefox and in FireDragon with a fresh profile, neither with a blocklist
+loaded; the page was never tried the way its reviewer runs it.
+
+**3 · Where the same fault sits.** The property is **a published file name a
+blocklist refuses**. Searched by matching every file under catalogue/,
+research/, css/, js/ and fonts/ against the 1689 plain path rules of
+EasyPrivacy and EasyList: none after the rename.
+
+**4 · How we prevent recurrence.** `gates/check-catalogue.mjs` refuses a
+published file name containing fingerprint, analytics, tracking, tracker,
+beacon, telemetry or advert; and `catalogue/boot-check.js` puts the browser's
+error on a page whose script does not start, which is how this was found.
+
+**5 · What the remedy costs.** One directory walk per gate run; a word list
+that catches the common rules, not every one.
+
+**6 · Who enforces it.** The gate, code; the boot check, code.
+
+**7 · How we measure it works, and when.** Now: Kenny opens the published
+review page in FireDragon and sees the navigation and the blocks.
+
+**8 · If the measurement fails.** Claude asks Kenny for the console line that
+names the refused URL, and replaces the word list with a check against the
+blocklists themselves.
+
+**9 · When we review the measure.** At the end of round eight.
+
