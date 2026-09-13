@@ -1974,10 +1974,11 @@
             }
 
             function pageButton(label, page, { disabled = false, current = false, role = String(page), name } = {}) {
-                // A button that points backwards is mirrored, so a theme that cuts a
-                // notch (cyberpunk) cuts it on the side the button points to.
-                const mirror = role === 'first' || role === 'prev' ? ' kp-button--mirror' : '';
-                return `<button type="button" class="kp-button kp-button--ghost kp-button--sm${mirror}" data-dtr-page="${page}" data-dtr-role="${role}"${disabled ? ' disabled' : ''}${current ? ' aria-current="page"' : ''}${name ? ` aria-label="${esc(name)}"` : ''}>${esc(label)}</button>`;
+                // The package pager's look: the theme's own button, visible at rest, and
+                // a button pointing backwards marked so a theme that cuts a notch
+                // (cyberpunk) cuts it on the side the button points to.
+                const back = role === 'first' || role === 'prev' ? ' data-kp-direction="back"' : '';
+                return `<button type="button" class="kp-button kp-button--sm"${back} data-dtr-page="${page}" data-dtr-role="${role}"${disabled ? ' disabled' : ''}${current ? ' aria-current="page"' : ''}${name ? ` aria-label="${esc(name)}"` : ''}>${esc(label)}</button>`;
             }
             function simplePager(page, pages) {
                 return (
