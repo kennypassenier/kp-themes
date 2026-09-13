@@ -33,6 +33,10 @@
 //     lengths are read as "a length" (viewportDependence below).
 //   - a block still loading its rows read differently in two runs; a block
 //     busy beyond its markup is given up to three seconds (readBlocks).
+// None of the three changes what is read, only when (2026-09-13): the version
+// stayed 2. A block is read laid out and shown (judging.js), after two frames
+// for the components that measure themselves, and a data table's own first
+// request counts as busy.
 /**
  * The version of this recipe. catalogue/verdicts.json names the version its
  * hashes were taken with; any change to what is read below raises this, and
@@ -363,17 +367,42 @@ export async function readBlocks(items, { lines = false } = {}) {
     // (measured 2026-09-13). So: lay out, then wait for the fonts.
     void document.body.offsetWidth;
     await document.fonts?.ready;
+    // A component that measures itself in a ResizeObserver (a tab row writes
+    // data-kp-tabs-overflow while its tabs do not fit) learns its size only at
+    // the next rendering step. A block the review page had hidden and shows
+    // again for reading still carried the answer it got while hidden — no
+    // overflow, so the scrolling row's padding read 0px for 8px: measured
+    // 2026-09-13 in Chromium, nostromo to formal to nostromo with every block
+    // judged. So two frames pass before reading; a timer stands in where no
+    // frame runs (a tab in the background, where no observer runs either).
+    await new Promise((resolve) => {
+        const timer = setTimeout(resolve, 100);
+        requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+                clearTimeout(timer);
+                resolve(undefined);
+            }),
+        );
+    });
     // A block still waiting for its rows (a data table on a mock server that
     // answers in 250 to 900 ms) reads as its loading state in one browser and
     // its rows in the next: measured 2026-09-13, the data table demo's
     // server block differed between two runs of one Chromium. So a block busy
     // beyond what its markup says (a loading state shown on purpose is busy
     // as written) is given up to three seconds to finish.
-    // A data table written as `data-kp-state="loading"` stays busy for good.
-    const busy = (item) =>
-        (item.elements?.() ?? reviewedElements(item.root)).filter(
-            (el) => el.getAttribute('aria-busy') === 'true' && !el.closest('[data-kp-state="loading"]'),
-        ).length > (item.source.match(/aria-busy="true"/g) ?? []).length;
+    // A data table written as `data-kp-state="loading"` stays busy for good,
+    // so a loading state counts as busy only beyond the ones written: a data
+    // table on its first request marks ITSELF `data-kp-state="loading"` and
+    // `aria-busy`, and excluding every element under a loading state let the
+    // review page read the server block's skeleton rows (measured 2026-09-13
+    // in Chromium, 77 elements where the rows give 95).
+    const count = (text, pattern) => (text.match(pattern) ?? []).length;
+    const busy = (item) => {
+        const elements = item.elements?.() ?? reviewedElements(item.root);
+        const loading = elements.filter((el) => el.getAttribute('data-kp-state') === 'loading').length;
+        const waiting = elements.filter((el) => el.getAttribute('aria-busy') === 'true' && !el.closest('[data-kp-state="loading"]')).length;
+        return loading > count(item.source, /data-kp-state="loading"/g) || waiting > count(item.source, /aria-busy="true"/g);
+    };
     for (const started = performance.now(); items.some(busy) && performance.now() - started < 3000;) {
         await new Promise((resolve) => setTimeout(resolve, 50));
     }

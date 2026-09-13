@@ -17,6 +17,7 @@
 // Firefox only while building; the review page gathers every component page
 // and measures every block, so these tests carry a long timeout.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { HASH_VERSION } from '../catalogue/block-hash.js';
 
@@ -338,6 +339,91 @@ test('a verdict stored before engines counts for this browser’s engine, and is
     expect(stored['switch--states'].cyberpunk[engine]).toEqual({ verdict: 'approved', hash: old });
     await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
 });
+
+/* ------------------------------------- the register as the review page reads it */
+
+// The register's hashes are taken on the component pages; Kenny judges mostly
+// on the review page. A block judged there must stay judged there, in a fresh
+// load and after a theme switch, at both of the widths he reviews at.
+//
+// Red run first, on 193974d in firefox: in nostromo ten register blocks read
+// "Changed since judged" on a fresh load (feedback--spinner, overlays--dialog,
+// overlays--dialog-parts, overlays--confirm, overlays--dialog-long,
+// navigation--bar-collapsed, navigation--bar-long, navigation--tabs-many,
+// data--shortcuts, data--col-low) and media--marquee an eleventh after a
+// switch. The review page hid every component whose blocks were all judged in
+// the register before the first reading, and read those blocks inside a
+// display:none component.
+const REGISTER = JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8'));
+
+/** The register's verdicts for one theme and engine: block key -> verdict. */
+const registerVerdicts = (theme, engine) =>
+    Object.fromEntries(
+        Object.entries(REGISTER.verdicts)
+            .filter(([, themes]) => themes[theme]?.[engine])
+            .map(([key, themes]) => [key, themes[theme][engine].verdict]),
+    );
+
+/** Every register block on the review page whose state is not its verdict, once measuring is done. */
+async function reviewMismatches(page, theme, verdicts) {
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme), { timeout: 30_000 }).toBe(theme);
+    await expect
+        .poll(
+            () =>
+                page.evaluate(() => {
+                    const states = [...document.querySelectorAll('[data-cat-approval-state]')];
+                    return states.length > 0 && !states.some((el) => /Checking/.test(el.textContent ?? ''));
+                }),
+            { timeout: 150_000 },
+        )
+        .toBe(true);
+    const states = await page.evaluate(
+        (keys) => Object.fromEntries(keys.map((key) => [key, document.getElementById(key)?.dataset.catState])),
+        Object.keys(verdicts),
+    );
+    return Object.entries(verdicts)
+        .filter(([key, verdict]) => states[key] !== verdict)
+        .map(([key, verdict]) => `${key}: ${states[key]} (register: ${verdict})`);
+}
+
+for (const theme of ['nostromo', 'formal']) {
+    for (const [width, height] of [
+        [1400, 900],
+        [1920, 1000],
+    ]) {
+        test(`every register block in ${theme} shows as judged on the review page at ${width}, after a fresh load and after a theme switch`, async ({
+            browser,
+            browserName,
+        }) => {
+            const verdicts = registerVerdicts(theme, engineOf(browserName));
+            test.skip(Object.keys(verdicts).length === 0, `the register holds no ${theme} verdicts in ${browserName}`);
+            // The register as committed: a context of its own, without the empty one beforeEach serves.
+            const context = await browser.newContext({ viewport: { width, height } });
+            const page = await context.newPage();
+
+            await page.goto('/catalogue/switch.html');
+            await page.evaluate((name) => localStorage.setItem('theme', name), theme);
+            await page.goto('/catalogue/index.html');
+            expect.soft(await reviewMismatches(page, theme, verdicts), 'fresh load').toEqual([]);
+
+            const other = theme === 'formal' ? 'nostromo' : 'formal';
+            await page.evaluate((name) => localStorage.setItem('theme', name), other);
+            await page.goto('/catalogue/index.html');
+            await reviewMismatches(page, other, {});
+            await setTheme(page, theme);
+            expect.soft(await reviewMismatches(page, theme, verdicts), `after switching from ${other}`).toEqual([]);
+
+            // And back again, with the blocks hidden in the meantime: a component
+            // that measures itself (a tab row's overflow) must not be read with
+            // what it measured while hidden.
+            await setTheme(page, other);
+            await reviewMismatches(page, other, {});
+            await setTheme(page, theme);
+            expect.soft(await reviewMismatches(page, theme, verdicts), `after switching to ${other} and back`).toEqual([]);
+            await context.close();
+        });
+    }
+}
 
 test('a block hashes the same in a short window and a tall one, a narrow one and a wide one', async ({ browser }) => {
     // The palette's `margin: 10vh` and the footer's `clamp(…4vw…)` padding

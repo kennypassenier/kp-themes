@@ -186,7 +186,19 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     async function readOnce() {
         const theme = currentTheme();
         // A hidden block reads display:none on its own root; all are shown while reading.
-        if (toolbar) for (const item of items) item.entry.root.hidden = false;
+        // So is what the page hid around them: the review page hides a component
+        // whose every block left the page, and a block read inside a hidden
+        // component has no layout. Its dialog read `margin: auto` for 0px, its
+        // animations did not exist (a spinner's `transform: none`), its
+        // container queries answered for no container (a collapsed bar's
+        // padding, a data table's low-priority column): measured 2026-09-13 in
+        // nostromo, ten register blocks, eleven after a theme switch, came back
+        // as "Changed since judged" on the review page only. onRender puts the
+        // wrappers back in step with the blocks.
+        if (toolbar) {
+            for (const item of items) item.entry.root.hidden = false;
+            onRender?.();
+        }
         // Laid out, fonts in, animations held still: block-hash.js's readBlocks.
         const hashes = await readBlocks(items.map(({ entry }) => ({ root: entry.root, source: entry.source, elements: entry.elements })));
         const next = new Map(items.map(({ entry }, i) => [entry.key, hashes[i].hash]));
