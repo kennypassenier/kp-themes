@@ -7,13 +7,18 @@ import { applyTheme, currentTheme, initializeTheme, THEME_EVENT } from '../js/th
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { PAGES } from './pages.js';
-import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
+import { JUDGEMENT_EVENT, loadJudgements, saveJudgements, stateOf } from './judgements.js';
+import { fingerprint, stillAnimations } from './fingerprint.js';
 import './demos.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
 const ROOT = new URL('../', import.meta.url);
 
 const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
+// What went into the last prompt copied from each page, so the next prompt
+// carries only what is new (Kenny, 2026-09-13: an old note and old verdicts
+// came back in every prompt). { page: [signature, …] }
+const COPIED_KEY = 'kp-catalogue-copied:v1';
 
 /* ------------------------------------------------------------- storage */
 
@@ -229,7 +234,14 @@ function setNote(block, theme, text) {
 }
 
 function blockTitle(section) {
-    return section.dataset.catTitle || section.querySelector('h2, h3')?.textContent?.trim() || section.id;
+    if (section.dataset.catTitle) return section.dataset.catTitle;
+    const heading = section.querySelector('h2, h3');
+    if (!heading) return section.id;
+    // A label set inside the heading (the data table demo's "mock", "mixed")
+    // is not part of the name; read without it rather than glued on.
+    const copy = /** @type {HTMLElement} */ (heading.cloneNode(true));
+    for (const tag of copy.querySelectorAll('[class*="-tag"]')) tag.remove();
+    return copy.textContent.trim() || section.id;
 }
 
 /** The blocks a note can belong to on this page. */
@@ -238,39 +250,159 @@ function sections() {
     return blocks.length ? blocks : [...document.querySelectorAll('main section[id]')];
 }
 
-/** The prompt a reviewer pastes into the conversation: verdicts and notes. */
-function promptText() {
+/** A research demo judges its own sections; the review page judges gathered blocks. */
+const isResearch = () => pagePath().startsWith('research/');
+
+/** The key a block's verdicts are stored under. */
+function judgementKey(section) {
+    return isResearch() ? `${pagePath()}#${section.id}` : section.id;
+}
+
+const copiedSignatures = () => new Set(load(COPIED_KEY, {})[pagePath()] ?? []);
+
+/**
+ * Everything the prompt could say, each with the signature that tells whether
+ * it was already in a copied prompt.
+ * @returns {{ kind: 'note' | 'approved' | 'rejected', theme: string, text: string, signature: string }[]}
+ */
+function promptItems() {
     const page = allFeedback()[pagePath()] ?? {};
     const judgements = loadJudgements();
-    const notes = new Map();
-    const approved = new Map();
-    const rejected = new Map();
-    const add = (map, theme, value) => {
-        if (!map.has(theme)) map.set(theme, []);
-        map.get(theme).push(value);
-    };
+    const items = [];
     for (const section of sections()) {
         for (const [theme, text] of Object.entries(page[section.id] ?? {})) {
-            add(notes, theme, `- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
+            const line = text.trim().replace(/\n+/g, ' / ');
+            items.push({
+                kind: 'note',
+                theme,
+                text: `- ${blockTitle(section)} (#${section.id}): ${line}`,
+                signature: `note|${section.id}|${theme}|${line}`,
+            });
         }
-        for (const [theme, { verdict }] of Object.entries(judgements[section.id] ?? {})) {
+        const key = judgementKey(section);
+        for (const [theme, { verdict, hash }] of Object.entries(judgements[key] ?? {})) {
             // In the theme on screen a verdict counts only while the block still
-            // looks the way it did when it was judged; review.js marks that.
+            // looks the way it did when it was judged.
             if (theme === currentTheme() && section.dataset.catState === 'changed') continue;
-            add(verdict === 'rejected' ? rejected : approved, theme, blockTitle(section));
+            items.push({
+                kind: verdict === 'rejected' ? 'rejected' : 'approved',
+                theme,
+                text: blockTitle(section),
+                signature: `verdict|${key}|${theme}|${verdict}|${hash}`,
+            });
         }
     }
-    if (!notes.size && !approved.size && !rejected.size) return '';
+    return items;
+}
+
+/** The prompt a reviewer pastes into the conversation: verdicts and notes. */
+function promptText({ includeCopied = false } = {}) {
+    const copied = copiedSignatures();
+    const items = promptItems().filter((item) => includeCopied || !copied.has(item.signature));
+    if (!items.length) return '';
     const order = THEMES.map((t) => t.name);
-    const themes = [...new Set([...notes.keys(), ...approved.keys(), ...rejected.keys()])].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const themes = [...new Set(items.map((i) => i.theme))].sort((a, b) => order.indexOf(a) - order.indexOf(b));
     const lines = [`Catalogue feedback on ${pagePath()}`];
     for (const theme of themes) {
+        const of = (kind) => items.filter((i) => i.theme === theme && i.kind === kind).map((i) => i.text);
+        const [approved, rejected, notes] = [of('approved'), of('rejected'), of('note')];
         lines.push('', `Theme ${themeLabel(theme)}:`);
-        if (approved.has(theme)) lines.push(`Approved (${approved.get(theme).length}): ${approved.get(theme).join('; ')}`);
-        if (rejected.has(theme)) lines.push(`Not approved (${rejected.get(theme).length}): ${rejected.get(theme).join('; ')}`);
-        if (notes.has(theme)) lines.push('Notes:', ...notes.get(theme));
+        if (approved.length) lines.push(`Approved (${approved.length}): ${approved.join('; ')}`);
+        if (rejected.length) lines.push(`Not approved (${rejected.length}): ${rejected.join('; ')}`);
+        if (notes.length) lines.push('Notes:', ...notes);
     }
     return lines.join('\n');
+}
+
+/* ------------------------------------------------------------ verdicts */
+
+// A research demo carries the same Approve / Not approved as the review page
+// (Kenny, 2026-09-13: "die moeten er altijd staan en functioneel zijn"). The
+// component pages do not: their blocks are judged on the review page, where
+// the heading sits a level lower and the hash would never match.
+async function mountVerdicts(sections) {
+    let raw = null;
+    try {
+        const response = await fetch(location.href);
+        if (response.ok) raw = new DOMParser().parseFromString(await response.text(), 'text/html');
+    } catch {
+        /* the markup as it stands now is the fallback */
+    }
+    const entries = sections.map((section) => {
+        const row = document.createElement('div');
+        row.className = 'cat-approval';
+        row.innerHTML = `
+            <span class="kp-badge" data-cat-approval-state>Checking…</span>
+            <button type="button" class="kp-button kp-button--primary kp-button--sm" data-cat-verdict="approved">Approve</button>
+            <button type="button" class="kp-button kp-button--sm" data-cat-verdict="rejected">Not approved</button>`;
+        const field = section.querySelector(':scope > .cat-feedback-field');
+        if (field) field.before(row);
+        else section.append(row);
+        return {
+            section,
+            key: judgementKey(section),
+            source: raw?.getElementById(section.id)?.outerHTML ?? section.outerHTML,
+            badge: row.querySelector('[data-cat-approval-state]'),
+            approve: row.querySelector('[data-cat-verdict="approved"]'),
+            reject: row.querySelector('[data-cat-verdict="rejected"]'),
+        };
+    });
+    let current = new Map();
+    const WORDS = {
+        new: (t) => `Not yet judged in ${t}`,
+        approved: (t) => `Approved in ${t}`,
+        rejected: (t) => `Not approved in ${t}`,
+        changed: (t) => `Changed since it was judged in ${t}`,
+    };
+    const TONE = { approved: ' kp-badge--success', rejected: ' kp-badge--destructive', changed: ' kp-badge--warning', new: '' };
+
+    function render() {
+        const theme = currentTheme();
+        const label = themeLabel(theme);
+        const all = loadJudgements();
+        for (const entry of entries) {
+            const hash = current.get(entry.key);
+            const state = stateOf(all, entry.key, theme, hash);
+            entry.badge.textContent = hash ? WORDS[state](label) : 'Checking…';
+            entry.badge.className = `kp-badge${TONE[state]}`;
+            entry.approve.textContent = `Approve in ${label}`;
+            entry.reject.textContent = `Not approved in ${label}`;
+            entry.approve.disabled = state === 'approved' || !hash;
+            entry.reject.disabled = state === 'rejected' || !hash;
+            entry.section.dataset.catState = state;
+        }
+        document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
+    }
+
+    async function measure() {
+        const theme = currentTheme();
+        const release = stillAnimations();
+        const next = new Map();
+        for (const entry of entries) next.set(entry.key, await fingerprint(entry.section, entry.source));
+        release();
+        if (theme !== currentTheme()) return;
+        current = next;
+        render();
+    }
+
+    document.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-cat-verdict]') : null;
+        const entry = button && entries.find((e) => e.approve === button || e.reject === button);
+        const hash = entry && current.get(entry.key);
+        if (!hash) return;
+        const all = loadJudgements();
+        (all[entry.key] ??= {})[currentTheme()] = { verdict: button.getAttribute('data-cat-verdict'), hash };
+        saveJudgements(all);
+        render();
+    });
+    document.documentElement.addEventListener(THEME_EVENT, () => {
+        current = new Map();
+        render();
+        // A timer, not a frame: a background tab runs none (see review.js).
+        setTimeout(measure, 400);
+    });
+    await document.fonts?.ready;
+    setTimeout(measure, 300);
 }
 
 function mountFeedback() {
@@ -307,9 +439,13 @@ function mountFeedback() {
     summary.setAttribute('aria-labelledby', 'cat-feedback-title');
     summary.innerHTML = `
         <h2 id="cat-feedback-title">Feedback on this page</h2>
-        <p class="cat-note">Every note and every approval on this page, from every theme, as one prompt to paste into the conversation. Both are kept in this browser only.</p>
+        <p class="cat-note">The notes and verdicts on this page that were not in a prompt copied before, from every theme, as one prompt to paste into the conversation. Both are kept in this browser only.</p>
         <pre class="cat-feedback-prompt" data-cat-prompt></pre>
         <div class="cat-feedback-actions">
+            <div class="kp-field kp-field--check">
+                <input class="kp-field__check" type="checkbox" id="cat-include-copied" data-cat-include-copied />
+                <label class="kp-field__label" for="cat-include-copied">Include what was already copied</label>
+            </div>
             <button type="button" class="kp-button" data-cat-copy>Copy prompt</button>
             <button type="button" class="kp-button kp-button--ghost" data-cat-clear>Clear this page's notes</button>
             <span class="cat-note" role="status" aria-live="polite" data-cat-copy-status></span>
@@ -320,13 +456,20 @@ function mountFeedback() {
     const status = summary.querySelector('[data-cat-copy-status]');
     const copy = summary.querySelector('[data-cat-copy]');
     const clear = summary.querySelector('[data-cat-clear]');
+    const includeCopied = summary.querySelector('[data-cat-include-copied]');
 
     function renderSummary() {
-        const text = promptText();
-        prompt.textContent = text || 'No notes or approvals yet. Write under any block above; a note belongs to the theme on screen.';
+        const text = promptText({ includeCopied: includeCopied.checked });
+        const anything = promptItems().length > 0;
+        prompt.textContent =
+            text ||
+            (anything
+                ? 'Nothing new since the last copied prompt. Tick "Include what was already copied" to see all of it again.'
+                : 'No notes or approvals yet. Write under any block above; a note belongs to the theme on screen.');
         copy.disabled = !text;
-        clear.disabled = !text;
+        clear.disabled = !Object.keys(allFeedback()[pagePath()] ?? {}).length;
     }
+    includeCopied.addEventListener('change', renderSummary);
 
     function renderFields() {
         const theme = currentTheme();
@@ -337,10 +480,18 @@ function mountFeedback() {
     }
 
     copy.addEventListener('click', async () => {
-        const text = promptText();
+        const text = promptText({ includeCopied: includeCopied.checked });
+        // Everything on the page now counts as passed on; the next prompt starts
+        // from what changes after this.
+        const copiedAll = load(COPIED_KEY, {});
+        copiedAll[pagePath()] = promptItems().map((item) => item.signature);
+        save(COPIED_KEY, copiedAll);
         try {
             await navigator.clipboard.writeText(text);
             status.textContent = 'Copied. Paste it into the conversation.';
+            // Only once it is on the clipboard: when the text is selected for a
+            // manual Ctrl+C instead, it must stay on screen.
+            setTimeout(renderSummary, 1500);
         } catch {
             // Without clipboard permission the text is selected instead, so
             // one Ctrl+C still does it.
@@ -370,6 +521,7 @@ function mountFeedback() {
     document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(renderSummary, 400));
     renderFields();
     renderSummary();
+    if (isResearch()) mountVerdicts(sections);
 }
 
 /* ------------------------------------------------------------ devtools */
