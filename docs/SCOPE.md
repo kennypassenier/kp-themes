@@ -1313,3 +1313,17 @@ als het over approvals gaat". Every block of a research demo carries them, with
 the same hash-kept verdicts as the review page; and a copied prompt is not
 repeated in the next one.
 
+**scope-66 · All seven data table features, now.** Kenny, 2026-09-13, form item
+datatable-build: "Alle zeven, nu". Multi-sort, column choice, row expansion, a
+fixed first column, server rows, inline editing and arrow-key cell navigation
+enter `.kp-datatable` in both channels. The last two reverse the "left out"
+of the data table form earlier that day. The filter design (panel or
+"+ Add filter") is not part of this; it waits for his look at the demo.
+
+**scope-67 · The review site is published under /review/.** Kenny, 2026-09-13,
+form item pages-review: "Publiceren onder /review/". The Pages workflow
+assembles the documentation from main and the catalogue with the research
+demos from round-six; Claude pushes round-six whenever it asks Kenny to look.
+Kenny's own answer on grotesk's pressed button waits until he has seen it
+there ("eerst zien op github pages").
+
