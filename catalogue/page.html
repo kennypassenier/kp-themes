@@ -75,16 +75,15 @@
                 <div class="cat-look">
                     <b>Look at:</b> the side note is the smallest, most muted text the package draws — a file code or a caption at the edge of a
                     section, hidden from screen readers because it repeats nothing they need. It must still be legible: check its contrast with the
-                    Devtools colour tool in the palest and the darkest theme. A register may turn it into a stamp or a vertical label; the long note
-                    in the narrow pane must then still wrap or stay inside the pane, never overlap the heading beside it.
+                    Devtools colour tool in the palest and the darkest theme. A register may turn it into a stamp or a vertical label in the margin of
+                    its container; it must stay inside that container, never overlap the heading beside it or anything outside the block.
                 </div>
-                <div class="cat-stage cat-stage--block">
+                <!-- Positioned, so a register that sets the note in the margin sets it in
+                     this stage's margin rather than over the review navigation (Kenny,
+                     2026-09-13, forest). -->
+                <div class="cat-stage cat-stage--block" style="position: relative; min-block-size: 20rem; padding-inline-start: 2.5rem">
                     <p class="kp-side-note" aria-hidden="true">PH4 · LINE 02 · SHEET 3 OF 7</p>
                     <h3 style="margin-block: 0.25rem 0">Handover, night to day</h3>
-                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 14rem">
-                        <p class="kp-side-note" aria-hidden="true">PH4 · LINE 02 · MANIFOLD · INCIDENT 4471 · REV C · CHECKED AGAINST GAUGE</p>
-                        <h3 style="margin-block: 0.25rem 0">Lock-out record</h3>
-                    </div>
                 </div>
             </section>
 
