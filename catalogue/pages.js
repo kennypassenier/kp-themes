@@ -26,6 +26,11 @@ export const PAGES = [
             { href: 'catalogue/colorpicker.html', label: 'Colour picker', component: true },
             { href: 'catalogue/feedback.html', label: 'Alerts, toasts, badges, progress', component: true },
             { href: 'catalogue/overlays.html', label: 'Dialogs, popovers, menus, tooltips', component: true },
+            { href: 'catalogue/navigation.html', label: 'Navigation', component: true },
+            { href: 'catalogue/structure.html', label: 'Accordion, tree, timeline, split, reorder, wizard', component: true },
+            { href: 'catalogue/data.html', label: 'Showing data', component: true },
+            { href: 'catalogue/media.html', label: 'Media, grid, marquee', component: true },
+            { href: 'catalogue/page.html', label: 'Footer, palette, theme menu', component: true },
         ],
     },
     {

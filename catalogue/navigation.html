@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Navigation · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Navigation</h1>
+            <p class="cat-intro">
+                Every way the package takes a reader somewhere else: the bar <code>.kp-nav</code> in its <code>.kp-nav-wrap</code> with a dropdown
+                <code>.kp-nav__menu</code>, <code>.kp-breadcrumb</code>, <code>.kp-pagination</code>, <code>.kp-tabs</code>, the side navigation
+                <code>.kp-sidenav</code> in its three shapes, and the back-to-top control <code>.kp-to-top</code>. Whatever opens is shown open, and
+                the two extremes a bar meets in real life are here too: fourteen items, and one label sixty characters long.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#bar">Bar</a></li>
+                <li><a href="#dropdown">Dropdown</a></li>
+                <li><a href="#bar-collapsed">Collapsed bar</a></li>
+                <li><a href="#bar-long">Fourteen items</a></li>
+                <li><a href="#breadcrumb">Breadcrumb</a></li>
+                <li><a href="#pagination">Pagination</a></li>
+                <li><a href="#tabs">Tabs</a></li>
+                <li><a href="#tabs-many">Many tabs</a></li>
+                <li><a href="#sidenav-side">Side navigation</a></li>
+                <li><a href="#sidenav-slim">Slim rail</a></li>
+                <li><a href="#sidenav-over">Over the page</a></li>
+                <li><a href="#to-top">Back to top</a></li>
+            </ul>
+
+            <section class="cat-block" id="bar">
+                <h2>Bar</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the bar is on the card surface with a strong rule under it, and must read as the top of a page rather than as a
+                    card lying on one. The brand leads; the file code beside it (<code>.kp-nav__brand-tag</code>) is quieter than the brand, not a
+                    second brand. <b>Incidents</b> is the current page: it must be marked by more than colour — weight and an underline — and a screen
+                    reader hears <code>aria-current</code>. Tab through the links: the focus ring must stay visible on the bar's own ground, and no
+                    link may shift its neighbours when it takes focus or hover.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Site operations">
+                            <a class="kp-nav__brand" href="#bar">Pump house 4 <span class="kp-nav__brand-tag">PH//04</span></a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#bar">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#bar" aria-current="page">Incidents</a></li>
+                                <li><a class="kp-nav__link" href="#bar">Readings</a></li>
+                                <li><a class="kp-nav__link" href="#bar">Rota</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="dropdown">
+                <h2>Dropdown</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> hover <b>Readings</b>, or Tab onto it: the dropdown opens under the link on the popover surface with a strong
+                    boundary, its caption ("Readings · line 2") above a hairline in small capitals, and its links each on a full-width row. It must
+                    sit <i>over</i> the stage, not push it down, and must not be cut by the bar's edge. Tab on: the next stop is the first link inside
+                    the dropdown, and the dropdown stays open while focus is in it. Every register styles this panel, so switch themes with it open —
+                    hover keeps it open while you use the theme menu with the keyboard. There is no copy frozen open in the wide bar: the package
+                    opens this panel only on <code>:hover</code> and <code>:focus-within</code>, and has no attribute or class a page could set to
+                    show it open without page CSS. The collapsed bar in the next block is the only place the package itself shows it open.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 16rem">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Site operations, with a dropdown">
+                            <a class="kp-nav__brand" href="#dropdown">Pump house 4</a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#dropdown">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#dropdown">Incidents</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#dropdown" aria-haspopup="true" aria-current="page">Readings</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                        <li><a href="#dropdown">Pressure</a></li>
+                                        <li><a href="#dropdown">Flow rate</a></li>
+                                        <li><a href="#dropdown">Pump cycles</a></li>
+                                        <li><a href="#dropdown">Valve positions</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="bar-collapsed">
+                <h2>Collapsed bar</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> both bars sit in a box narrower than 40rem, so they collapse behind their three-bar toggle. The first is frozen
+                    open: the toggle wears the theme's accent as a plate (open is a state, and a state is visible), the links stack in a column under
+                    the brand, and the dropdown under <b>Readings</b> is no longer a floating panel but an indented list in the flow — no frame, no
+                    ground. Judge whether a register that dresses the floating panel still leaves this indented list readable. The second bar is live:
+                    press its toggle, press Escape with focus inside, or click anywhere outside it — each must close it, and the toggle's accessible
+                    name must change between "Open the navigation" and "Close the navigation". Drag the panes' edges wider than 40rem and both must
+                    turn back into a plain bar.
+                </div>
+                <div class="cat-stage">
+                    <div class="cat-resize" style="inline-size: 22rem">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Site operations, collapsed and frozen open" data-kp-nav-open>
+                                <a class="kp-nav__brand" href="#bar-collapsed">Pump house 4</a>
+                                <button type="button" class="kp-nav__toggle" aria-expanded="true" aria-label="Close the navigation"></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Incidents</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#bar-collapsed" aria-haspopup="true" aria-current="page">Readings</a>
+                                        <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                            <li><a href="#bar-collapsed">Pressure</a></li>
+                                            <li><a href="#bar-collapsed">Flow rate</a></li>
+                                            <li><a href="#bar-collapsed">Pump cycles</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Rota</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="cat-resize" style="inline-size: 22rem">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Site operations, collapsed and live">
+                                <a class="kp-nav__brand" href="#bar-collapsed">Pump house 4</a>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar-collapsed" aria-current="page">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Incidents</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Readings</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-collapsed">Rota</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="bar-long">
+                <h2>Fourteen items, one label sixty characters long</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the wide bar must wrap its fourteen links onto more rows with an even gap between rows and columns — never scroll
+                    sideways, never push the page wider. The tenth link is sixty characters: it must wrap inside itself or take a row of its own, and
+                    its current-page underline must follow the text onto its second line rather than draw under one line only. The bar in the narrow
+                    pane collapses; open it with its toggle and check that the long label wraps in the column instead of running out of the pane.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Every section of the north site">
+                            <a class="kp-nav__brand" href="#bar-long">North site</a>
+                            <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#bar-long">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Incidents</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Readings</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Alarms</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Rota</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Handovers</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Vendors</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Spare parts</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Lock-outs</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#bar-long" aria-current="page"
+                                        >Pressure trends for all lines on the north site, last 24 hrs</a
+                                    >
+                                </li>
+                                <li><a class="kp-nav__link" href="#bar-long">Maintenance</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Reports</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Audit log</a></li>
+                                <li><a class="kp-nav__link" href="#bar-long">Settings</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Every section of the north site, narrow">
+                                <a class="kp-nav__brand" href="#bar-long">North site</a>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar-long">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Incidents</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Readings</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Alarms</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Rota</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Handovers</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Vendors</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Spare parts</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Lock-outs</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#bar-long" aria-current="page"
+                                            >Pressure trends for all lines on the north site, last 24 hrs</a
+                                        >
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Maintenance</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Reports</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Audit log</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-long">Settings</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="breadcrumb">
+                <h2>Breadcrumb</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the separator between crumbs is the theme's glyph in the muted ink, and it belongs to the crumb after it — it must
+                    never be the last thing on a line with its crumb on the next. The last crumb is the page you are on: it is not a link, and it must
+                    look like plain text beside the links rather than like a link that forgot its underline. The second trail has seven levels and a
+                    long last crumb; in the narrow pane it must wrap onto more lines with the separators still between the words, never scroll
+                    sideways.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="#breadcrumb">Sites</a></li>
+                            <li><a href="#breadcrumb">Pump house 4</a></li>
+                            <li><span aria-current="page">Incident INC-4471</span></li>
+                        </ol>
+                    </nav>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 18rem">
+                        <nav class="kp-breadcrumb" aria-label="Breadcrumb, deep">
+                            <ol>
+                                <li><a href="#breadcrumb">Sites</a></li>
+                                <li><a href="#breadcrumb">North</a></li>
+                                <li><a href="#breadcrumb">Pump house 4</a></li>
+                                <li><a href="#breadcrumb">Line 2</a></li>
+                                <li><a href="#breadcrumb">Manifold</a></li>
+                                <li><a href="#breadcrumb">Incidents</a></li>
+                                <li>
+                                    <span aria-current="page">INC-4471: pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40</span>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="pagination">
+                <h2>Pagination</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the current page carries <code>aria-current</code> and must be marked by weight and a thicker underline, not by
+                    colour alone. The gap (<code>.kp-pagination__gap</code>) is an ellipsis in the muted ink that nobody can click, and it must not
+                    look like a link. On the first row there is no page before page 1, so <b>Previous</b> is plain text: the package has no disabled
+                    style for it, so judge whether it reads as unavailable. The third row has twelve numbered pages in a narrow pane; it must wrap,
+                    and every number must stay a target large enough to hit.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <nav class="kp-pagination" aria-label="Incidents, first page">
+                        <ul>
+                            <li><span>Previous</span></li>
+                            <li><a href="#pagination" aria-current="page">1</a></li>
+                            <li><a href="#pagination">2</a></li>
+                            <li><a href="#pagination">3</a></li>
+                            <li><a href="#pagination">Next</a></li>
+                        </ul>
+                    </nav>
+                    <div style="margin-block-start: 1rem">
+                        <nav class="kp-pagination" aria-label="Readings, page 14 of 60">
+                            <ul>
+                                <li><a href="#pagination">Previous</a></li>
+                                <li><a href="#pagination">1</a></li>
+                                <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                                <li><a href="#pagination">13</a></li>
+                                <li><a href="#pagination" aria-current="page">14</a></li>
+                                <li><a href="#pagination">15</a></li>
+                                <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                                <li><a href="#pagination">60</a></li>
+                                <li><a href="#pagination">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 14rem">
+                        <nav class="kp-pagination" aria-label="Audit log, twelve pages">
+                            <ul>
+                                <li><a href="#pagination">Previous</a></li>
+                                <li><a href="#pagination">1</a></li>
+                                <li><a href="#pagination">2</a></li>
+                                <li><a href="#pagination">3</a></li>
+                                <li><a href="#pagination">4</a></li>
+                                <li><a href="#pagination">5</a></li>
+                                <li><a href="#pagination">6</a></li>
+                                <li><a href="#pagination" aria-current="page">7</a></li>
+                                <li><a href="#pagination">8</a></li>
+                                <li><a href="#pagination">9</a></li>
+                                <li><a href="#pagination">10</a></li>
+                                <li><a href="#pagination">11</a></li>
+                                <li><a href="#pagination">12</a></li>
+                                <li><a href="#pagination">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tabs">
+                <h2>Tabs</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the selected tab is marked three ways — the ink, the weight, and a rule in the primary colour on the list's bottom
+                    edge — and the unselected tabs must still pass contrast in their muted ink. Click into the first list and use the arrow keys:
+                    selection follows focus, Home and End jump, and the panel under it changes with no jump in height you did not cause. The second
+                    list is <code>data-kp-activation="manual"</code> and does not loop: the arrows only move focus, and Enter or Space selects, so for
+                    a moment the focused tab and the selected tab are different tabs — both must be visible at once.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-tabs">
+                        <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471">
+                            <button type="button" class="kp-tab" role="tab" id="nv-tab-a1" aria-controls="nv-panel-a1" aria-selected="true">
+                                Summary
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="nv-tab-a2" aria-controls="nv-panel-a2" aria-selected="false">
+                                Readings
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="nv-tab-a3" aria-controls="nv-panel-a3" aria-selected="false">
+                                Handover
+                            </button>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a1" aria-labelledby="nv-tab-a1">
+                            Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a2" aria-labelledby="nv-tab-a2" hidden>
+                            Sixty readings from the last hour; the gauge and the sensor agree within 0.05 bar.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a3" aria-labelledby="nv-tab-a3" hidden>
+                            Day shift checks the gauge against the sensor before reopening the line.
+                        </div>
+                    </div>
+                    <div style="margin-block-start: 1.5rem">
+                        <div class="kp-tabs">
+                            <div class="kp-tabs__list" role="tablist" aria-label="Export" data-kp-activation="manual" data-kp-loop="false">
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-b1" aria-controls="nv-panel-b1" aria-selected="true">
+                                    Last hour
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-b2" aria-controls="nv-panel-b2" aria-selected="false">
+                                    Whole incident
+                                </button>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-b1" aria-labelledby="nv-tab-b1">60 rows, as CSV.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-b2" aria-labelledby="nv-tab-b2" hidden>
+                                2,114 rows, as CSV, with the alarm log attached.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tabs-many">
+                <h2>Many tabs in a narrow pane</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> nine tabs, one with a long label, in a pane narrower than their row. <code>.kp-tabs__list</code> does not wrap, so
+                    the tabs must either shrink and break their labels onto two lines or run past the pane's dashed edge — see which one this theme
+                    does, and whether the selected tab's rule still sits on the list's bottom edge when the labels break. Drag the pane wider until
+                    they fit on one line. A row of tabs that pushes the page sideways is the fault to report.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 24rem">
+                        <div class="kp-tabs">
+                            <div class="kp-tabs__list" role="tablist" aria-label="Line 2">
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c1" aria-controls="nv-panel-c1" aria-selected="false">
+                                    Pressure
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c2" aria-controls="nv-panel-c2" aria-selected="false">
+                                    Flow
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c3" aria-controls="nv-panel-c3" aria-selected="true">
+                                    Pump cycles
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c4" aria-controls="nv-panel-c4" aria-selected="false">
+                                    Valves
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c5" aria-controls="nv-panel-c5" aria-selected="false">
+                                    Alarms
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c6" aria-controls="nv-panel-c6" aria-selected="false">
+                                    Temperature at the manifold inlet
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c7" aria-controls="nv-panel-c7" aria-selected="false">
+                                    Vendor
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c8" aria-controls="nv-panel-c8" aria-selected="false">
+                                    Notes
+                                </button>
+                                <button type="button" class="kp-tab" role="tab" id="nv-tab-c9" aria-controls="nv-panel-c9" aria-selected="false">
+                                    Audit
+                                </button>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c1" aria-labelledby="nv-tab-c1" hidden>3.2 bar at rest.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c2" aria-labelledby="nv-tab-c2" hidden>41 litres a minute.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c3" aria-labelledby="nv-tab-c3">
+                                The pump started every four minutes between 02:10 and 03:15.
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c4" aria-labelledby="nv-tab-c4" hidden>
+                                Manifold valve closed.
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c5" aria-labelledby="nv-tab-c5" hidden>
+                                Two low-pressure alarms.
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c6" aria-labelledby="nv-tab-c6" hidden>14 °C, steady.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c7" aria-labelledby="nv-tab-c7" hidden>Contract HF-2201.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c8" aria-labelledby="nv-tab-c8" hidden>No notes yet.</div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c9" aria-labelledby="nv-tab-c9" hidden>
+                                Opened by the night shift.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="sidenav-side">
+                <h2>Side navigation</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-sidenav</code> in its default <code>side</code> mode stands beside the content on the card surface with
+                    a rule on its inner edge. The header and the footer stay put while the list scrolls — scroll inside the panel to check. The
+                    current page (<b>Line 2</b>) is marked by a ground and weight, not colour alone; hover any row and the hover must be different
+                    from the current mark. <b>Readings</b> is an open category: its chevron points down and its links are indented;
+                    <b>Maintenance</b> is closed — press it and it must open smoothly, not jump. The fourth link's label is sixty characters: it must
+                    end in an ellipsis inside the panel with its count (<code>.kp-sidenav__badge</code>) still whole at the end of the row; the panel
+                    must never scroll sideways.
+                </div>
+                <div class="cat-stage" style="padding: 0; flex-wrap: nowrap; align-items: stretch; block-size: 24rem">
+                    <nav class="kp-sidenav" id="nv-side" aria-label="North site sections">
+                        <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side" aria-current="page"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                                        ><span class="kp-sidenav__badge">2</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                        ><span class="kp-sidenav__badge">14</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">↗</span
+                                        ><span class="kp-sidenav__label">Pressure trends for all lines on the north site, last 24 hrs</span
+                                        ><span class="kp-sidenav__badge">128</span></a
+                                    >
+                                </li>
+                                <li><hr class="kp-sidenav__divider" /></li>
+                                <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                    <button type="button" class="kp-sidenav__category-toggle">
+                                        <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                                    </button>
+                                    <div class="kp-sidenav__submenu">
+                                        <ul class="kp-sidenav__list">
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Pressure</span></a>
+                                            </li>
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Flow rate</span></a>
+                                            </li>
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-side"
+                                                    ><span class="kp-sidenav__label">Pump cycles</span></a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="kp-sidenav__category">
+                                    <button type="button" class="kp-sidenav__category-toggle">
+                                        <span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span>
+                                    </button>
+                                    <div class="kp-sidenav__submenu">
+                                        <ul class="kp-sidenav__list">
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Lock-outs</span></a>
+                                            </li>
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-side"
+                                                    ><span class="kp-sidenav__label">Spare parts</span></a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Vendors</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Rota</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Audit log</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+                    </nav>
+                    <div style="padding: 1rem; min-inline-size: 0">
+                        <p style="margin-block-start: 0">
+                            Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without
+                            anyone touching the valve.
+                        </p>
+                        <p>The content beside the panel starts at the panel's edge and is not covered by it.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="sidenav-slim">
+                <h2>Slim rail</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the left panel is a collapsed rail (<code>data-kp-sidenav-slim-collapsed</code>): icons only, each still with an
+                    accessible name, the wordmark swapped for the monogram "N". Hover it — it must <i>not</i> widen, because it was not asked to. The
+                    middle rail has <code>data-kp-sidenav-expand-on-hover</code>: hover it and the labels must come back without the rail pushing the
+                    content beside it. The right panel is the same rail expanded. Press <b>Collapse or expand the right rail</b>: the width must
+                    change with the theme's own timing, and the labels must not overflow while it narrows. The package has no attribute for this
+                    button; the catalogue calls the rail's handle.
+                </div>
+                <div class="cat-stage" style="padding: 0; align-items: stretch">
+                    <nav class="kp-sidenav" id="nv-slim-a" aria-label="Rail, collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
+                        <div class="kp-sidenav__header">
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+                        </div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                        ><span class="kp-sidenav__badge">14</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <nav
+                        class="kp-sidenav"
+                        id="nv-slim-b"
+                        aria-label="Rail, expands on hover"
+                        data-kp-sidenav-slim
+                        data-kp-sidenav-slim-collapsed
+                        data-kp-sidenav-expand-on-hover
+                    >
+                        <div class="kp-sidenav__header">
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+                        </div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                        ><span class="kp-sidenav__badge">14</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <nav class="kp-sidenav" id="nv-slim-c" aria-label="Rail, expanded" data-kp-sidenav-slim>
+                        <div class="kp-sidenav__header">
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+                            <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+                        </div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                                    >
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                                        ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                        ><span class="kp-sidenav__badge">14</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+                <div class="cat-stage" style="margin-block-start: 1rem">
+                    <button type="button" class="kp-button kp-button--secondary" data-cat-slim="nv-slim-c">Collapse or expand the right rail</button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="sidenav-over">
+                <h2>Over the page</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the left box is an <code>over</code> panel frozen open inside its box
+                    (<code>data-kp-sidenav-position="absolute"</code>): it covers the content, and the backdrop behind it <i>dims</i> the box — by
+                    darkening, never by tinting it with the theme's colour. The panel must have an edge against the dimmed content in every theme.
+                    Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press
+                    <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its
+                    first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is
+                    open.
+                </div>
+                <div class="cat-stage" style="align-items: stretch">
+                    <div style="position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden">
+                        <p style="margin: 1rem">
+                            Incident INC-4471 is open on line 2. The day shift checks the gauge against the sensor before reopening the line.
+                        </p>
+                        <nav
+                            class="kp-sidenav"
+                            id="nv-over-frozen"
+                            aria-label="Incident sections, frozen open"
+                            data-kp-sidenav-mode="over"
+                            data-kp-sidenav-position="absolute"
+                            data-kp-sidenav-open="true"
+                            style="--kp-sidenav-width: 13rem"
+                        >
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+                                            ><span class="kp-sidenav__label">Summary</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Handover</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div>
+                        <button
+                            type="button"
+                            class="kp-sidenav__toggle kp-button kp-button--secondary"
+                            data-kp-sidenav-toggle
+                            aria-controls="nv-over-live"
+                        >
+                            Open the panel
+                        </button>
+                        <nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over">
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+                                            ><span class="kp-sidenav__label">Summary</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Handover</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-sidenav__footer">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="nv-over-live">
+                                    Close
+                                </button>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="to-top">
+                <h2>Back to top</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-to-top</code> is fixed to the corner of the window and invisible until the reader has scrolled; the two
+                    in the box are frozen in their shown state (<code>data-kp-to-top-shown</code>) and pinned to the box's corner instead. The left
+                    one is written the way the package documents it — an empty button with only an accessible name — and the package draws no glyph
+                    for it: judge whether an empty box in the corner tells anyone what it does. The right one carries its own words. The live control
+                    is in the real corner of the window: it must fade in once you are 600 px down, sit above the page without covering the feedback
+                    field you are typing in, and on press scroll to the top <i>and</i> move focus there.
+                </div>
+                <div class="cat-stage">
+                    <div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
+                        <button type="button" class="kp-button kp-to-top" aria-label="Back to top" data-kp-to-top-shown></button>
+                    </div>
+                    <div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
+                        <button type="button" class="kp-button kp-to-top" data-kp-to-top-shown>↑ Back to top</button>
+                    </div>
+                </div>
+                <button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="600">↑ Back to top</button>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

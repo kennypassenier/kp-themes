@@ -52,7 +52,19 @@ export function suffixIds(root, suffix, prefix = '') {
         el.id = next;
     }
     if (!ids.size) return;
-    const refAttrs = ['for', 'aria-controls', 'aria-labelledby', 'aria-describedby', 'popovertarget', 'list', 'form'];
+    // The package's own id references too: a gathered "Open the dialog" or
+    // "Copy" whose target kept its old id opened and copied nothing.
+    const refAttrs = [
+        'for',
+        'aria-controls',
+        'aria-labelledby',
+        'aria-describedby',
+        'popovertarget',
+        'list',
+        'form',
+        'data-kp-dialog',
+        'data-kp-copy',
+    ];
     for (const el of root.querySelectorAll('*')) {
         for (const attr of refAttrs) {
             const value = el.getAttribute(attr);
@@ -162,6 +174,15 @@ function stillAnimations() {
 async function fingerprint(block, source) {
     const lines = [source];
     const elements = [block, ...block.querySelectorAll('*')].filter((el) => !el.closest('.cat-feedback-field, .cat-approval')).slice(0, MAX_ELEMENTS);
+    // A control whose look follows the scroll position rather than the theme
+    // (back-to-top shows itself past a threshold) would mark its block changed
+    // whenever the page was scrolled differently. Its state attribute is
+    // lifted while reading, so the block is compared at rest.
+    const volatile = [...block.querySelectorAll('[data-kp-to-top-shown]')];
+    for (const el of volatile) el.removeAttribute('data-kp-to-top-shown');
+    // Lifting the attribute starts the control's own fade; a reading taken now
+    // would catch the first frame of it, so the fade is run to its end first.
+    for (const el of volatile) for (const animation of el.getAnimations({ subtree: true })) animation.finish();
     for (const el of elements) {
         for (const pseudo of [null, '::before', '::after']) {
             const cs = getComputedStyle(el, pseudo);
@@ -169,6 +190,7 @@ async function fingerprint(block, source) {
             lines.push(PROPS.map((prop) => cs.getPropertyValue(prop)).join('|'));
         }
     }
+    for (const el of volatile) el.setAttribute('data-kp-to-top-shown', '');
     return sha256(lines.join('\n'));
 }
 

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Showing data · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Showing data</h1>
+            <p class="cat-intro">
+                The small patterns every data-heavy page rewrites badly: a status (<code>.kp-health</code>), a spec sheet (<code>.kp-spec</code>), a
+                diff (<code>.kp-diff</code>), a value with a copy button (<code>.kp-copyable</code>), identifiers and addresses (<code>.kp-id</code>,
+                <code>.kp-url</code>), masked values, timestamps and truncation, the keyboard shortcut sheet (<code>.kp-shortcuts</code>), and the
+                table column that gives way first (<code>.kp-col-low</code>). The extremes are the ones that push pages sideways: a 90-character URL,
+                a 70-character id, and a diff of forty lines.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#health">Health</a></li>
+                <li><a href="#spec">Spec sheet</a></li>
+                <li><a href="#diff">Diff</a></li>
+                <li><a href="#copyable">Copyable value</a></li>
+                <li><a href="#ids">Ids and URLs</a></li>
+                <li><a href="#values">Masked, timestamp, truncated</a></li>
+                <li><a href="#shortcuts">Shortcut sheet</a></li>
+                <li><a href="#col-low">Low-priority column</a></li>
+            </ul>
+
+            <section class="cat-block" id="health">
+                <h2>Health</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> every status is a word <i>and</i> a dot, and the word is what carries it — cover the dots with a finger and the
+                    row must still read. The dot takes the success, warning and alarm colours and has a boundary, so a yellow dot on a pale card is
+                    still a dot. The fourth has no <code>data-state</code> at all: its dot must look neutral, not like a fourth colour. In the narrow
+                    pane the long status must wrap beside its dot, with the dot staying on the first line.
+                </div>
+                <div class="cat-stage">
+                    <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Healthy</span>
+                    <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Degraded</span>
+                    <span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Unreachable</span>
+                    <span class="kp-health"><span class="kp-health__dot" aria-hidden="true"></span> Not checked yet</span>
+                    <div class="cat-resize" style="inline-size: 16rem">
+                        <span class="kp-health" data-state="warn"
+                            ><span class="kp-health__dot" aria-hidden="true"></span> Degraded: sensor PT-204 reads 1.1 bar, the gauge 1.0 bar, for 43
+                            minutes</span
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="spec">
+                <h2>Spec sheet</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a card with two columns: the terms in the muted ink, the values in the card's ink. Each colour row starts with a
+                    small square in that token's colour with a strong boundary — the <b>card</b> swatch sits on the card and must still be visible as
+                    a square. The three type rows are set in the theme's display, body and mono faces. The last value is a sentence with no natural
+                    break at the end; it must wrap inside the value column and never under the terms.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div style="max-inline-size: 30rem">
+                        <aside class="kp-spec" aria-label="Palette and type of the theme on screen">
+                            <dl>
+                                <dt>ground</dt>
+                                <dd><i class="kp-spec__swatch" data-token="background"></i>--background</dd>
+                                <dt>card</dt>
+                                <dd><i class="kp-spec__swatch" data-token="card"></i>--card</dd>
+                                <dt>primary</dt>
+                                <dd><i class="kp-spec__swatch" data-token="primary"></i>--primary</dd>
+                                <dt>alarm</dt>
+                                <dd><i class="kp-spec__swatch" data-token="destructive"></i>--destructive</dd>
+                                <dt>ok</dt>
+                                <dd><i class="kp-spec__swatch" data-token="success"></i>--success</dd>
+                                <dt>boundary</dt>
+                                <dd><i class="kp-spec__swatch" data-token="border-strong"></i>--border-strong</dd>
+                                <dt>display</dt>
+                                <dd><span class="kp-spec__font" data-font="display">Pump house 4</span></dd>
+                                <dt>body</dt>
+                                <dd><span class="kp-spec__font" data-font="body">Line closed at the manifold.</span></dd>
+                                <dt>mono</dt>
+                                <dd><span class="kp-spec__font" data-font="mono">PT-204 · 1.10 bar</span></dd>
+                                <dt>contract</dt>
+                                <dd>HF-2201/annex-B/valve-replacement-and-recalibration-of-every-sensor-on-line-2</dd>
+                            </dl>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="diff">
+                <h2>Diff of forty lines</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three columns — line number, sign, text — and the sign is the carrier that survives without colour: cover the
+                    tints and every changed line must still be findable by its <b>+</b> or <b>-</b>. Added lines take a success tint and removed lines
+                    an alarm tint, both faint enough that the text on them still passes contrast; in a dark theme they must stay tints, not slabs.
+                    Line numbers are right-aligned in tabular figures. Blank lines keep their height. Narrow the window until the added
+                    <code>reopen_by</code> line is too long for the box: it must wrap inside the text column with its number and sign on the first
+                    line only, and the diff must not scroll the page sideways.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <pre
+                        class="kp-diff"
+                        aria-label="Changes to the alarm thresholds of line 2"
+                    ><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">1</span><span class="kp-diff__sign"> </span><span># Pump house 4, line 2: alarm thresholds</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">2</span><span class="kp-diff__sign"> </span><span># Owned by the site manager; changes need a second signature.</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">3</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">4</span><span class="kp-diff__sign"> </span><span>[site]</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">5</span><span class="kp-diff__sign"> </span><span>name = &quot;Pump house 4&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">6</span><span class="kp-diff__sign"> </span><span>region = &quot;north&quot;</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">7</span><span class="kp-diff__sign">-</span><span>timezone = &quot;UTC&quot;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">7</span><span class="kp-diff__sign">+</span><span>timezone = &quot;Europe/Brussels&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">8</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">9</span><span class="kp-diff__sign"> </span><span>[line.2]</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">10</span><span class="kp-diff__sign"> </span><span>sensor = &quot;PT-204&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">11</span><span class="kp-diff__sign"> </span><span>gauge = &quot;wall, eye level, east side&quot;</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">12</span><span class="kp-diff__sign">-</span><span>low_pressure_bar = 1.5</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">12</span><span class="kp-diff__sign">+</span><span>low_pressure_bar = 2.0</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">13</span><span class="kp-diff__sign">-</span><span>drop_window_minutes = 60</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">13</span><span class="kp-diff__sign">+</span><span>drop_window_minutes = 30</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">14</span><span class="kp-diff__sign"> </span><span>high_pressure_bar = 4.5</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">15</span><span class="kp-diff__sign"> </span><span>sample_every_seconds = 60</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">16</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">17</span><span class="kp-diff__sign"> </span><span>[line.2.pump]</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">18</span><span class="kp-diff__sign"> </span><span>max_starts_per_hour = 12</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">19</span><span class="kp-diff__sign">+</span><span># Cycling every four minutes for an hour is fifteen starts:</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">20</span><span class="kp-diff__sign">+</span><span># alarm before the motor overheats, not after.</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">21</span><span class="kp-diff__sign"> </span><span>min_run_seconds = 90</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">22</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">23</span><span class="kp-diff__sign"> </span><span>[escalation]</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">22</span><span class="kp-diff__sign">-</span><span>first = &quot;site-manager&quot;</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">23</span><span class="kp-diff__sign">-</span><span>then = &quot;vendor-hotline&quot;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">24</span><span class="kp-diff__sign">+</span><span>first = &quot;shift-lead&quot;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">25</span><span class="kp-diff__sign">+</span><span>then = &quot;site-manager&quot;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">26</span><span class="kp-diff__sign">+</span><span>last = &quot;vendor-hotline&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">27</span><span class="kp-diff__sign"> </span><span>repeat_after_minutes = 15</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">28</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">29</span><span class="kp-diff__sign"> </span><span>[lockout]</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">30</span><span class="kp-diff__sign"> </span><span>requires_signature = true</span></span><span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">28</span><span class="kp-diff__sign">-</span><span>reopen_by = &quot;anyone on shift&quot;</span></span><span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">31</span><span class="kp-diff__sign">+</span><span>reopen_by = &quot;the person who signed the lock-out, or the site manager, and nobody else on the rota&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">32</span><span class="kp-diff__sign"> </span><span>log_to = &quot;audit&quot;</span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">33</span><span class="kp-diff__sign"> </span><span></span></span><span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">34</span><span class="kp-diff__sign"> </span><span># End of file</span></span></pre>
+                </div>
+            </section>
+
+            <section class="cat-block" id="copyable">
+                <h2>Copyable value</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the value is in the mono face with its button beside it on one baseline. Press the first <b>Copy</b>: the button's
+                    own word must change to <b>Copied</b> and back after a moment, on the success colour — the word is the confirmation, the colour
+                    only the second carrier, and in many themes the register's own button rule wins over that colour, so compare the frozen copy with
+                    an idle button and see whether anything but the word changed. The second row is frozen in that confirmed state so it can be
+                    compared across themes. The third is frozen after a refused copy (<code>data-kp-copy-failed</code>): the package announces the
+                    refusal in a toast but draws nothing on the button, so judge whether it looks any different from idle. The last value is a
+                    70-character key in a narrow pane: it must wrap, and its button must stay inside the pane.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <p style="margin-block-start: 0">
+                        <span class="kp-copyable">
+                            <span class="kp-copyable__value" id="dt-copy-ref">INC-4471</span>
+                            <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="dt-copy-ref">Copy</button>
+                        </span>
+                    </p>
+                    <p>
+                        <span class="kp-copyable">
+                            <span class="kp-copyable__value">HF-2201</span>
+                            <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copied>Copied</button>
+                        </span>
+                    </p>
+                    <p>
+                        <span class="kp-copyable">
+                            <span class="kp-copyable__value">PT-204</span>
+                            <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy-failed>Copy</button>
+                        </span>
+                    </p>
+                    <div class="cat-resize" style="inline-size: 18rem">
+                        <span class="kp-copyable">
+                            <span class="kp-copyable__value">inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c</span>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--ghost kp-copyable__button"
+                                data-kp-copy
+                                data-kp-copy-value="inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c"
+                                aria-label="Copy the incident key"
+                            >
+                                Copy
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="ids">
+                <h2>Ids and URLs</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-id</code> is in the mono face at nine-tenths of the text around it; <code>.kp-url</code> keeps the body
+                    face. Both have nowhere to break, so both are allowed to break anywhere: in the narrow pane the 90-character URL and the
+                    70-character id must wrap at the pane's edge — ragged, but inside. The same values inside a sentence must wrap with the sentence
+                    rather than leaving a gap before them on the line above. Nothing on this block may push the page sideways at 320 px.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 20rem">
+                        <p class="kp-url">https://telemetry.example.org/sites/pump-house-4/lines/2/readings?from=2026-09-13T00:00:00</p>
+                        <p class="kp-id">inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c</p>
+                        <p style="margin-block-end: 0">
+                            The readings are at
+                            <a class="kp-url" href="#ids"
+                                >https://telemetry.example.org/sites/pump-house-4/lines/2/readings?from=2026-09-13T00:00:00</a
+                            >, filed under <span class="kp-id">inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c</span> in the
+                            archive.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="values">
+                <h2>Masked, timestamp, truncated</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the masked value keeps the shape of the real one in the mono face, widely spaced and muted — it must never look
+                    like a value you could copy. Timestamps are muted with tabular figures, so the three below line up digit for digit. The truncated
+                    line ends in an ellipsis on one line at the pane's edge; hover it and the browser's tooltip shows the whole sentence, because a
+                    truncation without a <code>title</code> hides data. Drag the pane wider and the ellipsis must move with the edge.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <p style="margin-block-start: 0">Vendor account <span class="kp-masked">•••• •••• •••• 4417</span></p>
+                    <p>
+                        <span class="kp-timestamp">2026-09-13 02:10</span><br />
+                        <span class="kp-timestamp">2026-09-13 11:41</span><br />
+                        <span class="kp-timestamp">2026-09-13 23:08</span>
+                    </p>
+                    <div class="cat-resize" style="inline-size: 20rem">
+                        <span
+                            class="kp-truncate"
+                            title="Pressure on line 2 dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without anyone touching the valve."
+                            >Pressure on line 2 dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without anyone touching the
+                            valve.</span
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="shortcuts">
+                <h2>Shortcut sheet</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the sheet is a dialog on the card surface with a strong boundary. Group labels are small capitals in the muted
+                    ink; each row has its key on the left in a fixed column and its meaning muted on the right, so the meanings start on one line. The
+                    last row's meaning is long and must wrap inside its column, not under the key. The frozen copy is not modal. Press
+                    <b>Show the shortcuts</b>, or press <kbd>?</kbd> anywhere outside a text field: the live sheet opens modal, and Escape closes it.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 22rem">
+                    <dialog class="kp-shortcuts" open aria-labelledby="dt-sheet-title">
+                        <h2 class="kp-dialog__title" id="dt-sheet-title">Keyboard shortcuts</h2>
+                        <section>
+                            <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+                            <dl class="kp-shortcuts__list">
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                                    <dd>Open the commands</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">?</kbd></dt>
+                                    <dd>Show this sheet</dd>
+                                </div>
+                            </dl>
+                        </section>
+                        <section>
+                            <h3 class="kp-shortcuts__group-label">In the readings table</h3>
+                            <dl class="kp-shortcuts__list">
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">J</kbd></dt>
+                                    <dd>Next reading</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">Shift L</kbd></dt>
+                                    <dd>Lock out the line of the selected reading and ask the shift lead to sign it</dd>
+                                </div>
+                            </dl>
+                        </section>
+                    </dialog>
+                </div>
+                <div class="cat-stage" style="margin-block-start: 1rem">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="dt-sheet-live">Show the shortcuts</button>
+                    <dialog class="kp-shortcuts" id="dt-sheet-live" data-kp-shortcuts aria-labelledby="dt-sheet-live-title">
+                        <h2 class="kp-dialog__title" id="dt-sheet-live-title">Keyboard shortcuts</h2>
+                        <section>
+                            <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+                            <dl class="kp-shortcuts__list">
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                                    <dd>Open the commands</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">?</kbd></dt>
+                                    <dd>Show this sheet</dd>
+                                </div>
+                            </dl>
+                        </section>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button" data-kp-dialog-close>Close</button>
+                        </div>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="col-low">
+                <h2>Low-priority column</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the <b>Updated</b> column is <code>.kp-col-low</code>, header and cells together. In the wide table it is there,
+                    muted like any timestamp. The same table sits in a pane narrower than 40rem, where the column must be gone — header <i>and</i>
+                    cells, never one without the other. Drag that pane wider than 40rem and the column must come back. The width that decides is the
+                    table's own box, not the window's, so the two tables disagree on one page and both are right.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Incident</th>
+                                    <th scope="col">Line</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="kp-col-low">Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INC-4471</td>
+                                    <td>Line 2</td>
+                                    <td>Locked out</td>
+                                    <td class="kp-col-low kp-timestamp">2026-09-13 02:40</td>
+                                </tr>
+                                <tr>
+                                    <td>INC-4468</td>
+                                    <td>Cold store</td>
+                                    <td>Waiting on vendor</td>
+                                    <td class="kp-col-low kp-timestamp">2026-09-12 16:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 26rem">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Incident</th>
+                                        <th scope="col">Line</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="kp-col-low">Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>INC-4471</td>
+                                        <td>Line 2</td>
+                                        <td>Locked out</td>
+                                        <td class="kp-col-low kp-timestamp">2026-09-13 02:40</td>
+                                    </tr>
+                                    <tr>
+                                        <td>INC-4468</td>
+                                        <td>Cold store</td>
+                                        <td>Waiting on vendor</td>
+                                        <td class="kp-col-low kp-timestamp">2026-09-12 16:05</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>
