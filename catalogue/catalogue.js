@@ -6,33 +6,10 @@ import { THEMES } from '../js/theme-registry.js';
 import { currentTheme, initializeTheme, THEME_EVENT } from '../js/theme-core.js';
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
+import { PAGES } from './pages.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
 const ROOT = new URL('../', import.meta.url);
-
-/**
- * Every page a reviewer opens, in the order the navigation shows them.
- * gates/check-catalogue.mjs refuses a catalogue page or a research demo that
- * is missing here, so a new page cannot be written and left unreachable.
- */
-export const PAGES = [
-    {
-        group: 'Catalogue',
-        pages: [
-            { href: 'catalogue/index.html', label: 'Overview' },
-            { href: 'catalogue/button.html', label: 'Buttons' },
-            { href: 'catalogue/table.html', label: 'Tables' },
-        ],
-    },
-    {
-        group: 'Research demos',
-        pages: [
-            { href: 'research/navbar/demo.html', label: 'Navigation alternatives' },
-            { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },
-            { href: 'research/loading/demo.html', label: 'Loading per theme' },
-        ],
-    },
-];
 
 const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
 
@@ -244,7 +221,7 @@ function setNote(block, theme, text) {
 }
 
 function blockTitle(section) {
-    return section.querySelector('h2')?.textContent?.trim() || section.id;
+    return section.dataset.catTitle || section.querySelector('h2, h3')?.textContent?.trim() || section.id;
 }
 
 /** The blocks a note can belong to on this page. */
@@ -390,5 +367,14 @@ function mountDevtools() {
 
 const bar = mountShell();
 mountThemeMenu(bar);
-mountFeedback();
 mountDevtools();
+// A page that gathers its blocks from elsewhere says so, and announces when
+// they are in; notes attach to what is on the page at that moment.
+const composing = document.querySelector('[data-cat-compose]');
+if (composing?.getAttribute('data-cat-compose') === 'compare') {
+    /* two themes side by side: notes belong to the review page, not here */
+} else if (composing) {
+    document.addEventListener('cat-composed', () => mountFeedback(), { once: true });
+} else {
+    mountFeedback();
+}

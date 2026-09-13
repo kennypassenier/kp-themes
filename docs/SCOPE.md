@@ -1230,3 +1230,21 @@ tables page gains a data table (search, sort, select, pager, cards). And
 under every block a note field keeps a note per theme in the browser;
 switching theme swaps the note, and the foot of the page gathers every
 note of every theme into one prompt with a copy button.
+
+**scope-53 · One review page, approval by what the browser paints, and a
+compare page.** Kenny, 2026-09-13: every component on one long page so
+there is one prompt, a filter that shows only what changed, and two themes
+side by side with every element starting at the same height. The review
+page (`catalogue/index.html`) gathers the blocks of every component page at
+load, so each block is still written in one place. Approval is per block
+per theme: the browser hashes the block's markup as written plus the
+computed style of every element in it, over properties that do not depend
+on the window's width, with animations held still while it reads; the hash
+is kept in that browser and a block whose hash moves shows as changed.
+Measured before trusting it: stable across a reload, all 13 blocks; a
+letter-spacing change to `.kp-button` in cyberpunk marked the six button
+blocks and exactly the two table blocks that contain buttons, and reverting
+it approved all 13 again. The compare page (`catalogue/compare.html`) puts
+each theme in its own document — a theme nested in another leaks its
+register (`gap-10`) — and lines the rows up across the two by message:
+32 rows, none offset, before and after switching one column to brutalism.

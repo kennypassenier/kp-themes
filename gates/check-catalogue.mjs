@@ -99,7 +99,7 @@ function main() {
     // Every review page is reachable from the navigation catalogue.js builds,
     // and the navigation names no page that does not exist. A page written
     // and left out of PAGES is a page nobody opens [scope-52].
-    const shell = read('catalogue/catalogue.js');
+    const shell = read('catalogue/pages.js');
     const listed = new Set([...shell.matchAll(/href:\s*'([^']+)'/g)].map((m) => m[1]));
     const reviewPages = readdirSync(dir)
         .filter((name) => name.endsWith('.html'))
@@ -114,7 +114,8 @@ function main() {
     const phantom = [...listed].filter((page) => !existsSync(new URL(page, root))).sort();
     if (unlisted.length) {
         console.error(
-            `${unlisted.length} review page(s) exist but the navigation in catalogue/catalogue.js does not list them:\n  ` + unlisted.join('\n  '),
+            `${unlisted.length} review page(s) exist but the navigation in catalogue/catalogue.js (catalogue/pages.js) does not list them:\n  ` +
+                unlisted.join('\n  '),
         );
     }
     // And every one of them carries the shell, or the navigation is not there

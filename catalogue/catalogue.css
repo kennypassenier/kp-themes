@@ -201,6 +201,69 @@
         gap: 0.75rem;
     }
 
+    /* The review page: a filter bar, a component heading per gathered page,
+       and the approval state under every block. */
+    .cat-review-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 0.75rem 1.5rem;
+        padding: 0.75rem 0;
+        margin-block: 1rem;
+        border-block: 1px solid var(--border);
+    }
+
+    .cat-component {
+        margin-block-start: 3.5rem;
+        scroll-margin-block-start: 4rem;
+    }
+
+    .cat-component__title {
+        margin-block-end: 0.2rem;
+    }
+
+    .cat-approval {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        margin-block-start: 0.75rem;
+    }
+
+    .cat-main--wide {
+        max-inline-size: 110rem;
+    }
+
+    /* The compare page: two documents side by side, rows lined up by message. */
+    .cat-compare {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .cat-compare__frame {
+        inline-size: 100%;
+        block-size: 60vh;
+        border: 1px solid var(--border);
+    }
+
+    /* Inside a column. */
+    .cat-frame__main {
+        padding: 1rem;
+    }
+
+    .cat-frame__row {
+        display: flow-root;
+        box-sizing: border-box;
+        padding-block-end: 0.75rem;
+    }
+
+    .cat-frame__row > h2,
+    .cat-frame__row > h3 {
+        margin: 0.5rem 0 0;
+    }
+
     .cat-resize {
         resize: horizontal;
         overflow: auto;

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Compare · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Compare two themes</h1>
+            <p class="cat-intro">
+                One component under two themes. Every element of a block sits in the same row as its counterpart: where one theme draws it taller or
+                wider, the row grows for both, so the next pair still starts side by side. The choice of component and themes is in the address, so a
+                comparison can be linked.
+            </p>
+            <div data-cat-compose="compare"></div>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./review.js"></script>
+    </body>
+</html>

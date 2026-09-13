@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Catalogue · kp-themes</title>
+        <title>Review · kp-themes catalogue</title>
         <link rel="stylesheet" href="./deps.css" />
     </head>
     <body>
@@ -15,29 +15,26 @@
         </header>
 
         <main id="main" class="cat-main">
-            <h1>The catalogue</h1>
+            <h1>Every component, one page</h1>
             <p class="cat-intro">
-                Every component the package ships, on a fixed page, in every state and at its extremes — long text, empty, far too many rows — with a
-                note beside each block saying what to look at. Switch the theme in the bar and the whole page answers in it. Nothing here is
-                generated: these pages are written by hand and a gate refuses a component that has no page, so a new variant cannot hide.
+                Every block of every component page, gathered here so the whole package is reviewed in one place and every note ends up in one prompt
+                at the foot of the page. The component pages stay where each block is written; this page reads them, so the two cannot drift.
             </p>
-
-            <h2>How to review a page</h2>
             <p class="cat-intro">
-                Read the <b>Look at</b> note first, then the block beside it. If what you see disagrees with the note, that is a finding — the note is
-                the promise. Open <b>Devtools</b> (Alt+D) for the three tools: the colour and token under the cursor with its contrast, a timeline
-                that pauses and scrubs every animation on the page, and a ruler for sizes and gaps.
+                <b>Approving.</b> Each block can be approved in the theme on screen. The page remembers what the block looked like at that moment —
+                its markup and the computed style of every element in it — as a hash, in this browser. When anything that block paints changes, it
+                shows as changed again. Tick <b>Only blocks that need approval</b> to see just those; untick it to see everything. Approvals are per
+                theme, like the notes.
             </p>
-
-            <h2>Pages</h2>
-            <ul class="cat-toc">
-                <li><a href="./button.html">Buttons</a></li>
-                <li><a href="./table.html">Tables</a></li>
-            </ul>
-            <p class="cat-note">Two pages so far. The rest follow once the shape of these is approved — that is the review step, not a gap.</p>
+            <p class="cat-intro">
+                <b>Comparing.</b> <a href="./compare.html">Compare two themes</a> puts one component under two themes side by side, element by
+                element.
+            </p>
+            <div data-cat-compose="all"></div>
         </main>
 
         <script type="module" src="../js/auto.js"></script>
         <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./review.js"></script>
     </body>
 </html>
