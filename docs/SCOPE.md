@@ -1341,3 +1341,14 @@ Added the same day: verdicts are per browser engine as well — "er moet ook een
 verschil zijn tussen firedragon en chrome approved, dat zijn afzonderlijke
 testen". A block approved in Firefox is still to be judged in Chromium.
 
+**scope-69 · Every form says how long the step took, measured.** Kenny,
+2026-09-13, form item step-timing: "Alleen kp-themes, eerst". Each form carries
+an item `step-timing · …`: the time from his last message to the form, the
+longest tool calls and agents with their durations, the rest as Claude's own
+thinking and writing, one line of why per long part (or "niet vastgesteld")
+and what would shorten it, with Akkoord / Niet akkoord. The figures come from
+`~/Projects/dev-procedure/hooks/step-timing.py`, which reads the session
+transcript; `hooks/form-lint.py` refuses a form without the item wherever a
+CLAUDE.md carries `step-timing: required`. Only kp-themes carries it; after
+round eight Claude asks whether other projects should.
+
