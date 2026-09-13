@@ -3,7 +3,7 @@
 // developer overlay on demand. Components themselves are attached by
 // js/auto.js; this file only drives the chrome around them.
 import { THEMES } from '../js/theme-registry.js';
-import { currentTheme, initializeTheme, THEME_EVENT } from '../js/theme-core.js';
+import { applyTheme, currentTheme, initializeTheme, THEME_EVENT } from '../js/theme-core.js';
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { PAGES } from './pages.js';
@@ -197,7 +197,11 @@ function mountThemeMenu(bar) {
         attachLazyRegisters({ pattern: `${new URL('css/', ROOT).pathname}{theme}-register.css` });
     }
     attachThemePickers(slot);
-    initializeTheme(document.documentElement.dataset.theme || 'formal');
+    // A page about one theme says so with data-cat-theme on <html>, and opens in
+    // that theme whatever the browser last stored; the menu still switches.
+    const fixed = document.documentElement.getAttribute('data-cat-theme');
+    if (fixed) applyTheme(fixed);
+    else initializeTheme(document.documentElement.dataset.theme || 'formal');
 }
 
 /* ------------------------------------------------------------ feedback */

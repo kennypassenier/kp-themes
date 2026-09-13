@@ -41,6 +41,7 @@ export const PAGES = [
             { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },
             { href: 'research/loading/demo.html', label: 'Loading per theme' },
             { href: 'research/datatable/demo.html', label: 'Data tables' },
+            { href: 'research/grotesk-hover/demo.html', label: 'Grotesk hover options' },
         ],
     },
 ];
