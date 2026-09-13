@@ -1297,3 +1297,19 @@ gets the drawn list without opting in; `data-kp-select="native"` keeps the
 browser's own, and a `multiple` select always does. This replaces the opt-in
 half of scope-54; consumers see it on their next update, which raises the
 version as every change does.
+
+**scope-63 · Grotesk hovers by inverting.** Kenny, 2026-09-13, on
+`research/grotesk-hover/demo.html`: option B. A primary or destructive button
+turns to the page ground with its label in its colour on hover and on keyboard
+focus, not while pressed; a bare mirror button takes the grey wash.
+
+**scope-64 · The data table's bars sit inset.** Kenny, 2026-09-13, on the data
+table demo's footer block: "Bars inset". The search bar and the status-and-pager
+bar carry inline and block padding by default, as a knob.
+
+**scope-65 · A research demo is judged like a component.** Kenny, 2026-09-13:
+the Approve and Not approved buttons "moeten er altijd staan en functioneel zijn
+als het over approvals gaat". Every block of a research demo carries them, with
+the same hash-kept verdicts as the review page; and a copied prompt is not
+repeated in the next one.
+
