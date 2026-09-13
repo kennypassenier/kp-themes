@@ -220,6 +220,32 @@ var DEFAULT_STRINGS = Object.freeze({
   tableRemoveFilter: (label) => `Remove filter ${label}`,
   tableClearFilters: "Clear all filters",
   tableClearSearch: "Clear the search and filters",
+  // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
+  // words of the approved mock, research/datatable/demo.html#filter-add.
+  tableAddFilter: (active) => active > 0 ? `+ Add filter (${active} active)` : "+ Add filter",
+  tableAddFilterMenu: "Filter by column",
+  tableAddFilterItem: (column) => `Filter on ${column}`,
+  tableAddFilterItemActive: (column) => `${column}, already filtered: edit that filter`,
+  tableFilterMarked: "filtered",
+  tableFilterEditor: (column) => `Filter on ${column}`,
+  tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
+  tableFilterBound: (kind, bound, column) => {
+    if (kind === "date") return bound === "to" ? `${column} on or before` : `${column} on or after`;
+    return bound === "to" ? "To" : "From";
+  },
+  tableFilterChoicePill: (column, values) => `${column}: ${values.join(", ")}`,
+  tableFilterSpanPill: (column, from, to, kind) => {
+    if (from !== "" && to !== "") return `${column}: ${from}${kind === "date" ? " to " : "\u2013"}${to}`;
+    if (from !== "") return `${column}: from ${from}`;
+    return `${column}: up to ${to}`;
+  },
+  tableEditFilter: (label) => `Edit filter ${label}`,
+  tableFilterApply: "Apply",
+  tableFilterCancel: "Cancel",
+  tableFilterClearAll: "Clear all",
+  tableFilterNotNumber: (label, value) => `${label} takes a number, like 10; "${value}" is not one.`,
+  tableFilterNotDate: (label, value) => `${label}: "${value}" is not a date this field can read; write it the way the field shows, or use the calendar.`,
+  tableFilterBackwards: (from, to) => `The range runs backwards: from ${from} to ${to}. Swap the two values.`,
   tableDensity: "Density",
   tableDensityComfortable: "Comfortable",
   tableDensityCompact: "Compact",
@@ -2499,9 +2525,11 @@ __export(datatable_exports, {
   compareByOrder: () => compareByOrder,
   dataTable: () => dataTable,
   filterActive: () => filterActive,
+  filterPillLabel: () => filterPillLabel,
   filterPills: () => filterPills,
   matchesFilter: () => matchesFilter,
   nextSorts: () => nextSorts,
+  readFilterBounds: () => readFilterBounds,
   syncFixedColumns: () => syncFixedColumns
 });
 
@@ -3055,6 +3083,7 @@ var CLEAR_SELECTION = "[data-kp-datatable-clear-selection]";
 var FILTERS = "[data-kp-datatable-filters]";
 var FILTER_TOGGLE = "[data-kp-datatable-filter-toggle]";
 var PILLS = "[data-kp-datatable-pills]";
+var ADD_FILTER = "[data-kp-datatable-add-filter]";
 var CARD_SORT = "[data-kp-datatable-card-sort]";
 var SELECT_ALL = "[data-kp-select-all]";
 var SELECT_ROW = "[data-kp-select-row]";
@@ -3126,6 +3155,42 @@ function filterActive(kind, value) {
     value
   );
   return (range.from ?? "") !== "" || (range.to ?? "") !== "";
+}
+function filterPillLabel(kind, column, value, s) {
+  if (!filterActive(kind, value)) return null;
+  if (kind === "choice") return s.tableFilterChoicePill(
+    column,
+    /** @type {string[]} */
+    value
+  );
+  const { from = "", to = "" } = (
+    /** @type {{ from?: string, to?: string }} */
+    value
+  );
+  return s.tableFilterSpanPill(column, from, to, kind);
+}
+function readFilterBounds(kind, bounds, s) {
+  const value = { from: "", to: "" };
+  for (
+    const bound of
+    /** @type {const} */
+    ["from", "to"]
+  ) {
+    const { text, iso, label } = bounds[bound];
+    const typed = text.trim();
+    if (typed === "") continue;
+    if (kind === "range") {
+      if (!Number.isFinite(Number(typed))) return { value: null, error: s.tableFilterNotNumber(label, typed), bound };
+      value[bound] = typed;
+    } else {
+      if (iso === void 0 || iso === "") return { value: null, error: s.tableFilterNotDate(label, typed), bound };
+      value[bound] = iso;
+    }
+  }
+  const { from, to } = value;
+  if (from !== "" && to !== "" && (kind === "range" ? Number(from) > Number(to) : from > to))
+    return { value: null, error: s.tableFilterBackwards(from, to), bound: "from" };
+  return { value: from === "" && to === "" ? null : value };
 }
 function matchesFilter(kind, value, text, locale) {
   if (!filterActive(kind, value)) return true;
@@ -3336,6 +3401,7 @@ function attachDataTables(root = document, {
   debounceMs,
   sortCycle = "two",
   multiSort = false,
+  filterMode = "panel",
   // The theme's own button, not the ghost: a ghost is text alone at rest
   // in eleven of the twenty-two themes, so the pager did not read as
   // buttons until hovered [Kenny's note of 2026-09-13, seen in cyberpunk].
@@ -3362,6 +3428,12 @@ function attachDataTables(root = document, {
       const node = document.createElement(tag);
       if (className) node.className = className;
       return node;
+    }, choiceValues2 = function(at) {
+      const declared = splitList(headers[at]?.dataset.kpFilterOptions);
+      if (declared.length > 0) return declared;
+      const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
+      const order = orders[at];
+      return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
     }, datePickerFor2 = function(input) {
       const picker = make2("div", "kp-datepicker");
       picker.dataset.kpDatepicker = "";
@@ -3388,7 +3460,7 @@ function attachDataTables(root = document, {
       picker.append(input, opener, datePanel);
       return picker;
     };
-    var add = add2, make = make2, datePickerFor = datePickerFor2;
+    var add = add2, make = make2, choiceValues = choiceValues2, datePickerFor = datePickerFor2;
     const wrap = (
       /** @type {HTMLElement} */
       element
@@ -3656,7 +3728,65 @@ function attachDataTables(root = document, {
     let panel = null;
     let toggle = null;
     let pills = null;
-    if (filterColumns.length > 0) {
+    const addMode = (wrap.dataset.kpFilterMode ?? filterMode) === "add";
+    let addButton = null;
+    let addPop = null;
+    let addMenu = null;
+    let filterEditor = null;
+    if (filterColumns.length > 0 && addMode) {
+      const s = s0;
+      const popId = `${id}-add-filter`;
+      addButton = /** @type {HTMLButtonElement | null} */
+      wrap.querySelector(ADD_FILTER);
+      if (addButton === null) {
+        addButton = /** @type {HTMLButtonElement} */
+        add2(make2("button", "kp-button kp-datatable__add-filter"));
+        addButton.type = "button";
+        addButton.dataset.kpDatatableAddFilter = "";
+        ensureTopBar().append(addButton);
+      } else {
+        const node = addButton;
+        const was = ["aria-haspopup", "aria-expanded", "aria-controls", "popovertarget"].map((name) => [name, node.getAttribute(name)]);
+        const text = node.textContent;
+        undo.push(() => {
+          for (const [name, value] of was) {
+            if (value === null || value === void 0) node.removeAttribute(
+              /** @type {string} */
+              name
+            );
+            else node.setAttribute(
+              /** @type {string} */
+              name,
+              value
+            );
+          }
+          node.style.removeProperty("anchor-name");
+          node.textContent = text;
+        });
+      }
+      addButton.setAttribute("aria-haspopup", "true");
+      addButton.setAttribute("aria-expanded", "false");
+      addButton.setAttribute("aria-controls", popId);
+      addButton.setAttribute("popovertarget", popId);
+      addButton.style.setProperty("anchor-name", `--${popId}`);
+      addPop = add2(make2("div", "kp-popover kp-datatable__add-menu"));
+      addPop.id = popId;
+      addPop.setAttribute("popover", "auto");
+      addPop.dataset.kpDatatableAddMenu = "";
+      addPop.style.setProperty("position-anchor", `--${popId}`);
+      addMenu = make2("ul", "kp-menu");
+      addMenu.setAttribute("aria-label", s.tableAddFilterMenu);
+      addPop.append(addMenu);
+      addButton.after(addPop);
+      filterEditor = /** @type {HTMLFormElement} */
+      add2(make2("form", "kp-datatable__filter-editor"));
+      filterEditor.id = `${id}-filter-editor`;
+      filterEditor.dataset.kpDatatableFilterEditor = "";
+      filterEditor.noValidate = true;
+      filterEditor.hidden = true;
+      wrap.insertBefore(filterEditor, tableBlock);
+    }
+    if (filterColumns.length > 0 && !addMode) {
       panel = /** @type {HTMLElement | null} */
       wrap.querySelector(FILTERS);
       if (panel === null) {
@@ -3684,13 +3814,7 @@ function attachDataTables(root = document, {
         legend.textContent = label;
         set.append(legend);
         if (kind === "choice") {
-          const header = headers[at];
-          const declared = splitList(header?.dataset.kpFilterOptions);
-          const values = declared.length > 0 ? declared : [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
-          const order = orders[at];
-          if (declared.length === 0)
-            values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
-          for (const value of values) {
+          for (const value of choiceValues2(at)) {
             const option = make2("label", "kp-field__option");
             const box = (
               /** @type {HTMLInputElement} */
@@ -3738,6 +3862,8 @@ function attachDataTables(root = document, {
       }
       toggle.setAttribute("aria-controls", panel.id);
       toggle.setAttribute("aria-expanded", String(!panel.hidden));
+    }
+    if (filterColumns.length > 0) {
       pills = /** @type {HTMLElement | null} */
       wrap.querySelector(PILLS);
       if (pills === null) {
@@ -4225,12 +4351,12 @@ function attachDataTables(root = document, {
     const pillsList = add2(make2("ul", "kp-tag-list"));
     const clearButton = (
       /** @type {HTMLButtonElement} */
-      add2(make2("button", "kp-button kp-button--ghost kp-datatable__clear-filters"))
+      add2(make2("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
     );
     clearButton.type = "button";
     clearButton.addEventListener("click", () => {
       clearFilters();
-      toggle?.focus();
+      (toggle ?? addButton)?.focus();
     });
     if (pills !== null) {
       pills.textContent = "";
@@ -4242,6 +4368,10 @@ function attachDataTables(root = document, {
       const list = pillsList;
       list.textContent = "";
       list.setAttribute("aria-label", s.tableActiveFilters);
+      if (addMode) {
+        renderAddPills(s);
+        return;
+      }
       clearButton.textContent = s.tableClearFilters;
       let count = 0;
       for (const at of filterColumns) {
@@ -4273,6 +4403,338 @@ function attachDataTables(root = document, {
       }
       pills.hidden = count === 0;
       if (toggle !== null) toggle.textContent = s.tableFilters(count);
+    };
+    let editingFilter = null;
+    let editorReturn = null;
+    let detachEditorPickers = () => {
+    };
+    const renderAddPills = (s) => {
+      if (pills === null) return;
+      let count = 0;
+      for (const [at, value] of filters) {
+        const kind = filterKinds[at];
+        if (!kind) continue;
+        const label = filterPillLabel(kind, labelOf(at), value, s);
+        if (label === null) continue;
+        count += 1;
+        const item = make2("li", "kp-tag");
+        const edit = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-datatable__pill-edit")
+        );
+        edit.type = "button";
+        edit.dataset.kpFilterPill = String(at);
+        edit.setAttribute("aria-label", s.tableEditFilter(label));
+        edit.setAttribute("aria-expanded", String(editingFilter === at));
+        if (filterEditor !== null) edit.setAttribute("aria-controls", filterEditor.id);
+        edit.textContent = label;
+        const remove = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-tag__remove")
+        );
+        remove.type = "button";
+        remove.dataset.kpFilterUnpill = String(at);
+        remove.setAttribute("aria-label", s.tableRemoveFilter(label));
+        remove.textContent = removeGlyph;
+        item.append(edit, remove);
+        pillsList.append(item);
+      }
+      pills.hidden = count === 0;
+      clearButton.textContent = s.tableFilterClearAll;
+      clearButton.hidden = count < 2;
+      if (addButton !== null) addButton.textContent = s.tableAddFilter(count);
+      renderAddMenu(s);
+    };
+    const renderAddMenu = (s) => {
+      if (addMenu === null) return;
+      const focused = (
+        /** @type {HTMLElement | null} */
+        addMenu.querySelector(":focus")?.dataset.kpFilterColumn
+      );
+      addMenu.setAttribute("aria-label", s.tableAddFilterMenu);
+      addMenu.textContent = "";
+      for (const at of filterColumns) {
+        const on = filters.has(at);
+        const item = make2("li");
+        const button = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-menu__item kp-datatable__add-item")
+        );
+        button.type = "button";
+        button.dataset.kpFilterColumn = String(at);
+        button.setAttribute("aria-label", on ? s.tableAddFilterItemActive(labelOf(at)) : s.tableAddFilterItem(labelOf(at)));
+        button.append(labelOf(at));
+        if (on) {
+          button.dataset.kpFilterMarked = "";
+          const mark = make2("span", "kp-badge");
+          mark.setAttribute("aria-hidden", "true");
+          mark.textContent = s.tableFilterMarked;
+          button.append(" ", mark);
+        }
+        item.append(button);
+        addMenu.append(item);
+        if (focused === String(at)) button.focus();
+      }
+    };
+    const openFilterEditor = (at, returnTo) => {
+      const kind = filterKinds[at];
+      if (filterEditor === null || !kind) return;
+      closeFilterEditor(false);
+      const s = getStrings();
+      const form2 = filterEditor;
+      const label = labelOf(at);
+      const current2 = filters.get(at);
+      const range = (
+        /** @type {{ from?: string, to?: string } | undefined} */
+        Array.isArray(current2) ? void 0 : current2
+      );
+      editingFilter = at;
+      editorReturn = returnTo;
+      form2.setAttribute("aria-label", s.tableFilterEditor(label));
+      form2.dataset.kpFilterColumn = String(at);
+      const title = make2("p", "kp-datatable__filter-editor-title");
+      title.textContent = label;
+      form2.append(title);
+      if (kind === "choice") {
+        const set = make2("fieldset", "kp-fieldset");
+        const legend = make2("legend", "kp-sr-only");
+        legend.textContent = s.tableFilterChoicesLegend(label);
+        const choices = make2("div", "kp-datatable__filter-editor-choices");
+        for (const value of choiceValues2(at)) {
+          const option = make2("label", "kp-field__option");
+          const box = (
+            /** @type {HTMLInputElement} */
+            make2("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.name = "values";
+          box.value = value;
+          box.checked = Array.isArray(current2) && current2.includes(value);
+          option.append(box, ` ${value}`);
+          choices.append(option);
+        }
+        set.append(legend, choices);
+        form2.append(set);
+      } else {
+        const pair = make2("div", "kp-datatable__filter-editor-pair");
+        for (
+          const bound of
+          /** @type {const} */
+          ["from", "to"]
+        ) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            make2("input", "kp-field__input")
+          );
+          input.id = `${id}-filter-editor-${bound}`;
+          input.dataset.kpFilterBound = bound;
+          input.autocomplete = "off";
+          input.setAttribute("aria-describedby", `${id}-filter-editor-error`);
+          const text = (
+            /** @type {HTMLLabelElement} */
+            make2("label", "kp-field__label")
+          );
+          text.htmlFor = input.id;
+          text.textContent = s.tableFilterBound(kind, bound, label);
+          if (kind === "range") {
+            input.type = "text";
+            input.inputMode = "decimal";
+            input.value = range?.[bound] ?? "";
+            const field = make2("div", "kp-field");
+            field.append(text, input);
+            pair.append(field);
+          } else {
+            const picker = datePickerFor2(input);
+            picker.prepend(text);
+            pair.append(picker);
+          }
+        }
+        form2.append(pair);
+      }
+      const error = make2("p", "kp-field__error");
+      error.id = `${id}-filter-editor-error`;
+      error.dataset.kpFilterError = "";
+      error.setAttribute("role", "alert");
+      error.hidden = true;
+      const actions2 = make2("div", "kp-datatable__filter-editor-actions");
+      const apply = (
+        /** @type {HTMLButtonElement} */
+        make2("button", "kp-button kp-button--primary kp-button--sm")
+      );
+      apply.type = "submit";
+      apply.textContent = s.tableFilterApply;
+      const cancel = (
+        /** @type {HTMLButtonElement} */
+        make2("button", "kp-button kp-button--ghost kp-button--sm")
+      );
+      cancel.type = "button";
+      cancel.dataset.kpFilterCancel = "";
+      cancel.textContent = s.tableFilterCancel;
+      actions2.append(apply, cancel);
+      form2.append(error, actions2);
+      form2.hidden = false;
+      if (kind === "date") {
+        detachEditorPickers = attachDatePickers(form2);
+        for (
+          const bound of
+          /** @type {const} */
+          ["from", "to"]
+        ) {
+          const wanted = range?.[bound] ?? "";
+          const picker = form2.querySelector(`[data-kp-filter-bound="${bound}"]`)?.closest("[data-kp-datepicker]");
+          if (wanted !== "" && picker) datePicker(picker)?.set(wanted);
+        }
+      }
+      renderPills();
+      form2.querySelector("input")?.focus();
+    };
+    const closeFilterEditor = (focus = true) => {
+      if (editingFilter === null || filterEditor === null) return;
+      detachEditorPickers();
+      detachEditorPickers = () => {
+      };
+      const back = editorReturn;
+      editingFilter = null;
+      editorReturn = null;
+      filterEditor.hidden = true;
+      filterEditor.textContent = "";
+      delete filterEditor.dataset.kpFilterColumn;
+      filterEditor.removeAttribute("aria-label");
+      renderPills();
+      if (!focus) return;
+      const pill = back === null ? null : (
+        /** @type {HTMLElement | null} */
+        pills?.querySelector(`[data-kp-filter-pill="${back}"]`) ?? null
+      );
+      (pill ?? addButton)?.focus();
+    };
+    const onEditorSubmit = (event) => {
+      event.preventDefault();
+      const at = editingFilter;
+      const form2 = filterEditor;
+      if (at === null || form2 === null) return;
+      const kind = filterKinds[at];
+      const s = getStrings();
+      let next = null;
+      if (kind === "choice") {
+        const values = [...form2.querySelectorAll('input[name="values"]:checked')].map((box) => (
+          /** @type {HTMLInputElement} */
+          box.value
+        ));
+        next = values.length > 0 ? values : null;
+      } else if (kind === "range" || kind === "date") {
+        const read = (bound) => {
+          const input = (
+            /** @type {HTMLInputElement} */
+            form2.querySelector(`[data-kp-filter-bound="${bound}"]`)
+          );
+          return {
+            text: input.value,
+            iso: input.dataset.kpDateValue,
+            label: bound === "from" ? s.tableFilterFrom(labelOf(at)) : s.tableFilterTo(labelOf(at))
+          };
+        };
+        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s);
+        for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
+        if (result.error !== void 0) {
+          const error = (
+            /** @type {HTMLElement} */
+            form2.querySelector("[data-kp-filter-error]")
+          );
+          error.textContent = result.error;
+          error.hidden = false;
+          const field = (
+            /** @type {HTMLElement} */
+            form2.querySelector(`[data-kp-filter-bound="${result.bound}"]`)
+          );
+          field.setAttribute("aria-invalid", "true");
+          field.focus();
+          return;
+        }
+        next = result.value;
+      }
+      if (next !== null) editorReturn = at;
+      setFilter(at, next);
+      closeFilterEditor(true);
+    };
+    const onEditorClick = (event) => {
+      if (
+        /** @type {HTMLElement} */
+        event.target.closest("[data-kp-filter-cancel]") !== null
+      ) closeFilterEditor(true);
+    };
+    const onEditorKeydown = (event) => {
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      if (event.key !== "Escape" || event.defaultPrevented || target.closest("[data-kp-date-panel]") !== null) return;
+      if (target.getAttribute("aria-expanded") === "true") return;
+      event.preventDefault();
+      closeFilterEditor(true);
+    };
+    const onAddMenuClick = (event) => {
+      const button = (
+        /** @type {HTMLElement | null} */
+        /** @type {HTMLElement} */
+        event.target.closest("[data-kp-filter-column]")
+      );
+      if (button === null) return;
+      const at = Number(button.dataset.kpFilterColumn);
+      if (addPop?.matches(":popover-open")) addPop.hidePopover();
+      openFilterEditor(at, filters.has(at) ? at : null);
+    };
+    const onAddMenuKey = (event) => {
+      if (addMenu === null) return;
+      const items = (
+        /** @type {HTMLElement[]} */
+        [...addMenu.querySelectorAll(".kp-menu__item")]
+      );
+      const at = items.indexOf(
+        /** @type {HTMLElement} */
+        document.activeElement
+      );
+      const moves = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: items.length - 1 };
+      const to = moves[event.key];
+      if (to === void 0 || items.length === 0) return;
+      event.preventDefault();
+      items[(to + items.length) % items.length]?.focus();
+    };
+    const onAddToggle = (event) => {
+      const open = (
+        /** @type {ToggleEvent} */
+        event.newState === "open"
+      );
+      addButton?.setAttribute("aria-expanded", String(open));
+      if (!open) return;
+      renderAddMenu(getStrings());
+      (addMenu?.querySelector(".kp-menu__item") ?? null)?.focus();
+    };
+    const onPillsClick = (event) => {
+      if (!addMode) return;
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      const edit = (
+        /** @type {HTMLElement | null} */
+        target.closest("[data-kp-filter-pill]")
+      );
+      if (edit !== null) {
+        const at2 = Number(edit.dataset.kpFilterPill);
+        if (editingFilter === at2) closeFilterEditor(true);
+        else openFilterEditor(at2, at2);
+        return;
+      }
+      const remove = (
+        /** @type {HTMLElement | null} */
+        target.closest("[data-kp-filter-unpill]")
+      );
+      if (remove === null) return;
+      const at = Number(remove.dataset.kpFilterUnpill);
+      if (editingFilter === at) closeFilterEditor(false);
+      setFilter(at, null);
+      (pills?.querySelector(".kp-tag__remove") ?? addButton)?.focus();
     };
     let writing = false;
     const writeControls = () => {
@@ -4535,6 +4997,7 @@ function attachDataTables(root = document, {
       applyFilter();
     };
     const clearFilters = () => {
+      closeFilterEditor(false);
       filters.clear();
       writeControls();
       renderPills();
@@ -4543,6 +5006,7 @@ function attachDataTables(root = document, {
     const onClear = () => {
       query = "";
       if (search !== null) search.value = "";
+      closeFilterEditor(false);
       filters.clear();
       writeControls();
       renderPills();
@@ -5040,6 +5504,13 @@ function attachDataTables(root = document, {
     panel?.addEventListener("change", onPanel);
     panel?.addEventListener(DATE_EVENT, onPanel);
     toggle?.addEventListener("click", onToggle);
+    addPop?.addEventListener("toggle", onAddToggle);
+    addMenu?.addEventListener("click", onAddMenuClick);
+    addMenu?.addEventListener("keydown", onAddMenuKey);
+    filterEditor?.addEventListener("submit", onEditorSubmit);
+    filterEditor?.addEventListener("click", onEditorClick);
+    filterEditor?.addEventListener("keydown", onEditorKeydown);
+    pillsList.addEventListener("click", onPillsClick);
     sortBy?.addEventListener("change", onSortBy);
     sortDirection?.addEventListener("click", onSortDirection);
     sizeSelect?.addEventListener("change", onPageSize);
@@ -5123,6 +5594,15 @@ function attachDataTables(root = document, {
       },
       filter: setFilter,
       clearFilters,
+      editFilter: (column) => {
+        if (addMode) {
+          if (column === null) closeFilterEditor(false);
+          else openFilterEditor(column, filters.has(column) ? column : null);
+        } else if (panel !== null && toggle !== null) {
+          panel.hidden = column === null;
+          toggle.setAttribute("aria-expanded", String(!panel.hidden));
+        }
+      },
       hideColumns: (columns) => setHidden(columns),
       expand: expandKeys,
       density: setDensity,
@@ -5166,6 +5646,15 @@ function attachDataTables(root = document, {
       panel?.removeEventListener("change", onPanel);
       panel?.removeEventListener(DATE_EVENT, onPanel);
       toggle?.removeEventListener("click", onToggle);
+      closeFilterEditor(false);
+      if (addPop?.matches(":popover-open")) addPop.hidePopover();
+      addPop?.removeEventListener("toggle", onAddToggle);
+      addMenu?.removeEventListener("click", onAddMenuClick);
+      addMenu?.removeEventListener("keydown", onAddMenuKey);
+      filterEditor?.removeEventListener("submit", onEditorSubmit);
+      filterEditor?.removeEventListener("click", onEditorClick);
+      filterEditor?.removeEventListener("keydown", onEditorKeydown);
+      pillsList.removeEventListener("click", onPillsClick);
       sortBy?.removeEventListener("change", onSortBy);
       sortDirection?.removeEventListener("click", onSortDirection);
       sizeSelect?.removeEventListener("change", onPageSize);
@@ -9077,6 +9566,7 @@ export {
   enforceContracts,
   ensureRegister,
   filterActive,
+  filterPillLabel,
   filterPills,
   findViolations,
   form,
@@ -9111,6 +9601,7 @@ export {
   pendingTheme,
   placeDatePanel,
   raiseDatePanel,
+  readFilterBounds,
   registerHref,
   registerLink,
   registerLoaded,

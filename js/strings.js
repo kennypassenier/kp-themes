@@ -87,6 +87,23 @@
  * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
  * @property {string} tableClearFilters
  * @property {string} tableClearSearch      The way out of the no-match state
+ * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
+ * @property {string} tableAddFilterMenu    The name of its menu of filterable columns
+ * @property {(column: string) => string} tableAddFilterItem  A column in that menu, not filtered yet
+ * @property {(column: string) => string} tableAddFilterItemActive  A column in that menu that is filtered already: choosing it edits that filter
+ * @property {string} tableFilterMarked     The mark beside a filtered column in the menu
+ * @property {(column: string) => string} tableFilterEditor  The editor's accessible name
+ * @property {(column: string) => string} tableFilterChoicesLegend  The editor's list of choices, for a screen reader
+ * @property {(kind: 'range' | 'date', bound: 'from' | 'to', column: string) => string} tableFilterBound  A bound's visible label in the editor
+ * @property {(column: string, values: string[]) => string} tableFilterChoicePill  A choice filter's one pill in the add-filter mode
+ * @property {(column: string, from: string, to: string, kind: 'range' | 'date') => string} tableFilterSpanPill  A range or date filter's pill in the add-filter mode; an open end is left out
+ * @property {(label: string) => string} tableEditFilter  A pill's own button, which reopens its editor
+ * @property {string} tableFilterApply
+ * @property {string} tableFilterCancel
+ * @property {string} tableFilterClearAll   The add-filter mode's way out of every filter, shown from two pills
+ * @property {(label: string, value: string) => string} tableFilterNotNumber  A number bound that is not a number
+ * @property {(label: string, value: string) => string} tableFilterNotDate  A date bound the picker cannot read
+ * @property {(from: string, to: string) => string} tableFilterBackwards  A range whose lower bound is above its upper
  * @property {string} tableDensity
  * @property {string} tableDensityComfortable
  * @property {string} tableDensityCompact
@@ -287,6 +304,33 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableRemoveFilter: (label) => `Remove filter ${label}`,
     tableClearFilters: 'Clear all filters',
     tableClearSearch: 'Clear the search and filters',
+    // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
+    // words of the approved mock, research/datatable/demo.html#filter-add.
+    tableAddFilter: (active) => (active > 0 ? `+ Add filter (${active} active)` : '+ Add filter'),
+    tableAddFilterMenu: 'Filter by column',
+    tableAddFilterItem: (column) => `Filter on ${column}`,
+    tableAddFilterItemActive: (column) => `${column}, already filtered: edit that filter`,
+    tableFilterMarked: 'filtered',
+    tableFilterEditor: (column) => `Filter on ${column}`,
+    tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
+    tableFilterBound: (kind, bound, column) => {
+        if (kind === 'date') return bound === 'to' ? `${column} on or before` : `${column} on or after`;
+        return bound === 'to' ? 'To' : 'From';
+    },
+    tableFilterChoicePill: (column, values) => `${column}: ${values.join(', ')}`,
+    tableFilterSpanPill: (column, from, to, kind) => {
+        if (from !== '' && to !== '') return `${column}: ${from}${kind === 'date' ? ' to ' : '–'}${to}`;
+        if (from !== '') return `${column}: from ${from}`;
+        return `${column}: up to ${to}`;
+    },
+    tableEditFilter: (label) => `Edit filter ${label}`,
+    tableFilterApply: 'Apply',
+    tableFilterCancel: 'Cancel',
+    tableFilterClearAll: 'Clear all',
+    tableFilterNotNumber: (label, value) => `${label} takes a number, like 10; "${value}" is not one.`,
+    tableFilterNotDate: (label, value) =>
+        `${label}: "${value}" is not a date this field can read; write it the way the field shows, or use the calendar.`,
+    tableFilterBackwards: (from, to) => `The range runs backwards: from ${from} to ${to}. Swap the two values.`,
     tableDensity: 'Density',
     tableDensityComfortable: 'Comfortable',
     tableDensityCompact: 'Compact',

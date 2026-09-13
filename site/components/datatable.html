@@ -238,6 +238,8 @@
                             <tr><td><code>data-kp-column-menu</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-datatable</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-actions</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-add-filter</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-add-menu</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-datatable-card-sort</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-clear</code></td><td>selector</td></tr>
@@ -255,6 +257,7 @@
                             <tr><td><code>data-kp-datatable-empty</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-expand-all</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-failed</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-filter-editor</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-filter-toggle</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-filters</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-grid-readout</code></td><td>written</td></tr>
@@ -286,7 +289,14 @@
                             <tr><td><code>data-kp-expanded</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filter</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filter-bound</code></td><td>selector, written</td></tr>
-                            <tr><td><code>data-kp-filter-column</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-filter-cancel</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-filter-column</code></td><td>selector, written, read</td></tr>
+                            <tr><td><code>data-kp-filter-error</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-filter-marked</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-filter-mode</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-filter-options</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-filter-pill</code></td><td>selector, written, read</td></tr>
+                            <tr><td><code>data-kp-filter-unpill</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-filter-value</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-filters-open</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-fixed</code></td><td>read, written</td></tr>
@@ -338,6 +348,7 @@
                             <tr><td><code>filters</code></td><td><code>Record&lt;string, FilterValue&gt;</code></td><td>optional</td><td>Controlled, by column key.</td></tr>
                             <tr><td><code>defaultFilters</code></td><td><code>Record&lt;string, FilterValue&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>onFiltersChange</code></td><td><code>(filters: Record&lt;string, FilterValue&gt;) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>filterMode</code></td><td><code>'panel' | 'add'</code></td><td>optional</td><td>How the column filters are set: a panel of every filter, or &quot;+ Add filter&quot; with one pill per filter that reopens its editor. Default panel.</td></tr>
                             <tr><td><code>filtersOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Controlled: the filter panel.</td></tr>
                             <tr><td><code>defaultFiltersOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Default false.</td></tr>
                             <tr><td><code>onFiltersOpenChange</code></td><td><code>(open: boolean) =&gt; void</code></td><td>optional</td><td></td></tr>
@@ -422,6 +433,7 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-cell-truncate-max</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-add-mark-gap</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-datatable-bar-padding-block</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-bar-padding-inline</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-busy-opacity</code></td><td><code>0.55</code></td></tr>
@@ -429,6 +441,17 @@
                             <tr><td><code>--kp-datatable-edit-rule</code></td><td><code>var(--border-strong)</code></td></tr>
                             <tr><td><code>--kp-datatable-editor-min</code></td><td><code>8rem</code></td></tr>
                             <tr><td><code>--kp-datatable-expand-size</code></td><td><code>2em</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-bound-min</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-choice-min</code></td><td><code>9rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-border</code></td><td><code>var(--border-strong)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-border-width</code></td><td><code>1px</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-ground</code></td><td><code>var(--card)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-ink</code></td><td><code>var(--card-foreground)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-max-width</code></td><td><code>34rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-padding</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-radius</code></td><td><code>var(--radius, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-datatable-filter-editor-title-weight</code></td><td><code>600</code></td></tr>
                             <tr><td><code>--kp-datatable-filter-min</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-datatable-fixed-ground</code></td><td><code>var(--kp-datatable-head-ground, var(--background))</code></td></tr>
                             <tr><td><code>--kp-datatable-fixed-rule</code></td><td><code>var(--border-strong)</code></td></tr>

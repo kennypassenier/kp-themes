@@ -83,6 +83,15 @@
 //   th data-kp-edit          a value is edited in its cell; the app hears it and may refuse it
 //   data-kp-grid             a roving focus grid: arrows, Home/End, Page Up/Down
 //
+// And the add-filter mode of Kenny's form of 2026-09-14 ("Allebei, per
+// tabel"), the approved mock of research/datatable/demo.html#filter-add:
+//
+//   data-kp-filter-mode="add"  "+ Add filter" opens a menu of the filterable
+//                              columns; each filter is added in an editor
+//                              and shown as one pill that reopens it. The
+//                              panel stays the default, and both keep the
+//                              same filter state, handle and events.
+//
 // Inline editing and the keyboard grid reverse the "left out" of TH42: the
 // APG grid pattern is right for a table a person edits, and Kenny asked for
 // both.
@@ -110,6 +119,7 @@ const CLEAR_SELECTION = '[data-kp-datatable-clear-selection]';
 const FILTERS = '[data-kp-datatable-filters]';
 const FILTER_TOGGLE = '[data-kp-datatable-filter-toggle]';
 const PILLS = '[data-kp-datatable-pills]';
+const ADD_FILTER = '[data-kp-datatable-add-filter]';
 const CARD_SORT = '[data-kp-datatable-card-sort]';
 const SELECT_ALL = '[data-kp-select-all]';
 const SELECT_ROW = '[data-kp-select-row]';
@@ -283,6 +293,56 @@ export function filterActive(kind, value) {
     if (kind === 'choice') return Array.isArray(value) && value.length > 0;
     const range = /** @type {{ from?: string, to?: string }} */ (value);
     return (range.from ?? '') !== '' || (range.to ?? '') !== '';
+}
+
+/**
+ * The one pill a filter shows in the add-filter mode [Kenny, 2026-09-14]:
+ * the column and every value the filter holds, or null when it holds
+ * nothing. Both channels call this, so their pills read the same.
+ *
+ * @param {FilterKind} kind
+ * @param {string} column the column's name
+ * @param {FilterValue | undefined} value
+ * @param {import('./strings.js').Strings} s
+ * @returns {string | null}
+ */
+export function filterPillLabel(kind, column, value, s) {
+    if (!filterActive(kind, value)) return null;
+    if (kind === 'choice') return s.tableFilterChoicePill(column, /** @type {string[]} */ (value));
+    const { from = '', to = '' } = /** @type {{ from?: string, to?: string }} */ (value);
+    return s.tableFilterSpanPill(column, from, to, kind);
+}
+
+/**
+ * Read the two bounds of an add-filter editor into a filter value, or say
+ * what is wrong with them [Kenny, 2026-09-14, #filter-add]: a number bound
+ * that is not a number, a date the picker cannot read, a range that runs
+ * backwards. A value of null with no error means both bounds are empty, and
+ * applying that removes the filter. Both channels call this.
+ *
+ * @param {'range' | 'date'} kind
+ * @param {Record<'from' | 'to', { text: string, iso?: string, label: string }>} bounds  `text` as the field shows it; `iso` a date picker's value
+ * @param {import('./strings.js').Strings} s
+ * @returns {{ value: { from: string, to: string } | null, error?: string, bound?: 'from' | 'to' }}
+ */
+export function readFilterBounds(kind, bounds, s) {
+    const value = { from: '', to: '' };
+    for (const bound of /** @type {const} */ (['from', 'to'])) {
+        const { text, iso, label } = bounds[bound];
+        const typed = text.trim();
+        if (typed === '') continue;
+        if (kind === 'range') {
+            if (!Number.isFinite(Number(typed))) return { value: null, error: s.tableFilterNotNumber(label, typed), bound };
+            value[bound] = typed;
+        } else {
+            if (iso === undefined || iso === '') return { value: null, error: s.tableFilterNotDate(label, typed), bound };
+            value[bound] = iso;
+        }
+    }
+    const { from, to } = value;
+    if (from !== '' && to !== '' && (kind === 'range' ? Number(from) > Number(to) : from > to))
+        return { value: null, error: s.tableFilterBackwards(from, to), bound: 'from' };
+    return { value: from === '' && to === '' ? null : value };
 }
 
 /**
@@ -545,6 +605,7 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {(column: number | null) => void} scope  limit the search to one column, or null for all
  * @property {(column: number, value: FilterValue | null) => void} filter  set one column's filter; null clears it
  * @property {() => void} clearFilters
+ * @property {(column: number | null) => void} editFilter  open a column's filter editor, or close it with null; in the panel mode, open or close the panel
  * @property {(columns: readonly number[]) => void} hideColumns  the columns to hide; a locked column stays
  * @property {(keys: readonly string[]) => void} expand  the rows to open, by key
  * @property {(density: Density) => void} density
@@ -576,6 +637,7 @@ let instances = 0;
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
  * @property {boolean} [multiSort]  Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
+ * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]
  * @property {boolean} [regions]
@@ -609,6 +671,7 @@ export function attachDataTables(
         debounceMs,
         sortCycle = 'two',
         multiSort = false,
+        filterMode = 'panel',
         // The theme's own button, not the ghost: a ghost is text alone at rest
         // in eleven of the twenty-two themes, so the pager did not read as
         // buttons until hovered [Kenny's note of 2026-09-13, seen in cyberpunk].
@@ -909,7 +972,65 @@ export function attachDataTables(
         let toggle = null;
         /** @type {HTMLElement | null} */
         let pills = null;
-        if (filterColumns.length > 0) {
+        const addMode = (wrap.dataset.kpFilterMode ?? filterMode) === 'add';
+        /** The add-filter mode's button, its menu, the list in the menu and the editor [#filter-add]. */
+        /** @type {HTMLButtonElement | null} */
+        let addButton = null;
+        /** @type {HTMLElement | null} */
+        let addPop = null;
+        /** @type {HTMLElement | null} */
+        let addMenu = null;
+        /** @type {HTMLFormElement | null} */
+        let filterEditor = null;
+        if (filterColumns.length > 0 && addMode) {
+            const s = s0;
+            const popId = `${id}-add-filter`;
+            addButton = /** @type {HTMLButtonElement | null} */ (wrap.querySelector(ADD_FILTER));
+            if (addButton === null) {
+                addButton = /** @type {HTMLButtonElement} */ (add(make('button', 'kp-button kp-datatable__add-filter')));
+                addButton.type = 'button';
+                addButton.dataset.kpDatatableAddFilter = '';
+                ensureTopBar().append(addButton);
+            } else {
+                const node = addButton;
+                const was = ['aria-haspopup', 'aria-expanded', 'aria-controls', 'popovertarget'].map((name) => [name, node.getAttribute(name)]);
+                const text = node.textContent;
+                undo.push(() => {
+                    for (const [name, value] of was) {
+                        if (value === null || value === undefined) node.removeAttribute(/** @type {string} */ (name));
+                        else node.setAttribute(/** @type {string} */ (name), value);
+                    }
+                    node.style.removeProperty('anchor-name');
+                    node.textContent = text;
+                });
+            }
+            addButton.setAttribute('aria-haspopup', 'true');
+            addButton.setAttribute('aria-expanded', 'false');
+            addButton.setAttribute('aria-controls', popId);
+            addButton.setAttribute('popovertarget', popId);
+            // Under its button, as the column menu is placed.
+            addButton.style.setProperty('anchor-name', `--${popId}`);
+            addPop = add(make('div', 'kp-popover kp-datatable__add-menu'));
+            addPop.id = popId;
+            addPop.setAttribute('popover', 'auto');
+            addPop.dataset.kpDatatableAddMenu = '';
+            addPop.style.setProperty('position-anchor', `--${popId}`);
+            addMenu = make('ul', 'kp-menu');
+            addMenu.setAttribute('aria-label', s.tableAddFilterMenu);
+            addPop.append(addMenu);
+            addButton.after(addPop);
+            // The editor's frame is the package's own, not a .kp-card or a
+            // .kp-popover: both carry a clip-path in some registers, which cut
+            // off the calendar a date bound opens (measured on the mock,
+            // 2026-09-13). The calendar itself goes to the top layer.
+            filterEditor = /** @type {HTMLFormElement} */ (add(make('form', 'kp-datatable__filter-editor')));
+            filterEditor.id = `${id}-filter-editor`;
+            filterEditor.dataset.kpDatatableFilterEditor = '';
+            filterEditor.noValidate = true;
+            filterEditor.hidden = true;
+            wrap.insertBefore(filterEditor, tableBlock);
+        }
+        if (filterColumns.length > 0 && !addMode) {
             panel = /** @type {HTMLElement | null} */ (wrap.querySelector(FILTERS));
             if (panel === null) {
                 panel = add(make('div', 'kp-datatable__filters'));
@@ -933,13 +1054,7 @@ export function attachDataTables(
                 legend.textContent = label;
                 set.append(legend);
                 if (kind === 'choice') {
-                    const header = headers[at];
-                    const declared = splitList(header?.dataset.kpFilterOptions);
-                    const values = declared.length > 0 ? declared : [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ''))];
-                    const order = orders[at];
-                    if (declared.length === 0)
-                        values.sort((a, b) => (order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b)));
-                    for (const value of values) {
+                    for (const value of choiceValues(at)) {
                         const option = make('label', 'kp-field__option');
                         const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
                         box.type = 'checkbox';
@@ -984,13 +1099,30 @@ export function attachDataTables(
             }
             toggle.setAttribute('aria-controls', panel.id);
             toggle.setAttribute('aria-expanded', String(!panel.hidden));
-
+        }
+        if (filterColumns.length > 0) {
             pills = /** @type {HTMLElement | null} */ (wrap.querySelector(PILLS));
             if (pills === null) {
                 pills = add(make('div', 'kp-datatable__pills'));
                 pills.dataset.kpDatatablePills = '';
                 wrap.insertBefore(pills, tableBlock);
             }
+        }
+
+        /**
+         * A choice filter's values: the header's `data-kp-filter-options`, else
+         * every value the rows hold, in the column's declared order or the
+         * locale's. The add-filter editor asks when it opens, so rows written
+         * after the attach are in it.
+         *
+         * @param {number} at
+         */
+        function choiceValues(at) {
+            const declared = splitList(headers[at]?.dataset.kpFilterOptions);
+            if (declared.length > 0) return declared;
+            const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ''))];
+            const order = orders[at];
+            return values.sort((a, b) => (order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b)));
         }
 
         /**
@@ -1536,11 +1668,13 @@ export function attachDataTables(
         // range field, whose change event re-renders the pills, and a button
         // rebuilt between the press and the release never gets its click.
         const pillsList = add(make('ul', 'kp-tag-list'));
-        const clearButton = /** @type {HTMLButtonElement} */ (add(make('button', 'kp-button kp-button--ghost kp-datatable__clear-filters')));
+        const clearButton = /** @type {HTMLButtonElement} */ (
+            add(make('button', `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? ' kp-button--sm' : ''}`))
+        );
         clearButton.type = 'button';
         clearButton.addEventListener('click', () => {
             clearFilters();
-            toggle?.focus();
+            (toggle ?? addButton)?.focus();
         });
         if (pills !== null) {
             pills.textContent = '';
@@ -1552,6 +1686,10 @@ export function attachDataTables(
             const list = pillsList;
             list.textContent = '';
             list.setAttribute('aria-label', s.tableActiveFilters);
+            if (addMode) {
+                renderAddPills(s);
+                return;
+            }
             clearButton.textContent = s.tableClearFilters;
             let count = 0;
             for (const at of filterColumns) {
@@ -1574,6 +1712,280 @@ export function attachDataTables(
             }
             pills.hidden = count === 0;
             if (toggle !== null) toggle.textContent = s.tableFilters(count);
+        };
+
+        // ── The add-filter mode (#filter-add) ──────────────────────────
+        /** The column whose editor is open. @type {number | null} */
+        let editingFilter = null;
+        /** The pill the focus returns to when the editor closes; null for the add button. @type {number | null} */
+        let editorReturn = null;
+        let detachEditorPickers = () => {};
+
+        /** One pill per filter, in the order the filters were added. @param {import('./strings.js').Strings} s */
+        const renderAddPills = (s) => {
+            if (pills === null) return;
+            let count = 0;
+            for (const [at, value] of filters) {
+                const kind = filterKinds[at];
+                if (!kind) continue;
+                const label = filterPillLabel(kind, labelOf(at), value, s);
+                if (label === null) continue;
+                count += 1;
+                const item = make('li', 'kp-tag');
+                const edit = /** @type {HTMLButtonElement} */ (make('button', 'kp-datatable__pill-edit'));
+                edit.type = 'button';
+                edit.dataset.kpFilterPill = String(at);
+                edit.setAttribute('aria-label', s.tableEditFilter(label));
+                edit.setAttribute('aria-expanded', String(editingFilter === at));
+                if (filterEditor !== null) edit.setAttribute('aria-controls', filterEditor.id);
+                edit.textContent = label;
+                const remove = /** @type {HTMLButtonElement} */ (make('button', 'kp-tag__remove'));
+                remove.type = 'button';
+                remove.dataset.kpFilterUnpill = String(at);
+                remove.setAttribute('aria-label', s.tableRemoveFilter(label));
+                remove.textContent = removeGlyph;
+                item.append(edit, remove);
+                pillsList.append(item);
+            }
+            pills.hidden = count === 0;
+            clearButton.textContent = s.tableFilterClearAll;
+            clearButton.hidden = count < 2;
+            if (addButton !== null) addButton.textContent = s.tableAddFilter(count);
+            renderAddMenu(s);
+        };
+
+        /** The menu of filterable columns; a filtered one is marked, and choosing it edits its filter. @param {import('./strings.js').Strings} s */
+        const renderAddMenu = (s) => {
+            if (addMenu === null) return;
+            const focused = /** @type {HTMLElement | null} */ (addMenu.querySelector(':focus'))?.dataset.kpFilterColumn;
+            addMenu.setAttribute('aria-label', s.tableAddFilterMenu);
+            addMenu.textContent = '';
+            for (const at of filterColumns) {
+                const on = filters.has(at);
+                const item = make('li');
+                const button = /** @type {HTMLButtonElement} */ (make('button', 'kp-menu__item kp-datatable__add-item'));
+                button.type = 'button';
+                button.dataset.kpFilterColumn = String(at);
+                button.setAttribute('aria-label', on ? s.tableAddFilterItemActive(labelOf(at)) : s.tableAddFilterItem(labelOf(at)));
+                button.append(labelOf(at));
+                if (on) {
+                    button.dataset.kpFilterMarked = '';
+                    const mark = make('span', 'kp-badge');
+                    mark.setAttribute('aria-hidden', 'true');
+                    mark.textContent = s.tableFilterMarked;
+                    button.append(' ', mark);
+                }
+                item.append(button);
+                addMenu.append(item);
+                if (focused === String(at)) button.focus();
+            }
+        };
+
+        /** @param {number} at @param {number | null} returnTo the pill the focus goes back to, or null for the add button */
+        const openFilterEditor = (at, returnTo) => {
+            const kind = filterKinds[at];
+            if (filterEditor === null || !kind) return;
+            closeFilterEditor(false);
+            const s = getStrings();
+            const form = filterEditor;
+            const label = labelOf(at);
+            const current = filters.get(at);
+            const range = /** @type {{ from?: string, to?: string } | undefined} */ (Array.isArray(current) ? undefined : current);
+            editingFilter = at;
+            editorReturn = returnTo;
+            form.setAttribute('aria-label', s.tableFilterEditor(label));
+            form.dataset.kpFilterColumn = String(at);
+            const title = make('p', 'kp-datatable__filter-editor-title');
+            title.textContent = label;
+            form.append(title);
+            if (kind === 'choice') {
+                const set = make('fieldset', 'kp-fieldset');
+                const legend = make('legend', 'kp-sr-only');
+                legend.textContent = s.tableFilterChoicesLegend(label);
+                const choices = make('div', 'kp-datatable__filter-editor-choices');
+                for (const value of choiceValues(at)) {
+                    const option = make('label', 'kp-field__option');
+                    const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
+                    box.type = 'checkbox';
+                    box.name = 'values';
+                    box.value = value;
+                    box.checked = Array.isArray(current) && current.includes(value);
+                    option.append(box, ` ${value}`);
+                    choices.append(option);
+                }
+                set.append(legend, choices);
+                form.append(set);
+            } else {
+                const pair = make('div', 'kp-datatable__filter-editor-pair');
+                for (const bound of /** @type {const} */ (['from', 'to'])) {
+                    const input = /** @type {HTMLInputElement} */ (make('input', 'kp-field__input'));
+                    input.id = `${id}-filter-editor-${bound}`;
+                    input.dataset.kpFilterBound = bound;
+                    input.autocomplete = 'off';
+                    input.setAttribute('aria-describedby', `${id}-filter-editor-error`);
+                    const text = /** @type {HTMLLabelElement} */ (make('label', 'kp-field__label'));
+                    text.htmlFor = input.id;
+                    text.textContent = s.tableFilterBound(kind, bound, label);
+                    if (kind === 'range') {
+                        input.type = 'text';
+                        input.inputMode = 'decimal';
+                        input.value = range?.[bound] ?? '';
+                        const field = make('div', 'kp-field');
+                        field.append(text, input);
+                        pair.append(field);
+                    } else {
+                        // The package's date picker, the label on the row above its field.
+                        const picker = datePickerFor(input);
+                        picker.prepend(text);
+                        pair.append(picker);
+                    }
+                }
+                form.append(pair);
+            }
+            const error = make('p', 'kp-field__error');
+            error.id = `${id}-filter-editor-error`;
+            error.dataset.kpFilterError = '';
+            error.setAttribute('role', 'alert');
+            error.hidden = true;
+            const actions = make('div', 'kp-datatable__filter-editor-actions');
+            const apply = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--primary kp-button--sm'));
+            apply.type = 'submit';
+            apply.textContent = s.tableFilterApply;
+            const cancel = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--ghost kp-button--sm'));
+            cancel.type = 'button';
+            cancel.dataset.kpFilterCancel = '';
+            cancel.textContent = s.tableFilterCancel;
+            actions.append(apply, cancel);
+            form.append(error, actions);
+            form.hidden = false;
+            if (kind === 'date') {
+                detachEditorPickers = attachDatePickers(form);
+                for (const bound of /** @type {const} */ (['from', 'to'])) {
+                    const wanted = range?.[bound] ?? '';
+                    const picker = form.querySelector(`[data-kp-filter-bound="${bound}"]`)?.closest('[data-kp-datepicker]');
+                    if (wanted !== '' && picker) datePicker(picker)?.set(wanted);
+                }
+            }
+            renderPills();
+            /** @type {HTMLElement | null} */ (form.querySelector('input'))?.focus();
+        };
+
+        /** @param {boolean} [focus] hand the focus back to the pill, or to the add button */
+        const closeFilterEditor = (focus = true) => {
+            if (editingFilter === null || filterEditor === null) return;
+            detachEditorPickers();
+            detachEditorPickers = () => {};
+            const back = editorReturn;
+            editingFilter = null;
+            editorReturn = null;
+            filterEditor.hidden = true;
+            filterEditor.textContent = '';
+            delete filterEditor.dataset.kpFilterColumn;
+            filterEditor.removeAttribute('aria-label');
+            renderPills();
+            if (!focus) return;
+            const pill = back === null ? null : /** @type {HTMLElement | null} */ (pills?.querySelector(`[data-kp-filter-pill="${back}"]`) ?? null);
+            (pill ?? addButton)?.focus();
+        };
+
+        /** @param {SubmitEvent} event */
+        const onEditorSubmit = (event) => {
+            event.preventDefault();
+            const at = editingFilter;
+            const form = filterEditor;
+            if (at === null || form === null) return;
+            const kind = filterKinds[at];
+            const s = getStrings();
+            /** @type {FilterValue | null} */
+            let next = null;
+            if (kind === 'choice') {
+                const values = [...form.querySelectorAll('input[name="values"]:checked')].map((box) => /** @type {HTMLInputElement} */ (box).value);
+                next = values.length > 0 ? values : null;
+            } else if (kind === 'range' || kind === 'date') {
+                const read = (/** @type {'from' | 'to'} */ bound) => {
+                    const input = /** @type {HTMLInputElement} */ (form.querySelector(`[data-kp-filter-bound="${bound}"]`));
+                    return {
+                        text: input.value,
+                        iso: input.dataset.kpDateValue,
+                        label: bound === 'from' ? s.tableFilterFrom(labelOf(at)) : s.tableFilterTo(labelOf(at)),
+                    };
+                };
+                const result = readFilterBounds(kind, { from: read('from'), to: read('to') }, s);
+                for (const input of form.querySelectorAll('[data-kp-filter-bound]')) input.removeAttribute('aria-invalid');
+                if (result.error !== undefined) {
+                    const error = /** @type {HTMLElement} */ (form.querySelector('[data-kp-filter-error]'));
+                    error.textContent = result.error;
+                    error.hidden = false;
+                    const field = /** @type {HTMLElement} */ (form.querySelector(`[data-kp-filter-bound="${result.bound}"]`));
+                    field.setAttribute('aria-invalid', 'true');
+                    field.focus();
+                    return;
+                }
+                next = result.value;
+            }
+            // A filter just applied returns the focus to its own pill.
+            if (next !== null) editorReturn = at;
+            setFilter(at, next);
+            closeFilterEditor(true);
+        };
+        /** @param {MouseEvent} event */
+        const onEditorClick = (event) => {
+            if (/** @type {HTMLElement} */ (event.target).closest('[data-kp-filter-cancel]') !== null) closeFilterEditor(true);
+        };
+        /** @param {KeyboardEvent} event */
+        const onEditorKeydown = (event) => {
+            const target = /** @type {HTMLElement} */ (event.target);
+            // Escape inside an open calendar closes the calendar, not the editor.
+            if (event.key !== 'Escape' || event.defaultPrevented || target.closest('[data-kp-date-panel]') !== null) return;
+            if (target.getAttribute('aria-expanded') === 'true') return;
+            event.preventDefault();
+            closeFilterEditor(true);
+        };
+        /** @param {MouseEvent} event */
+        const onAddMenuClick = (event) => {
+            const button = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (event.target).closest('[data-kp-filter-column]'));
+            if (button === null) return;
+            const at = Number(button.dataset.kpFilterColumn);
+            if (addPop?.matches(':popover-open')) addPop.hidePopover();
+            openFilterEditor(at, filters.has(at) ? at : null);
+        };
+        /** @param {KeyboardEvent} event */
+        const onAddMenuKey = (event) => {
+            if (addMenu === null) return;
+            const items = /** @type {HTMLElement[]} */ ([...addMenu.querySelectorAll('.kp-menu__item')]);
+            const at = items.indexOf(/** @type {HTMLElement} */ (document.activeElement));
+            /** @type {Record<string, number>} */
+            const moves = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: items.length - 1 };
+            const to = moves[event.key];
+            if (to === undefined || items.length === 0) return;
+            event.preventDefault();
+            items[(to + items.length) % items.length]?.focus();
+        };
+        /** @param {Event} event */
+        const onAddToggle = (event) => {
+            const open = /** @type {ToggleEvent} */ (event).newState === 'open';
+            addButton?.setAttribute('aria-expanded', String(open));
+            if (!open) return;
+            renderAddMenu(getStrings());
+            /** @type {HTMLElement | null} */ (addMenu?.querySelector('.kp-menu__item') ?? null)?.focus();
+        };
+        /** @param {MouseEvent} event */
+        const onPillsClick = (event) => {
+            if (!addMode) return;
+            const target = /** @type {HTMLElement} */ (event.target);
+            const edit = /** @type {HTMLElement | null} */ (target.closest('[data-kp-filter-pill]'));
+            if (edit !== null) {
+                const at = Number(edit.dataset.kpFilterPill);
+                if (editingFilter === at) closeFilterEditor(true);
+                else openFilterEditor(at, at);
+                return;
+            }
+            const remove = /** @type {HTMLElement | null} */ (target.closest('[data-kp-filter-unpill]'));
+            if (remove === null) return;
+            const at = Number(remove.dataset.kpFilterUnpill);
+            if (editingFilter === at) closeFilterEditor(false);
+            setFilter(at, null);
+            /** @type {HTMLElement | null} */ (pills?.querySelector('.kp-tag__remove') ?? addButton)?.focus();
         };
 
         /** True while writeControls sets a date picker, whose change event must not be read back. */
@@ -1838,6 +2250,7 @@ export function attachDataTables(
             applyFilter();
         };
         const clearFilters = () => {
+            closeFilterEditor(false);
             filters.clear();
             writeControls();
             renderPills();
@@ -1846,6 +2259,7 @@ export function attachDataTables(
         const onClear = () => {
             query = '';
             if (search !== null) search.value = '';
+            closeFilterEditor(false);
             filters.clear();
             writeControls();
             renderPills();
@@ -2331,6 +2745,13 @@ export function attachDataTables(
         panel?.addEventListener('change', onPanel);
         panel?.addEventListener(DATE_EVENT, onPanel);
         toggle?.addEventListener('click', onToggle);
+        addPop?.addEventListener('toggle', onAddToggle);
+        addMenu?.addEventListener('click', onAddMenuClick);
+        addMenu?.addEventListener('keydown', onAddMenuKey);
+        filterEditor?.addEventListener('submit', onEditorSubmit);
+        filterEditor?.addEventListener('click', onEditorClick);
+        filterEditor?.addEventListener('keydown', onEditorKeydown);
+        pillsList.addEventListener('click', onPillsClick);
         sortBy?.addEventListener('change', onSortBy);
         sortDirection?.addEventListener('click', onSortDirection);
         sizeSelect?.addEventListener('change', onPageSize);
@@ -2425,6 +2846,15 @@ export function attachDataTables(
             },
             filter: setFilter,
             clearFilters,
+            editFilter: (column) => {
+                if (addMode) {
+                    if (column === null) closeFilterEditor(false);
+                    else openFilterEditor(column, filters.has(column) ? column : null);
+                } else if (panel !== null && toggle !== null) {
+                    panel.hidden = column === null;
+                    toggle.setAttribute('aria-expanded', String(!panel.hidden));
+                }
+            },
             hideColumns: (columns) => setHidden(columns),
             expand: expandKeys,
             density: setDensity,
@@ -2469,6 +2899,15 @@ export function attachDataTables(
             panel?.removeEventListener('change', onPanel);
             panel?.removeEventListener(DATE_EVENT, onPanel);
             toggle?.removeEventListener('click', onToggle);
+            closeFilterEditor(false);
+            if (addPop?.matches(':popover-open')) addPop.hidePopover();
+            addPop?.removeEventListener('toggle', onAddToggle);
+            addMenu?.removeEventListener('click', onAddMenuClick);
+            addMenu?.removeEventListener('keydown', onAddMenuKey);
+            filterEditor?.removeEventListener('submit', onEditorSubmit);
+            filterEditor?.removeEventListener('click', onEditorClick);
+            filterEditor?.removeEventListener('keydown', onEditorKeydown);
+            pillsList.removeEventListener('click', onPillsClick);
             sortBy?.removeEventListener('change', onSortBy);
             sortDirection?.removeEventListener('click', onSortDirection);
             sizeSelect?.removeEventListener('change', onPageSize);

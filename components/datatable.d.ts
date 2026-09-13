@@ -32,6 +32,7 @@ export type SortKey = {
 export type DataTableApi = {
     rows: (which?: 'view' | 'page') => Record<string, unknown>[];
     reload: () => void;
+    editFilter: (key: string | null) => void;
 };
 export type DataRequest = {
     query: string;
@@ -96,6 +97,10 @@ export type DataTableProps = {
     filters?: Record<string, FilterValue>;
     defaultFilters?: Record<string, FilterValue>;
     onFiltersChange?: (filters: Record<string, FilterValue>) => void;
+    /**
+     * How the column filters are set: a panel of every filter, or "+ Add filter" with one pill per filter that reopens its editor. Default panel.
+     */
+    filterMode?: 'panel' | 'add';
     /**
      * Controlled: the filter panel.
      */

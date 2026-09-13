@@ -105,6 +105,68 @@ export type Strings = {
      * The way out of the no-match state
      */
     tableClearSearch: string;
+    /**
+     * The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
+     */
+    tableAddFilter: (active: number) => string;
+    /**
+     * The name of its menu of filterable columns
+     */
+    tableAddFilterMenu: string;
+    /**
+     * A column in that menu, not filtered yet
+     */
+    tableAddFilterItem: (column: string) => string;
+    /**
+     * A column in that menu that is filtered already: choosing it edits that filter
+     */
+    tableAddFilterItemActive: (column: string) => string;
+    /**
+     * The mark beside a filtered column in the menu
+     */
+    tableFilterMarked: string;
+    /**
+     * The editor's accessible name
+     */
+    tableFilterEditor: (column: string) => string;
+    /**
+     * The editor's list of choices, for a screen reader
+     */
+    tableFilterChoicesLegend: (column: string) => string;
+    /**
+     * A bound's visible label in the editor
+     */
+    tableFilterBound: (kind: 'range' | 'date', bound: 'from' | 'to', column: string) => string;
+    /**
+     * A choice filter's one pill in the add-filter mode
+     */
+    tableFilterChoicePill: (column: string, values: string[]) => string;
+    /**
+     * A range or date filter's pill in the add-filter mode; an open end is left out
+     */
+    tableFilterSpanPill: (column: string, from: string, to: string, kind: 'range' | 'date') => string;
+    /**
+     * A pill's own button, which reopens its editor
+     */
+    tableEditFilter: (label: string) => string;
+    tableFilterApply: string;
+    tableFilterCancel: string;
+    /**
+     * The add-filter mode's way out of every filter, shown from two pills
+     */
+    tableFilterClearAll: string;
+    /**
+     * A number bound that is not a number
+     */
+    tableFilterNotNumber: (label: string, value: string) => string;
+    /**
+     * A date bound the picker cannot read
+     */
+    tableFilterNotDate: (label: string, value: string) => string;
+    /**
+     * A range whose lower bound is above its upper
+     */
+    tableFilterBackwards: (from: string, to: string) => string;
     tableDensity: string;
     tableDensityComfortable: string;
     tableDensityCompact: string;
@@ -361,6 +423,23 @@ export type Strings = {
  * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
  * @property {string} tableClearFilters
  * @property {string} tableClearSearch      The way out of the no-match state
+ * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
+ * @property {string} tableAddFilterMenu    The name of its menu of filterable columns
+ * @property {(column: string) => string} tableAddFilterItem  A column in that menu, not filtered yet
+ * @property {(column: string) => string} tableAddFilterItemActive  A column in that menu that is filtered already: choosing it edits that filter
+ * @property {string} tableFilterMarked     The mark beside a filtered column in the menu
+ * @property {(column: string) => string} tableFilterEditor  The editor's accessible name
+ * @property {(column: string) => string} tableFilterChoicesLegend  The editor's list of choices, for a screen reader
+ * @property {(kind: 'range' | 'date', bound: 'from' | 'to', column: string) => string} tableFilterBound  A bound's visible label in the editor
+ * @property {(column: string, values: string[]) => string} tableFilterChoicePill  A choice filter's one pill in the add-filter mode
+ * @property {(column: string, from: string, to: string, kind: 'range' | 'date') => string} tableFilterSpanPill  A range or date filter's pill in the add-filter mode; an open end is left out
+ * @property {(label: string) => string} tableEditFilter  A pill's own button, which reopens its editor
+ * @property {string} tableFilterApply
+ * @property {string} tableFilterCancel
+ * @property {string} tableFilterClearAll   The add-filter mode's way out of every filter, shown from two pills
+ * @property {(label: string, value: string) => string} tableFilterNotNumber  A number bound that is not a number
+ * @property {(label: string, value: string) => string} tableFilterNotDate  A date bound the picker cannot read
+ * @property {(from: string, to: string) => string} tableFilterBackwards  A range whose lower bound is above its upper
  * @property {string} tableDensity
  * @property {string} tableDensityComfortable
  * @property {string} tableDensityCompact

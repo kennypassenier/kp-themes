@@ -348,88 +348,6 @@
                 min-inline-size: 11rem;
                 --kp-datepicker-input-min: 6.5rem;
             }
-            /* ---- Adding a filter, one at a time (#filter-add) ---- */
-            .dtr-anchor-add {
-                anchor-name: --dtr-add;
-            }
-            .dtr-pop-add {
-                position-anchor: --dtr-add;
-            }
-            /* Block, not flex: a register may put a ::before on the item
-               (cyberpunk's dash), and in a flex row it becomes an item. */
-            .dtr-menu-item {
-                display: block;
-                inline-size: 100%;
-                white-space: nowrap;
-            }
-            .dtr-menu-item > .kp-badge {
-                margin-inline-start: 0.5rem;
-            }
-            /* The editor's frame is mock, not a .kp-card and not a
-               .kp-popover: both carry a clip-path in cyberpunk (the cut
-               corner), which cuts off the calendar a date picker opens
-               inside them. Measured on this page, 2026-09-13. */
-            .dtr-editor {
-                position: relative;
-                z-index: 3;
-                display: grid;
-                gap: 0.75rem;
-                margin: 0.75rem 0.75rem 0;
-                padding: 0.75rem;
-                max-inline-size: 34rem;
-                border: 1px solid var(--border-strong);
-                border-radius: var(--radius, 0.5rem);
-                background: var(--card);
-                color: var(--card-foreground);
-            }
-            .dtr-editor__title {
-                margin: 0;
-                font-size: 1rem;
-            }
-            .dtr-editor[hidden] {
-                display: none;
-            }
-            .dtr-editor__choices {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-                gap: 0.25rem 1rem;
-            }
-            .dtr-editor__pair {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-                gap: 0.75rem;
-            }
-            .dtr-editor__actions {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            .dtr-pill-edit {
-                padding: 0;
-                border: 0;
-                background: none;
-                color: inherit;
-                font: inherit;
-                text-align: start;
-                cursor: pointer;
-                text-decoration: underline dotted;
-                text-underline-offset: 0.2em;
-            }
-            .dtr-chips--quiet {
-                min-block-size: 0;
-                padding-block-start: 0.5rem;
-            }
-            .dtr-frozen-pair {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-                gap: 1.25rem;
-                margin-block-end: 1.25rem;
-                align-items: start;
-            }
-            .dtr-frozen-menu {
-                position: relative;
-                min-block-size: 17rem;
-            }
         </style>
     </head>
     <body>
@@ -868,94 +786,43 @@
 
             <!-- ============================================================ filter-add -->
             <section class="cat-block" id="filter-add">
-                <h2>Adding a filter, one at a time<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <h2>Adding a filter, one at a time<span class="dtr-tag dtr-tag--package">package today</span></h2>
                 <div class="cat-look">
-                    <b>Look at:</b> <b>mock</b> behaviour built from package parts: the button is <code>.kp-button</code>, the column list a
-                    <code>.kp-menu</code> in a <code>.kp-popover</code>, the editor holds <code>.kp-field__check</code> boxes, two
-                    <code>.kp-field</code> number fields or two <code>.kp-datepicker</code> pickers (attached by <code>js/datepicker.js</code>), and
-                    every active filter is a <code>.kp-tag</code> pill. Only the editor's frame is mock: a <code>.kp-card</code> or
-                    <code>.kp-popover</code> cuts off an open calendar in cyberpunk, whose cut corner is a clip-path. The two frozen pictures on top
-                    show the menu and an editor open; the live table below them starts with one pill, <i>Status: Open, Watching</i>.
-                    <b>Compare it with the panel in the block above.</b> <b>Space:</b> the panel, while open, spends its full height above the table
-                    even with nothing set (closed, its choices are out of sight too); this design spends one toolbar line and one line of pills, and
-                    the editor's height only while you edit (the line under the table measures both in the current theme).
-                    <b>What each makes easy:</b> the panel shows every filter at once, so you see what could be narrowed without opening anything;
-                    adding a filter keeps the toolbar quiet and does not grow with the number of columns, which matters for a table with twenty
-                    columns rather than six. <b>Try:</b> press <b>+ Add filter</b>, choose <b>Hours open</b>, type 10 and 100, Apply: a pill
-                    <i>Hours open: 10–100</i> appears and the rows narrow. Click the pill's text: its editor opens with 10 and 100 in it. Open the
-                    menu again: Status and Hours open are marked <i>filtered</i>, and choosing one opens its pill's editor rather than a second pill.
-                    Add <b>Opened</b> from 1 September with the calendar button. With two or more pills, <b>Clear all</b>
-                    appears. Remove a pill with its ×. Cancel and Escape leave everything as it was; an empty editor applied removes its filter.
+                    <b>Look at:</b> <b>package today</b>, nothing on this block is mock. It is <code>.kp-datatable</code> with
+                    <code>data-kp-filter-mode="add"</code> (React: <code>filterMode="add"</code>), Kenny's choice of 2026-09-14: both designs ship,
+                    chosen per table, and the panel stays the default. The button, the menu (<code>.kp-menu</code> in a <code>.kp-popover</code>), the
+                    checkboxes, the number fields, the two <code>.kp-datepicker</code> pickers and the <code>.kp-tag</code> pills are the package's
+                    own; the editor has its own frame, because a <code>.kp-card</code> or <code>.kp-popover</code> carries a clip-path in some
+                    registers that would cut off an open calendar, and the calendar itself opens in the top layer. The table starts with one pill,
+                    <i>Status: Open, Watching</i>. <b>Compare it with the panel in the block above.</b> <b>Space:</b> the panel, while open, spends
+                    its full height above the table even with nothing set; this design spends one toolbar line and one line of pills, and the editor's
+                    height only while you edit (the line under the table measures both in the current theme). <b>What each makes easy:</b>
+                    the panel shows every filter at once; adding a filter keeps the toolbar quiet and does not grow with the number of columns.
+                    <b>Try:</b> press <b>+ Add filter (1 active)</b>, choose <b>Hours open</b>, type 10 and 100, Apply: a pill
+                    <i>Hours open: 10–100</i> appears and the rows narrow. Type <i>ten</i> instead and the editor says it wants a number; 100 then 10
+                    and it says the range runs backwards. Click the pill's text: its editor opens with 10 and 100 in it. Open the menu again: Status
+                    and Hours open are marked <i>filtered</i>, and choosing one opens its pill's editor rather than a second pill. Add
+                    <b>Opened</b> from 1 September with the calendar button. With two or more pills, <b>Clear all</b> appears. Remove a pill with its
+                    ×. Cancel and Escape leave everything as it was; an empty editor applied removes its filter; the arrow keys move through the menu.
                 </div>
                 <div class="cat-stage cat-stage--block">
-                    <div class="dtr-frozen-pair" inert>
-                        <div>
-                            <p class="dtr-caption">Frozen open: the column menu</p>
-                            <div class="dtr-frozen-menu">
-                                <button type="button" class="kp-button" aria-haspopup="true" aria-expanded="true">+ Add filter</button>
-                                <div class="kp-popover">
-                                    <ul class="kp-menu" aria-label="Filter by column, frozen picture">
-                                        <li><button type="button" class="kp-menu__item dtr-menu-item">Site</button></li>
-                                        <li>
-                                            <button type="button" class="kp-menu__item dtr-menu-item">
-                                                Status <span class="kp-badge">filtered</span>
-                                            </button>
-                                        </li>
-                                        <li><button type="button" class="kp-menu__item dtr-menu-item">Severity</button></li>
-                                        <li><button type="button" class="kp-menu__item dtr-menu-item">Hours open</button></li>
-                                        <li><button type="button" class="kp-menu__item dtr-menu-item">Opened</button></li>
-                                        <li><button type="button" class="kp-menu__item dtr-menu-item">Owner</button></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="dtr-caption">Frozen open: the editor for Status</p>
-                            <form class="dtr-editor" aria-label="Filter on Status, frozen picture">
-                                <h3 class="dtr-editor__title">Status</h3>
-                                <fieldset class="kp-fieldset">
-                                    <legend class="kp-sr-only">Show incidents whose status is</legend>
-                                    <div class="dtr-editor__choices">
-                                        <label class="kp-field__option"><input class="kp-field__check" type="checkbox" checked /> Open</label>
-                                        <label class="kp-field__option"><input class="kp-field__check" type="checkbox" checked /> Watching</label>
-                                        <label class="kp-field__option"><input class="kp-field__check" type="checkbox" /> Closed</label>
-                                    </div>
-                                </fieldset>
-                                <div class="dtr-editor__actions">
-                                    <button type="button" class="kp-button kp-button--primary kp-button--sm">Apply</button>
-                                    <button type="button" class="kp-button kp-button--ghost kp-button--sm">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="kp-datatable dtr-mock" id="mk-addfilter">
-                        <div class="dtr-toolbar">
-                            <button
-                                type="button"
-                                class="kp-button dtr-anchor-add"
-                                popovertarget="dtr-add-pop"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                data-dtr-add
-                            >
-                                + Add filter
-                            </button>
-                            <div popover="auto" id="dtr-add-pop" class="kp-popover dtr-pop-add">
-                                <ul class="kp-menu" aria-label="Filter by column" data-dtr-addmenu></ul>
-                            </div>
+                    <div
+                        class="kp-datatable"
+                        id="dt-addfilter"
+                        data-kp-datatable
+                        data-kp-filter-mode="add"
+                        data-kp-page-size="10"
+                        data-kp-page-sizes="none"
+                    >
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button" data-kp-datatable-add-filter>+ Add filter</button>
                             <input
-                                class="kp-field__input dtr-grow"
+                                class="kp-datatable__search"
                                 type="search"
+                                data-kp-datatable-search
                                 aria-label="Search incidents, add-filter block"
                                 placeholder="Search all columns"
-                                data-dtr-q
                             />
-                        </div>
-                        <form class="dtr-editor" data-dtr-editor-card hidden novalidate></form>
-                        <div class="dtr-chips dtr-chips--quiet">
-                            <ul class="kp-tag-list" aria-label="Active filters, add-filter block" data-dtr-pills></ul>
-                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-clear-all hidden>Clear all</button>
                         </div>
                         <div class="kp-table-wrap">
                             <table class="kp-table">
@@ -963,20 +830,44 @@
                                     Incidents, filtered one column at a time
                                 </caption>
                                 <thead>
-                                    <tr data-dtr-head></tr>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Site</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-filter="choice"
+                                            data-kp-filter-options="Open,Watching,Closed"
+                                            data-kp-filter-value="Open,Watching"
+                                        >
+                                            Status
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-sort-order="Low,Medium,High,Critical"
+                                            data-kp-filter="choice"
+                                            data-kp-filter-options="Critical,High,Medium,Low"
+                                        >
+                                            Severity
+                                        </th>
+                                        <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-sort="date" data-kp-filter="date">Opened</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Owner</th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
                         </div>
-                        <div class="dtr-foot">
-                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
-                            <div class="dtr-pager" data-dtr-pager></div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches these filters. Remove a pill or loosen one.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
                         </div>
                     </div>
                     <p class="dtr-readout" data-dtr-space-readout></p>
                 </div>
             </section>
-
             <!-- ============================================================ multi-sort -->
             <section class="cat-block" id="multi-sort">
                 <h2>Sorting on more than one column<span class="dtr-tag dtr-tag--mock">mock</span></h2>
@@ -2221,243 +2112,20 @@
 
             /* ---------------------------------------------------- filter-add */
             {
-                const root = document.getElementById('mk-addfilter');
-                const addButton = root.querySelector('[data-dtr-add]');
-                const pop = root.querySelector('#dtr-add-pop');
-                const menu = root.querySelector('[data-dtr-addmenu]');
-                const card = root.querySelector('[data-dtr-editor-card]');
-                const pillList = root.querySelector('[data-dtr-pills]');
-                const clearAll = root.querySelector('[data-dtr-clear-all]');
-                const q = root.querySelector('[data-dtr-q]');
-
-                // The six columns a filter can be added on, each with its editor's kind.
-                const FILTERABLE = [
-                    { key: 'site', kind: 'choice', values: SITES },
-                    { key: 'status', kind: 'choice', values: ['Open', 'Watching', 'Closed'] },
-                    { key: 'severity', kind: 'choice', values: ['Critical', 'High', 'Medium', 'Low'] },
-                    { key: 'hours', kind: 'range' },
-                    { key: 'opened', kind: 'dates' },
-                    { key: 'owner', kind: 'choice', values: [...OWNERS].sort(collator.compare) },
-                ];
-                const SPEC = Object.fromEntries(FILTERABLE.map((f) => [f.key, f]));
-                /** key -> { values } | { from, to }, in the order the filters were added. */
-                const filters = new Map([['status', { values: ['Open', 'Watching'] }]]);
-                let editing = null;
-
-                const pillLabel = (key, f) => {
-                    const label = COL[key].label;
-                    if (f.values) return `${label}: ${f.values.join(', ')}`;
-                    if (f.from !== '' && f.to !== '') return `${label}: ${f.from}${SPEC[key].kind === 'range' ? '–' : ' to '}${f.to}`;
-                    if (f.from !== '') return `${label}: from ${f.from}`;
-                    return `${label}: up to ${f.to}`;
-                };
-
-                const table = new MockTable(root, {
-                    sorts: [{ key: 'opened', dir: 'desc' }],
-                    predicate: (r) => {
-                        const words = lower(q.value.trim());
-                        if (words && !KEYS.some((k) => lower(r[k]).includes(words))) return false;
-                        for (const [key, f] of filters) {
-                            if (f.values && !f.values.includes(r[key])) return false;
-                            if (!f.values) {
-                                // Hours compare as numbers, dates as ISO strings.
-                                const bound = (b) => (SPEC[key].kind === 'range' ? Number(b) : b);
-                                if (f.from !== '' && r[key] < bound(f.from)) return false;
-                                if (f.to !== '' && r[key] > bound(f.to)) return false;
-                            }
-                        }
-                        return true;
-                    },
-                });
-                table.emptyText = 'No incident matches these filters. Remove a pill or loosen one.';
-
-                const renderMenu = () => {
-                    menu.innerHTML = FILTERABLE.map(({ key }) => {
-                        const on = filters.has(key);
-                        const name = on ? `${COL[key].label}, already filtered: edit that filter` : `Filter on ${COL[key].label}`;
-                        return `<li><button type="button" class="kp-menu__item dtr-menu-item" data-dtr-addcol="${key}" aria-label="${esc(name)}">${esc(COL[key].label)}${on ? ' <span class="kp-badge" aria-hidden="true">filtered</span>' : ''}</button></li>`;
-                    }).join('');
-                };
-                const renderPills = () => {
-                    pillList.innerHTML = [...filters]
-                        .map(([key, f]) => {
-                            const label = pillLabel(key, f);
-                            return `<li class="kp-tag"><button type="button" class="dtr-pill-edit" data-dtr-pill="${key}" aria-label="Edit filter ${esc(label)}" aria-expanded="${editing === key}">${esc(label)}</button><button type="button" class="kp-tag__remove" data-dtr-unpill="${key}" aria-label="Remove filter ${esc(label)}">×</button></li>`;
-                        })
-                        .join('');
-                    clearAll.hidden = filters.size < 2;
-                    addButton.textContent = filters.size ? `+ Add filter (${filters.size} active)` : '+ Add filter';
-                };
-                const refresh = () => {
-                    renderPills();
-                    renderMenu();
-                    table.update();
-                };
-
-                /* The editor: one column at a time, built fresh from the filter it edits. */
-                const openEditor = (key, returnFocus) => {
-                    const spec = SPEC[key];
-                    const current = filters.get(key);
-                    const label = COL[key].label;
-                    editing = key;
-                    card.dataset.dtrReturn = returnFocus;
-                    card.setAttribute('aria-label', `Filter on ${label}`);
-                    let body = '';
-                    if (spec.kind === 'choice') {
-                        body = `<fieldset class="kp-fieldset"><legend class="kp-sr-only">Show incidents whose ${esc(lower(label))} is</legend><div class="dtr-editor__choices">${spec.values
-                            .map(
-                                (v) =>
-                                    `<label class="kp-field__option"><input class="kp-field__check" type="checkbox" name="values" value="${esc(v)}"${current?.values?.includes(v) ? ' checked' : ''} /> ${esc(v)}</label>`,
-                            )
-                            .join('')}</div></fieldset>`;
-                    } else if (spec.kind === 'range') {
-                        const field = (bound, text) =>
-                            `<div class="kp-field"><label class="kp-field__label" for="addf-hours-${bound}">${text}</label><input class="kp-field__input" id="addf-hours-${bound}" name="${bound}" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${esc(current?.[bound] ?? '')}" /></div>`;
-                        body = `<div class="dtr-editor__pair">${field('from', 'From (hours)')}${field('to', 'To (hours)')}</div>`;
-                    } else {
-                        const picker = (bound, text) =>
-                            `<div class="kp-datepicker" data-kp-datepicker lang="en-GB"><label class="kp-field__label" for="addf-opened-${bound}">${text}</label><input class="kp-field__input" id="addf-opened-${bound}" name="${bound}" type="text" inputmode="numeric" autocomplete="off" data-kp-date-input /><button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar for ${text.toLowerCase()}" title="Open the calendar"><span aria-hidden="true">▦</span></button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>`;
-                        body = `<div class="dtr-editor__pair">${picker('from', 'Opened on or after')}${picker('to', 'Opened on or before')}</div>`;
-                    }
-                    card.innerHTML = `<h3 class="dtr-editor__title">${esc(label)}</h3>${body}<p class="kp-field__error" data-dtr-editor-error role="alert" hidden></p><div class="dtr-editor__actions"><button type="submit" class="kp-button kp-button--primary kp-button--sm">Apply</button><button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-cancel>Cancel</button></div>`;
-                    if (spec.kind === 'dates') {
-                        attachDatePickers(card);
-                        for (const bound of ['from', 'to']) {
-                            if (current?.[bound])
-                                datePicker(card.querySelector(`#addf-opened-${bound}`).closest('[data-kp-datepicker]')).set(current[bound]);
-                        }
-                    }
-                    card.hidden = false;
-                    renderPills();
-                    card.querySelector('input')?.focus();
-                };
-                const closeEditor = () => {
-                    const back = card.dataset.dtrReturn;
-                    editing = null;
-                    card.hidden = true;
-                    card.innerHTML = '';
-                    renderPills();
-                    (root.querySelector(`[data-dtr-pill="${back}"]`) ?? addButton).focus();
-                };
-                const fail = (message, field) => {
-                    const error = card.querySelector('[data-dtr-editor-error]');
-                    error.textContent = message;
-                    error.hidden = false;
-                    field?.focus();
-                };
-
-                card.addEventListener('submit', (event) => {
-                    event.preventDefault();
-                    const key = editing;
-                    const spec = SPEC[key];
-                    let next = null;
-                    if (spec.kind === 'choice') {
-                        const values = [...card.querySelectorAll('input[name="values"]:checked')].map((box) => box.value);
-                        if (values.length) next = { values };
-                    } else if (spec.kind === 'range') {
-                        const from = card.querySelector('[name="from"]');
-                        const to = card.querySelector('[name="to"]');
-                        for (const input of [from, to]) {
-                            input.value = input.value.trim();
-                            if (input.value !== '' && !/^\d+$/.test(input.value))
-                                return fail(`${input.labels[0].textContent} takes whole hours, like 10; "${input.value}" is not one.`, input);
-                        }
-                        if (from.value !== '' && to.value !== '' && Number(from.value) > Number(to.value))
-                            return fail(`The range runs backwards: from ${from.value} to ${to.value}. Swap the two values.`, from);
-                        if (from.value !== '' || to.value !== '') next = { from: from.value, to: to.value };
-                    } else {
-                        const read = (bound) => {
-                            const input = card.querySelector(`[name="${bound}"]`);
-                            return { input, iso: input.dataset.kpDateValue ?? '', typed: input.value.trim() };
-                        };
-                        const from = read('from');
-                        const to = read('to');
-                        for (const b of [from, to]) {
-                            if (b.typed !== '' && b.iso === '')
-                                return fail(`"${b.typed}" is not a date this field can read; write it as 01/09/2026, or use the calendar.`, b.input);
-                        }
-                        if (from.iso && to.iso && from.iso > to.iso)
-                            return fail(`The dates run backwards: ${from.iso} is after ${to.iso}. Swap the two.`, from.input);
-                        if (from.iso || to.iso) next = { from: from.iso, to: to.iso };
-                    }
-                    if (next) filters.set(key, next);
-                    else filters.delete(key);
-                    // A filter that was just added returns focus to its own new pill.
-                    card.dataset.dtrReturn = next ? key : card.dataset.dtrReturn;
-                    refresh();
-                    closeEditor();
-                });
-                card.addEventListener('click', (event) => {
-                    if (event.target.closest('[data-dtr-cancel]')) closeEditor();
-                });
-                card.addEventListener('keydown', (event) => {
-                    // Escape inside an open calendar closes the calendar, not the editor.
-                    if (event.key !== 'Escape' || event.target.closest('[data-kp-date-panel]')) return;
-                    if (event.target.getAttribute('aria-expanded') === 'true') return;
-                    event.preventDefault();
-                    closeEditor();
-                });
-
-                menu.addEventListener('click', (event) => {
-                    const key = event.target.closest('[data-dtr-addcol]')?.dataset.dtrAddcol;
-                    if (!key) return;
-                    pop.hidePopover();
-                    openEditor(key, filters.has(key) ? key : '');
-                });
-                menu.addEventListener('keydown', (event) => {
-                    const items = [...menu.querySelectorAll('.kp-menu__item')];
-                    const at = items.indexOf(document.activeElement);
-                    const to = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: items.length - 1 }[event.key];
-                    if (to === undefined) return;
-                    event.preventDefault();
-                    items[(to + items.length) % items.length].focus();
-                });
-                pop.addEventListener('toggle', (event) => {
-                    const open = event.newState === 'open';
-                    addButton.setAttribute('aria-expanded', String(open));
-                    if (open) {
-                        renderMenu();
-                        menu.querySelector('.kp-menu__item')?.focus();
-                    }
-                });
-                pillList.addEventListener('click', (event) => {
-                    const edit = event.target.closest('[data-dtr-pill]')?.dataset.dtrPill;
-                    if (edit) {
-                        if (editing === edit) closeEditor();
-                        else openEditor(edit, edit);
-                        return;
-                    }
-                    const remove = event.target.closest('[data-dtr-unpill]')?.dataset.dtrUnpill;
-                    if (!remove) return;
-                    filters.delete(remove);
-                    if (editing === remove) {
-                        editing = null;
-                        card.hidden = true;
-                        card.innerHTML = '';
-                    }
-                    refresh();
-                    (pillList.querySelector('.kp-tag__remove') ?? addButton).focus();
-                });
-                clearAll.addEventListener('click', () => {
-                    filters.clear();
-                    editing = null;
-                    card.hidden = true;
-                    card.innerHTML = '';
-                    refresh();
-                    addButton.focus();
-                });
-                q.addEventListener('input', () => table.update());
-                refresh();
+                // Package today: the rows go in, the package does the rest.
+                fillPackage('dt-addfilter', INCIDENTS, ['ref', 'site', 'status', 'severity', 'hours', 'opened', 'owner']);
 
                 // Measured, not asserted: what each design spends above the table.
                 const readout = document.querySelector('[data-dtr-space-readout]');
+                const root = document.getElementById('dt-addfilter');
                 const measure = () => {
                     const above = (id) => {
                         const r = document.getElementById(id);
                         return Math.round(r.querySelector('.kp-table-wrap').getBoundingClientRect().top - r.getBoundingClientRect().top);
                     };
                     const panelOpen = !document.getElementById('flt-panel').hidden;
-                    readout.textContent = `Measured in this theme: the filter panel above ${panelOpen ? 'with its panel open' : 'with its panel closed'} spends ${above('mk-filters')} px above its table; this block spends ${above('mk-addfilter')} px${card.hidden ? '' : ' with its editor open'}.`;
+                    const editing = root.querySelector('[data-kp-datatable-filter-editor]:not([hidden])') !== null;
+                    readout.textContent = `Measured in this theme: the filter panel above ${panelOpen ? 'with its panel open' : 'with its panel closed'} spends ${above('mk-filters')} px above its table; this block spends ${above('dt-addfilter')} px${editing ? ' with its editor open' : ''}.`;
                 };
                 measure();
                 new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

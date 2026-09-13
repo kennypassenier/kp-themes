@@ -177,6 +177,42 @@ export declare function nextSorts<K>(keys: {
  */
 export declare function filterActive(kind: FilterKind, value: FilterValue | undefined): boolean;
 /**
+ * The one pill a filter shows in the add-filter mode [Kenny, 2026-09-14]:
+ * the column and every value the filter holds, or null when it holds
+ * nothing. Both channels call this, so their pills read the same.
+ *
+ * @param {FilterKind} kind
+ * @param {string} column the column's name
+ * @param {FilterValue | undefined} value
+ * @param {import('./strings.js').Strings} s
+ * @returns {string | null}
+ */
+export declare function filterPillLabel(kind: FilterKind, column: string, value: FilterValue | undefined, s: import('./strings.js').Strings): string | null;
+/**
+ * Read the two bounds of an add-filter editor into a filter value, or say
+ * what is wrong with them [Kenny, 2026-09-14, #filter-add]: a number bound
+ * that is not a number, a date the picker cannot read, a range that runs
+ * backwards. A value of null with no error means both bounds are empty, and
+ * applying that removes the filter. Both channels call this.
+ *
+ * @param {'range' | 'date'} kind
+ * @param {Record<'from' | 'to', { text: string, iso?: string, label: string }>} bounds  `text` as the field shows it; `iso` a date picker's value
+ * @param {import('./strings.js').Strings} s
+ * @returns {{ value: { from: string, to: string } | null, error?: string, bound?: 'from' | 'to' }}
+ */
+export declare function readFilterBounds(kind: 'range' | 'date', bounds: Record<'from' | 'to', {
+    text: string;
+    iso?: string;
+    label: string;
+}>, s: import('./strings.js').Strings): {
+    value: {
+        from: string;
+        to: string;
+    } | null;
+    error?: string;
+    bound?: 'from' | 'to';
+};
+/**
  * Whether a cell's text passes a column's filter [gap-13].
  *
  * A range reads the cell in the page's locale, the way the sort does; a
@@ -280,6 +316,10 @@ export type DataTableHandle = {
     filter: (column: number, value: FilterValue | null) => void;
     clearFilters: () => void;
     /**
+     * open a column's filter editor, or close it with null; in the panel mode, open or close the panel
+     */
+    editFilter: (column: number | null) => void;
+    /**
      * the columns to hide; a locked column stays
      */
     hideColumns: (columns: readonly number[]) => void;
@@ -327,6 +367,10 @@ export type DataTableOptions = {
      * Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
      */
     multiSort?: boolean;
+    /**
+     * How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
+     */
+    filterMode?: 'panel' | 'add';
     pagerClassName?: string;
     pageLabel?: (at: number, of: number) => string;
     regions?: boolean;
@@ -369,6 +413,7 @@ export type DataTableOptions = {
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
  * @property {boolean} [multiSort]  Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
+ * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]
  * @property {boolean} [regions]
@@ -392,6 +437,6 @@ export type DataTableOptions = {
  *   wrapper untouched.
  * @returns {(() => void) & { handles: DataTableHandle[] }} detach
  */
-export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, }?: DataTableOptions): (() => void) & {
+export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, filterMode, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, }?: DataTableOptions): (() => void) & {
     handles: DataTableHandle[];
 };

@@ -3270,6 +3270,89 @@
         gap: var(--kp-space-sm, 0.5rem);
     }
 
+    /* The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], as the
+ * approved mock of research/datatable/demo.html#filter-add draws it: a menu
+ * of columns under "+ Add filter", an editor between the bar and the
+ * pills, and one pill per filter whose words reopen its editor. */
+
+    /* Under its button, and above it where the window has no room below. */
+    .kp-datatable__add-menu {
+        position-try-fallbacks: flip-block;
+    }
+
+    /* Block, not flex: a register may put a ::before on a menu item
+ * (cyberpunk's dash), and in a flex row it becomes an item. */
+    .kp-datatable__add-item {
+        display: block;
+        inline-size: 100%;
+        white-space: nowrap;
+        text-align: start;
+    }
+
+    .kp-datatable__add-item > .kp-badge {
+        margin-inline-start: var(--kp-datatable-add-mark-gap, 0.5rem);
+    }
+
+    /* Its own frame, not a .kp-card or a .kp-popover: both carry a clip-path
+ * in some registers, which cut off the calendar a date bound opens. The
+ * calendar goes to the top layer; the editor stays in the flow. */
+    .kp-datatable__filter-editor {
+        display: grid;
+        gap: var(--kp-datatable-filter-editor-gap, var(--kp-space-md, 0.75rem));
+        margin-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem)) 0;
+        margin-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+        padding: var(--kp-datatable-filter-editor-padding, var(--kp-space-md, 0.75rem));
+        max-inline-size: var(--kp-datatable-filter-editor-max-width, 34rem);
+        border: var(--kp-datatable-filter-editor-border-width, 1px) solid var(--kp-datatable-filter-editor-border, var(--border-strong));
+        border-radius: var(--kp-datatable-filter-editor-radius, var(--radius, 0.5rem));
+        background: var(--kp-datatable-filter-editor-ground, var(--card));
+        color: var(--kp-datatable-filter-editor-ink, var(--card-foreground));
+    }
+
+    .kp-datatable__filter-editor-title {
+        margin: 0;
+        font-weight: var(--kp-datatable-filter-editor-title-weight, 600);
+    }
+
+    .kp-datatable__filter-editor-choices {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-datatable-filter-choice-min, 9rem)), 1fr));
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-bound-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair > .kp-datepicker {
+        --kp-datepicker-input-min: 6rem;
+        min-inline-size: 0;
+    }
+
+    .kp-datatable__filter-editor-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A pill's words are a button that reopens its editor; it reads as the
+ * pill's text, with a dotted underline to say it can be pressed. */
+    .kp-datatable__pill-edit {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: start;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+    }
+
     .kp-datatable__actions {
         display: flex;
         flex-wrap: wrap;

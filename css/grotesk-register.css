@@ -452,10 +452,13 @@
        what it painted before and in option B's demo — the register's own
        pressed ground below (--secondary-active). Written out so the pressed
        state of these two buttons is this register's decision on the page,
-       not an accident of specificity. */
+       not an accident of specificity. The label turns to --foreground while
+       pressed [Kenny, 2026-09-14, "B, met een zwart label bij indrukken"]:
+       the white label measured 1.66:1 on that grey, the black one 11.31:1. */
     [data-theme='grotesk'] .kp-button--primary:active:not(:disabled),
     [data-theme='grotesk'] .kp-button--destructive:active:not(:disabled) {
         background: var(--secondary-active);
+        color: var(--foreground);
     }
 
     /* A bare mirror button, neither primary nor destructive, takes the

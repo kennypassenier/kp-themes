@@ -36,6 +36,7 @@
                 <li><a href="#datatable-server">Data table, rows from a server</a></li>
                 <li><a href="#datatable-inline-edit">Data table, editing in the cell</a></li>
                 <li><a href="#datatable-keyboard">Data table, arrow keys</a></li>
+                <li><a href="#datatable-add-filter">Data table, adding a filter</a></li>
                 <li><a href="#many">Two hundred rows</a></li>
             </ul>
 
@@ -3273,6 +3274,161 @@
                         </div>
                         <div class="kp-datatable__bar">
                             <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-add-filter">
+                <h2>Data table: adding a filter, one at a time</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-filter-mode="add"</code>, the second way to set the same filters as the panel above (Kenny's choice
+                    of 2026-09-14: both, per table). The table opens with one pill, <i>Status: Open, Watching</i>. Press <b>+ Add filter</b>: a menu
+                    of the four filterable columns opens under it, and <b>Status</b> carries a <i>filtered</i> mark. Choose <b>Hours open</b>, type
+                    <i>ten</i> and press Apply: the editor says it wants a number. Type 10 and 30, Apply: a pill <i>Hours open: 10–30</i> appears and
+                    the rows narrow. Press the pill's words: its editor opens again with 10 and 30 in it. Choose <b>Status</b> from the menu: it opens
+                    that pill's editor rather than adding a second pill. Add <b>Opened</b>: its two bounds are the theme's own date picker, and the
+                    calendar (<b>▦</b>) must open whole, above the table and never cut off, in every theme. With two or more pills
+                    <b>Clear all</b> appears; each pill's × removes that one filter. Escape closes the menu and the editor and leaves everything as it
+                    was; the arrow keys move through the menu. The editor's frame, the menu and the pills must look like this theme's own card, menu
+                    and tags.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-filter-mode="add" data-kp-page-size="10" data-kp-page-sizes="none">
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button" data-kp-datatable-add-filter>+ Add filter</button>
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search incidents" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, filtered one column at a time
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Site</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-filter="choice"
+                                            data-kp-filter-options="Open,Watching,Closed"
+                                            data-kp-filter-value="Open,Watching"
+                                        >
+                                            Status
+                                        </th>
+                                        <th scope="col" data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical">Severity</th>
+                                        <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-sort="date" data-kp-filter="date">Opened</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-13</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-12</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-11</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-10</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-09</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-08</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-06</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-04</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-02</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">24</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-01</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">41</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-08-29</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">55</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-08-27</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>
+                            <p class="kp-empty__title">No incident matches these filters</p>
+                            <button type="button" class="kp-button kp-button--secondary" data-kp-datatable-clear>Clear the search and filters</button>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
                         </div>
                     </div>
                 </div>

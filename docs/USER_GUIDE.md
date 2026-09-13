@@ -703,6 +703,64 @@ line under the table says where the focus is, from
 `strings.tableGridPosition`. `attachGrid(table)` gives a table of your own
 the same keys. React: `grid` and `gridPageRows`.
 
+### Adding a filter, one at a time [Kenny, 2026-09-14]
+
+The filters a header declares (`data-kp-filter="choice"`, `"range"`,
+`"date"`) are set in a panel by default. A table can choose the second
+design instead:
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-filter-mode="add">
+    <div class="kp-datatable__bar">
+        <!-- optional: without it the button is made and put in the top bar -->
+        <button type="button" class="kp-button" data-kp-datatable-add-filter>+ Add filter</button>
+    </div>
+    …
+    <th data-kp-filter="choice" data-kp-filter-value="Open,Watching">Status</th>
+    <th data-kp-filter="range">Hours open</th>
+    <th data-kp-filter="date">Opened</th>
+</div>
+```
+
+**+ Add filter** opens a menu (`.kp-menu` in a `.kp-popover`, under its
+button, above it where the window has no room) of every filterable column;
+the arrow keys, Home and End move through it and Escape closes it. Choosing
+a column opens an editor between the bar and the table: the package's
+checkboxes for a choice (the header's `data-kp-filter-options`, else the
+values the rows hold, read when the editor opens), two fields for a number
+range, two package date pickers for dates. **Apply** checks the bounds — a
+number that is not one, a date the picker cannot read, a range that runs
+backwards each get a message under the fields — and adds one pill for the
+filter, `Status: Open, Watching` or `Hours open: 10–30`. The pill's words
+reopen its editor with its values; its × removes it; **Clear all** shows
+from two pills. A column that is filtered already is marked in the menu and
+opens its own pill's editor rather than a second pill. Cancel and Escape
+leave everything as it was, an editor applied empty removes its filter, and
+the focus comes back to the pill or to the button.
+
+The state is the panel's: `view().filters`, `filter(column, value)`,
+`clearFilters()`, `kp-datatable-view` and, in React, `filters` /
+`defaultFilters` / `onFiltersChange` hold the same shape in both modes, so
+an app that reads the filters does not know which design is on screen. The
+handle's `editFilter(column)` opens a column's editor and `editFilter(null)`
+closes it (in the panel mode it opens and closes the panel); React's
+`apiRef.current.editFilter(key)` does the same. A default for every table
+at once: `attachDataTables(root, { filterMode: 'add' })`.
+
+React: `filterMode="add"`. The words are `strings.tableAddFilter`,
+`tableAddFilterMenu`, `tableAddFilterItem`, `tableAddFilterItemActive`,
+`tableFilterMarked`, `tableFilterEditor`, `tableFilterChoicesLegend`,
+`tableFilterBound`, `tableFilterChoicePill`, `tableFilterSpanPill`,
+`tableEditFilter`, `tableFilterApply`, `tableFilterCancel`,
+`tableFilterClearAll`, `tableFilterNotNumber`, `tableFilterNotDate` and
+`tableFilterBackwards`. The editor's frame is its own rather than a card
+or a popover, because some registers clip those to a cut corner and an
+open calendar would be clipped with them; the calendar opens in the top
+layer. Knobs: `--kp-datatable-filter-editor-ground`, `-ink`, `-border`,
+`-border-width`, `-radius`, `-padding`, `-gap`, `-max-width` and
+`-title-weight`, `--kp-datatable-filter-choice-min`,
+`--kp-datatable-filter-bound-min` and `--kp-datatable-add-mark-gap`.
+
 ## What a scroll region clips [TH114]
 
 Three boxes in this package scroll sideways inside themselves rather than

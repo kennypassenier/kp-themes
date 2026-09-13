@@ -20,6 +20,9 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { HASH_VERSION } from '../catalogue/block-hash.js';
+// A register of the test's own in place of catalogue/verdicts.json, so the
+// verdicts recorded in the repository do not decide what these tests can press.
+import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 
 test.describe.configure({ timeout: 180_000 });
 
@@ -30,17 +33,8 @@ const FEEDBACK = 'kp-catalogue-feedback:v1';
 const engineOf = (browserName) => browserName;
 const ENGINE_LABEL = { firefox: 'Firefox', chromium: 'Chromium', webkit: 'WebKit' };
 
-/**
- * Serve a register of our own in place of catalogue/verdicts.json, so the
- * verdicts recorded in the repository do not decide what these tests can press.
- * @param {import('@playwright/test').BrowserContext} context
- */
-async function useRegister(context, verdicts = {}) {
-    await context.route('**/catalogue/verdicts.json', (route) => route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts } }));
-}
-
 test.beforeEach(async ({ context }) => {
-    await useRegister(context);
+    await useEmptyRegister(context);
 });
 
 /** The hash this browser stored for a block in a theme. */
@@ -100,7 +94,7 @@ test('the same block in the same theme hashes the same on the review page, its c
         ['table', 'table--datatable'],
     ];
     const review = await browser.newContext();
-    await useRegister(review);
+    await useEmptyRegister(review);
     const reviewPage = await review.newPage();
     await openReview(reviewPage);
     const expected = {};
@@ -112,7 +106,7 @@ test('the same block in the same theme hashes the same on the review page, its c
 
     // A fresh browser: nothing judged, so the column measures on its own.
     const compare = await browser.newContext();
-    await useRegister(compare);
+    await useEmptyRegister(compare);
     const page = await compare.newPage();
     for (const [component, id] of blocks) {
         const columns = await openCompare(page, component);
@@ -132,7 +126,7 @@ test('the same block in the same theme hashes the same on the review page, its c
 
     // And on the component page itself, a third fresh browser.
     const own = await browser.newContext();
-    await useRegister(own);
+    await useEmptyRegister(own);
     const ownPage = await own.newPage();
     await ownPage.setViewportSize({ width: 1400, height: 900 });
     for (const [component, id] of blocks) {
@@ -262,7 +256,7 @@ test('a verdict in the register shows as judged in a fresh browser, only in its 
     const other = engine === 'firefox' ? 'chromium' : 'firefox';
     // The hashes this engine reads for two blocks, taken in a browser of its own.
     const first = await browser.newContext();
-    await useRegister(first);
+    await useEmptyRegister(first);
     const measuring = await first.newPage();
     await measuring.setViewportSize({ width: 1400, height: 900 });
     await measuring.goto('/catalogue/switch.html');
@@ -430,7 +424,7 @@ test('a block hashes the same in a short window and a tall one, a narrow one and
     // moved these hashes with the window before version 2 (measured 2026-09-13).
     const read = async (width, height) => {
         const context = await browser.newContext({ viewport: { width, height } });
-        await useRegister(context);
+        await useEmptyRegister(context);
         const page = await context.newPage();
         await page.goto('/catalogue/page.html');
         await expect(page.locator('#palette [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 60_000 });

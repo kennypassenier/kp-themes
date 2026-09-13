@@ -212,6 +212,41 @@
                 </div>
             </div>
             <button type="button" data-test="plain-after-grid">After the grid</button>
+
+            <!-- Kenny's form of 2026-09-14, filter-design, "Allebei, per tabel":
+                 the add-filter mode, one choice, a second choice, a number
+                 range and a date range. -->
+            <div
+                class="kp-datatable"
+                data-kp-datatable
+                data-kp-filter-mode="add"
+                data-kp-page-size="50"
+                data-kp-page-sizes="none"
+                data-test="plain-addfilter"
+            >
+                <div class="kp-datatable__bar"></div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, filtered one column at a time
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Reference</th>
+                                <th scope="col" data-kp-filter="choice">Site</th>
+                                <th scope="col" data-kp-filter="choice" data-kp-sort-order="Open,Watching,Closed">Status</th>
+                                <th scope="col" data-kp-filter="range">Hours</th>
+                                <th scope="col" data-kp-filter="date">Opened</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site status hours opened"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
         </section>
 
         <section>
@@ -291,7 +326,12 @@
                 hidden: () => labelsOf('columns', handle('columns').view().hidden),
                 expanded: () => handle('expand').view().expanded,
                 reload: () => handle('server').reload(),
+                filters: () => handle('addfilter').view().filters,
+                viewFilters: () => window.kpFixture.plainViewFilters,
             };
+            document.querySelector('[data-test="plain-addfilter"]').addEventListener('kp-datatable-view', (event) => {
+                window.kpFixture.plainViewFilters = event.detail.filters;
+            });
         </script>
         <script type="module" src="/tests/fixtures/.build/react-datatable-more.js"></script>
     </body>

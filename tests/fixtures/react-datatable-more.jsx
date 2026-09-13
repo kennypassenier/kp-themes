@@ -22,8 +22,8 @@ const editLog = [];
 
 function Cases() {
     const [rows, setRows] = useState(() => INCIDENTS.map((row) => ({ ...row })));
-    /** @type {import('react').MutableRefObject<{ sorts: [string, string][], hidden: string[], expanded: string[] }>} */
-    const seen = useRef({ sorts: [], hidden: ['Note'], expanded: ['INC-4400'] });
+    /** @type {import('react').MutableRefObject<{ sorts: [string, string][], hidden: string[], expanded: string[], filters: Record<string, unknown>, viewFilters: Record<string, unknown> }>} */
+    const seen = useRef({ sorts: [], hidden: ['Note'], expanded: ['INC-4400'], filters: {}, viewFilters: {} });
     /** @type {import('react').RefObject<import('../../components/datatable.jsx').DataTableApi | null>} */
     const serverApi = useRef(null);
     window.kpFixture = {
@@ -35,6 +35,8 @@ function Cases() {
             hidden: () => seen.current.hidden,
             expanded: () => seen.current.expanded,
             reload: () => serverApi.current?.reload(),
+            filters: () => seen.current.filters,
+            viewFilters: () => seen.current.viewFilters,
         },
     };
     const labels = /** @type {Record<string, string>} */ ({ ref: 'Reference', site: 'Site', status: 'Status', severity: 'Severity', note: 'Note' });
@@ -193,6 +195,30 @@ function Cases() {
             <button type="button" data-test="react-after-grid">
                 After the grid
             </button>
+            <DataTable
+                data-test="react-addfilter"
+                caption="Incidents, filtered one column at a time"
+                columns={[
+                    { key: 'ref', label: 'Reference', sortable: false },
+                    { key: 'site', label: 'Site', sortable: false, filter: 'choice' },
+                    { key: 'status', label: 'Status', sortable: false, filter: 'choice', order: ['Open', 'Watching', 'Closed'], render: badge },
+                    { key: 'hours', label: 'Hours', sortable: false, kind: 'number', filter: 'range' },
+                    { key: 'opened', label: 'Opened', sortable: false, filter: 'date' },
+                ]}
+                rows={INCIDENTS}
+                rowKey={rowKey}
+                searchable={false}
+                cards={false}
+                pageSizes={[]}
+                pageSize={50}
+                filterMode="add"
+                onFiltersChange={(filters) => {
+                    seen.current.filters = filters;
+                }}
+                onViewChange={(view) => {
+                    seen.current.viewFilters = view.filters;
+                }}
+            />
         </div>
     );
 }

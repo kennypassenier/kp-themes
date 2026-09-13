@@ -389,3 +389,55 @@ test.describe("grotesk hover, option B [Kenny's note 2]", () => {
         await page.mouse.up();
     });
 });
+
+// Kenny's decision of 2026-09-14, "B, met een zwart label bij indrukken":
+// option B stays, and while a primary or destructive button is pressed its
+// label is --foreground on the grey press ground. Before: the label stayed
+// --primary-foreground/--destructive-foreground, white rgb(255, 255, 255) on
+// rgb(201, 201, 201) = 1.66:1; red on this test.
+test.describe('grotesk press label [grotesk-hover decision]', () => {
+    /** @param {string} text */
+    const rgb = (text) => (text.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    /** @param {number[]} c */
+    const lum = (c) => {
+        const [r, g, b] = c.map((v) => {
+            const s = v / 255;
+            return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    /** @param {string} a @param {string} b */
+    const ratio = (a, b) => {
+        const [x, y] = [lum(rgb(a)), lum(rgb(b))].sort((p, q) => q - p);
+        return (x + 0.05) / (y + 0.05);
+    };
+
+    for (const variant of ['primary', 'destructive']) {
+        test(`a pressed ${variant} button's label reads at 4.5:1 or more on the press ground`, async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto('/tests/fixtures/button.html');
+            await page.evaluate((v) => {
+                document.documentElement.setAttribute('data-theme', 'grotesk');
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = `kp-button kp-button--${v}`;
+                b.dataset.probe = v;
+                b.textContent = v;
+                document.body.prepend(b);
+            }, variant);
+            const button = page.locator(`[data-probe="${variant}"]`);
+            const pressGround = await paint(page, '--secondary-active');
+            const ink = await paint(page, '--foreground');
+            await button.hover();
+            await page.mouse.down();
+            await style(button, 'background-color', 'the grey press ground').toBe(pressGround);
+            await style(button, 'color', 'the label turns to the foreground ink while pressed').toBe(ink);
+            const { color, backgroundColor } = await button.evaluate((el) => {
+                const cs = getComputedStyle(el);
+                return { color: cs.color, backgroundColor: cs.backgroundColor };
+            });
+            expect(ratio(color, backgroundColor), `${color} on ${backgroundColor}`).toBeGreaterThanOrEqual(4.5);
+            await page.mouse.up();
+        });
+    }
+});

@@ -7,11 +7,11 @@
 // as second.
 
 import { test, expect } from '@playwright/test';
-import { HASH_VERSION } from '../catalogue/block-hash.js';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 test('after opening the overlay again, one click picks only the first element for the ruler', async ({ page }) => {
     // An empty register, so no block is hidden as already judged.
-    await page.context().route('**/catalogue/verdicts.json', (route) => route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts: {} } }));
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/button.html');
     await expect(page.locator('.cat-nav')).toBeVisible();
     // Open, close, open: the sequence a reviewer goes through within minutes.
