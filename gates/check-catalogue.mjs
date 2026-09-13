@@ -131,7 +131,62 @@ function main() {
         console.error(`${phantom.length} page(s) in the navigation do not exist:\n  ` + phantom.join('\n  '));
     }
 
-    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length || shellless.length) process.exit(1);
+    // A class the package does not define styles nothing, and a page using one
+    // shows the reviewer the page's mistake rather than the package's look.
+    // Batch 2 found three on the first pages — kp-badge--destructive,
+    // kp-alert__title, kp-field__control — each counted a root as shown while
+    // painting nothing [scope-53].
+    const known = new Set();
+    for (const name of readdirSync(new URL('css/', root)).filter((n) => n.endsWith('.css'))) {
+        for (const match of readFileSync(new URL(`css/${name}`, root), 'utf8').matchAll(/\.(kp-[a-z0-9_-]+)/g)) {
+            known.add(match[1]);
+        }
+    }
+    // The package's own modules and React components also name classes they
+    // write (a calendar's blank cell, an upload row); those are its vocabulary
+    // even where no rule styles them.
+    for (const [folder, ext] of [
+        ['js/', '.js'],
+        ['components/', '.jsx'],
+    ]) {
+        for (const name of readdirSync(new URL(folder, root)).filter((n) => n.endsWith(ext))) {
+            for (const match of readFileSync(new URL(`${folder}${name}`, root), 'utf8').matchAll(/\b(kp-[a-z0-9_-]+)/g)) {
+                known.add(match[1]);
+            }
+        }
+    }
+    const used = new Map();
+    const sources = [
+        ...readdirSync(dir)
+            .filter((n) => n.endsWith('.html') || n.endsWith('.js'))
+            .map((n) => `catalogue/${n}`),
+        ...(existsSync(new URL('catalogue/frame/', root)) ? readdirSync(new URL('catalogue/frame/', root)).map((n) => `catalogue/frame/${n}`) : []),
+    ];
+    for (const path of sources) {
+        const text = readFileSync(new URL(path, root), 'utf8');
+        const lists = [
+            ...[...text.matchAll(/class(?:Name)?\s*=\s*["'`]([^"'`]*)["'`]/g)].map((m) => m[1]),
+            ...[...text.matchAll(/classList\.(?:add|toggle|remove)\(([^)]*)\)/g)].map((m) => m[1].replace(/['"`,]/g, ' ')),
+        ];
+        for (const list of lists) {
+            for (const name of list.split(/\s+/)) {
+                if (/^kp-[a-z0-9_-]+$/.test(name) && !known.has(name)) {
+                    if (!used.has(name)) used.set(name, new Set());
+                    used.get(name).add(path);
+                }
+            }
+        }
+    }
+    const undefinedClasses = [...used.entries()].sort(([a], [b]) => a.localeCompare(b));
+    if (undefinedClasses.length) {
+        console.error(
+            `${undefinedClasses.length} class(es) on catalogue pages that no stylesheet in css/ defines:\n  ` +
+                undefinedClasses.map(([name, paths]) => `${name}  (${[...paths].join(', ')})`).join('\n  '),
+        );
+    }
+
+    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length || shellless.length || undefinedClasses.length)
+        process.exit(1);
 
     console.log(
         `catalogue: ${shown.size} of ${defined.size} component roots shown across ${pages.length} page(s), ` +

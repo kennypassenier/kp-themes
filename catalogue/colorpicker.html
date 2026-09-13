@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Colour picker · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Colour picker</h1>
+            <p class="cat-intro">
+                <code>.kp-colorpicker</code>: three sliders for hue, saturation and lightness, a swatch, the value, and the one thing a theme system's
+                picker adds — the contrast of the chosen colour against a token of the theme on screen, measured by
+                <code>js/colorpicker.js</code> with the same function the contrast gate uses. Every picker here is live; switch the theme and every
+                verdict is measured again.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#default">Default</a></li>
+                <li><a href="#verdicts">Passes and fails</a></li>
+                <li><a href="#against">Against another token</a></li>
+                <li><a href="#missing">A token that does not exist</a></li>
+                <li><a href="#narrow">In a narrow pane</a></li>
+            </ul>
+
+            <section class="cat-block" id="default">
+                <h2>Default</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each slider has its label to its left, and the three sliders line up in one column. The slider tracks and thumbs
+                    are the browser's, tinted by the theme's accent: in a dark theme the track must not sit on a grey or white slab of its own. The
+                    swatch has a boundary, so a colour close to the page's ground is still a visible square. The value is in the mono face. The
+                    sentence under it gives the ratio <i>and</i> the verdict in words; move a slider and both must update as you drag, not only when
+                    you let go.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
+                        <label class="kp-field__label" for="cp-h">Hue</label>
+                        <input id="cp-h" type="range" data-kp-channel="h" min="0" max="360" value="220" />
+                        <label class="kp-field__label" for="cp-s">Saturation</label>
+                        <input id="cp-s" type="range" data-kp-channel="s" min="0" max="100" value="90" />
+                        <label class="kp-field__label" for="cp-l">Lightness</label>
+                        <input id="cp-l" type="range" data-kp-channel="l" min="0" max="100" value="56" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="verdicts">
+                <h2>Passes and fails</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a pale yellow on the left and a deep blue on the right, both measured as body text against
+                    <code>--background</code>. In a light theme the yellow must fail and the blue pass; in a dark theme the verdicts swap. A failing
+                    verdict is written in the alarm colour and a passing one in the muted ink — but the words "too little" and "passes" are what carry
+                    it, so read them, then switch the theme and read them again. A verdict that does not change when the theme flips from light to
+                    dark means the picker is not re-measuring.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-colorpicker" data-kp-colorpicker>
+                        <label class="kp-field__label" for="cp-pale-h">Hue</label>
+                        <input id="cp-pale-h" type="range" data-kp-channel="h" min="0" max="360" value="50" />
+                        <label class="kp-field__label" for="cp-pale-s">Saturation</label>
+                        <input id="cp-pale-s" type="range" data-kp-channel="s" min="0" max="100" value="90" />
+                        <label class="kp-field__label" for="cp-pale-l">Lightness</label>
+                        <input id="cp-pale-l" type="range" data-kp-channel="l" min="0" max="100" value="82" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="kp-colorpicker" data-kp-colorpicker>
+                        <label class="kp-field__label" for="cp-deep-h">Hue</label>
+                        <input id="cp-deep-h" type="range" data-kp-channel="h" min="0" max="360" value="225" />
+                        <label class="kp-field__label" for="cp-deep-s">Saturation</label>
+                        <input id="cp-deep-s" type="range" data-kp-channel="s" min="0" max="100" value="70" />
+                        <label class="kp-field__label" for="cp-deep-l">Lightness</label>
+                        <input id="cp-deep-l" type="range" data-kp-channel="l" min="0" max="100" value="22" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="against">
+                <h2>Against another token, and a lower bar</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the left picker sits on a card and measures against <code>--card</code>; the sentence must name
+                    <code>--card</code>, not <code>--background</code>. The measurement reads the token from the root of the document, not from the
+                    card around the picker, so in a theme that repaints its cards locally the number can describe a ground the picker is not on —
+                    worth a finding if you see a verdict that contradicts your eye. The right picker measures the same orange with
+                    <code>data-kp-against-kind="non-text"</code>: its bar is 3:1, not 4.5:1, so it may pass where the left one fails.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-card">
+                        <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--card">
+                            <label class="kp-field__label" for="cp-card-h">Hue</label>
+                            <input id="cp-card-h" type="range" data-kp-channel="h" min="0" max="360" value="28" />
+                            <label class="kp-field__label" for="cp-card-s">Saturation</label>
+                            <input id="cp-card-s" type="range" data-kp-channel="s" min="0" max="100" value="95" />
+                            <label class="kp-field__label" for="cp-card-l">Lightness</label>
+                            <input id="cp-card-l" type="range" data-kp-channel="l" min="0" max="100" value="45" />
+                            <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                            <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                            <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background" data-kp-against-kind="non-text">
+                        <label class="kp-field__label" for="cp-nt-h">Hue</label>
+                        <input id="cp-nt-h" type="range" data-kp-channel="h" min="0" max="360" value="28" />
+                        <label class="kp-field__label" for="cp-nt-s">Saturation</label>
+                        <input id="cp-nt-s" type="range" data-kp-channel="s" min="0" max="100" value="95" />
+                        <label class="kp-field__label" for="cp-nt-l">Lightness</label>
+                        <input id="cp-nt-l" type="range" data-kp-channel="l" min="0" max="100" value="45" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="missing">
+                <h2>A token that does not exist</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> this picker is pointed at <code>--sidebar-highlight</code>, which no theme defines. It must <i>say</i> that there
+                    is nothing to measure against, in words, in the alarm colour — never show a blank line, and never a ratio. A picker that silently
+                    stops measuring looks exactly like one that says the colour is fine, which is the failure this block exists to catch.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--sidebar-highlight">
+                        <label class="kp-field__label" for="cp-miss-h">Hue</label>
+                        <input id="cp-miss-h" type="range" data-kp-channel="h" min="0" max="360" value="160" />
+                        <label class="kp-field__label" for="cp-miss-s">Saturation</label>
+                        <input id="cp-miss-s" type="range" data-kp-channel="s" min="0" max="100" value="60" />
+                        <label class="kp-field__label" for="cp-miss-l">Lightness</label>
+                        <input id="cp-miss-l" type="range" data-kp-channel="l" min="0" max="100" value="40" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="narrow">
+                <h2>In a narrow pane</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> drag the pane narrow. The labels keep their width and the sliders take what is left; at the narrowest a slider
+                    must still be long enough to drag with a finger, and no label may overlap its slider. The contrast sentence is the longest thing
+                    here: it must wrap under the swatch rather than push the picker wider than the pane. The value must not break in the middle of a
+                    number.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <div class="kp-colorpicker" data-kp-colorpicker>
+                            <label class="kp-field__label" for="cp-n-h">Hue</label>
+                            <input id="cp-n-h" type="range" data-kp-channel="h" min="0" max="360" value="340" />
+                            <label class="kp-field__label" for="cp-n-s">Saturation</label>
+                            <input id="cp-n-s" type="range" data-kp-channel="s" min="0" max="100" value="75" />
+                            <label class="kp-field__label" for="cp-n-l">Lightness</label>
+                            <input id="cp-n-l" type="range" data-kp-channel="l" min="0" max="100" value="48" />
+                            <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                            <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                            <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

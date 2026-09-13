@@ -19,6 +19,13 @@ export const PAGES = [
         pages: [
             { href: 'catalogue/button.html', label: 'Buttons', component: true },
             { href: 'catalogue/table.html', label: 'Tables', component: true },
+            { href: 'catalogue/field.html', label: 'Fields and forms', component: true },
+            { href: 'catalogue/combobox.html', label: 'Combobox', component: true },
+            { href: 'catalogue/datepicker.html', label: 'Date picker', component: true },
+            { href: 'catalogue/upload.html', label: 'Upload', component: true },
+            { href: 'catalogue/colorpicker.html', label: 'Colour picker', component: true },
+            { href: 'catalogue/feedback.html', label: 'Alerts, toasts, badges, progress', component: true },
+            { href: 'catalogue/overlays.html', label: 'Dialogs, popovers, menus, tooltips', component: true },
         ],
     },
     {

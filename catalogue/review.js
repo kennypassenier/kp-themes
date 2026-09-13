@@ -306,7 +306,9 @@ async function composeAll(host) {
                     : state === 'changed'
                       ? `Changed since approval in ${themeLabel(theme)}`
                       : `Not yet approved in ${themeLabel(theme)}`;
-            entry.badge.className = `kp-badge${state === 'changed' ? ' kp-badge--warning' : state === 'approved' ? ' kp-badge--success' : ''}`;
+            // The badge has no severity variants (only application statuses), so the
+            // state is carried by the words alone.
+            entry.badge.className = 'kp-badge';
             entry.button.textContent = state === 'approved' ? 'Approved' : `Approve in ${themeLabel(theme)}`;
             entry.button.disabled = state === 'approved' || !hash;
             entry.section.dataset.catState = state;
@@ -357,7 +359,7 @@ function columnMenu(id, label, onPick) {
     const wrap = document.createElement('span');
     wrap.className = 'kp-theme-menu cat-compare__menu';
     wrap.innerHTML =
-        `<button type="button" class="kp-button kp-button--outline" popovertarget="${id}" style="anchor-name: --${id}" data-cat-column-label></button>` +
+        `<button type="button" class="kp-button" popovertarget="${id}" style="anchor-name: --${id}" data-cat-column-label></button>` +
         `<div popover="auto" id="${id}" class="kp-popover" style="position-anchor: --${id}">` +
         `<ul class="kp-menu" aria-label="${label}">${themeOptionsMarkup()}</ul></div>`;
     const button = wrap.querySelector('[data-cat-column-label]');

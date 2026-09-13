@@ -7,6 +7,7 @@ import { applyTheme } from '../../js/theme-core.js';
 import { THEMES } from '../../js/theme-registry.js';
 import { readPage, suffixIds } from '../review.js';
 import { COMPONENT_PAGES } from '../pages.js';
+import '../demos.js';
 
 const params = new URLSearchParams(location.search);
 const side = params.get('side') === 'b' ? 'b' : 'a';

@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Upload · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Upload</h1>
+            <p class="cat-intro">
+                <code>.kp-upload</code>: a drop zone that is a label for a real file input, and a list of rows the consumer drives with
+                <code>setProgress</code>, <code>setDone</code> and <code>setError</code> from <code>js/upload.js</code>. The package paints the
+                states; it never sends a file. The rows below are the exact markup the module writes, frozen at a chosen moment of an upload.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#empty">Empty</a></li>
+                <li><a href="#dragging">Dragging</a></li>
+                <li><a href="#list">A file list</a></li>
+                <li><a href="#errors">Errors</a></li>
+                <li><a href="#narrow">In a narrow pane</a></li>
+            </ul>
+
+            <section class="cat-block" id="empty">
+                <h2>Empty</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the zone is a dashed frame on a muted ground with its words centred; it must read as a place to drop something,
+                    not as a disabled box. It is a label for a hidden file input, so Tab must land on it — the focus ring has to show on the
+                    <i>zone</i>, and in a theme where it shows nowhere, a keyboard user cannot see where they are. Press Enter or Space: the browser's
+                    file dialog opens. Choose a file larger than 5 MB and it must appear as a refused row with the reason.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-upload" data-kp-upload data-kp-max-bytes="5000000" data-kp-max-files="3">
+                        <input type="file" multiple class="kp-sr-only" id="up-empty" data-kp-upload-input />
+                        <label class="kp-upload__zone" for="up-empty" data-kp-upload-zone>Drop the telemetry exports here, or choose them</label>
+                        <ul class="kp-upload__list" data-kp-upload-list></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="dragging">
+                <h2>Dragging</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> while a file is held over the zone the module sets <code>data-kp-dragging</code>: the frame takes the primary
+                    colour and the words the full ink. The difference from the empty zone above must be obvious at arm's length — a person dragging a
+                    file is looking at the file, not at the zone. The frozen copy is on the left; drag a real file from your desktop over the live
+                    zone on the right and the two must match. Nothing may change size when the state flips, or the target jumps away from the pointer.
+                </div>
+                <div class="cat-stage cat-grid">
+                    <div class="cat-cell">
+                        <h3>Frozen while dragging</h3>
+                        <div class="kp-upload">
+                            <input type="file" class="kp-sr-only" id="up-drag-frozen" />
+                            <label class="kp-upload__zone" for="up-drag-frozen" data-kp-dragging
+                                >Drop the telemetry exports here, or choose them</label
+                            >
+                        </div>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Live</h3>
+                        <div class="kp-upload" data-kp-upload>
+                            <input type="file" multiple class="kp-sr-only" id="up-drag-live" data-kp-upload-input />
+                            <label class="kp-upload__zone" for="up-drag-live" data-kp-upload-zone
+                                >Drop the telemetry exports here, or choose them</label
+                            >
+                            <ul class="kp-upload__list" data-kp-upload-list></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="list">
+                <h2>A file list</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> four rows in four moments: <b>waiting</b> (no progress yet), <b>uploading</b> at 64 %, <b>done</b> with a message,
+                    and a file whose name is 90 characters with no space in it. In every row the name, the size and the remove button must sit on one
+                    line, with the thin progress bar under them and the message under that. The size must stay right-aligned in tabular figures. The
+                    long name must break or ellipse inside its row — it must never push the size and the remove button out of the row or make the page
+                    scroll sideways. Each remove button must be named after its file.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-upload" data-kp-upload>
+                        <input type="file" multiple class="kp-sr-only" id="up-list" data-kp-upload-input />
+                        <label class="kp-upload__zone" for="up-list" data-kp-upload-zone>Drop the telemetry exports here, or choose them</label>
+                        <ul class="kp-upload__list" data-kp-upload-list>
+                            <li class="kp-upload__file" data-kp-upload-file="pump-house-4-line-1.csv" data-state="waiting">
+                                <span class="kp-upload__name">pump-house-4-line-1.csv</span><span class="kp-upload__size">412 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of pump-house-4-line-1.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove pump-house-4-line-1.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="pump-house-4-line-2.csv"
+                                data-state="uploading"
+                                style="--kp-progress: 64%"
+                            >
+                                <span class="kp-upload__name">pump-house-4-line-2.csv</span><span class="kp-upload__size">2.4 MB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="64"
+                                    aria-label="Progress of pump-house-4-line-2.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove pump-house-4-line-2.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="cold-store-door-sensor.csv"
+                                data-state="done"
+                                style="--kp-progress: 100%"
+                            >
+                                <span class="kp-upload__name">cold-store-door-sensor.csv</span><span class="kp-upload__size">18.4 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-label="Progress of cold-store-door-sensor.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite">Uploaded.</span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove cold-store-door-sensor.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                data-state="uploading"
+                                style="--kp-progress: 30%"
+                            >
+                                <span class="kp-upload__name"
+                                    >quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv</span
+                                ><span class="kp-upload__size">1.2 MB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="30"
+                                    aria-label="Progress of quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="errors">
+                <h2>Errors</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a refused file stays in the list with its reason on its own row — too large, wrong type, one too many — rather
+                    than a single message about "some files". The row's border and its message take the alarm colour, and the message must pass
+                    contrast on the ground; the file name stays in the ordinary ink so it can still be read. An error row must be told from a done row
+                    without colour: the words are what say it. The failed upload in the last row was accepted and then broke half-way; its bar stays
+                    where it stopped.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-upload" data-kp-upload>
+                        <input type="file" multiple class="kp-sr-only" id="up-errors" data-kp-upload-input accept=".csv" />
+                        <label class="kp-upload__zone" for="up-errors" data-kp-upload-zone>Drop CSV exports here, or choose them</label>
+                        <ul class="kp-upload__list" data-kp-upload-list>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="boiler-room-thermal-camera-footage.mp4"
+                                data-state="error"
+                                data-error="Larger than 5 MB"
+                            >
+                                <span class="kp-upload__name">boiler-room-thermal-camera-footage.mp4</span><span class="kp-upload__size">48.7 MB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of boiler-room-thermal-camera-footage.mp4"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite">Larger than 5 MB</span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove boiler-room-thermal-camera-footage.mp4"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="boiler-room-readings.xlsx"
+                                data-state="error"
+                                data-error="Only .csv files."
+                            >
+                                <span class="kp-upload__name">boiler-room-readings.xlsx</span><span class="kp-upload__size">88 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of boiler-room-readings.xlsx"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite">Only .csv files.</span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove boiler-room-readings.xlsx"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="boiler-room-full-year.csv"
+                                data-state="error"
+                                data-error="Larger than 5 MB"
+                            >
+                                <span class="kp-upload__name">boiler-room-full-year.csv</span><span class="kp-upload__size">12.9 MB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of boiler-room-full-year.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite">Larger than 5 MB</span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove boiler-room-full-year.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                            <li class="kp-upload__file" data-kp-upload-file="a.csv" data-state="waiting">
+                                <span class="kp-upload__name">a.csv</span><span class="kp-upload__size">1 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of a.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                ><button type="button" class="kp-button kp-button--ghost" aria-label="Remove a.csv" data-kp-upload-remove="">
+                                    ×
+                                </button>
+                            </li>
+                            <li class="kp-upload__file" data-kp-upload-file="b.csv" data-state="waiting">
+                                <span class="kp-upload__name">b.csv</span><span class="kp-upload__size">1 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of b.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                ><button type="button" class="kp-button kp-button--ghost" aria-label="Remove b.csv" data-kp-upload-remove="">
+                                    ×
+                                </button>
+                            </li>
+                            <li class="kp-upload__file" data-kp-upload-file="c.csv" data-state="error" data-error="No more than 2 files.">
+                                <span class="kp-upload__name">c.csv</span><span class="kp-upload__size">1 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="0"
+                                    aria-label="Progress of c.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite">No more than 2 files.</span
+                                ><button type="button" class="kp-button kp-button--ghost" aria-label="Remove c.csv" data-kp-upload-remove="">
+                                    ×
+                                </button>
+                            </li>
+                            <li
+                                class="kp-upload__file"
+                                data-kp-upload-file="weighbridge-calibration.csv"
+                                data-state="error"
+                                style="--kp-progress: 47%"
+                                data-error="The connection dropped at 47 %. Choose the file again to retry."
+                            >
+                                <span class="kp-upload__name">weighbridge-calibration.csv</span><span class="kp-upload__size">96 kB</span
+                                ><span
+                                    class="kp-upload__bar"
+                                    role="progressbar"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="47"
+                                    aria-label="Progress of weighbridge-calibration.csv"
+                                ></span
+                                ><span class="kp-upload__message" role="status" aria-live="polite"
+                                    >The connection dropped at 47 %. Choose the file again to retry.</span
+                                ><button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    aria-label="Remove weighbridge-calibration.csv"
+                                    data-kp-upload-remove=""
+                                >
+                                    ×
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="narrow">
+                <h2>In a narrow pane</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> drag the pane as narrow as it goes. The zone's words must wrap inside the dashed frame. In the rows, the
+                    90-character name is the first thing to give: it must wrap or ellipse while the size and the remove button stay whole and visible.
+                    A remove button pushed out of reach at 320 px is a file nobody can take back. Nothing may overflow the dashed edge of the pane.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <div class="kp-upload" data-kp-upload>
+                            <input type="file" multiple class="kp-sr-only" id="up-narrow" data-kp-upload-input />
+                            <label class="kp-upload__zone" for="up-narrow" data-kp-upload-zone>Drop the telemetry exports here, or choose them</label>
+                            <ul class="kp-upload__list" data-kp-upload-list>
+                                <li
+                                    class="kp-upload__file"
+                                    data-kp-upload-file="quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                    data-state="uploading"
+                                    style="--kp-progress: 80%"
+                                >
+                                    <span class="kp-upload__name"
+                                        >quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv</span
+                                    ><span class="kp-upload__size">1.2 MB</span
+                                    ><span
+                                        class="kp-upload__bar"
+                                        role="progressbar"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="80"
+                                        aria-label="Progress of quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                    ></span
+                                    ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--ghost"
+                                        aria-label="Remove quarterly-pressure-telemetry-pump-house-4-line-2-night-shift-2026-09-13-raw-export-v2b.csv"
+                                        data-kp-upload-remove=""
+                                    >
+                                        ×
+                                    </button>
+                                </li>
+                                <li class="kp-upload__file" data-kp-upload-file="line-2.csv" data-state="waiting">
+                                    <span class="kp-upload__name">line-2.csv</span><span class="kp-upload__size">2.4 MB</span
+                                    ><span
+                                        class="kp-upload__bar"
+                                        role="progressbar"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="0"
+                                        aria-label="Progress of line-2.csv"
+                                    ></span
+                                    ><span class="kp-upload__message" role="status" aria-live="polite"></span
+                                    ><button type="button" class="kp-button kp-button--ghost" aria-label="Remove line-2.csv" data-kp-upload-remove="">
+                                        ×
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

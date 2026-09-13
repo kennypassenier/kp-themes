@@ -7,6 +7,7 @@ import { currentTheme, initializeTheme, THEME_EVENT } from '../js/theme-core.js'
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { PAGES } from './pages.js';
+import './demos.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
 const ROOT = new URL('../', import.meta.url);
