@@ -120,6 +120,15 @@ function DatePickerInner(
         if (!open || panelRef.current === null) return undefined;
         return raiseDatePanel(panelRef.current);
     }, [open]);
+    // Opened from its button, the calendar takes the focus on its one tabbable
+    // day, as the framework-free channel does: the arrows then move through the
+    // month, and Escape has somewhere to come back from.
+    const focusOnOpen = useRef(false);
+    useEffect(() => {
+        if (!open || !focusOnOpen.current) return;
+        focusOnOpen.current = false;
+        /** @type {HTMLElement | null | undefined} */ (panelRef.current?.querySelector('[tabindex="0"]'))?.focus();
+    }, [open]);
 
     const chosen = parseDate(text, locale);
     const year = cursor.getFullYear();
@@ -196,6 +205,14 @@ function DatePickerInner(
             onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
             }}
+            onKeyDown={(event) => {
+                // Escape from anywhere in the open picker — the month buttons too —
+                // closes it and hands the focus back to its button.
+                if (event.key !== 'Escape' || !open || event.defaultPrevented) return;
+                event.preventDefault();
+                setOpen(false);
+                button.current?.focus();
+            }}
             {...rest}
         >
             <div className="kp-field">
@@ -237,7 +254,14 @@ function DatePickerInner(
                 aria-label={s.calendarOpen}
                 title={s.calendarOpen}
                 aria-expanded={open}
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                    if (!open) {
+                        focusOnOpen.current = true;
+                        // Open on the chosen date, so the focused day is the one in the field.
+                        if (chosen !== null) setCursor(chosen);
+                    }
+                    setOpen(!open);
+                }}
             >
                 {trigger ?? <span aria-hidden="true">{s.calendarButton}</span>}
             </button>

@@ -295,3 +295,19 @@ for (const channel of CHANNELS) {
         });
     }
 }
+
+for (const channel of CHANNELS) {
+    test(`opening the calendar puts focus on a day, and Escape closes it back to its button — ${channel.name}`, async ({ page }) => {
+        // Before (React): focus stayed on the trigger when the calendar opened,
+        // so the arrows moved nothing and Escape did nothing; the framework-free
+        // channel already focused a day and closed on Escape.
+        await page.goto(URL);
+        await page.locator(channel.input).fill('4-9-2026');
+        await page.locator(channel.open).click();
+        await expect(page.locator(channel.panel)).toBeVisible();
+        await expect(page.locator(`${channel.panel} [data-kp-day="2026-09-04"]`)).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(page.locator(channel.panel)).toBeHidden();
+        await expect(page.locator(channel.open)).toBeFocused();
+    });
+}
