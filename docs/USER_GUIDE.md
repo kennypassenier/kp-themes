@@ -474,6 +474,26 @@ stopped counting: `min-inline-size: 100%` gives you the whole parent
 (measured: 800px in a flex row) and still zero as an inline-block, and
 `min-content` gives zero. Pick the floor you want to see.
 
+**The data table's bars are inset.** The search bar above a
+`.kp-datatable` and the status-and-pager bar below it carry their own
+padding, so in a theme that frames the table the row count does not sit
+on the frame. Two knobs move it, the block half and the inline half, on
+the table or anywhere above it:
+
+```css
+.my-report .kp-datatable {
+    --kp-datatable-bar-padding-block: 0.25rem; /* default var(--kp-space-sm) */
+    --kp-datatable-bar-padding-inline: 1.5rem; /* default var(--kp-space-md) */
+}
+```
+
+The filter panel, the pills, the action bar, the loading slot and the
+card layout's sort control take the same inset. The pager's Previous and
+Next are the theme's own button (`kp-button`; `pagerClassName` in
+`attachDataTables`, `classNames.pagerButton` on `<DataTable>`), and
+Previous carries `data-kp-direction="back"`, which a theme may answer —
+cyberpunk turns its notch to that side.
+
 ## What a scroll region clips [TH114]
 
 Three boxes in this package scroll sideways inside themselves rather than
@@ -531,6 +551,21 @@ assumed:
 The clip is not a defect and there is no repair for it: `overflow-x: auto`
 is what keeps a wide table off the page's own scrollbar (SC 1.4.10, DI11).
 Use the top layer for the thing that has to escape.
+
+**The package's own calendars and lists already do.** A `clip-path` clips
+the same way an overflow does, and four registers draw a container's
+silhouette with one — the cut corners of `.kp-card`, `.kp-alert`,
+`.kp-popover`, `.kp-dialog` or `.kp-spec` in dark, cyberpunk, phantom and
+titanium. Measured on 2026-09-13 inside a `.kp-card` in those four themes:
+every day of an open date picker and every option of a combobox and of a
+drawn select was out of reach, the clipped area handing the click to what
+lay beneath. Since then the date picker's panel, the combobox's list and
+the drawn select's list become a manual popover while they are open
+(`js/top-layer.js`), placed in window coordinates beside their control and
+following it when anything scrolls. They stay where they are in the
+document, so the theme, the register rules and focus behave as before. A
+calendar that would run past the window's inline end opens toward the
+inline start instead (`data-kp-align="end"` on the panel).
 
 ## The grid and the nav bar measure their own box too [TH104]
 

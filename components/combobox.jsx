@@ -1,5 +1,6 @@
-import { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
+import { raiseInPlace } from '../js/top-layer.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -264,6 +265,15 @@ function ComboboxInner(
     /** @param {string} v */
     const labelOf = (v) => options.find((o) => o.value === v)?.label ?? v;
 
+    const listShown = open && !(visible.length === 0 && !(emptyRow && query.trim() !== ''));
+    const listRef = useRef(/** @type {HTMLUListElement | null} */ (null));
+    // Above a container that clips, where the stylesheet drew it: the same
+    // raiseInPlace the framework-free channel opens with (js/top-layer.js).
+    useLayoutEffect(() => {
+        if (!listShown || listRef.current === null || boxRef.current === null) return undefined;
+        return raiseInPlace(listRef.current, boxRef.current);
+    }, [listShown]);
+
     return (
         <div
             className={`kp-combobox ${className}`.trim()}
@@ -343,12 +353,7 @@ function ComboboxInner(
             {/* A query that matches nothing keeps the list open with a row that
                 says so, right under the input [gap-11]; an empty query with
                 nothing left to offer still closes it. */}
-            <ul
-                className={`kp-combobox__list ${classNames.list ?? ''}`.trim()}
-                id={listId}
-                role="listbox"
-                hidden={!open || (visible.length === 0 && !(emptyRow && query.trim() !== ''))}
-            >
+            <ul ref={listRef} className={`kp-combobox__list ${classNames.list ?? ''}`.trim()} id={listId} role="listbox" hidden={!listShown}>
                 {visible.map((option, i) => (
                     <li
                         className={`kp-combobox__option ${i === active ? 'is-active' : ''} ${classNames.option ?? ''}`.trim()}

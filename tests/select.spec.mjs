@@ -269,3 +269,46 @@ test('every register answers the drawn list the way it answers the combobox list
     expect(apart).toEqual([]);
     expect(far).toEqual([]);
 });
+
+for (const channel of CHANNELS) {
+    test(`inside a card that clips its corners the drawn list is whole, takes its clicks and opens under its select, in every theme — ${channel.name} [2026-09-13]`, async ({
+        page,
+    }) => {
+        // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach.
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await ready(page);
+        const select = page.locator(channel.select);
+        const list = listOf(page, channel.select);
+        // The card ends where the field ends, so the open list hangs outside it.
+        await select.evaluate((el) => /** @type {HTMLElement} */ (el.parentElement).classList.add('kp-card'));
+        const lost = [];
+        for (const theme of THEME_NAMES) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+            await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+            await select.click();
+            await expect(list).toBeVisible();
+            const m = await select.evaluate((el) => {
+                const drawn = /** @type {HTMLElement} */ (el.nextElementSibling);
+                const options = [...drawn.querySelectorAll('[role="option"]')];
+                const missed = options.filter((option) => {
+                    const r = option.getBoundingClientRect();
+                    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                    return hit !== option && !option.contains(hit);
+                }).length;
+                const a = el.getBoundingClientRect();
+                const b = drawn.getBoundingClientRect();
+                return {
+                    missed,
+                    of: options.length,
+                    top: Math.round(b.top - a.bottom),
+                    left: Math.round(b.left - a.left),
+                    width: Math.round(b.width - a.width),
+                };
+            });
+            if (m.missed > 0 || m.top < 0 || m.top > 8 || Math.abs(m.left) > 1 || Math.abs(m.width) > 1) lost.push(`${theme}: ${JSON.stringify(m)}`);
+            await select.press('Escape');
+            await expect(list).toBeHidden();
+        }
+        expect(lost).toEqual([]);
+    });
+}

@@ -249,7 +249,12 @@ var DEFAULT_STRINGS = Object.freeze({
   switchOn: "On",
   switchOff: "Off",
   calendarOpen: "Open the calendar",
-  calendarButton: "Calendar",
+  // What the calendar button shows: a glyph, hidden from a screen reader,
+  // which hears calendarOpen as the button's name instead. The same glyph
+  // the date picker's own markup carries, so a picker the package builds
+  // (the data table's date filter) looks like one written by hand
+  // [Kenny's note of 2026-09-13]. Until then it was the word "Calendar".
+  calendarButton: "\u25A6",
   dateFormatHint: "dd-mm-yyyy",
   previousMonth: "Previous month",
   nextMonth: "Next month",
@@ -1631,6 +1636,49 @@ function subsequence(text, query) {
   return true;
 }
 
+// js/top-layer.js
+function raiseOverlay(element, place2) {
+  if (typeof element.showPopover !== "function" || !element.isConnected) {
+    place2(element);
+    return () => {
+    };
+  }
+  const added = !element.hasAttribute("popover");
+  if (added) element.setAttribute("popover", "manual");
+  if (!element.matches(":popover-open")) element.showPopover();
+  const follow = () => place2(element);
+  follow();
+  window.addEventListener("scroll", follow, { capture: true, passive: true });
+  window.addEventListener("resize", follow);
+  return () => {
+    window.removeEventListener("scroll", follow, { capture: true });
+    window.removeEventListener("resize", follow);
+    if (element.matches(":popover-open")) element.hidePopover();
+    if (added) element.removeAttribute("popover");
+  };
+}
+function raiseInPlace(element, anchor) {
+  const drawn = element.getBoundingClientRect();
+  const from = anchor.getBoundingClientRect();
+  const dx = drawn.left - from.left;
+  const dy = drawn.top - from.top;
+  const width = drawn.width;
+  const lower = raiseOverlay(element, () => {
+    const at = anchor.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    element.style.left = `${at.left + dx - (Number.parseFloat(style.marginLeft) || 0)}px`;
+    element.style.top = `${at.top + dy - (Number.parseFloat(style.marginTop) || 0)}px`;
+    element.style.width = `${width}px`;
+  });
+  return () => {
+    lower();
+    element.style.removeProperty("left");
+    element.style.removeProperty("top");
+    element.style.removeProperty("width");
+  };
+}
+var raised = (element) => element.matches(":popover-open");
+
 // js/combobox.js
 var COMBOBOX = "[data-kp-combobox]";
 var INPUT = 'input[role="combobox"]';
@@ -1736,9 +1784,17 @@ function attachComboboxes(root = document, {
       tags: tagList ? [...tagList.children] : [],
       status: status?.textContent ?? ""
     };
+    let lower = () => {
+    };
     const setOpen = (next) => {
       const was = list.hidden === false;
       list.hidden = !next;
+      if (next && !was) lower = raiseInPlace(list, box);
+      if (!next && was) {
+        lower();
+        lower = () => {
+        };
+      }
       input.setAttribute("aria-expanded", String(next));
       if (!next) listbox.clear();
       if (was !== next) box.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next } }));
@@ -1945,6 +2001,7 @@ function attachComboboxes(root = document, {
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(pending);
+      lower();
       listbox.destroy();
       input.removeEventListener("input", onInput);
       input.removeEventListener("keydown", onKeyDown);
@@ -2032,11 +2089,14 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.style.width = `${box.width}px`;
   };
   const isOpen = () => list.hidden === false;
+  let lower = () => {
+  };
   const open = () => {
     if (select.disabled) return;
     build();
     list.hidden = false;
-    place2();
+    lower();
+    lower = raiseOverlay(list, place2);
     select.setAttribute("aria-expanded", "true");
     const chosen = listbox.options.findIndex((option) => option.dataset.kpChosen !== void 0);
     listbox.highlight(Math.max(chosen, 0));
@@ -2044,6 +2104,9 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   };
   const close = () => {
     if (!isOpen()) return;
+    lower();
+    lower = () => {
+    };
     list.hidden = true;
     select.setAttribute("aria-expanded", "false");
     listbox.clear();
@@ -2120,6 +2183,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   selectHandles.set(select, handle);
   select.dataset.kpSelectAttached = "";
   const detach = () => {
+    lower();
     listbox.destroy();
     select.removeEventListener("keydown", onKeyDownCapture, { capture: true });
     select.removeEventListener("mousedown", onMouseDown);
@@ -2590,6 +2654,8 @@ __export(datepicker_exports, {
   datePicker: () => datePicker,
   formatLocalDate: () => formatLocalDate,
   parseDate: () => parseDate2,
+  placeDatePanel: () => placeDatePanel,
+  raiseDatePanel: () => raiseDatePanel,
   toDutch: () => toDutch,
   toISO: () => toISO
 });
@@ -2611,6 +2677,41 @@ function toDutch(date) {
 function parseDate2(text, locale) {
   if (text.trim() === "") return null;
   return parseDate(text, locale);
+}
+function placeDatePanel(panel) {
+  delete panel.dataset.kpAlign;
+  const width = document.documentElement.clientWidth;
+  const rtl = getComputedStyle(panel).direction === "rtl";
+  const pastEnd = (x, w) => rtl ? -x : x + w - width;
+  const pastStart = (x, w) => rtl ? x + w - width : -x;
+  if (raised(panel)) {
+    const anchor = (panel.closest("[data-kp-datepicker]") ?? panel.parentElement ?? panel).getBoundingClientRect();
+    const w = panel.offsetWidth;
+    const fromStart = rtl ? anchor.right - w : anchor.left;
+    const fromEnd = rtl ? anchor.left : anchor.right - w;
+    let x = fromStart;
+    if (pastEnd(fromStart, w) > 0 && Math.max(0, pastStart(fromEnd, w)) <= pastEnd(fromStart, w)) {
+      x = fromEnd;
+      panel.dataset.kpAlign = "end";
+    }
+    panel.style.left = `${Math.round(x)}px`;
+    panel.style.top = `${Math.round(anchor.bottom)}px`;
+    return;
+  }
+  const start = panel.getBoundingClientRect();
+  if (pastEnd(start.left, start.width) <= 0) return;
+  panel.dataset.kpAlign = "end";
+  const end = panel.getBoundingClientRect();
+  if (Math.max(0, pastStart(end.left, end.width)) > pastEnd(start.left, start.width)) delete panel.dataset.kpAlign;
+}
+function raiseDatePanel(panel) {
+  const lower = raiseOverlay(panel, placeDatePanel);
+  return () => {
+    lower();
+    panel.style.removeProperty("left");
+    panel.style.removeProperty("top");
+    delete panel.dataset.kpAlign;
+  };
 }
 var handles4 = /* @__PURE__ */ new WeakMap();
 function datePicker(element) {
@@ -2749,6 +2850,8 @@ function attachDatePickers(root = document, {
       }
       panel.append(head, grid2);
     };
+    let lower = () => {
+    };
     const setOpen = (next) => {
       if (panel.hidden === !next) return;
       if (next) {
@@ -2756,6 +2859,12 @@ function attachDatePickers(root = document, {
         draw();
       }
       panel.hidden = !next;
+      if (next) lower = raiseDatePanel(panel);
+      else {
+        lower();
+        lower = () => {
+        };
+      }
       open.setAttribute("aria-expanded", String(next));
       if (next) panel.querySelector('[tabindex="0"]')?.focus();
       picker.dispatchEvent(new CustomEvent(OPEN_EVENT3, { bubbles: true, detail: { open: next } }));
@@ -2873,6 +2982,7 @@ function attachDatePickers(root = document, {
       panel.removeEventListener("keydown", onPanelKey);
       panel.removeEventListener("click", onPanelClick);
       picker.removeEventListener("focusout", onFocusOut);
+      lower();
       panel.textContent = "";
       panel.hidden = before.panelHidden;
       input.placeholder = before.placeholder;
@@ -3000,7 +3110,10 @@ function attachDataTables(root = document, {
   filter: filterFn = defaultFilter,
   debounceMs = 0,
   sortCycle = "two",
-  pagerClassName = "kp-button kp-button--ghost",
+  // The theme's own button, not the ghost: a ghost is text alone at rest
+  // in eleven of the twenty-two themes, so the pager did not read as
+  // buttons until hovered [Kenny's note of 2026-09-13, seen in cyberpunk].
+  pagerClassName = "kp-button",
   pageLabel,
   regions = true,
   pageSizes: pageSizesOption = PAGE_SIZES,
@@ -3269,12 +3382,16 @@ function attachDataTables(root = document, {
             input.dataset.kpDateInput = "";
             const opener = (
               /** @type {HTMLButtonElement} */
-              make("button", "kp-button kp-button--ghost")
+              make("button", "kp-button")
             );
             opener.type = "button";
             opener.dataset.kpDateOpen = "";
             opener.setAttribute("aria-label", s0.calendarOpen);
-            opener.textContent = s0.calendarButton;
+            opener.title = s0.calendarOpen;
+            const glyph = make("span");
+            glyph.setAttribute("aria-hidden", "true");
+            glyph.textContent = s0.calendarButton;
+            opener.append(glyph);
             const datePanel = make("div", "kp-datepicker__panel");
             datePanel.dataset.kpDatePanel = "";
             datePanel.hidden = true;
@@ -3436,7 +3553,7 @@ function attachDataTables(root = document, {
       if (pager !== null) {
         pager.textContent = "";
         if (sizeLabel !== null) pager.append(sizeLabel);
-        pager.append(pagerButton(s.previous, page > 0, () => page -= 1));
+        pager.append(pagerButton(s.previous, page > 0, () => page -= 1, "back"));
         const label = document.createElement("span");
         label.className = "kp-datatable__page";
         label.textContent = (pageLabel ?? s.tablePage)(page + 1, pages);
@@ -3450,10 +3567,11 @@ function attachDataTables(root = document, {
       syncCardSort();
       wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...shown], pageRows: [...pageRows] } }));
     };
-    const pagerButton = (text, enabled, go) => {
+    const pagerButton = (text, enabled, go, direction) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = pagerClassName;
+      if (direction !== void 0) button.dataset.kpDirection = direction;
       button.textContent = text;
       button.disabled = !enabled;
       button.addEventListener("click", () => {
@@ -7807,6 +7925,8 @@ export {
   parseHsl,
   patterns_exports as patternsExports,
   pendingTheme,
+  placeDatePanel,
+  raiseDatePanel,
   registerHref,
   registerLink,
   registerLoaded,

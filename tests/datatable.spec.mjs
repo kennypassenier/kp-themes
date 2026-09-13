@@ -570,3 +570,206 @@ test.describe('datatable features — React sort header', () => {
             .toBe(32);
     });
 });
+
+// ── Kenny's review notes of 2026-09-13: the date filter, the pager, the bars ─
+//
+// Measured in Firefox before the change, each test below went red on the
+// code as it stood; the line under each name records what it read there.
+
+/** What a button paints, as the theme computes it: the reading two buttons that should look alike must agree on. */
+const buttonPaint = (/** @type {Element} */ el) => {
+    const s = getComputedStyle(el);
+    return [
+        s.color,
+        s.backgroundColor,
+        s.backgroundImage,
+        s.backgroundPosition,
+        s.borderTopColor,
+        s.borderTopWidth,
+        s.borderTopStyle,
+        s.boxShadow,
+        s.clipPath,
+    ].join(' | ');
+};
+
+/** Put a theme on and wait out what the switch set moving, so a colour is read where it lands. @param {import('@playwright/test').Page} page @param {string} theme */
+const wearSettled = async (page, theme) => {
+    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+    await page.evaluate(() =>
+        Promise.all(
+            document
+                .getAnimations()
+                .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+                .map((a) => a.finished.catch(() => {})),
+        ),
+    );
+};
+
+for (const channel of FEATURE_CHANNELS) {
+    test.describe(`datatable review notes — ${channel.name}`, () => {
+        test("the date filter's calendar button is the date picker's own: its classes, its glyph, its name [Kenny's note 1]", async ({ page }) => {
+            // Before: class "kp-button kp-button--ghost", the text "Calendar", no title — the standalone picker has "kp-button", ▦ and a title.
+            await page.goto('/catalogue/datepicker.html');
+            /** @param {Element} opener */
+            const markup = (opener) => ({
+                className: opener.className,
+                glyph: opener.querySelector('[aria-hidden="true"]')?.textContent?.trim() ?? null,
+                text: opener.textContent?.trim(),
+                name: opener.getAttribute('aria-label'),
+                title: opener.getAttribute('title'),
+            });
+            const standalone = await page.locator('#closed [data-kp-date-open]').first().evaluate(markup);
+            const table = page.locator(channel.table);
+            await ready(page, table);
+            await table.locator('[data-kp-datatable-filter-toggle]').click();
+            const openers = table.getByRole('group', { name: 'Opened' }).locator('[data-kp-date-open]');
+            await expect(openers).toHaveCount(2);
+            for (const opener of await openers.all()) expect(await opener.evaluate(markup)).toEqual(standalone);
+        });
+
+        test("the date filter's field shows the whole date, beside its calendar button, in every theme [Kenny's note 1]", async ({ page }) => {
+            // Before: see the report for the per-theme reading; formal had 73px of room for the 95px hint in the catalogue.
+            const table = page.locator(channel.table);
+            await ready(page, table);
+            await table.locator('[data-kp-datatable-filter-toggle]').click();
+            const input = table.getByLabel(S.tableFilterFrom('Opened'), { exact: true });
+            await expect(input).toBeVisible();
+            const short = [];
+            for (const theme of THEME_NAMES) {
+                await wearSettled(page, theme);
+                const m = await input.evaluate((el) => {
+                    const field = /** @type {HTMLInputElement} */ (el);
+                    const s = getComputedStyle(field);
+                    const context = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
+                    context.font = `${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
+                    if (s.letterSpacing !== 'normal') context.letterSpacing = s.letterSpacing;
+                    // The widest thing the field has to hold: the hint, or a whole date in the same pattern.
+                    const need = Math.ceil(Math.max(context.measureText(field.placeholder).width, context.measureText('28/12/2026').width));
+                    const room = Math.floor(field.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
+                    const opener = /** @type {Element} */ (field.closest('.kp-datepicker')?.querySelector('[data-kp-date-open]'));
+                    const a = field.getBoundingClientRect();
+                    const b = opener.getBoundingClientRect();
+                    // Beside it: the button starts where the field ends and shares its line (their heights are the control-height question, not this one).
+                    const sameLine = b.left >= a.right - 1 && b.top < a.bottom && b.bottom > a.top;
+                    return { need, room, sameLine, field: Math.round(a.width), button: Math.round(b.width) };
+                });
+                if (m.room < m.need || !m.sameLine)
+                    short.push(
+                        `${theme}: ${m.room}px for ${m.need}px (field ${m.field}, button ${m.button})${m.sameLine ? '' : ', button on another line'}`,
+                    );
+            }
+            expect(short).toEqual([]);
+        });
+
+        test("the pager's buttons are the theme's own button at rest, and Previous differs only where a theme points it backwards [Kenny's note 3]", async ({
+            page,
+        }) => {
+            // Before: kp-button--ghost on both, so Next differed from the theme's button in all 22 themes (text only, no edge, in eleven).
+            const table = page.locator(channel.table);
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await ready(page, table);
+            await table.locator('[data-kp-datatable-page-size]').selectOption('10');
+            const pager = table.locator('[data-kp-datatable-pager]');
+            await pager.getByRole('button', { name: S.next }).click();
+            const previous = pager.getByRole('button', { name: S.previous });
+            const next = pager.getByRole('button', { name: S.next });
+            await expect(previous).toBeEnabled();
+            await page.mouse.move(0, 0);
+            await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+            await page.evaluate(() => {
+                const row = document.createElement('div');
+                for (const [ref, className] of [
+                    ['bare', 'kp-button'],
+                    ['mirror', 'kp-button kp-button--mirror'],
+                ]) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = className;
+                    button.dataset.ref = ref;
+                    button.textContent = 'Reference';
+                    row.append(button);
+                }
+                document.body.append(row);
+            });
+            const differ = [];
+            for (const theme of THEME_NAMES) {
+                await wearSettled(page, theme);
+                const bare = await page.locator('[data-ref="bare"]').evaluate(buttonPaint);
+                const got = await next.evaluate(buttonPaint);
+                if (got !== bare) differ.push(`${theme} Next: ${got}`);
+                // Cyberpunk cuts its notch on the other side of a button that points back; every other theme draws the bare button.
+                if (theme === 'cyberpunk') {
+                    const clip = await previous.evaluate((el) => getComputedStyle(el).clipPath);
+                    const mirrored = await page.locator('[data-ref="mirror"]').evaluate((el) => getComputedStyle(el).clipPath);
+                    if (clip !== mirrored) differ.push(`${theme} Previous clip: ${clip}, want ${mirrored}`);
+                } else {
+                    const back = await previous.evaluate(buttonPaint);
+                    if (back !== bare) differ.push(`${theme} Previous: ${back}`);
+                }
+            }
+            expect(differ).toEqual([]);
+        });
+
+        test('a calendar opened inside a card or an alert that clips its corners is whole and takes its clicks, in every theme [coordinator finding]', async ({
+            page,
+        }) => {
+            // Before: 31 of 31 days out of reach in dark, cyberpunk, phantom and titanium (the container clip-path cut the panel away), 23 in terminal.
+            const table = page.locator(channel.table);
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await ready(page, table);
+            await table.locator('[data-kp-datatable-filter-toggle]').click();
+            const opened = table.getByRole('group', { name: 'Opened' });
+            const picker = opened.locator('.kp-datepicker').nth(1);
+            await table.getByLabel(S.tableFilterTo('Opened'), { exact: true }).fill('2026-08-01');
+            const lost = [];
+            for (const container of ['kp-card', 'kp-alert']) {
+                // The filter's own fieldset wears the container: its box ends under the field, so the calendar hangs outside it.
+                await opened.evaluate((el, name) => {
+                    el.classList.remove('kp-card', 'kp-alert');
+                    el.classList.add(name);
+                }, container);
+                for (const theme of THEME_NAMES) {
+                    await wearSettled(page, theme);
+                    await picker.locator('[data-kp-date-open]').click();
+                    const panel = picker.locator('.kp-datepicker__panel');
+                    await expect(panel).toBeVisible();
+                    const missed = await panel.evaluate((el) => {
+                        const days = [...el.querySelectorAll('[data-kp-day]')];
+                        return days.filter((day) => {
+                            const box = day.getBoundingClientRect();
+                            const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+                            return hit !== day && !day.contains(hit);
+                        }).length;
+                    });
+                    if (missed > 0) lost.push(`${theme} in .${container}: ${missed} days out of reach`);
+                    // The trigger toggles it shut in both channels (the React picker's Escape lives on the days, not on the trigger).
+                    await picker.locator('[data-kp-date-open]').click();
+                    await expect(panel).toBeHidden();
+                }
+            }
+            expect(lost).toEqual([]);
+        });
+
+        test("both bars are inset by default, and the inset is two knobs [Kenny's note 4]", async ({ page }) => {
+            // Before: one shorthand knob; setting --kp-datatable-bar-padding-inline and -block left 12px and 8px in place.
+            const table = page.locator(channel.table);
+            await ready(page, table);
+            const bars = table.locator(':scope > .kp-datatable__bar');
+            await expect(bars).toHaveCount(2);
+            for (const bar of await bars.all()) {
+                await expect(bar).toHaveCSS('padding-inline-start', '12px');
+                await expect(bar).toHaveCSS('padding-block-end', '8px');
+            }
+            await table.evaluate((el) => {
+                /** @type {HTMLElement} */ (el).style.setProperty('--kp-datatable-bar-padding-inline', '1.5rem');
+                /** @type {HTMLElement} */ (el).style.setProperty('--kp-datatable-bar-padding-block', '0.25rem');
+            });
+            for (const bar of await bars.all()) {
+                await expect(bar).toHaveCSS('padding-inline-start', '24px');
+                await expect(bar).toHaveCSS('padding-inline-end', '24px');
+                await expect(bar).toHaveCSS('padding-block-start', '4px');
+                await expect(bar).toHaveCSS('padding-block-end', '4px');
+            }
+        });
+    });
+}

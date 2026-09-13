@@ -146,6 +146,7 @@ export const FILES = [
     'js/theme-core.js',
     'js/theme-picker.js',
     'js/theme-registry.js',
+    'js/top-layer.js',
     'js/upload.js',
     'js/wizard.js',
     // The shipped fonts [T19, AR39]: every file under fonts/ that

@@ -2945,6 +2945,20 @@
         inset-inline: auto;
     }
 
+    /* An open list lives in the top layer, where no container's clip-path or
+ * overflow reaches it (js/top-layer.js): a combobox's or a drawn select's
+ * options were out of reach inside a card in dark, cyberpunk, phantom and
+ * titanium. js/combobox.js places it in window coordinates under its field
+ * and as wide as the list was; the popover's UA inset, margin and ink are
+ * put back to the list's own. */
+    .kp-combobox__list:popover-open {
+        position: fixed;
+        inset: auto;
+        box-sizing: border-box;
+        margin: 0.25rem 0 0;
+        color: inherit;
+    }
+
     [data-kp-select-list] > [data-kp-chosen] {
         display: flex;
         gap: var(--kp-space-sm, 0.5rem);
@@ -3201,7 +3215,8 @@
     .kp-datatable__actions,
     .kp-datatable__loading,
     .kp-datatable__card-sort {
-        padding: var(--kp-datatable-bar-padding, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
     }
 
     .kp-datatable__filters {
@@ -3233,6 +3248,19 @@
         --kp-datepicker-input-min: 5rem;
         flex: 1 1 100%;
         min-inline-size: 0;
+    }
+
+    /* A date filter takes two columns where the panel has them [Kenny's note
+ * of 2026-09-13]. One column holds a number range or a list of choices,
+ * but a date field beside its calendar button did not hold the date: in a
+ * 238px column the date was cut in eighteen of the twenty-two themes with
+ * the old ghost button, and still 2px short in brutalism with the glyph
+ * (97px of room for 99px). From 40rem the panel always has two columns at its 12rem
+ * floor, so the span never makes a column the grid does not have. */
+    @container kp-table (min-width: 40rem) {
+        .kp-datatable__filter:has(.kp-datepicker) {
+            grid-column: span 2;
+        }
     }
 
     .kp-datatable__pills {
@@ -3328,8 +3356,13 @@
      * Twenty registers frame the data table and draw its bars as strips,
      * and with no padding the row count sat on the frame's left edge and
      * the pager on its bottom edge. The bar carries the inset rather than
-     * the table, so the rows still run to the frame. */
-        padding: var(--kp-datatable-bar-padding, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
+     * the table, so the rows still run to the frame.
+     * Two knobs rather than one shorthand [Kenny's note of 2026-09-13, "Bars
+     * inset" chosen in research/datatable/demo.html]: the inset is the
+     * default, and a theme or a consumer moves the inline and the block half
+     * on their own. */
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
     }
 
     .kp-datatable__search {
@@ -3927,6 +3960,27 @@
         background: var(--card);
         color: var(--card-foreground);
         box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* Opened toward the inline start, hanging from the picker's inline end,
+ * when the window has no room past it [Kenny's note of 2026-09-13]; the
+ * module measures and sets the attribute (placeDatePanel). */
+    .kp-datepicker__panel[data-kp-align='end'] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    /* An open calendar lives in the top layer, where no container's clip-path
+ * or overflow reaches it (js/top-layer.js). js/datepicker.js places it in
+ * window coordinates; what the popover's UA sheet gives every popover —
+ * an inset of 0, auto margins, its own overflow and ink — is put back to
+ * what the panel had. */
+    .kp-datepicker__panel:popover-open {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+        margin-block-start: 0.25rem;
+        overflow: visible;
     }
 
     .kp-datepicker__head {

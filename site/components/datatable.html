@@ -255,6 +255,7 @@
                             <tr><td><code>data-kp-datatable-sort-direction</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-status</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-debounce</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-direction</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-filter</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filter-bound</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-filter-column</code></td><td>selector, written</td></tr>
@@ -344,7 +345,7 @@
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>classNames</code></td><td><code>{ bar?: string; search?: string; table?: string; status?: string; pager?: string; }</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ bar?: string; search?: string; table?: string; status?: string; pager?: string; pagerButton?: string; }</code></td><td>optional</td><td>`pagerButton` replaces the pager buttons' classes, `kp-button` by default.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
@@ -359,7 +360,8 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
-                            <tr><td><code>--kp-datatable-bar-padding</code></td><td><code>var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-datatable-bar-padding-block</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-datatable-bar-padding-inline</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-busy-opacity</code></td><td><code>0.55</code></td></tr>
                             <tr><td><code>--kp-datatable-filter-min</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-datatable-head-ground</code></td><td><code>var(--background)</code></td></tr>

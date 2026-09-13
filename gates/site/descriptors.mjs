@@ -555,7 +555,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-datepicker'],
         exports: ['DatePicker'],
-        aliases: ['date', 'day', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale'],
+        aliases: ['date', 'day', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale', 'align'],
         intro: 'A text input that takes a typed date, with a calendar beside it for the reader who would rather look. The value is kept as an ISO date whatever the page’s locale prints, so a consumer never parses a localised string.',
         whenToUse:
             'For a date a person knows or can find in a month — a start date, a deadline. Not for a birth date far in the past, where three selects or a typed field beat paging a calendar back forty years; and not for a date the browser can own entirely, where the native date input is smaller and already localised.',
@@ -848,7 +848,7 @@ export const DESCRIPTORS = [
         group: 'Data',
         classes: ['kp-datatable'],
         exports: ['DataTable'],
-        aliases: ['sort', 'select', 'page', 'row', 'debounce', 'locale', 'cards', 'filter', 'filters', 'search', 'state', 'max'],
+        aliases: ['sort', 'select', 'page', 'row', 'debounce', 'locale', 'cards', 'filter', 'filters', 'search', 'state', 'max', 'direction'],
         intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data.',
         whenToUse:
             'For a table a reader will interrogate — hundreds of rows, a search box, a sort. Not for thousands: there is no virtualisation, no in-cell editing and no export here, and a grid is a different product. Not for a handful of rows either, where a search box over six lines is furniture.',

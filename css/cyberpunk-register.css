@@ -475,8 +475,14 @@
         transform: translateY(var(--fx-lift));
     }
 
-    /* The mirrored notch, bottom-left [AR43]. */
-    [data-theme='cyberpunk'] .kp-button--mirror {
+    /* The mirrored notch, bottom-left [AR43]. A button that points backwards
+       — a pager's Previous, marked `data-kp-direction="back"` — carries the
+       notch on the side it points to [Kenny's note of 2026-09-13]. Not the
+       --mirror class: nine other registers paint --mirror as a device of
+       their own (an offset shadow, a sheen, a chamfer), so a Previous
+       wearing it would stop looking like its Next there. */
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
         clip-path: polygon(0 0, 100% 0, 100% 100%, var(--kp-button-notch) 100%, 0 calc(100% - var(--kp-button-notch)));
         background-image:
             linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
@@ -536,6 +542,16 @@
         --kp-btn-fg: var(--muted-foreground);
         --kp-btn-frame: var(--border-strong);
         transform: none;
+    }
+
+    /* A ghost has no ground, so its disabled frame colour is the whole plate
+       its label sits on, and the muted label read 1.12:1 painted on that
+       olive (Kenny's note of 2026-09-13, a pager's disabled Previous). The
+       page's ink on the plate reads at 6.02:1 from the tokens; the plate
+       stays the unsaturated olive, so the button still looks unavailable
+       beside a live one. */
+    [data-theme='cyberpunk'] .kp-button--ghost:disabled {
+        --kp-btn-fg: var(--background);
     }
 
     [data-theme='cyberpunk'] .kp-button--primary:disabled {

@@ -1,5 +1,5 @@
-import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { parseDate, toISO } from '../js/datepicker.js';
+import { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { parseDate, raiseDatePanel, toISO } from '../js/datepicker.js';
 import { calendarNames, datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
 import { DEFAULT_STRINGS } from '../js/strings.js';
 import { acceptsFile } from '../js/upload.js';
@@ -113,6 +113,13 @@ function DatePickerInner(
     const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
     const [cursor, setCursor] = useState(() => parseDate(defaultValue, locale) ?? new Date());
     const button = useRef(/** @type {HTMLButtonElement | null} */ (null));
+    const panelRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+    // Above any container that clips, and inside the window: the same
+    // raiseDatePanel the framework-free channel opens with (js/datepicker.js).
+    useLayoutEffect(() => {
+        if (!open || panelRef.current === null) return undefined;
+        return raiseDatePanel(panelRef.current);
+    }, [open]);
 
     const chosen = parseDate(text, locale);
     const year = cursor.getFullYear();
@@ -218,19 +225,24 @@ function DatePickerInner(
                     {...inputProps}
                 />
             </div>
+            {/* The date picker's markup, class for class: a plain button with
+                the glyph hidden from a screen reader, named by aria-label and
+                title [Kenny's note of 2026-09-13 — it was a ghost reading
+                "Calendar"]. */}
             <button
                 type="button"
                 ref={button}
-                className="kp-button kp-button--ghost"
+                className="kp-button"
                 data-kp-date-open
                 aria-label={s.calendarOpen}
+                title={s.calendarOpen}
                 aria-expanded={open}
                 onClick={() => setOpen(!open)}
             >
-                {trigger ?? s.calendarButton}
+                {trigger ?? <span aria-hidden="true">{s.calendarButton}</span>}
             </button>
             {open && (
-                <div className="kp-datepicker__panel" data-kp-date-panel>
+                <div className="kp-datepicker__panel" data-kp-date-panel ref={panelRef}>
                     <div className="kp-datepicker__head">
                         <button
                             type="button"

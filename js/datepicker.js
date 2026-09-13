@@ -37,6 +37,7 @@
 // the day cells can be decorated; and the panel's glyphs are attributes.
 
 import { DEFAULT_STRINGS, getStrings } from './strings.js';
+import { raiseOverlay, raised } from './top-layer.js';
 import { calendarNames, datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
 
 const PICKER = '[data-kp-datepicker]';
@@ -92,6 +93,70 @@ export function parseDate(text, locale) {
  * @property {() => void} open
  * @property {() => void} close
  */
+
+/**
+ * Keep an open calendar inside the window [Kenny's note of 2026-09-13]. The
+ * panel hangs from the picker's inline start, so a picker near the inline
+ * end of the window — the last filter of a data table — opened its calendar
+ * past the edge: measured at x=1374 of a 1280px page. When it would cross
+ * that edge it hangs from the picker's inline end instead and opens toward
+ * the inline start; when that is worse (a picker narrower than its calendar
+ * in a window narrower than both), the side that overflows less is kept.
+ * `data-kp-align="end"` says which side was taken. A panel in the top layer
+ * (js/top-layer.js) is placed in window coordinates under its picker; one
+ * that is not keeps hanging from the picker and only the side changes.
+ *
+ * @param {HTMLElement} panel an open `.kp-datepicker__panel`
+ */
+export function placeDatePanel(panel) {
+    delete panel.dataset.kpAlign;
+    const width = document.documentElement.clientWidth;
+    const rtl = getComputedStyle(panel).direction === 'rtl';
+    /** How far past the window's inline-end edge a panel starting at x runs. @param {number} x @param {number} w */
+    const pastEnd = (x, w) => (rtl ? -x : x + w - width);
+    /** @param {number} x @param {number} w */
+    const pastStart = (x, w) => (rtl ? x + w - width : -x);
+
+    if (raised(panel)) {
+        const anchor = (panel.closest('[data-kp-datepicker]') ?? panel.parentElement ?? panel).getBoundingClientRect();
+        const w = panel.offsetWidth;
+        const fromStart = rtl ? anchor.right - w : anchor.left;
+        const fromEnd = rtl ? anchor.left : anchor.right - w;
+        let x = fromStart;
+        if (pastEnd(fromStart, w) > 0 && Math.max(0, pastStart(fromEnd, w)) <= pastEnd(fromStart, w)) {
+            x = fromEnd;
+            panel.dataset.kpAlign = 'end';
+        }
+        panel.style.left = `${Math.round(x)}px`;
+        panel.style.top = `${Math.round(anchor.bottom)}px`;
+        return;
+    }
+
+    const start = panel.getBoundingClientRect();
+    if (pastEnd(start.left, start.width) <= 0) return;
+    panel.dataset.kpAlign = 'end';
+    const end = panel.getBoundingClientRect();
+    if (Math.max(0, pastStart(end.left, end.width)) > pastEnd(start.left, start.width)) delete panel.dataset.kpAlign;
+}
+
+/**
+ * Open a calendar above every container it sits in (js/top-layer.js: a
+ * card's clip-path cut every day of it away in four themes), inside the
+ * window, and following its field while it is open. Both channels open
+ * with it. Returns the way back down.
+ *
+ * @param {HTMLElement} panel an open `.kp-datepicker__panel`
+ * @returns {() => void} lower
+ */
+export function raiseDatePanel(panel) {
+    const lower = raiseOverlay(panel, placeDatePanel);
+    return () => {
+        lower();
+        panel.style.removeProperty('left');
+        panel.style.removeProperty('top');
+        delete panel.dataset.kpAlign;
+    };
+}
 
 /** @type {WeakMap<Element, DatePickerHandle>} */
 const handles = new WeakMap();
@@ -258,6 +323,8 @@ export function attachDatePickers(
             panel.append(head, grid);
         };
 
+        /** Takes the open panel out of the top layer again. */
+        let lower = () => {};
         /** @param {boolean} next */
         const setOpen = (next) => {
             if (panel.hidden === !next) return;
@@ -266,6 +333,11 @@ export function attachDatePickers(
                 draw();
             }
             panel.hidden = !next;
+            if (next) lower = raiseDatePanel(panel);
+            else {
+                lower();
+                lower = () => {};
+            }
             open.setAttribute('aria-expanded', String(next));
             if (next) /** @type {HTMLElement | null} */ (panel.querySelector('[tabindex="0"]'))?.focus();
             picker.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next } }));
@@ -392,6 +464,7 @@ export function attachDatePickers(
             panel.removeEventListener('keydown', onPanelKey);
             panel.removeEventListener('click', onPanelClick);
             picker.removeEventListener('focusout', onFocusOut);
+            lower();
             panel.textContent = '';
             panel.hidden = before.panelHidden;
             input.placeholder = before.placeholder;

@@ -135,7 +135,7 @@ function DateBound({ label, iso, locale, onIso, strings }) {
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').CSSProperties} [style]
- * @property {{ bar?: string, search?: string, table?: string, status?: string, pager?: string }} [classNames]
+ * @property {{ bar?: string, search?: string, table?: string, status?: string, pager?: string, pagerButton?: string }} [classNames]  `pagerButton` replaces the pager buttons' classes, `kp-button` by default.
  */
 
 /** @param {Column} column */
@@ -821,11 +821,26 @@ function DataTableInner(
                                 </select>
                             </label>
                         )}
-                        <button type="button" className="kp-button kp-button--ghost" disabled={at === 0} onClick={() => setPage(at - 1)}>
+                        {/* The theme's own button, not the ghost, which is text
+                            alone at rest in eleven themes; Previous says it points
+                            back, and cyberpunk turns its notch that way [Kenny's
+                            note of 2026-09-13]. */}
+                        <button
+                            type="button"
+                            className={classNames.pagerButton ?? 'kp-button'}
+                            data-kp-direction="back"
+                            disabled={at === 0}
+                            onClick={() => setPage(at - 1)}
+                        >
                             {s.previous}
                         </button>
                         <span className="kp-datatable__page">{s.tablePage(at + 1, pages)}</span>
-                        <button type="button" className="kp-button kp-button--ghost" disabled={at >= pages - 1} onClick={() => setPage(at + 1)}>
+                        <button
+                            type="button"
+                            className={classNames.pagerButton ?? 'kp-button'}
+                            disabled={at >= pages - 1}
+                            onClick={() => setPage(at + 1)}
+                        >
                             {s.next}
                         </button>
                     </div>

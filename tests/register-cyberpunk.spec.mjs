@@ -125,6 +125,85 @@ test.describe('the cyberpunk register on the concept page [C2]', () => {
         expect(shapes.ghost.slit, 'a ghost keeps the layers; its frame is transparent').toContain('linear-gradient');
     });
 
+    test("a disabled button's label reads on the plate it sits on, and still looks unavailable [Kenny's note 3b]", async ({ page }) => {
+        // Before: the disabled ghost ("Previous" in a pager) drew its muted label on the olive frame colour — 1.12:1 painted (1.06:1 from the tokens).
+        await open(page);
+        await page.evaluate(() => {
+            const row = document.querySelector('[data-kp-surface="app"] .kp-row');
+            for (const [probe, className, disabled] of [
+                ['ghost-off', 'kp-button kp-button--ghost', true],
+                ['plain-off', 'kp-button', true],
+                ['ghost-on', 'kp-button kp-button--ghost', false],
+                ['plain-on', 'kp-button', false],
+            ]) {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = String(className);
+                b.disabled = Boolean(disabled);
+                b.dataset.probe = String(probe);
+                b.textContent = 'Previous';
+                row?.append(b);
+            }
+        });
+        await page.mouse.move(0, 0);
+        for (const kind of ['ghost', 'plain']) {
+            const off = page.locator(`[data-probe="${kind}-off"]`);
+            const shot = await off.screenshot();
+            // The plate is the colour most of the button is painted in; the label is the painted pixel furthest from it.
+            const ratio = await page.evaluate(async (data) => {
+                const img = await new Promise((resolve) => {
+                    const i = new Image();
+                    i.onload = () => resolve(i);
+                    i.src = `data:image/png;base64,${data}`;
+                });
+                const image = /** @type {HTMLImageElement} */ (img);
+                const canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                const context = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
+                context.drawImage(image, 0, 0);
+                const d = context.getImageData(0, 0, canvas.width, canvas.height).data;
+                /** @param {number} k */
+                const lum = (k) => {
+                    const f = (/** @type {number} */ v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+                    return 0.2126 * f(d[k]) + 0.7152 * f(d[k + 1]) + 0.0722 * f(d[k + 2]);
+                };
+                /** @type {Map<string, number>} */
+                const counts = new Map();
+                // The middle third of the height: the face and the label, clear of the notch and the slit's ends.
+                const top = Math.floor(canvas.height / 3);
+                const bottom = Math.ceil((2 * canvas.height) / 3);
+                for (let y = top; y < bottom; y++)
+                    for (let x = 4; x < canvas.width - 4; x++) {
+                        const k = (y * canvas.width + x) * 4;
+                        const key = `${d[k] >> 3},${d[k + 1] >> 3},${d[k + 2] >> 3}`;
+                        counts.set(key, (counts.get(key) ?? 0) + 1);
+                    }
+                const mode = [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+                let plate = 0;
+                let n = 0;
+                let best = 1;
+                const lums = [];
+                for (let y = top; y < bottom; y++)
+                    for (let x = 4; x < canvas.width - 4; x++) {
+                        const k = (y * canvas.width + x) * 4;
+                        if (`${d[k] >> 3},${d[k + 1] >> 3},${d[k + 2] >> 3}` === mode) {
+                            plate += lum(k);
+                            n += 1;
+                        }
+                        lums.push(lum(k));
+                    }
+                plate /= n;
+                for (const l of lums) best = Math.max(best, (Math.max(l, plate) + 0.05) / (Math.min(l, plate) + 0.05));
+                return Math.round(best * 100) / 100;
+            }, shot.toString('base64'));
+            expect(ratio, `${kind}: the disabled label against its plate`).toBeGreaterThanOrEqual(4.5);
+            const on = await page.locator(`[data-probe="${kind}-on"]`).evaluate((el) => getComputedStyle(el).color);
+            const offColour = await off.evaluate((el) => getComputedStyle(el).color);
+            expect(offColour, `${kind}: disabled must not wear the enabled label`).not.toBe(on);
+        }
+    });
+
     for (const variant of ['', 'kp-button--primary', 'kp-button--mirror', 'kp-button--destructive']) {
         test(`focus paints a ring inside the ${variant || 'plain'} button, measured as a difference [TH118, DI2]`, async ({ page }) => {
             await open(page);

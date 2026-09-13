@@ -161,7 +161,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Kenny's second nostromo pass (2026-09-13) added two, the toast
     // button's hover veil and the ink that veil is judged from
     // (--kp-toast-button-hover, --kp-toast-button-ink): 141 + 2.
-    assert.equal(result.expected, 143, 'AR21 counted 143 --kp-* properties in css/components.css');
+    // Kenny's review notes of the same day split the data table bar's one
+    // shorthand knob into its block and inline halves
+    // (--kp-datatable-bar-padding-block, --kp-datatable-bar-padding-inline):
+    // 143 - 1 + 2.
+    assert.equal(result.expected, 144, 'AR21 counted 144 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -194,7 +198,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 143);
+    assert.equal(result.readCount, 144);
     assert.deepEqual(result.unread, []);
 });
 

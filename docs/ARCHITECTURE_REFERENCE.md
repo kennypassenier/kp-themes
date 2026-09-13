@@ -42,6 +42,8 @@ js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │
 js/datatable.js      search, paging             │
+js/top-layer.js      an open list or calendar   │
+                     above a clipping container │
 js/listbox.js        the shared listbox         │
 js/combobox.js       typeahead over it          │
 js/palette.js        the command palette        │

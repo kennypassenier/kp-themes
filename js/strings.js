@@ -296,7 +296,12 @@ export const DEFAULT_STRINGS = Object.freeze({
     switchOn: 'On',
     switchOff: 'Off',
     calendarOpen: 'Open the calendar',
-    calendarButton: 'Calendar',
+    // What the calendar button shows: a glyph, hidden from a screen reader,
+    // which hears calendarOpen as the button's name instead. The same glyph
+    // the date picker's own markup carries, so a picker the package builds
+    // (the data table's date filter) looks like one written by hand
+    // [Kenny's note of 2026-09-13]. Until then it was the word "Calendar".
+    calendarButton: '▦',
     dateFormatHint: 'dd-mm-yyyy',
     previousMonth: 'Previous month',
     nextMonth: 'Next month',

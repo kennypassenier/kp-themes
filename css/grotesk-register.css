@@ -415,25 +415,54 @@
         color: var(--primary-foreground);
     }
 
-    /* (e) mirror-invert: the theme's own fx-duration/fx-ease, not a value
-       invented for the demo — the one micro-interaction timing this
-       theme ships is the one used here too. */
-    [data-theme='grotesk'] .kp-button--primary.kp-button--mirror:hover,
-    [data-theme='grotesk'] .kp-button--primary.kp-button--mirror:focus-visible {
-        background: var(--background);
-        color: var(--primary);
-    }
-
     [data-theme='grotesk'] .kp-button--destructive {
         background: var(--destructive);
         border-color: var(--destructive);
         color: var(--destructive-foreground);
     }
 
-    [data-theme='grotesk'] .kp-button--destructive.kp-button--mirror:hover,
-    [data-theme='grotesk'] .kp-button--destructive.kp-button--mirror:focus-visible {
+    /* (e) The invert, on every coloured button [Kenny's note of 2026-09-13,
+       option B of research/grotesk-hover/demo.html]. The approved demo
+       inverted a coloured button only when it also carried --mirror, so a
+       plain primary or destructive button merely deepened its red on hover
+       (measured: each painted its own --primary-hover or --destructive-hover).
+       Now the fill becomes the page ground and the label takes the colour,
+       on hover and on keyboard focus, and never while pressed — the press
+       keeps its own value, so it still differs from the hover.
+       The border is restated: the fill was the button's colour and the
+       border merely matched it, so with the fill gone the 2px border in the
+       same colour is what keeps the button's outline on the white ground,
+       and --primary-hover from the components layer would otherwise tint it. */
+    [data-theme='grotesk'] .kp-button--primary:hover:not(:active),
+    [data-theme='grotesk'] .kp-button--primary:focus-visible:not(:active) {
         background: var(--background);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-button--destructive:hover:not(:active),
+    [data-theme='grotesk'] .kp-button--destructive:focus-visible:not(:active) {
+        background: var(--background);
+        border-color: var(--destructive);
         color: var(--destructive);
+    }
+
+    /* The press, restated for the two coloured variants [fix-12]: the invert
+       above already stands down while :active, so what a press paints is
+       what it painted before and in option B's demo — the register's own
+       pressed ground below (--secondary-active). Written out so the pressed
+       state of these two buttons is this register's decision on the page,
+       not an accident of specificity. */
+    [data-theme='grotesk'] .kp-button--primary:active:not(:disabled),
+    [data-theme='grotesk'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    /* A bare mirror button, neither primary nor destructive, takes the
+       default button's grey wash on hover (option B), which the wash above
+       leaves out for it. */
+    [data-theme='grotesk'] .kp-button--mirror:not(.kp-button--primary):not(.kp-button--destructive):hover:not(:active) {
+        background: var(--muted);
     }
 
     [data-theme='grotesk'] .kp-button--ghost {

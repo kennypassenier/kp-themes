@@ -254,3 +254,44 @@ test('the calendar button sits on the line with the input [gap-11]', async ({ pa
         expect(b.x, `${id}: the button is not beside the input`).toBeGreaterThanOrEqual(a.x + a.width - 1);
     }
 });
+
+// Kenny's review note of 2026-09-13: the data table's date filter opened its
+// calendar past the right edge of the window. The fix is the picker's own,
+// so every picker near an edge is held here, in both channels and both
+// writing directions.
+for (const channel of CHANNELS) {
+    for (const dir of ['ltr', 'rtl']) {
+        test(`a picker at the ${dir === 'ltr' ? 'right' : 'left'} edge opens its calendar toward the inline start, inside the window — ${channel.name}, ${dir} [Kenny's note 1]`, async ({
+            page,
+        }) => {
+            // Before, both channels: ltr, the panel ran to x=1374 of the page in a 1280px window (the page grew a sideways scroll); rtl, it started at x=-94.
+            await page.setViewportSize({ width: 1280, height: 800 });
+            await page.goto(URL);
+            const picker = page.locator(channel.open).locator('xpath=ancestor::*[contains(concat(" ", @class, " "), " kp-datepicker ")][1]');
+            await picker.evaluate((el, direction) => {
+                const node = /** @type {HTMLElement} */ (el);
+                node.dir = direction;
+                // Ten rem wide, narrower than its calendar, and pushed to the inline end of its section.
+                node.style.inlineSize = '10rem';
+                node.style.marginInlineStart = 'auto';
+                node.scrollIntoView({ block: 'center', inline: 'nearest' });
+            }, dir);
+            await page.locator(channel.open).click();
+            const panel = page.locator(channel.panel);
+            await expect(panel).toBeVisible();
+            await expect
+                .poll(() =>
+                    panel.evaluate((el) => {
+                        // In page coordinates, so a window that scrolled sideways to show the panel does not hide the overflow.
+                        const box = el.getBoundingClientRect();
+                        const page = document.documentElement;
+                        return {
+                            left: Math.round(box.left + scrollX) >= 0,
+                            right: Math.round(box.right + scrollX) <= page.clientWidth,
+                        };
+                    }),
+                )
+                .toEqual({ left: true, right: true });
+        });
+    }
+}

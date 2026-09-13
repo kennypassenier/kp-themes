@@ -311,3 +311,81 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// Kenny's review note of 2026-09-13, option B of research/grotesk-hover/demo.html:
+// every coloured button inverts on hover and on keyboard focus, not while it
+// is pressed, and a bare mirror button takes the default button's grey wash.
+test.describe("grotesk hover, option B [Kenny's note 2]", () => {
+    /** @param {import('@playwright/test').Page} page */
+    const probes = async (page) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto('/tests/fixtures/button.html');
+        await page.evaluate(() => {
+            document.documentElement.setAttribute('data-theme', 'grotesk');
+            const row = document.createElement('div');
+            for (const [probe, className] of [
+                ['primary', 'kp-button kp-button--primary'],
+                ['destructive', 'kp-button kp-button--destructive'],
+                ['mirror', 'kp-button kp-button--mirror'],
+            ]) {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = className;
+                b.dataset.probe = probe;
+                b.textContent = probe;
+                row.append(b);
+            }
+            document.body.prepend(row);
+            // Where the keyboard starts from, so Tab reaches the probes in order.
+            const start = document.createElement('span');
+            start.tabIndex = -1;
+            start.dataset.probe = 'start';
+            row.before(start);
+        });
+    };
+
+    for (const variant of ['primary', 'destructive']) {
+        test(`a ${variant} button inverts on hover and on keyboard focus, keeps its edge, and the press differs from the hover`, async ({ page }) => {
+            // Before: without --mirror the hover only deepened the red (primary rgb(199, 5, 21), destructive rgb(224, 6, 24)); no invert.
+            await probes(page);
+            const button = page.locator(`[data-probe="${variant}"]`);
+            const ground = await paint(page, '--background');
+            const colour = await paint(page, `--${variant}`);
+            await expect(button).toHaveCSS('background-color', colour);
+
+            await button.hover();
+            await style(button, 'background-color', 'the fill becomes the page ground on hover').toBe(ground);
+            await style(button, 'color', 'the label takes the colour').toBe(colour);
+            // The fill was the button's colour; with it gone, the 2px border is what keeps the outline.
+            await style(button, 'border-top-color', 'the border carries the colour while inverted').toBe(colour);
+            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
+
+            await page.mouse.down();
+            await expect
+                .poll(() => button.evaluate((el) => getComputedStyle(el).backgroundColor), 'the press must not look like the hover')
+                .not.toBe(ground);
+            await page.mouse.up();
+
+            await page.mouse.move(0, 0);
+            await style(button, 'background-color').toBe(colour);
+            await page.locator('[data-probe="start"]').focus();
+            await tabToSelector(page, `[data-probe="${variant}"]`);
+            await style(button, 'background-color', 'keyboard focus inverts as hover does').toBe(ground);
+            await style(button, 'color').toBe(colour);
+        });
+    }
+
+    test('a bare mirror button takes the grey wash on hover, and the press differs from it', async ({ page }) => {
+        // Before: the bare --mirror button kept rgb(255, 255, 255) on hover — nothing changed.
+        await probes(page);
+        const button = page.locator('[data-probe="mirror"]');
+        const muted = await paint(page, '--muted');
+        await button.hover();
+        await style(button, 'background-color', 'the grey wash').toBe(muted);
+        await page.mouse.down();
+        await expect
+            .poll(() => button.evaluate((el) => getComputedStyle(el).backgroundColor), 'the press must not look like the hover')
+            .not.toBe(muted);
+        await page.mouse.up();
+    });
+});

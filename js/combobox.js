@@ -35,6 +35,7 @@
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
+import { raiseInPlace, raiseOverlay } from './top-layer.js';
 
 const COMBOBOX = '[data-kp-combobox]';
 const INPUT = 'input[role="combobox"]';
@@ -173,10 +174,18 @@ export function attachComboboxes(
             status: status?.textContent ?? '',
         };
 
+        /** Takes the open list out of the top layer again (js/top-layer.js). */
+        let lower = () => {};
         /** @param {boolean} next */
         const setOpen = (next) => {
             const was = list.hidden === false;
             list.hidden = !next;
+            // Above a container that clips — a card's cut corners hid every option in four themes — where it was drawn.
+            if (next && !was) lower = raiseInPlace(list, box);
+            if (!next && was) {
+                lower();
+                lower = () => {};
+            }
             input.setAttribute('aria-expanded', String(next));
             if (!next) listbox.clear();
             if (was !== next) box.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next } }));
@@ -437,6 +446,7 @@ export function attachComboboxes(
 
         cleanups.push(() => {
             clearTimeout(pending);
+            lower();
             listbox.destroy();
             input.removeEventListener('input', onInput);
             input.removeEventListener('keydown', onKeyDown);
@@ -593,11 +603,15 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
 
     const isOpen = () => list.hidden === false;
 
+    /** Takes the open list out of the top layer again (js/top-layer.js). */
+    let lower = () => {};
     const open = () => {
         if (select.disabled) return;
         build();
         list.hidden = false;
-        place();
+        // Above a container that clips, placed by the same measurement as before; it follows the select while open.
+        lower();
+        lower = raiseOverlay(list, place);
         select.setAttribute('aria-expanded', 'true');
         const chosen = listbox.options.findIndex((option) => option.dataset.kpChosen !== undefined);
         listbox.highlight(Math.max(chosen, 0));
@@ -606,6 +620,8 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
 
     const close = () => {
         if (!isOpen()) return;
+        lower();
+        lower = () => {};
         list.hidden = true;
         select.setAttribute('aria-expanded', 'false');
         listbox.clear();
@@ -710,6 +726,7 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     select.dataset.kpSelectAttached = '';
 
     const detach = () => {
+        lower();
         listbox.destroy();
         select.removeEventListener('keydown', onKeyDownCapture, { capture: true });
         select.removeEventListener('mousedown', onMouseDown);

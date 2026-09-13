@@ -296,7 +296,10 @@ export function attachDataTables(
         filter: filterFn = defaultFilter,
         debounceMs = 0,
         sortCycle = 'two',
-        pagerClassName = 'kp-button kp-button--ghost',
+        // The theme's own button, not the ghost: a ghost is text alone at rest
+        // in eleven of the twenty-two themes, so the pager did not read as
+        // buttons until hovered [Kenny's note of 2026-09-13, seen in cyberpunk].
+        pagerClassName = 'kp-button',
         pageLabel,
         regions = true,
         pageSizes: pageSizesOption = PAGE_SIZES,
@@ -554,11 +557,19 @@ export function attachDataTables(
                         input.inputMode = 'numeric';
                         input.id = `${id}-filter-${at}-${bound}`;
                         input.dataset.kpDateInput = '';
-                        const opener = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--ghost'));
+                        // The date picker's own trigger, class for class and
+                        // string for string: a plain button with the glyph,
+                        // named by aria-label and title [Kenny's note of
+                        // 2026-09-13 — it was a ghost button reading "Calendar"].
+                        const opener = /** @type {HTMLButtonElement} */ (make('button', 'kp-button'));
                         opener.type = 'button';
                         opener.dataset.kpDateOpen = '';
                         opener.setAttribute('aria-label', s0.calendarOpen);
-                        opener.textContent = s0.calendarButton;
+                        opener.title = s0.calendarOpen;
+                        const glyph = make('span');
+                        glyph.setAttribute('aria-hidden', 'true');
+                        glyph.textContent = s0.calendarButton;
+                        opener.append(glyph);
                         const datePanel = make('div', 'kp-datepicker__panel');
                         datePanel.dataset.kpDatePanel = '';
                         datePanel.hidden = true;
@@ -727,7 +738,7 @@ export function attachDataTables(
             if (pager !== null) {
                 pager.textContent = '';
                 if (sizeLabel !== null) pager.append(sizeLabel);
-                pager.append(pagerButton(s.previous, page > 0, () => (page -= 1)));
+                pager.append(pagerButton(s.previous, page > 0, () => (page -= 1), 'back'));
                 const label = document.createElement('span');
                 label.className = 'kp-datatable__page';
                 label.textContent = (pageLabel ?? s.tablePage)(page + 1, pages);
@@ -744,11 +755,15 @@ export function attachDataTables(
             wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...shown], pageRows: [...pageRows] } }));
         };
 
-        /** @param {string} text @param {boolean} enabled @param {() => void} go */
-        const pagerButton = (text, enabled, go) => {
+        /** @param {string} text @param {boolean} enabled @param {() => void} go @param {'back'} [direction] */
+        const pagerButton = (text, enabled, go, direction) => {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = pagerClassName;
+            // Meaning in the markup, the look in the theme: cyberpunk turns a
+            // back button's notch to the side it points to; the other themes
+            // draw it as the button beside it [Kenny's note of 2026-09-13].
+            if (direction !== undefined) button.dataset.kpDirection = direction;
             button.textContent = text;
             button.disabled = !enabled;
             button.addEventListener('click', () => {

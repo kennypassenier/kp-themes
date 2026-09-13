@@ -179,6 +179,57 @@ for (const channel of CHANNELS) {
         await input.fill('a');
         await expect(list.locator('.kp-combobox__empty')).toBeHidden();
     });
+
+    test(`inside a card that clips its corners the open list is whole, takes its clicks and stays under the input, in every theme — ${channel.name} [2026-09-13]`, async ({
+        page,
+    }) => {
+        // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach (4 of 5 in phantom).
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(URL);
+        const box = page.locator(channel.box);
+        await box.evaluate(async (el, names) => {
+            await Promise.all(
+                names.map(
+                    (name) =>
+                        new Promise((resolve) => {
+                            const link = document.createElement('link');
+                            link.rel = 'stylesheet';
+                            link.href = `/css/${name}-register.css`;
+                            link.onload = resolve;
+                            link.onerror = resolve;
+                            document.head.append(link);
+                        }),
+                ),
+            );
+            // The card ends where the combobox ends, so the open list hangs outside it.
+            /** @type {HTMLElement} */ (el.parentElement).classList.add('kp-card');
+        }, THEME_NAMES);
+        const input = page.locator(channel.input);
+        const list = box.locator('.kp-combobox__list');
+        const lost = [];
+        for (const theme of THEME_NAMES) {
+            await wear(page, theme);
+            await input.click();
+            await input.press('ArrowDown');
+            await expect(list).toBeVisible();
+            const m = await box.evaluate((el) => {
+                const field = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__input')).getBoundingClientRect();
+                const drawn = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__list'));
+                const options = [...drawn.querySelectorAll('[role="option"]:not([hidden])')];
+                const missed = options.filter((option) => {
+                    const r = option.getBoundingClientRect();
+                    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                    return hit !== option && !option.contains(hit);
+                }).length;
+                return { missed, of: options.length, gap: Math.round(drawn.getBoundingClientRect().top - field.bottom) };
+            });
+            if (m.missed > 0 || m.gap < 0 || m.gap > 8) lost.push(`${theme}: ${m.missed} of ${m.of} out of reach, ${m.gap}px under the input`);
+            await input.press('Escape');
+            await expect(list).toBeHidden();
+            await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+        }
+        expect(lost).toEqual([]);
+    });
 }
 
 test('the list sits under its input in every theme [gap-11]', async ({ page }) => {

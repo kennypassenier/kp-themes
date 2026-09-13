@@ -183,12 +183,16 @@ export type DataTableProps = {
     strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;
     style?: import('react').CSSProperties;
+    /**
+     * `pagerButton` replaces the pager buttons' classes, `kp-button` by default.
+     */
     classNames?: {
         bar?: string;
         search?: string;
         table?: string;
         status?: string;
         pager?: string;
+        pagerButton?: string;
     };
 };
 declare const DataTable: import("react").ForwardRefExoticComponent<DataTableProps & import("react").RefAttributes<HTMLDivElement>>;
