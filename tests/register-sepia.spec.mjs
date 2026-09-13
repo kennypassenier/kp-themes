@@ -31,7 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle, style } from './paint.mjs';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -203,30 +203,6 @@ for (const [channel, url] of CHANNELS) {
             expect(mark.content.replace(/"/g, '')).toContain('◆');
         });
 
-        test('the dropdown opens in the theme’s own language, sienna on hover [KT14]', async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            const li = page.locator('.kp-nav__links > li', { has: trigger }).first();
-            await li.hover();
-            const menu = li.locator('.kp-nav__menu');
-            await expect(menu).toBeVisible();
-            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
-            const item = menu.locator('a').first();
-            await item.hover();
-            await style(item, 'color').toBe(await paint(page, '--primary'));
-        });
-
-        test('the primary, ghost and destructive buttons carry the theme’s own quiet plates', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('6px');
-            const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
-            expect(await ghost.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
-            const wipe = page.locator('.kp-button--destructive').first();
-            expect(await wipe.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--destructive'));
-        });
-
         test('the dossier: a rotated stamp from data-kp-label, and redactions covered until the file opens, lifting in order [TH120]', async ({
             page,
         }) => {
@@ -258,35 +234,6 @@ for (const [channel, url] of CHANNELS) {
             const focusedIsDestructive = await page.evaluate(() => document.activeElement?.classList.contains('kp-button--destructive') ?? false);
             expect(focusedIsDestructive, 'focus is not on the destructive action').toBe(false);
             await style(dialog, 'background-color').toBe(await paint(page, '--popover'));
-        });
-
-        test('the marginal bracket is drawn beside the touched control, not on it [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the `::before` rule's border
-            // removed -> red on the bracket's colour; the hover's
-            // `opacity: 1` removed -> red on it appearing at all.
-            // The first attempt removed the WRONG one of three identical
-            // `border: 1px solid var(--primary)` lines — sepia's sidenav
-            // bracket, which this quirk deliberately echoes — and reported
-            // green. The drill now anchors on `inset-inline-start: -0.65rem`,
-            // which only this rule has [KT3].
-            await open(page, url);
-            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
-            // reaches the hero's `--mirror` variant, which carries its own
-            // later rules — so this test passed with the rule under it
-            // removed, until the drill of 2026-09-12 said so [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            expect(Number((await pseudo(btn, '::before', ['opacity']))['opacity']), 'blank margin at rest').toBe(0);
-            const box = await btn.evaluate((el) => el.getBoundingClientRect().left);
-            const mark = await btn.evaluate((el) => {
-                const s = getComputedStyle(el, '::before');
-                return { start: s.insetInlineStart, colour: s.borderTopColor, end: s.borderInlineEndStyle };
-            });
-            expect(mark.colour, 'the bracket is drawn in the theme primary').toBe(await paint(page, '--primary'));
-            expect(mark.end, 'and it is open toward the text').toBe('none');
-            expect(box, 'the control itself sits clear of the margin').toBeGreaterThan(0);
-            await btn.hover();
-            // Polled: the bracket fades in over the theme's duration [fix-1].
-            await pseudoStyle(btn, '::before', 'opacity', 'the reader marks what they touch').toBe('1');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

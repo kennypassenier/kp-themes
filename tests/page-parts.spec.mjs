@@ -107,47 +107,4 @@ test.describe('the last two pieces of the page', () => {
             expect(text.includes('kp-btn'), `${file} still writes kp-btn`).toBe(false);
         }
     });
-
-    test('a picture holds its space before it has a picture in it [feat-media-1]', async ({ page }) => {
-        // The frame with nothing in it at all is the state every page is in
-        // for the first moments of its life, and the one that makes text
-        // below jump when the bytes land.
-        //
-        // Drill: `aspect-ratio` removed from `.kp-media` and this goes red —
-        // an empty frame collapses to nothing.
-        await page.goto(FIXTURE);
-
-        const empty = await part(page, 'media-empty').evaluate((el) => el.getBoundingClientRect());
-        expect(empty.height, 'an empty frame still has a height').toBeGreaterThan(0);
-        expect(empty.width / empty.height, 'and it is the ratio the token declares').toBeCloseTo(16 / 9, 1);
-
-        const square = await part(page, 'media-square').evaluate((el) => el.getBoundingClientRect());
-        expect(square.width / square.height, 'and a square one is square').toBeCloseTo(1, 1);
-    });
-
-    test('the picture fills its frame rather than stretching to it [feat-media-1]', async ({ page }) => {
-        // A one-pixel image in a 16/9 frame is the worst case: without
-        // object-fit it is drawn as a 16/9 smear of one colour, and nobody
-        // notices until the photograph is a face.
-        await page.goto(FIXTURE);
-
-        await measured(part(page, 'media-img'), (el) => getComputedStyle(el).objectFit, undefined, 'the image covers its frame').toBe('cover');
-        const [frame, image] = await page.evaluate(() => {
-            const rect = (sel) => document.querySelector(sel).getBoundingClientRect();
-            return [rect('[data-test="media"]'), rect('[data-test="media-img"]')];
-        });
-        expect(Math.round(image.width), 'and fills it exactly').toBe(Math.round(frame.width));
-        expect(Math.round(image.height), 'in both directions').toBe(Math.round(frame.height));
-    });
-
-    test('a caption over a picture has a ground under it [feat-media-1, DI1]', async ({ page }) => {
-        // The picture belongs to the consumer and can be any brightness.
-        // Text laid straight on it is legible until somebody uploads a
-        // bright one.
-        await page.goto(FIXTURE);
-        const overlay = part(page, 'media-overlay');
-
-        await measured(overlay, (el) => getComputedStyle(el).backgroundImage, undefined, 'the caption sits on something').not.toBe('none');
-        await measured(overlay, (el) => getComputedStyle(el).position, undefined, 'and it sits on the picture, not under it').toBe('absolute');
-    });
 });

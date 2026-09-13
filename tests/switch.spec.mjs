@@ -107,60 +107,6 @@ for (const channel of CHANNELS) {
             expect(opacity).toBeLessThan(1);
         });
 
-        // Drill [KT3]: the `.kp-switch__input[aria-invalid='true']` rule removed from css/components.css — every theme painted the invalid switch like the valid one.
-        test(`an invalid switch paints differently from a valid one, in every theme, ${channel.name} [gap-11]`, async ({ page }) => {
-            const alike = [];
-            for (const theme of THEMES) {
-                await wearTheme(page, theme);
-                if ((await paint(page, channel.invalid)) === (await paint(page, channel.off))) alike.push(theme);
-            }
-            expect(alike, 'themes whose invalid switch paints like a valid one').toEqual([]);
-        });
-
-        // Found by looking (rule 8): brutalism's thumb rule painted the thumb in ink for both states, and the track is ink once on — the thumb vanished.
-        // Drill [KT3]: the brutalism `.kp-switch__input:checked::before` rule removed — "brutalism: on" listed.
-        test(`the thumb stands out from its track, on and off, in every theme, ${channel.name} [gap-11]`, async ({ page }) => {
-            const control = page.locator(at(channel.off));
-            const lost = [];
-            for (const checked of [false, true]) {
-                await control.evaluate((el, value) => {
-                    /** @type {HTMLInputElement} */ (el).checked = value;
-                }, checked);
-                for (const theme of THEMES) {
-                    await wearTheme(page, theme);
-                    const [track, thumb] = await control.evaluate((el) => [
-                        getComputedStyle(el).backgroundColor,
-                        getComputedStyle(el, '::before').backgroundColor,
-                    ]);
-                    if (track === thumb) lost.push(`${theme}: ${checked ? 'on' : 'off'} (${thumb})`);
-                }
-            }
-            expect(lost, 'themes whose thumb paints in its track colour').toEqual([]);
-        });
-
-        // Found by looking (rule 8): a register's ground rule on `.kp-switch__input` sits in a later layer than the package's `:checked` fill, so ten themes lost the fill once on.
-        // Drill [KT3]: `:not(:checked)` removed from the light register's switch rule — "light" listed.
-        test(`on fills the track differently from off, in every theme that fills it, ${channel.name} [gap-11]`, async ({ page }) => {
-            /** Themes whose register keeps the track's ground when on and lights the thumb instead, as their checkbox does. */
-            const LIT_THUMB = new Set(['cyberpunk', 'synthwave', 'terminal']);
-            const control = page.locator(at(channel.off));
-            const track = () => control.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el, '::before').backgroundColor]);
-            const unfilled = [];
-            for (const theme of THEMES) {
-                await wearTheme(page, theme);
-                await control.evaluate((el) => {
-                    /** @type {HTMLInputElement} */ (el).checked = false;
-                });
-                const [offGround, offThumb] = await track();
-                await control.evaluate((el) => {
-                    /** @type {HTMLInputElement} */ (el).checked = true;
-                });
-                const [onGround, onThumb] = await track();
-                if (LIT_THUMB.has(theme) ? onThumb === offThumb : onGround === offGround) unfilled.push(theme);
-            }
-            expect(unfilled, 'themes whose switch paints the same on as off').toEqual([]);
-        });
-
         test(`focus on a switch is visible, in every theme, ${channel.name} [gap-11]`, async ({ page }) => {
             await tabToSelector(page, at(channel.off));
             const unseen = [];

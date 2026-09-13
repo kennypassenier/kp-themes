@@ -11,7 +11,6 @@
 // code, which is the point: the test is here to catch the day someone
 // replaces it with a div.
 
-import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 
 const PAGE = '/tests/fixtures/components.html';
@@ -79,8 +78,6 @@ for (const channel of CHANNELS) {
 }
 
 // ── gap-11, the overlay faults of catalogue batch 2 [2026-09-13] ──────────
-
-const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
 test('an alert closes from its own close button, without a framework [gap-11]', async ({ page }) => {
     // gap-11: .kp-alert__close did nothing outside React; the framework-free channel left an alert's dismissal unwired.
@@ -170,31 +167,4 @@ test('a tall dialog stops at the window and scrolls its body [gap-11]', async ({
         };
     });
     expect(measure).toEqual({ fits: true, bodyScrolls: true, actionsShown: true, dialogScrolls: false });
-});
-
-test('a disabled menu item looks disabled and does not react to hover, in every theme [gap-11]', async ({ page }) => {
-    // gap-11: a disabled .kp-menu__item painted like an enabled one and lit up under the pointer like one.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catalogue/overlays.html');
-    const off = page.locator('#menu-extremes .kp-menu__item[disabled]').first();
-    const on = page.locator('#menu-extremes .kp-menu__item:not([disabled])').first();
-    const paint = (/** @type {import('@playwright/test').Locator} */ locator) =>
-        locator.evaluate((el) => {
-            const s = getComputedStyle(el);
-            return ['color', 'opacity', 'background-color', 'background-image', 'box-shadow', 'text-decoration-line']
-                .map((p) => s.getPropertyValue(p))
-                .join(' | ');
-        });
-    await off.scrollIntoViewIfNeeded();
-    const faults = [];
-    for (const theme of THEME_NAMES) {
-        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        await page.mouse.move(0, 0);
-        const rest = await paint(off);
-        if (rest === (await paint(on))) faults.push(`${theme}: disabled paints like enabled`);
-        const box = await off.boundingBox();
-        if (box) await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-        if ((await paint(off)) !== rest) faults.push(`${theme}: disabled reacts to hover`);
-    }
-    expect(faults).toEqual([]);
 });

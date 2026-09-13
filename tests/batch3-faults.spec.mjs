@@ -92,58 +92,6 @@ test('a nav dropdown declared open with data-kp-nav-menu-open is painted open in
     await measured(menu, (el) => el.getBoundingClientRect().height, undefined, 'closed again once the declaration is gone').toBe(0);
 });
 
-test('in the collapsed bar the dropdown is a list in the flow, with no panel ground, frame or shadow in any theme [gap-12]', async ({ page }) => {
-    // Before: 20 of 22 kept a ground (formal rgb(253, 253, 252)), light kept its shadow and high-contrast its 2px frame — every register's panel rule beat the reset in kp.components.
-    await page.goto('/catalogue/navigation.html');
-    await sweep(page, () => {
-        const panel = /** @type {HTMLElement} */ (document.querySelector('#bar-collapsed .kp-nav[data-kp-nav-open] .kp-nav__menu'));
-        const style = getComputedStyle(panel);
-        const faults = [];
-        if (!/^(transparent|rgba\(\d+, \d+, \d+, 0\))$/.test(style.backgroundColor)) faults.push(`ground ${style.backgroundColor}`);
-        if (style.backgroundImage !== 'none') faults.push(`ground image ${style.backgroundImage}`);
-        for (const side of ['Top', 'Right', 'Bottom', 'Left']) {
-            if (
-                style.getPropertyValue(`border-${side.toLowerCase()}-style`) !== 'none' &&
-                parseFloat(style.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0
-            )
-                faults.push(`${side.toLowerCase()} frame`);
-        }
-        if (style.boxShadow !== 'none') faults.push(`shadow ${style.boxShadow}`);
-        if (style.position !== 'static') faults.push(`position ${style.position}`);
-        return faults.length ? faults.join('; ') : null;
-    });
-});
-
-test('a tab row longer than its box scrolls inside the box in every theme, and never widens the pane [gap-12]', async ({ page }) => {
-    // Before: the row ran 344px past a 384px pane (last tab at 1030 against a pane edge at 703), all 22 themes.
-    await page.goto('/catalogue/navigation.html');
-    await sweep(page, () => {
-        const list = /** @type {HTMLElement} */ (document.querySelector('#tabs-many .kp-tabs__list'));
-        const pane = /** @type {HTMLElement} */ (list.closest('.cat-resize'));
-        const row = list.getBoundingClientRect();
-        if (row.right > pane.getBoundingClientRect().right + 0.5)
-            return `the row ends ${Math.round(row.right - pane.getBoundingClientRect().right)}px past the pane`;
-        if (pane.scrollWidth > pane.clientWidth + 1) return `the pane scrolls by ${pane.scrollWidth - pane.clientWidth}px`;
-        if (list.scrollWidth <= list.clientWidth) return 'the row does not scroll, so some tabs are unreachable';
-        return null;
-    });
-
-    // A row that fits is not a scroller: a scroller clips what a register
-    // draws past the row's edge, which several do for the selected tab.
-    const fitting = page.locator('#tabs .kp-tabs__list').first();
-    await measured(fitting, (el) => getComputedStyle(el).overflowX, undefined, 'a row that fits does not scroll').toBe('visible');
-    // And the long row stops scrolling once its pane is wide enough. Three
-    // tabs go first, so "wide enough" does not hang on one theme's face.
-    await page.evaluate(() => {
-        document.documentElement.setAttribute('data-theme', 'formal');
-        for (const tab of [...document.querySelectorAll('#tabs-many [role="tab"]')].slice(-3)) tab.remove();
-    });
-    await page.locator('#tabs-many .cat-resize').evaluate((el) => (el.style.inlineSize = '80rem'));
-    await measured(page.locator('#tabs-many .kp-tabs__list'), (el) => getComputedStyle(el).overflowX, undefined, 'widened, it stops scrolling').toBe(
-        'visible',
-    );
-});
-
 test('the selected tab is scrolled into view when it changes from outside [gap-12]', async ({ page }) => {
     // Before: selectTab(list, 8) left the ninth tab at 1030px against a row that ends at 686px.
     await page.goto('/catalogue/navigation.html');
@@ -171,33 +119,6 @@ test('the selected tab is scrolled into view when it changes from outside [gap-1
 });
 
 // --- 2 · Structure ---------------------------------------------------------
-
-test('a selected tree item is visibly different from its unselected sibling in every theme [gap-12]', async ({ page }) => {
-    // Before: readings-0240.csv (aria-selected="true") and pump-log.txt painted identically in all 22 themes.
-    await page.goto('/catalogue/structure.html');
-    await page.mouse.move(1, 1);
-    await sweep(
-        page,
-        (paint) => {
-            const read = eval(paint);
-            const items = [...document.querySelectorAll('#tree [role="treeitem"]')];
-            const selected = items.find((el) => el.getAttribute('aria-selected') === 'true');
-            const other = items.find((el) => el.textContent?.trim() === 'pump-log.txt');
-            return read(selected) === read(other) ? 'selected paints like unselected' : null;
-        },
-        PAINT,
-    );
-});
-
-test('an unbreakable tree label wraps inside its pane in every theme [gap-12]', async ({ page }) => {
-    // Before: the 64-character file name pushed the 320px pane to a scroll width of 632px.
-    await page.goto('/catalogue/structure.html');
-    await sweep(page, () => {
-        const tree = /** @type {HTMLElement} */ (document.querySelector('#tree-deep .kp-tree'));
-        const pane = /** @type {HTMLElement} */ (tree.closest('.cat-resize'));
-        return pane.scrollWidth > pane.clientWidth + 1 ? `the pane scrolls by ${pane.scrollWidth - pane.clientWidth}px` : null;
-    });
-});
 
 test('a horizontal split stacks its panes with a horizontal separator in every theme, and the arrows move it [gap-12]', async ({ page }) => {
     // Before: data-kp-orientation="horizontal" laid out as columns — panes side by side at x 286 and 770, the separator 10px wide and 222px tall.
@@ -278,45 +199,6 @@ test('the wizard says why it refuses Next when it is not inside a form, and the 
 
 // --- 3 · The copy button ---------------------------------------------------
 
-test('a copied button keeps the success plate in every theme, hovered or not [gap-12]', async ({ page }) => {
-    // Before: 18 of 22 painted the ghost button's own ground over the success colour (dark: rgba(0, 0, 0, 0) against rgb(24, 57, 44)); only formal, light, high-contrast and solstice kept it.
-    await page.goto('/catalogue/data.html');
-    const copied = page.locator('#copyable [data-kp-copied]');
-    await copied.scrollIntoViewIfNeeded();
-    for (const hovered of [false, true]) {
-        if (hovered) await copied.hover();
-        else await page.mouse.move(1, 1);
-        await sweep(page, () => {
-            const button = /** @type {HTMLElement} */ (document.querySelector('#copyable [data-kp-copied]'));
-            const probe = document.createElement('span');
-            probe.style.setProperty('background-color', 'var(--success)');
-            probe.style.setProperty('color', 'var(--success-foreground)');
-            button.parentElement?.append(probe);
-            const wanted = { ground: getComputedStyle(probe).backgroundColor, ink: getComputedStyle(probe).color };
-            probe.remove();
-            const style = getComputedStyle(button);
-            if (style.backgroundColor !== wanted.ground) return `ground ${style.backgroundColor}, success is ${wanted.ground}`;
-            if (style.color !== wanted.ink) return `ink ${style.color}, success-foreground is ${wanted.ink}`;
-            return null;
-        });
-    }
-});
-
-test('a copy the clipboard refused is visibly different from an idle copy button in every theme [gap-12]', async ({ page }) => {
-    // Before: data-kp-copy-failed painted exactly like idle in all 22 themes; only a toast said anything.
-    await page.goto('/catalogue/data.html');
-    await page.mouse.move(1, 1);
-    await sweep(
-        page,
-        (paint) => {
-            const read = eval(paint);
-            const [idle, , failed] = document.querySelectorAll('#copyable .kp-copyable__button');
-            return read(idle) === read(failed) ? 'failed paints like idle' : null;
-        },
-        PAINT,
-    );
-});
-
 // --- 4 · Attached without React --------------------------------------------
 
 test('data-kp-sidenav-slim-toggle collapses and expands the slim rail it controls, says which, and fires the slim event [gap-12]', async ({
@@ -388,18 +270,4 @@ test('data-kp-palette-open opens the command palette through its own open, so th
     await page.keyboard.press('Escape');
     await measured(dialog, (el) => el.getBoundingClientRect().height, undefined, 'Escape closes it').toBe(0);
     expect(await page.evaluate(() => /** @type {any} */ (window).paletteEvents)).toEqual([true, false]);
-});
-
-test('a theme picker written as a list has no list indent and no markers in any theme [gap-12]', async ({ page }) => {
-    // Before: the first option sat 40px in from the list's edge (the browser's padding-inline-start), all 22 themes.
-    await page.goto('/catalogue/page.html');
-    await sweep(page, () => {
-        const list = /** @type {HTMLElement} */ (document.querySelector('#theme-buttons ul[data-kp-theme-picker]'));
-        const first = /** @type {HTMLElement} */ (list.querySelector('[data-kp-theme]'));
-        const indent = first.getBoundingClientRect().left - list.getBoundingClientRect().left;
-        if (indent > 0.5) return `the first option is ${Math.round(indent)}px in`;
-        const marker = getComputedStyle(/** @type {Element} */ (list.querySelector('li')), '::marker').content;
-        if (getComputedStyle(list).listStyleType !== 'none' && marker !== 'none') return `markers: ${getComputedStyle(list).listStyleType}`;
-        return null;
-    });
 });

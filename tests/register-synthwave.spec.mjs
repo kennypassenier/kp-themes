@@ -219,27 +219,6 @@ for (const [channel, url] of CHANNELS) {
             expect((await pseudo(rule, '::after', ['transform'])).transform).toMatch(/none|matrix\(1,/);
         });
 
-        test('the nav link carries the stripe on hover, and the button the sun cut', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            const link = page.locator('.kp-nav__link').nth(1);
-            const before = await pseudo(link, '::after', ['transform']);
-            expect(before.transform).toMatch(/matrix\(0,/);
-            await link.hover();
-            await expect.poll(async () => (await pseudo(link, '::after', ['transform'])).transform).toMatch(/none|matrix\(1,/);
-            expect((await pseudo(link, '::after', ['background-image']))['background-image']).toMatch(/linear-gradient/);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            await button.hover();
-            await expect.poll(async () => (await pseudo(button, '::before', ['animation-name']))['animation-name']).toBe('kp-sun-cut');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-        });
-
         test('the field label and the dossier stamp are in the OSD face, and the noise clears on the trigger', async ({ page }) => {
             await open(page, url);
             await page

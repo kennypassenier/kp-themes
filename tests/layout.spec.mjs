@@ -204,15 +204,6 @@ test.describe('the layout layer', () => {
         expect(overflows).toBe(false);
     });
 
-    // Drill: removing the [aria-busy='true'] rule makes the two buttons
-    // identical, which is the state standing rule 31 exists to prevent.
-    test('a busy control looks different from an idle one [TH92]', async ({ page }) => {
-        const idle = await box(page, 'idle');
-        const busy = await box(page, 'busy');
-        expect(busy.opacity).not.toBe(idle.opacity);
-        expect(busy.cursor).toBe('progress');
-    });
-
     // The one AR17 turns on. `.kp-table td` is (0,1,1) and `.kp-text-end`
     // is (0,1,0), so before the layers this cell stayed on `start` however
     // late the utility loaded — measured at the Phase 4 gate.

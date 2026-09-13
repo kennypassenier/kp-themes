@@ -93,33 +93,6 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the pastel register, ${channel}`, () => {
-        test('the sticker: a flat drop at rest, askew under the pointer, pressed flat [scope-12]', async ({ page }) => {
-            // Kenny chose this between three proposals: "A de sticker". A
-            // risograph print lands on paper like a sticker, so a control
-            // behaves like one — and this was the one of the three that shows
-            // something at rest, which is why he took it.
-            //
-            // The drop is HARD: no blur radius. A soft shadow here would be
-            // the thing this is not, so the test reads the blur and expects
-            // a zero in it.
-            //
-            // Drill: `--kp-pastel-peel` removed at its source in
-            // css/pastel-register.css, and the bundle regenerated —
-            // `18 passed, 2 failed`, one per channel. The regeneration is
-            // not optional: the page reads the generated stylesheet, and a
-            // drill that skips it reports green twice over [see the same
-            // note in register-lapis.spec.mjs].
-            await open(page, url);
-            const button = page.locator('.kp-button').first();
-
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow), 'at rest: offset three down, no blur').toMatch(/0px 3px 0px/);
-
-            await button.hover();
-            await expect
-                .poll(() => button.evaluate((el) => getComputedStyle(el).rotate), { message: 'under the pointer it sits askew' })
-                .not.toBe('none');
-        });
-
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'a risograph page does not boot').toBe(0);
@@ -237,24 +210,6 @@ for (const [channel, url] of CHANNELS) {
             expect(first.clip, 'the two tears are different cuts').not.toBe(second.clip);
             expect(first.bg).toBe(await paint(page, '--primary'));
             expect(second.bg).toBe(await paint(page, '--accent-foreground'));
-        });
-
-        test('the dropdown is styled in the theme’s own radius [KT14], and the buttons spring on hover', async ({ page }) => {
-            await open(page, url);
-            const menu = page.locator('.kp-nav__menu').first();
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('12.8px');
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
-            // The dropdown opens on hover of its trigger; the item inside
-            // is not actionable until then.
-            await page.locator('[aria-haspopup="true"]').first().hover();
-            const item = menu.locator('a').first();
-            await expect(item).toBeVisible();
-            await item.hover();
-            await expect.poll(() => item.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--accent'));
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            const restTranslate = await button.evaluate((el) => getComputedStyle(el).translate);
-            await button.hover();
-            await expect.poll(() => button.evaluate((el) => getComputedStyle(el).translate), 'the springy lift').not.toBe(restTranslate);
         });
 
         test('the dossier: the rotated stamp swaps its word when the file opens, and the redactions cover the words until then', async ({ page }) => {

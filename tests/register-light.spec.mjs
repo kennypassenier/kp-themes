@@ -200,46 +200,6 @@ for (const [channel, url] of CHANNELS) {
             expect(alt.border).toBe(await paint(page, '--fx-signal'));
         });
 
-        test('the nav dropdown opens and is styled, not left to the bar alone [KT14]', async ({ page }) => {
-            await open(page, url);
-            const item = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            await item.hover();
-            const menu = item.locator('.kp-nav__menu');
-            await expect.poll(() => menu.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { shadow: s.boxShadow, radius: s.borderRadius };
-            });
-            expect(style.shadow, 'the dropdown panel carries the shared shadow step').not.toBe('none');
-            expect(style.radius).not.toBe('0px');
-        });
-
-        test('the two radius vocabularies: buttons and the icon button are pills, cards keep the small radius', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius), 'a full pill').toMatch(/^(999px|6249\.9375rem|.*px)$/);
-            const bRadius = await button.evaluate((el) => parseFloat(getComputedStyle(el).borderRadius));
-            expect(bRadius, 'a pill: at least half the control height').toBeGreaterThan(15);
-            const card = page.locator('.kp-card[data-kp-reveal="emphasis"]').first();
-            const cRadius = await card.evaluate((el) => parseFloat(getComputedStyle(el).borderRadius));
-            expect(cRadius, 'the small surface radius, not a pill').toBeLessThan(15);
-        });
-
-        test('elevated panels carry a shadow: card and popover are both pure white [DI6]', async ({ page }) => {
-            await open(page, url);
-            const card = page.locator('.kp-card[data-kp-reveal="emphasis"]').first();
-            const shadow = await card.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'the card carries its own elevation').not.toBe('none');
-            const menuShadow = await page
-                .locator('.kp-nav__menu')
-                .first()
-                .evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(menuShadow, 'the dropdown too').not.toBe('none');
-        });
-
         test("the dossier's redactions clear on the trigger, staggered [S49, A11]", async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');

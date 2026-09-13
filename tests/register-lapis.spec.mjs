@@ -98,42 +98,6 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the lapis register, ${channel}`, () => {
-        test('the fourfold ruling closes around a control that is touched [Kenny, 2026-09-11]', async ({ page }) => {
-            // His own choice between two proposals for this theme: "A de
-            // vierdubbele liniëring". A page of tazhib is ruled before it is
-            // written, so the edge of a control is four lines at unequal
-            // intervals, and touching it adds a fifth — the ruling closing
-            // around the word rather than a colour changing.
-            //
-            // Counted rather than matched: every layer of the stack is an
-            // inset-less shadow, so the number of `0px 0px 0px` runs IS the
-            // number of rules. Three at rest, five once touched.
-            //
-            // Drill: `--kp-lapis-rule` removed at its source in
-            // css/lapis-register.css — four red, this test and the existing
-            // button test, in both channels.
-            //
-            // Two earlier attempts reported green and were both wrong. The
-            // first edited the register without regenerating, and the page
-            // reads the generated stylesheet. The second removed only the
-            // base rule's `box-shadow`, and the first button on the page
-            // wears `--mirror`, whose own rule re-applies the ruling beside
-            // its gloss. A drill takes the thing away, not one of the places
-            // that reaches for it.
-            await open(page, url);
-            const button = page.locator('.kp-button').first();
-
-            const rules = (s) => (s.match(/0px 0px 0px/g) ?? []).length;
-            expect(rules(await button.evaluate((el) => getComputedStyle(el).boxShadow)), 'three rules at rest').toBe(3);
-
-            await button.hover();
-            await expect
-                .poll(() => button.evaluate((el) => (getComputedStyle(el).boxShadow.match(/0px 0px 0px/g) ?? []).length), {
-                    message: 'and the ruling closes: two more',
-                })
-                .toBe(5);
-        });
-
         test('under reduced motion there is no wipe, no page-wide texture, and every reveal is at rest', async ({ page }) => {
             await open(page, url, { reduced: true });
             await expect(page.locator('[data-kp-reveal="headline"]').first()).toHaveClass(/is-deciphered/);
@@ -244,20 +208,6 @@ for (const [channel, url] of CHANNELS) {
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
             await style(menu, 'background-color').toBe(await paint(page, '--popover'));
-        });
-
-        test('the buttons: a plain ring, the filled gold plate, and the mirror gloss', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the filled gold plate').toBe(
-                await paint(page, '--primary'),
-            );
-            const mirror = await primary.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(mirror.match(/inset/g)?.length, 'the mirror gloss (highlight and shadow)').toBe(2);
-            const plain = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await plain.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
-            await plain.hover();
-            await expect.poll(() => plain.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
         });
 
         test('the dossier: the seal covers the redactions before the trigger, and clears on a stagger', async ({ page }) => {

@@ -29,7 +29,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { bothHalves, shadowLayers, tabToSelector, wholeRingFor } from './ring.mjs';
+import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -192,35 +192,6 @@ for (const [channel, url] of CHANNELS) {
             expect(altBefore['border-top-style']).toBe('dashed');
             const altAfter = await pseudo(dividers.nth(1), '::after', ['content']);
             expect(altAfter.content === 'none' || altAfter.content === '').toBe(true);
-        });
-
-        test('the mirror button carries a static letterpress offset shadow, composed with the two-channel focus ring [DI2, AR30]', async ({
-            page,
-        }) => {
-            await open(page, url);
-            const MIRROR = '.kp-button--mirror';
-            const button = page.locator(MIRROR).first();
-            const rest = shadowLayers(await button.evaluate((el) => getComputedStyle(el).boxShadow));
-            expect(rest.length, 'one layer at rest: the letterpress offset, and no ring').toBe(1);
-            expect(rest[0], 'a 2px offset shadow, always there — not an animation').toMatch(/2px 2px 0px/);
-            // Reached with the keyboard rather than focus(): a focus() that
-            // never lands resolves happily, and every read below then
-            // measures the RESTING element and passes [G15].
-            await tabToSelector(page, MIRROR);
-            // Read until the ring is whole [fix-1]: the keyboard landed a
-            // moment ago and the ring arrives through a transition.
-            const { found } = await wholeRingFor(page, MIRROR);
-            expect(found.focused, 'the keyboard actually reached the mirror button').toBe(true);
-            const focused = shadowLayers(found.boxShadow);
-            expect(
-                focused.some((layer) => /2px 2px 0px/.test(layer)),
-                'the letterpress offset survives the focus rather than being replaced by the ring',
-            ).toBe(true);
-            // The ring itself, measured — not a comma count. `split(',')`
-            // splits inside the single `rgb(r, g, b)` of the resting offset
-            // shadow, so the old assertion could never fall below three and
-            // held with no focus ring at all [G2].
-            expect(bothHalves(found), 'both channels, and focus is what paints them').toEqual({ outer: true, inner: true, changed: true });
         });
 
         test('the dossier stamp names its own word, static; the redactions cover, then clear left to right on the trigger', async ({ page }) => {

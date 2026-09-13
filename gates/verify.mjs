@@ -18,7 +18,7 @@
 //     have to be visible or they are not findings at all
 //
 // The browser phase uses Playwright's `line` reporter, which prints
-// `[412/2526] [firefox] › tests/x.spec.mjs:31:5 › name` over one line:
+// `[412/2650] [firefox] › tests/x.spec.mjs:31:5 › name` over one line:
 // that is the "what is running" half, and the heartbeat below never
 // fires while it is printing.
 //
@@ -105,7 +105,7 @@ const PHASES = [
     },
     {
         name: 'browser',
-        what: fast ? 'the whole suite, Firefox only (--fast)' : 'the whole suite, Chromium and Firefox — about 2500 tests, six minutes',
+        what: fast ? 'the whole suite, Firefox only (--fast)' : 'the whole suite, Chromium and Firefox — about 2650 tests, six minutes',
         command: 'npx',
         args: fast ? ['playwright', 'test', '--project=firefox', '--reporter=line'] : ['playwright', 'test', '--reporter=line'],
         blocking: true,

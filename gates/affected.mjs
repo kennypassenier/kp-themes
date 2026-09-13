@@ -1,6 +1,7 @@
 // Which suites a change actually needs [Kenny, 2026-09-09].
 //
-// The suite grew to 2466 tests and every push ran all of them, whatever
+// The suite grew to 2466 tests (1,325 per engine after the scope-32
+// removal of 2026-09-14) and every push ran all of them, whatever
 // had changed: 254 CI runs in five days, 35.9 hours of waiting. Kenny's
 // instruction is that a change runs what it touches, and that a tag runs
 // everything.
@@ -98,7 +99,8 @@ export function changes(ref) {
  * seven — all register edits — ran twenty tests and reported green while
  * the every-theme press, alert-contrast, focus-ring and reflow sweeps
  * never ran at all. Measured 2026-09-12: one spec is 20 tests, one spec
- * plus the sweeps is 446, the whole suite is 1,297.
+ * plus the sweeps is 446, the whole suite is 1,297. Re-measured in firefox
+ * on 2026-09-14, after the scope-32 removal: 14, 608 and 1,325.
  *
  * @returns {string[]}
  */

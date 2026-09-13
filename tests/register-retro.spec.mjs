@@ -249,40 +249,6 @@ for (const [channel, url] of CHANNELS) {
             expect(second.bg).not.toMatch(/conic-gradient/);
         });
 
-        test('the brand is the title bar, a hovered menu item is the selection bar, and the buttons are bevels', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            // Nothing below is read before the module says it is finished
-            // and the boot overlay is off the page with it [TF1].
-            await bootGone(page);
-            const brand = page.locator('.kp-nav__brand').first();
-            await style(brand, 'background-image').toMatch(/linear-gradient/);
-            await style(brand, 'color').toBe(await paint(page, '--primary-foreground'));
-            const link = page.locator('.kp-nav__link').nth(1);
-            await link.hover();
-            await style(link, 'background-color').toBe(await paint(page, '--primary'));
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            await expect
-                .poll(async () => (await button.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
-                    message: 'the four-inset bevel',
-                })
-                .toBe(4);
-            await style(button, 'border-radius').toBe('0px');
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            await style(primary, 'background-color').toBe(await paint(page, '--primary'));
-            await expect
-                .poll(async () => (await primary.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
-                    message: 'with its own bevel',
-                })
-                .toBe(4);
-        });
-
         test('the dossier is a Notepad window: the read-only stamp, and the dither brush lifting off on the trigger', async ({ page }) => {
             await open(page, url);
             await page

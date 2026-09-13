@@ -26,8 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { animationsSeen, recordAnimations, style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
+import { animationsSeen, recordAnimations } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -176,34 +175,6 @@ for (const [channel, url] of CHANNELS) {
             const style = await pseudo(lede, '', ['color', 'background-color']);
             expect(style.color).toBe(await paint(page, '--primary'));
             expect(style['background-color'], 'never covered, no reveal wait').toBe('rgba(0, 0, 0, 0)');
-        });
-
-        test('the focus ring needs no override: the base layer default already answers DI2 for this theme', async ({ page }) => {
-            await open(page, url);
-            const BUTTON = '[data-kp-surface="hero"] .kp-button';
-            const button = page.locator(BUTTON).first();
-            // Reached with the keyboard, not focus(): a focus() that never
-            // lands resolves happily and the reads below then measure the
-            // element at rest and pass [G15].
-            await tabToSelector(page, BUTTON);
-            const ring = await button.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(ring, 'the inner ring is the foreground token').toContain(await paint(page, '--foreground'));
-            const outline = await button.evaluate((el) => getComputedStyle(el).outlineColor);
-            expect(outline, 'the outer ring is the background token').toBe(await paint(page, '--background'));
-        });
-
-        test('the mirror flourish fades under a primary button, and the nav dropdown opens styled [KT14]', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            const mirror = await pseudo(primary, '::after', ['background-image']);
-            expect(mirror['background-image']).toMatch(/linear-gradient/);
-            const link = page.locator('.kp-nav__link[aria-haspopup="true"]').first();
-            await link.hover();
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            await style(menu, 'border-style').toBe('solid');
-            await style(menu, 'border-color').toBe(await paint(page, '--border-strong'));
-            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

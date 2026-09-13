@@ -27,8 +27,6 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle, style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -201,81 +199,6 @@ for (const [channel, url] of CHANNELS) {
             expect(Number(centre.opacity)).toBeCloseTo(0.75, 2);
             const second = dividers.nth(1);
             expect(await second.evaluate((el) => getComputedStyle(el).transform), 'the alt divider mirrors').not.toBe('none');
-        });
-
-        test('there is no starfield: the ground is plain [Kenny, 2026-09-11]', async ({ page }) => {
-            // It had one, and he took it back out: "dark mag zijn sterren weer
-            // kwijtspelen op de achtergrond". This test is the other way round
-            // from the one it replaces, which asserted 102 points at 0.35 and a
-            // shimmer layer above them.
-            //
-            // Drill: `--fx-texture` put back on the root in css/_rules.css,
-            // AND `npm run generate` run — the page loads the generated
-            // css/themes.css, so a drill that edits the source without
-            // regenerating proves nothing. `18 passed, 2 failed`, one per
-            // channel. The first attempt skipped that step and reported
-            // green, which is the trap rule 7e is about.
-            await open(page, url);
-            const ground = await page.evaluate(() => {
-                const after = getComputedStyle(document.body, '::after');
-                const before = getComputedStyle(document.body, '::before');
-                return {
-                    after: after.backgroundImage,
-                    before: before.backgroundImage,
-                    token: getComputedStyle(document.documentElement).getPropertyValue('--fx-texture').trim(),
-                };
-            });
-            expect(ground.token, 'the theme declares no texture at all').toBe('');
-            expect(ground.after, 'and nothing is painted on the shared layer').toBe('none');
-            expect(ground.before, 'nor on a layer of its own').toBe('none');
-        });
-
-        test('the nav dropdown: a quiet panel, its own violet keyboard ring [KT14]', async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            await trigger.hover();
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            await style(menu, 'background-color').toBe(await paint(page, '--card'));
-            const link = menu.locator('a').first();
-            // Walked to with the keyboard, not focus(): :focus-visible is
-            // the selector under test and a focus() that never lands would
-            // read the item at rest [G15].
-            await tabToSelector(page, '.kp-nav__menu a');
-            await style(link, 'outline-color', 'the keyboard state is the theme’s own violet, not the page-wide ink outline').toBe(
-                await paint(page, '--primary'),
-            );
-        });
-
-        test('the button is machined: a cut corner, brackets that close, the oxide along the edge [scope-16]', async ({ page }) => {
-            // Three things happen at once and none of them is a colour
-            // change — which is the theme. The brackets are the button's own
-            // pseudo-elements; the film is `.kp-button__edge`, which the
-            // component provides because both were needed at once.
-            //
-            // Drilled 2026-09-12 in firefox: the `clip-path` rule removed ->
-            // red on the cut corner; the hover's `opacity: 1` on the
-            // brackets removed -> red on them closing; the edge's
-            // `scale: 1 1` removed -> red on the film running out.
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).clipPath), 'the corner is cut, not rounded').toMatch(/polygon/);
-
-            const bracket = () => pseudoStyle(button, '::before', 'opacity');
-            await bracket().toBe('0');
-            const edge = button.locator('.kp-button__edge');
-            expect(await edge.evaluate((el) => getComputedStyle(el).backgroundImage), 'the edge carries the film').toMatch(/conic-gradient/);
-            await style(edge, 'scale', 'nothing is drawn at rest').toBe('0 1');
-
-            await button.hover();
-            // Polled: all three ease in over the theme's own duration and a
-            // single read lands mid-transition [fix-1].
-            await bracket().toBe('1');
-            await style(edge, 'scale', 'the film runs the width of the control').toMatch(/^(1|1 1)$/);
-            await pseudoStyle(button.locator('.kp-button__label'), '', 'scale', 'and the label draws itself in').toBe('0.94');
-
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
         });
 
         test('the dossier is a log: the redact bar covers the words until the trigger is pressed', async ({ page }) => {

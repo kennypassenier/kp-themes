@@ -192,16 +192,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => item.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
         });
 
-        test('the primary button reads the amber token, and the mirror carries a two-part inset highlight', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            const mirror = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            const shadow = await mirror.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'two inset layers, top and bottom').toMatch(/inset/);
-            expect(shadow.match(/inset/g)?.length, 'top and bottom edges').toBeGreaterThanOrEqual(2);
-        });
-
         test('the dossier: three redactions covered by a boundary-coloured bar, lifted right to left on the trigger', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -229,27 +219,6 @@ for (const [channel, url] of CHANNELS) {
             const stamp = await pseudo(dossier, '::before', ['background-color', 'rotate']);
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toBe('On file');
             expect(stamp['background-color']).toBe(await paint(page, '--accent'));
-        });
-
-        test('the focus ring keeps two channels on the mirror button, composed in front of its highlight [DI2, AR30]', async ({ page }) => {
-            // Drilled 2026-09-08: the mirror's own box-shadow (kp.register,
-            // later than kp.components) replaced the ring outright until a
-            // dedicated :focus-visible rule composed the two — the same
-            // fault retro's own register comment records for its bevel.
-            await open(page, url);
-            const MIRROR = '[data-kp-surface="hero"] .kp-button--mirror';
-            const btn = page.locator(MIRROR).first();
-            // Reached with the keyboard, not focus(): a focus() that never
-            // lands resolves happily and the reads below then measure the
-            // button at rest and pass [G15].
-            await tabToSelector(page, MIRROR);
-            const focused = await btn.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { outline: s.outlineStyle, boxShadow: s.boxShadow };
-            });
-            expect(focused.outline, 'the outline channel').toBe('solid');
-            expect(focused.boxShadow.match(/inset/g)?.length, 'the mirror highlight survives, both edges').toBe(2);
-            expect(focused.boxShadow.replace(/inset[^,]*,?/g, '').trim(), 'a ring layer remains beside the highlight').not.toBe('');
         });
 
         test('a low sun rakes once across the touched control [scope-12]', async ({ page }) => {

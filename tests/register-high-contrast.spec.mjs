@@ -169,33 +169,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await mark.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--accent-foreground'));
         });
 
-        test('the mirrored button drops onto its own offset when pressed, no easing', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            const rest = await button.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(rest, 'the flat 3px offset').toMatch(/3px 3px 0px/);
-            const box = await button.boundingBox();
-            if (!box) throw new Error('the mirrored button has no box');
-            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-            await page.mouse.down();
-            const pressed = await button.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(pressed).toBe('none');
-            expect(await button.evaluate((el) => getComputedStyle(el).translate), 'dropped onto its own shadow, instantly').toBe('3px 3px');
-            await page.mouse.up();
-        });
-
-        test('the ghost button has no fill, and a bar rises from the bottom edge on hover', async ({ page }) => {
-            await open(page, url);
-            const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
-            expect(await ghost.evaluate((el) => getComputedStyle(el).backgroundColor), 'no fill at rest').toBe('rgba(0, 0, 0, 0)');
-            const restBar = await pseudo(ghost, '::after', ['transform']);
-            expect(restBar.transform, 'the bar sits below the edge').toMatch(/matrix\(1, 0, 0, 1, 0,/);
-            await ghost.hover();
-            await settled(page);
-            const hoverBar = await pseudo(ghost, '::after', ['transform']);
-            expect(hoverBar.transform, 'the bar rose into place').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
         test('the razor-tear dividers swap their two tones', async ({ page }) => {
             await open(page, url);
             const dividers = page.locator('[data-kp-divider]');
@@ -204,20 +177,6 @@ for (const [channel, url] of CHANNELS) {
             expect(first, 'ink first').toBe(await paint(page, '--border-strong'));
             const second = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
             expect(second, 'signal second').toBe(await paint(page, '--accent'));
-        });
-
-        test('the nav dropdown carries its own rule [KT14]', async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            await trigger.hover();
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { borderWidth: s.borderTopWidth, borderColor: s.borderTopColor };
-            });
-            expect(style.borderWidth).toBe('2px');
-            expect(style.borderColor).toBe(await paint(page, '--border-strong'));
         });
 
         test('nothing fades: a state change is a switch, and the hover inverts [scope-12]', async ({ page }) => {

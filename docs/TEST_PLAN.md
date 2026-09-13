@@ -26,7 +26,7 @@ It is written here rather than left unsaid, because the reason the step
 exists is exactly this shape of confidence: latch 2.0.1 passed CI, a
 hardening round and an external security review and was still unusable in
 every real project — the first genuine use found it in one command. So
-what this release has instead is thirty-two gates, 2,594 browser tests
+what this release has instead is thirty-two gates, 2,650 browser tests
 over both engines, and Kenny's own look at the pages. What it does not
 have is one run through a consumer's own path: `npm pack`, install into
 an empty directory, build a page with a theme, a register and a component
@@ -123,7 +123,7 @@ a reason, written down; a silent hole is neither.
 - **Nothing compares how the page looks.** Every check here is a number —
   contrast, distance, flashes per second, whether an element exists — and
   there are no screenshot comparisons. A theme can therefore look wrong
-  while every one of the 2500-odd tests passes. The cost is real and was paid once already: at
+  while every one of the 2,650 tests passes. The cost is real and was paid once already: at
   L3-EXIT, 42 colours were converted to tokens and the proof that nothing
   changed on screen had to be computed by hand, because no test could see
   it.
@@ -173,12 +173,16 @@ round measures are the engine-divergent kind: computed `clip-path` polygon
 serialisation, `scale` shorthand strings, pseudo-element `background-size`,
 `mix-blend-mode` on an absolutely positioned child, canvas
 `fontBoundingBoxAscent`, and `border-image` against a row background. The
-suite is 2,734 tests over 79 files across both engines and 1,367 in
-firefox alone; the second engine roughly doubles the wall-clock.
+suite is 2,650 tests over 90 files across both engines and 1,325 in
+firefox alone (2026-09-14, after scope-32 removed the appearance-only
+tests the catalogue now shows); the second engine roughly doubles the wall-clock.
 
-**One engine-conditional skip, by design.** `tests/fixtures.spec.mjs`
-skips the themed select list where `appearance: base-select` is not
-supported, naming the engine. The support is probed, not assumed.
+**No support-probed skip any more.** `tests/fixtures.spec.mjs` used to
+skip the themed select list where `appearance: base-select` is not
+supported. That test measured appearance only and went with scope-32 on
+2026-09-14; the list is judged by eye on `catalogue/field.html`. The
+firefox-only tests that remain are scoped to one engine by decision, not
+by a probe.
 
 **Two readings that stay under the floor, by decision.** Both were put to
 Kenny on 2026-09-12 and both are answered, so neither is an open finding

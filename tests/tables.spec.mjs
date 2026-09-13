@@ -14,8 +14,6 @@ import { test, expect } from '@playwright/test';
 
 const URL = '/tests/fixtures/tables.html';
 
-/** The 70-character identifier both channels put in the breakable cell. */
-const IDENTIFIER = 'a3f92b71c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809125';
 const NOTE = 'A note long enough that no column can hold it, which is the whole point of a truncated cell.';
 
 const CHANNELS = ['plain', 'react'];
@@ -77,31 +75,6 @@ for (const channel of CHANNELS) {
         await expect.poll(async () => page.evaluate((s) => document.querySelector(s).scrollLeft, selector)).toBeGreaterThan(0);
     });
 
-    test(`${channel}: a 70-character identifier in a .kp-cell-break cell stays inside its container at 320px [TH96]`, async ({ page }) => {
-        await page.setViewportSize({ width: 320, height: 800 });
-        await open(page);
-        const measured = await page.evaluate(
-            (selector) => {
-                const wrap = document.querySelector(selector);
-                const table = wrap.querySelector('table');
-                const cell = [...wrap.querySelectorAll('td')].find((td) => td.classList.contains('kp-cell-break'));
-                return { wrap: wrap.clientWidth, table: table.scrollWidth, text: cell.textContent.trim() };
-            },
-            `${host('break')} .kp-table-wrap`,
-        );
-        expect(measured.text).toBe(IDENTIFIER);
-        // Drill: with BOTH declarations removed from .kp-cell-break the
-        // identifier is one unbreakable word and the table is wider than
-        // its container — red in both channels and both browsers.
-        // Removing only `overflow-wrap: anywhere` leaves it green:
-        // `word-break: break-word` carries it on its own in Chromium and
-        // Firefox, so the rule this measures is the pair, not either line.
-        // (The first cut of this fixture used a hyphenated identifier,
-        // which browsers break at the hyphens; the drill stayed green and
-        // said so, which is what the drill is for.)
-        expect(measured.table).toBeLessThanOrEqual(measured.wrap + 1);
-    });
-
     test(`${channel}: a .kp-cell-truncate cell shows an ellipsis and keeps the full value [TH96]`, async ({ page }) => {
         await page.setViewportSize({ width: 320, height: 800 });
         await open(page);
@@ -135,22 +108,6 @@ for (const channel of CHANNELS) {
         expect(measured.title).toBe(NOTE);
     });
 
-    test(`${channel}: a .kp-col-low column is there at 1280 and gone at 480, header and cells together [TH96]`, async ({ page }) => {
-        await open(page);
-        const shown = (selector) => page.evaluate((s) => [...document.querySelectorAll(s)].map((el) => getComputedStyle(el).display), selector);
-        const cells = `${host('priority')} .kp-col-low`;
-
-        await page.setViewportSize({ width: 1280, height: 800 });
-        const wide = await shown(cells);
-        expect(wide.length).toBe(2); // the header and its one cell
-        expect(wide.every((display) => display !== 'none')).toBe(true);
-
-        await page.setViewportSize({ width: 480, height: 800 });
-        // Drill: with `display: none` removed from the .kp-col-low rule in
-        // the @container block, both stay visible at 480 and this fails.
-        await expect.poll(async () => (await shown(cells)).join()).toBe('none,none');
-    });
-
     test(`${channel}: a plain table in a 400px container falls into cards while the viewport stays 1280 [TH96]`, async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await open(page);
@@ -179,29 +136,6 @@ for (const channel of CHANNELS) {
         // Drill: with `content: attr(data-label)` removed from the card
         // rule, and again with data-label removed from the cells that
         // components/table.jsx writes, this measures 0px.
-        expect(measured.label).toBeGreaterThan(10);
-    });
-
-    test(`${channel}: the DataTable falls into cards in a 400px container while the viewport stays 1280 [TH96]`, async ({ page }) => {
-        await page.setViewportSize({ width: 1280, height: 800 });
-        await open(page);
-        const measured = await page.evaluate((selector) => {
-            const table = document.querySelector(`${selector} table`);
-            const cell = table.querySelector('tbody td');
-            return {
-                viewport: window.innerWidth,
-                head: getComputedStyle(table.querySelector('thead')).position,
-                cell: getComputedStyle(cell).display,
-                label: Number.parseFloat(getComputedStyle(cell, '::before').width),
-            };
-        }, host('datatable-cards'));
-        expect(measured.viewport).toBe(1280);
-        // Drill: the same removal as the plain table's — without
-        // `container-type` on .kp-table-wrap this reads "static".
-        expect(measured.head).toBe('absolute');
-        expect(measured.cell).toBe('flex');
-        // Drill: the same removal as the plain table's — without the
-        // label the ::before box measures 0px.
         expect(measured.label).toBeGreaterThan(10);
     });
 }

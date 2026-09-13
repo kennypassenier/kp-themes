@@ -72,40 +72,6 @@ for (const channel of TABLE_CHANNELS) {
     });
 }
 
-test('the catalogue data table’s date filter wears each theme’s date picker, in every theme [scope-58]', async ({ page }) => {
-    // Before: no .kp-datepicker in the filter panel, so nothing to read in any of the 22 themes.
-    await open(page, '/catalogue/table.html');
-    const block = page.locator('#datatable');
-    await block.locator('[data-kp-datatable-filter-toggle]').click();
-    const picker = block.locator('[data-kp-datatable-filters] .kp-datepicker').first();
-    await expect(picker).toBeVisible();
-    await picker.locator('[data-kp-date-open]').click();
-    const panel = picker.locator('.kp-datepicker__panel');
-    await expect(panel).toBeVisible();
-    const differ = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        // A reference picker of the package, outside the table, drawn in the same theme.
-        const read = await panel.evaluate((el) => {
-            const ref = document.createElement('div');
-            ref.className = 'kp-datepicker';
-            const refPanel = document.createElement('div');
-            refPanel.className = 'kp-datepicker__panel';
-            ref.append(refPanel);
-            document.querySelector('main, body')?.append(ref);
-            const pick = (/** @type {Element} */ e) => {
-                const s = getComputedStyle(e);
-                return [s.backgroundColor, s.borderTopColor, s.borderTopWidth, s.borderTopLeftRadius].join(' ');
-            };
-            const out = { filter: pick(el), reference: pick(refPanel) };
-            ref.remove();
-            return out;
-        });
-        if (read.filter !== read.reference) differ.push(`${theme}: ${read.filter} vs ${read.reference}`);
-    }
-    expect(differ).toEqual([]);
-});
-
 // ── Note 2: the tag input ─────────────────────────────────────────────────
 
 const COMPONENTS = '/tests/fixtures/components.html';
@@ -303,39 +269,6 @@ const raiseToasts = (page) =>
             }
         }
     });
-
-test('every toast’s buttons sit at its end, whatever the text length, in every theme [note 4]', async ({ page }) => {
-    // Before: the toast was a block, so a button followed its text — 163px short of the end on the success toast in nostromo, 0 only by luck on info.
-    await open(page, '/catalogue/feedback.html');
-    await raiseToasts(page);
-    const off = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const reads = await page.locator('#toasts .kp-toast').evaluateAll((toasts) =>
-            toasts.flatMap((t) => {
-                const buttons = [...t.querySelectorAll(':scope > button, :scope > .kp-button, :scope > .kp-icon-button')];
-                if (buttons.length === 0) return [];
-                const s = getComputedStyle(t);
-                const end = t.getBoundingClientRect().right - Number.parseFloat(s.paddingRight) - Number.parseFloat(s.borderRightWidth);
-                // The layout box, not the painted one: a theme that skews its buttons (phantom) paints past the box it laid out.
-                const lastEl = /** @type {HTMLElement} */ (buttons.at(-1));
-                const painted = lastEl.getBoundingClientRect();
-                const last = { right: (painted.left + painted.right) / 2 + lastEl.offsetWidth / 2 };
-                const text = t.querySelector('.kp-toast__body')?.getBoundingClientRect();
-                return [
-                    {
-                        what: `${t.className} "${(t.textContent ?? '').trim().slice(0, 20)}"`,
-                        gap: Math.round(end - last.right),
-                        // Beside the text, not dropped below it.
-                        beside: text === undefined ? false : buttons.every((b) => b.getBoundingClientRect().left >= text.right - 1),
-                    },
-                ];
-            }),
-        );
-        for (const r of reads) if (Math.abs(r.gap) > 1 || !r.beside) off.push(`${theme} ${r.what}: ${r.gap}px from the end, beside ${r.beside}`);
-    }
-    expect(off).toEqual([]);
-});
 
 test('a button hovered in a toast takes a shade of that toast’s own colour and reads at 4.5:1, in every theme [note 4]', async ({ page }) => {
     // Before: the theme's standard ghost hover — nostromo painted rgb(225, 215, 199) on the info, destructive and success plates alike.

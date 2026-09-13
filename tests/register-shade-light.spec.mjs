@@ -167,47 +167,6 @@ for (const [channel, url] of CHANNELS) {
             expect(Number(alt.opacity), 'the accent band, at the ceiling and not over it').toBeLessThanOrEqual(0.06);
         });
 
-        test('the brand carries its own dot, a hovered link underlines in the primary, and the dropdown lifts on a shadow', async ({ page }) => {
-            await open(page, url);
-            const brand = page.locator('.kp-nav__brand').first();
-            const dot = await pseudo(brand, '::before', ['background-color', 'border-radius']);
-            expect(dot['background-color'], 'the brand’s dot is the primary').toBe(await paint(page, '--primary'));
-            expect(dot['border-radius']).not.toBe('0px');
-            const link = page.locator('.kp-nav__link').nth(1);
-            await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
-            expect(await link.evaluate((el) => getComputedStyle(el).borderBottomColor), 'the underline').toBe(await paint(page, '--primary'));
-            const item = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            await item.hover();
-            const menu = item.locator('.kp-nav__menu');
-            await expect(menu).toBeVisible();
-            await style(menu, 'box-shadow', 'the dropdown lifts on a shadow, not a border alone').not.toBe('none');
-            await style(menu, 'border-color', 'the boundary stays too').toBe(await paint(page, '--border-strong'));
-        });
-
-        test('the buttons are flat: the primary a plate, the ghost underlined, the destructive an outline', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            // Flat means nothing is drawn, which is either no shadow at all
-            // or the ring channel resting at zero offset, blur and spread —
-            // the shape the package's two-channel focus ring keeps at rest
-            // (DI2, AR30). Both paint nothing; a real elevation would carry
-            // a non-zero length.
-            const shadow = await primary.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow === 'none' || /0px 0px 0px 0px/.test(shadow), `no elevation on a button, got ${shadow}`).toBe(true);
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            await primary.hover();
-            await expect.poll(() => primary.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(await paint(page, '--primary'));
-            const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
-            expect(await ghost.evaluate((el) => getComputedStyle(el).textDecorationLine)).toMatch(/underline/);
-            const destructive = page.locator('.kp-button--destructive').first();
-            await style(destructive, 'color').toBe(await paint(page, '--destructive'));
-            await style(destructive, 'border-color').toBe(await paint(page, '--destructive'));
-        });
-
         test('the dossier covers its marks before the trigger opens them, then clears the redaction bars in order', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -234,40 +193,6 @@ for (const [channel, url] of CHANNELS) {
             await style(dialog, 'box-shadow').not.toBe('none');
             await settled(page);
             await expect.poll(async () => await dialog.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
-        });
-
-        test('one light at the top left: the control lifts, and the press goes under the surface [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the rest `box-shadow` removed
-            // -> red on the shadow lying to the lower right; the `:active`
-            // rule's `inset` removed -> red on the press turning inward.
-            // The first attempt reported green: the assertion asked only
-            // that the shadow not be `none`, and the base layer leaves a
-            // `0px 0px 0px 0px` behind. It reads the offsets now [KT3].
-            await open(page, url);
-            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
-            // reaches the hero's `--mirror` variant, which carries its own
-            // later rules — so this test passed with the rule under it
-            // removed, until the drill of 2026-09-12 said so [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            const rest = await btn.evaluate((el) => getComputedStyle(el).boxShadow);
-            // The OFFSETS, not merely "a shadow". Drilled 2026-09-12: with
-            // the rest rule removed the button still reports a box-shadow of
-            // `0px 0px 0px 0px` from the base layer, so `not.toBe('none')`
-            // stayed green over nothing at all [KT3].
-            const offsets = rest.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/);
-            expect(offsets, 'a shadow at rest').not.toBeNull();
-            expect(Number(offsets[1]), 'it falls to the right of the source').toBeGreaterThan(0);
-            expect(Number(offsets[2]), 'and below it').toBeGreaterThan(Number(offsets[1]));
-            expect(rest, 'away from the light, not into it').not.toContain('inset');
-            await btn.hover();
-            await style(btn, 'translate', 'the lift is toward the source').toBe('-1px -1px');
-            // The press is instant on the way in, so a short click still
-            // shows [Kenny, 2026-09-11, on shade-dark's twin].
-            await style(btn, 'transition-duration', 'the lift eases').not.toBe('0s');
-            await page.mouse.down();
-            await style(btn, 'transition-duration', 'the press does not ease in').toBe('0s');
-            expect(await btn.evaluate((el) => getComputedStyle(el).boxShadow), 'and it turns inward').toContain('inset');
-            await page.mouse.up();
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

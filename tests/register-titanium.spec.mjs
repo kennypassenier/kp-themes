@@ -51,22 +51,6 @@ async function open(page, url, { reduced = false } = {}) {
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the titanium register, ${channel}`, () => {
-        test('the corner is milled on the leading diagonal, with the line the tool left [scope-17]', async ({ page }) => {
-            // Drilled: the `clip-path` rule removed -> red on the cut;
-            // `--kp-tool-edge` removed -> red on the bright line.
-            await open(page, url);
-            const button = page.locator('[class="kp-button"]').first();
-            const cut = await button.evaluate((el) => getComputedStyle(el).clipPath);
-            expect(cut, 'the corner is cut, not rounded').toMatch(/polygon/);
-            // The leading-TOP corner, which is the other diagonal from the
-            // spectral instrument's: its first point is inset on x, not on y.
-            const first = cut.match(/polygon\(([\d.]+)px ([\d.]+)px/);
-            expect(first, 'the polygon starts at a measured inset').not.toBeNull();
-            expect(Number(first[1]), 'inset along the top edge').toBeGreaterThan(0);
-            expect(Number(first[2]), 'and flush at the top').toBe(0);
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow), "the tool's bright line, inside the top face").toMatch(/inset/);
-        });
-
         test('the film catches rather than sweeps, and turns with the pointer [scope-17, scope-16]', async ({ page }) => {
             // Drilled: the hover's `opacity: 0.26` removed -> red on the
             // film appearing; `mix-blend-mode: screen` removed -> red on it

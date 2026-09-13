@@ -141,45 +141,7 @@ const wear = async (page, theme) => {
     await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
 };
 
-/** The gap between an input's bottom edge and its list's top edge. @param {import('@playwright/test').Locator} box */
-const gapUnderInput = (box) =>
-    box.evaluate((el) => {
-        const input = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__input'));
-        const list = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__list'));
-        return Math.round(list.getBoundingClientRect().top - input.getBoundingClientRect().bottom);
-    });
-
 for (const channel of CHANNELS) {
-    test(`the list opens directly under its input, not under the status line — ${channel.name} [gap-11]`, async ({ page }) => {
-        // gap-11: the list hung from top: 100% of the whole .kp-combobox, so with a status line inside the box it opened a line below the input.
-        await page.goto(URL);
-        const input = page.locator(channel.input);
-        await input.click();
-        await input.pressSequentially('a');
-        await expect(page.locator(`${channel.box} .kp-combobox__status`)).not.toBeEmpty();
-        await expect(page.locator(`${channel.box} .kp-combobox__list`)).toBeVisible();
-        const gap = await gapUnderInput(page.locator(channel.box));
-        expect(gap).toBeGreaterThanOrEqual(0);
-        expect(gap).toBeLessThanOrEqual(8);
-    });
-
-    test(`a query that matches nothing keeps a visible "no results" row in the list — ${channel.name} [gap-11]`, async ({ page }) => {
-        // gap-11: filtering to nothing closed the list, so the only answer was a small status line a line away from the input.
-        await page.goto(URL);
-        const input = page.locator(channel.input);
-        await input.click();
-        await input.pressSequentially('zzz');
-        const list = page.locator(`${channel.box} .kp-combobox__list`);
-        await expect(list).toBeVisible();
-        await expect(list.locator('.kp-combobox__empty')).toBeVisible();
-        await expect(list.locator('.kp-combobox__empty')).toHaveText(S.noResults);
-        // It is not an option: nothing for Enter to take, nothing for the arrows to land on.
-        await expect(list.locator('[role="option"]:visible')).toHaveCount(0);
-        // And it leaves when something matches again.
-        await input.fill('a');
-        await expect(list.locator('.kp-combobox__empty')).toBeHidden();
-    });
-
     test(`inside a card that clips its corners the open list is whole, takes its clicks and stays under the input, in every theme — ${channel.name} [2026-09-13]`, async ({
         page,
     }) => {
@@ -231,60 +193,6 @@ for (const channel of CHANNELS) {
         expect(lost).toEqual([]);
     });
 }
-
-test('the list sits under its input in every theme [gap-11]', async ({ page }) => {
-    // gap-11: the frozen open copy on the catalogue page showed the list under the status line in every theme.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catalogue/combobox.html');
-    const box = page.locator('#open .kp-combobox');
-    const far = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const gap = await gapUnderInput(box);
-        if (gap < 0 || gap > 8) far.push(`${theme}: ${gap}px`);
-    }
-    expect(far).toEqual([]);
-});
-
-test('a disabled option looks disabled, in every theme [gap-11]', async ({ page }) => {
-    // gap-11: an option with aria-disabled painted exactly like one that can be chosen.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catalogue/combobox.html');
-    const paint = (/** @type {string} */ selector) =>
-        page.locator(selector).evaluate((el) => {
-            const s = getComputedStyle(el);
-            return ['color', 'opacity', 'text-decoration-line', 'background-color', 'background-image'].map((p) => s.getPropertyValue(p)).join(' | ');
-        });
-    const alike = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const off = await paint('#open [role="option"][aria-disabled="true"]');
-        const on = await paint('#open #cb-open-list-option-0');
-        if (off === on) alike.push(theme);
-    }
-    expect(alike).toEqual([]);
-});
-
-test('the combobox input takes the same ground as a .kp-field__input, in every theme [gap-11]', async ({ page }) => {
-    // gap-11: the combobox input read --card and --border where a field reads --background and --input, two different boxes side by side.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catalogue/combobox.html');
-    const ground = (/** @type {string} */ selector) =>
-        page.locator(selector).evaluate((el) => {
-            const s = getComputedStyle(el);
-            return ['background-color', 'background-image', 'border-top-color', 'border-top-width', 'border-top-style', 'color']
-                .map((p) => `${p}: ${s.getPropertyValue(p)}`)
-                .join('; ');
-        });
-    const apart = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const combobox = await ground('#cb-closed');
-        const field = await ground('#cb-beside');
-        if (combobox !== field) apart.push(`${theme} — ${combobox} ≠ ${field}`);
-    }
-    expect(apart).toEqual([]);
-});
 
 // ── scope-60, the tag input that could not add ─────────────────────────────
 

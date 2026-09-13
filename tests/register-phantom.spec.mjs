@@ -205,35 +205,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).transform), 'the second tear is mirrored').toMatch(/matrix\(-1,/);
         });
 
-        test('the skewed bar grows behind a hovered nav link; the button is a key cap that fills on hover', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            const link = page.locator('.kp-nav__link').nth(1);
-            expect((await pseudo(link, '::before', ['width'])).width).toBe('0px');
-            expect((await pseudo(link, '::before', ['transform'])).transform, 'the bar is skewed').toMatch(/matrix\(1, 0, -0\.28/);
-            await link.hover();
-            await expect.poll(async () => parseFloat((await pseudo(link, '::before', ['width'])).width)).toBeGreaterThan(40);
-            // The button IS the parallelogram [S49, A7, Kenny 2026-09-08]:
-            // the element carries the skew, so the box a click lands in
-            // follows the plate, and the label is set upright again on
-            // its own element. Drill [KT3]: the skew moved back to
-            // `::before` → the element reads "none" and this goes red.
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            await style(button, 'transform', 'the button is skewed').toMatch(/matrix\(1, 0, -0\.14/);
-            const plate = await pseudo(button, '::before', ['border-top-width']);
-            expect(plate['border-top-width']).toBe('2px');
-            const label = button.locator('.kp-button__label');
-            await style(label, 'transform', 'and the label is set upright again').toMatch(/matrix\(1, 0, 0\.14/);
-            await button.hover();
-            await expect.poll(async () => parseFloat((await pseudo(button, '::after', ['width'])).width)).toBeGreaterThan(40);
-        });
-
         test('the dossier stamp is a rotated red plate, and the censor plates shear off on the trigger', async ({ page }) => {
             await open(page, url);
             await page

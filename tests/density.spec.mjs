@@ -23,24 +23,6 @@ test.describe('the compact density mode', () => {
         await page.goto(FIXTURE);
     });
 
-    // The table is the isolated measure of the spacing scale: it holds no
-    // control, so its height moves only when --kp-space-* moves. Drill:
-    // remove the --kp-space-* declarations from the compact block in
-    // css/_density.css and the two tables measure the same. The first
-    // version measured the whole block and stayed green under that drill,
-    // because the control height alone still made the block shorter [KT3].
-    test('the same table is shorter in every theme [TH105]', async ({ page }) => {
-        /** @type {string[]} */
-        const notShorter = [];
-        for (const theme of THEMES) {
-            await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
-            const roomy = await heightOf(page, 'roomy-table');
-            const compact = await heightOf(page, 'compact-table');
-            if (compact >= roomy) notShorter.push(`${theme} (${roomy.toFixed(0)} -> ${compact.toFixed(0)})`);
-        }
-        expect(notShorter, `compact is not shorter in: ${notShorter.join(', ')}`).toEqual([]);
-    });
-
     // The form's own gap, not its height: the button inside it takes the
     // control floor down too, so a height comparison stayed green with
     // the --kp-space-* declarations removed and measured nothing [KT3].

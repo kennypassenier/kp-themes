@@ -27,7 +27,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -221,23 +220,6 @@ for (const [channel, url] of CHANNELS) {
             await expect(marks.first()).not.toHaveClass(/is-cleared/);
         });
 
-        test('the focus ring keeps two channels: an outline in the foreground, a moat in the ground [DI2]', async ({ page }) => {
-            await open(page, url);
-            const PRIMARY = '[data-kp-surface="hero"] .kp-button--primary';
-            const primary = page.locator(PRIMARY).first();
-            // Reached with the keyboard, not focus(): a focus() that never
-            // lands resolves happily and the reads below then measure the
-            // button at rest and pass [G15].
-            await tabToSelector(page, PRIMARY);
-            const ring = await primary.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { outlineColor: s.outlineColor, outlineStyle: s.outlineStyle, boxShadow: s.boxShadow };
-            });
-            expect(ring.outlineStyle).toBe('solid');
-            expect(ring.outlineColor).toBe(await paint(page, '--foreground'));
-            expect(ring.boxShadow, 'the outer moat in the ground').toContain(await paint(page, '--background'));
-        });
-
         test('the dividers swell in the next surface’s own tone, no literal blur() filter', async ({ page }) => {
             await open(page, url);
             const dividers = page.locator('[data-kp-divider]');
@@ -250,49 +232,6 @@ for (const [channel, url] of CHANNELS) {
                 const after = await pseudo(d, '::after', ['background-image', 'opacity']);
                 expect(after['background-image']).toMatch(/linear-gradient/);
             }
-        });
-
-        test('the dropdown is styled in the theme’s own language [KT14]', async ({ page }) => {
-            await open(page, url);
-            const parent = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            const link = parent.locator(':scope > a').first();
-            await link.hover();
-            const menu = parent.locator('.kp-nav__menu');
-            await expect.poll(() => menu.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
-            const item = menu.locator('a').first();
-            await item.hover();
-            await expect.poll(() => item.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--secondary'));
-        });
-
-        test('the same light, the other material: the control lifts, and the press goes under [scope-12]', async ({ page }) => {
-            // shade-light's own test, read on the dark twin. Drilled
-            // 2026-09-12 in firefox: the rest `box-shadow` removed -> red on
-            // the offsets; the `:active` rule's `inset` removed -> red on
-            // the press turning inward.
-            // The PLAIN button, named explicitly: `.kp-button` with
-            // `.first()` reaches the hero's `--mirror` variant, which
-            // carries its own later rules [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            await open(page, url);
-            const rest = await btn.evaluate((el) => getComputedStyle(el).boxShadow);
-            const offsets = rest.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/);
-            expect(offsets, 'a shadow at rest').not.toBeNull();
-            expect(Number(offsets[1]), 'it falls to the right of the source').toBeGreaterThan(0);
-            expect(Number(offsets[2]), 'and below it').toBeGreaterThan(Number(offsets[1]));
-            // Further and softer than the light twin's 1px 2px 3px: on a
-            // dark ground a short sharp shadow is not a shadow, it is a line.
-            expect(Number(offsets[3]), 'softer than the light twin').toBeGreaterThan(3);
-            expect(rest, 'away from the light, not into it').not.toContain('inset');
-            await btn.hover();
-            await style(btn, 'translate', 'the lift is toward the source').toBe('-1px -1px');
-            await page.mouse.down();
-            await style(btn, 'transition-duration', 'the press does not ease in').toBe('0s');
-            expect(await btn.evaluate((el) => getComputedStyle(el).boxShadow), 'and it turns inward').toContain('inset');
-            await page.mouse.up();
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

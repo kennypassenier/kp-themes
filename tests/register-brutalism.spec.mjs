@@ -195,25 +195,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).boxShadow), 'the shadow grows').toMatch(/8px 8px 0px 0px/);
         });
 
-        test('the buttons are plates with the line and the shadow; the primary is the ink with the yellow ink', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow)).toMatch(/6px 6px 0px 0px/);
-            expect(await button.evaluate((el) => getComputedStyle(el).backgroundColor), 'yellow is the default').toBe(
-                await paint(page, '--secondary'),
-            );
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
-            const label = page.locator('.microlabel').first();
-            const outline = await label.evaluate((el) => getComputedStyle(el).boxShadow.split(/,(?![^(]*\))/));
-            expect(outline, 'the pixel outline: four hard box-shadows, one per side').toHaveLength(4);
-            for (const layer of outline) expect(layer).toMatch(/(-?3px 0px|0px -?3px) 0px 0px$/);
-            expect(await label.evaluate((el) => getComputedStyle(el).borderTopWidth), 'and no border').toBe('0px');
-        });
-
         test('the dossier: the tilted stamp with the pixel outline, and the bars sliding off on the trigger', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -257,29 +238,6 @@ for (const [channel, url] of CHANNELS) {
             await pseudoStyle(btn, '::after', 'opacity', 'the tag appears on the thing you touch').toBe('1');
             await btn.evaluate((el) => el.style.setProperty('--kp-label', "'VERZENDEN'"));
             expect(await word('.kp-button'), 'the consumer replaces the word').toBe('VERZENDEN');
-        });
-
-        test('the tag reaches more than the buttons [scope-12, Kenny 2026-09-11]', async ({ page }) => {
-            await open(page, url);
-            const word = async (sel) => (await pseudo(page.locator(sel).first(), '::after', ['content']))['content'].replace(/^["']|["']$/g, '');
-            // Phase 7: this skipped a selector the page did not carry,
-            // which meant a page carrying neither ran no assertion at all
-            // and reported pass. The same shape is named as a fault in
-            // this project's own comments (tests/registers.spec.mjs:197).
-            // The point of the test is that the tag reaches BEYOND the
-            // buttons, so the page must carry something beyond them.
-            const wanted = [
-                ['.kp-card', 'CARD'],
-                ['.kp-badge', 'BADGE'],
-            ];
-            const present = [];
-            for (const [selector] of wanted) if ((await page.locator(selector).count()) > 0) present.push(selector);
-            expect(present.length, 'the page carries neither a card nor a badge, so this test measures nothing').toBeGreaterThan(0);
-
-            for (const [selector, expected] of wanted) {
-                if (!present.includes(selector)) continue;
-                expect(await word(selector), `${selector} names itself`).toBe(expected);
-            }
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

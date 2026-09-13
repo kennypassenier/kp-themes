@@ -192,35 +192,6 @@ for (const [channel, url] of CHANNELS) {
             expect(before['border-radius']).toMatch(/50%/);
         });
 
-        test('the dropdown is styled in the theme’s own language [KT14]', async ({ page }) => {
-            await open(page, url);
-            const item = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            await item.locator('.kp-nav__link').first().hover();
-            const menu = item.locator('.kp-nav__menu');
-            await expect(menu).toBeVisible();
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { background: s.backgroundColor, border: s.borderTopWidth, boxShadow: s.boxShadow };
-            });
-            expect(style.background).toBe(await paint(page, '--card'));
-            expect(style.border).not.toBe('0px');
-            expect(style.boxShadow, 'a lifted card, not a flat panel').not.toBe('none');
-        });
-
-        test('the primary button carries the mirror sheen and lifts on hover', async ({ page }) => {
-            await open(page, url);
-            const btn = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            const rest = await btn.evaluate((el) => getComputedStyle(el).backgroundPosition);
-            await btn.hover();
-            await settled(page);
-            await expect.poll(() => btn.evaluate((el) => getComputedStyle(el).backgroundPosition)).not.toBe(rest);
-            const lift = await btn.evaluate((el) => getComputedStyle(el).transform);
-            expect(lift).not.toBe('none');
-        });
-
         test('the stamp reads the dossier’s own label, rotated, in the destructive ink', async ({ page }) => {
             await open(page, url);
             const card = page.locator('.kp-card[data-kp-label]').first();

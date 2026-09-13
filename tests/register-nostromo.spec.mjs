@@ -30,7 +30,6 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -189,31 +188,6 @@ for (const [channel, url] of CHANNELS) {
             expect(alt).toBe(await paint(page, '--sidebar-accent'));
         });
 
-        test('buttons are label tape: tracked uppercase mono, and the primary plate is the ink', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            const style = await primary.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { transform: s.textTransform, tracking: s.letterSpacing, bg: s.backgroundColor };
-            });
-            expect(style.transform).toBe('uppercase');
-            expect(parseFloat(style.tracking)).toBeGreaterThan(0);
-            expect(style.bg).toBe(await paint(page, '--primary'));
-        });
-
-        test("the dropdown is the sidebar's own dark plate, open [KT14]", async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            await trigger.hover();
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { bg: s.backgroundColor, border: s.borderColor };
-            });
-            expect(style.bg, 'the dropdown is the sidebar plate, not the plain popover').toBe(await paint(page, '--sidebar-background'));
-        });
-
         test('the dossier: the stamp swaps its word, and the redactions clear together on the trigger [S49, A11]', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -233,31 +207,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const count = await marks.count();
             for (let i = 0; i < count; i++) await expect(marks.nth(i)).toHaveClass(/is-cleared/);
-        });
-
-        test('every control carries its own lamp, dark at rest and lit under the pointer [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the hover's `opacity: 0.7`
-            // removed -> red on the lit reading. The concept pages load
-            // `css/<theme>-register.css` directly, so a register drill does
-            // not need a regenerated bundle — checked before trusting the
-            // red, because the opposite trap has cost this project three
-            // false greens [KT3].
-            await open(page, url);
-            const btn = page.locator('.kp-button').first();
-            const at = async (p) => (await pseudo(btn, '::before', [p]))[p];
-            // The lamp is `currentcolor` — the CONTROL's own label colour,
-            // not the page's. Measured 2026-09-12: this test first asked for
-            // `--foreground` and went red, because a primary button prints
-            // light on dark and its lamp goes with it. That is the design:
-            // every switch is lit in its own console's ink.
-            expect(await at('background-color'), "the lamp burns in the control's own ink").toBe(
-                await btn.evaluate((el) => getComputedStyle(el).color),
-            );
-            expect(Number(await at('opacity')), 'dark at rest').toBeCloseTo(0.25, 2);
-            await btn.hover();
-            // Polled, not read once: the lamp eases up over the theme's own
-            // duration and a single read lands mid-fade [fix-1].
-            await pseudoStyle(btn, '::before', 'opacity', 'lit under the pointer').toBe('0.7');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

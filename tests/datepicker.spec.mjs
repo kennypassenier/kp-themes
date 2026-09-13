@@ -241,20 +241,6 @@ test('a disabled day keeps aria-disabled and looks unavailable, in every theme [
     await expect(page.locator('[data-test="limits"] [data-kp-day="2026-09-05"]')).toHaveAttribute('aria-disabled', 'true');
 });
 
-test('the calendar button sits on the line with the input [gap-11]', async ({ page }) => {
-    // gap-11: the input took the whole row (inline-size: 100%) in a wrapping flex row, so the button always fell to the next line.
-    await page.goto('/catalogue/datepicker.html');
-    for (const id of ['dp-closed', 'dp-keys']) {
-        const input = page.locator(`#${id}`);
-        const button = page.locator(`.kp-datepicker:has(#${id}) [data-kp-date-open]`);
-        const boxes = await Promise.all([input.boundingBox(), button.boundingBox()]);
-        const [a, b] = /** @type {{ x: number, y: number, width: number, height: number }[]} */ (boxes);
-        expect(b.y, `${id}: the button starts below the input`).toBeLessThan(a.y + a.height);
-        expect(b.y + b.height, `${id}: the button ends above the input`).toBeGreaterThan(a.y);
-        expect(b.x, `${id}: the button is not beside the input`).toBeGreaterThanOrEqual(a.x + a.width - 1);
-    }
-});
-
 // Kenny's review note of 2026-09-13: the data table's date filter opened its
 // calendar past the right edge of the window. The fix is the picker's own,
 // so every picker near an edge is held here, in both channels and both

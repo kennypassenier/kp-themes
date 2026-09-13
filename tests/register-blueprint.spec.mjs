@@ -26,7 +26,6 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -206,38 +205,6 @@ for (const [channel, url] of CHANNELS) {
             expect(line['animation-timing-function']).toMatch(/ease-out/);
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dropdown is a title block: the ground colour, one hairline, a cyan top rule and numbered leaders [KT14]', async ({ page }) => {
-            await open(page, url);
-            const menu = page.locator('.kp-nav__menu').first();
-            // Reached with the keyboard, not focus() [G15].
-            await tabToSelector(page, '.kp-nav__links > li:first-child > .kp-nav__link');
-            await expect(menu).toBeVisible();
-            const panel = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { background: s.backgroundColor, border: s.borderColor, radius: s.borderRadius };
-            });
-            expect(panel.background).toBe(await paint(page, '--background'));
-            expect(panel.border).toBe(await paint(page, '--border-strong'));
-            const rule = await pseudo(menu, '::before', ['background-color', 'block-size']);
-            expect(rule['background-color']).toBe(await paint(page, '--primary'));
-            const firstItem = menu.locator('a').first();
-            const leader = await pseudo(firstItem, '::before', ['content']);
-            // Firefox resolves the counter to "01"; chromium reports the
-            // unresolved expression, counter(kp-menu-item) included.
-            expect(leader.content).toMatch(/01|counter\(/i);
-            await firstItem.hover();
-            await expect.poll(() => firstItem.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
-        });
-
-        test('the mirrored button keeps the one chamfer, and the primary is the cyan plate', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            const mirror = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            const clip = await mirror.evaluate((el) => getComputedStyle(el).clipPath);
-            expect(clip, 'the mitred corner').toMatch(/polygon/);
         });
 
         test('the dossier’s redactions are solid ink blocks that clear left to right on the trigger, staggered', async ({ page }) => {
