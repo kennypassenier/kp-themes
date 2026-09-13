@@ -3,7 +3,12 @@
 // developer overlay on demand. Components themselves are attached by
 // js/auto.js; this file only drives the chrome around them.
 import { THEMES } from '../js/theme-registry.js';
-import { applyTheme, currentTheme, THEME_EVENT } from '../js/theme-core.js';
+import { currentTheme, initializeTheme, THEME_EVENT } from '../js/theme-core.js';
+import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
+import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
+
+/** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
+const ROOT = new URL('../', import.meta.url);
 
 /**
  * Every page a reviewer opens, in the order the navigation shows them.
@@ -29,7 +34,6 @@ export const PAGES = [
     },
 ];
 
-const THEME_KEY = 'kp-catalogue-theme';
 const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
 
 /* ------------------------------------------------------------- storage */
@@ -58,8 +62,7 @@ function save(key, value) {
 
 /** This page's path from the repository root, e.g. `catalogue/table.html`. */
 function pagePath() {
-    const parts = location.pathname.split('/').filter(Boolean);
-    return parts.slice(-2).join('/');
+    return decodeURIComponent(location.pathname).slice(decodeURIComponent(ROOT.pathname).length);
 }
 
 const themeLabel = (name) => THEMES.find((t) => t.name === name)?.label ?? name;
@@ -108,7 +111,7 @@ function buildNavigation() {
             const item = document.createElement('li');
             const link = document.createElement('a');
             link.className = 'kp-sidenav__link';
-            link.href = `../${page.href}`;
+            link.href = new URL(page.href, ROOT).href;
             if (page.href === here) link.setAttribute('aria-current', 'page');
             const label = document.createElement('span');
             label.className = 'kp-sidenav__label';
@@ -127,17 +130,39 @@ function buildNavigation() {
 }
 
 function mountShell() {
-    const bar = document.querySelector('.cat-bar');
-    const main = document.querySelector('.cat-main');
-    if (!bar || !main) return;
+    let bar = document.querySelector('.cat-bar');
+    let main = document.querySelector('.cat-main');
 
-    // The page stays two plain siblings in its HTML; the shell wraps them
-    // here so fifty-odd hand-written pages do not each carry a copy of the
-    // navigation that could drift.
+    // A catalogue page arrives with its bar and main; a research demo arrives
+    // with neither. Both end in the same shell, so every review page carries
+    // the navigation and the theme menu (Kenny, 2026-09-13: "die sidenav moet
+    // op elke pagina terugkomen").
     const column = document.createElement('div');
     column.className = 'cat-column';
-    bar.before(column);
-    column.append(bar, main);
+    if (!bar) {
+        bar = document.createElement('header');
+        bar.className = 'cat-bar';
+        const home = document.createElement('a');
+        home.className = 'cat-bar__home';
+        home.href = new URL('catalogue/index.html', ROOT).href;
+        home.textContent = 'kp-themes catalogue';
+        const spacer = document.createElement('span');
+        spacer.className = 'cat-bar__spacer';
+        const tools = document.createElement('button');
+        tools.type = 'button';
+        tools.className = 'kp-button kp-button--ghost';
+        tools.setAttribute('data-cat-devtools', '');
+        tools.textContent = 'Devtools (Alt+D)';
+        bar.append(home, spacer, tools);
+    }
+    const skip = document.querySelector('body > .kp-skip-link');
+    const content = [...document.body.children].filter((el) => el !== bar && el !== skip && el.tagName !== 'SCRIPT' && !el.hasAttribute('popover'));
+    if (skip) skip.after(column);
+    else document.body.prepend(column);
+    column.append(bar);
+    if (main) column.append(main);
+    else for (const el of content) column.append(el);
+    main ??= column;
 
     const nav = buildNavigation();
     document.body.classList.add('cat-shell');
@@ -167,26 +192,30 @@ function mountShell() {
         fit();
         narrow.addEventListener('change', fit);
     });
+    return bar;
 }
 
 /* --------------------------------------------------------------- theme */
 
-function mountThemeSwitcher() {
-    const select = document.querySelector('[data-cat-theme]');
-    if (!select) return;
-    for (const theme of THEMES) {
-        const option = document.createElement('option');
-        option.value = theme.name;
-        option.textContent = `${theme.label}${theme.dark ? ' (dark)' : ''}`;
-        select.append(option);
+function mountThemeMenu(bar) {
+    // The package's own theme menu, grouped Light and Dark, exactly as a
+    // consumer gets it — the catalogue reviews the picker by using it.
+    const slot = document.createElement('span');
+    slot.className = 'cat-bar__theme';
+    slot.innerHTML = themeMenuMarkup({ id: 'cat-theme-menu', label: 'Choose a theme' });
+    const tools = bar.querySelector('[data-cat-devtools]');
+    if (tools) tools.before(slot);
+    else bar.append(slot);
+
+    // A catalogue page links every register; a research demo links two or
+    // three. Where some are missing and the page does not manage its own
+    // register links, the missing one is fetched on the switch [scope-50].
+    const managed = document.querySelector('link[data-kp-register]') !== null;
+    if (!managed && registersPresent().length < THEMES.length) {
+        attachLazyRegisters({ pattern: `${new URL('css/', ROOT).pathname}{theme}-register.css` });
     }
-    const start = load(THEME_KEY, null) || document.documentElement.dataset.theme || 'formal';
-    select.value = start;
-    applyTheme(start);
-    select.addEventListener('change', () => {
-        applyTheme(select.value);
-        save(THEME_KEY, select.value);
-    });
+    attachThemePickers(slot);
+    initializeTheme(document.documentElement.dataset.theme || 'formal');
 }
 
 /* ------------------------------------------------------------ feedback */
@@ -218,11 +247,17 @@ function blockTitle(section) {
     return section.querySelector('h2')?.textContent?.trim() || section.id;
 }
 
+/** The blocks a note can belong to on this page. */
+function sections() {
+    const blocks = [...document.querySelectorAll('.cat-block[id]')];
+    return blocks.length ? blocks : [...document.querySelectorAll('main section[id]')];
+}
+
 /** The prompt a reviewer pastes into the conversation. */
 function promptText() {
     const page = allFeedback()[pagePath()] ?? {};
     const byTheme = new Map();
-    for (const section of document.querySelectorAll('.cat-block[id]')) {
+    for (const section of sections()) {
         for (const [theme, text] of Object.entries(page[section.id] ?? {})) {
             if (!byTheme.has(theme)) byTheme.set(theme, []);
             byTheme.get(theme).push(`- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
@@ -239,20 +274,24 @@ function promptText() {
 }
 
 function mountFeedback() {
-    const main = document.querySelector('.cat-main');
-    const sections = [...document.querySelectorAll('.cat-block[id]')];
+    const main = document.querySelector('.cat-main') ?? document.querySelector('main') ?? document.querySelector('.cat-column');
+    let sections = [...document.querySelectorAll('.cat-block[id]')];
+    // A research demo has no catalogue blocks; its own id'd sections are
+    // what a reviewer comments on there.
+    if (!sections.length) sections = [...document.querySelectorAll('main section[id]')];
     if (!main || !sections.length) return;
 
     const fields = [];
     for (const section of sections) {
         const wrap = document.createElement('div');
-        wrap.className = 'cat-feedback-field';
+        wrap.className = 'kp-field cat-feedback-field';
         const id = `cat-feedback-${section.id}`;
         const label = document.createElement('label');
+        label.className = 'kp-field__label';
         label.htmlFor = id;
         const area = document.createElement('textarea');
         area.id = id;
-        area.className = 'kp-field__control cat-feedback-input';
+        area.className = 'kp-field__input kp-field__input--multiline cat-feedback-input';
         area.rows = 2;
         area.addEventListener('input', () => {
             setNote(section.id, currentTheme(), area.value);
@@ -349,7 +388,7 @@ function mountDevtools() {
     });
 }
 
-mountShell();
-mountThemeSwitcher();
+const bar = mountShell();
+mountThemeMenu(bar);
 mountFeedback();
 mountDevtools();

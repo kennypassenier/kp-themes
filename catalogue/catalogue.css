@@ -63,10 +63,6 @@
         flex: 1 1 auto;
     }
 
-    .cat-bar label {
-        font-size: 0.85rem;
-    }
-
     .cat-main {
         max-inline-size: 70rem;
         margin: 0 auto;
@@ -173,14 +169,7 @@
     /* Feedback under each block, and the prompt that gathers it. */
     .cat-feedback-field {
         margin-block-start: 0.75rem;
-        display: grid;
-        gap: 0.3rem;
         max-inline-size: 46rem;
-    }
-
-    .cat-feedback-field label {
-        font-size: 0.8rem;
-        color: var(--muted-foreground);
     }
 
     .cat-feedback-input {

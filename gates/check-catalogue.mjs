@@ -117,11 +117,20 @@ function main() {
             `${unlisted.length} review page(s) exist but the navigation in catalogue/catalogue.js does not list them:\n  ` + unlisted.join('\n  '),
         );
     }
+    // And every one of them carries the shell, or the navigation is not there
+    // to reach the next page from it (Kenny, 2026-09-13: "die sidenav moet op
+    // elke pagina terugkomen, anders is er ook niks aan").
+    const shellless = reviewPages.filter((page) => !/src="[^"]*catalogue\.js"/.test(readFileSync(new URL(page, root), 'utf8'))).sort();
+    if (shellless.length) {
+        console.error(
+            `${shellless.length} review page(s) do not load catalogue/catalogue.js, so they have no navigation:\n  ` + shellless.join('\n  '),
+        );
+    }
     if (phantom.length) {
         console.error(`${phantom.length} page(s) in the navigation do not exist:\n  ` + phantom.join('\n  '));
     }
 
-    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length) process.exit(1);
+    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length || shellless.length) process.exit(1);
 
     console.log(
         `catalogue: ${shown.size} of ${defined.size} component roots shown across ${pages.length} page(s), ` +

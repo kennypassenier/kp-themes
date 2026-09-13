@@ -12,6 +12,7 @@
         "kp-dialog",
         "kp-diff",
         "kp-error",
+        "kp-field",
         "kp-fieldset",
         "kp-footer",
         "kp-form",
