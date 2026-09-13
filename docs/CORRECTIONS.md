@@ -2920,7 +2920,9 @@ a deliberately long background run is reported once too.
 **7 · How we measure it works, and when.** On the turn that built it: a
 `sleep 900` started in the background must be refused at that turn's end, with
 the shell named in the message. At the end of round eight: the count of times
-the hook reported.
+the hook reported. Measured on the building turn: at 613 s the hook
+refused the turn with `pid 3251896 · 10 min · sleep 900`; the shell was then
+stopped with TaskStop.
 
 **8 · If the measurement fails.** Claude puts `timeout 600` before every command
 of its own that can run long, as discipline, and says so.
