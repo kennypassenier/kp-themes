@@ -304,11 +304,12 @@
             <section class="cat-block" id="empty">
                 <h2>Empty state</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> two empties that must not say the same thing. <b>Nothing yet</b> offers to create the first one.
-                    <b>Nothing found</b>
-                    after a search offers to clear the search instead — offering "create" to someone who just typed a filter is noise. Both sit in a
-                    dashed frame, centred, with the title in the full ink and the body muted; the body must still pass contrast. The action is a real
-                    button, and in a narrow pane the text wraps inside the frame.
+                    <b>Look at:</b> <code>.kp-empty</code> is what a list, a table or a search result shows when it has nothing in it — the component
+                    on its own, before any list around it. There are two here, and they must not say the same thing. <b>Nothing yet</b> is a list that
+                    has never had an item: it says so and offers to create the first one. <b>Nothing found</b> is a search that matched nothing: it
+                    offers to clear the search, because offering "create" to someone who just typed a filter is noise. In every theme both sit in a
+                    frame, centred, the title in full ink and the body muted but readable, the action a real button; narrow the pane and the text
+                    wraps inside the frame.
                 </div>
                 <div class="cat-stage cat-grid">
                     <div class="kp-empty" data-kp-empty>
