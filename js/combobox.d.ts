@@ -35,11 +35,12 @@ export declare function combobox(element: Element): ComboboxHandle | null;
  * Attach every combobox and tag input under `root`.
  *
  * @param {ParentNode} root
- * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
- *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`.
+ * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, emptyRow?: boolean, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
+ *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`, `data-kp-empty-row`.
+ *   `emptyRow` (default true): a query that matches nothing keeps the list open with a "no results" row — the server's own `[data-kp-combobox-empty]` element inside the list if it wrote one, else one built from the dictionary; `false` closes the list instead, as before 6.1 [gap-11].
  * @returns {(() => void) & { handles: ComboboxHandle[] }} detach
  */
-export declare function attachComboboxes(root?: ParentNode, { match, loop, openOnFocus, closeOnBlur, backspaceRemoves, stayOpen, maxTags, allowDuplicates, debounceMs, renderTag, removeGlyph, }?: {
+export declare function attachComboboxes(root?: ParentNode, { match, loop, openOnFocus, closeOnBlur, backspaceRemoves, stayOpen, maxTags, allowDuplicates, debounceMs, emptyRow, renderTag, removeGlyph, }?: {
     match?: keyof typeof MATCHERS | Matcher;
     loop?: boolean;
     openOnFocus?: boolean;
@@ -49,6 +50,7 @@ export declare function attachComboboxes(root?: ParentNode, { match, loop, openO
     maxTags?: number;
     allowDuplicates?: boolean;
     debounceMs?: number;
+    emptyRow?: boolean;
     renderTag?: (value: string, label: string) => HTMLElement;
     removeGlyph?: string;
 }): (() => void) & {

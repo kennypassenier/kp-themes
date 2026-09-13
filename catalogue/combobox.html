@@ -35,9 +35,9 @@
                 <h2>Closed</h2>
                 <div class="cat-look">
                     <b>Look at:</b> closed, a combobox is a text input with a label, and it must sit in a form beside a <code>.kp-field__input</code>
-                    without looking like a different control — compare the two. It is not the same rule in the stylesheet (the combobox takes the
-                    card's ground, the field takes the page's), so a theme whose card and page differ will show two different boxes side by side. That
-                    difference is a finding, not a matter of taste. The status line under it is empty until you type.
+                    without looking like a different control — compare the two. The combobox takes the field's ground, boundary, ink and height, so
+                    the two boxes must match in every theme; a theme where they do not is a finding, not a matter of taste. The status line under it
+                    is empty until you type.
                 </div>
                 <div class="cat-stage">
                     <div class="kp-combobox" data-kp-combobox>
@@ -74,10 +74,9 @@
                     whatever is behind — here the list covers the note under the box, and the note must not show through. The highlighted option (<b
                         >Cold store</b
                     >, moved to with the arrow keys) must be told apart from the others by more than a hair of tint: in a theme with a loud register,
-                    check that the highlight is still readable and that the text on it keeps its contrast. The list is as wide as the input, no wider.
-                    It hangs from the bottom of the whole <code>.kp-combobox</code>, so when the status line sits inside the box the list opens
-                    <i>under the status line</i>, a line away from the input it belongs to — look at that gap and decide whether it reads as one
-                    control.
+                    check that the highlight is still readable and that the text on it keeps its contrast. The list is as wide as the input, no wider,
+                    and it opens directly under the input it belongs to — over the status line, not below it — so the two read as one control. The
+                    third option is disabled: it must look faded and must not light up under the pointer.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 17rem">
                     <div class="kp-combobox">
@@ -100,6 +99,7 @@
                             <li class="kp-combobox__option is-active" role="option" id="cb-open-list-option-1" aria-selected="true" data-kp-option>
                                 Cold store
                             </li>
+                            <li class="kp-combobox__option" role="option" aria-disabled="true" data-kp-option>Weighbridge (closed for repairs)</li>
                             <li class="kp-combobox__option" role="option" id="cb-open-list-option-2" aria-selected="false" data-kp-option>
                                 Boiler room
                             </li>
@@ -118,13 +118,13 @@
             <section class="cat-block" id="nothing">
                 <h2>Filtered to nothing</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> when nothing matches, the module <i>closes</i> the list rather than showing an empty one, and the status line
-                    under the input says <b>No results</b>. So the whole message is that one small line: it must be legible in every theme, and it
-                    must be close enough to the input to read as its answer. There is no "nothing found" row inside the list and no way to offer "add
-                    this" — if a theme needs one, that is a request for the package, not something this page can show. Type <code>zzz</code> into the
-                    live box beside the frozen one: both must look the same.
+                    <b>Look at:</b> when nothing matches, the list stays open under the input with one row that says <b>No results</b>, in the muted
+                    ink — where the eye already is — and the status line says it for a screen reader. The row is not an option: the arrows do not land
+                    on it and Enter takes nothing. It must be legible on the list's surface in every theme. A server that wants to offer "add this"
+                    writes its own <code>[data-kp-combobox-empty]</code> row into the list and the module uses that one instead. Type
+                    <code>zzz</code> into the live box beside the frozen one: both must look the same.
                 </div>
-                <div class="cat-stage">
+                <div class="cat-stage" style="min-block-size: 9rem">
                     <div class="kp-combobox">
                         <label class="kp-field__label" for="cb-none">Site (frozen)</label>
                         <input
@@ -132,14 +132,15 @@
                             id="cb-none"
                             type="text"
                             role="combobox"
-                            aria-expanded="false"
+                            aria-expanded="true"
                             aria-controls="cb-none-list"
                             autocomplete="off"
                             value="Pump house 9"
                         />
-                        <ul class="kp-combobox__list" id="cb-none-list" role="listbox" hidden>
+                        <ul class="kp-combobox__list" id="cb-none-list" role="listbox">
                             <li class="kp-combobox__option" role="option" data-kp-option hidden>Pump house 4</li>
                             <li class="kp-combobox__option" role="option" data-kp-option hidden>Cold store</li>
+                            <li class="kp-combobox__empty" role="presentation" data-kp-combobox-empty>No results</li>
                         </ul>
                         <p class="kp-combobox__status" role="status" aria-live="polite">No results</p>
                     </div>

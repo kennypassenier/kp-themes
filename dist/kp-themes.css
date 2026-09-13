@@ -4904,6 +4904,35 @@
         color: var(--status-withdrawn-foreground);
     }
 
+    /* Severity, beside the application statuses rather than instead of them
+ * [gap-11]. The seven names above are JobTracker's and say where an
+ * application stands; a service that is healthy, degraded or down had no
+ * badge. Modifiers on the alert's four token pairs, written the way the
+ * alert writes them, so a badge and an alert of one severity are one
+ * colour and the contrast gate already holds every pair. Not `data-status`
+ * values: that attribute names the application statuses, one token family
+ * each, and the unit test that ties them together stays true. The word on
+ * the badge still carries the meaning [DI4]. */
+    .kp-badge--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-badge--info {
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-badge--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-badge--destructive {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
     /* A destructive button with an undo offers it inline, beside itself. */
     .kp-button__undo {
         display: inline-flex;
@@ -5066,6 +5095,24 @@
  * beside it — without the label, the error and the describedby wiring
  * that are the point of the component. */
 
+    /* Disabled and read-only are two promises and look like two [gap-11].
+ * Disabled cannot be used: it fades and refuses the pointer. Read-only can
+ * be focused, selected and copied but not changed: it keeps full ink, so
+ * the value stays a value, and loses the editable look — a dashed
+ * boundary on the muted ground, a record rather than a box to type in.
+ * All three painted the same, and a reviewer typed into the read-only
+ * field and thought the page had frozen. `[readonly]` rather than
+ * `:read-only`, which also matches every <select>. */
+    .kp-field__input:disabled {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
     .kp-field__input--multiline {
         min-height: 5.5rem;
         /* Vertical only: a textarea dragged wider than its column breaks the
@@ -5130,10 +5177,25 @@
 
     /* The error text carries the message [DI4]; this only makes the control
  * itself findable when the summary sends someone to it. A checkbox has no
- * border to colour, so it is an outline. */
-    .kp-field--invalid .kp-field__check {
+ * border to colour, so it is an outline. The child combinator keeps it on
+ * the checkbox that IS the field: the radios inside an invalid group were
+ * framed one by one, a square frame around every round control, which
+ * read as several wrong answers rather than one [gap-11]. */
+    .kp-field--invalid > .kp-field__check {
         outline: var(--focus-ring-width, 2px) solid var(--destructive);
         outline-offset: 2px;
+    }
+
+    /* An invalid radio group is one wrong answer, so it carries one mark:
+ * an outline around the whole group, legend and options together
+ * [gap-11]. An outline rather than a border, because a register that
+ * frames its fieldsets sets the border in a later layer and would
+ * silently take the mark away. Either spelling counts: the attribute on
+ * the group, or the group inside an invalid field. */
+    .kp-fieldset[aria-invalid='true'],
+    .kp-field--invalid > .kp-fieldset {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
     }
 
     /* --- Table [TH3] ----------------------------------------------------- */
@@ -6025,6 +6087,42 @@
         color: var(--popover-foreground);
     }
 
+    /* A dialog stops short of the window and scrolls its body, not itself
+ * [gap-11]. With no maximum height of its own, sixty rows scrolled the
+ * whole dialog (the browser's cap on a modal one) and took the title and
+ * the actions away with the rows. Open, a dialog with a body is a column:
+ * the title, the description and the actions keep their size, and the
+ * body takes what is left and scrolls inside it. A dialog without a
+ * `.kp-dialog__body` keeps its block flow and only gains the cap. */
+    .kp-dialog[open] {
+        max-block-size: var(--kp-dialog-max-height, calc(100dvh - 2rem));
+        box-sizing: border-box;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) > :not(.kp-dialog__body) {
+        flex: none;
+    }
+
+    .kp-dialog__body {
+        flex: 1 1 auto;
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-dialog__body > :first-child {
+        margin-block-start: 0;
+    }
+
+    .kp-dialog__body > :last-child {
+        margin-block-end: 0;
+    }
+
     .kp-dialog::backdrop {
         /* Not a token: a backdrop is a dimming of whatever is behind it, and
      * a theme colour here would tint the page rather than dim it. */
@@ -6131,6 +6229,16 @@
     .kp-menu__item:hover {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
+    }
+
+    /* A disabled item looks unavailable and does not answer the pointer
+ * [gap-11]. It painted like an enabled one and lit up under the pointer
+ * in every theme. `pointer-events: none` rather than a :not() on the
+ * hover rule, because nineteen registers write their own item hover in a
+ * later layer, and an item the pointer cannot reach matches none of them. */
+    .kp-menu__item:is(:disabled, [aria-disabled='true']) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        pointer-events: none;
     }
 
     .kp-tooltip {
@@ -6312,6 +6420,44 @@
 
     .kp-progress::-moz-progress-bar {
         background: var(--kp-control-accent, var(--primary));
+    }
+
+    /* An indeterminate bar is not a full one [gap-11]. With the theme's own
+ * appearance Firefox drew the bar across the whole track and stopped
+ * animating it, so "no idea yet" looked exactly like "done". The track
+ * wears diagonal stripes in the accent instead, and the bar itself steps
+ * aside; under no reduced-motion preference the stripes drift, slowly
+ * and without any change of light [DI5]. */
+    .kp-progress:indeterminate {
+        background-color: var(--muted);
+        background-image: linear-gradient(
+            -45deg,
+            var(--kp-control-accent, var(--primary)) 25%,
+            transparent 25% 50%,
+            var(--kp-control-accent, var(--primary)) 50% 75%,
+            transparent 75%
+        );
+        background-size: var(--kp-progress-stripe, 1rem) var(--kp-progress-stripe, 1rem);
+    }
+
+    .kp-progress:indeterminate::-moz-progress-bar {
+        background: transparent;
+    }
+
+    .kp-progress:indeterminate::-webkit-progress-bar {
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-progress:indeterminate {
+            animation: kp-progress-stripes 1200ms linear infinite;
+        }
+    }
+
+    @keyframes kp-progress-stripes {
+        to {
+            background-position: var(--kp-progress-stripe, 1rem) 0;
+        }
     }
 
     .kp-spinner {
@@ -6510,25 +6656,46 @@
 
     /* --- Combobox and tag input [TH39, TH41] ----------------------------- */
 
+    /* Block flow rather than a flex column [gap-11]. The list is positioned
+ * absolutely and used to hang from `top: 100%` of the whole box, so with
+ * the status line inside the box it opened a line below the input it
+ * belongs to. In block flow an absolutely positioned box with no `top`
+ * sits at its static position — directly after the input, whatever comes
+ * before it (a label, a row of tags) and whatever follows (the status).
+ * In a flex container that static position is the container's start, so
+ * the flex column had to go; the gap it gave is a margin now. */
     .kp-combobox {
         position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 0.375rem;
+        display: flow-root;
     }
 
+    .kp-combobox > :where(label, .kp-field__label) {
+        display: block;
+    }
+
+    .kp-combobox > :not(:first-child, .kp-combobox__list, .kp-combobox__clear) {
+        margin-block-start: var(--kp-combobox-gap, 0.375rem);
+    }
+
+    /* The same ground, boundary, ink and size as .kp-field__input [gap-11]:
+ * the combobox read --card and --border where a field reads --background
+ * and --input, so a theme whose card and page differ showed two different
+ * boxes side by side in one form. */
     .kp-combobox__input {
         /* Border-box, or `width: 100%` plus padding and a border overflows the
      * wrapper. Found by putting this on the showcase: at 320 px it pushed
      * the page 10 px sideways and DI11 went red on all eleven themes. */
         box-sizing: border-box;
+        display: block;
         width: 100%;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border);
+        min-height: var(--kp-control-height, 2.25rem);
+        padding: 0.375rem 0.625rem;
+        border: 1px solid var(--input);
         border-radius: var(--radius, 0.5rem);
-        background: var(--card);
-        color: var(--card-foreground);
+        background: var(--background);
+        color: var(--foreground);
         font: inherit;
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     /* The theme's own timing, and only for someone who did not ask for less
@@ -6550,7 +6717,7 @@
     .kp-combobox__list {
         position: absolute;
         inset-inline: 0;
-        top: 100%;
+        /* No top: the static position, directly under the input [gap-11]. */
         z-index: var(--kp-z-popover, 20);
         max-height: var(--kp-combobox-list-max-height, 15rem);
         margin: 0.25rem 0 0;
@@ -6579,6 +6746,22 @@
 
     .kp-combobox__option[hidden] {
         display: none;
+    }
+
+    /* An option that cannot be chosen looks it [gap-11]: faded, and the
+ * pointer says no. The listbox already skips it for the arrows and the
+ * hover; it painted exactly like one that can be taken. */
+    .kp-combobox__option:is([aria-disabled='true'], [data-kp-disabled]) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The "no results" row: in the list, where the eye already is, and not an
+ * option — nothing for Enter to take [gap-11]. */
+    .kp-combobox__empty {
+        padding: 0.375rem 0.625rem;
+        color: var(--muted-foreground);
+        cursor: default;
     }
 
     .kp-combobox__status {
@@ -6831,6 +7014,12 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
+        /* An inset of its own [gap-11, Kenny 2026-09-13, seen in nostromo].
+     * Twenty registers frame the data table and draw its bars as strips,
+     * and with no padding the row count sat on the frame's left edge and
+     * the pager on its bottom edge. The bar carries the inset rather than
+     * the table, so the rows still run to the frame. */
+        padding: var(--kp-datatable-bar-padding, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
     }
 
     .kp-datatable__search {
@@ -6978,8 +7167,13 @@
 
     /* --- Forms [TH38] ---------------------------------------------------- */
 
-    /* A radio group laid out in a row rather than a column. */
+    /* A radio group laid out in a row rather than a column. The fieldset is
+ * made a flex container here: the rule used to set only the direction, on
+ * an element that was never flex, so it did nothing at all [gap-11]. The
+ * rendered legend stays above the row, outside the flex flow, as a
+ * fieldset's legend does. */
     .kp-fieldset[data-kp-layout='inline'] {
+        display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         align-items: baseline;
@@ -7315,6 +7509,21 @@
         gap: 0.5rem;
     }
 
+    /* The calendar button on the line with its input [gap-11]. The input's
+ * `inline-size: 100%` filled the wrapping row on its own, so the button
+ * always fell to the next line. The label takes the row above, the input
+ * the room that is left, and the button stays beside it; the React
+ * channel wraps label and input in a .kp-field, which grows the same way. */
+    .kp-datepicker > .kp-field__label {
+        flex-basis: 100%;
+    }
+
+    .kp-datepicker > .kp-field__input,
+    .kp-datepicker > .kp-field {
+        flex: 1 1 var(--kp-datepicker-input-min, 8rem);
+        inline-size: auto;
+    }
+
     .kp-datepicker__panel {
         position: absolute;
         top: 100%;
@@ -7377,6 +7586,21 @@
         color: var(--primary-foreground);
     }
 
+    /* A disabled day stays in the grid and says it is not a choice [gap-11]:
+ * struck through in the muted ink, so it reads as unavailable without
+ * relying on the colour, and it does not light up under the pointer. It
+ * painted exactly like a day that could be chosen, and the only sign was
+ * a click that did nothing. */
+    .kp-datepicker__day[aria-disabled='true'] {
+        color: var(--muted-foreground);
+        text-decoration-line: line-through;
+        cursor: not-allowed;
+    }
+
+    .kp-datepicker__day[aria-disabled='true']:hover {
+        background: none;
+    }
+
     /* --- Upload and wizard [TH44, TH48] ---------------------------------- */
 
     .kp-upload__zone {
@@ -7388,6 +7612,17 @@
         color: var(--muted-foreground);
         text-align: center;
         cursor: pointer;
+    }
+
+    /* The zone is the label of a visually hidden file input, so Tab lands on
+ * the input and the base focus ring draws round an element nobody can see
+ * [gap-11]. The zone wears the ring instead, the same two parts the base
+ * layer draws: the contrast outline and the inner ring. */
+    :focus-visible + .kp-upload__zone,
+    [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     .kp-upload__zone[data-kp-dragging] {
@@ -7403,13 +7638,30 @@
 
     .kp-upload__file {
         display: grid;
-        grid-template-columns: 1fr auto auto;
+        /* minmax(0, …): a name with nowhere to break gives way first, and the
+     * size and the remove button stay whole [DI11]. */
+        grid-template-columns: minmax(0, 1fr) auto auto;
         align-items: center;
         gap: 0.5rem;
         padding: 0.375rem 0.5rem;
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         margin-block-end: 0.375rem;
+    }
+
+    .kp-upload__name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* The remove button on the line with the name and the size [gap-11]. The
+ * row has three columns and five children (name, size, bar, message,
+ * button) in that order, so the button was auto-placed onto a row of its
+ * own under the message. Placed, not moved in the markup: a screen reader
+ * still meets it after the message, where the module writes it. */
+    .kp-upload__file > [data-kp-upload-remove] {
+        grid-row: 1;
+        grid-column: -2;
     }
 
     .kp-upload__size {
@@ -8238,6 +8490,15 @@
         outline: none;
         border-color: var(--ring);
         box-shadow: inset 0 0 0 1px var(--ring);
+    }
+
+    /* The combobox input stands on the field's ground [gap-11]. The package
+       gives both the same ground now, and this register moves the field's
+       to the card, so the combobox follows it here. The ground only: the
+       notch would clip the package's focus ring, which the field replaces
+       with a ring of its own. */
+    [data-theme='cyberpunk'] .kp-combobox__input {
+        background: var(--card);
     }
 
     [data-theme='cyberpunk'] .kp-field__input::placeholder {
@@ -11032,6 +11293,18 @@
     [data-theme='retro'] .kp-button:focus-visible [data-kp-key] {
         border-block-end-color: currentcolor;
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='retro'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -12695,6 +12968,18 @@
     [data-theme='synthwave'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='synthwave'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -14368,6 +14653,18 @@
         background: var(--primary-active);
         border-color: var(--primary-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='phantom'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -15884,6 +16181,18 @@
             animation: kp-caret 1s steps(1) infinite;
         }
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='terminal'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -17342,6 +17651,18 @@
     [data-theme='brutalism'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='brutalism'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -18668,6 +18989,18 @@
     [data-theme='titanium'] .kp-measure__bracket {
         border-color: hsl(from var(--chart-1) h s l / 0.55);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='titanium'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -19831,6 +20164,18 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='pastel'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -20971,6 +21316,18 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='shade-light'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -21450,6 +21807,14 @@
 
     [data-theme='forest'] .kp-field__input:focus-visible {
         border-color: var(--primary);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='forest'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
     }
 
     [data-theme='forest'] .kp-field__help {
@@ -22056,6 +22421,18 @@
 
     [data-theme='forest'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='forest'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -23305,6 +23682,18 @@
     [data-theme='deco'] .kp-button:hover:not(:disabled)::before,
     [data-theme='deco'] .kp-button:focus-visible::before {
         opacity: 1;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='deco'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -25380,6 +25769,18 @@
         --kp-baseline-weight: var(--kp-baseline-weight-pressed, 4px);
         --kp-baseline-colour: var(--primary-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='grotesk'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -25948,6 +26349,14 @@
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='blueprint'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
     }
 
     [data-theme='blueprint'] .kp-field__check {
@@ -26597,6 +27006,18 @@
     [data-theme='blueprint'] .kp-button:focus-visible::before,
     [data-theme='blueprint'] .kp-button:focus-visible::after {
         opacity: 1;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='blueprint'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -27775,6 +28196,18 @@
     [data-theme='nostromo'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='nostromo'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -29141,6 +29574,18 @@
     [data-theme='dark'] .kp-measure__bracket {
         border-color: hsl(from var(--chart-1) h s l / 0.55);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='dark'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -29479,6 +29924,14 @@
         background: var(--background);
         border-color: var(--border-strong);
         border-radius: var(--radius);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='formal'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
     }
 
     [data-theme='formal'] .kp-fieldset {
@@ -31197,6 +31650,18 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='sepia'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }
 
 @layer kp.register {
@@ -31527,6 +31992,14 @@
     [data-theme='solstice'] .kp-field__input {
         border-radius: calc(var(--radius) - 2px);
         border-color: var(--border-strong);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='solstice'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
     }
 
     [data-theme='solstice'] .kp-field__help {
@@ -32539,6 +33012,14 @@
     [data-theme='high-contrast'] .kp-combobox__input:focus-visible,
     [data-theme='high-contrast'] .kp-palette__input:focus-visible {
         border-color: var(--border-strong);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='high-contrast'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
     }
 
     [data-theme='high-contrast'] .kp-field__label {
@@ -33593,6 +34074,15 @@
         caret-color: var(--primary);
     }
 
+    /* Invalid wins over the gold ruling [gap-11]: the border underneath is
+       transparent and the ruling is a box-shadow set in kp.register, so
+       .kp-field--invalid in kp.components changed nothing that painted.
+       The ruling itself turns to the alarm colour — the same double rule,
+       in the colour that says something is wrong. */
+    [data-theme='lapis'] .kp-field--invalid .kp-field__input {
+        --kp-lapis-rule: 0 0 0 1px var(--destructive), 0 0 0 3px var(--card), 0 0 0 4px hsl(from var(--destructive) h s l / 0.45);
+    }
+
     [data-theme='lapis'] select.kp-field__input::picker-icon {
         color: var(--primary);
     }
@@ -34183,6 +34673,18 @@
     [data-theme='lapis'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='lapis'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 
@@ -35221,6 +35723,18 @@
         transition-duration: 0s;
         translate: 1px 1px;
         box-shadow: inset 2px 3px 5px hsl(from var(--background) h s l / 0.95);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='shade-dark'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }
 

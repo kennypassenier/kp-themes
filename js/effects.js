@@ -407,6 +407,9 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The indeterminate progress stripes [gap-11]: a background-position
+    // drift of one stripe period, no luminance change of its own.
+    'kp-progress-stripes': { durationMs: 1200, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     // The shared marquee [M1, 2026-09-08]: one transform across a doubled
     // row, no luminance change of its own, and the only loop besides
     // brutalism's hatch. The duration is a knob, so this row carries the

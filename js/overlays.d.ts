@@ -91,5 +91,63 @@ export declare function toast(content: string | Node, { ms, region, live, classN
 }): HTMLElement & {
     dismiss: () => void;
 };
+/** Dispatched on an alert, bubbling and cancelable, before its close button hides it: `{ alert, button }`. */
+export declare const ALERT_DISMISS_EVENT = "kp-alert-dismiss";
+/** Close buttons another channel wires itself; the React Alert and Toasts mark theirs [AR29]. */
+export declare const DISMISS_OWNED = "[data-kp-dismiss-owner]";
+/**
+ * Make `.kp-alert__close` and `.kp-toast__close` close what they sit in,
+ * without a framework [gap-11].
+ *
+ * Before this only the React components did anything with those buttons;
+ * a server-rendered alert kept a close button that did nothing, which is
+ * worse than no button at all. Delegated from `root`, so a toast raised
+ * after attach is covered too.
+ *
+ * An alert is hidden (`hidden`, which the base layer holds above every
+ * layout class) after ALERT_DISMISS_EVENT, which a consumer may cancel to
+ * keep it or to animate it out first — setting `hidden = false` brings it
+ * back. A toast leaves through its own `dismiss()` when `toast()` made it,
+ * so TOAST_HIDE_EVENT fires as it does on a timeout; otherwise it is
+ * removed and the same event is dispatched on its region.
+ *
+ * @param {ParentNode} root
+ * @param {{ ownedBy?: string }} [options] `ownedBy: ''` wires even the buttons another channel marked
+ * @returns {() => void} detach
+ */
+export declare function attachDismissals(root?: ParentNode, { ownedBy }?: {
+    ownedBy?: string;
+}): () => void;
+/** Dispatched on a tooltip anchor, bubbling, when its tooltip opens or closes: `{ open, tooltip }`. */
+export declare const TOOLTIP_EVENT = "kp-tooltip";
+/** Tooltip anchors another channel wires itself; the React Tooltip marks its own [AR29]. */
+export declare const TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
+/**
+ * Framework-free tooltips on `.kp-tooltip-anchor` [gap-11].
+ *
+ *   <span class="kp-tooltip-anchor">
+ *     <button type="button" class="kp-button">Recalibrate</button>
+ *     <span role="tooltip" class="kp-popover kp-tooltip">Takes about two minutes</span>
+ *   </span>
+ *
+ * The same contract as the React Tooltip: hidden at rest, shown after a
+ * short delay under the pointer and at once on focus, gone when the
+ * pointer or focus leaves, and gone on Escape (WCAG 1.4.13). The trigger
+ * is described by the tooltip — an id is given where there was none, and
+ * `aria-describedby` gains it rather than losing what it held. The anchor
+ * names itself for anchor positioning, as the React channel does. Detach
+ * puts back the attributes, the styles and the hidden state it found.
+ *
+ * @param {ParentNode} root
+ * @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, ownedBy?: string }} [options]
+ *   Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"`.
+ * @returns {() => void} detach
+ */
+export declare function attachTooltips(root?: ParentNode, { openDelayMs, closeDelayMs, closeOnEscape, ownedBy }?: {
+    openDelayMs?: number;
+    closeDelayMs?: number;
+    closeOnEscape?: boolean;
+    ownedBy?: string;
+}): () => void;
 /** The close label a consumer's markup can use: `data-kp-dialog-close` with the dictionary's word. */
 export declare const closeLabel: () => string;

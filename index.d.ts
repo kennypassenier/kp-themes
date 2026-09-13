@@ -10,7 +10,7 @@ export { default as Marquee } from './components/marquee.jsx';
 export { default as Sidenav, SidenavToggle } from './components/sidenav.jsx';
 export { CONFIRM_MODES, CONFIRM_OWNED, CONFIRM_WINDOW_MS, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, attachSkipLinks, enforceContracts, findViolations, openConfirmation, skipTo, } from './js/components.js';
 export { Accordion, Breadcrumb, Dialog, DropdownMenu, Pagination, Progress, Skeleton, Spinner, Tabs, Toasts, Tooltip, } from './components/overlays.jsx';
-export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
+export { TOAST_MS, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
 export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
 export { CheckIcon, PaletteIcon } from './components/theme-switcher.jsx';
 export { attachAll } from './js/auto.js';

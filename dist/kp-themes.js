@@ -827,13 +827,19 @@ function attachSkipLinks(root = document) {
 // js/overlays.js
 var overlays_exports = {};
 __export(overlays_exports, {
+  ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
   DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
+  DISMISS_OWNED: () => DISMISS_OWNED,
   TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
   TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
   TOAST_MS: () => TOAST_MS,
   TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
+  TOOLTIP_EVENT: () => TOOLTIP_EVENT,
+  TOOLTIP_OWNED: () => TOOLTIP_OWNED,
   attachDialogs: () => attachDialogs,
+  attachDismissals: () => attachDismissals,
   attachTabs: () => attachTabs,
+  attachTooltips: () => attachTooltips,
   closeLabel: () => closeLabel,
   selectTab: () => selectTab,
   toast: () => toast,
@@ -1053,6 +1059,128 @@ function toast(content, { ms = TOAST_MS, region = null, live, className = "kp-to
   );
   if (ms > 0) timer = window.setTimeout(el.dismiss, ms);
   return el;
+}
+var ALERT_DISMISS_EVENT = "kp-alert-dismiss";
+var DISMISS_OWNED = "[data-kp-dismiss-owner]";
+var dismissHandled = /* @__PURE__ */ new WeakSet();
+function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
+  const onClick = (event) => {
+    if (dismissHandled.has(event)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const button = target?.closest(".kp-alert__close, .kp-toast__close");
+    if (!button) return;
+    if (ownedBy !== "" && button.matches(ownedBy)) return;
+    dismissHandled.add(event);
+    const toastEl = (
+      /** @type {(HTMLElement & { dismiss?: () => void }) | null} */
+      button.closest(".kp-toast")
+    );
+    if (button.classList.contains("kp-toast__close") && toastEl) {
+      if (typeof toastEl.dismiss === "function") {
+        toastEl.dismiss();
+        return;
+      }
+      const region = toastEl.parentElement;
+      toastEl.remove();
+      region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } }));
+      return;
+    }
+    const alert = (
+      /** @type {HTMLElement | null} */
+      button.closest(".kp-alert")
+    );
+    if (!alert) return;
+    const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
+    if (proceed) alert.hidden = true;
+  };
+  root.addEventListener("click", onClick);
+  return () => root.removeEventListener("click", onClick);
+}
+var TOOLTIP_EVENT = "kp-tooltip";
+var TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
+function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
+  const cleanups = [];
+  let count = 0;
+  for (const el of root.querySelectorAll(".kp-tooltip-anchor")) {
+    const anchor = (
+      /** @type {HTMLElement} */
+      el
+    );
+    if (ownedBy !== "" && anchor.matches(ownedBy)) continue;
+    if (anchor.dataset.kpTooltipAttached !== void 0) continue;
+    const tooltip = (
+      /** @type {HTMLElement | null} */
+      anchor.querySelector('[role="tooltip"], .kp-tooltip')
+    );
+    const trigger = (
+      /** @type {HTMLElement | null} */
+      [...anchor.children].find((child) => child !== tooltip) ?? null
+    );
+    if (tooltip === null || trigger === null) continue;
+    anchor.dataset.kpTooltipAttached = "";
+    count += 1;
+    const before = {
+      id: tooltip.getAttribute("id"),
+      hidden: tooltip.hidden,
+      describedby: trigger.getAttribute("aria-describedby"),
+      anchorName: anchor.style.getPropertyValue("anchor-name"),
+      positionAnchor: tooltip.style.getPropertyValue("position-anchor")
+    };
+    if (!tooltip.id) tooltip.id = `kp-tooltip-${count}-${Math.random().toString(36).slice(2, 8)}`;
+    const ids = (before.describedby ?? "").split(/\s+/).filter(Boolean);
+    if (!ids.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids, tooltip.id].join(" "));
+    if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
+    if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
+    const number = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
+    const openDelay = number(anchor.dataset.kpOpenDelay, openDelayMs);
+    const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
+    const escapes = anchor.dataset.kpCloseOnEscape === void 0 ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== "false";
+    let timer = 0;
+    const set = (open) => {
+      clearTimeout(timer);
+      if (tooltip.hidden === !open) return;
+      tooltip.hidden = !open;
+      anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
+    };
+    const schedule = (open, delay) => {
+      clearTimeout(timer);
+      if (delay <= 0) set(open);
+      else timer = window.setTimeout(() => set(open), delay);
+    };
+    const onEnter = () => schedule(true, openDelay);
+    const onLeave = () => {
+      if (!anchor.contains(document.activeElement)) schedule(false, closeDelay);
+    };
+    const onFocusIn = () => schedule(true, 0);
+    const onFocusOut = () => schedule(false, 0);
+    const onKey = (event) => {
+      if (escapes && event.key === "Escape" && !tooltip.hidden) set(false);
+    };
+    tooltip.hidden = true;
+    anchor.addEventListener("pointerenter", onEnter);
+    anchor.addEventListener("pointerleave", onLeave);
+    anchor.addEventListener("focusin", onFocusIn);
+    anchor.addEventListener("focusout", onFocusOut);
+    document.addEventListener("keydown", onKey);
+    cleanups.push(() => {
+      clearTimeout(timer);
+      anchor.removeEventListener("pointerenter", onEnter);
+      anchor.removeEventListener("pointerleave", onLeave);
+      anchor.removeEventListener("focusin", onFocusIn);
+      anchor.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("keydown", onKey);
+      tooltip.hidden = before.hidden;
+      if (before.id === null) tooltip.removeAttribute("id");
+      if (before.describedby === null) trigger.removeAttribute("aria-describedby");
+      else trigger.setAttribute("aria-describedby", before.describedby);
+      if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
+      if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
+      delete anchor.dataset.kpTooltipAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
 }
 var closeLabel = () => getStrings().close;
 
@@ -1410,6 +1538,7 @@ var INPUT = 'input[role="combobox"]';
 var LIST = '[role="listbox"]';
 var STATUS2 = "[data-kp-combobox-status]";
 var TAGS = "[data-kp-tag-list]";
+var EMPTY = "[data-kp-combobox-empty]";
 var RESULTS_TEXT = (
   /** @param {number} n */
   (n) => {
@@ -1438,6 +1567,7 @@ function attachComboboxes(root = document, {
   maxTags = Infinity,
   allowDuplicates = false,
   debounceMs = 0,
+  emptyRow = true,
   renderTag,
   removeGlyph = "\xD7"
 } = {}) {
@@ -1477,6 +1607,20 @@ function attachComboboxes(root = document, {
     const cap = Number.parseInt(box.dataset.kpMaxTags ?? "", 10) || maxTags;
     const debounce = Number.parseInt(box.dataset.kpDebounce ?? "", 10) || debounceMs;
     const matcher = typeof match === "function" ? match : MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring;
+    const showsEmpty = flag("kpEmptyRow", emptyRow);
+    const serverEmpty = (
+      /** @type {HTMLElement | null} */
+      list.querySelector(EMPTY)
+    );
+    let empty = serverEmpty;
+    if (showsEmpty && empty === null) {
+      empty = document.createElement("li");
+      empty.className = "kp-combobox__empty";
+      empty.setAttribute("role", "presentation");
+      empty.dataset.kpComboboxEmpty = "";
+      list.append(empty);
+    }
+    const emptyWasHidden = serverEmpty?.hidden ?? true;
     const chosen = tagList ? [...tagList.querySelectorAll(".kp-tag")].map((t) => (
       /** @type {HTMLElement} */
       t.dataset.value ?? (t.textContent ?? "").trim()
@@ -1516,6 +1660,10 @@ function attachComboboxes(root = document, {
       }
       listbox.refresh();
       if (status !== null) status.textContent = RESULTS_TEXT(visible);
+      if (empty !== null) {
+        empty.hidden = !showsEmpty || visible > 0;
+        if (empty !== serverEmpty) empty.textContent = getStrings().noResults;
+      }
       return visible;
     };
     const optionFor = (value) => {
@@ -1595,7 +1743,7 @@ function attachComboboxes(root = document, {
       clearTimeout(pending);
       const run = () => {
         const visible = filter();
-        if (visible > 0) open();
+        if (visible > 0 || showsEmpty && input.value.trim() !== "") open();
         else close();
       };
       if (debounce > 0) pending = window.setTimeout(run, debounce);
@@ -1684,6 +1832,8 @@ function attachComboboxes(root = document, {
       });
       if (tagList) tagList.replaceChildren(...before.tags);
       if (status) status.textContent = before.status;
+      if (empty !== null && empty !== serverEmpty) empty.remove();
+      if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;
       handles2.delete(box);
       delete box.dataset.kpComboboxAttached;
     });
@@ -1965,6 +2115,28 @@ function parseDate(text, locale) {
   if (year < 100) year += 2e3;
   return exact(year, by.month ?? Number.NaN, by.day ?? Number.NaN);
 }
+function calendarNames(dictionary, defaults, locale) {
+  const resolved = resolveLocale(locale);
+  let english = true;
+  try {
+    english = new Intl.Locale(resolved).language === "en";
+  } catch {
+  }
+  const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+  const fromIntl = (options, date, count) => {
+    if (english) return null;
+    try {
+      const format = new Intl.DateTimeFormat(resolved, options);
+      return Array.from({ length: count }, (_, i) => format.format(date(i)));
+    } catch {
+      return null;
+    }
+  };
+  const months = (same(dictionary.months, defaults.months) ? fromIntl({ month: "long" }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+  const sundayFirst = [6, 0, 1, 2, 3, 4, 5].map((i) => dictionary.weekdays[i] ?? "");
+  const weekdays = (same(dictionary.weekdays, defaults.weekdays) ? fromIntl({ weekday: "short" }, (i) => new Date(2001, 0, 7 + i), 7) : null) ?? sundayFirst;
+  return { months, weekdays };
+}
 function formatBytes(bytes, locale, { base = 1e3, units = ["B", "kB", "MB", "GB", "TB"] } = {}) {
   let value = bytes;
   let unit = 0;
@@ -2067,7 +2239,7 @@ var TABLE = "[data-kp-datatable]";
 var SEARCH = "[data-kp-datatable-search]";
 var STATUS4 = "[data-kp-datatable-status]";
 var PAGER = "[data-kp-datatable-pager]";
-var EMPTY = "[data-kp-datatable-empty]";
+var EMPTY2 = "[data-kp-datatable-empty]";
 var SELECT_ALL = "[data-kp-select-all]";
 var SELECT_ROW = "[data-kp-select-row]";
 var VIEW_EVENT = "kp-datatable-view";
@@ -2134,7 +2306,7 @@ function attachDataTables(root = document, {
     );
     const empty = (
       /** @type {HTMLElement | null} */
-      wrap.querySelector(EMPTY)
+      wrap.querySelector(EMPTY2)
     );
     const selectAll = (
       /** @type {HTMLInputElement | null} */
@@ -3300,6 +3472,7 @@ function attachDatePickers(root = document, {
       const days = new Date(year, month + 1, 0).getDate();
       const chosen = read();
       const s = getStrings();
+      const names = calendarNames(s, DEFAULT_STRINGS, locale);
       panel.textContent = "";
       const head = document.createElement("div");
       head.className = "kp-datepicker__head";
@@ -3318,7 +3491,7 @@ function attachDatePickers(root = document, {
       const title = document.createElement("span");
       title.className = "kp-datepicker__title";
       title.id = `${input.id || "kp-date"}-title`;
-      title.textContent = s.monthTitle(s.months[month] ?? "", year);
+      title.textContent = s.monthTitle(names.months[month] ?? "", year);
       const next = document.createElement("button");
       next.type = "button";
       next.className = "kp-button kp-button--ghost";
@@ -3337,7 +3510,7 @@ function attachDatePickers(root = document, {
       grid2.setAttribute("role", "grid");
       grid2.setAttribute("aria-labelledby", title.id);
       for (let i = 0; i < 7; i += 1) {
-        const day = s.weekdays[(firstDay + i) % 7] ?? "";
+        const day = names.weekdays[(firstDay + i) % 7] ?? "";
         const cell = document.createElement("span");
         cell.className = "kp-datepicker__weekday";
         cell.setAttribute("role", "columnheader");
@@ -3357,7 +3530,7 @@ function attachDatePickers(root = document, {
         button.className = "kp-datepicker__day";
         button.dataset.kpDay = toISO(date);
         button.setAttribute("role", "gridcell");
-        button.setAttribute("aria-label", s.dayLabel(day, s.months[month] ?? "", year));
+        button.setAttribute("aria-label", s.dayLabel(day, names.months[month] ?? "", year));
         button.textContent = String(day);
         const isChosen = chosen !== null && toISO(chosen) === toISO(date);
         button.setAttribute("aria-selected", String(isChosen));
@@ -4600,6 +4773,9 @@ var TIMINGS = Object.freeze({
   "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
   "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
   "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+  // The indeterminate progress stripes [gap-11]: a background-position
+  // drift of one stripe period, no luminance change of its own.
+  "kp-progress-stripes": { durationMs: 1200, cycles: Infinity, property: "background-position", luminanceSteps: [] },
   // The shared marquee [M1, 2026-09-08]: one transform across a doubled
   // row, no luminance change of its own, and the only loop besides
   // brutalism's hatch. The duration is a knob, so this row carries the
@@ -5930,6 +6106,8 @@ function attachAll(root = document) {
     attachNavToggles(root),
     attachSidenavs(root),
     attachDialogs(root),
+    attachDismissals(root),
+    attachTooltips(root),
     attachTabs(root),
     attachThemePickers(root),
     attachComboboxes(root),
@@ -6266,6 +6444,7 @@ function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = 
   };
 }
 export {
+  ALERT_DISMISS_EVENT,
   ARRIVAL,
   ARRIVALS,
   BEFORE_STEP_EVENT,
@@ -6290,6 +6469,7 @@ export {
   DEFAULT_STRINGS,
   DEFAULT_THEME,
   DIALOG_OPEN_EVENT,
+  DISMISS_OWNED,
   DONE_ATTRIBUTE,
   DONE_EVENT,
   EFFECTS_ATTRIBUTE,
@@ -6357,6 +6537,8 @@ export {
   TOAST_HIDE_EVENT,
   TOAST_MS,
   TOAST_SHOW_EVENT,
+  TOOLTIP_EVENT,
+  TOOLTIP_OWNED,
   TO_TOP,
   TO_TOP_EVENT,
   TREE_EXPAND_EVENT,
@@ -6382,6 +6564,7 @@ export {
   attachDataTables,
   attachDatePickers,
   attachDialogs,
+  attachDismissals,
   attachEffects,
   attachForms,
   attachGrids,
@@ -6396,6 +6579,7 @@ export {
   attachTabs,
   attachThemePickers,
   attachToTop,
+  attachTooltips,
   attachUploads,
   attachWizards,
   auto_exports as autoExports,

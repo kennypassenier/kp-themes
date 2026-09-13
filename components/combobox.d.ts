@@ -72,6 +72,10 @@ export type ComboboxProps = {
      */
     loading?: boolean;
     /**
+     * A query that matches nothing keeps the list open with a "no results" row. Default true [gap-11].
+     */
+    emptyRow?: boolean;
+    /**
      * A hidden input carries the value(s) for a plain <form>.
      */
     name?: string;

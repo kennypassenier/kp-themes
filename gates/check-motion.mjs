@@ -66,6 +66,9 @@ const OUT_OF_SCOPE = {
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
     'kp-slide-in': 'a 6px translate on a badge, once; nothing changes luminance [TH70]',
     'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
+    // The indeterminate progress bar [gap-11].
+    'kp-progress-stripes':
+        'a background-position slide of diagonal stripes by one 1rem period every 1.2 seconds, on a bar 0.5rem tall; the stripes keep their colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
     'kp-charge':
         'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',

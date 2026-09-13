@@ -1,5 +1,6 @@
 // Upload and wizard [TH44, TH48].
 
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
@@ -112,3 +113,68 @@ for (const channel of CHANNELS) {
         });
     });
 }
+
+// ── gap-11, the upload faults of catalogue batch 2 [2026-09-13] ───────────
+
+const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+
+/** Whether every row's remove button shares a line with its name and its size. @param {import('@playwright/test').Locator} rows */
+const removeBesideName = (rows) =>
+    rows.evaluateAll((items) =>
+        items.map((item) => {
+            const name = /** @type {HTMLElement} */ (item.querySelector('.kp-upload__name')).getBoundingClientRect();
+            const size = /** @type {HTMLElement} */ (item.querySelector('.kp-upload__size')).getBoundingClientRect();
+            const remove = /** @type {HTMLElement} */ (item.querySelector('button')).getBoundingClientRect();
+            return {
+                row: item.getAttribute('data-kp-upload-file'),
+                beside: remove.top < name.bottom && remove.bottom > name.top && remove.top < size.bottom && remove.bottom > size.top,
+            };
+        }),
+    );
+
+for (const channel of CHANNELS) {
+    test(`the remove button sits on the row with the file name and size — ${channel.name} [gap-11]`, async ({ page }) => {
+        // gap-11: the row grid had three columns and five children, so the remove button was auto-placed onto a row of its own under the message.
+        await page.goto(URL);
+        await page.setInputFiles(channel.uploadInput, { name: 'notitie.txt', mimeType: 'text/plain', buffer: Buffer.from('hallo') });
+        const rows = page.locator(`${channel.upload} .kp-upload__file`);
+        await expect(rows).toHaveCount(1);
+        expect(await removeBesideName(rows)).toEqual([{ row: 'notitie.txt', beside: true }]);
+    });
+}
+
+test('every catalogue row keeps its remove button beside the name, even the 90-character one [gap-11]', async ({ page }) => {
+    // gap-11: on the catalogue page each remove button fell to a line of its own.
+    await page.goto('/catalogue/upload.html');
+    const measured = await removeBesideName(page.locator('#list .kp-upload__file'));
+    expect(measured.length).toBe(4);
+    expect(measured.filter((row) => !row.beside)).toEqual([]);
+});
+
+test('the drop zone shows a focus ring when its hidden input has keyboard focus, in every theme [gap-11]', async ({ page }) => {
+    // gap-11: the file input is visually hidden and the zone is its label, so Tab landed on the input and nothing on screen changed.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/catalogue/upload.html');
+    const zone = page.locator('#empty .kp-upload__zone');
+    const ring = () =>
+        zone.evaluate((el) => {
+            const s = getComputedStyle(el);
+            return `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor} | ${s.boxShadow}`;
+        });
+    // Reach the input the way a keyboard does: Tab from the element just before it.
+    await page.locator('#empty .cat-look').evaluate((el) => {
+        el.setAttribute('tabindex', '-1');
+        /** @type {HTMLElement} */ (el).focus();
+    });
+    const rest = await ring();
+    await page.keyboard.press('Tab');
+    expect(await page.evaluate(() => document.activeElement?.id)).toBe('up-empty');
+    const unseen = [];
+    for (const theme of THEME_NAMES) {
+        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+        const focused = await ring();
+        if (focused.startsWith('none') && focused.endsWith('| none')) unseen.push(`${theme}: ${focused}`);
+    }
+    expect(rest.startsWith('none'), `the zone at rest already paints a ring: ${rest}`).toBe(true);
+    expect(unseen).toEqual([]);
+});

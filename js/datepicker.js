@@ -36,8 +36,8 @@
 // and disabled weekdays exist; the date is settable through the handle;
 // the day cells can be decorated; and the panel's glyphs are attributes.
 
-import { getStrings } from './strings.js';
-import { datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
+import { DEFAULT_STRINGS, getStrings } from './strings.js';
+import { calendarNames, datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
 
 const PICKER = '[data-kp-datepicker]';
 
@@ -170,6 +170,8 @@ export function attachDatePickers(
             const days = new Date(year, month + 1, 0).getDate();
             const chosen = read();
             const s = getStrings();
+            // The names follow the picker's locale; a consumer's own dictionary still wins [gap-11].
+            const names = calendarNames(s, DEFAULT_STRINGS, locale);
 
             panel.textContent = '';
             const head = document.createElement('div');
@@ -189,7 +191,7 @@ export function attachDatePickers(
             const title = document.createElement('span');
             title.className = 'kp-datepicker__title';
             title.id = `${input.id || 'kp-date'}-title`;
-            title.textContent = s.monthTitle(s.months[month] ?? '', year);
+            title.textContent = s.monthTitle(names.months[month] ?? '', year);
             const next = document.createElement('button');
             next.type = 'button';
             next.className = 'kp-button kp-button--ghost';
@@ -210,8 +212,12 @@ export function attachDatePickers(
             grid.setAttribute('aria-labelledby', title.id);
             // The weekday headings rotate with the first day: Sunday first
             // for a locale that starts there, Monday for one that does not.
+            // Column i holds the days whose getDay() is (firstDay + i) % 7,
+            // so the names are counted the same way — the dictionary is
+            // Monday first, and indexing it with a Sunday-zero day put every
+            // heading one column off [gap-11].
             for (let i = 0; i < 7; i += 1) {
-                const day = s.weekdays[(firstDay + i) % 7] ?? '';
+                const day = names.weekdays[(firstDay + i) % 7] ?? '';
                 const cell = document.createElement('span');
                 cell.className = 'kp-datepicker__weekday';
                 cell.setAttribute('role', 'columnheader');
@@ -233,7 +239,7 @@ export function attachDatePickers(
                 button.setAttribute('role', 'gridcell');
                 // The full date as the name: "4" alone tells a screen
                 // reader nothing about which month it is in.
-                button.setAttribute('aria-label', s.dayLabel(day, s.months[month] ?? '', year));
+                button.setAttribute('aria-label', s.dayLabel(day, names.months[month] ?? '', year));
                 button.textContent = String(day);
                 const isChosen = chosen !== null && toISO(chosen) === toISO(date);
                 button.setAttribute('aria-selected', String(isChosen));

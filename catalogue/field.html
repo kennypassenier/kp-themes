@@ -91,8 +91,8 @@ Line closed at the manifold. Day shift to check the gauge against the sensor bef
                     <b>Look at:</b> the box comes <i>before</i> its label and shares its baseline. Tick and untick: the checked mark must be visible
                     in every theme — in a theme whose primary colour is its ink, a checked box that looks unchecked is the known fault. The radio
                     group is a <code>.kp-fieldset</code>: the legend reads as the question, the options as answers, and clicking a label must select
-                    its radio. The second group asks for <code>data-kp-layout="inline"</code>; its options should sit in a row and wrap. There is no
-                    switch component — a toggle is a checkbox here.
+                    its radio. The second group asks for <code>data-kp-layout="inline"</code>; its options sit in a row and wrap. There is no switch
+                    in the package yet — a toggle is a checkbox here, and the switch is a concept on its own page for now.
                 </div>
                 <div class="cat-stage">
                     <div>
@@ -151,11 +151,11 @@ Line closed at the manifold. Day shift to check the gauge against the sensor bef
                 <div class="cat-look">
                     <b>Look at:</b> every invalid field says what is wrong in words, under the control, in the alarm colour — and the colour must pass
                     contrast on the ground, because the words are the message. The text input's border turns to the alarm colour; the checkbox, which
-                    has no border, gets an outline instead. The radio group carries <code>aria-invalid</code> on the group, but the stylesheet
-                    outlines <i>each</i> radio — a square frame around every round control; judge whether that reads as one wrong answer or as
-                    several. In a theme whose register repaints the input's border, check that the invalid border still wins over it. The help text
-                    must survive beside the error rather than be replaced by it. Compare with the valid field at the end: the difference must be
-                    visible without colour — the message is what carries it.
+                    has no border, gets an outline instead. The radio group carries <code>aria-invalid</code> on the group and gets one outline around
+                    the whole group — one wrong answer, one mark — while the radios inside it stay unframed. In a theme whose register repaints the
+                    input's border, the invalid border must still win over it; every theme answers that state now. The help text must survive beside
+                    the error rather than be replaced by it. Compare with the valid field at the end: the difference must be visible without colour —
+                    the message is what carries it.
                 </div>
                 <div class="cat-stage">
                     <div class="kp-field kp-field--invalid">
@@ -200,7 +200,8 @@ Line closed at the manifold. Day shift to check the gauge against the sensor bef
                 <div class="cat-look">
                     <b>Look at:</b> these two are different promises and must not look the same. <b>Disabled</b> cannot be used and says so: the
                     pointer shows it is refused and the value is still readable. <b>Read-only</b> can be focused, selected and copied, but not changed
-                    — it should look like a value on a record, not like a broken input. If the read-only field looks exactly like an editable one, a
+                    — it should look like a value on a record, not like a broken input. The package fades the disabled field and gives the read-only
+                    one a dashed boundary on the muted ground at full ink. If the read-only field looks exactly like an editable one in some theme, a
                     reviewer will type into it and think the page froze: that is the fault to watch for. The disabled checkbox and select must follow
                     the same rule as the text input.
                 </div>

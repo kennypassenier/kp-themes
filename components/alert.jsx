@@ -60,6 +60,8 @@ function AlertInner(
                 <button
                     type="button"
                     className={`kp-icon-button kp-alert__close ${classNames.close ?? ''}`.trim()}
+                    // Wired here, so js/overlays.js attachDismissals leaves it alone [gap-11, AR29].
+                    data-kp-dismiss-owner
                     aria-label={s.close}
                     onClick={onDismiss}
                 >

@@ -41,6 +41,7 @@ const INPUT = 'input[role="combobox"]';
 const LIST = '[role="listbox"]';
 const STATUS = '[data-kp-combobox-status]';
 const TAGS = '[data-kp-tag-list]';
+const EMPTY = '[data-kp-combobox-empty]';
 
 /** Announced when the list changes; the words come from the dictionary [KT5]. */
 const RESULTS_TEXT = /** @param {number} n */ (n) => {
@@ -89,8 +90,9 @@ export function combobox(element) {
  * Attach every combobox and tag input under `root`.
  *
  * @param {ParentNode} root
- * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
- *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`.
+ * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, emptyRow?: boolean, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
+ *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`, `data-kp-empty-row`.
+ *   `emptyRow` (default true): a query that matches nothing keeps the list open with a "no results" row — the server's own `[data-kp-combobox-empty]` element inside the list if it wrote one, else one built from the dictionary; `false` closes the list instead, as before 6.1 [gap-11].
  * @returns {(() => void) & { handles: ComboboxHandle[] }} detach
  */
 export function attachComboboxes(
@@ -105,6 +107,7 @@ export function attachComboboxes(
         maxTags = Infinity,
         allowDuplicates = false,
         debounceMs = 0,
+        emptyRow = true,
         renderTag,
         removeGlyph = '×',
     } = {},
@@ -135,6 +138,23 @@ export function attachComboboxes(
         const cap = Number.parseInt(box.dataset.kpMaxTags ?? '', 10) || maxTags;
         const debounce = Number.parseInt(box.dataset.kpDebounce ?? '', 10) || debounceMs;
         const matcher = typeof match === 'function' ? match : (MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring);
+        const showsEmpty = flag('kpEmptyRow', emptyRow);
+        // The row that says nothing matched, inside the list and directly under
+        // the input [gap-11]. Filtering to nothing used to close the list, and
+        // the only answer left was the status line. The server's own row is
+        // used when it wrote one (it may offer "add this"); otherwise one is
+        // built, and taken away again at detach.
+        const serverEmpty = /** @type {HTMLElement | null} */ (list.querySelector(EMPTY));
+        /** @type {HTMLElement | null} */
+        let empty = serverEmpty;
+        if (showsEmpty && empty === null) {
+            empty = document.createElement('li');
+            empty.className = 'kp-combobox__empty';
+            empty.setAttribute('role', 'presentation');
+            empty.dataset.kpComboboxEmpty = '';
+            list.append(empty);
+        }
+        const emptyWasHidden = serverEmpty?.hidden ?? true;
 
         /** Tags the server rendered are the starting set, not invisible. */
         /** @type {string[]} */
@@ -174,6 +194,10 @@ export function attachComboboxes(
             }
             listbox.refresh();
             if (status !== null) status.textContent = RESULTS_TEXT(visible);
+            if (empty !== null) {
+                empty.hidden = !showsEmpty || visible > 0;
+                if (empty !== serverEmpty) empty.textContent = getStrings().noResults;
+            }
             return visible;
         };
 
@@ -271,7 +295,7 @@ export function attachComboboxes(
             clearTimeout(pending);
             const run = () => {
                 const visible = filter();
-                if (visible > 0) open();
+                if (visible > 0 || (showsEmpty && input.value.trim() !== '')) open();
                 else close();
             };
             if (debounce > 0) pending = window.setTimeout(run, debounce);
@@ -369,6 +393,8 @@ export function attachComboboxes(
             });
             if (tagList) tagList.replaceChildren(...before.tags);
             if (status) status.textContent = before.status;
+            if (empty !== null && empty !== serverEmpty) empty.remove();
+            if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;
             handles.delete(box);
             delete box.dataset.kpComboboxAttached;
         });

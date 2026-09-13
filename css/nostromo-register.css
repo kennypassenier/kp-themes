@@ -1174,4 +1174,16 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='nostromo'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
 }

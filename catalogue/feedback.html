@@ -79,8 +79,8 @@
                     </div>
                 </div>
                 <p class="cat-note">
-                    The close buttons do nothing on this page: in the framework-free channel an alert's dismissal is the consumer's to wire; only the
-                    React component takes an <code>onDismiss</code>.
+                    The close buttons work without a framework: <code>js/overlays.js</code> hides the alert after a cancelable
+                    <code>kp-alert-dismiss</code> event, and a toast's close button removes its toast. Reload the page to bring them back.
                 </p>
             </section>
 
@@ -152,9 +152,10 @@
                 <div class="cat-look">
                     <b>Look at:</b> the plain badge is a muted pill; the seven status badges take their plate from <code>data-status</code>, and each
                     plate's text must pass contrast on that plate in every theme — <b>draft</b> and <b>withdrawn</b> are the two that drift towards
-                    grey-on-grey. The status names are the package's own and the only colour variants a badge has; there is no
-                    <code>--destructive</code> or <code>--warning</code> modifier. All eight share one height and one baseline with the text around
-                    them, so the row reads as a sentence with pills in it, not a staircase.
+                    grey-on-grey. The second row is severity: <code>.kp-badge--success</code>, <code>--info</code>, <code>--warning</code> and
+                    <code>--destructive</code>, on the same four token pairs an alert of that severity wears, so a badge and an alert that mean the
+                    same thing are one colour; each word must pass contrast on its plate in every theme. All of them share one height and one baseline
+                    with the text around them, so a row reads as a sentence with pills in it, not a staircase.
                 </div>
                 <div class="cat-stage cat-stage--tight" style="align-items: baseline">
                     <span class="kp-badge">Plain</span>
@@ -165,6 +166,12 @@
                     <span class="kp-badge" data-kp-semantic data-status="offer">Offer</span>
                     <span class="kp-badge" data-kp-semantic data-status="rejected">Rejected</span>
                     <span class="kp-badge" data-kp-semantic data-status="withdrawn">Withdrawn</span>
+                </div>
+                <div class="cat-stage cat-stage--tight" style="align-items: baseline; margin-block-start: 1rem" id="badge-severity">
+                    <span class="kp-badge kp-badge--success" data-kp-semantic>Healthy</span>
+                    <span class="kp-badge kp-badge--info" data-kp-semantic>Scheduled</span>
+                    <span class="kp-badge kp-badge--warning" data-kp-semantic>Degraded</span>
+                    <span class="kp-badge kp-badge--destructive" data-kp-semantic>Down</span>
                 </div>
                 <p>
                     In running text: incident INC-4471 is <span class="kp-badge" data-kp-semantic data-status="sent">Sent</span> to the vendor and the
@@ -233,9 +240,10 @@
                     <b>Look at:</b> four native <code>&lt;progress&gt;</code> bars painted by the theme: empty, a third, full, and indeterminate (no
                     value). The track must be the theme's muted ground with a hairline, and the fill the theme's accent — never the browser's own grey
                     track or blue fill, which is the fault that shows first in a dark theme. The empty bar must still show its track, so an empty bar
-                    is not an invisible one. The indeterminate bar is the browser's own animation; check that it is visibly <i>moving</i> — in
-                    Firefox, with the theme's appearance, a still indeterminate bar looks exactly like the full one above it, and a person cannot tell
-                    "done" from "no idea yet". The percentage beside the second bar sits on its centre line.
+                    is not an invisible one. The indeterminate bar wears diagonal stripes in the accent on the muted track, so it can never be
+                    mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion
+                    preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar
+                    sits on its centre line.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>

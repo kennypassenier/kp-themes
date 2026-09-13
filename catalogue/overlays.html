@@ -130,330 +130,331 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
             <section class="cat-block" id="dialog-long">
                 <h2>A dialog with sixty rows</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> press <b>Open sixty readings</b>. The modal dialog is taller than any window, so it must stop short of the
-                    window's edges and scroll <i>inside itself</i>; the page behind must not scroll along. Scroll to the end: the buttons must be
-                    reachable, and note whether the title and the buttons scroll away with the rows or stay put — the package leaves that to the
-                    browser, which scrolls the whole dialog. The frozen copy below is <i>not</i> modal, and <code>.kp-dialog</code> sets no height
-                    limit of its own: it grows to its full sixty rows, and the <i>stage</i> around it scrolls so it does not cover the rest of this
-                    page. That scrollbar belongs to the catalogue, not to the dialog. If the live one does not scroll inside itself either, that is
-                    the fault.
+                    <b>Look at:</b> press <b>Open sixty readings</b>. The modal dialog is taller than any window, so it stops a margin short of the
+                    window's edges and scrolls its <code>.kp-dialog__body</code> <i>inside itself</i>: the title stays at the top and the buttons stay
+                    at the bottom while the rows move between them, and the page behind must not scroll along. The frozen copy below is
+                    <i>not</i> modal and takes the same cap (<code>--kp-dialog-max-height</code>, the window minus 2rem), so it scrolls its body the
+                    same way; the stage around it still scrolls so it does not cover the rest of this page, and that scrollbar belongs to the
+                    catalogue, not to the dialog.
                 </div>
                 <div class="cat-stage" style="margin-block-end: 1rem">
                     <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ov-long-live">Open sixty readings</button>
                     <dialog class="kp-dialog" id="ov-long-live" aria-labelledby="ov-long-live-title">
                         <h2 class="kp-dialog__title" id="ov-long-live-title">Pressure readings, line 2, last hour</h2>
-                        <div class="kp-table-wrap">
-                            <table class="kp-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Time</th>
-                                        <th scope="col" class="kp-text-end">Pressure</th>
-                                        <th scope="col">Reading</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="kp-numeric">02:00</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:01</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:02</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:03</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:04</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:05</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:06</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:07</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:08</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:09</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:10</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:11</td>
-                                        <td class="kp-text-end kp-numeric">2.99 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:12</td>
-                                        <td class="kp-text-end kp-numeric">2.78 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:13</td>
-                                        <td class="kp-text-end kp-numeric">2.58 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:14</td>
-                                        <td class="kp-text-end kp-numeric">2.38 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:15</td>
-                                        <td class="kp-text-end kp-numeric">2.20 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:16</td>
-                                        <td class="kp-text-end kp-numeric">2.03 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:17</td>
-                                        <td class="kp-text-end kp-numeric">1.87 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:18</td>
-                                        <td class="kp-text-end kp-numeric">1.72 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:19</td>
-                                        <td class="kp-text-end kp-numeric">1.60 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:20</td>
-                                        <td class="kp-text-end kp-numeric">1.50 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:21</td>
-                                        <td class="kp-text-end kp-numeric">1.41 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:22</td>
-                                        <td class="kp-text-end kp-numeric">1.35 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:23</td>
-                                        <td class="kp-text-end kp-numeric">1.32 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:24</td>
-                                        <td class="kp-text-end kp-numeric">1.30 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:25</td>
-                                        <td class="kp-text-end kp-numeric">1.31 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:26</td>
-                                        <td class="kp-text-end kp-numeric">1.34 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:27</td>
-                                        <td class="kp-text-end kp-numeric">1.40 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:28</td>
-                                        <td class="kp-text-end kp-numeric">1.47 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:29</td>
-                                        <td class="kp-text-end kp-numeric">1.57 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:30</td>
-                                        <td class="kp-text-end kp-numeric">1.69 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:31</td>
-                                        <td class="kp-text-end kp-numeric">1.83 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:32</td>
-                                        <td class="kp-text-end kp-numeric">1.98 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:33</td>
-                                        <td class="kp-text-end kp-numeric">2.15 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:34</td>
-                                        <td class="kp-text-end kp-numeric">2.33 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:35</td>
-                                        <td class="kp-text-end kp-numeric">2.52 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:36</td>
-                                        <td class="kp-text-end kp-numeric">2.72 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:37</td>
-                                        <td class="kp-text-end kp-numeric">2.93 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:38</td>
-                                        <td class="kp-text-end kp-numeric">3.14 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:39</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:40</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:41</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:42</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:43</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:44</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:45</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:46</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:47</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:48</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:49</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:50</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:51</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:52</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:53</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:54</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:55</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:56</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:57</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:58</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:59</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="kp-dialog__body">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Time</th>
+                                            <th scope="col" class="kp-text-end">Pressure</th>
+                                            <th scope="col">Reading</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="kp-numeric">02:00</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:01</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:02</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:03</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:04</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:05</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:06</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:07</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:08</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:09</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:10</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:11</td>
+                                            <td class="kp-text-end kp-numeric">2.99 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:12</td>
+                                            <td class="kp-text-end kp-numeric">2.78 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:13</td>
+                                            <td class="kp-text-end kp-numeric">2.58 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:14</td>
+                                            <td class="kp-text-end kp-numeric">2.38 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:15</td>
+                                            <td class="kp-text-end kp-numeric">2.20 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:16</td>
+                                            <td class="kp-text-end kp-numeric">2.03 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:17</td>
+                                            <td class="kp-text-end kp-numeric">1.87 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:18</td>
+                                            <td class="kp-text-end kp-numeric">1.72 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:19</td>
+                                            <td class="kp-text-end kp-numeric">1.60 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:20</td>
+                                            <td class="kp-text-end kp-numeric">1.50 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:21</td>
+                                            <td class="kp-text-end kp-numeric">1.41 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:22</td>
+                                            <td class="kp-text-end kp-numeric">1.35 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:23</td>
+                                            <td class="kp-text-end kp-numeric">1.32 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:24</td>
+                                            <td class="kp-text-end kp-numeric">1.30 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:25</td>
+                                            <td class="kp-text-end kp-numeric">1.31 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:26</td>
+                                            <td class="kp-text-end kp-numeric">1.34 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:27</td>
+                                            <td class="kp-text-end kp-numeric">1.40 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:28</td>
+                                            <td class="kp-text-end kp-numeric">1.47 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:29</td>
+                                            <td class="kp-text-end kp-numeric">1.57 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:30</td>
+                                            <td class="kp-text-end kp-numeric">1.69 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:31</td>
+                                            <td class="kp-text-end kp-numeric">1.83 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:32</td>
+                                            <td class="kp-text-end kp-numeric">1.98 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:33</td>
+                                            <td class="kp-text-end kp-numeric">2.15 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:34</td>
+                                            <td class="kp-text-end kp-numeric">2.33 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:35</td>
+                                            <td class="kp-text-end kp-numeric">2.52 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:36</td>
+                                            <td class="kp-text-end kp-numeric">2.72 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:37</td>
+                                            <td class="kp-text-end kp-numeric">2.93 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:38</td>
+                                            <td class="kp-text-end kp-numeric">3.14 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:39</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:40</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:41</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:42</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:43</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:44</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:45</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:46</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:47</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:48</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:49</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:50</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:51</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:52</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:53</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:54</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:55</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:56</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:57</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:58</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:59</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="kp-dialog__actions">
                             <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close>Close</button>
@@ -464,318 +465,320 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
                 <div class="cat-stage cat-stage--block" style="contain: layout; block-size: 32rem; overflow: auto">
                     <dialog class="kp-dialog" open aria-labelledby="ov-long-title">
                         <h2 class="kp-dialog__title" id="ov-long-title">Pressure readings, line 2, last hour (frozen, not modal)</h2>
-                        <div class="kp-table-wrap">
-                            <table class="kp-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Time</th>
-                                        <th scope="col" class="kp-text-end">Pressure</th>
-                                        <th scope="col">Reading</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="kp-numeric">02:00</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:01</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:02</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:03</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:04</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:05</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:06</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:07</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:08</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:09</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:10</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:11</td>
-                                        <td class="kp-text-end kp-numeric">2.99 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:12</td>
-                                        <td class="kp-text-end kp-numeric">2.78 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:13</td>
-                                        <td class="kp-text-end kp-numeric">2.58 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:14</td>
-                                        <td class="kp-text-end kp-numeric">2.38 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:15</td>
-                                        <td class="kp-text-end kp-numeric">2.20 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:16</td>
-                                        <td class="kp-text-end kp-numeric">2.03 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:17</td>
-                                        <td class="kp-text-end kp-numeric">1.87 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:18</td>
-                                        <td class="kp-text-end kp-numeric">1.72 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:19</td>
-                                        <td class="kp-text-end kp-numeric">1.60 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:20</td>
-                                        <td class="kp-text-end kp-numeric">1.50 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:21</td>
-                                        <td class="kp-text-end kp-numeric">1.41 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:22</td>
-                                        <td class="kp-text-end kp-numeric">1.35 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:23</td>
-                                        <td class="kp-text-end kp-numeric">1.32 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:24</td>
-                                        <td class="kp-text-end kp-numeric">1.30 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:25</td>
-                                        <td class="kp-text-end kp-numeric">1.31 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:26</td>
-                                        <td class="kp-text-end kp-numeric">1.34 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:27</td>
-                                        <td class="kp-text-end kp-numeric">1.40 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:28</td>
-                                        <td class="kp-text-end kp-numeric">1.47 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:29</td>
-                                        <td class="kp-text-end kp-numeric">1.57 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:30</td>
-                                        <td class="kp-text-end kp-numeric">1.69 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:31</td>
-                                        <td class="kp-text-end kp-numeric">1.83 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:32</td>
-                                        <td class="kp-text-end kp-numeric">1.98 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:33</td>
-                                        <td class="kp-text-end kp-numeric">2.15 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:34</td>
-                                        <td class="kp-text-end kp-numeric">2.33 bar</td>
-                                        <td>Low</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:35</td>
-                                        <td class="kp-text-end kp-numeric">2.52 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:36</td>
-                                        <td class="kp-text-end kp-numeric">2.72 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:37</td>
-                                        <td class="kp-text-end kp-numeric">2.93 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:38</td>
-                                        <td class="kp-text-end kp-numeric">3.14 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:39</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:40</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:41</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:42</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:43</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:44</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:45</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:46</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:47</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:48</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:49</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:50</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:51</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:52</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:53</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:54</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:55</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:56</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:57</td>
-                                        <td class="kp-text-end kp-numeric">3.20 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:58</td>
-                                        <td class="kp-text-end kp-numeric">3.15 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="kp-numeric">02:59</td>
-                                        <td class="kp-text-end kp-numeric">3.10 bar</td>
-                                        <td>Normal</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="kp-dialog__body">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Time</th>
+                                            <th scope="col" class="kp-text-end">Pressure</th>
+                                            <th scope="col">Reading</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="kp-numeric">02:00</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:01</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:02</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:03</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:04</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:05</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:06</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:07</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:08</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:09</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:10</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:11</td>
+                                            <td class="kp-text-end kp-numeric">2.99 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:12</td>
+                                            <td class="kp-text-end kp-numeric">2.78 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:13</td>
+                                            <td class="kp-text-end kp-numeric">2.58 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:14</td>
+                                            <td class="kp-text-end kp-numeric">2.38 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:15</td>
+                                            <td class="kp-text-end kp-numeric">2.20 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:16</td>
+                                            <td class="kp-text-end kp-numeric">2.03 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:17</td>
+                                            <td class="kp-text-end kp-numeric">1.87 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:18</td>
+                                            <td class="kp-text-end kp-numeric">1.72 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:19</td>
+                                            <td class="kp-text-end kp-numeric">1.60 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:20</td>
+                                            <td class="kp-text-end kp-numeric">1.50 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:21</td>
+                                            <td class="kp-text-end kp-numeric">1.41 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:22</td>
+                                            <td class="kp-text-end kp-numeric">1.35 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:23</td>
+                                            <td class="kp-text-end kp-numeric">1.32 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:24</td>
+                                            <td class="kp-text-end kp-numeric">1.30 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:25</td>
+                                            <td class="kp-text-end kp-numeric">1.31 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:26</td>
+                                            <td class="kp-text-end kp-numeric">1.34 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:27</td>
+                                            <td class="kp-text-end kp-numeric">1.40 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:28</td>
+                                            <td class="kp-text-end kp-numeric">1.47 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:29</td>
+                                            <td class="kp-text-end kp-numeric">1.57 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:30</td>
+                                            <td class="kp-text-end kp-numeric">1.69 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:31</td>
+                                            <td class="kp-text-end kp-numeric">1.83 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:32</td>
+                                            <td class="kp-text-end kp-numeric">1.98 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:33</td>
+                                            <td class="kp-text-end kp-numeric">2.15 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:34</td>
+                                            <td class="kp-text-end kp-numeric">2.33 bar</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:35</td>
+                                            <td class="kp-text-end kp-numeric">2.52 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:36</td>
+                                            <td class="kp-text-end kp-numeric">2.72 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:37</td>
+                                            <td class="kp-text-end kp-numeric">2.93 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:38</td>
+                                            <td class="kp-text-end kp-numeric">3.14 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:39</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:40</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:41</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:42</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:43</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:44</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:45</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:46</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:47</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:48</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:49</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:50</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:51</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:52</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:53</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:54</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:55</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:56</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:57</td>
+                                            <td class="kp-text-end kp-numeric">3.20 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:58</td>
+                                            <td class="kp-text-end kp-numeric">3.15 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="kp-numeric">02:59</td>
+                                            <td class="kp-text-end kp-numeric">3.10 bar</td>
+                                            <td>Normal</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="kp-dialog__actions">
                             <button type="button" class="kp-button kp-button--ghost">Close</button>
@@ -836,10 +839,11 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
             <section class="cat-block" id="menu-extremes">
                 <h2>Menu extremes</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> a disabled item, an item whose label is a whole sentence, and a menu with twenty-four items. The disabled item
-                    must look unavailable and must not light up on hover. The long label must wrap inside the popover, never push it wider than the
-                    window. The long menu must stop at the popover's maximum height and scroll inside itself, with the items keeping their height
-                    rather than squashing to fit — the fault this rule was written for was a second column appearing beside the first.
+                    <b>Look at:</b> a disabled item, an item whose label is a whole sentence, and a menu with twenty-four items. The disabled item is
+                    faded and out of the pointer's reach, so it must not light up on hover in any theme. The long label must wrap inside the popover,
+                    never push it wider than the window. The long menu must stop at the popover's maximum height and scroll inside itself, with the
+                    items keeping their height rather than squashing to fit — the fault this rule was written for was a second column appearing beside
+                    the first.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 13rem">
                     <div>
@@ -904,17 +908,31 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
                     <b>Look at:</b> a tooltip is a <code>.kp-popover</code> with <code>.kp-tooltip</code> on it: the same surface and boundary as a
                     menu, smaller text and less padding. It describes; it never holds the only copy of anything, so each trigger here has its own
                     visible label. The short tooltip must hug its text; the long one must stop at its maximum width and wrap into a short paragraph,
-                    not stretch into one line across the page. Both are shown open here; there is no framework-free behaviour that opens them on hover
-                    — only the React component does.
+                    not stretch into one line across the page. The first two are shown open and held open for the eye; the two under them are live:
+                    <code>js/overlays.js</code> opens a tooltip after a moment under the pointer and at once on focus, closes it when the pointer or
+                    focus leaves or on Escape, and points the trigger's <code>aria-describedby</code> at it.
                 </div>
                 <div class="cat-stage" style="contain: layout; min-block-size: 11rem">
-                    <span class="kp-tooltip-anchor">
+                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue">
                         <button type="button" class="kp-button" aria-describedby="ov-tt1">Recalibrate</button>
                         <span role="tooltip" id="ov-tt1" class="kp-popover kp-tooltip">Takes about two minutes</span>
                     </span>
-                    <span class="kp-tooltip-anchor" style="margin-inline-start: 14rem">
+                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="margin-inline-start: 14rem">
                         <button type="button" class="kp-button" aria-describedby="ov-tt2">Lock out line 2</button>
                         <span role="tooltip" id="ov-tt2" class="kp-popover kp-tooltip"
+                            >Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
+                            against the sensor.</span
+                        >
+                    </span>
+                </div>
+                <div class="cat-stage" style="contain: layout; min-block-size: 9rem; margin-block-start: 1rem">
+                    <span class="kp-tooltip-anchor">
+                        <button type="button" class="kp-button" id="ov-tt-live-trigger">Recalibrate (live)</button>
+                        <span role="tooltip" class="kp-popover kp-tooltip" id="ov-tt-live">Takes about two minutes</span>
+                    </span>
+                    <span class="kp-tooltip-anchor" style="margin-inline-start: 14rem">
+                        <button type="button" class="kp-button">Lock out line 2 (live)</button>
+                        <span role="tooltip" class="kp-popover kp-tooltip"
                             >Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
                             against the sensor.</span
                         >

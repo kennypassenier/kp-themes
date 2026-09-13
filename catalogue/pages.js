@@ -20,6 +20,7 @@ export const PAGES = [
             { href: 'catalogue/button.html', label: 'Buttons', component: true },
             { href: 'catalogue/table.html', label: 'Tables', component: true },
             { href: 'catalogue/field.html', label: 'Fields and forms', component: true },
+            { href: 'catalogue/switch.html', label: 'Switch (concept)', component: true },
             { href: 'catalogue/combobox.html', label: 'Combobox', component: true },
             { href: 'catalogue/datepicker.html', label: 'Date picker', component: true },
             { href: 'catalogue/upload.html', label: 'Upload', component: true },

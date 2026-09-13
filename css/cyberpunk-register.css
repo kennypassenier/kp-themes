@@ -599,6 +599,15 @@
         box-shadow: inset 0 0 0 1px var(--ring);
     }
 
+    /* The combobox input stands on the field's ground [gap-11]. The package
+       gives both the same ground now, and this register moves the field's
+       to the card, so the combobox follows it here. The ground only: the
+       notch would clip the package's focus ring, which the field replaces
+       with a ring of its own. */
+    [data-theme='cyberpunk'] .kp-combobox__input {
+        background: var(--card);
+    }
+
     [data-theme='cyberpunk'] .kp-field__input::placeholder {
         color: var(--muted-foreground);
     }

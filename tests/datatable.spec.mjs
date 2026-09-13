@@ -6,6 +6,7 @@
 // be announced. A sighted user watches the rows rearrange; without those
 // two, everyone else is told nothing at all.
 
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
@@ -124,3 +125,40 @@ for (const channel of CHANNELS) {
         });
     });
 }
+
+// ── gap-11, the data table footer [Kenny, 2026-09-13, seen in nostromo] ───
+
+const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+
+test('the status and pager bar keeps its distance from the table and from the frame, in every theme [gap-11]', async ({ page }) => {
+    // gap-11: the footer bar had no padding, so in a theme that frames the data table the row count sat on the frame's left edge and the pager on its bottom edge.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/catalogue/table.html');
+    const table = page.locator('.kp-datatable[data-kp-datatable]').first();
+    await expect(table.locator('[data-kp-datatable-status]')).not.toBeEmpty();
+    const tight = [];
+    for (const theme of THEME_NAMES) {
+        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+        const m = await table.evaluate((el) => {
+            const s = getComputedStyle(el);
+            const box = el.getBoundingClientRect();
+            const inner = {
+                left: box.left + parseFloat(s.borderLeftWidth),
+                right: box.right - parseFloat(s.borderRightWidth),
+                bottom: box.bottom - parseFloat(s.borderBottomWidth),
+            };
+            const wrap = /** @type {Element} */ (el.querySelector(':scope > .kp-table-wrap')).getBoundingClientRect();
+            const status = /** @type {Element} */ (el.querySelector('[data-kp-datatable-status]')).getBoundingClientRect();
+            const pager = /** @type {Element} */ (el.querySelector('[data-kp-datatable-pager]')).getBoundingClientRect();
+            return {
+                aboveBar: Math.round(Math.min(status.top, pager.top) - wrap.bottom),
+                beforeStatus: Math.round(status.left - inner.left),
+                afterPager: Math.round(inner.right - pager.right),
+                underBar: Math.round(inner.bottom - Math.max(status.bottom, pager.bottom)),
+            };
+        });
+        const short = Object.entries(m).filter(([, px]) => px < 6);
+        if (short.length > 0) tight.push(`${theme}: ${short.map(([side, px]) => `${side} ${px}px`).join(', ')}`);
+    }
+    expect(tight).toEqual([]);
+});

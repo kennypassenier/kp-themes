@@ -81,13 +81,13 @@
                                 ><button type="button" class="kp-button kp-button--ghost" aria-label="Next month">›</button>
                             </div>
                             <div class="kp-datepicker__grid" role="grid" aria-labelledby="dp-open-title">
-                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="Tu">Tu</span
+                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="Mo">Mo</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Tu">Tu</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="We">We</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Th">Th</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Fr">Fr</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Sa">Sa</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Su">Su</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Mo">Mo</span
                                 ><span class="kp-datepicker__blank"></span
                                 ><button
                                     type="button"
@@ -411,9 +411,9 @@
                 <div class="cat-look">
                     <b>Look at:</b> this picker allows 7 to 25 September 2026 and no weekends (<code>data-kp-min</code>, <code>data-kp-max</code>,
                     <code>data-kp-disabled-days="0,6"</code>). Every day before the 7th, after the 25th, and every Saturday and Sunday is disabled: it
-                    must <i>look</i> unavailable — faded, struck, or otherwise plainly not a choice — and clicking it must do nothing. A disabled day
-                    that looks exactly like an enabled one, so that the only sign is that the click is ignored, is the fault to look for here.
-                    Disabled days stay in the grid rather than leaving gaps.
+                    must <i>look</i> unavailable — the package strikes it through in the muted ink and gives it no hover — and clicking it must do
+                    nothing. A theme in which a disabled day looks exactly like an enabled one, so that the only sign is that the click is ignored,
+                    has lost that rule. Disabled days stay in the grid rather than leaving gaps.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 22rem">
                     <div class="kp-datepicker" lang="en-GB">
@@ -429,13 +429,13 @@
                                 ><button type="button" class="kp-button kp-button--ghost" aria-label="Next month">›</button>
                             </div>
                             <div class="kp-datepicker__grid" role="grid" aria-labelledby="dp-limits-title">
-                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="Tu">Tu</span
+                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="Mo">Mo</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Tu">Tu</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="We">We</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Th">Th</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Fr">Fr</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Sa">Sa</span
                                 ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Su">Su</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Mo">Mo</span
                                 ><span class="kp-datepicker__blank"></span
                                 ><button
                                     type="button"
@@ -796,9 +796,9 @@
                 <div class="cat-look">
                     <b>Look at:</b> this picker sits under <code>lang="nl"</code> and nothing else changed. What the module takes from the locale must
                     follow: the value is written <code>13-09-2026</code> with dashes, the placeholder of the empty one says <code>dd-mm-yyyy</code>,
-                    and typing <code>14-9-2026</code> is read day first. What it takes from the string dictionary does <i>not</i> follow the locale:
-                    the month name, the weekday initials and the arrow labels stay English until a consumer calls <code>setStrings</code>. A Dutch
-                    page showing "September" over a Dutch date is therefore the package's current behaviour, and worth a finding if it should not be.
+                    typing <code>14-9-2026</code> is read day first, and the month name and the weekday headings are Dutch — <b>september</b> over
+                    <b>ma di wo do vr za zo</b>, read from the browser for the picker's own locale. The arrow labels stay English until a consumer
+                    calls <code>setStrings</code>, and a consumer who sets month or weekday names of their own keeps them in every locale.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 22rem">
                     <div class="kp-datepicker" lang="nl">
@@ -810,24 +810,24 @@
                         <div class="kp-datepicker__panel">
                             <div class="kp-datepicker__head">
                                 <button type="button" class="kp-button kp-button--ghost" aria-label="Previous month">‹</button
-                                ><span class="kp-datepicker__title" id="dp-nl-title">September 2026</span
+                                ><span class="kp-datepicker__title" id="dp-nl-title">september 2026</span
                                 ><button type="button" class="kp-button kp-button--ghost" aria-label="Next month">›</button>
                             </div>
                             <div class="kp-datepicker__grid" role="grid" aria-labelledby="dp-nl-title">
-                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="Tu">Tu</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="We">We</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Th">Th</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Fr">Fr</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Sa">Sa</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Su">Su</span
-                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="Mo">Mo</span
+                                <span class="kp-datepicker__weekday" role="columnheader" aria-label="ma">ma</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="di">di</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="wo">wo</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="do">do</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="vr">vr</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="za">za</span
+                                ><span class="kp-datepicker__weekday" role="columnheader" aria-label="zo">zo</span
                                 ><span class="kp-datepicker__blank"></span
                                 ><button
                                     type="button"
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-01"
                                     role="gridcell"
-                                    aria-label="1 September 2026"
+                                    aria-label="1 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -837,7 +837,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-02"
                                     role="gridcell"
-                                    aria-label="2 September 2026"
+                                    aria-label="2 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -847,7 +847,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-03"
                                     role="gridcell"
-                                    aria-label="3 September 2026"
+                                    aria-label="3 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -857,7 +857,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-04"
                                     role="gridcell"
-                                    aria-label="4 September 2026"
+                                    aria-label="4 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -867,7 +867,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-05"
                                     role="gridcell"
-                                    aria-label="5 September 2026"
+                                    aria-label="5 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -877,7 +877,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-06"
                                     role="gridcell"
-                                    aria-label="6 September 2026"
+                                    aria-label="6 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -887,7 +887,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-07"
                                     role="gridcell"
-                                    aria-label="7 September 2026"
+                                    aria-label="7 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -897,7 +897,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-08"
                                     role="gridcell"
-                                    aria-label="8 September 2026"
+                                    aria-label="8 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -907,7 +907,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-09"
                                     role="gridcell"
-                                    aria-label="9 September 2026"
+                                    aria-label="9 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -917,7 +917,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-10"
                                     role="gridcell"
-                                    aria-label="10 September 2026"
+                                    aria-label="10 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -927,7 +927,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-11"
                                     role="gridcell"
-                                    aria-label="11 September 2026"
+                                    aria-label="11 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -937,7 +937,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-12"
                                     role="gridcell"
-                                    aria-label="12 September 2026"
+                                    aria-label="12 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -947,7 +947,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-13"
                                     role="gridcell"
-                                    aria-label="13 September 2026"
+                                    aria-label="13 september 2026"
                                     aria-selected="true"
                                     tabindex="0"
                                 >
@@ -957,7 +957,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-14"
                                     role="gridcell"
-                                    aria-label="14 September 2026"
+                                    aria-label="14 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -967,7 +967,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-15"
                                     role="gridcell"
-                                    aria-label="15 September 2026"
+                                    aria-label="15 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -977,7 +977,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-16"
                                     role="gridcell"
-                                    aria-label="16 September 2026"
+                                    aria-label="16 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -987,7 +987,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-17"
                                     role="gridcell"
-                                    aria-label="17 September 2026"
+                                    aria-label="17 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -997,7 +997,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-18"
                                     role="gridcell"
-                                    aria-label="18 September 2026"
+                                    aria-label="18 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1007,7 +1007,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-19"
                                     role="gridcell"
-                                    aria-label="19 September 2026"
+                                    aria-label="19 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1017,7 +1017,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-20"
                                     role="gridcell"
-                                    aria-label="20 September 2026"
+                                    aria-label="20 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1027,7 +1027,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-21"
                                     role="gridcell"
-                                    aria-label="21 September 2026"
+                                    aria-label="21 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1037,7 +1037,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-22"
                                     role="gridcell"
-                                    aria-label="22 September 2026"
+                                    aria-label="22 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1047,7 +1047,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-23"
                                     role="gridcell"
-                                    aria-label="23 September 2026"
+                                    aria-label="23 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1057,7 +1057,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-24"
                                     role="gridcell"
-                                    aria-label="24 September 2026"
+                                    aria-label="24 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1067,7 +1067,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-25"
                                     role="gridcell"
-                                    aria-label="25 September 2026"
+                                    aria-label="25 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1077,7 +1077,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-26"
                                     role="gridcell"
-                                    aria-label="26 September 2026"
+                                    aria-label="26 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1087,7 +1087,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-27"
                                     role="gridcell"
-                                    aria-label="27 September 2026"
+                                    aria-label="27 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1097,7 +1097,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-28"
                                     role="gridcell"
-                                    aria-label="28 September 2026"
+                                    aria-label="28 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1107,7 +1107,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-29"
                                     role="gridcell"
-                                    aria-label="29 September 2026"
+                                    aria-label="29 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >
@@ -1117,7 +1117,7 @@
                                     class="kp-datepicker__day"
                                     data-kp-day="2026-09-30"
                                     role="gridcell"
-                                    aria-label="30 September 2026"
+                                    aria-label="30 september 2026"
                                     aria-selected="false"
                                     tabindex="-1"
                                 >

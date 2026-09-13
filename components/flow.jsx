@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { parseDate, toISO } from '../js/datepicker.js';
-import { datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
+import { calendarNames, datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
+import { DEFAULT_STRINGS } from '../js/strings.js';
 import { acceptsFile } from '../js/upload.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
@@ -104,6 +105,8 @@ function DatePickerInner(
     useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
     const locale = useLocale(inner, localeProp);
     const firstDay = weekStartsOn(locale, weekProp);
+    // The names follow the locale; a consumer's own dictionary still wins [gap-11].
+    const names = calendarNames(s, DEFAULT_STRINGS, locale);
     const [text, setText] = useControllable(value, defaultValue, undefined);
     const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
     const [cursor, setCursor] = useState(() => parseDate(defaultValue, locale) ?? new Date());
@@ -236,7 +239,7 @@ function DatePickerInner(
                             {previousGlyph}
                         </button>
                         <span className="kp-datepicker__title" id={`${id}-title`}>
-                            {s.monthTitle(s.months[month] ?? '', year)}
+                            {s.monthTitle(names.months[month] ?? '', year)}
                         </span>
                         <button
                             type="button"
@@ -248,7 +251,7 @@ function DatePickerInner(
                         </button>
                     </div>
                     <div className="kp-datepicker__grid" role="grid" aria-labelledby={`${id}-title`}>
-                        {Array.from({ length: 7 }, (_, i) => s.weekdays[(firstDay + i) % 7] ?? '').map((day, i) => (
+                        {Array.from({ length: 7 }, (_, i) => names.weekdays[(firstDay + i) % 7] ?? '').map((day, i) => (
                             <span className="kp-datepicker__weekday" role="columnheader" aria-label={day} key={`${day}-${i}`}>
                                 {day}
                             </span>
@@ -271,7 +274,7 @@ function DatePickerInner(
                                     // The full date as the name: "4" alone
                                     // tells a screen reader nothing about
                                     // which month it is in.
-                                    aria-label={s.dayLabel(i + 1, s.months[month] ?? '', year)}
+                                    aria-label={s.dayLabel(i + 1, names.months[month] ?? '', year)}
                                     aria-selected={chosen !== null && toISO(chosen) === iso}
                                     aria-disabled={off ? 'true' : undefined}
                                     // Exactly one day in the tab order, so
@@ -477,6 +480,7 @@ function UploadInner(
                             <button
                                 type="button"
                                 className="kp-button kp-button--ghost"
+                                data-kp-upload-remove
                                 aria-label={s.removeNamed(row.name)}
                                 onClick={() => remove(row)}
                             >

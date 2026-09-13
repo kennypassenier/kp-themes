@@ -60,6 +60,7 @@ export const MATCHERS = {
  * @property {boolean} [clearable]       A clear button on the combobox.
  * @property {boolean} [loop]            Arrow keys wrap. Default true.
  * @property {boolean} [loading]         Says so in the status line instead of a count.
+ * @property {boolean} [emptyRow]        A query that matches nothing keeps the list open with a "no results" row. Default true [gap-11].
  * @property {string} [name]             A hidden input carries the value(s) for a plain <form>.
  * @property {string} [placeholder]
  * @property {boolean} [disabled]
@@ -104,6 +105,7 @@ function ComboboxInner(
         clearable = false,
         loop = true,
         loading = false,
+        emptyRow = true,
         name,
         placeholder,
         disabled = false,
@@ -338,7 +340,15 @@ function ComboboxInner(
                     <input type="hidden" name={name} value={options.find((o) => o.label === query)?.value ?? query} />
                 ))}
 
-            <ul className={`kp-combobox__list ${classNames.list ?? ''}`.trim()} id={listId} role="listbox" hidden={!open || visible.length === 0}>
+            {/* A query that matches nothing keeps the list open with a row that
+                says so, right under the input [gap-11]; an empty query with
+                nothing left to offer still closes it. */}
+            <ul
+                className={`kp-combobox__list ${classNames.list ?? ''}`.trim()}
+                id={listId}
+                role="listbox"
+                hidden={!open || (visible.length === 0 && !(emptyRow && query.trim() !== ''))}
+            >
                 {visible.map((option, i) => (
                     <li
                         className={`kp-combobox__option ${i === active ? 'is-active' : ''} ${classNames.option ?? ''}`.trim()}
@@ -359,6 +369,11 @@ function ComboboxInner(
                         {renderOption ? renderOption(option, { active: i === active, selected: chosen.includes(option.value) }) : option.label}
                     </li>
                 ))}
+                {emptyRow && (
+                    <li className="kp-combobox__empty" role="presentation" data-kp-combobox-empty hidden={visible.length > 0}>
+                        {s.noResults}
+                    </li>
+                )}
             </ul>
 
             {/* A sighted user watches the list shrink; without this nobody

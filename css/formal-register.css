@@ -336,6 +336,14 @@
         border-radius: var(--radius);
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='formal'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='formal'] .kp-fieldset {
         border-color: var(--border);
         border-radius: var(--radius);

@@ -434,7 +434,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-combobox', 'kp-tag', 'kp-tag-list'],
         exports: ['Combobox'],
-        aliases: ['listbox', 'option', 'tags', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce'],
+        aliases: ['listbox', 'option', 'tags', 'empty-row', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce'],
         intro: 'A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value.',
         whenToUse:
             'When there are more options than a select can carry comfortably and the reader knows roughly what they are looking for. Not for a handful of fixed choices — a select is smaller, needs no script and works before the page has finished loading. Not for a free-text field with suggestions you may ignore either: this one is about choosing from a list.',
@@ -1180,7 +1180,7 @@ export const DESCRIPTORS = [
         group: 'Feedback',
         classes: ['kp-alert'],
         exports: ['Alert'],
-        aliases: ['semantic'],
+        aliases: ['semantic', 'dismiss'],
         intro: 'A message on a coloured plate that also says, in words, what kind of message it is. Four flavours, no hover and no active state: an alert is a message, not a control.',
         whenToUse:
             'For something the reader has to know about the page or their last action, in place, where it happened. Not for a message about a single field — that belongs under the field, where the eye already is. Not for something that can be missed either: an alert appears in the page rather than announcing itself, so a passing confirmation is a toast.',
@@ -1560,7 +1560,8 @@ export const DESCRIPTORS = [
         group: 'Feedback',
         classes: ['kp-tooltip'],
         exports: ['Tooltip'],
-        intro: 'A short label on the popover surface, anchored to the thing it describes. The React component opens it on hover and on focus, with a delay at both ends, and closes it on Escape.',
+        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape'],
+        intro: 'A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote.',
         whenToUse:
             'For naming a control whose glyph is not obvious, in a few words. Never for anything the reader needs — a tooltip cannot be reached on a touch screen, cannot be selected, and is gone the moment the pointer moves. Instructions, errors and help text belong in the page.',
         examples: [

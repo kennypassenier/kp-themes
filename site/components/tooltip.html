@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Tooltip — kp-themes</title>
-        <meta name="description" content="A short label on the popover surface, anchored to the thing it describes. The React component opens it on hover and on focus, with a delay at both ends, and closes it on Escape." />
+        <meta name="description" content="A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote." />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
         <link rel="stylesheet" href="../../css/layout.css" />
@@ -144,7 +144,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Tooltip</h1>
-                    <p class="kp-prose">A short label on the popover surface, anchored to the thing it describes. The React component opens it on hover and on focus, with a delay at both ends, and closes it on Escape.</p>
+                    <p class="kp-prose">A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote.</p>
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>
@@ -167,7 +167,13 @@
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-close-delay</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-close-on-escape</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-open-delay</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-tooltip-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-tooltip-owner</code></td><td>selector</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
@@ -194,7 +200,9 @@
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <p class="kp-text-muted">This unit fires no events.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-tooltip</code></td><td>Dispatched on a tooltip anchor, bubbling, when its tooltip opens or closes: `{ open, tooltip }`.</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>

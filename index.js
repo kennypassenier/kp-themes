@@ -34,7 +34,7 @@ export {
     Toasts,
     Tooltip,
 } from './components/overlays.jsx';
-export { TOAST_MS, attachDialogs, attachTabs, toast } from './js/overlays.js';
+export { TOAST_MS, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
 export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
 export { CheckIcon, PaletteIcon } from './components/theme-switcher.jsx';
 export { attachAll } from './js/auto.js';

@@ -52,6 +52,34 @@ export declare function formatDate(date: Date, locale?: string | undefined): str
  */
 export declare function parseDate(text: string, locale?: string | undefined): Date | null;
 /**
+ * The month and weekday names a calendar shows, in the locale it is drawn
+ * for [gap-11].
+ *
+ * The date picker wrote a Dutch date under an English month, because its
+ * names came from the string dictionary and the dictionary is English.
+ * Intl knows the names in every language the browser does, so a locale
+ * that is not English reads them from Intl. The dictionary still decides
+ * in two cases: when a consumer has set names of their own (their words
+ * win, which is the way out [KT6]), and when the locale is English, where
+ * the dictionary already is the answer — and where Intl's "Mon" would
+ * quietly change the two-letter "Mo" every English page shows.
+ *
+ * @param {{ months: string[], weekdays: string[] }} dictionary the strings in force; weekdays Monday first
+ * @param {{ months: string[], weekdays: string[] }} defaults the package's own dictionary, to tell a consumer's names from it
+ * @param {string | undefined} [locale]
+ * @returns {{ months: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
+ */
+export declare function calendarNames(dictionary: {
+    months: string[];
+    weekdays: string[];
+}, defaults: {
+    months: string[];
+    weekdays: string[];
+}, locale?: string | undefined): {
+    months: string[];
+    weekdays: string[];
+};
+/**
  * A byte count as the locale writes numbers: "1,5 MB" in Dutch, "1.5 MB"
  * in English. Base 1000 with SI units, because a person reading a file
  * size is not counting sectors.

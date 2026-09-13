@@ -342,6 +342,8 @@ function TooltipInner(
         <As
             ref={inner}
             className={`kp-tooltip-anchor ${className}`.trim()}
+            // Wired here, so js/overlays.js attachTooltips leaves it alone [gap-11, AR29].
+            data-kp-tooltip-owner
             style={{ anchorName: `--${id}`, ...style }}
             onMouseEnter={() => schedule(true, openDelayMs)}
             onMouseLeave={() => schedule(false, closeDelayMs)}
@@ -416,7 +418,14 @@ function ToastsInner(
                         </button>
                     )}
                     {dismissible && (
-                        <button type="button" className="kp-icon-button kp-toast__close" aria-label={s.close} onClick={() => onDismiss?.(m.id)}>
+                        <button
+                            type="button"
+                            className="kp-icon-button kp-toast__close"
+                            aria-label={s.close}
+                            // Wired here, so js/overlays.js attachDismissals leaves it alone [gap-11, AR29].
+                            data-kp-dismiss-owner
+                            onClick={() => onDismiss?.(m.id)}
+                        >
                             ×
                         </button>
                     )}

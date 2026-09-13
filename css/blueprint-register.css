@@ -566,6 +566,14 @@
         border-radius: 2px;
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='blueprint'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='blueprint'] .kp-field__check {
         accent-color: var(--selected);
     }
@@ -1213,5 +1221,17 @@
     [data-theme='blueprint'] .kp-button:focus-visible::before,
     [data-theme='blueprint'] .kp-button:focus-visible::after {
         opacity: 1;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='blueprint'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
     }
 }

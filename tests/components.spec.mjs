@@ -9,7 +9,9 @@
 // render the same markup. That is the property AR7 asks for, and the only
 // way to notice when one channel quietly stops honouring a contract.
 
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+import { contrast } from '../gates/colour.mjs';
 
 const PAGE = '/tests/fixtures/components.html';
 const CHANNELS = [
@@ -280,4 +282,66 @@ test.describe('a status badge colours itself from its class [R5-BADGE]', () => {
         const badge = await plate(page, '#plain [data-test="badge-labelled"]');
         expect(badge.inlineStyle).toBeNull();
     });
+});
+
+// ── gap-11, the badge and progress faults of catalogue batch 2 [2026-09-13] ─
+
+const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+
+/** @param {string} value a computed colour @returns {number[]} */
+const channels = (value) => {
+    const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/.exec(value);
+    if (srgb) return srgb.slice(1, 4).map((v) => Math.round(Number(v) * 255));
+    const rgb = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(value);
+    if (!rgb) throw new Error(`not a colour: ${value}`);
+    return rgb.slice(1, 4).map(Number);
+};
+
+test('a badge has severity variants on the alert tokens, answered by every theme [gap-11]', async ({ page }) => {
+    // gap-11: the only coloured badges were JobTracker's seven application statuses; there was no success, info, warning or destructive badge.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/catalogue/feedback.html');
+    const faults = [];
+    for (const theme of THEME_NAMES) {
+        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+        const painted = await page.evaluate(() => {
+            const plain = getComputedStyle(/** @type {Element} */ (document.querySelector('#badges .kp-badge:not([data-status])'))).backgroundColor;
+            return ['success', 'info', 'warning', 'destructive'].map((name) => {
+                const el = /** @type {Element} */ (document.querySelector(`#badge-severity .kp-badge--${name}`));
+                const probe = document.createElement('span');
+                probe.style.setProperty('background-color', `var(--${name})`);
+                probe.style.setProperty('color', `var(--${name}-foreground)`);
+                el.parentElement?.append(probe);
+                const wanted = { background: getComputedStyle(probe).backgroundColor, ink: getComputedStyle(probe).color };
+                probe.remove();
+                return { name, plain, background: getComputedStyle(el).backgroundColor, ink: getComputedStyle(el).color, wanted };
+            });
+        });
+        for (const badge of painted) {
+            if (badge.background === badge.plain) faults.push(`${theme} ${badge.name}: the plate is the plain badge's`);
+            if (badge.background !== badge.wanted.background)
+                faults.push(`${theme} ${badge.name}: plate ${badge.background}, token ${badge.wanted.background}`);
+            if (badge.ink !== badge.wanted.ink) faults.push(`${theme} ${badge.name}: ink ${badge.ink}, token ${badge.wanted.ink}`);
+            else if (contrast(channels(badge.ink), channels(badge.background)) < 4.5)
+                faults.push(`${theme} ${badge.name}: ink under 4.5 on its plate`);
+        }
+    }
+    expect(faults).toEqual([]);
+    // The application statuses are still there, untouched.
+    await expect(page.locator('#badges .cat-stage').first().locator('.kp-badge[data-status]')).toHaveCount(7);
+});
+
+test('an indeterminate progress bar is visibly different from a full one [gap-11]', async ({ page }) => {
+    // gap-11: with the theme's appearance: none, Firefox painted an indeterminate <progress> exactly like a full one, so "done" and "no idea yet" looked the same.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/catalogue/feedback.html');
+    const full = page.locator('#progress progress[value="100"]');
+    const unknown = page.locator('#progress progress:not([value])');
+    const alike = [];
+    for (const theme of THEME_NAMES) {
+        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+        const [a, b] = await Promise.all([full.screenshot({ animations: 'disabled' }), unknown.screenshot({ animations: 'disabled' })]);
+        if (a.equals(b)) alike.push(theme);
+    }
+    expect(alike).toEqual([]);
 });
