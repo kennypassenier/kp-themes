@@ -13,6 +13,8 @@ import './demos.js';
 const ROOT = new URL('../', import.meta.url);
 
 const FEEDBACK_KEY = 'kp-catalogue-feedback:v1';
+// Written by review.js when a block is approved; read here so the prompt says what was approved too.
+const APPROVALS_KEY = 'kp-catalogue-approvals:v1';
 
 /* ------------------------------------------------------------- storage */
 
@@ -151,14 +153,16 @@ function mountShell() {
     toggle.className = 'kp-sidenav__toggle kp-button kp-button--ghost cat-nav-toggle';
     toggle.setAttribute('data-kp-sidenav-toggle', '');
     toggle.setAttribute('aria-controls', nav.id);
-    toggle.textContent = 'Pages';
+    toggle.textContent = '☰ All pages';
     bar.prepend(toggle);
 
     import('../js/sidenav.js').then(({ attachSidenavs, sidenavOf }) => {
         attachSidenavs(document);
         // Beside the content on a wide screen, over it on a narrow one: the
         // same component, told which of its modes fits the room.
-        const narrow = window.matchMedia('(max-width: 56rem)');
+        // Beside the page down to a phone's width: at 56rem it folded behind a
+        // button on any half-screen window, and the navigation looked absent.
+        const narrow = window.matchMedia('(max-width: 40rem)');
         const fit = () => {
             const handle = sidenavOf(nav);
             handle?.setMode(narrow.matches ? 'over' : 'side');
@@ -231,22 +235,38 @@ function sections() {
     return blocks.length ? blocks : [...document.querySelectorAll('main section[id]')];
 }
 
-/** The prompt a reviewer pastes into the conversation. */
+/** The prompt a reviewer pastes into the conversation: notes and approvals. */
 function promptText() {
     const page = allFeedback()[pagePath()] ?? {};
-    const byTheme = new Map();
+    let approvals = {};
+    try {
+        approvals = JSON.parse(localStorage.getItem(APPROVALS_KEY) ?? '{}');
+    } catch {
+        /* unreadable storage: the notes still go out */
+    }
+    const notes = new Map();
+    const approved = new Map();
     for (const section of sections()) {
         for (const [theme, text] of Object.entries(page[section.id] ?? {})) {
-            if (!byTheme.has(theme)) byTheme.set(theme, []);
-            byTheme.get(theme).push(`- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
+            if (!notes.has(theme)) notes.set(theme, []);
+            notes.get(theme).push(`- ${blockTitle(section)} (#${section.id}): ${text.trim().replace(/\n+/g, ' / ')}`);
+        }
+        // An approval counts only while the block still looks the way it did
+        // when it was approved; review.js marks that on the section.
+        for (const theme of Object.keys(approvals[section.id] ?? {})) {
+            if (theme === currentTheme() && section.dataset.catState !== 'approved') continue;
+            if (!approved.has(theme)) approved.set(theme, []);
+            approved.get(theme).push(blockTitle(section));
         }
     }
-    if (!byTheme.size) return '';
+    if (!notes.size && !approved.size) return '';
     const order = THEMES.map((t) => t.name);
-    const themes = [...byTheme.keys()].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const themes = [...new Set([...notes.keys(), ...approved.keys()])].sort((a, b) => order.indexOf(a) - order.indexOf(b));
     const lines = [`Catalogue feedback on ${pagePath()}`];
     for (const theme of themes) {
-        lines.push('', `Theme ${themeLabel(theme)}:`, ...byTheme.get(theme));
+        lines.push('', `Theme ${themeLabel(theme)}:`);
+        if (approved.has(theme)) lines.push(`Approved (${approved.get(theme).length}): ${approved.get(theme).join('; ')}`);
+        if (notes.has(theme)) lines.push('Notes:', ...notes.get(theme));
     }
     return lines.join('\n');
 }
@@ -285,7 +305,7 @@ function mountFeedback() {
     summary.setAttribute('aria-labelledby', 'cat-feedback-title');
     summary.innerHTML = `
         <h2 id="cat-feedback-title">Feedback on this page</h2>
-        <p class="cat-note">Every note on this page, from every theme, as one prompt to paste into the conversation. Notes are kept in this browser only.</p>
+        <p class="cat-note">Every note and every approval on this page, from every theme, as one prompt to paste into the conversation. Both are kept in this browser only.</p>
         <pre class="cat-feedback-prompt" data-cat-prompt></pre>
         <div class="cat-feedback-actions">
             <button type="button" class="kp-button" data-cat-copy>Copy prompt</button>
@@ -301,7 +321,7 @@ function mountFeedback() {
 
     function renderSummary() {
         const text = promptText();
-        prompt.textContent = text || 'No notes yet. Write under any block above; the note belongs to the theme on screen.';
+        prompt.textContent = text || 'No notes or approvals yet. Write under any block above; a note belongs to the theme on screen.';
         copy.disabled = !text;
         clear.disabled = !text;
     }
@@ -343,6 +363,9 @@ function mountFeedback() {
     });
 
     document.documentElement.addEventListener(THEME_EVENT, renderFields);
+    // An approval changes the prompt as much as a note does.
+    document.addEventListener('cat-approval-change', renderSummary);
+    document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(renderSummary, 400));
     renderFields();
     renderSummary();
 }

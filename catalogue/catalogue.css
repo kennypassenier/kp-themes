@@ -264,6 +264,16 @@
         margin: 0.5rem 0 0;
     }
 
+    /* A pane that narrows to a few characters, for the short buttons only. */
+    .cat-resize.cat-resize--narrow {
+        min-inline-size: 2.5rem;
+        inline-size: 16rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
     .cat-resize {
         resize: horizontal;
         overflow: auto;

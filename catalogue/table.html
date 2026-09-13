@@ -136,9 +136,11 @@
             <section class="cat-block" id="wide">
                 <h2>Forty columns</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> the wrapper must scroll on its own — put the pointer inside it and scroll sideways, then Tab through the cells and
-                    watch the wrapper follow the focus. The header must stay readable while you scroll. The <i>page</i> must not move sideways at all.
-                    In a theme that paints a frame or a bezel, check that the frame does not get scrolled away with the content.
+                    <b>Look at:</b> the wrapper scrolls on its own and the page never does. Two ways to reach the columns off screen, both to check.
+                    With Tab: the first cell of each row is a link, so Tab walks down the rows, and when the wrapper itself has focus the arrow keys
+                    scroll it sideways — a table cell is not a Tab stop, so Tab alone never walks across a row (Kenny found the earlier note promised
+                    that, and it cannot). With the pointer: scroll sideways inside the wrapper. The header must stay readable while it scrolls, and in
+                    a theme that paints a frame or a bezel, the frame must not scroll away with the content.
                 </div>
                 <div class="cat-stage cat-stage--dense cat-stage--block">
                     <div class="kp-table-wrap" tabindex="0" role="region" aria-label="Forty-column incident detail">
@@ -189,7 +191,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="kp-text-nowrap">INC-4471</td>
+                                    <td class="kp-text-nowrap"><a href="#wide">INC-4471</a></td>
                                     <td class="kp-text-nowrap">Pump house 4</td>
                                     <td class="kp-text-nowrap">L1</td>
                                     <td class="kp-text-nowrap">Night</td>
@@ -231,7 +233,7 @@
                                     <td class="kp-text-nowrap">04:02</td>
                                 </tr>
                                 <tr>
-                                    <td class="kp-text-nowrap">INC-4472</td>
+                                    <td class="kp-text-nowrap"><a href="#wide">INC-4472</a></td>
                                     <td class="kp-text-nowrap">Pump house 4</td>
                                     <td class="kp-text-nowrap">L2</td>
                                     <td class="kp-text-nowrap">Night</td>
@@ -273,7 +275,7 @@
                                     <td class="kp-text-nowrap">04:02</td>
                                 </tr>
                                 <tr>
-                                    <td class="kp-text-nowrap">INC-4473</td>
+                                    <td class="kp-text-nowrap"><a href="#wide">INC-4473</a></td>
                                     <td class="kp-text-nowrap">Pump house 4</td>
                                     <td class="kp-text-nowrap">L3</td>
                                     <td class="kp-text-nowrap">Night</td>
@@ -315,7 +317,7 @@
                                     <td class="kp-text-nowrap">04:02</td>
                                 </tr>
                                 <tr>
-                                    <td class="kp-text-nowrap">INC-4474</td>
+                                    <td class="kp-text-nowrap"><a href="#wide">INC-4474</a></td>
                                     <td class="kp-text-nowrap">Pump house 4</td>
                                     <td class="kp-text-nowrap">L4</td>
                                     <td class="kp-text-nowrap">Night</td>
@@ -357,7 +359,7 @@
                                     <td class="kp-text-nowrap">04:02</td>
                                 </tr>
                                 <tr>
-                                    <td class="kp-text-nowrap">INC-4475</td>
+                                    <td class="kp-text-nowrap"><a href="#wide">INC-4475</a></td>
                                     <td class="kp-text-nowrap">Pump house 4</td>
                                     <td class="kp-text-nowrap">L5</td>
                                     <td class="kp-text-nowrap">Night</td>

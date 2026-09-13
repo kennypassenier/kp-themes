@@ -318,6 +318,7 @@ async function composeAll(host) {
             component.hidden = only.checked && !component.querySelector('.cat-block:not([hidden])');
         }
         count.textContent = `${needing} of ${entries.length} block(s) need approval in ${themeLabel(theme)}.`;
+        document.dispatchEvent(new CustomEvent('cat-approval-change'));
     }
 
     host.addEventListener('click', (event) => {

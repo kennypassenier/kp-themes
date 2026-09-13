@@ -26,6 +26,7 @@
                 <li><a href="#sizes">Sizes</a></li>
                 <li><a href="#icons">Icons</a></li>
                 <li><a href="#extremes">Extremes</a></li>
+                <li><a href="#accelerator">Accelerator</a></li>
                 <li><a href="#groups">In a row</a></li>
             </ul>
 
@@ -111,27 +112,48 @@
             <section class="cat-block" id="extremes">
                 <h2>Extremes</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> drag the right edge of the pane to narrow it. The long label must wrap or ellipse inside the button — it must
-                    never push the button past the pane, and it must never be cut mid-word with no sign that something is missing. The one-character
-                    button must stay square-ish rather than collapsing to a sliver. The button with no label at all is a fault to see, not to hide.
+                    <b>Look at:</b> two panes, both resizable by their bottom-right corner. In the first, narrow it until the long labels run out of
+                    room: they must wrap or ellipse inside the button, never push the button past the pane, and never be cut mid-word with no sign
+                    that something is missing. The second pane holds only the short buttons, so it narrows to a few characters (Kenny found the long
+                    labels stopped the first pane long before a one-character button was tested): the one-character button must stay square-ish rather
+                    than collapse to a sliver, and the button with no label at all is a fault to see, not to hide.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="cat-resize">
                         <p style="margin-block-start: 0">
-                            <button type="button" class="kp-button">
+                            <button type="button" class="kp-button kp-button--primary">
                                 Acknowledge the incident and notify every subscriber on the escalation list
                             </button>
                         </p>
-                        <p>
-                            <button type="button" class="kp-button kp-button--secondary">
+                        <p style="margin-block-end: 0">
+                            <button type="button" class="kp-button">
                                 Ein außerordentlich langes Wort: Rindfleischetikettierungsüberwachungsaufgaben
                             </button>
                         </p>
-                        <p style="margin-block-end: 0">
-                            <button type="button" class="kp-button">؟</button>
-                            <button type="button" class="kp-button"></button>
-                        </p>
                     </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize cat-resize--narrow">
+                        <button type="button" class="kp-button">؟</button>
+                        <button type="button" class="kp-button kp-button--primary">OK</button>
+                        <button type="button" class="kp-button" aria-label="A button with no label"></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="accelerator">
+                <h2>The keyboard accelerator</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the underlined letter. Hover or Tab to each button and one letter of its label gains an underline: the
+                    <code>data-kp-key</code> span marks which. This is the only hover some themes give on purpose — <b>retro</b> quotes a 1995
+                    desktop, which had no hover at all and underlined the accelerator instead (decided 2026-09-12). In retro the underline must appear
+                    on hover and focus and be the only change; in a theme that does not answer the hook, nothing extra may appear and the buttons keep
+                    their own hover.
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button kp-button--primary"><span data-kp-key>S</span>ave</button>
+                    <button type="button" class="kp-button">Save <span data-kp-key>a</span>s…</button>
+                    <button type="button" class="kp-button kp-button--destructive"><span data-kp-key>D</span>elete</button>
                 </div>
             </section>
 
