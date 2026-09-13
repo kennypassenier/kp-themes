@@ -59,7 +59,8 @@ function buildNavigation() {
             const item = document.createElement('li');
             const link = document.createElement('a');
             link.className = 'kp-sidenav__link';
-            link.href = new URL(page.href, ROOT).href;
+            // An example page wears the shell only when asked (pages.js).
+            link.href = new URL(page.review ? `${page.href}?review` : page.href, ROOT).href;
             if (page.href === here) link.setAttribute('aria-current', 'page');
             const label = document.createElement('span');
             label.className = 'kp-sidenav__label';

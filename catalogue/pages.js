@@ -3,7 +3,7 @@
 // gates/check-catalogue.mjs refuses a catalogue page or a research demo that
 // is missing here, and an entry here with no page behind it.
 
-/** @typedef {{ href: string, label: string, component?: boolean }} Page */
+/** @typedef {{ href: string, label: string, component?: boolean, review?: boolean }} Page */
 
 /** @type {{ group: string, pages: Page[] }[]} */
 export const PAGES = [
@@ -32,6 +32,27 @@ export const PAGES = [
             { href: 'catalogue/data.html', label: 'Showing data', component: true },
             { href: 'catalogue/media.html', label: 'Media, grid, marquee', component: true },
             { href: 'catalogue/page.html', label: 'Footer, palette, theme menu', component: true },
+            { href: 'catalogue/page-effects.html', label: 'Page effects', component: true },
+        ],
+    },
+    {
+        // The ten example pages as fixed pages [scope-31]. Not component pages:
+        // a page is read whole, so the review page does not gather it. The
+        // pages are generated (gates/generate-examples.mjs) and are also the
+        // documentation site's; they put the catalogue's shell on only when
+        // asked by `?review`, which the navigation adds (catalogue.js).
+        group: 'Example pages',
+        pages: [
+            { href: 'examples/app-shell.html', label: 'Application shell', review: true },
+            { href: 'examples/login.html', label: 'Sign in', review: true },
+            { href: 'examples/list-with-form.html', label: 'List with a filter form', review: true },
+            { href: 'examples/settings.html', label: 'Settings', review: true },
+            { href: 'examples/wizard.html', label: 'Wizard', review: true },
+            { href: 'examples/empty-and-error.html', label: 'Empty and error states', review: true },
+            { href: 'examples/hero.html', label: 'Hero', review: true },
+            { href: 'examples/pricing-and-testimonials.html', label: 'Pricing and testimonials', review: true },
+            { href: 'examples/article.html', label: 'Article', review: true },
+            { href: 'examples/profile.html', label: 'Profile', review: true },
         ],
     },
     {

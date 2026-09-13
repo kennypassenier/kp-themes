@@ -202,6 +202,20 @@ function main() {
     if (phantom.length) {
         console.error(`${phantom.length} page(s) in the navigation do not exist:\n  ` + phantom.join('\n  '));
     }
+    // An example page the navigation opens with `?review` must answer it with
+    // the shell (gates/generate-examples.mjs), or the reviewer lands on a page
+    // with no way back [scope-31].
+    const reviewHrefs = [...shell.matchAll(/href:\s*'([^']+)'[^}]*review:\s*true/g)].map((m) => m[1]);
+    const unanswered = reviewHrefs
+        .filter((page) => existsSync(new URL(page, root)))
+        .filter((page) => !readFileSync(new URL(page, root), 'utf8').includes("'../catalogue/catalogue.js'"))
+        .sort();
+    if (unanswered.length) {
+        console.error(
+            `${unanswered.length} page(s) the navigation opens with ?review do not load the catalogue shell when asked:\n  ` +
+                unanswered.join('\n  '),
+        );
+    }
 
     // A class the package does not define styles nothing, and a page using one
     // shows the reviewer the page's mistake rather than the package's look.
@@ -281,7 +295,7 @@ function main() {
     // the whole page down with it: `catalogue/fingerprint.js` matched
     // EasyPrivacy's `/fingerprint.js^$domain=~github.com`, and FireDragon ships
     // uBlock Origin with that list on (fix-23, Kenny 2026-09-13).
-    const PUBLISHED = ['catalogue', 'research', 'css', 'js', 'fonts'];
+    const PUBLISHED = ['catalogue', 'research', 'examples', 'css', 'js', 'fonts'];
     const BLOCKED_WORDS = /fingerprint|analytics|tracking|tracker|beacon|telemetry|advert/i;
     const blockable = PUBLISHED.flatMap((dir) =>
         readdirSync(new URL(`${dir}/`, root), { recursive: true })
@@ -304,6 +318,7 @@ function main() {
         unlisted.length ||
         phantom.length ||
         shellless.length ||
+        unanswered.length ||
         undefinedClasses.length ||
         bare.length
     )

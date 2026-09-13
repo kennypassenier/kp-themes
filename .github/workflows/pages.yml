@@ -16,7 +16,9 @@ name: Documentation site
 # round-six branch, where the catalogue and the research demos live, and
 # carries only what those pages load — measured by loading all 23 of them:
 # catalogue/, research/, css/, js/ and fonts/. The documentation stays the
-# one on main, whichever branch the push came from.
+# one on main, whichever branch the push came from. examples/ joined when the
+# ten example pages became fixed pages of the catalogue's navigation
+# [scope-31]; they load nothing beyond css/, js/ and catalogue/.
 
 on:
   push:
@@ -66,7 +68,7 @@ jobs:
           # The review site: the pages and what they load, nothing else —
           # docs/ stays out here as well (MR5-PAGES).
           mkdir -p _site/review
-          for dir in catalogue research css js fonts; do
+          for dir in catalogue research examples css js fonts; do
             cp -r "review/$dir" "_site/review/$dir"
           done
           printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/index.html">\n' > _site/review/index.html

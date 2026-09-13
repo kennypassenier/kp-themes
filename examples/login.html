@@ -104,5 +104,20 @@
             </div>
         </main>
         <script type="module" src="../js/auto.js"></script>
+        <script>
+            if (new URLSearchParams(location.search).has('review')) {
+                var sheet = document.createElement('link');
+                sheet.rel = 'stylesheet';
+                sheet.href = '../catalogue/catalogue.css';
+                document.head.append(sheet);
+                var check = document.createElement('script');
+                check.src = '../catalogue/boot-check.js';
+                document.body.append(check);
+                var shell = document.createElement('script');
+                shell.type = 'module';
+                shell.src = '../catalogue/catalogue.js';
+                document.body.append(shell);
+            }
+        </script>
     </body>
 </html>

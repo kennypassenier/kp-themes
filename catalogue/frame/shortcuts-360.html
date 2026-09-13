@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Shortcut sheet at 360 px · kp-themes catalogue</title>
+        <link rel="stylesheet" href="../deps.css" />
+    </head>
+    <body class="cat-viewport-page">
+        <!-- A window of its own for catalogue/page-effects.html#palette-narrow:
+             the sheet's width follows the viewport (min(30.625rem, 92vw)), so
+             only a document 360 px wide shows it on a phone. The markup is the
+             package's; the theme is the page around the frame's. -->
+        <dialog class="kp-shortcuts" open aria-labelledby="pe-sheet-title">
+            <h2 class="kp-dialog__title" id="pe-sheet-title">Keyboard shortcuts</h2>
+            <section>
+                <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+                <dl class="kp-shortcuts__list">
+                    <div class="kp-shortcuts__row">
+                        <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                        <dd>Open the commands</dd>
+                    </div>
+                    <div class="kp-shortcuts__row">
+                        <dt><kbd class="kp-palette__keys">?</kbd></dt>
+                        <dd>Show this sheet</dd>
+                    </div>
+                </dl>
+            </section>
+            <section>
+                <h3 class="kp-shortcuts__group-label">In the readings table</h3>
+                <dl class="kp-shortcuts__list">
+                    <div class="kp-shortcuts__row">
+                        <dt><kbd class="kp-palette__keys">Shift L</kbd></dt>
+                        <dd>Lock out the line of the selected reading and ask the shift lead to sign it</dd>
+                    </div>
+                </dl>
+            </section>
+        </dialog>
+        <script src="./theme-guard.js"></script>
+        <script type="module" src="./follow-theme.js"></script>
+    </body>
+</html>
