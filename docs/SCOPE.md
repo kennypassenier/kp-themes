@@ -1286,3 +1286,7 @@ close button, no dot on the current page in pagination, inner spacing in the
 wizard and the laurels, a theme menu scrollbar that follows its corners,
 adding a tag in the tag combobox, and dragging a reorder item across any
 number of rows.
+
+**scope-61 · Only retro underlines the accelerator letter.** Kenny,
+2026-09-13, after asking whether every theme should: it stays retro's alone,
+as decided on 2026-09-12. Every theme keeps a marked label whole (scope-57).
