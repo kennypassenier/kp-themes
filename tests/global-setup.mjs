@@ -14,6 +14,7 @@ export default async function globalSetup() {
         'react-components',
         'react-tables',
         'react-datatable',
+        'react-datatable-more',
         'examples-react',
         'react-button',
         'react-container',

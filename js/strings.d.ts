@@ -130,6 +130,65 @@ export type Strings = {
     tableSortDescending: string;
     tableFailed: string;
     tableRetry: string;
+    /**
+     * One key of a multi-column sort in words; `kind` is text, number, date or order
+     */
+    tableSortKey: (column: string, direction: 'ascending' | 'descending', kind: string) => string;
+    /**
+     * The multi-sort summary, from the keys in order
+     */
+    tableSortedBy: (keys: string[]) => string;
+    tableNotSorted: string;
+    /**
+     * The column menu's button
+     */
+    tableColumns: string;
+    /**
+     * The column menu's name
+     */
+    tableColumnsLabel: string;
+    /**
+     * A column that cannot be hidden, in the menu
+     */
+    tableColumnLocked: (column: string) => string;
+    tableShowAllColumns: string;
+    tableColumnsShown: (shown: number, total: number) => string;
+    /**
+     * The expansion column's header, read by a screen reader only
+     */
+    tableDetailsColumn: string;
+    /**
+     * A row's expand button
+     */
+    tableRowDetails: (key: string) => string;
+    /**
+     * An editable cell's button
+     */
+    tableEdit: (column: string, key: string, value: string) => string;
+    /**
+     * The editor's accessible name
+     */
+    tableEditField: (column: string, key: string) => string;
+    /**
+     * Said when an editor opens
+     */
+    tableEditing: (column: string, key: string) => string;
+    tableEdited: (key: string, column: string, before: string, after: string) => string;
+    tableEditUndone: (key: string, column: string, value: string) => string;
+    tableEditCancelled: string;
+    tableEditRequired: string;
+    /**
+     * A rejected edit with no message of its own
+     */
+    tableEditInvalid: string;
+    /**
+     * The keyboard grid's line before the first cell is focused
+     */
+    tableGridStart: string;
+    /**
+     * Row 0 is the header row
+     */
+    tableGridPosition: (row: number, rows: number, column: string, text: string) => string;
     formRequired: string;
     formInvalid: string;
     formSummaryOne: string;
@@ -315,6 +374,26 @@ export type Strings = {
  * @property {string} tableSortDescending
  * @property {string} tableFailed
  * @property {string} tableRetry
+ * @property {(column: string, direction: 'ascending' | 'descending', kind: string) => string} tableSortKey  One key of a multi-column sort in words; `kind` is text, number, date or order
+ * @property {(keys: string[]) => string} tableSortedBy  The multi-sort summary, from the keys in order
+ * @property {string} tableNotSorted
+ * @property {string} tableColumns          The column menu's button
+ * @property {string} tableColumnsLabel     The column menu's name
+ * @property {(column: string) => string} tableColumnLocked  A column that cannot be hidden, in the menu
+ * @property {string} tableShowAllColumns
+ * @property {(shown: number, total: number) => string} tableColumnsShown
+ * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
+ * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
+ * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name
+ * @property {(column: string, key: string) => string} tableEditing  Said when an editor opens
+ * @property {(key: string, column: string, before: string, after: string) => string} tableEdited
+ * @property {(key: string, column: string, value: string) => string} tableEditUndone
+ * @property {string} tableEditCancelled
+ * @property {string} tableEditRequired
+ * @property {string} tableEditInvalid     A rejected edit with no message of its own
+ * @property {string} tableGridStart        The keyboard grid's line before the first cell is focused
+ * @property {(row: number, rows: number, column: string, text: string) => string} tableGridPosition  Row 0 is the header row
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne

@@ -165,7 +165,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // shorthand knob into its block and inline halves
     // (--kp-datatable-bar-padding-block, --kp-datatable-bar-padding-inline):
     // 143 - 1 + 2.
-    assert.equal(result.expected, 144, 'AR21 counted 144 --kp-* properties in css/components.css');
+    // The data table's seven features of the same day ("Alle zeven, nu")
+    // added eleven: the sort order ring's radius and size, the expand
+    // button's width and the detail row's block padding, the fixed column's
+    // offset, ground, hairline and hairline width, and the edit button's
+    // underline, pencil and editor floor: 144 + 11.
+    assert.equal(result.expected, 155, 'AR21 counted 155 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -198,7 +203,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 144);
+    assert.equal(result.readCount, 155);
     assert.deepEqual(result.unread, []);
 });
 

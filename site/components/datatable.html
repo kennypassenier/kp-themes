@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Data table — kp-themes</title>
-        <meta name="description" content="Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data." />
+        <meta name="description" content="Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead." />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
         <link rel="stylesheet" href="../../css/layout.css" />
@@ -145,11 +145,11 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Data table</h1>
-                    <p class="kp-prose">Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data.</p>
+                    <p class="kp-prose">Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead.</p>
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>
-                    <p class="kp-prose">For a table a reader will interrogate — hundreds of rows, a search box, a sort. Not for thousands: there is no virtualisation, no in-cell editing and no export here, and a grid is a different product. Not for a handful of rows either, where a search box over six lines is furniture.</p>
+                    <p class="kp-prose">For a table a reader will interrogate — hundreds of rows, a search box, a sort on one column or several, a choice of columns, rows that open, values edited in place, arrow keys between cells. Not for thousands without a server behind it: there is no virtualisation, and export is the app’s, from the rows the table hands over. Not for a handful of rows either, where a search box over six lines is furniture.</p>
                 </section>
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
@@ -232,49 +232,86 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-cards</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-cell-class</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-column-hidden</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-column-locked</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-column-menu</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-datatable</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-actions</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-datatable-card-sort</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-clear</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-clear-selection</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-collapse-all</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-column</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-columns</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-datatable-columns-count</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-datatable-columns-reset</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-columns-toggle</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-density</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-edit-log</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-datatable-editor</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-editor-wrap</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-empty</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-datatable-failed</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-expand-all</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-failed</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-filter-toggle</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-filters</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-datatable-grid-readout</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-loading</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-page-size</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-pager</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-pills</code></td><td>selector, written</td></tr>
-                            <tr><td><code>data-kp-datatable-retry</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-retry</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-scope</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-search</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-selected-count</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-sort-by</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-sort-direction</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-datatable-sort-reset</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-sort-summary</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-status</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datatable-undo</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-debounce</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-direction</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-edit</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-edit-cell</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-edit-max</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-edit-min</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-edit-value</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-expand-cell</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-expand-column</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-expand-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-expandable</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-expanded</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filter</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filter-bound</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-filter-column</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-filter-value</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-filters-open</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-fixed</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-fixed-columns</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-max</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-page-size</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-page-sizes</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-row-key</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-row-detail</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-row-key</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-row-key-field</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-row-toggle</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-search</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-select</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-select-all</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-select-row</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-select-row</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-server</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-sort</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-sort-cycle</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-sort-multi</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-sort-order</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-sort-priority</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-total</code></td><td>read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -287,7 +324,7 @@
                     <h3 class="kp-fw-semibold"><code>DataTable</code></h3>
                     <div class="kp-table-wrap" data-kp-region-label="DataTable props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>columns</code></td><td><code>Column[]</code></td><td>required</td><td></td></tr>
-                            <tr><td><code>rows</code></td><td><code>Record&lt;string, unknown&gt;[]</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>rows</code></td><td><code>Record&lt;string, unknown&gt;[]</code></td><td>optional</td><td>Required unless `load` supplies them.</td></tr>
                             <tr><td><code>rowKey</code></td><td><code>(row: Record&lt;string, unknown&gt;, index: number) =&gt; string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>pageSize</code></td><td><code>number</code></td><td>optional</td><td>Default 25.</td></tr>
                             <tr><td><code>pageSizes</code></td><td><code>number[]</code></td><td>optional</td><td>The rows-per-page choice. Default 10, 25, 50, 100; an empty list offers none.</td></tr>
@@ -319,11 +356,31 @@
                             <tr><td><code>query</code></td><td><code>string</code></td><td>optional</td><td>Controlled.</td></tr>
                             <tr><td><code>defaultQuery</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>onQueryChange</code></td><td><code>(query: string) =&gt; void</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>debounceMs</code></td><td><code>number</code></td><td>optional</td><td>Default 0.</td></tr>
-                            <tr><td><code>sort</code></td><td><code>Sort</code></td><td>optional</td><td>Controlled.</td></tr>
+                            <tr><td><code>debounceMs</code></td><td><code>number</code></td><td>optional</td><td>Default 0, and 300 with `load`.</td></tr>
+                            <tr><td><code>sort</code></td><td><code>Sort</code></td><td>optional</td><td>Controlled: a sort on one column.</td></tr>
                             <tr><td><code>defaultSort</code></td><td><code>Sort</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>onSortChange</code></td><td><code>(sort: Sort) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onSortChange</code></td><td><code>(sort: Sort) =&gt; void</code></td><td>optional</td><td>Hears the first key of every sort.</td></tr>
+                            <tr><td><code>multiSort</code></td><td><code>boolean</code></td><td>optional</td><td>Shift + click (or Shift + Enter) adds a sort key. Default false.</td></tr>
+                            <tr><td><code>sorts</code></td><td><code>SortKey[]</code></td><td>optional</td><td>Controlled: every key, the first first.</td></tr>
+                            <tr><td><code>defaultSorts</code></td><td><code>SortKey[]</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onSortsChange</code></td><td><code>(sorts: SortKey[]) =&gt; void</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>sortCycle</code></td><td><code>'two' | 'three'</code></td><td>optional</td><td>Default two; three adds an unsorted state.</td></tr>
+                            <tr><td><code>columnMenu</code></td><td><code>boolean</code></td><td>optional</td><td>A menu of columns to show or hide; a `locked` column stays. Default false.</td></tr>
+                            <tr><td><code>hiddenColumns</code></td><td><code>string[]</code></td><td>optional</td><td>Controlled, by column key.</td></tr>
+                            <tr><td><code>defaultHiddenColumns</code></td><td><code>string[]</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onHiddenColumnsChange</code></td><td><code>(keys: string[]) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>renderDetail</code></td><td><code>(row: Record&lt;string, unknown&gt;, index: number) =&gt; import('react').ReactNode</code></td><td>optional</td><td>A row's detail; each row gets a button that opens it.</td></tr>
+                            <tr><td><code>rowExpandable</code></td><td><code>(row: Record&lt;string, unknown&gt;, index: number) =&gt; boolean</code></td><td>optional</td><td>Default every row.</td></tr>
+                            <tr><td><code>expanded</code></td><td><code>string[]</code></td><td>optional</td><td>Controlled: the open rows, by key.</td></tr>
+                            <tr><td><code>defaultExpanded</code></td><td><code>string[]</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>onExpandedChange</code></td><td><code>(keys: string[]) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>expandGlyph</code></td><td><code>string</code></td><td>optional</td><td>Default ▸.</td></tr>
+                            <tr><td><code>collapseGlyph</code></td><td><code>string</code></td><td>optional</td><td>Default ▾.</td></tr>
+                            <tr><td><code>fixedColumns</code></td><td><code>boolean | number</code></td><td>optional</td><td>The leading columns that stay while the box scrolls sideways: true for through the first column, or a count.</td></tr>
+                            <tr><td><code>load</code></td><td><code>(request: DataRequest) =&gt; Promise&lt;DataAnswer&gt; | DataAnswer</code></td><td>optional</td><td>The rows come from here: asked again on every search, sort, filter and page, and an answer that arrives after a newer request is thrown away.</td></tr>
+                            <tr><td><code>onCellEdit</code></td><td><code>(edit: CellEdit) =&gt; unknown</code></td><td>optional</td><td>Hears an edit before it is saved.</td></tr>
+                            <tr><td><code>grid</code></td><td><code>boolean</code></td><td>optional</td><td>Moving through cells with the arrow keys, as an ARIA grid. Default false.</td></tr>
+                            <tr><td><code>gridPageRows</code></td><td><code>number</code></td><td>optional</td><td>Rows Page Up and Page Down move. Default 5.</td></tr>
                             <tr><td><code>page</code></td><td><code>number</code></td><td>optional</td><td>Controlled, 0-based.</td></tr>
                             <tr><td><code>defaultPage</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>onPageChange</code></td><td><code>(page: number) =&gt; void</code></td><td>optional</td><td></td></tr>
@@ -339,8 +396,8 @@
                             <tr><td><code>loadingContent</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What the loading slot shows. Default: three skeleton lines.</td></tr>
                             <tr><td><code>error</code></td><td><code>boolean | import('react').ReactNode</code></td><td>optional</td><td>The failed state: true for the dictionary's text, or the text itself.</td></tr>
                             <tr><td><code>onRetry</code></td><td><code>() =&gt; void</code></td><td>optional</td><td>The failed state's way out; the `kp-datatable-retry` event fires as well.</td></tr>
-                            <tr><td><code>apiRef</code></td><td><code>import('react').Ref&lt;DataTableApi&gt;</code></td><td>optional</td><td>`rows()` — the rows the table shows, every page of the view or this page.</td></tr>
-                            <tr><td><code>onViewChange</code></td><td><code>(view: { keys: string[]; pageKeys: string[]; rows: Record&lt;string, unknown&gt;[]; pageRows: Record&lt;string, unknown&gt;[]; query: string; scope: string | null; filters: Record&lt;string, FilterValue&gt;; sort: Sort; page: number; pageSize: number; }) =&gt; void</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>apiRef</code></td><td><code>import('react').Ref&lt;DataTableApi&gt;</code></td><td>optional</td><td>`rows()` — the rows the table shows, every page of the view or this page; `reload()` asks `load` again.</td></tr>
+                            <tr><td><code>onViewChange</code></td><td><code>(view: { keys: string[]; pageKeys: string[]; rows: Record&lt;string, unknown&gt;[]; pageRows: Record&lt;string, unknown&gt;[]; query: string; scope: string | null; filters: Record&lt;string, FilterValue&gt;; sort: Sort; sorts: SortKey[]; hidden: string[]; expanded: string[]; page: number; pageSize: number; }) =&gt; void</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>removeGlyph</code></td><td><code>string</code></td><td>optional</td><td>A filter pill's remove glyph. Default ×.</td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
@@ -353,19 +410,34 @@
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-datatable-view</code></td><td>Fired on the wrapper when the visible set changes. A contract value [TH26]. Detail: View, plus `rows` and `pageRows` (the elements).</td></tr>
                             <tr><td><code>kp-datatable-select</code></td><td>Fired when the selection changes; the detail carries the selected row keys and rows.</td></tr>
-                            <tr><td><code>kp-datatable-sort</code></td><td>Fired when the sort changes: `{ column, direction }` or null.</td></tr>
+                            <tr><td><code>kp-datatable-sort</code></td><td>Fired when the sort changes: `{ column, direction }` or null — the first key; the view carries all of them as `sorts`.</td></tr>
                             <tr><td><code>kp-datatable-retry</code></td><td>Fired when the failed state's retry control is pressed; the app loads again and sets the state.</td></tr>
+                            <tr><td><code>kp-datatable-columns</code></td><td>Fired when the reader shows or hides a column: `{ hidden }`, the column indices.</td></tr>
+                            <tr><td><code>kp-datatable-expand</code></td><td>Fired when a row opens or closes: `{ key, row, open, cell, expanded }`; `cell` is the detail cell, for an app that fills it then.</td></tr>
+                            <tr><td><code>kp-datatable-request</code></td><td>Fired when a server-backed table needs rows: the DataRequest, plus `respond(answer)` and `fail(error)`.</td></tr>
+                            <tr><td><code>kp-datatable-edit</code></td><td>Fired, cancelable, when an edited value is about to be saved (EditDetail); `preventDefault()` refuses it.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-cell-truncate-max</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-datatable-bar-padding-block</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-bar-padding-inline</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-busy-opacity</code></td><td><code>0.55</code></td></tr>
+                            <tr><td><code>--kp-datatable-edit-glyph</code></td><td><code>'✎'</code></td></tr>
+                            <tr><td><code>--kp-datatable-edit-rule</code></td><td><code>var(--border-strong)</code></td></tr>
+                            <tr><td><code>--kp-datatable-editor-min</code></td><td><code>8rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-expand-size</code></td><td><code>2em</code></td></tr>
                             <tr><td><code>--kp-datatable-filter-min</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-fixed-ground</code></td><td><code>var(--kp-datatable-head-ground, var(--background))</code></td></tr>
+                            <tr><td><code>--kp-datatable-fixed-rule</code></td><td><code>var(--border-strong)</code></td></tr>
+                            <tr><td><code>--kp-datatable-fixed-rule-width</code></td><td><code>1px</code></td></tr>
+                            <tr><td><code>--kp-datatable-fixed-start</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-datatable-head-ground</code></td><td><code>var(--background)</code></td></tr>
                             <tr><td><code>--kp-datatable-max-height</code></td><td><code>24rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-sort-order-radius</code></td><td><code>999px</code></td></tr>
+                            <tr><td><code>--kp-datatable-sort-order-size</code></td><td><code>0.7em</code></td></tr>
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
@@ -397,6 +469,12 @@
                             <tr><td><code>sorted ascending / descending</code></td><td>An arrow after the header text and the sort state on the header itself; the arrow is the second carrier, the state is what is announced.</td></tr>
                             <tr><td><code>.kp-datatable__pager / __page</code></td><td>The page controls and the “page m of n” label, in same-width digits.</td></tr>
                             <tr><td><code>.kp-datatable__page-size</code></td><td>The rows-per-page control, before the pager.</td></tr>
+                            <tr><td><code>.kp-datatable__sort-order / __sort-summary</code></td><td>With `data-kp-sort-multi`: each sorted header’s place in the sort, and the sort said in words above the table.</td></tr>
+                            <tr><td><code>.kp-datatable__columns / __column-option</code></td><td>With `data-kp-column-menu`: the menu of columns, on the popover layer, and one checkbox per column; the key column is locked.</td></tr>
+                            <tr><td><code>.kp-datatable__expand / __detail</code></td><td>With `data-kp-expandable`: the button that opens a row, and the detail row under it that spans every column.</td></tr>
+                            <tr><td><code>fixed columns</code></td><td>With `data-kp-fixed-columns`: the key column stays at the left edge on an opaque ground, with a hairline, while the box scrolls sideways.</td></tr>
+                            <tr><td><code>.kp-datatable__edit / __editor / __edit-log</code></td><td>With `data-kp-edit` on a header: a value as a button with a dashed underline, the package’s control that edits it in the cell, and the line that says what changed, with Undo.</td></tr>
+                            <tr><td><code>.kp-datatable__grid-readout</code></td><td>With `data-kp-grid`: the table is an ARIA grid, and this line says which cell has the focus.</td></tr>
                             <tr><td><code>.kp-datatable__status</code></td><td>The live region that says how many rows are showing after a search, a sort or a page.</td></tr>
                             <tr><td><code>.kp-datatable__search</code></td><td>The search box. Typing is debounced so a long list is not re-sorted on every keystroke.</td></tr>
                             <tr><td><code>empty</code></td><td>When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.</td></tr>

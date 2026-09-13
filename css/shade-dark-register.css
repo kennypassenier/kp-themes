@@ -88,6 +88,16 @@
         border-radius: var(--radius);
     }
 
+    /* Inside a keyboard grid's cell the ring is drawn inward, the outline
+       at the edge and the moat inside it, because an outer ring on a cell is
+       covered by the next cell's ground [Kenny's form of 2026-09-13,
+       #keyboard]. */
+    [data-theme='shade-dark'] .kp-table[role='grid'] :is(th, td):focus-visible {
+        outline-offset: -2px;
+        box-shadow: inset 0 0 0 4px var(--background);
+        border-radius: 0;
+    }
+
     /* ── The hooks [S45]: the headline, the mark, the rule, the divider ── */
 
     /* The headline reveal: words arrive out of a blur, one after another,

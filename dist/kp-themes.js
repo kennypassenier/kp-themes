@@ -197,7 +197,7 @@ var DEFAULT_STRINGS = Object.freeze({
   tableSelectRow: (key) => `Select row ${key}`,
   tableEmpty: "Nothing found.",
   tableRows: (n) => `${n} rows`,
-  tableRowsFiltered: (shown, total) => `${shown} of ${total} rows`,
+  tableRowsFiltered: (shown2, total) => `${shown2} of ${total} rows`,
   /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
   tablePage: (at, of) => `${at} / ${of}`,
   /**
@@ -238,6 +238,33 @@ var DEFAULT_STRINGS = Object.freeze({
   tableSortDescending: "Descending",
   tableFailed: "The rows could not be loaded.",
   tableRetry: "Try again",
+  // The seven features of 2026-09-13 ("Alle zeven, nu"), in the words the
+  // approved mocks of research/datatable/demo.html used.
+  tableSortKey: (column, direction, kind) => {
+    const up = direction === "ascending";
+    if (kind === "number" || kind === "order") return `${column} ${up ? "low to high" : "high to low"}`;
+    if (kind === "date") return `${column} ${up ? "oldest first" : "newest first"}`;
+    return `${column} ${up ? "A to Z" : "Z to A"}`;
+  },
+  tableSortedBy: (keys) => `Sorted by ${keys.join(", then ")}.`,
+  tableNotSorted: "Not sorted.",
+  tableColumns: "Columns",
+  tableColumnsLabel: "Visible columns",
+  tableColumnLocked: (column) => `${column} (always shown)`,
+  tableShowAllColumns: "Show every column",
+  tableColumnsShown: (shown2, total) => `${shown2} of ${total} columns shown`,
+  tableDetailsColumn: "Details",
+  tableRowDetails: (key) => `Details for ${key}`,
+  tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
+  tableEditField: (column, key) => `${column} of ${key}`,
+  tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
+  tableEdited: (key, column, before, after) => `${key}: ${column} changed from ${before} to ${after}.`,
+  tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
+  tableEditCancelled: "Edit cancelled; nothing changed.",
+  tableEditRequired: "A value is required.",
+  tableEditInvalid: "This value cannot be saved.",
+  tableGridStart: "Tab into the table to start.",
+  tableGridPosition: (row, rows, column, text) => `${row === 0 ? "Header row" : `Row ${row} of ${rows}`}, column ${column}: ${text}`,
   formRequired: "required",
   formInvalid: "This field is not filled in correctly.",
   formSummaryOne: "1 field is not filled in correctly.",
@@ -746,13 +773,13 @@ function attachToTop(root = document, { strings, after } = {}) {
       glyph.setAttribute("aria-hidden", "true");
       button.append(glyph);
     }
-    let shown = false;
+    let shown2 = false;
     let queued = false;
     const decide = () => {
       queued = false;
       const next = view.scrollY > threshold;
-      if (next === shown) return;
-      shown = next;
+      if (next === shown2) return;
+      shown2 = next;
       button.toggleAttribute("data-kp-to-top-shown", next);
       button.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next } }));
     };
@@ -1444,7 +1471,7 @@ function createListbox({
   const stampedSelected = /* @__PURE__ */ new Set();
   let buffer = "";
   let bufferTimer = 0;
-  const shown = (option) => {
+  const shown2 = (option) => {
     for (let el = (
       /** @type {HTMLElement | null} */
       option
@@ -1453,7 +1480,7 @@ function createListbox({
   };
   const options = () => (
     /** @type {HTMLElement[]} */
-    [...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector) && shown(
+    [...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector) && shown2(
       /** @type {HTMLElement} */
       el
     ))
@@ -1811,9 +1838,9 @@ function attachComboboxes(root = document, {
         );
         const text = (option.textContent ?? "").toLowerCase();
         const taken = isTags && !duplicates && chosen.includes(option.dataset.value ?? text);
-        const shown = !taken && (query === "" || matcher(text, query));
-        option.hidden = !shown;
-        if (shown) visible += 1;
+        const shown2 = !taken && (query === "" || matcher(text, query));
+        option.hidden = !shown2;
+        if (shown2) visible += 1;
       }
       listbox.refresh();
       if (status !== null) status.textContent = RESULTS_TEXT(visible);
@@ -2332,9 +2359,9 @@ function attachPalettes(root = document, {
           element2
         );
         const text = [...option.childNodes].filter((n) => !(n instanceof HTMLElement && n.tagName === "KBD")).map((n) => n.textContent ?? "").join("");
-        const shown = matcher(text, query);
-        option.hidden = !shown;
-        if (shown) visible += 1;
+        const shown2 = matcher(text, query);
+        option.hidden = !shown2;
+        if (shown2) visible += 1;
       }
       for (const element2 of list.querySelectorAll(GROUP)) {
         const group = (
@@ -2453,19 +2480,29 @@ function attachPalettes(root = document, {
 // js/datatable.js
 var datatable_exports = {};
 __export(datatable_exports, {
+  COLUMNS_EVENT: () => COLUMNS_EVENT,
+  DETAIL: () => DETAIL,
+  EDIT_EVENT: () => EDIT_EVENT,
+  EXPAND_EVENT: () => EXPAND_EVENT,
+  GRID_PAGE_ROWS: () => GRID_PAGE_ROWS,
   PAGE_SIZE: () => PAGE_SIZE,
   PAGE_SIZES: () => PAGE_SIZES,
+  REQUEST_EVENT: () => REQUEST_EVENT,
   RETRY_EVENT: () => RETRY_EVENT,
   SELECT_EVENT: () => SELECT_EVENT,
+  SERVER_DEBOUNCE_MS: () => SERVER_DEBOUNCE_MS,
   SORT_EVENT: () => SORT_EVENT,
   VIEW_EVENT: () => VIEW_EVENT,
   attachDataTables: () => attachDataTables,
+  attachGrid: () => attachGrid,
   compare: () => compare,
   compareByOrder: () => compareByOrder,
   dataTable: () => dataTable,
   filterActive: () => filterActive,
   filterPills: () => filterPills,
-  matchesFilter: () => matchesFilter
+  matchesFilter: () => matchesFilter,
+  nextSorts: () => nextSorts,
+  syncFixedColumns: () => syncFixedColumns
 });
 
 // js/locale.js
@@ -3021,13 +3058,30 @@ var PILLS = "[data-kp-datatable-pills]";
 var CARD_SORT = "[data-kp-datatable-card-sort]";
 var SELECT_ALL = "[data-kp-select-all]";
 var SELECT_ROW = "[data-kp-select-row]";
+var SORT_SUMMARY = "[data-kp-datatable-sort-summary]";
+var SORT_RESET = "[data-kp-datatable-sort-reset]";
+var EXPAND_ALL = "[data-kp-datatable-expand-all]";
+var COLLAPSE_ALL = "[data-kp-datatable-collapse-all]";
+var EXPAND_COLUMN = "[data-kp-expand-column]";
+var ROW_TOGGLE = "[data-kp-row-toggle]";
+var DETAIL = "[data-kp-row-detail]";
+var EDIT_CELL = "[data-kp-edit-cell]";
+var EDIT_VALUE = "[data-kp-edit-value]";
+var EDITOR_WRAP = "[data-kp-datatable-editor-wrap]";
+var SKELETON_ROW = "[data-kp-skeleton-row]";
 var CHECK_CLASS = "kp-field__check";
 var VIEW_EVENT = "kp-datatable-view";
 var SELECT_EVENT = "kp-datatable-select";
 var SORT_EVENT = "kp-datatable-sort";
 var RETRY_EVENT = "kp-datatable-retry";
+var COLUMNS_EVENT = "kp-datatable-columns";
+var EXPAND_EVENT = "kp-datatable-expand";
+var REQUEST_EVENT = "kp-datatable-request";
+var EDIT_EVENT = "kp-datatable-edit";
 var PAGE_SIZE = 25;
 var PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
+var SERVER_DEBOUNCE_MS = 300;
+var GRID_PAGE_ROWS = 5;
 function compare(a, b, kind, locale) {
   if (kind === "number") {
     const left = parseNumber(a, locale);
@@ -3049,6 +3103,19 @@ function compareByOrder(order, a, b, fallback2) {
     return at === -1 ? order.length : at;
   };
   return rank(a) - rank(b) || fallback2(a, b);
+}
+function nextSorts(keys, column, { add = false, cycle = "two" } = {}) {
+  const current2 = keys.find((key) => key.column === column);
+  if (add) {
+    if (current2 === void 0) return [...keys, { column, direction: "ascending" }];
+    if (current2.direction === "ascending") return keys.map((key) => key.column === column ? { column, direction: "descending" } : key);
+    return keys.filter((key) => key.column !== column);
+  }
+  if (current2 !== void 0 && keys.length === 1) {
+    if (current2.direction === "ascending") return [{ column, direction: "descending" }];
+    return cycle === "three" ? [] : [{ column, direction: "ascending" }];
+  }
+  return [{ column, direction: "ascending" }];
 }
 var splitList = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
 function filterActive(kind, value) {
@@ -3098,6 +3165,164 @@ function filterPills(kind, column, value, s) {
   );
   return [{ label: s.tableFilterRange(column, from || s.tableFilterOpenEnd, to || s.tableFilterOpenEnd), without: void 0 }];
 }
+var shown = (element) => !/** @type {HTMLElement} */
+element.hidden && getComputedStyle(element).display !== "none";
+function syncFixedColumns(table, count) {
+  const head = table.tHead?.rows[0];
+  const starts = /* @__PURE__ */ new Map();
+  let last = -1;
+  if (head !== void 0 && count > 0) {
+    let offset = 0;
+    for (const cell of head.cells) {
+      if (cell.cellIndex >= count) break;
+      if (!shown(cell)) continue;
+      starts.set(cell.cellIndex, offset);
+      offset += cell.getBoundingClientRect().width;
+      last = cell.cellIndex;
+    }
+  }
+  for (const row of table.rows) {
+    const whole = row.matches(DETAIL);
+    for (const cell of row.cells) {
+      const start = whole ? void 0 : starts.get(cell.cellIndex);
+      if (start === void 0) {
+        if (cell.dataset.kpFixed !== void 0) {
+          delete cell.dataset.kpFixed;
+          cell.style.removeProperty("--kp-datatable-fixed-start");
+        }
+        continue;
+      }
+      cell.dataset.kpFixed = cell.cellIndex === last ? "last" : "";
+      cell.style.setProperty("--kp-datatable-fixed-start", `${Math.round(start * 100) / 100}px`);
+    }
+  }
+}
+function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove } = {}) {
+  const roleWas = table.getAttribute("role");
+  table.setAttribute("role", "grid");
+  let at = { row: -1, column: 0 };
+  const touched = /* @__PURE__ */ new Map();
+  const rows = () => [...table.rows].filter((row) => shown(row) && !row.matches(SKELETON_ROW) && row.cells.length > 0);
+  const cellsOf = (row) => [...row.cells].filter(shown);
+  const targetOf = (cell) => {
+    const controls = [...cell.querySelectorAll("button, a[href], input, select, textarea, [tabindex]")].filter(
+      (control) => control.closest(EDITOR_WRAP) === null && shown(control)
+    );
+    return (
+      /** @type {HTMLElement} */
+      controls.length === 1 ? controls[0] : cell
+    );
+  };
+  const setTab = (element, value) => {
+    if (!touched.has(element)) touched.set(element, element.getAttribute("tabindex"));
+    if (element.tabIndex !== value || !element.hasAttribute("tabindex")) element.tabIndex = value;
+  };
+  const clamp = () => {
+    const list = rows();
+    const header = list.findIndex((row2) => row2.parentElement?.tagName !== "THEAD");
+    const row = at.row < 0 ? Math.max(header, 0) : Math.max(0, Math.min(list.length - 1, at.row));
+    const cells = list[row] === void 0 ? [] : cellsOf(list[row]);
+    return [list, row, Math.max(0, Math.min(cells.length - 1, at.column))];
+  };
+  const sync = () => {
+    const [list, row, column] = clamp();
+    for (const tr of table.rows) {
+      for (const cell of tr.cells) {
+        setTab(cell, -1);
+        for (const control of cell.querySelectorAll("button, a[href], input, select, textarea")) {
+          if (control.closest(EDITOR_WRAP) === null) setTab(
+            /** @type {HTMLElement} */
+            control,
+            -1
+          );
+        }
+      }
+    }
+    const current2 = list[row] === void 0 ? void 0 : cellsOf(list[row])[column];
+    if (current2 !== void 0) setTab(targetOf(current2), 0);
+  };
+  const move = (row, column, take = true) => {
+    const list = rows();
+    if (list.length === 0) return;
+    const r = Math.max(0, Math.min(list.length - 1, row));
+    const cells = cellsOf(
+      /** @type {HTMLTableRowElement} */
+      list[r]
+    );
+    const c = Math.max(0, Math.min(cells.length - 1, column));
+    at = { row: r, column: c };
+    sync();
+    const cell = cells[c];
+    if (cell === void 0) return;
+    if (take) targetOf(cell).focus();
+    const header = list.filter((tr) => tr.parentElement?.tagName === "THEAD").length;
+    const bodyRows = list.filter((tr) => tr.parentElement?.tagName !== "THEAD" && !tr.matches(DETAIL)).length;
+    const bodyIndex = r < header ? 0 : list.slice(header, r + 1).filter((tr) => !tr.matches(DETAIL)).length;
+    onMove?.({ row: bodyIndex, rows: bodyRows, column: c, cell });
+  };
+  const onKey = (event) => {
+    const target = (
+      /** @type {HTMLElement} */
+      event.target
+    );
+    if (target.closest(EDITOR_WRAP) !== null || event.altKey || event.metaKey) return;
+    const [, row, column] = clamp();
+    const ctrl = event.ctrlKey;
+    const moves = {
+      ArrowUp: [row - 1, column],
+      ArrowDown: [row + 1, column],
+      ArrowLeft: [row, column - 1],
+      ArrowRight: [row, column + 1],
+      Home: ctrl ? [0, 0] : [row, 0],
+      End: ctrl ? [rows().length - 1, Number.MAX_SAFE_INTEGER] : [row, Number.MAX_SAFE_INTEGER],
+      PageUp: [row - pageRows, column],
+      PageDown: [row + pageRows, column]
+    };
+    const next = moves[event.key];
+    if (next === void 0) return;
+    if (target.matches('input:not([type="checkbox"]):not([type="radio"]), textarea, select') && !event.key.startsWith("Page")) return;
+    event.preventDefault();
+    move(next[0], next[1]);
+  };
+  const onFocusIn = (event) => {
+    const target = (
+      /** @type {HTMLElement} */
+      event.target
+    );
+    if (target.closest(EDITOR_WRAP) !== null) return;
+    const cell = (
+      /** @type {HTMLTableCellElement | null} */
+      target.closest("td, th")
+    );
+    const tr = (
+      /** @type {HTMLTableRowElement | null} */
+      cell?.parentElement ?? null
+    );
+    if (cell === null || tr === null || cell.closest("table") !== table) return;
+    const list = rows();
+    const r = list.indexOf(tr);
+    const c = cellsOf(tr).indexOf(cell);
+    if (r === -1 || c === -1) return;
+    move(r, c, false);
+  };
+  table.addEventListener("keydown", onKey);
+  table.addEventListener("focusin", onFocusIn);
+  sync();
+  return {
+    sync,
+    focus: (row, column) => move(row, column),
+    detach: () => {
+      table.removeEventListener("keydown", onKey);
+      table.removeEventListener("focusin", onFocusIn);
+      for (const [element, was] of touched) {
+        if (was === null) element.removeAttribute("tabindex");
+        else element.setAttribute("tabindex", was);
+      }
+      if (roleWas === null) table.removeAttribute("role");
+      else table.setAttribute("role", roleWas);
+    }
+  };
+}
 var defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
 var handles5 = /* @__PURE__ */ new WeakMap();
 function dataTable(element) {
@@ -3108,8 +3333,9 @@ function attachDataTables(root = document, {
   locale: localeOption,
   compare: compareFn = compare,
   filter: filterFn = defaultFilter,
-  debounceMs = 0,
+  debounceMs,
   sortCycle = "two",
+  multiSort = false,
   // The theme's own button, not the ghost: a ghost is text alone at rest
   // in eleven of the twenty-two themes, so the pager did not read as
   // buttons until hovered [Kenny's note of 2026-09-13, seen in cyberpunk].
@@ -3117,11 +3343,52 @@ function attachDataTables(root = document, {
   pageLabel,
   regions = true,
   pageSizes: pageSizesOption = PAGE_SIZES,
-  removeGlyph = "\xD7"
+  removeGlyph = "\xD7",
+  detail: detailFn,
+  load: loadFn,
+  rowKey: rowKeyFn,
+  onEdit,
+  expandGlyph = "\u25B8",
+  collapseGlyph = "\u25BE",
+  gridPageRows = GRID_PAGE_ROWS
 } = {}) {
   const cleanups = [];
   const created = [];
   for (const element of root.querySelectorAll(TABLE)) {
+    let add2 = function(node) {
+      added.push(node);
+      return node;
+    }, make2 = function(tag, className) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      return node;
+    }, datePickerFor2 = function(input) {
+      const picker = make2("div", "kp-datepicker");
+      picker.dataset.kpDatepicker = "";
+      picker.dataset.kpLocale = locale;
+      input.type = "text";
+      input.inputMode = "numeric";
+      input.dataset.kpDateInput = "";
+      const s = getStrings();
+      const opener = (
+        /** @type {HTMLButtonElement} */
+        make2("button", "kp-button")
+      );
+      opener.type = "button";
+      opener.dataset.kpDateOpen = "";
+      opener.setAttribute("aria-label", s.calendarOpen);
+      opener.title = s.calendarOpen;
+      const glyph = make2("span");
+      glyph.setAttribute("aria-hidden", "true");
+      glyph.textContent = s.calendarButton;
+      opener.append(glyph);
+      const datePanel = make2("div", "kp-datepicker__panel");
+      datePanel.dataset.kpDatePanel = "";
+      datePanel.hidden = true;
+      picker.append(input, opener, datePanel);
+      return picker;
+    };
+    var add = add2, make = make2, datePickerFor = datePickerFor2;
     const wrap = (
       /** @type {HTMLElement} */
       element
@@ -3138,6 +3405,7 @@ function attachDataTables(root = document, {
     const id = `kp-datatable-${instances}`;
     const added = [];
     const undo = [];
+    const s0 = getStrings();
     if (regions) cleanups.push(attachTableRegions(wrap));
     const search = (
       /** @type {HTMLInputElement | null} */
@@ -3167,7 +3435,7 @@ function attachDataTables(root = document, {
       /** @type {HTMLElement | null} */
       wrap.querySelector(LOADING)
     );
-    const failedSlot = (
+    let failedSlot = (
       /** @type {HTMLElement | null} */
       wrap.querySelector(FAILED)
     );
@@ -3181,8 +3449,15 @@ function attachDataTables(root = document, {
     );
     let size = Number.parseInt(wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
     const locale = resolveLocale(wrap.dataset.kpLocale ?? localeOption, wrap);
-    const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs;
+    const serverMode = wrap.dataset.kpServer !== void 0;
+    const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
     const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
+    const cycleName = cycle === "three" ? "three" : "two";
+    const multi = wrap.dataset.kpSortMulti === void 0 ? multiSort : wrap.dataset.kpSortMulti !== "false";
+    const glyphs = {
+      expand: wrap.dataset.kpExpandGlyph ?? expandGlyph,
+      collapse: wrap.dataset.kpCollapseGlyph ?? collapseGlyph
+    };
     const sizesAttribute = wrap.dataset.kpPageSizes;
     const sizes = sizesAttribute === "none" ? [] : [
       .../* @__PURE__ */ new Set([
@@ -3190,32 +3465,62 @@ function attachDataTables(root = document, {
         size
       ])
     ].sort((a, b) => a - b);
-    let all = (
-      /** @type {HTMLTableRowElement[]} */
-      [...body.rows]
-    );
-    const rendered = [...all];
-    let shown = [...all];
-    let pageRows = [...all];
-    let page = 0;
-    let query = "";
-    let scope = null;
-    const filters = /* @__PURE__ */ new Map();
-    let sort = null;
-    let state = (
-      /** @type {State} */
-      ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready"
-    );
-    const emptyWasHidden = empty?.hidden ?? false;
-    const densityWas = wrap.getAttribute("data-density");
-    const busyWas = wrap.getAttribute("aria-busy");
+    const headRow = table.tHead?.rows[0];
+    const details = /* @__PURE__ */ new Map();
+    const detailsWereHidden = /* @__PURE__ */ new Map();
+    const builtDetails = /* @__PURE__ */ new Set();
+    const collectDetails = () => {
+      let owner = null;
+      for (const row of body.rows) {
+        if (row.matches(DETAIL)) {
+          if (owner !== null && !details.has(owner)) {
+            details.set(owner, row);
+            if (!detailsWereHidden.has(row)) detailsWereHidden.set(row, row.hidden === true);
+          }
+        } else if (!row.matches(SKELETON_ROW)) owner = row;
+      }
+    };
+    collectDetails();
+    const expandable = wrap.dataset.kpExpandable !== void 0 && headRow !== void 0;
+    const expanded = /* @__PURE__ */ new Set();
+    if (expandable && headRow !== void 0 && headRow.querySelector(EXPAND_COLUMN) === null) {
+      const th = add2(make2("th"));
+      th.setAttribute("scope", "col");
+      th.dataset.kpExpandColumn = "";
+      const label = make2("span", "kp-sr-only");
+      label.textContent = s0.tableDetailsColumn;
+      th.append(label);
+      headRow.prepend(th);
+    }
+    const insertExpandCell = (row) => {
+      if (!expandable || row.matches(DETAIL) || row.matches(SKELETON_ROW) || row.querySelector("[data-kp-expand-cell]") !== null) return;
+      const cell = (
+        /** @type {HTMLTableCellElement} */
+        make2("td")
+      );
+      cell.dataset.kpExpandCell = "";
+      cell.dataset.label = "";
+      if (details.has(row) || detailFn !== void 0 || details.size === 0) {
+        const button = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand")
+        );
+        button.type = "button";
+        button.dataset.kpRowToggle = "";
+        cell.append(button);
+      }
+      row.prepend(cell);
+    };
+    for (const row of body.rows) insertExpandCell(row);
     const headers = (
       /** @type {HTMLTableCellElement[]} */
-      [...table.tHead?.rows[0]?.cells ?? []]
+      [...headRow?.cells ?? []]
     );
     const headerSort = headers.map((h) => h.getAttribute("aria-sort"));
     const headerTab = headers.map((h) => h.getAttribute("tabindex"));
-    const headerLabel = (header) => (header?.textContent ?? "").trim();
+    const headersWereHidden = headers.map((h) => h.hidden);
+    const labels = headers.map((h) => (h.textContent ?? "").trim());
+    const labelOf = (at) => labels[at] ?? "";
     const orders = headers.map((h) => h.dataset.kpSortOrder === void 0 ? null : splitList(h.dataset.kpSortOrder));
     const filterKinds = headers.map((h) => {
       const kind = h.dataset.kpFilter;
@@ -3224,20 +3529,53 @@ function attachDataTables(root = document, {
         kind
       ) : null;
     });
-    const cellText = (row, at) => (row.cells[at]?.textContent ?? "").trim();
+    const editKinds = headers.map((h) => {
+      const kind = h.dataset.kpEdit;
+      return kind === "text" || kind === "number" || kind === "select" || kind === "date" ? (
+        /** @type {EditKind} */
+        kind
+      ) : null;
+    });
+    const controlColumn = (at) => {
+      const header = headers[at];
+      return header === void 0 || header.querySelector(SELECT_ALL) !== null || header.matches(EXPAND_COLUMN);
+    };
+    const keyColumn = headers.findIndex((_, at) => !controlColumn(at));
+    const cellText = (row, at) => {
+      const cell = row.cells[at];
+      if (cell === void 0) return "";
+      return ((cell.querySelector(EDIT_VALUE) ?? cell).textContent ?? "").trim();
+    };
     const keyOf = (row) => row.dataset.kpRowKey ?? row.id ?? "";
+    const isRow = (row) => !row.matches(DETAIL) && !row.matches(SKELETON_ROW);
+    let all = (
+      /** @type {HTMLTableRowElement[]} */
+      [...body.rows].filter(isRow)
+    );
+    const rendered = [...all];
+    let shownRows = [...all];
+    let pageRows = [...all];
+    let page = 0;
+    let query = "";
+    let scope = null;
+    const filters = /* @__PURE__ */ new Map();
+    let sorts = [];
+    let state = (
+      /** @type {State} */
+      ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready"
+    );
+    let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
+    const emptyWasHidden = empty?.hidden ?? false;
+    const densityWas = wrap.getAttribute("data-density");
+    const busyWas = wrap.getAttribute("aria-busy");
     const themeBox = (box) => {
       if (box === null || box.classList.contains(CHECK_CLASS)) return;
       box.classList.add(CHECK_CLASS);
       undo.push(() => box.classList.remove(CHECK_CLASS));
     };
-    const themeBoxes = () => {
-      themeBox(selectAll);
-      for (const row of all) themeBox(row.querySelector(SELECT_ROW));
-    };
-    themeBoxes();
+    themeBox(selectAll);
     if (selectAll !== null && !selectAll.hasAttribute("aria-label") && selectAll.labels?.length === 0) {
-      selectAll.setAttribute("aria-label", getStrings().tableSelectAll);
+      selectAll.setAttribute("aria-label", s0.tableSelectAll);
       undo.push(() => selectAll.removeAttribute("aria-label"));
     }
     const maxHeight = wrap.dataset.kpMaxHeight;
@@ -3250,37 +3588,41 @@ function attachDataTables(root = document, {
       table
     );
     while (tableBlock.parentElement !== null && tableBlock.parentElement !== wrap) tableBlock = tableBlock.parentElement;
-    const topBar = (
+    let topBar = (
       /** @type {HTMLElement | null} */
       [...wrap.children].find(
         (child) => child.classList.contains("kp-datatable__bar") && child.compareDocumentPosition(tableBlock) & Node.DOCUMENT_POSITION_FOLLOWING
       ) ?? null
     );
-    const add = (node) => {
-      added.push(node);
-      return node;
+    const ensureTopBar = () => {
+      if (topBar !== null) return topBar;
+      topBar = add2(make2("div", "kp-datatable__bar"));
+      wrap.insertBefore(topBar, wrap.firstElementChild);
+      return topBar;
     };
-    const make = (tag, className) => {
-      const node = document.createElement(tag);
-      if (className) node.className = className;
-      return node;
+    const bottomBar = (
+      /** @type {HTMLElement | null} */
+      status?.closest(".kp-datatable__bar") ?? null
+    );
+    const putUnder = (line) => {
+      if (bottomBar !== null) bottomBar.append(line);
+      else wrap.insertBefore(line, tableBlock.nextSibling);
     };
-    const s0 = getStrings();
     if (scopeSelect !== null) {
       if (scopeSelect.options.length === 0) {
-        const every = make("option");
+        const every = make2("option");
         every.setAttribute("value", "");
         every.textContent = s0.tableSearchAllColumns;
-        scopeSelect.append(add(every));
+        scopeSelect.append(add2(every));
         headers.forEach((header, at) => {
-          if (header.dataset.kpSearch === "false" || header.querySelector(SELECT_ALL) !== null || headerLabel(header) === "") return;
+          if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf(at) === "") return;
           const option = (
             /** @type {HTMLOptionElement} */
-            make("option")
+            make2("option")
           );
           option.value = String(at);
-          option.textContent = headerLabel(header);
-          scopeSelect.append(add(option));
+          option.textContent = labelOf(at);
+          scopeSelect.append(add2(option));
         });
       }
       if (!scopeSelect.hasAttribute("aria-label") && scopeSelect.labels?.length === 0) {
@@ -3297,11 +3639,11 @@ function attachDataTables(root = document, {
         ]) {
           const option = (
             /** @type {HTMLOptionElement} */
-            make("option")
+            make2("option")
           );
           option.value = value ?? "";
           option.textContent = text ?? "";
-          densitySelect.append(add(option));
+          densitySelect.append(add2(option));
         }
       }
       if (!densitySelect.hasAttribute("aria-label") && densitySelect.labels?.length === 0) {
@@ -3318,7 +3660,7 @@ function attachDataTables(root = document, {
       panel = /** @type {HTMLElement | null} */
       wrap.querySelector(FILTERS);
       if (panel === null) {
-        panel = add(make("div", "kp-datatable__filters"));
+        panel = add2(make2("div", "kp-datatable__filters"));
         panel.dataset.kpDatatableFilters = "";
         panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
         wrap.insertBefore(panel, tableBlock);
@@ -3335,10 +3677,10 @@ function attachDataTables(root = document, {
           /** @type {FilterKind} */
           filterKinds[at]
         );
-        const label = headerLabel(headers[at]);
-        const set = add(make("fieldset", "kp-fieldset kp-datatable__filter"));
+        const label = labelOf(at);
+        const set = add2(make2("fieldset", "kp-fieldset kp-datatable__filter"));
         set.dataset.kpFilterColumn = String(at);
-        const legend = make("legend", "kp-field__label");
+        const legend = make2("legend", "kp-field__label");
         legend.textContent = label;
         set.append(legend);
         if (kind === "choice") {
@@ -3349,10 +3691,10 @@ function attachDataTables(root = document, {
           if (declared.length === 0)
             values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
           for (const value of values) {
-            const option = make("label", "kp-field__option");
+            const option = make2("label", "kp-field__option");
             const box = (
               /** @type {HTMLInputElement} */
-              make("input", CHECK_CLASS)
+              make2("input", CHECK_CLASS)
             );
             box.type = "checkbox";
             box.value = value;
@@ -3360,11 +3702,11 @@ function attachDataTables(root = document, {
             set.append(option);
           }
         } else {
-          const range = make("div", "kp-datatable__range");
+          const range = make2("div", "kp-datatable__range");
           for (const bound of ["from", "to"]) {
             const input = (
               /** @type {HTMLInputElement} */
-              make("input", "kp-field__input")
+              make2("input", "kp-field__input")
             );
             input.dataset.kpFilterBound = bound;
             input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
@@ -3373,30 +3715,8 @@ function attachDataTables(root = document, {
               range.append(input);
               continue;
             }
-            const picker = make("div", "kp-datepicker");
-            picker.dataset.kpDatepicker = "";
-            picker.dataset.kpLocale = locale;
-            input.type = "text";
-            input.inputMode = "numeric";
             input.id = `${id}-filter-${at}-${bound}`;
-            input.dataset.kpDateInput = "";
-            const opener = (
-              /** @type {HTMLButtonElement} */
-              make("button", "kp-button")
-            );
-            opener.type = "button";
-            opener.dataset.kpDateOpen = "";
-            opener.setAttribute("aria-label", s0.calendarOpen);
-            opener.title = s0.calendarOpen;
-            const glyph = make("span");
-            glyph.setAttribute("aria-hidden", "true");
-            glyph.textContent = s0.calendarButton;
-            opener.append(glyph);
-            const datePanel = make("div", "kp-datepicker__panel");
-            datePanel.dataset.kpDatePanel = "";
-            datePanel.hidden = true;
-            picker.append(input, opener, datePanel);
-            range.append(picker);
+            range.append(datePickerFor2(input));
           }
           set.append(range);
           if (kind === "date") {
@@ -3410,7 +3730,7 @@ function attachDataTables(root = document, {
       wrap.querySelector(FILTER_TOGGLE);
       if (toggle === null) {
         toggle = /** @type {HTMLButtonElement} */
-        add(make("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
+        add2(make2("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
         toggle.type = "button";
         toggle.dataset.kpDatatableFilterToggle = "";
         if (topBar !== null) topBar.append(toggle);
@@ -3421,7 +3741,7 @@ function attachDataTables(root = document, {
       pills = /** @type {HTMLElement | null} */
       wrap.querySelector(PILLS);
       if (pills === null) {
-        pills = add(make("div", "kp-datatable__pills"));
+        pills = add2(make2("div", "kp-datatable__pills"));
         pills.dataset.kpDatatablePills = "";
         wrap.insertBefore(pills, tableBlock);
       }
@@ -3430,17 +3750,17 @@ function attachDataTables(root = document, {
     let sortBy = null;
     let sortDirection = null;
     if (wrap.dataset.kpCards !== void 0 && sortable.length > 0 && wrap.querySelector(CARD_SORT) === null) {
-      const control = add(make("div", "kp-datatable__card-sort"));
+      const control = add2(make2("div", "kp-datatable__card-sort"));
       control.dataset.kpDatatableCardSort = "";
-      const label = make("label", "kp-datatable__label");
+      const label = make2("label", "kp-datatable__label");
       label.append(s0.tableSortBy, " ");
       sortBy = /** @type {HTMLSelectElement} */
-      make("select", "kp-field__input kp-datatable__select");
+      make2("select", "kp-field__input kp-datatable__select");
       sortBy.dataset.kpDatatableSortBy = "";
       sortBy.setAttribute("aria-label", s0.tableSortBy);
       const none = (
         /** @type {HTMLOptionElement} */
-        make("option")
+        make2("option")
       );
       none.value = "";
       none.textContent = s0.tableSortNone;
@@ -3448,33 +3768,119 @@ function attachDataTables(root = document, {
       for (const at of sortable) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make("option")
+          make2("option")
         );
         option.value = String(at);
-        option.textContent = headerLabel(headers[at]);
+        option.textContent = labelOf(at);
         sortBy.append(option);
       }
       label.append(sortBy);
       sortDirection = /** @type {HTMLButtonElement} */
-      make("button", "kp-button kp-button--ghost");
+      make2("button", "kp-button kp-button--ghost");
       sortDirection.type = "button";
       sortDirection.dataset.kpDatatableSortDirection = "";
       control.append(label, sortDirection);
       wrap.insertBefore(control, tableBlock);
     }
+    let sortSummary = null;
+    if (multi) {
+      sortSummary = /** @type {HTMLElement | null} */
+      wrap.querySelector(SORT_SUMMARY);
+      if (sortSummary === null) {
+        sortSummary = add2(make2("p", "kp-datatable__status kp-datatable__sort-summary"));
+        sortSummary.dataset.kpDatatableSortSummary = "";
+        sortSummary.setAttribute("aria-live", "polite");
+        ensureTopBar().prepend(sortSummary);
+      }
+    }
+    const locked = headers.map(
+      (header, at) => !controlColumn(at) && (header.dataset.kpColumnLocked === void 0 ? at === keyColumn : header.dataset.kpColumnLocked !== "false")
+    );
+    let hiddenColumns = new Set(headers.flatMap((header, at) => header.dataset.kpColumnHidden !== void 0 && !locked[at] ? [at] : []));
+    const choosable = headers.flatMap((_, at) => controlColumn(at) ? [] : [at]);
+    let columnList = null;
+    let columnCount = null;
+    if (wrap.dataset.kpColumnMenu !== void 0 && choosable.length > 0) {
+      const bar = ensureTopBar();
+      const popId = `${id}-columns`;
+      const button = (
+        /** @type {HTMLButtonElement} */
+        add2(make2("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
+      );
+      button.type = "button";
+      button.dataset.kpDatatableColumnsToggle = "";
+      button.textContent = s0.tableColumns;
+      button.setAttribute("aria-haspopup", "true");
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-controls", popId);
+      button.setAttribute("popovertarget", popId);
+      button.style.setProperty("anchor-name", `--${popId}`);
+      const pop = add2(make2("div", "kp-popover kp-datatable__columns"));
+      pop.id = popId;
+      pop.setAttribute("popover", "auto");
+      pop.dataset.kpDatatableColumns = "";
+      pop.style.setProperty("position-anchor", `--${popId}`);
+      pop.addEventListener("toggle", (event) => {
+        button.setAttribute("aria-expanded", String(
+          /** @type {ToggleEvent} */
+          event.newState === "open"
+        ));
+      });
+      columnList = make2("ul", "kp-menu");
+      columnList.setAttribute("aria-label", s0.tableColumnsLabel);
+      pop.append(columnList);
+      columnCount = add2(make2("span", "kp-datatable__status kp-datatable__columns-count"));
+      columnCount.dataset.kpDatatableColumnsCount = "";
+      bar.append(button, pop, columnCount);
+    }
+    const editable = editKinds.some((kind) => kind !== null);
+    let editLog = null;
+    if (editable) {
+      editLog = add2(make2("p", "kp-datatable__status kp-datatable__edit-log"));
+      editLog.dataset.kpDatatableEditLog = "";
+      editLog.setAttribute("role", "status");
+      editLog.setAttribute("aria-live", "polite");
+      putUnder(editLog);
+    }
+    const gridMode = wrap.dataset.kpGrid !== void 0;
+    let gridReadout = null;
+    if (gridMode) {
+      gridReadout = add2(make2("p", "kp-datatable__status kp-datatable__grid-readout"));
+      gridReadout.dataset.kpDatatableGridReadout = "";
+      gridReadout.setAttribute("aria-live", "polite");
+      gridReadout.textContent = s0.tableGridStart;
+      putUnder(gridReadout);
+    }
+    if (serverMode && failedSlot === null) {
+      failedSlot = add2(make2("div", "kp-alert kp-alert--destructive"));
+      failedSlot.dataset.kpDatatableFailed = "";
+      failedSlot.setAttribute("role", "alert");
+      failedSlot.hidden = true;
+      const text = make2("p");
+      text.textContent = s0.tableFailed;
+      const retry = (
+        /** @type {HTMLButtonElement} */
+        make2("button", "kp-button")
+      );
+      retry.type = "button";
+      retry.dataset.kpDatatableRetry = "";
+      retry.textContent = s0.tableRetry;
+      failedSlot.append(text, retry);
+      wrap.insertBefore(failedSlot, tableBlock);
+    }
     let sizeLabel = null;
     let sizeSelect = null;
     if (pager !== null && sizes.length > 0) {
       sizeLabel = /** @type {HTMLLabelElement} */
-      make("label", "kp-datatable__label");
+      make2("label", "kp-datatable__label");
       sizeSelect = /** @type {HTMLSelectElement} */
-      make("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
+      make2("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
       sizeSelect.dataset.kpDatatablePageSize = "";
       sizeSelect.setAttribute("aria-label", s0.tableRowsPerPage);
       for (const n of sizes) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make("option")
+          make2("option")
         );
         option.value = String(n);
         option.textContent = String(n);
@@ -3483,21 +3889,121 @@ function attachDataTables(root = document, {
       sizeSelect.value = String(size);
       sizeLabel.append(s0.tableRowsPerPage, " ", sizeSelect);
     }
+    const prepared = /* @__PURE__ */ new Set();
+    const prepareRow = (row) => {
+      themeBox(row.querySelector(SELECT_ROW));
+      if (prepared.has(row)) return;
+      prepared.add(row);
+      insertExpandCell(row);
+      editKinds.forEach((kind, at) => {
+        const cell = row.cells[at];
+        if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
+        const button = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-datatable__edit")
+        );
+        button.type = "button";
+        button.dataset.kpEditCell = "";
+        const value = make2("span");
+        value.dataset.kpEditValue = "";
+        value.append(...cell.childNodes);
+        button.append(value);
+        cell.append(button);
+      });
+      if (hiddenColumns.size > 0) {
+        for (const at of hiddenColumns) if (row.cells[at]) row.cells[at].hidden = true;
+      }
+    };
+    const unprepareRow = (row) => {
+      row.querySelector("[data-kp-expand-cell]")?.remove();
+      for (const button of row.querySelectorAll(EDIT_CELL)) {
+        const value = button.querySelector(EDIT_VALUE);
+        if (value !== null) button.replaceWith(...value.childNodes);
+      }
+      for (const cell of row.cells) cell.hidden = false;
+    };
+    const labelRow = (row) => {
+      const s = getStrings();
+      const key = keyOf(row);
+      const toggleButton = (
+        /** @type {HTMLButtonElement | null} */
+        row.querySelector(ROW_TOGGLE)
+      );
+      if (toggleButton !== null) {
+        const open = expanded.has(key);
+        toggleButton.setAttribute("aria-label", s.tableRowDetails(key));
+        toggleButton.setAttribute("aria-expanded", String(open));
+        toggleButton.textContent = open ? glyphs.collapse : glyphs.expand;
+        const detail = details.has(row) || open ? detailFor(row) : void 0;
+        if (detail !== void 0) toggleButton.setAttribute("aria-controls", detail.id);
+        else toggleButton.removeAttribute("aria-controls");
+      }
+      for (const button of row.querySelectorAll(EDIT_CELL)) {
+        const cell = (
+          /** @type {HTMLTableCellElement} */
+          button.closest("td, th")
+        );
+        button.setAttribute("aria-label", s.tableEdit(labelOf(cell.cellIndex), key, cellText(row, cell.cellIndex)));
+      }
+    };
+    for (const row of all) {
+      if (row.dataset.kpExpanded !== void 0) expanded.add(keyOf(row));
+      prepareRow(row);
+    }
+    const visibleColumns = () => headers.filter((_, at) => !hiddenColumns.has(at)).length;
+    const detailFor = (row) => {
+      let detail = details.get(row);
+      if (detail === void 0 && expandable) {
+        const hasMarkup = [...detailsWereHidden.keys()].length > 0;
+        if (detailFn === void 0 && hasMarkup) return void 0;
+        detail = /** @type {HTMLTableRowElement} */
+        make2("tr");
+        detail.dataset.kpRowDetail = "";
+        detail.hidden = true;
+        const cell2 = make2("td");
+        detail.append(cell2);
+        details.set(row, detail);
+        builtDetails.add(detail);
+        if (detailFn !== void 0) {
+          const content = detailFn(row);
+          if (typeof content === "string") cell2.textContent = content;
+          else if (content !== null && content !== void 0) cell2.append(content);
+        }
+      }
+      if (detail === void 0) return void 0;
+      if (!detail.classList.contains("kp-datatable__detail")) {
+        detail.classList.add("kp-datatable__detail");
+        const node = detail;
+        if (!builtDetails.has(detail)) undo.push(() => node.classList.remove("kp-datatable__detail"));
+      }
+      if (detail.id === "") {
+        detail.id = `${id}-detail-${keyOf(row) || row.rowIndex}`;
+        const node = detail;
+        if (!builtDetails.has(detail)) undo.push(() => node.removeAttribute("id"));
+      }
+      const cell = detail.cells[0];
+      if (cell !== void 0) cell.colSpan = visibleColumns();
+      return detail;
+    };
     const view = () => ({
-      shown: shown.length,
-      total: all.length,
+      shown: serverMode ? total || 0 : shownRows.length,
+      total: serverMode ? total || 0 : all.length,
       page,
-      pages: Math.max(1, Math.ceil(shown.length / size)),
+      pages: Math.max(1, Math.ceil((serverMode ? total || 0 : shownRows.length) / size)),
       pageSize: size,
       query,
       scope,
       filters: Object.fromEntries(filters),
-      sort,
+      sort: sorts[0] ?? null,
+      sorts: sorts.map((key) => ({ ...key })),
+      hidden: [...hiddenColumns].sort((a, b) => a - b),
+      expanded: [...expanded],
       density: wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable",
       state,
-      keys: shown.map(keyOf),
+      keys: shownRows.map(keyOf),
       pageKeys: pageRows.map(keyOf)
     });
+    const serverSelection = /* @__PURE__ */ new Set();
     const selectedRows = () => all.filter((row) => {
       const box = (
         /** @type {HTMLInputElement | null} */
@@ -3517,10 +4023,31 @@ function attachDataTables(root = document, {
     };
     const syncActions = () => {
       if (actions === null) return;
-      const count = selectedRows().length;
+      const count = serverMode ? serverSelection.size : selectedRows().length;
       actions.hidden = count === 0;
       const counter2 = actions.querySelector(SELECTED_COUNT);
       if (counter2 !== null) counter2.textContent = getStrings().tableSelected(count);
+    };
+    const syncSkeleton = () => {
+      const want = state === "loading" && all.length === 0 && loadingSlot === null;
+      const have = [...body.querySelectorAll(`:scope > ${SKELETON_ROW}`)];
+      if (!want) {
+        for (const row of have) row.remove();
+        return;
+      }
+      if (have.length > 0) return;
+      for (let i = 0; i < 3; i += 1) {
+        const row = make2("tr");
+        row.dataset.kpSkeletonRow = "";
+        row.setAttribute("aria-hidden", "true");
+        headers.forEach((_, at) => {
+          const cell = make2("td");
+          if (hiddenColumns.has(at)) cell.hidden = true;
+          if (!controlColumn(at)) cell.append(make2("span", "kp-skeleton"));
+          row.append(cell);
+        });
+        body.append(row);
+      }
     };
     const syncStateParts = () => {
       if (state === "loading") wrap.setAttribute("aria-busy", "true");
@@ -3529,26 +4056,137 @@ function attachDataTables(root = document, {
       wrap.dataset.kpState = state;
       if (loadingSlot !== null) loadingSlot.hidden = !(state === "loading" && all.length === 0);
       if (failedSlot !== null) failedSlot.hidden = state !== "failed";
+      syncSkeleton();
     };
     const syncCardSort = () => {
       if (sortBy === null || sortDirection === null) return;
       const s = getStrings();
-      sortBy.value = sort === null || sort.direction === "none" ? "" : String(sort.column);
-      const direction = sort?.direction === "descending" ? "descending" : "ascending";
-      sortDirection.textContent = direction === "descending" ? s.tableSortDescending : s.tableSortAscending;
+      const first = sorts[0];
+      sortBy.value = first === void 0 ? "" : String(first.column);
+      sortDirection.textContent = first?.direction === "descending" ? s.tableSortDescending : s.tableSortAscending;
       sortDirection.disabled = sortBy.value === "";
     };
+    const syncSortMarks = () => {
+      const s = getStrings();
+      headers.forEach((header, at) => {
+        header.querySelector(":scope .kp-datatable__sort-order")?.remove();
+        if (header.dataset.kpSort === void 0) return;
+        const index = sorts.findIndex((key2) => key2.column === at);
+        const key = sorts[index];
+        header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
+        if (key === void 0 || sorts.length < 2) return;
+        const mark = make2("span", "kp-datatable__sort-order");
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = String(index + 1);
+        (header.querySelector("button") ?? header).append(mark);
+      });
+      if (sortSummary !== null) {
+        sortSummary.textContent = sorts.length === 0 ? s.tableNotSorted : s.tableSortedBy(
+          sorts.map(
+            (key) => s.tableSortKey(
+              labelOf(key.column),
+              key.direction,
+              orders[key.column] ? "order" : headers[key.column]?.dataset.kpSort ?? "text"
+            )
+          )
+        );
+      }
+    };
+    const syncColumns = () => {
+      headers.forEach((header, at) => {
+        header.hidden = hiddenColumns.has(at) || (headersWereHidden[at] ?? false);
+      });
+      for (const row of body.rows) {
+        if (row.matches(DETAIL)) continue;
+        headers.forEach((_, at) => {
+          const cell = row.cells[at];
+          if (cell !== void 0) cell.hidden = hiddenColumns.has(at);
+        });
+      }
+      if (columnList !== null && columnList.childElementCount > 0) {
+        for (const box of columnList.querySelectorAll("[data-kp-datatable-column]")) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            box
+          );
+          input.checked = !hiddenColumns.has(Number(input.value));
+        }
+      } else if (columnList !== null) {
+        const s = getStrings();
+        for (const at of choosable) {
+          const item = make2("li");
+          const label = (
+            /** @type {HTMLLabelElement} */
+            make2("label", "kp-menu__item kp-datatable__column-option")
+          );
+          const box = (
+            /** @type {HTMLInputElement} */
+            make2("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.value = String(at);
+          box.dataset.kpDatatableColumn = "";
+          box.checked = !hiddenColumns.has(at);
+          box.disabled = locked[at] ?? false;
+          label.append(box, ` ${locked[at] ? s.tableColumnLocked(labelOf(at)) : labelOf(at)}`);
+          item.append(label);
+          columnList.append(item);
+        }
+        const separator = make2("li", "kp-menu__separator");
+        separator.setAttribute("role", "separator");
+        const resetItem = make2("li");
+        const reset = (
+          /** @type {HTMLButtonElement} */
+          make2("button", "kp-menu__item")
+        );
+        reset.type = "button";
+        reset.dataset.kpDatatableColumnsReset = "";
+        reset.textContent = s.tableShowAllColumns;
+        resetItem.append(reset);
+        columnList.append(separator, resetItem);
+      }
+      if (columnCount !== null)
+        columnCount.textContent = getStrings().tableColumnsShown(
+          choosable.length - [...hiddenColumns].filter((at) => choosable.includes(at)).length,
+          choosable.length
+        );
+    };
+    const fixedAttribute = wrap.dataset.kpFixedColumns;
+    const fixedCount = fixedAttribute === void 0 ? 0 : Number.parseInt(fixedAttribute, 10) || keyColumn + 1;
+    const syncFixed = () => {
+      if (fixedCount > 0) syncFixedColumns(table, fixedCount);
+    };
+    let grid2 = null;
     const render = () => {
-      const pages = Math.max(1, Math.ceil(shown.length / size));
+      const count = serverMode ? total || 0 : shownRows.length;
+      const pages = Math.max(1, Math.ceil(count / size));
       page = Math.min(page, pages - 1);
       const from = page * size;
-      pageRows = pager === null ? shown : shown.slice(from, from + size);
+      pageRows = serverMode || pager === null ? shownRows : shownRows.slice(from, from + size);
       for (const row of all) row.hidden = true;
       for (const row of pageRows) row.hidden = false;
-      for (const row of shown) body.append(row);
+      for (const row of shownRows) {
+        body.append(row);
+        const detail = details.get(row);
+        if (detail !== void 0) body.append(detail);
+      }
+      for (const [row, detail] of details) {
+        const open = expanded.has(keyOf(row)) && !row.hidden && all.includes(row);
+        if (open) detailFor(row);
+        detail.hidden = !open;
+      }
+      for (const row of all) labelRow(row);
       const s = getStrings();
       if (status !== null) {
-        status.textContent = state === "loading" ? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, shown.length, all.length);
+        status.textContent = "";
+        if (state === "loading" && all.length > 0) {
+          const spinner = make2("span", "kp-spinner");
+          spinner.setAttribute("aria-hidden", "true");
+          status.append(spinner, " ");
+        }
+        status.append(
+          state === "loading" ? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, count, serverMode ? count : all.length)
+        );
       }
       if (pager !== null) {
         pager.textContent = "";
@@ -3560,12 +4198,15 @@ function attachDataTables(root = document, {
         pager.append(label);
         pager.append(pagerButton(s.next, page < pages - 1, () => page += 1));
       }
-      if (empty !== null) empty.hidden = shown.length > 0 || state !== "ready";
+      if (empty !== null) empty.hidden = count > 0 || state !== "ready";
       syncSelectAll();
       syncActions();
       syncStateParts();
       syncCardSort();
-      wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...shown], pageRows: [...pageRows] } }));
+      syncSortMarks();
+      syncFixed();
+      grid2?.sync();
+      wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...shownRows], pageRows: [...pageRows] } }));
     };
     const pagerButton = (text, enabled, go, direction) => {
       const button = document.createElement("button");
@@ -3576,14 +4217,15 @@ function attachDataTables(root = document, {
       button.disabled = !enabled;
       button.addEventListener("click", () => {
         go();
-        render();
+        if (serverMode) request();
+        else render();
       });
       return button;
     };
-    const pillsList = add(make("ul", "kp-tag-list"));
+    const pillsList = add2(make2("ul", "kp-tag-list"));
     const clearButton = (
       /** @type {HTMLButtonElement} */
-      add(make("button", "kp-button kp-button--ghost kp-datatable__clear-filters"))
+      add2(make2("button", "kp-button kp-button--ghost kp-datatable__clear-filters"))
     );
     clearButton.type = "button";
     clearButton.addEventListener("click", () => {
@@ -3607,12 +4249,12 @@ function attachDataTables(root = document, {
           /** @type {FilterKind} */
           filterKinds[at]
         );
-        for (const pill of filterPills(kind, headerLabel(headers[at]), filters.get(at), s)) {
+        for (const pill of filterPills(kind, labelOf(at), filters.get(at), s)) {
           count += 1;
-          const item = make("li", "kp-tag");
+          const item = make2("li", "kp-tag");
           const remove = (
             /** @type {HTMLButtonElement} */
-            make("button", "kp-tag__remove")
+            make2("button", "kp-tag__remove")
           );
           remove.type = "button";
           remove.setAttribute("aria-label", s.tableRemoveFilter(pill.label));
@@ -3703,9 +4345,32 @@ function attachDataTables(root = document, {
         if (kind !== null && kind !== void 0 && filterActive(kind, value)) filters.set(at, value);
       }
     };
-    const applyFilter = () => {
+    const compareRows = (a, b) => {
+      for (const key of sorts) {
+        const kind = headers[key.column]?.dataset.kpSort ?? "text";
+        const order = orders[key.column];
+        const by = (x, y) => compareFn(x, y, kind, locale);
+        const left = cellText(a, key.column);
+        const right = cellText(b, key.column);
+        const c = order ? compareByOrder(order, left, right, by) : by(left, right);
+        if (c !== 0) return key.direction === "ascending" ? c : -c;
+      }
+      return 0;
+    };
+    const applySorts = () => {
+      if (sorts.length === 0) {
+        const keep = new Set(shownRows);
+        shownRows = rendered.filter((row) => keep.has(row));
+      } else shownRows = [...shownRows].sort(compareRows);
+    };
+    const applyFilter = ({ keepPage = false } = {}) => {
+      if (serverMode) {
+        if (!keepPage) page = 0;
+        request();
+        return;
+      }
       const needle = query.trim().toLowerCase();
-      shown = all.filter((row) => {
+      shownRows = all.filter((row) => {
         if (needle !== "") {
           const hit = scope === null ? filterFn(row, needle) : cellText(row, scope).toLowerCase().includes(needle);
           if (!hit) return false;
@@ -3716,15 +4381,121 @@ function attachDataTables(root = document, {
         }
         return true;
       });
-      if (sort !== null && sort.direction !== "none") applySort(sort.column, sort.direction);
-      page = 0;
+      applySorts();
+      if (!keepPage) page = 0;
       render();
+    };
+    let sent = 0;
+    let latest = 0;
+    let controller = null;
+    const rowFrom = (item) => {
+      if (item instanceof HTMLTableRowElement) return item;
+      const row = (
+        /** @type {HTMLTableRowElement} */
+        make2("tr")
+      );
+      const field = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
+      row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field === void 0 ? void 0 : item[field]) ?? item.key ?? item.id ?? "");
+      headers.forEach((header, at) => {
+        if (header.matches(EXPAND_COLUMN)) return;
+        const cell = make2("td");
+        if (header.querySelector(SELECT_ALL) !== null) {
+          const box = (
+            /** @type {HTMLInputElement} */
+            make2("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.dataset.kpSelectRow = "";
+          box.setAttribute("aria-label", getStrings().tableSelectRow(row.dataset.kpRowKey ?? ""));
+          cell.dataset.label = "";
+          cell.append(box);
+        } else {
+          cell.dataset.label = labelOf(at);
+          if (header.dataset.kpCellClass) cell.className = header.dataset.kpCellClass;
+          const value = item[header.dataset.kpField ?? labelOf(at)];
+          cell.textContent = value === void 0 || value === null ? "" : String(value);
+        }
+        row.append(cell);
+      });
+      return row;
+    };
+    const applyAnswer = (answer) => {
+      for (const row of all) {
+        const box = (
+          /** @type {HTMLInputElement | null} */
+          row.querySelector(SELECT_ROW)
+        );
+        if (box !== null) {
+          if (box.checked) serverSelection.add(keyOf(row));
+          else serverSelection.delete(keyOf(row));
+        }
+      }
+      if (editing !== null) closeEditor();
+      const next = answer.rows.map(rowFrom);
+      for (const row of [...body.rows]) if (!next.includes(row)) row.remove();
+      details.clear();
+      for (const row of next) {
+        row.hidden = false;
+        body.append(row);
+        prepareRow(row);
+        const box = (
+          /** @type {HTMLInputElement | null} */
+          row.querySelector(SELECT_ROW)
+        );
+        if (box !== null) box.checked = serverSelection.has(keyOf(row));
+      }
+      all = next;
+      shownRows = [...next];
+      total = Number(answer.total) || 0;
+      state = "ready";
+      syncColumns();
+      render();
+    };
+    const request = () => {
+      if (!serverMode) return;
+      sent += 1;
+      const requestId = sent;
+      latest = requestId;
+      controller?.abort();
+      controller = new AbortController();
+      const params = {
+        id: requestId,
+        query,
+        scope,
+        sort: sorts[0] ? { ...sorts[0] } : null,
+        sorts: sorts.map((key) => ({ ...key })),
+        filters: Object.fromEntries(filters),
+        page,
+        pageSize: size,
+        signal: controller.signal
+      };
+      state = "loading";
+      render();
+      let settled = false;
+      const respond = (answer) => {
+        if (settled) return;
+        settled = true;
+        if (requestId !== latest) return;
+        applyAnswer(answer);
+      };
+      const fail = (error) => {
+        if (settled) return;
+        settled = true;
+        if (requestId !== latest) return;
+        void error;
+        state = "failed";
+        render();
+      };
+      wrap.dispatchEvent(new CustomEvent(REQUEST_EVENT, { bubbles: true, detail: { ...params, respond, fail } }));
+      if (loadFn !== void 0) {
+        Promise.resolve().then(() => loadFn(params)).then(respond, fail);
+      }
     };
     let pending = 0;
     const onSearch = () => {
       query = search?.value ?? "";
       clearTimeout(pending);
-      if (debounce > 0) pending = window.setTimeout(applyFilter, debounce);
+      if (debounce > 0) pending = window.setTimeout(() => applyFilter(), debounce);
       else applyFilter();
     };
     const onScope = () => {
@@ -3780,42 +4551,29 @@ function attachDataTables(root = document, {
     };
     const onRetry = () => {
       wrap.dispatchEvent(new CustomEvent(RETRY_EVENT, { bubbles: true }));
+      if (serverMode) request();
     };
-    const applySort = (at, direction) => {
-      const kind = headers[at]?.dataset.kpSort ?? "text";
-      if (direction === "none") {
-        const keep = new Set(shown);
-        shown = rendered.filter((row) => keep.has(row));
-      } else {
-        const sign = direction === "ascending" ? 1 : -1;
-        const order = orders[at];
-        const by = (a, b) => compareFn(a, b, kind, locale);
-        shown = [...shown].sort((a, b) => {
-          const left = cellText(a, at);
-          const right = cellText(b, at);
-          return sign * (order ? compareByOrder(order, left, right, by) : by(left, right));
-        });
+    const commitSorts = (next, announced) => {
+      sorts = next.filter((key) => headers[key.column] !== void 0);
+      wrap.dispatchEvent(new CustomEvent(SORT_EVENT, { bubbles: true, detail: announced === void 0 ? sorts[0] ?? null : announced }));
+      page = 0;
+      if (serverMode) {
+        request();
+        return;
       }
-      headers.forEach((header, i) => {
-        if (header.dataset.kpSort === void 0) return;
-        header.setAttribute("aria-sort", i === at && direction !== "none" ? direction : "none");
-      });
-    };
-    const setSort = (next) => {
-      sort = next;
-      if (next === null) applySort(-1, "none");
-      else applySort(next.column, next.direction);
-      wrap.dispatchEvent(new CustomEvent(SORT_EVENT, { bubbles: true, detail: sort }));
+      applySorts();
       render();
     };
-    const toggleSort = (header) => {
+    const setSort = (next) => {
+      if (next === null || next.direction === "none") commitSorts([], next);
+      else commitSorts([{ column: next.column, direction: next.direction }], next);
+    };
+    const toggleSort = (header, addKey) => {
       const at = headers.indexOf(header);
       if (at === -1) return;
-      const current2 = header.getAttribute("aria-sort");
-      let next = "ascending";
-      if (current2 === "ascending") next = "descending";
-      else if (current2 === "descending") next = cycle === "three" ? "none" : "ascending";
-      setSort({ column: at, direction: next });
+      const next = nextSorts(sorts, at, { add: multi && addKey, cycle: cycleName });
+      if (next.length === 0) commitSorts([], { column: at, direction: "none" });
+      else commitSorts(next);
     };
     const onHeadClick = (event) => {
       const header = (
@@ -3823,7 +4581,7 @@ function attachDataTables(root = document, {
         /** @type {HTMLElement} */
         event.target.closest("th[data-kp-sort]")
       );
-      if (header !== null) toggleSort(header);
+      if (header !== null) toggleSort(header, event.shiftKey);
     };
     const onHeadKey = (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
@@ -3834,7 +4592,7 @@ function attachDataTables(root = document, {
       );
       if (header === null) return;
       event.preventDefault();
-      toggleSort(header);
+      toggleSort(header, event.shiftKey);
     };
     for (const header of headers) {
       if (header.dataset.kpSort !== void 0 && header.querySelector("button, a") === null && !header.hasAttribute("tabindex"))
@@ -3843,11 +4601,12 @@ function attachDataTables(root = document, {
     const onSortBy = () => {
       if (sortBy === null) return;
       if (sortBy.value === "") setSort(null);
-      else setSort({ column: Number(sortBy.value), direction: sort?.direction === "descending" ? "descending" : "ascending" });
+      else setSort({ column: Number(sortBy.value), direction: sorts[0]?.direction === "descending" ? "descending" : "ascending" });
     };
     const onSortDirection = () => {
-      if (sort === null || sort.direction === "none") return;
-      setSort({ column: sort.column, direction: sort.direction === "ascending" ? "descending" : "ascending" });
+      const first = sorts[0];
+      if (first === void 0) return;
+      setSort({ column: first.column, direction: first.direction === "ascending" ? "descending" : "ascending" });
     };
     const onPageSize = () => {
       if (sizeSelect === null) return;
@@ -3859,7 +4618,50 @@ function attachDataTables(root = document, {
       size = next;
       if (sizeSelect !== null) sizeSelect.value = String(next);
       page = Math.floor(first / size);
+      if (serverMode) request();
+      else render();
+    };
+    const setHidden = (next) => {
+      hiddenColumns = new Set([...next].filter((at) => headers[at] !== void 0 && !locked[at] && !controlColumn(at)));
+      syncColumns();
+      wrap.dispatchEvent(new CustomEvent(COLUMNS_EVENT, { bubbles: true, detail: { hidden: [...hiddenColumns].sort((a, b) => a - b) } }));
       render();
+    };
+    const onColumnChange = (event) => {
+      const box = (
+        /** @type {HTMLInputElement} */
+        event.target
+      );
+      if (box.dataset.kpDatatableColumn === void 0) return;
+      const at = Number(box.value);
+      const next = new Set(hiddenColumns);
+      if (box.checked) next.delete(at);
+      else next.add(at);
+      setHidden(next);
+    };
+    const onColumnClick = (event) => {
+      if (
+        /** @type {HTMLElement} */
+        event.target.closest("[data-kp-datatable-columns-reset]") !== null
+      ) setHidden([]);
+    };
+    const setExpanded = (row, open) => {
+      const key = keyOf(row);
+      if (open === expanded.has(key)) return;
+      if (open) expanded.add(key);
+      else expanded.delete(key);
+      const detail = open ? detailFor(row) : details.get(row);
+      render();
+      wrap.dispatchEvent(
+        new CustomEvent(EXPAND_EVENT, { bubbles: true, detail: { key, row, open, cell: detail?.cells[0] ?? null, expanded: [...expanded] } })
+      );
+    };
+    const expandKeys = (keys) => {
+      const want = new Set(keys);
+      for (const row of all) {
+        const key = keyOf(row);
+        if (want.has(key) !== expanded.has(key)) setExpanded(row, want.has(key));
+      }
     };
     const announceSelection = () => {
       const rows = selectedRows();
@@ -3867,8 +4669,21 @@ function attachDataTables(root = document, {
       wrap.dispatchEvent(new CustomEvent(SELECT_EVENT, { bubbles: true, detail: { keys, rows } }));
     };
     const onBodyChange = (event) => {
-      if (!/** @type {HTMLElement} */
-      event.target.matches(SELECT_ROW)) return;
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      if (!target.matches(SELECT_ROW)) return;
+      if (serverMode) {
+        const row = target.closest("tr");
+        if (row !== null) {
+          if (
+            /** @type {HTMLInputElement} */
+            target.checked
+          ) serverSelection.add(keyOf(row));
+          else serverSelection.delete(keyOf(row));
+        }
+      }
       syncSelectAll();
       syncActions();
       announceSelection();
@@ -3881,6 +4696,10 @@ function attachDataTables(root = document, {
           row.querySelector(SELECT_ROW)
         );
         if (box !== null) box.checked = selectAll.checked;
+        if (serverMode) {
+          if (selectAll.checked) serverSelection.add(keyOf(row));
+          else serverSelection.delete(keyOf(row));
+        }
       }
       selectAll.indeterminate = false;
       syncActions();
@@ -3888,6 +4707,10 @@ function attachDataTables(root = document, {
     };
     const select = (keys) => {
       const want = new Set(keys);
+      if (serverMode) {
+        serverSelection.clear();
+        for (const key of keys) serverSelection.add(key);
+      }
       for (const row of all) {
         const box = (
           /** @type {HTMLInputElement | null} */
@@ -3900,27 +4723,315 @@ function attachDataTables(root = document, {
       announceSelection();
     };
     const onClearSelection = () => select([]);
-    const onActionsClick = (event) => {
-      if (
-        /** @type {HTMLElement} */
-        event.target.closest(CLEAR_SELECTION) !== null
-      ) onClearSelection();
+    let editing = null;
+    let lastEdit = null;
+    let listWasOpen = false;
+    const logEdit = (text, { undo: withUndo = false } = {}) => {
+      if (editLog === null) return;
+      editLog.textContent = text;
+      if (!withUndo) return;
+      const button = (
+        /** @type {HTMLButtonElement} */
+        make2("button", "kp-button kp-button--ghost kp-button--sm")
+      );
+      button.type = "button";
+      button.dataset.kpDatatableUndo = "";
+      button.textContent = getStrings().undo;
+      editLog.append(" ", button);
     };
-    const onEmptyClick = (event) => {
-      if (
+    const writeCell = (cell, value) => {
+      const holder = (
         /** @type {HTMLElement} */
-        event.target.closest(CLEAR) !== null
-      ) onClear();
+        cell.querySelector(EDIT_VALUE) ?? cell
+      );
+      const only = holder.children.length === 1 && holder.children[0]?.children.length === 0 ? holder.children[0] : null;
+      if (only !== null && (holder.textContent ?? "").trim() === (only.textContent ?? "").trim()) only.textContent = value;
+      else holder.textContent = value;
     };
-    const onFailedClick = (event) => {
-      if (
+    const closeEditor = () => {
+      if (editing === null) return;
+      const current2 = editing;
+      editing = null;
+      current2.detach();
+      current2.holder.remove();
+      current2.button.hidden = false;
+      grid2?.sync();
+    };
+    const openEditor = async (row, column) => {
+      if (editing !== null && !await commitEdit(true)) return;
+      const kind = editKinds[column];
+      const cell = row.cells[column];
+      const button = (
+        /** @type {HTMLButtonElement | null} */
+        cell?.querySelector(EDIT_CELL) ?? null
+      );
+      if (kind === null || kind === void 0 || cell === void 0 || button === null) return;
+      const s = getStrings();
+      const header = headers[column];
+      const key = keyOf(row);
+      const previous = cellText(row, column);
+      const holder = make2("div", "kp-datatable__editor");
+      holder.dataset.kpDatatableEditorWrap = "";
+      holder.setAttribute("data-density", "compact");
+      const errorId = `${id}-edit-error`;
+      const error = make2("p", "kp-field__error");
+      error.id = errorId;
+      error.hidden = true;
+      let control;
+      let detachControl = () => {
+      };
+      if (kind === "select") {
+        const select2 = (
+          /** @type {HTMLSelectElement} */
+          make2("select", "kp-field__input")
+        );
+        const declared = splitList(header?.dataset.kpEditOptions);
+        const values = declared.length > 0 ? declared : [...new Set(all.map((r) => cellText(r, column)).filter((v) => v !== ""))];
+        if (!values.includes(previous)) values.unshift(previous);
+        for (const value of values) {
+          const option = (
+            /** @type {HTMLOptionElement} */
+            make2("option")
+          );
+          option.value = value;
+          option.textContent = value;
+          select2.append(option);
+        }
+        select2.value = previous;
+        control = select2;
+        holder.append(select2);
+      } else {
+        const input = (
+          /** @type {HTMLInputElement} */
+          make2("input", "kp-field__input")
+        );
+        input.value = kind === "date" ? "" : previous;
+        if (kind === "number") {
+          input.type = "number";
+          if (header?.dataset.kpEditMin !== void 0) input.min = header.dataset.kpEditMin;
+          if (header?.dataset.kpEditMax !== void 0) input.max = header.dataset.kpEditMax;
+        } else if (kind === "text") input.type = "text";
+        control = input;
+        if (kind === "date") {
+          input.id = `${id}-edit-date`;
+          holder.append(datePickerFor2(input));
+        } else holder.append(input);
+      }
+      control.dataset.kpDatatableEditor = "";
+      control.setAttribute("aria-label", s.tableEditField(labelOf(column), key));
+      control.setAttribute("aria-describedby", errorId);
+      if (header?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
+      holder.append(error);
+      button.hidden = true;
+      cell.append(holder);
+      if (kind === "select" && drawsSelect(control)) detachControl = attachSelect(
+        /** @type {HTMLSelectElement} */
+        control
+      );
+      if (kind === "date") {
+        const detachPickers = attachDatePickers(holder);
+        const picker = holder.querySelector("[data-kp-datepicker]");
+        const handle2 = picker === null ? null : datePicker(picker);
+        if (previous !== "") handle2?.set(previous);
+        detachControl = detachPickers;
+      }
+      editing = { row, column, kind, button, holder, control, error, previous, detach: detachControl, busy: false };
+      control.focus();
+      if (control instanceof HTMLInputElement && kind !== "date") control.select();
+      logEdit(s.tableEditing(labelOf(column), key));
+    };
+    const refuse = (message) => {
+      if (editing === null) return;
+      editing.error.textContent = message;
+      editing.error.hidden = false;
+      editing.control.setAttribute("aria-invalid", "true");
+      editing.control.focus();
+    };
+    const askApp = async (row, column, value, previous, isUndo) => {
+      const s = getStrings();
+      let refused = null;
+      const waits = [];
+      const detail = {
+        key: keyOf(row),
+        row,
+        cell: (
+          /** @type {HTMLTableCellElement} */
+          row.cells[column]
+        ),
+        column,
+        label: labelOf(column),
+        value,
+        previous,
+        undo: isUndo,
+        reject: (message) => {
+          refused = message ?? s.tableEditInvalid;
+        },
+        waitUntil: (promise) => {
+          waits.push(promise);
+        }
+      };
+      const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
+      wrap.dispatchEvent(event);
+      if (event.defaultPrevented && refused === null) refused = s.tableEditInvalid;
+      if (onEdit !== void 0) waits.push(Promise.resolve().then(() => onEdit(detail)));
+      if (refused === null && waits.length > 0) {
+        try {
+          for (const answer of await Promise.all(waits)) {
+            if (typeof answer === "string") refused = answer;
+            else if (answer === false) refused = s.tableEditInvalid;
+          }
+        } catch (error) {
+          refused = error instanceof Error && error.message !== "" ? error.message : s.tableEditInvalid;
+        }
+      }
+      return refused;
+    };
+    const commitEdit = async (save) => {
+      const current2 = editing;
+      if (current2 === null) return true;
+      if (current2.busy) return false;
+      const s = getStrings();
+      const { row, column, kind, button, control, previous } = current2;
+      const key = keyOf(row);
+      if (!save) {
+        closeEditor();
+        logEdit(s.tableEditCancelled);
+        button.focus();
+        return true;
+      }
+      const value = kind === "date" ? control.dataset.kpDateValue ?? (control.value.trim() === "" ? "" : control.value.trim()) : control.value.trim();
+      if (value === "" && headers[column]?.dataset.kpEditRequired !== void 0) {
+        refuse(s.tableEditRequired);
+        return false;
+      }
+      if (kind === "number" && value !== "" && Number.isNaN(Number(value))) {
+        refuse(s.tableEditInvalid);
+        return false;
+      }
+      if (value === previous) {
+        closeEditor();
+        button.focus();
+        return true;
+      }
+      current2.busy = true;
+      const refused = await askApp(row, column, value, previous, false);
+      current2.busy = false;
+      if (editing !== current2) return true;
+      if (refused !== null) {
+        refuse(refused);
+        return false;
+      }
+      const cell = (
+        /** @type {HTMLTableCellElement} */
+        row.cells[column]
+      );
+      writeCell(cell, value);
+      closeEditor();
+      lastEdit = { row, column, before: previous, after: value };
+      labelRow(row);
+      logEdit(s.tableEdited(key, labelOf(column), previous, value), { undo: true });
+      button.focus();
+      return true;
+    };
+    const undoEdit = async () => {
+      const last = lastEdit;
+      if (last === null) return;
+      const s = getStrings();
+      const refused = await askApp(last.row, last.column, last.before, last.after, true);
+      if (refused !== null) {
+        logEdit(refused);
+        return;
+      }
+      lastEdit = null;
+      writeCell(
+        /** @type {HTMLTableCellElement} */
+        last.row.cells[last.column],
+        last.before
+      );
+      labelRow(last.row);
+      logEdit(s.tableEditUndone(keyOf(last.row), labelOf(last.column), last.before));
+      (last.row.cells[last.column]?.querySelector(EDIT_CELL) ?? null)?.focus();
+    };
+    const onEditorKeyCapture = (event) => {
+      const target = (
         /** @type {HTMLElement} */
-        event.target.closest(RETRY) !== null
-      ) onRetry();
+        event.target
+      );
+      if (target.matches("select[data-kp-datatable-editor]")) listWasOpen = target.getAttribute("aria-expanded") === "true";
     };
-    for (const select2 of [scopeSelect, densitySelect, sortBy, sizeSelect]) {
-      if (select2 === null || select2.dataset.kpSelectAttached !== void 0 || !drawsSelect(select2)) continue;
-      cleanups.push(attachSelect(select2));
+    const onEditorKey = (event) => {
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      if (editing === null || !target.matches("[data-kp-datatable-editor]")) return;
+      const isSelect = target instanceof HTMLSelectElement;
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (!isSelect || listWasOpen || !drawsSelect(target)) void commitEdit(true);
+      } else if (event.key === "Escape") {
+        const panelOpen = editing.holder.querySelector("[data-kp-date-panel]:not([hidden])") !== null;
+        if (isSelect && listWasOpen || panelOpen) return;
+        event.preventDefault();
+        void commitEdit(false);
+      }
+    };
+    const onEditorFocusOut = (event) => {
+      if (editing === null || !editing.holder.contains(
+        /** @type {Node} */
+        event.target
+      )) return;
+      const current2 = editing;
+      setTimeout(() => {
+        if (editing !== current2 || current2.busy) return;
+        if (current2.holder.contains(document.activeElement)) return;
+        void commitEdit(true);
+      }, 0);
+    };
+    const onWrapClick = (event) => {
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      if (target.closest(CLEAR_SELECTION) !== null && actions?.contains(target)) onClearSelection();
+      if (target.closest(CLEAR) !== null && empty?.contains(target)) onClear();
+      if (target.closest(RETRY) !== null && failedSlot?.contains(target)) onRetry();
+      if (target.closest(SORT_RESET) !== null) commitSorts(initialSorts.map((key) => ({ ...key })));
+      if (target.closest(EXPAND_ALL) !== null)
+        expandKeys([.../* @__PURE__ */ new Set([...expanded, ...pageRows.filter((row) => row.querySelector(ROW_TOGGLE) !== null).map(keyOf)])]);
+      if (target.closest(COLLAPSE_ALL) !== null) expandKeys([]);
+      if (target.closest("[data-kp-datatable-undo]") !== null && editLog?.contains(target)) void undoEdit();
+      const rowToggle = (
+        /** @type {HTMLElement | null} */
+        target.closest(ROW_TOGGLE)
+      );
+      if (rowToggle !== null && body.contains(rowToggle)) {
+        const row = (
+          /** @type {HTMLTableRowElement} */
+          rowToggle.closest("tr")
+        );
+        setExpanded(row, !expanded.has(keyOf(row)));
+        row.querySelector(ROW_TOGGLE)?.focus();
+      }
+      const editButton = (
+        /** @type {HTMLElement | null} */
+        target.closest(EDIT_CELL)
+      );
+      if (editButton !== null && body.contains(editButton)) {
+        const cell = (
+          /** @type {HTMLTableCellElement} */
+          editButton.closest("td, th")
+        );
+        void openEditor(
+          /** @type {HTMLTableRowElement} */
+          cell.parentElement,
+          cell.cellIndex
+        );
+      }
+    };
+    for (const control of [scopeSelect, densitySelect, sortBy, sizeSelect]) {
+      if (control === null || control.dataset.kpSelectAttached !== void 0 || !drawsSelect(control)) continue;
+      cleanups.push(attachSelect(control));
     }
     search?.addEventListener("input", onSearch);
     scopeSelect?.addEventListener("change", onScope);
@@ -3932,19 +5043,22 @@ function attachDataTables(root = document, {
     sortBy?.addEventListener("change", onSortBy);
     sortDirection?.addEventListener("click", onSortDirection);
     sizeSelect?.addEventListener("change", onPageSize);
-    actions?.addEventListener("click", onActionsClick);
-    empty?.addEventListener("click", onEmptyClick);
-    failedSlot?.addEventListener("click", onFailedClick);
+    columnList?.addEventListener("change", onColumnChange);
+    columnList?.addEventListener("click", onColumnClick);
+    wrap.addEventListener("click", onWrapClick);
+    wrap.addEventListener("keydown", onEditorKeyCapture, { capture: true });
+    wrap.addEventListener("keydown", onEditorKey);
+    wrap.addEventListener("focusout", onEditorFocusOut);
     table.tHead?.addEventListener("click", onHeadClick);
     table.tHead?.addEventListener("keydown", onHeadKey);
     body.addEventListener("change", onBodyChange);
     selectAll?.addEventListener("change", onSelectAll);
     query = search?.value ?? "";
-    const presorted = headers.findIndex((h) => h.getAttribute("aria-sort") === "ascending" || h.getAttribute("aria-sort") === "descending");
-    if (presorted !== -1) sort = { column: presorted, direction: (
-      /** @type {Direction} */
-      headers[presorted]?.getAttribute("aria-sort")
-    ) };
+    const initialSorts = headers.map((header, at) => ({ header, at })).filter(({ header }) => ["ascending", "descending"].includes(header.getAttribute("aria-sort") ?? "")).sort((a, b) => (Number(a.header.dataset.kpSortPriority) || a.at + 1e3) - (Number(b.header.dataset.kpSortPriority) || b.at + 1e3)).map(({ header, at }) => ({ column: at, direction: (
+      /** @type {'ascending' | 'descending'} */
+      header.getAttribute("aria-sort")
+    ) })).slice(0, multi ? void 0 : 1);
+    sorts = initialSorts.map((key) => ({ ...key }));
     for (const at of filterColumns) {
       const declared = headers[at]?.dataset.kpFilterValue;
       if (declared === void 0) continue;
@@ -3955,16 +5069,46 @@ function attachDataTables(root = document, {
         filters.set(at, { from, to });
       }
     }
+    if (gridMode) {
+      grid2 = attachGrid(table, {
+        pageRows: gridPageRows,
+        onMove: ({ row, rows, column, cell }) => {
+          if (gridReadout === null) return;
+          const at = cell.cellIndex;
+          const text = cell.parentElement?.parentElement?.tagName === "THEAD" ? labelOf(at) : cellText(
+            /** @type {HTMLTableRowElement} */
+            cell.parentElement,
+            at
+          );
+          void column;
+          gridReadout.textContent = getStrings().tableGridPosition(row, rows, labelOf(at), text);
+        }
+      });
+    }
     writeControls();
     renderPills();
-    applyFilter();
+    syncColumns();
+    if (serverMode) {
+      if (all.length > 0 && Number.isFinite(total)) {
+        state = "ready";
+        render();
+      } else request();
+    } else applyFilter();
+    let resizeFrame = 0;
+    const resize = fixedCount > 0 && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(syncFixed);
+    }) : null;
+    resize?.observe(table);
     const handle = {
       element: wrap,
       view,
       sort: setSort,
+      sortBy: (keys) => commitSorts(keys.map((key) => ({ column: key.column, direction: key.direction }))),
       page: (next) => {
         page = Math.max(0, next);
-        render();
+        if (serverMode) request();
+        else render();
       },
       pageSize: setPageSize,
       query: (next) => {
@@ -3979,25 +5123,42 @@ function attachDataTables(root = document, {
       },
       filter: setFilter,
       clearFilters,
+      hideColumns: (columns) => setHidden(columns),
+      expand: expandKeys,
       density: setDensity,
       state: (next) => {
         state = next;
         render();
       },
-      rows: (which = "view") => which === "page" ? [...pageRows] : [...shown],
-      selected: () => selectedRows().map(keyOf),
+      reload: () => serverMode ? request() : applyFilter({ keepPage: true }),
+      edit: (key, column) => {
+        const row = all.find((r) => keyOf(r) === key);
+        if (row !== void 0) void openEditor(row, column);
+      },
+      cancelEdit: () => void commitEdit(false),
+      rows: (which = "view") => which === "page" ? [...pageRows] : [...shownRows],
+      selected: () => serverMode ? [...serverSelection] : selectedRows().map(keyOf),
       select,
       refresh: () => {
-        all = [...body.rows];
-        for (const row of all) if (!rendered.includes(row)) rendered.push(row);
-        themeBoxes();
-        applyFilter();
+        collectDetails();
+        all = [...body.rows].filter(isRow);
+        for (const row of all) {
+          if (!rendered.includes(row)) rendered.push(row);
+          prepareRow(row);
+        }
+        syncColumns();
+        applyFilter({ keepPage: false });
       }
     };
     handles5.set(wrap, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(pending);
+      controller?.abort();
+      resize?.disconnect();
+      cancelAnimationFrame(resizeFrame);
+      closeEditor();
+      grid2?.detach();
       search?.removeEventListener("input", onSearch);
       scopeSelect?.removeEventListener("change", onScope);
       densitySelect?.removeEventListener("change", onDensity);
@@ -4008,18 +5169,32 @@ function attachDataTables(root = document, {
       sortBy?.removeEventListener("change", onSortBy);
       sortDirection?.removeEventListener("click", onSortDirection);
       sizeSelect?.removeEventListener("change", onPageSize);
-      actions?.removeEventListener("click", onActionsClick);
-      empty?.removeEventListener("click", onEmptyClick);
-      failedSlot?.removeEventListener("click", onFailedClick);
+      columnList?.removeEventListener("change", onColumnChange);
+      columnList?.removeEventListener("click", onColumnClick);
+      wrap.removeEventListener("click", onWrapClick);
+      wrap.removeEventListener("keydown", onEditorKeyCapture, { capture: true });
+      wrap.removeEventListener("keydown", onEditorKey);
+      wrap.removeEventListener("focusout", onEditorFocusOut);
       table.tHead?.removeEventListener("click", onHeadClick);
       table.tHead?.removeEventListener("keydown", onHeadKey);
       body.removeEventListener("change", onBodyChange);
       selectAll?.removeEventListener("change", onSelectAll);
+      for (const row of body.querySelectorAll(`:scope > ${SKELETON_ROW}`)) row.remove();
+      for (const detail of builtDetails) detail.remove();
+      for (const row of prepared) unprepareRow(row);
       for (const row of rendered) {
         row.hidden = false;
         body.append(row);
+        const detail = details.get(row);
+        if (detail !== void 0 && !builtDetails.has(detail)) {
+          detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
+          body.append(detail);
+        }
       }
+      syncFixedColumns(table, 0);
       headers.forEach((header, i) => {
+        header.querySelector(":scope .kp-datatable__sort-order")?.remove();
+        header.hidden = headersWereHidden[i] ?? false;
         const was = headerSort[i];
         if (was === null || was === void 0) header.removeAttribute("aria-sort");
         else header.setAttribute("aria-sort", was);
@@ -7005,17 +8180,17 @@ function attachEffects(root = document, options = {}) {
       else later(step, 110);
     };
     const lines = words.arrivalLinesByTheme?.[html.getAttribute("data-theme") ?? ""] ?? null;
-    let shown = 0;
+    let shown2 = 0;
     const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
     const lineStep = () => {
       if (ended || !lines) return;
-      shown++;
-      const upto = lines.slice(0, shown);
+      shown2++;
+      const upto = lines.slice(0, shown2);
       line.textContent = upto.map(
-        (text, index) => text.replace("{count}", String(index === shown - 1 ? Math.round(total * shown / lines.length) : total))
+        (text, index) => text.replace("{count}", String(index === shown2 - 1 ? Math.round(total * shown2 / lines.length) : total))
       ).join("\n");
-      bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
-      if (shown === lines.length) later(end, 320);
+      bar?.style.setProperty(BOOT_PROGRESS, String(shown2 / lines.length));
+      if (shown2 === lines.length) later(end, 320);
       else later(lineStep, 190);
     };
     skip.addEventListener("click", end);
@@ -7731,6 +8906,7 @@ export {
   CHOOSE_EVENT,
   COLOR_EVENT,
   COLUMNS,
+  COLUMNS_EVENT,
   COMMIT_EVENT,
   COMMIT_MS,
   CONFIRM_MODES,
@@ -7744,16 +8920,20 @@ export {
   DATE_EVENT,
   DEFAULT_STRINGS,
   DEFAULT_THEME,
+  DETAIL,
   DIALOG_OPEN_EVENT,
   DISMISS_OWNED,
   DONE_ATTRIBUTE,
   DONE_EVENT,
+  EDIT_EVENT,
   EFFECTS_ATTRIBUTE,
   EXEMPT,
+  EXPAND_EVENT,
   FIELD_EVENT,
   FILE_EVENT,
   FINISH_EVENT,
   GLYPHS,
+  GRID_PAGE_ROWS,
   HEADLINE_ROUTINES,
   HIGHLIGHT_EVENT,
   HOOKS,
@@ -7788,6 +8968,7 @@ export {
   REJECT_EVENT,
   REMOVE_EVENT,
   REORDER_EVENT,
+  REQUEST_EVENT,
   RETRY_EVENT,
   REVEALS,
   REVEAL_EVENT,
@@ -7796,6 +8977,7 @@ export {
   ROUTINES,
   RUN_EVENT,
   SELECT_EVENT,
+  SERVER_DEBOUNCE_MS,
   SIDENAV_MODE_EVENT,
   SIDENAV_OWNED,
   SIDENAV_SLIM_EVENT,
@@ -7847,6 +9029,7 @@ export {
   attachDismissals,
   attachEffects,
   attachForms,
+  attachGrid,
   attachGrids,
   attachLazyRegisters,
   attachNavToggles,
@@ -7914,6 +9097,7 @@ export {
   matchesFilter,
   meets,
   nameOf,
+  nextSorts,
   no_flash_exports as noFlashExports,
   noFlashSnippet,
   onThemeChange,
@@ -7952,6 +9136,7 @@ export {
   structure_exports as structureExports,
   stylesheetSide,
   subsequence,
+  syncFixedColumns,
   tables_exports as tablesExports,
   theme_core_exports as themeCoreExports,
   themeMenuMarkup,

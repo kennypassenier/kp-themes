@@ -29,6 +29,13 @@
                 <li><a href="#datatable">Data table</a></li>
                 <li><a href="#datatable-sticky">Data table, header that stays</a></li>
                 <li><a href="#datatable-states">Data table, loading and failed</a></li>
+                <li><a href="#datatable-multi-sort">Data table, sorting on more than one column</a></li>
+                <li><a href="#datatable-columns">Data table, choosing columns</a></li>
+                <li><a href="#datatable-expansion">Data table, rows that open</a></li>
+                <li><a href="#datatable-fixed-column">Data table, a first column that stays</a></li>
+                <li><a href="#datatable-server">Data table, rows from a server</a></li>
+                <li><a href="#datatable-inline-edit">Data table, editing in the cell</a></li>
+                <li><a href="#datatable-keyboard">Data table, arrow keys</a></li>
                 <li><a href="#many">Two hundred rows</a></li>
             </ul>
 
@@ -1158,6 +1165,2114 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-multi-sort">
+                <h2>Data table: sorting on more than one column</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-sort-multi</code>. It opens sorted by <b>Severity</b> high to low, then <b>Hours open</b> high to
+                    low: the small numbers in the two headers give the order, and the line above the table says it in words. A plain click on a header
+                    sorts on that column alone; <b>Shift</b> + click (or Shift + Enter on a focused header) adds the column as the next key, a second
+                    Shift + click turns it round and a third takes it out again. <b>Back to Severity, then Hours open</b> restores the opening sort.
+                    Severity sorts by its meaning, Critical above Low. Check that the numbers read clearly beside the theme's sort arrow and stay on
+                    the header's line in every theme.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-sort-multi data-kp-page-sizes="none">
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>
+                                Back to Severity, then Hours open
+                            </button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, sorted on several columns. Shift and click a column header to add it to the sort.
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text">Site</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-sort-order="Low,Medium,High,Critical"
+                                            aria-sort="descending"
+                                            data-kp-sort-priority="1"
+                                        >
+                                            Severity
+                                        </th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end" aria-sort="descending" data-kp-sort-priority="2">
+                                            Hours open
+                                        </th>
+                                        <th scope="col" data-kp-sort="text">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">24</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">31</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">38</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4435">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4435</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4432">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4432</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">11</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4429">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4429</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">18</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4426">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4426</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">25</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4423">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4423</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">32</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4420">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4420</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">39</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4417">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4417</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">5</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4414">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4414</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">12</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4411">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4411</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">19</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4408">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4408</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">26</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4405">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4405</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">33</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4402">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4402</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">40</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-columns">
+                <h2>Data table: choosing which columns show</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-column-menu</code>. Press <b>Columns</b>: the menu is the theme's own <code>.kp-menu</code> on a
+                    <code>.kp-popover</code>, under its button, with the theme's checkboxes. Untick <b>Note</b> and <b>Owner</b>: the header and the
+                    cells go together, and the count beside the button follows. <b>Reference (always shown)</b> cannot be unticked, because a row
+                    without its key cannot be told apart. <b>Show every column</b> brings them all back. Check the open menu in every theme: its
+                    ground, its items under the pointer, and the disabled item.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-column-menu data-kp-page-size="8" data-kp-page-sizes="none">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, with a choice of columns
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Reference</th>
+                                        <th scope="col">Site</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Severity</th>
+                                        <th scope="col">Owner</th>
+                                        <th scope="col">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4435">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4435</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4432">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4432</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4429">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4429</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4426">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4426</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4423">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4423</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4420">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4420</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4417">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4417</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4414">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4414</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4411">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4411</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4408">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4408</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4405">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4405</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4402">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4402</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-expansion">
+                <h2>Data table: rows that open to show more</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-expandable</code>, with each row's detail written as the <code>tr data-kp-row-detail</code> after
+                    it. The first row starts open: the whole note (which the Note column cuts off), the owner and a short history, in a full-width row
+                    under it. The toggle is a real button with <code>aria-expanded</code> and a name that says which incident it opens; Enter and
+                    Space work it from the keyboard. Open two more and sort by <b>Hours open</b>: the open rows stay open and travel with their
+                    incident, even to another page. Check that the detail row is told apart from an ordinary row in every theme, and that the long
+                    note wraps instead of widening the table.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-page-size="8" data-kp-page-sizes="none">
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-expand-all>
+                                Open every row on this page
+                            </button>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-collapse-all>
+                                Close them all
+                            </button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, each row can be opened for details
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col">Site</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Severity</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471" data-kp-expanded>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">
+                                                    The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two
+                                                    bar; line closed at the manifold pending a look in daylight.
+                                                </dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Anouk Peeters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-13: reported at Pump house 4, severity High.</li>
+                                                        <li>Assigned to Anouk Peeters.</li>
+                                                        <li>Still open after 2 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Door sensor reports open while the door is shut.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Chloé Martens</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-12: reported at Cold store, severity Medium.</li>
+                                                        <li>Assigned to Chloé Martens.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Elif Yilmaz</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-11: reported at Weighbridge, severity Critical.</li>
+                                                        <li>Assigned to Elif Yilmaz.</li>
+                                                        <li>Closed after 16 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Reported twice by the night shift; no fault found in daylight.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Bram De Smet</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-10: reported at Boiler room, severity Low.</li>
+                                                        <li>Assigned to Bram De Smet.</li>
+                                                        <li>Still open after 23 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Awaiting a part from the supplier, promised for Thursday.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Dries Wouters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-09: reported at Loading bay, severity High.</li>
+                                                        <li>Assigned to Dries Wouters.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Sensor replaced; watching for a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Anouk Peeters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-08: reported at Main gate, severity Medium.</li>
+                                                        <li>Assigned to Anouk Peeters.</li>
+                                                        <li>Closed after 37 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">
+                                                    The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two
+                                                    bar; line closed at the manifold pending a look in daylight.
+                                                </dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Chloé Martens</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-07: reported at Server room, severity Critical.</li>
+                                                        <li>Assigned to Chloé Martens.</li>
+                                                        <li>Still open after 3 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Door sensor reports open while the door is shut.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Elif Yilmaz</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-06: reported at Canteen, severity Low.</li>
+                                                        <li>Assigned to Elif Yilmaz.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Bram De Smet</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-05: reported at Pump house 4, severity High.</li>
+                                                        <li>Assigned to Bram De Smet.</li>
+                                                        <li>Closed after 17 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">24</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Reported twice by the night shift; no fault found in daylight.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Dries Wouters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-04: reported at Cold store, severity Medium.</li>
+                                                        <li>Assigned to Dries Wouters.</li>
+                                                        <li>Still open after 24 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">31</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Awaiting a part from the supplier, promised for Thursday.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Anouk Peeters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-03: reported at Weighbridge, severity Critical.</li>
+                                                        <li>Assigned to Anouk Peeters.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">38</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Sensor replaced; watching for a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Chloé Martens</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-02: reported at Boiler room, severity Low.</li>
+                                                        <li>Assigned to Chloé Martens.</li>
+                                                        <li>Closed after 38 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4435">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4435</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">4</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">
+                                                    The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two
+                                                    bar; line closed at the manifold pending a look in daylight.
+                                                </dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Elif Yilmaz</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-13: reported at Loading bay, severity High.</li>
+                                                        <li>Assigned to Elif Yilmaz.</li>
+                                                        <li>Still open after 4 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4432">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4432</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">11</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Door sensor reports open while the door is shut.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Bram De Smet</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-12: reported at Main gate, severity Medium.</li>
+                                                        <li>Assigned to Bram De Smet.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4429">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4429</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">18</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Dries Wouters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-11: reported at Server room, severity Critical.</li>
+                                                        <li>Assigned to Dries Wouters.</li>
+                                                        <li>Closed after 18 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4426">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4426</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">25</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Reported twice by the night shift; no fault found in daylight.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Anouk Peeters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-10: reported at Canteen, severity Low.</li>
+                                                        <li>Assigned to Anouk Peeters.</li>
+                                                        <li>Still open after 25 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4423">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4423</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">32</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Awaiting a part from the supplier, promised for Thursday.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Chloé Martens</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-09: reported at Pump house 4, severity High.</li>
+                                                        <li>Assigned to Chloé Martens.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4420">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4420</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">39</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Sensor replaced; watching for a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Elif Yilmaz</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-08: reported at Cold store, severity Medium.</li>
+                                                        <li>Assigned to Elif Yilmaz.</li>
+                                                        <li>Closed after 39 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4417">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4417</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">5</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">
+                                                    The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two
+                                                    bar; line closed at the manifold pending a look in daylight.
+                                                </dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Bram De Smet</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-07: reported at Weighbridge, severity Critical.</li>
+                                                        <li>Assigned to Bram De Smet.</li>
+                                                        <li>Still open after 5 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4414">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4414</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">12</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Door sensor reports open while the door is shut.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Dries Wouters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-06: reported at Boiler room, severity Low.</li>
+                                                        <li>Assigned to Dries Wouters.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4411">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4411</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">19</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title='Calibrated, and the "zero" drift of 40 kg is back within a week.'
+                                        >
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Anouk Peeters</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-05: reported at Loading bay, severity High.</li>
+                                                        <li>Assigned to Anouk Peeters.</li>
+                                                        <li>Closed after 19 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4408">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4408</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">26</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Reported twice by the night shift; no fault found in daylight.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Chloé Martens</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-04: reported at Main gate, severity Medium.</li>
+                                                        <li>Assigned to Chloé Martens.</li>
+                                                        <li>Still open after 26 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4405">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4405</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">33</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Awaiting a part from the supplier, promised for Thursday."
+                                        >
+                                            Awaiting a part from the supplier, promised for Thursday.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Awaiting a part from the supplier, promised for Thursday.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Elif Yilmaz</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-03: reported at Server room, severity Critical.</li>
+                                                        <li>Assigned to Elif Yilmaz.</li>
+                                                        <li>Fix applied; being watched before it is closed.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4402">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4402</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">40</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            <dl class="kp-stack kp-gap-xs kp-m-0">
+                                                <dt class="kp-text-muted">Note</dt>
+                                                <dd class="kp-m-0">Sensor replaced; watching for a week.</dd>
+                                                <dt class="kp-text-muted">Owner</dt>
+                                                <dd class="kp-m-0">Bram De Smet</dd>
+                                                <dt class="kp-text-muted">History</dt>
+                                                <dd class="kp-m-0">
+                                                    <ol>
+                                                        <li>2026-09-02: reported at Canteen, severity Low.</li>
+                                                        <li>Assigned to Bram De Smet.</li>
+                                                        <li>Closed after 40 hours.</li>
+                                                    </ol>
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-fixed-column">
+                <h2>Data table: a first column that stays</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-fixed-columns</code> with <code>data-kp-max-height="22rem"</code>: all 24 rows in a box shorter and
+                    narrower than the table. Scroll down inside it: the header row stays on top. Scroll sideways: <b>Reference</b> stays on the left,
+                    so every row keeps its name. Check in every theme — nostromo and cyberpunk first — that the stuck cells are opaque (no rows
+                    showing through), that the hairline beside the first column is visible, and that the corner cell sits above both the header and
+                    the column.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-fixed-columns data-kp-max-height="22rem">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    All incidents, in a box that scrolls both ways
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="kp-text-nowrap">Reference</th>
+                                        <th scope="col" class="kp-text-nowrap">Site</th>
+                                        <th scope="col" class="kp-text-nowrap">Status</th>
+                                        <th scope="col" class="kp-text-nowrap">Severity</th>
+                                        <th scope="col" class="kp-text-nowrap">Hours open</th>
+                                        <th scope="col" class="kp-text-nowrap">Opened</th>
+                                        <th scope="col" class="kp-text-nowrap">Owner</th>
+                                        <th scope="col" class="kp-text-nowrap">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Pump house 4</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">2</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-13</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Cold store</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">9</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-12</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Door sensor reports open while the door is shut.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Weighbridge</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">16</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-11</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Boiler room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">23</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-10</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Loading bay</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">30</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-09</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Dries Wouters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Awaiting a part from the supplier, promised for Thursday.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Main gate</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">37</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-08</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Sensor replaced; watching for a week.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Server room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">3</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-07</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Canteen</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">10</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-06</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Door sensor reports open while the door is shut.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Pump house 4</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">17</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-05</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Cold store</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">24</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-04</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Dries Wouters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Weighbridge</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">31</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-03</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Awaiting a part from the supplier, promised for Thursday.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Boiler room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">38</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-02</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Sensor replaced; watching for a week.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4435">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4435</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Loading bay</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">4</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-13</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4432">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4432</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Main gate</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">11</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-12</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Door sensor reports open while the door is shut.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4429">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4429</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Server room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">18</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-11</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Dries Wouters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4426">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4426</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Canteen</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">25</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-10</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4423">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4423</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Pump house 4</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">32</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-09</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Awaiting a part from the supplier, promised for Thursday.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4420">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4420</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Cold store</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">39</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-08</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Sensor replaced; watching for a week.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4417">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4417</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Weighbridge</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">5</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-07</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4414">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4414</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Boiler room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">12</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-06</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Dries Wouters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Door sensor reports open while the door is shut.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4411">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4411</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Loading bay</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">19</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-05</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Anouk Peeters</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Calibrated, and the &quot;zero&quot; drift of 40 kg is back within a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4408">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4408</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Main gate</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">26</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-04</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Chloé Martens</td>
+                                        <td data-label="Note" class="kp-text-nowrap">
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4405">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4405</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Server room</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">33</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-03</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Elif Yilmaz</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Awaiting a part from the supplier, promised for Thursday.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4402">
+                                        <td data-label="Reference" class="kp-text-nowrap"><code class="kp-mono">INC-4402</code></td>
+                                        <td data-label="Site" class="kp-text-nowrap">Canteen</td>
+                                        <td data-label="Status" class="kp-text-nowrap"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity" class="kp-text-nowrap">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric kp-text-nowrap">40</td>
+                                        <td data-label="Opened" class="kp-numeric kp-text-nowrap">2026-09-02</td>
+                                        <td data-label="Owner" class="kp-text-nowrap">Bram De Smet</td>
+                                        <td data-label="Note" class="kp-text-nowrap">Sensor replaced; watching for a week.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-server">
+                <h2>Data table: rows that come from a server</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-server</code>. The table does not search, sort or page by itself: every change asks the page's
+                    pretend server (<code>catalogue/demos.js</code>, 400 ms, or 2 s with <b>Slow network</b>), and the list under the table logs each
+                    request, newest first. Type <i>pump house</i> quickly: the search waits 300 ms after the last key, so one request goes out, not
+                    nine. Tick <b>Slow network</b> and click a sort header twice fast: the first answer arrives after the second request was sent, is
+                    thrown away, and the log says so. While waiting, the old rows stay dimmed and the status line shows the theme's spinner; the first
+                    load shows skeleton rows. Tick <b>Fail the next answer</b> and page on: the failed state appears in the alarm colour with
+                    <b>Try again</b>.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-server data-kp-page-size="8" data-kp-page-sizes="none" data-cat-server>
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search incidents on the server" />
+                            <label class="kp-field__option"><input class="kp-field__check" type="checkbox" data-cat-slow /> Slow network</label>
+                            <label class="kp-field__option"
+                                ><input class="kp-field__check" type="checkbox" data-cat-fail /> Fail the next answer</label
+                            >
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, served page by page
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text" data-kp-field="ref">Reference</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-field="site">Site</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-field="status">Status</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-field="severity">Severity</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="number"
+                                            data-kp-field="hours"
+                                            data-kp-cell-class="kp-text-end kp-numeric"
+                                            class="kp-text-end"
+                                        >
+                                            Hours open
+                                        </th>
+                                        <th scope="col" data-kp-sort="text" data-kp-field="owner">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                        <ol class="kp-mono" reversed data-cat-server-log aria-label="Requests sent"></ol>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-inline-edit">
+                <h2>Data table: editing a value in its cell</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-edit</code> on six headers. Their values have a dashed underline and a pencil: each is a button, so
+                    it is plain which cells can be edited before a pointer finds them. Press one: <b>Status</b>, <b>Severity</b> and <b>Owner</b> open
+                    the theme's drawn select, <b>Site</b> a text field, <b>Hours open</b> a number field and <b>Opened</b> the theme's date picker.
+                    Enter saves (on a select, Enter takes the highlighted option), moving away saves, Escape cancels; the line under the table says
+                    what changed and <b>Undo</b> puts it back, and the focus returns to the cell. Empty <b>Site</b> and press Enter: the field's error
+                    shows and nothing is saved. Set <b>Hours open</b> above 100: the page refuses it through <code>kp-datatable-edit</code>, with its
+                    own message. Check that the editor fits its cell without making the row jump, in every theme.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="8" data-kp-page-sizes="none" data-cat-edit>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, Site, Status, Severity, Hours open, Opened and Owner can be edited in place
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Reference</th>
+                                        <th scope="col" data-kp-edit="text" data-kp-edit-required>Site</th>
+                                        <th scope="col" data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+                                        <th scope="col" data-kp-edit="select" data-kp-edit-options="Critical,High,Medium,Low">Severity</th>
+                                        <th scope="col" data-kp-edit="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-edit="date">Opened</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-edit="select"
+                                            data-kp-edit-options="Anouk Peeters,Bram De Smet,Chloé Martens,Dries Wouters,Elif Yilmaz"
+                                        >
+                                            Owner
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-13</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-12</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-11</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-10</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-09</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-08</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-07</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-06</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-05</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">24</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-04</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">31</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-03</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">38</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-02</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4435">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4435</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">4</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-13</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4432">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4432</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">11</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-12</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4429">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4429</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">18</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-11</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4426">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4426</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">25</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-10</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4423">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4423</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">32</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-09</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4420">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4420</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">39</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-08</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4417">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4417</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">5</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-07</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4414">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4414</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">12</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-06</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4411">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4411</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">19</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-05</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4408">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4408</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">26</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-04</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4405">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4405</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">33</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-03</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4402">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4402</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">40</td>
+                                        <td data-label="Opened" class="kp-numeric">2026-09-02</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-keyboard">
+                <h2>Data table: moving through cells with the arrow keys</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-grid</code>, which makes the table <code>role="grid"</code>. Tab enters it once, on one cell, and
+                    leaves it with the next Tab. Inside, the arrow keys move a cell at a time, Home and End go to the start and end of the row, Ctrl +
+                    Home and Ctrl + End to the first and last cell, Page Up and Page Down five rows; the line under the table says where you are. A
+                    cell that holds a control hands it the focus: Enter on a sort header sorts, Enter on <b>Status</b> edits it and Escape comes back
+                    to the cell. Check that the focus ring shows inside every cell in every theme, the header cells included.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-grid data-kp-page-size="10" data-kp-page-sizes="none">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Ten most recent incidents, navigable with the arrow keys
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col">Site</th>
+                                        <th scope="col" data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+                                        <th scope="col">Severity</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4465">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4462">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4459">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Owner">Anouk Peeters</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Critical</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td data-label="Owner">Chloé Martens</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status"><span class="kp-badge">Watching</span></td>
+                                        <td data-label="Severity">Low</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Owner">Elif Yilmaz</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status"><span class="kp-badge">Closed</span></td>
+                                        <td data-label="Severity">High</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td data-label="Owner">Bram De Smet</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status"><span class="kp-badge">Open</span></td>
+                                        <td data-label="Severity">Medium</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">24</td>
+                                        <td data-label="Owner">Dries Wouters</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
                         </div>
                     </div>
                 </div>

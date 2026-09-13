@@ -3330,6 +3330,134 @@
         cursor: pointer;
     }
 
+    /* The seven of Kenny's form of 2026-09-13 ("Alle zeven, nu"), each as
+ * its approved mock in research/datatable/demo.html drew it. */
+
+    /* Sorting on more than one column: each sorted header carries its place
+ * in a small ring beside its label, on the header's line [#multi-sort]. */
+    .kp-datatable[data-kp-sort-multi] .kp-table thead th {
+        white-space: nowrap;
+    }
+
+    .kp-datatable__sort-order {
+        display: inline-block;
+        margin-inline-start: 0.3rem;
+        min-inline-size: 1.2em;
+        padding: 0 0.25em;
+        border: 1px solid currentColor;
+        border-radius: var(--kp-datatable-sort-order-radius, 999px);
+        font-size: var(--kp-datatable-sort-order-size, 0.7em);
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .kp-datatable__sort-summary {
+        flex: 1 1 auto;
+    }
+
+    /* Refreshing: a spinner beside the status words [#states]. */
+    .kp-datatable__status:has(> .kp-spinner) {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__status > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    /* Choosing which columns show: a checkbox and its column on one line in
+ * the menu [#columns]. */
+    .kp-datatable__column-option {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Rows that open: the detail row wraps its prose rather than widening
+ * the table, and the toggle keeps its width when its glyph turns
+ * [#expansion]. */
+    .kp-datatable__expand {
+        min-inline-size: var(--kp-datatable-expand-size, 2em);
+    }
+
+    .kp-table tr.kp-datatable__detail > td {
+        padding-block: var(--kp-datatable-detail-padding-block, 0.75rem 1rem);
+        white-space: normal;
+    }
+
+    /* A first column that stays [#sticky]. The script marks the cells of the
+ * fixed columns and writes the offset each sticks at; the ground is opaque
+ * so the scrolled cells do not show through, and the last fixed column
+ * draws a hairline. The header's cells stay above the body's, and the
+ * corner above both. */
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed] {
+        position: sticky;
+        inset-inline-start: var(--kp-datatable-fixed-start, 0);
+        z-index: 1;
+        background-color: var(--kp-datatable-fixed-ground, var(--kp-datatable-head-ground, var(--background)));
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed='last'] {
+        box-shadow: inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong));
+    }
+
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th {
+        z-index: 2;
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table thead th[data-kp-fixed] {
+        z-index: 3;
+    }
+
+    /* Editing a value in its cell [#inline-edit]: an editable value is a
+ * button with a dashed underline and a pencil, so it can be told apart
+ * before a pointer finds it; the editor is the package's own field, in
+ * the compact density so the row does not jump. */
+    .kp-datatable__edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-block-end: 1px dashed var(--kp-datatable-edit-rule, var(--border-strong));
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: inherit;
+        cursor: pointer;
+    }
+
+    /* The pencil is paint, not text: it stays out of the value a search, a
+ * sort or an export reads, and out of what a screen reader says (the
+ * second declaration, for a browser that reads alternative text). */
+    .kp-datatable__edit::after {
+        content: var(--kp-datatable-edit-glyph, '✎');
+        content: var(--kp-datatable-edit-glyph, '✎') / '';
+    }
+
+    .kp-datatable__editor {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: var(--kp-datatable-editor-min, 8rem);
+    }
+
+    .kp-datatable__editor > .kp-field__input {
+        inline-size: 100%;
+    }
+
+    /* Moving through cells with the arrow keys [#keyboard]: the two-part
+ * ring drawn inside the cell, so the next cell's ground and the scroll box
+ * cannot cut it away. */
+    .kp-table[role='grid'] :is(th, td):focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
     .kp-datatable {
         display: flex;
         flex-direction: column;
@@ -3454,6 +3582,12 @@
      * control that stands in for them shows [gap-13]. */
         .kp-datatable[data-kp-cards] > .kp-datatable__card-sort {
             display: flex;
+        }
+
+        /* A card has no columns to keep in place. */
+        .kp-datatable[data-kp-cards] .kp-table :is(th, td)[data-kp-fixed] {
+            position: static;
+            box-shadow: none;
         }
 
         .kp-datatable[data-kp-cards] .kp-table thead,

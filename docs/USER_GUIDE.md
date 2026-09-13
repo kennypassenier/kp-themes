@@ -494,6 +494,215 @@ Next are the theme's own button (`kp-button`; `pagerClassName` in
 Previous carries `data-kp-direction="back"`, which a theme may answer —
 cyberpunk turns its notch to that side.
 
+## Seven more things a data table does [Kenny, 2026-09-13]
+
+Each is off until the markup (or a prop) asks for it, each keeps its
+state in the handle `attachDataTables()` returns (`dataTable(element)`
+finds it again), and each looks the way its approved mock in the data
+table research demo did. The catalogue's Tables page shows every one live.
+
+### Sorting on more than one column
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-sort-multi>
+    …
+    <th data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical" aria-sort="descending" data-kp-sort-priority="1">Severity</th>
+    <th data-kp-sort="number" aria-sort="descending" data-kp-sort-priority="2">Hours open</th>
+</div>
+```
+
+A plain click sorts on that column alone. **Shift** + click — or Shift +
+Enter on a focused header — adds the column as the next key, a second
+one turns it round, a third takes it out. Each sorted header carries its
+`aria-sort` and, with two keys or more, its place in a small ring
+(`.kp-datatable__sort-order`); a line in the top bar says the whole sort in
+words, from `strings.tableSortedBy` and `strings.tableSortKey`. Headers the
+server rendered with `aria-sort` open sorted, in the order
+`data-kp-sort-priority` gives; a button with `data-kp-datatable-sort-reset`
+puts that opening sort back. A new sort goes to the first page.
+
+The handle: `sortBy([{ column, direction }, …])` sets every key, and
+`view().sorts` reads them (`view().sort` is still the first).
+`kp-datatable-sort` still announces the first key. React:
+`multiSort`, and `sorts` / `defaultSorts` / `onSortsChange` with
+`{ key, direction }` entries; `sort` and `onSortChange` keep working and
+hear the first key. Knobs: `--kp-datatable-sort-order-radius`,
+`--kp-datatable-sort-order-size`.
+
+### Choosing which columns show
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-column-menu>
+    …
+    <th>Reference</th>
+    <th data-kp-column-hidden>Note</th>
+</div>
+```
+
+A **Columns** button in the top bar (made when the markup has no top bar)
+opens a `.kp-menu` on a `.kp-popover`, anchored under the button, with one
+of the theme's checkboxes per column and **Show every column** at the
+end; beside the button the count says how many show. A column hides with
+its header and its cells together. The key column — the first that is not
+a column of checkboxes or expand buttons — is locked and says so;
+`data-kp-column-locked` locks another, `data-kp-column-locked="false"`
+unlocks the key column. `data-kp-column-hidden` starts a column hidden.
+
+The handle: `hideColumns([indices])`, `view().hidden`, and the
+`kp-datatable-columns` event with `{ hidden }`. React: `columnMenu`,
+`hiddenColumns` / `defaultHiddenColumns` / `onHiddenColumnsChange` by
+column key, and `locked` on a column (the first by default).
+
+### Rows that open to show more
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-expandable>
+    …
+    <tbody>
+        <tr data-kp-row-key="INC-4471" data-kp-expanded>…</tr>
+        <tr data-kp-row-detail hidden>
+            <td colspan="6">The whole note, the owner, the history…</td>
+        </tr>
+    </tbody>
+</div>
+```
+
+The detail is yours: a `tr data-kp-row-detail` straight after its row, or
+a `detail: (row) => Node | string` option that builds it the first time
+the row opens, or — with neither — the `kp-datatable-expand` event, whose
+`cell` you fill. The table puts a column in front (its header read by a
+screen reader only, `strings.tableDetailsColumn`) with a button per row:
+`aria-expanded`, `aria-controls` on the detail, a name from
+`strings.tableRowDetails`, Enter and Space from the keyboard. Column
+indices the handle takes count that column. An open row keeps its detail
+directly under it through a sort and onto another page, and the detail
+spans every visible column. `data-kp-expanded` opens a row from the start;
+buttons with `data-kp-datatable-expand-all` and
+`data-kp-datatable-collapse-all` open or close the page's rows.
+
+The handle: `expand([keys])`, `view().expanded`. React: `renderDetail`,
+`rowExpandable`, `expanded` / `defaultExpanded` / `onExpandedChange`,
+`expandGlyph` and `collapseGlyph` (▸ and ▾; `expandGlyph` and
+`collapseGlyph` as attach options). Knobs:
+`--kp-datatable-detail-padding-block`, `--kp-datatable-expand-size`.
+
+### A first column that stays
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-fixed-columns data-kp-max-height="22rem">…</div>
+```
+
+Scrolled sideways, the key column — and every column of checkboxes or
+expand buttons before it — stays at the left edge; `data-kp-fixed-columns="2"`
+names a count instead. With a max height the box scrolls both ways and the
+header stays too, with the corner above both. The script measures the
+columns and writes `data-kp-fixed` and `--kp-datatable-fixed-start` on
+their cells (`syncFixedColumns(table, count)` does it for a table of your
+own); the stylesheet sticks them on an opaque ground,
+`--kp-datatable-fixed-ground` (the header's ground by default), and the
+last fixed column draws a hairline, `--kp-datatable-fixed-rule` and
+`--kp-datatable-fixed-rule-width`. In the card layout nothing is fixed.
+React: `fixedColumns` (`true`, or a count).
+
+### Rows that come from a server
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-server data-kp-page-size="25">
+    …
+    <th data-kp-sort="text" data-kp-field="ref">Reference</th>
+    <th data-kp-sort="number" data-kp-field="hours" data-kp-cell-class="kp-text-end kp-numeric">Hours open</th>
+</div>
+```
+
+```js
+attachDataTables(document, {
+    load: async ({ query, sorts, filters, page, pageSize, signal }) => {
+        const response = await fetch(`/api/incidents?${params}`, { signal });
+        const { rows, total } = await response.json();
+        return { rows, total };
+    },
+});
+```
+
+The table searches, sorts, filters and pages nothing itself: every change
+asks `load` — or, without the option, whoever answers the
+`kp-datatable-request` event through its `respond(answer)` and
+`fail(error)` — for one page, and shows the rows and the `total` it
+answers. `rows` are table rows or plain objects; an object's cells are
+read through each header's `data-kp-field`, wear the header's
+`data-kp-cell-class`, and its key is the field `data-kp-row-key-field`
+names (else the key column's field, else `key` or `id`; a `rowKey`
+option decides otherwise). The search waits 300 ms after the last key
+(`data-kp-debounce`). An answer to a request that is no longer the newest
+is thrown away, and the older request's `signal` is aborted. While it
+waits the old rows stay, dimmed, and the status shows the theme's spinner;
+a first load with no loading slot of yours shows three skeleton rows; a
+failed answer shows the failed slot — made, with **Try again**, when the
+markup has none — and Try again asks again. A server-rendered first page
+with `data-kp-total` is shown without asking. Selected keys outlive the
+page they were ticked on.
+
+The handle: `reload()`. React: `load` with the same request (column keys
+instead of indices), `rows` then left out, `debounceMs` 300 by default, and
+`apiRef.current.reload()`; `totalRows` still serves a table whose page you
+fetch yourself.
+
+### Editing a value in its cell
+
+```html
+<th data-kp-edit="text" data-kp-edit-required>Site</th>
+<th data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+<th data-kp-edit="number" data-kp-edit-min="0">Hours open</th>
+<th data-kp-edit="date">Opened</th>
+```
+
+```js
+table.addEventListener('kp-datatable-edit', (event) => {
+    const { key, label, value, previous, reject, waitUntil } = event.detail;
+    if (label === 'Hours open' && Number(value) > 100) reject('No more than 100 hours.');
+    else waitUntil(save(key, label, value)); // resolve to a string or false to refuse
+});
+```
+
+Every value in an editable column becomes a button with a dashed
+underline and a pencil (`.kp-datatable__edit`; `--kp-datatable-edit-rule`,
+`--kp-datatable-edit-glyph`, a paint that stays out of the value). Pressing
+it opens the package's own control in the cell, in the compact density: a
+field, a number field, the drawn select, or the date picker. Enter saves
+(on a select, Enter on the open list takes the highlighted option and
+saves), moving away saves, Escape cancels. A required value that is empty,
+or a number that is not one, shows the field's error and saves nothing.
+Before saving, the table fires `kp-datatable-edit` (cancelable) and calls
+the `onEdit` option; `reject(message)`, `preventDefault()`, or a string or
+false from `waitUntil` or `onEdit` refuses the value and the cell shows the
+message. A saved value is written into the cell — into its badge, where
+the cell holds one — and a line under the table says what changed, with
+**Undo**, which asks again with `undo: true`. The focus returns to the
+cell.
+
+The handle: `edit(key, column)` and `cancelEdit()`. React: `edit`,
+`editOptions`, `editRequired`, `editMin` and `editMax` on a column, and
+`onCellEdit({ row, rowKey, key, label, value, previous, undo })` —
+return a string or false (or a promise of one) to refuse; accepting is
+yours to show, by updating `rows`.
+
+### Moving through cells with the arrow keys
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-grid>…</div>
+```
+
+The table becomes an ARIA grid with one tab stop. Inside it the arrow keys
+move a cell at a time, Home and End go to the start and end of the row,
+Ctrl + Home and Ctrl + End to the first and last cell, Page Up and Page
+Down five rows (`gridPageRows`). A cell that holds one control hands it
+the focus, so Enter on a sort header sorts and Enter on an editable value
+edits it; Escape from the editor comes back to the cell. Keys pressed in
+an editor stay the editor's. The focus ring is drawn inside the cell. A
+line under the table says where the focus is, from
+`strings.tableGridPosition`. `attachGrid(table)` gives a table of your own
+the same keys. React: `grid` and `gridPageRows`.
+
 ## What a scroll region clips [TH114]
 
 Three boxes in this package scroll sideways inside themselves rather than

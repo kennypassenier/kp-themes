@@ -100,6 +100,26 @@
  * @property {string} tableSortDescending
  * @property {string} tableFailed
  * @property {string} tableRetry
+ * @property {(column: string, direction: 'ascending' | 'descending', kind: string) => string} tableSortKey  One key of a multi-column sort in words; `kind` is text, number, date or order
+ * @property {(keys: string[]) => string} tableSortedBy  The multi-sort summary, from the keys in order
+ * @property {string} tableNotSorted
+ * @property {string} tableColumns          The column menu's button
+ * @property {string} tableColumnsLabel     The column menu's name
+ * @property {(column: string) => string} tableColumnLocked  A column that cannot be hidden, in the menu
+ * @property {string} tableShowAllColumns
+ * @property {(shown: number, total: number) => string} tableColumnsShown
+ * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
+ * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
+ * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name
+ * @property {(column: string, key: string) => string} tableEditing  Said when an editor opens
+ * @property {(key: string, column: string, before: string, after: string) => string} tableEdited
+ * @property {(key: string, column: string, value: string) => string} tableEditUndone
+ * @property {string} tableEditCancelled
+ * @property {string} tableEditRequired
+ * @property {string} tableEditInvalid     A rejected edit with no message of its own
+ * @property {string} tableGridStart        The keyboard grid's line before the first cell is focused
+ * @property {(row: number, rows: number, column: string, text: string) => string} tableGridPosition  Row 0 is the header row
  * @property {string} formRequired
  * @property {string} formInvalid
  * @property {string} formSummaryOne
@@ -285,6 +305,33 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableSortDescending: 'Descending',
     tableFailed: 'The rows could not be loaded.',
     tableRetry: 'Try again',
+    // The seven features of 2026-09-13 ("Alle zeven, nu"), in the words the
+    // approved mocks of research/datatable/demo.html used.
+    tableSortKey: (column, direction, kind) => {
+        const up = direction === 'ascending';
+        if (kind === 'number' || kind === 'order') return `${column} ${up ? 'low to high' : 'high to low'}`;
+        if (kind === 'date') return `${column} ${up ? 'oldest first' : 'newest first'}`;
+        return `${column} ${up ? 'A to Z' : 'Z to A'}`;
+    },
+    tableSortedBy: (keys) => `Sorted by ${keys.join(', then ')}.`,
+    tableNotSorted: 'Not sorted.',
+    tableColumns: 'Columns',
+    tableColumnsLabel: 'Visible columns',
+    tableColumnLocked: (column) => `${column} (always shown)`,
+    tableShowAllColumns: 'Show every column',
+    tableColumnsShown: (shown, total) => `${shown} of ${total} columns shown`,
+    tableDetailsColumn: 'Details',
+    tableRowDetails: (key) => `Details for ${key}`,
+    tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
+    tableEditField: (column, key) => `${column} of ${key}`,
+    tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
+    tableEdited: (key, column, before, after) => `${key}: ${column} changed from ${before} to ${after}.`,
+    tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
+    tableEditCancelled: 'Edit cancelled; nothing changed.',
+    tableEditRequired: 'A value is required.',
+    tableEditInvalid: 'This value cannot be saved.',
+    tableGridStart: 'Tab into the table to start.',
+    tableGridPosition: (row, rows, column, text) => `${row === 0 ? 'Header row' : `Row ${row} of ${rows}`}, column ${column}: ${text}`,
     formRequired: 'required',
     formInvalid: 'This field is not filled in correctly.',
     formSummaryOne: '1 field is not filled in correctly.',
