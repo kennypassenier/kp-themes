@@ -5,6 +5,7 @@ import {
     initializeTheme,
     isTheme,
     onThemeChange,
+    pendingTheme,
     storedTheme,
     storeTheme,
     configureTheme,
@@ -127,7 +128,10 @@ export function useTheme(options = {}) {
 
     /** @param {Theme} next */
     const commit = (next) => {
-        const applied = applyTheme(next, { root, darkClass });
+        // A change held for its register [scope-50] is still the choice:
+        // store the theme on its way, not the one the root still wears.
+        const worn = applyTheme(next, { root, darkClass });
+        const applied = pendingTheme({ root }) ?? worn;
         if (persist) setStorageFailed(!storeTheme(applied, { key: storageKey }));
         return applied;
     };

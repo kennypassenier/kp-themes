@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Lazy register</title>
+        <!-- scope-50: the shared stylesheets, then the register snippet BELOW
+             css/themes.css. No register is linked by hand: the snippet writes
+             the first, js/lazy-register.js every one after it. -->
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/utilities.css" />
+        <!-- Two probes of the cascade layer a register lands in. Both name a
+             layer css/themes.css already stated, and neither states an order.
+             Under cyberpunk the register sets letter-spacing on .kp-button:
+             a kp.layout rule must beat it, a kp.components rule must lose. -->
+        <style>
+            @layer kp.layout {
+                #probe-layout {
+                    letter-spacing: 3px;
+                }
+            }
+            @layer kp.components {
+                #probe-components {
+                    letter-spacing: 3px;
+                }
+            }
+        </style>
+        <!-- The output of noFlashSnippet({ register: true }), verbatim; the
+             spec refuses this page when it drifts from the generator. -->
+        <!-- prettier-ignore -->
+        <script>
+(function () {
+    var d = document.documentElement;
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) d.setAttribute("data-theme", t);
+    } catch (e) {}
+    var n = d.getAttribute("data-theme");
+    if (["formal","light","dark","cyberpunk","synthwave","pastel","terminal","forest","high-contrast","sepia","blueprint","solstice","brutalism","deco","phantom","shade-light","shade-dark","retro","grotesk","lapis","nostromo","titanium"].indexOf(n) < 0) n = "formal";
+    document.write('<link rel="stylesheet" href="' + "/css/" + n + "-register.css" + '" data-kp-register="' + n + '" blocking="render">');
+})();
+        </script>
+    </head>
+    <body>
+        <button type="button" class="kp-button" id="probe-plain">Plain</button>
+        <button type="button" class="kp-button" id="probe-layout">Layout</button>
+        <button type="button" class="kp-button" id="probe-components">Components</button>
+
+        <!-- The paint at the first moment a script can read it: every
+             stylesheet above, the written register included, holds this
+             script until it has loaded. -->
+        <script>
+            (function () {
+                window.__firstPaint = {
+                    background: getComputedStyle(document.body).backgroundColor,
+                    register: getComputedStyle(document.getElementById('probe-plain')).textTransform,
+                };
+            })();
+        </script>
+
+        <div data-kp-theme-picker id="picker"></div>
+        <p data-kp-theme-status hidden></p>
+
+        <script type="module">
+            const { attachThemePickers, themeOptionsMarkup } = await import('/js/theme-picker.js');
+            const { attachLazyRegisters } = await import('/js/lazy-register.js');
+            attachLazyRegisters();
+            document.getElementById('picker').innerHTML = themeOptionsMarkup({ grouped: false });
+            attachThemePickers();
+            document.documentElement.setAttribute('data-fixture-ready', '');
+        </script>
+    </body>
+</html>

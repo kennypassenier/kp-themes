@@ -1195,6 +1195,8 @@ test('the no-flash snippet cannot break out of the script element it lives in', 
         noFlashSnippet({ key: hostile }),
         noFlashSnippet({ attribute: hostile }),
         noFlashSnippet({ key: hostile, effects: true }),
+        // The register variant interpolates a pattern as well [scope-50].
+        noFlashSnippet({ key: hostile, register: { pattern: `${hostile}{theme}${hostile}` } }),
     ]) {
         assert.ok(!snippet.includes('</script'), 'the snippet closes the script element it is inlined in');
     }

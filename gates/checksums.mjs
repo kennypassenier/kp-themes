@@ -132,6 +132,7 @@ export const FILES = [
     'js/effects.js',
     'js/forms.js',
     'js/gridlayout.js',
+    'js/lazy-register.js',
     'js/listbox.js',
     'js/locale.js',
     'js/no-flash.js',

@@ -68,6 +68,10 @@
             "types": "./js/no-flash.d.ts",
             "default": "./js/no-flash.js"
         },
+        "./js/lazy-register": {
+            "types": "./js/lazy-register.d.ts",
+            "default": "./js/lazy-register.js"
+        },
         "./js/components": {
             "types": "./js/components.d.ts",
             "default": "./js/components.js"

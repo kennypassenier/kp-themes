@@ -216,6 +216,7 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-register</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-theme</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-theme-attached</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-theme-from-query</code></td><td>read</td></tr>
@@ -259,6 +260,8 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-register-load</code></td><td>Dispatched on the root, bubbling, when a register has loaded: `{ theme, href }`.</td></tr>
+                            <tr><td><code>kp-register-error</code></td><td>Dispatched on the root, bubbling, when a register failed to load: `{ theme, href }`. The theme stays what it was.</td></tr>
                             <tr><td><code>kp-theme-change</code></td><td>The event both channels listen to. A contract value: a consumer may listen for it too, so it does not get renamed casually [TH26]. It bubbles from the root, so `document.addEventListener` sees it as it always did, and so does a listener on the root itself.</td></tr>
                             <tr><td><code>kp-theme-before-change</code></td><td>Fired before a change, cancelable: `{ theme, previous }`. preventDefault() keeps the current theme.</td></tr>
                             <tr><td><code>kp-theme-unknown</code></td><td>Fired when a name was dropped: `{ requested, applied, source }` [TH97]. `source` is one of `stored`, `current`, `apply` or `cross-tab` — the four places a name can be dropped (AR25). A consumer listening to this learns what its page asked for and what it got, which is the whole of what the silence used to cost.</td></tr>
@@ -300,6 +303,7 @@
                             <tr><td><code>.kp-theme-option__label / __check</code></td><td>The parts of one option in the React channel: the name, and the check that marks the current theme.</td></tr>
                             <tr><td><code>selected</code></td><td>The current theme is marked twice — a border and a check mark flat, weight and a check in a menu — because colour alone is not a carrier.</td></tr>
                             <tr><td><code>storage refused</code></td><td>When the browser will not store the choice the status line says so out loud instead of leaving a picker that looks broken on the next load.</td></tr>
+                            <tr><td><code>registers loaded lazily</code></td><td>On a page that links only the active theme’s register, a choice waits until the new register has arrived: the page keeps the previous theme meanwhile, the choice is still the one remembered, and a register that fails to load leaves the theme as it was.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

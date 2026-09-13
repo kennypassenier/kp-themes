@@ -239,24 +239,65 @@ shell — that is not a number worth engineering around, and it removes a
 moving part: no load on switch, no flash while the new register arrives,
 no error path when it does not.
 
-**Per theme — load the one in use.**
+**Per theme — the shared stylesheets, and the active register fetched
+when it is needed.** Opt-in, through `js/lazy-register.js`
+(`@kp-soft/themes/js/lazy-register`); a page that links every register,
+or the bundle, is unaffected.
 
 ```html
+<link rel="stylesheet" href="/kp/css/fonts.css" />
 <link rel="stylesheet" href="/kp/css/themes.css" />
-<link rel="stylesheet" id="register" href="/kp/css/formal-register.css" />
+<link rel="stylesheet" href="/kp/css/components.css" />
+<link rel="stylesheet" href="/kp/css/layout.css" />
+<link rel="stylesheet" href="/kp/css/utilities.css" />
+<script>
+    /* the output of noFlashSnippet({ register: { pattern: '/kp/css/{theme}-register.css' } }) */
+</script>
 <script type="module">
-    import { onThemeChange } from '@kp-soft/themes/js/core';
-    onThemeChange((theme) => {
-        document.getElementById('register').href = `/kp/css/${theme}-register.css`;
-    });
+    import { attachLazyRegisters } from '@kp-soft/themes/js/lazy-register';
+    attachLazyRegisters({ pattern: '/kp/css/{theme}-register.css' });
 </script>
 ```
 
-A register averages 20 kB minified — `dark` is the heaviest at 44 kB,
-`light` the lightest at 12 kB — so a visitor who never leaves one theme
-downloads about 3% of what the bundle costs. Worth it for a public site
-over a slow connection; the price is a request on every switch and a
-frame where the old register has gone and the new one has not arrived.
+The page downloads the shared stylesheets and one register; a switch
+fetches the new theme's register once and keeps it, and switching back
+fetches nothing. Measured in `research/loading/README.md` on 2026-09-13:
+371,900 bytes of CSS on a first load under formal against 1,320,113 with
+every register linked, and one register — 31 to 66 kB raw — per theme a
+visitor switches to. `pattern` is where the registers are served from,
+with `{theme}` in it (default `/css/{theme}-register.css`;
+`/kp/dist/css/{theme}-register.min.css` takes the minified twins), and the
+snippet and the module must be given the same one. `hold` and `prune` are
+the other two knobs, both described in the module.
+
+Two things work differently on such a page, and both are contracts:
+
+1. **The no-flash snippet goes below `themes.css`, and writes the first
+   register.** `noFlashSnippet({ register: true })` — or an object with
+   `pattern` and `fallback` in place of `true` — copies the stored theme onto `<html>` as always,
+   and then writes the register link for that theme with
+   `document.write`, which every browser holds the first paint for — a
+   link a module inserts arrives after the page has painted without it.
+   It has to sit BELOW the `css/themes.css` link: the cascade layer order
+   is stated by whichever stylesheet states it first, `themes.css` states
+   it, and a register written above it would state `kp.register` before
+   `kp.components` exists, so the components would beat every register
+   rule. Written below, the register lands in `kp.register` and the
+   snippet never states a layer order of its own. An unknown stored name
+   asks for the fallback's register (default `formal`), not a missing
+   file. Without `register` the snippet is unchanged and still goes
+   before the stylesheets.
+2. **`applyTheme()` holds the previous theme until the new register has
+   loaded.** Tokens without their register are a theme that is not that
+   theme, so while the file is on its way the root keeps wearing the
+   previous theme, `applyTheme()` returns the previous name, and
+   `pendingTheme()` (from `@kp-soft/themes/js/core`) names the one on its
+   way. The change lands, with its `kp-theme-change`, the moment the
+   register has; a choice made meanwhile supersedes it. The picker and
+   `useTheme()` store the chosen theme, not the one still worn. A
+   register that fails to load leaves the theme as it was and fires
+   `kp-register-error`; `attachLazyRegisters({ hold: false })` flips at
+   once instead and accepts the frame without a register.
 
 Neither is more supported than the other. If you are not counting bytes,
 take the bundle: it is the one that cannot go wrong.
@@ -292,6 +333,7 @@ for.
 | `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                    |
 | `@kp-soft/themes/js/registry`            | the generated theme list                                 |
 | `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                  |
+| `@kp-soft/themes/js/lazy-register`       | the active theme's register, fetched at runtime          |
 | `@kp-soft/themes/js/strings`             | the dictionary and its defaults                          |
 | `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region               |
 | `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                  |

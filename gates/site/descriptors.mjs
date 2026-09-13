@@ -63,7 +63,9 @@ export const DESCRIPTORS = [
         group: 'Theming',
         classes: ['kp-theme-menu', 'kp-theme-group', 'kp-theme-option', 'kp-swatch'],
         exports: ['ThemeSwitcher'],
-        aliases: ['theme'],
+        // `register` claims what js/lazy-register.js writes and dispatches
+        // [scope-50]: the link attribute and its load and error events.
+        aliases: ['theme', 'register'],
         intro: 'The control that changes the page’s theme. Two shapes share one behaviour: a flat row of buttons, and an icon button whose dropdown groups the light themes above the dark ones. Both write the chosen name onto the document and remember it.',
         whenToUse:
             'Put one in the page’s header when the reader picks their own theme. Do not reach for it to preview a theme in one corner of a page — every element can wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.',
@@ -111,6 +113,10 @@ export const DESCRIPTORS = [
             { name: '.kp-theme-option__label / __check', what: 'The parts of one option in the React channel: the name, and the check that marks the current theme.' },
             { name: 'selected', what: 'The current theme is marked twice — a border and a check mark flat, weight and a check in a menu — because colour alone is not a carrier.' },
             { name: 'storage refused', what: 'When the browser will not store the choice the status line says so out loud instead of leaving a picker that looks broken on the next load.' },
+            {
+                name: 'registers loaded lazily',
+                what: 'On a page that links only the active theme’s register, a choice waits until the new register has arrived: the page keeps the previous theme meanwhile, the choice is still the one remembered, and a register that fails to load leaves the theme as it was.',
+            },
         ],
         accessibility: [
             'Built in — each option is a real button with a pressed state, so a screen reader says which theme is current without seeing the border.',

@@ -28,7 +28,9 @@ css/tailwind-bridge.css  separate: the tokens as Tailwind's own names
 
 js/theme-core.js     the state, in the document
 js/theme-registry.js the generated list: name, label, whether it is dark
-js/no-flash.js       the snippet for <head>, before the stylesheet
+js/no-flash.js       the snippet for <head>: before the stylesheet, or below
+                     css/themes.css when it also writes the register
+js/lazy-register.js  the active theme's register, fetched at runtime (opt-in)
 js/strings.js        every user-visible string, English by default [KT5]
 js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one

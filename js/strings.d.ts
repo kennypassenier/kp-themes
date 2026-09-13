@@ -142,6 +142,10 @@ export type Strings = {
     themeGroupLight: string;
     themeGroupDark: string;
     themeUnknown: (requested: string, applied: string) => string;
+    /**
+     * The console error when a lazily loaded register did not arrive; the theme stays what it was [scope-50]
+     */
+    registerLoadFailed: (theme: string, href: string) => string;
     diagnosticsHeading: string;
     diagnosticsStylesheet: string;
     diagnosticsScript: string;
@@ -261,6 +265,7 @@ export type Strings = {
  * @property {string} themeGroupLight
  * @property {string} themeGroupDark
  * @property {(requested: string, applied: string) => string} themeUnknown
+ * @property {(theme: string, href: string) => string} registerLoadFailed  The console error when a lazily loaded register did not arrive; the theme stays what it was [scope-50]
  * @property {string} diagnosticsHeading
  * @property {string} diagnosticsStylesheet
  * @property {string} diagnosticsScript
