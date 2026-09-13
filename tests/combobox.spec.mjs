@@ -232,3 +232,45 @@ test('the combobox input takes the same ground as a .kp-field__input, in every t
     }
     expect(apart).toEqual([]);
 });
+
+// ── scope-60, the tag input that could not add ─────────────────────────────
+
+test('the tag input adds a tag from typed text, with Enter or a comma [scope-60]', async ({ page }) => {
+    // scope-60: Kenny filtered and removed tags on the catalogue page, but typing a label and pressing Enter added nothing —
+    // with no option highlighted Enter had nothing to take. Before the fix no tag appeared for "safety" + Enter.
+    await page.goto('/catalogue/combobox.html');
+    const box = page.locator('#tags .kp-combobox');
+    const input = page.locator('#cb-tags');
+    const tags = box.locator('.kp-tag > span');
+    await expect(tags).toHaveText(['Pressure', 'Night shift']);
+    // Typed text that names an option takes that option, value and all.
+    await input.fill('safety');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety']);
+    await expect(box.locator('.kp-tag').last()).toHaveAttribute('data-value', 'safety');
+    await expect(input).toHaveValue('');
+    // Typed text no option names becomes a tag of its own, on a box that allows it.
+    await input.fill('Leak at the manifold');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold']);
+    // A comma ends a tag too, and is not typed into the next one.
+    await input.pressSequentially('Valve,');
+    await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold', 'Valve']);
+    await expect(input).toHaveValue('');
+    // And the new tag can be removed like the others.
+    await box.getByRole('button', { name: 'Remove Valve' }).click();
+    await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold']);
+});
+
+test('a tag input that does not allow new values adds only what an option names [scope-60]', async ({ page }) => {
+    await page.goto(URL);
+    const input = page.locator('[data-test="plain-tags-input"]');
+    const tags = page.locator('[data-test="plain-tags"] .kp-tag > span');
+    await input.fill('bug');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Bug']);
+    await input.fill('Nothing like it');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Bug']);
+    await expect(input).toHaveValue('Nothing like it');
+});

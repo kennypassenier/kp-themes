@@ -228,28 +228,33 @@ function ThemeSwitcherInner(
             >
                 {icon ?? <PaletteIcon />}
             </button>
+            {/* The popover box and the list that scrolls inside it are two
+                elements since 6.1, as in the markup channel, so the scrollbar
+                stays inside the box's rounded corners [scope-60]. */}
             {open && (
-                <ul
-                    id={`${id}-list`}
-                    role="listbox"
-                    aria-label={name}
-                    className={`kp-popover kp-menu kp-theme-menu__list ${classNames.menu ?? ''}`.trim()}
-                    data-kp-theme-picker=""
-                >
-                    {saveFailed && (
-                        <li role="presentation" className={`kp-theme-menu__status ${classNames.status ?? ''}`.trim()} data-kp-theme-status="">
-                            {refused}
-                        </li>
-                    )}
-                    {storageFailed && (
-                        <li role="presentation" className={`kp-theme-menu__status ${classNames.status ?? ''}`.trim()} data-kp-theme-status="">
-                            {blocked}
-                        </li>
-                    )}
-                    {grouped
-                        ? [group('light', groupLabels.light ?? s.themeGroupLight), group('dark', groupLabels.dark ?? s.themeGroupDark)]
-                        : themes.map(option)}
-                </ul>
+                <div className="kp-popover kp-theme-menu__list">
+                    <ul
+                        id={`${id}-list`}
+                        role="listbox"
+                        aria-label={name}
+                        className={`kp-menu ${classNames.menu ?? ''}`.trim()}
+                        data-kp-theme-picker=""
+                    >
+                        {saveFailed && (
+                            <li role="presentation" className={`kp-theme-menu__status ${classNames.status ?? ''}`.trim()} data-kp-theme-status="">
+                                {refused}
+                            </li>
+                        )}
+                        {storageFailed && (
+                            <li role="presentation" className={`kp-theme-menu__status ${classNames.status ?? ''}`.trim()} data-kp-theme-status="">
+                                {blocked}
+                            </li>
+                        )}
+                        {grouped
+                            ? [group('light', groupLabels.light ?? s.themeGroupLight), group('dark', groupLabels.dark ?? s.themeGroupDark)]
+                            : themes.map(option)}
+                    </ul>
+                </div>
             )}
         </div>
     );

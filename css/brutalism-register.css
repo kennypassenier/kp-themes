@@ -669,6 +669,41 @@
         text-transform: uppercase;
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='brutalism'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='brutalism'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='brutalism'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='brutalism'] .kp-toast--destructive,
+    [data-theme='brutalism'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='brutalism']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     [data-theme='brutalism'] .kp-toasts {
         gap: 0.9rem;
     }
@@ -843,11 +878,6 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-    }
-
-    [data-theme='brutalism'] .kp-progress__value {
-        background: var(--secondary);
-        border-inline-end: var(--kp-line) solid var(--border-strong);
     }
 
     [data-theme='brutalism'] .kp-spinner {

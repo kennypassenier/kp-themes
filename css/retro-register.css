@@ -929,6 +929,39 @@
             right 4px center;
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='retro'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='retro'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='retro'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='retro'] .kp-toast--destructive,
+    [data-theme='retro'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='retro'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) .kp-button--ghost {
+        color: inherit;
+    }
+
     /* And the keyboard highlight is the selection bar, as it is on a
        mark: navy with white on it [S49, A12]. */
     [data-theme='retro'] .kp-combobox__option.is-active,
@@ -1130,10 +1163,6 @@
         border-radius: 0;
         box-shadow: var(--kp-sunken);
         padding: 2px;
-    }
-
-    [data-theme='retro'] .kp-progress__value {
-        background: repeating-linear-gradient(90deg, var(--primary) 0 8px, var(--popover) 8px 10px);
     }
 
     [data-theme='retro'] .kp-spinner {

@@ -218,21 +218,28 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-backspace-removes</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-chosen</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-close-on-blur</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-combobox</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-combobox-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-combobox-empty</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-combobox-status</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-creatable</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-debounce</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-disabled</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-disabled</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-duplicates</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-empty-row</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-loop</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-match</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-tags</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-open-on-focus</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-option</code></td><td>prose, selector</td></tr>
+                            <tr><td><code>data-kp-option</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-remove-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-select</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-select-all</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-select-attached</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-select-list</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-select-row</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-stay-open</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-tag-list</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-tag-remove</code></td><td>selector</td></tr>
@@ -303,6 +310,7 @@
                             <tr><td><code>--kp-combobox-list-max-height</code></td><td><code>15rem</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>

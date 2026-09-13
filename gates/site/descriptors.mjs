@@ -489,7 +489,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-combobox', 'kp-tag', 'kp-tag-list'],
         exports: ['Combobox'],
-        aliases: ['listbox', 'option', 'tags', 'empty-row', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce'],
+        aliases: ['listbox', 'option', 'tags', 'empty-row', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce', 'creatable', 'select', 'select-list', 'select-attached', 'chosen'],
         intro: 'A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value.',
         whenToUse:
             'When there are more options than a select can carry comfortably and the reader knows roughly what they are looking for. Not for a handful of fixed choices — a select is smaller, needs no script and works before the page has finished loading. Not for a free-text field with suggestions you may ignore either: this one is about choosing from a list.',

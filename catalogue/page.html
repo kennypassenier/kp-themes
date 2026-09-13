@@ -217,8 +217,8 @@
                     in two groups, <b>Light</b> and <b>Dark</b>, each with a small muted label and a rule between the groups that runs the menu's full
                     width. Each option starts with its swatch — a circle split between that theme's own ground and primary colour, with a boundary so
                     a pale swatch on a pale menu is still a circle — and the theme on screen carries a check at the row's end and a heavier weight.
-                    The menu is taller than most windows, so it scrolls inside itself. It is attached: choosing a theme here changes the whole page,
-                    exactly as the bar's menu does.
+                    The menu is taller than most windows, so the list scrolls inside the popover; the scrollbar must stay inside the rounded corners,
+                    never run square across them. It is attached: choosing a theme here changes the whole page, exactly as the bar's menu does.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 44rem">
                     <span class="kp-theme-menu">
@@ -382,103 +382,111 @@
                             <button type="button" class="kp-icon-button" aria-label="Choose a theme" aria-haspopup="listbox" aria-expanded="true">
                                 Aa
                             </button>
-                            <ul role="listbox" aria-label="Choose a theme" class="kp-popover kp-menu kp-theme-menu__list">
-                                <li role="presentation" class="kp-theme-group" data-kp-theme-group="light">
-                                    <span class="kp-theme-group__label" aria-hidden="true">Light</span>
-                                    <ul role="group" class="kp-theme-group__list" aria-label="Light">
-                                        <li role="option" data-kp-theme="formal" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="formal"></span><span class="kp-theme-option__label">Formal</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="light" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="light"></span><span class="kp-theme-option__label">Light</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="pastel" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="pastel"></span><span class="kp-theme-option__label">Pastel</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="forest" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="forest"></span><span class="kp-theme-option__label">Forest</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="high-contrast" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="high-contrast"></span
-                                            ><span class="kp-theme-option__label">High contrast</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="sepia" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="sepia"></span><span class="kp-theme-option__label">Sepia</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="brutalism" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="brutalism"></span
-                                            ><span class="kp-theme-option__label">Brutalism</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="shade-light" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="shade-light"></span
-                                            ><span class="kp-theme-option__label">Shade (light)</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="retro" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="retro"></span><span class="kp-theme-option__label">Retro</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="grotesk" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="grotesk"></span><span class="kp-theme-option__label">Grotesk</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="nostromo" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="nostromo"></span><span class="kp-theme-option__label">Nostromo</span>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark">
-                                    <span class="kp-theme-group__label" aria-hidden="true">Dark</span>
-                                    <ul role="group" class="kp-theme-group__list" aria-label="Dark">
-                                        <li role="option" data-kp-theme="dark" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="dark"></span><span class="kp-theme-option__label">Dark</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="cyberpunk" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="cyberpunk"></span
-                                            ><span class="kp-theme-option__label">Cyberpunk</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="synthwave" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="synthwave"></span
-                                            ><span class="kp-theme-option__label">Synthwave</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="terminal" data-selected="true" aria-selected="true" tabindex="0">
-                                            <span class="kp-swatch" data-theme="terminal"></span><span class="kp-theme-option__label">Terminal</span
-                                            ><svg
-                                                class="kp-theme-option__check"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                aria-hidden="true"
-                                            >
-                                                <path d="M20 6 9 17l-5-5"></path>
-                                            </svg>
-                                        </li>
-                                        <li role="option" data-kp-theme="blueprint" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="blueprint"></span
-                                            ><span class="kp-theme-option__label">Blueprint</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="solstice" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="solstice"></span><span class="kp-theme-option__label">Solstice</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="deco" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="deco"></span><span class="kp-theme-option__label">Art Deco</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="phantom" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="phantom"></span><span class="kp-theme-option__label">Phantom</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="shade-dark" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="shade-dark"></span
-                                            ><span class="kp-theme-option__label">Shade (dark)</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="lapis" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="lapis"></span><span class="kp-theme-option__label">Lapis</span>
-                                        </li>
-                                        <li role="option" data-kp-theme="titanium" data-selected="false" aria-selected="false" tabindex="-1">
-                                            <span class="kp-swatch" data-theme="titanium"></span><span class="kp-theme-option__label">Titanium</span>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div class="kp-popover kp-theme-menu__list">
+                                <ul role="listbox" aria-label="Choose a theme" class="kp-menu">
+                                    <li role="presentation" class="kp-theme-group" data-kp-theme-group="light">
+                                        <span class="kp-theme-group__label" aria-hidden="true">Light</span>
+                                        <ul role="group" class="kp-theme-group__list" aria-label="Light">
+                                            <li role="option" data-kp-theme="formal" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="formal"></span><span class="kp-theme-option__label">Formal</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="light" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="light"></span><span class="kp-theme-option__label">Light</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="pastel" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="pastel"></span><span class="kp-theme-option__label">Pastel</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="forest" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="forest"></span><span class="kp-theme-option__label">Forest</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="high-contrast" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="high-contrast"></span
+                                                ><span class="kp-theme-option__label">High contrast</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="sepia" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="sepia"></span><span class="kp-theme-option__label">Sepia</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="brutalism" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="brutalism"></span
+                                                ><span class="kp-theme-option__label">Brutalism</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="shade-light" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="shade-light"></span
+                                                ><span class="kp-theme-option__label">Shade (light)</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="retro" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="retro"></span><span class="kp-theme-option__label">Retro</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="grotesk" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="grotesk"></span
+                                                ><span class="kp-theme-option__label">Grotesk</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="nostromo" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="nostromo"></span
+                                                ><span class="kp-theme-option__label">Nostromo</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark">
+                                        <span class="kp-theme-group__label" aria-hidden="true">Dark</span>
+                                        <ul role="group" class="kp-theme-group__list" aria-label="Dark">
+                                            <li role="option" data-kp-theme="dark" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="dark"></span><span class="kp-theme-option__label">Dark</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="cyberpunk" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="cyberpunk"></span
+                                                ><span class="kp-theme-option__label">Cyberpunk</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="synthwave" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="synthwave"></span
+                                                ><span class="kp-theme-option__label">Synthwave</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="terminal" data-selected="true" aria-selected="true" tabindex="0">
+                                                <span class="kp-swatch" data-theme="terminal"></span
+                                                ><span class="kp-theme-option__label">Terminal</span
+                                                ><svg
+                                                    class="kp-theme-option__check"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M20 6 9 17l-5-5"></path>
+                                                </svg>
+                                            </li>
+                                            <li role="option" data-kp-theme="blueprint" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="blueprint"></span
+                                                ><span class="kp-theme-option__label">Blueprint</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="solstice" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="solstice"></span
+                                                ><span class="kp-theme-option__label">Solstice</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="deco" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="deco"></span><span class="kp-theme-option__label">Art Deco</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="phantom" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="phantom"></span
+                                                ><span class="kp-theme-option__label">Phantom</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="shade-dark" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="shade-dark"></span
+                                                ><span class="kp-theme-option__label">Shade (dark)</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="lapis" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="lapis"></span><span class="kp-theme-option__label">Lapis</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="titanium" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="titanium"></span
+                                                ><span class="kp-theme-option__label">Titanium</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

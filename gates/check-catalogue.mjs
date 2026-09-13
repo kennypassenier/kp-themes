@@ -51,6 +51,78 @@ export function rootsShown(pages) {
     return found;
 }
 
+/**
+ * Bare controls the gate knows about and does not refuse yet, each with the
+ * reason and a matcher on the tag's attributes. An entry nothing matches any
+ * more fails, so the list can only shrink.
+ *
+ * @type {{ match: RegExp, reason: string }[]}
+ */
+// Empty since the data table round gave its selection boxes the theme's
+// checkbox (gap-13, 2026-09-13); an entry here is refused once it matches nothing.
+export const PENDING_BARE = [];
+
+const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+
+/**
+ * The bare controls a page carries where the package has a styled one
+ * [scope-58]. Kenny judged a composition on the catalogue and found a
+ * native date input in it, beside a styled everything else: "elke component
+ * in een compositie moet het gestylede element zijn." Three shapes:
+ *
+ *   - a date input (`type="date"` or `datetime-local`) outside a `.kp-datepicker`
+ *   - a `<select>` without `.kp-field__input`
+ *   - a checkbox or radio without `.kp-field__check` or `.kp-switch__input`
+ *
+ * A small tag walker rather than a parser dependency: it keeps the stack of
+ * open elements with their classes, which is all "outside" needs.
+ *
+ * @param {string} html
+ * @returns {{ line: number, fault: string, pending?: number }[]}
+ */
+export function bareControls(html) {
+    const text = html
+        .replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, ' '))
+        .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, (m) => m.replace(/[^\n]/g, ' '));
+    /** @type {{ name: string, classes: string[] }[]} */
+    const stack = [];
+    /** @type {{ line: number, fault: string, pending?: number }[]} */
+    const found = [];
+    for (const match of text.matchAll(/<(\/?)([a-zA-Z][\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g)) {
+        const [whole, closing, rawName, attributes] = match;
+        const name = rawName.toLowerCase();
+        const line = text.slice(0, match.index).split('\n').length;
+        if (closing) {
+            const at = stack.map((e) => e.name).lastIndexOf(name);
+            if (at !== -1) stack.length = at;
+            continue;
+        }
+        /** @param {string} attribute */
+        const attr = (attribute) => new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*("([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i').exec(attributes);
+        const value = (/** @type {string} */ attribute) => {
+            const m = attr(attribute);
+            return m ? (m[2] ?? m[3] ?? m[4] ?? '') : null;
+        };
+        const classes = (value('class') ?? '').split(/\s+/).filter(Boolean);
+        if (name === 'input') {
+            const type = (value('type') ?? 'text').toLowerCase();
+            const inPicker = stack.some((e) => e.classes.includes('kp-datepicker'));
+            if ((type === 'date' || type === 'datetime-local') && !inPicker) {
+                found.push({ line, fault: `a bare <input type="${type}"> outside a .kp-datepicker` });
+            }
+            if ((type === 'checkbox' || type === 'radio') && !classes.includes('kp-field__check') && !classes.includes('kp-switch__input')) {
+                const pending = PENDING_BARE.findIndex((entry) => entry.match.test(attributes));
+                found.push({ line, fault: `a ${type} without .kp-field__check or .kp-switch__input`, ...(pending === -1 ? {} : { pending }) });
+            }
+        }
+        if (name === 'select' && !classes.includes('kp-field__input')) {
+            found.push({ line, fault: 'a <select> without .kp-field__input' });
+        }
+        if (!VOID.has(name) && !whole.endsWith('/>')) stack.push({ name, classes });
+    }
+    return found;
+}
+
 function main() {
     const components = read('css/components.css');
     const dir = new URL('catalogue/', root);
@@ -185,7 +257,35 @@ function main() {
         );
     }
 
-    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length || shellless.length || undefinedClasses.length)
+    // A composition uses the styled components [scope-58].
+    const bare = [];
+    const pendingSeen = new Set();
+    for (const name of readdirSync(dir).filter((n) => n.endsWith('.html'))) {
+        for (const { line, fault, pending } of bareControls(readFileSync(new URL(name, dir), 'utf8'))) {
+            if (pending === undefined) bare.push(`catalogue/${name}:${line} — ${fault}`);
+            else pendingSeen.add(pending);
+        }
+    }
+    PENDING_BARE.forEach((entry, i) => {
+        if (!pendingSeen.has(i))
+            bare.push(`PENDING_BARE[${i}] in gates/check-catalogue.mjs matches no bare control any more — remove it (${entry.match})`);
+    });
+    if (bare.length) {
+        console.error(
+            `${bare.length} bare control(s) on catalogue pages where the package has a styled component [scope-58]:\n  ` + bare.join('\n  '),
+        );
+    }
+
+    if (
+        invisible.length ||
+        stale.length ||
+        gone.length ||
+        unlisted.length ||
+        phantom.length ||
+        shellless.length ||
+        undefinedClasses.length ||
+        bare.length
+    )
         process.exit(1);
 
     console.log(

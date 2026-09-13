@@ -148,12 +148,18 @@
                     <code>data-kp-key</code> span marks which. This is the only hover some themes give on purpose — <b>retro</b> quotes a 1995
                     desktop, which had no hover at all and underlined the accelerator instead (decided 2026-09-12). In retro the underline must appear
                     on hover and focus and be the only change; in a theme that does not answer the hook, nothing extra may appear and the buttons keep
-                    their own hover.
+                    their own hover. In every theme the marked letter stays part of its word: no gap between it and the rest of the label ("S ave" was
+                    the fault), and the space in “Save as…” stays a space. The last button carries an icon too; its gap to the label must match the
+                    icon buttons above.
                 </div>
                 <div class="cat-stage">
                     <button type="button" class="kp-button kp-button--primary"><span data-kp-key>S</span>ave</button>
                     <button type="button" class="kp-button">Save <span data-kp-key>a</span>s…</button>
                     <button type="button" class="kp-button kp-button--destructive"><span data-kp-key>D</span>elete</button>
+                    <button type="button" class="kp-button" data-cat-icon-key>
+                        <span aria-hidden="true">↻</span>
+                        <span data-kp-key>R</span>etry
+                    </button>
                 </div>
             </section>
 

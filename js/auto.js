@@ -17,7 +17,7 @@ import { THEMES } from './theme-registry.js';
 import { attachConfirmations, attachNavToggles, attachSkipLinks, attachToTop, enforceContracts } from './components.js';
 import { attachDialogs, attachDismissals, attachTabs, attachTooltips } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
-import { attachComboboxes } from './combobox.js';
+import { attachComboboxes, attachSelects } from './combobox.js';
 import { attachPalettes } from './palette.js';
 import { attachDataTables } from './datatable.js';
 import { attachTableRegions } from './tables.js';
@@ -52,6 +52,7 @@ export function attachAll(root = document) {
         attachTabs(root),
         attachThemePickers(root),
         attachComboboxes(root),
+        attachSelects(root),
         attachPalettes(root),
         attachDataTables(root),
         attachTableRegions(root),

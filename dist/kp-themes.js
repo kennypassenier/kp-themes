@@ -1394,7 +1394,10 @@ __export(combobox_exports, {
   MATCHERS: () => MATCHERS,
   OPEN_EVENT: () => OPEN_EVENT,
   attachComboboxes: () => attachComboboxes,
-  combobox: () => combobox
+  attachSelect: () => attachSelect,
+  attachSelects: () => attachSelects,
+  combobox: () => combobox,
+  drawnSelect: () => drawnSelect
 });
 
 // js/listbox.js
@@ -1650,6 +1653,7 @@ function attachComboboxes(root = document, {
   allowDuplicates = false,
   debounceMs = 0,
   emptyRow = true,
+  creatable = false,
   renderTag,
   removeGlyph = "\xD7"
 } = {}) {
@@ -1690,6 +1694,7 @@ function attachComboboxes(root = document, {
     const debounce = Number.parseInt(box.dataset.kpDebounce ?? "", 10) || debounceMs;
     const matcher = typeof match === "function" ? match : MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring;
     const showsEmpty = flag("kpEmptyRow", emptyRow);
+    const creates = flag("kpCreatable", creatable);
     const serverEmpty = (
       /** @type {HTMLElement | null} */
       list.querySelector(EMPTY)
@@ -1781,24 +1786,42 @@ function attachComboboxes(root = document, {
       tag.append(text, remove);
       return tag;
     };
+    const addTag = (value, label) => {
+      if (chosen.length >= cap) return;
+      if (duplicates || !chosen.includes(value)) {
+        chosen.push(value);
+        if (tagList !== null) tagList.append(tagElement(value, label));
+      }
+      input.value = "";
+      filter();
+      if (stays) open();
+      else close();
+      announce(value, label, "add");
+    };
     const take = (option) => {
       const label = (option.textContent ?? "").trim();
       const value = option.dataset.value ?? label;
       if (isTags) {
-        if (chosen.length >= cap) return;
-        if (duplicates || !chosen.includes(value)) {
-          chosen.push(value);
-          if (tagList !== null) tagList.append(tagElement(value, label));
-        }
-        input.value = "";
-        filter();
-        if (stays) open();
-        else close();
-      } else {
-        input.value = label;
-        close();
+        addTag(value, label);
+        return;
       }
+      input.value = label;
+      close();
       announce(value, label, "add");
+    };
+    const addTyped = () => {
+      const typed = input.value.trim();
+      if (typed === "") return false;
+      const named = [...list.querySelectorAll(OPTION_SELECTOR)].find(
+        (element2) => !element2.matches('[aria-disabled="true"], [data-kp-disabled]') && (element2.textContent ?? "").trim().toLowerCase() === typed.toLowerCase()
+      );
+      if (named instanceof HTMLElement) {
+        take(named);
+        return true;
+      }
+      if (!creates) return false;
+      addTag(typed, typed);
+      return true;
     };
     const removeValue = (value) => {
       const at = chosen.indexOf(value);
@@ -1832,7 +1855,13 @@ function attachComboboxes(root = document, {
       else run();
     };
     const onKeyDown = (event) => {
-      if (!isTags || !backspaces) return;
+      if (!isTags) return;
+      if ((event.key === "Enter" || event.key === ",") && !event.defaultPrevented && !event.isComposing) {
+        if (event.key === "Enter" && listbox.index !== -1) return;
+        if (addTyped()) event.preventDefault();
+        return;
+      }
+      if (!backspaces) return;
       if (event.key === "Backspace" && input.value === "" && chosen.length > 0) removeValue(chosen[chosen.length - 1] ?? "");
     };
     const onTagClick = (event) => {
@@ -1919,6 +1948,193 @@ function attachComboboxes(root = document, {
       handles2.delete(box);
       delete box.dataset.kpComboboxAttached;
     });
+  }
+  const detach = () => {
+    for (const c of cleanups) c();
+  };
+  return Object.assign(detach, { handles: created });
+}
+var SELECT = "select[data-kp-select]";
+var selectHandles = /* @__PURE__ */ new WeakMap();
+function drawnSelect(element) {
+  return selectHandles.get(element) ?? null;
+}
+var selectCount = 0;
+function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
+  const before = {
+    expanded: select.getAttribute("aria-expanded"),
+    controls: select.getAttribute("aria-controls")
+  };
+  selectCount += 1;
+  const list = document.createElement("ul");
+  list.className = "kp-combobox__list";
+  list.id = `${select.id || "kp-select"}-drawn-${selectCount}`;
+  list.setAttribute("role", "listbox");
+  list.dataset.kpSelectList = "";
+  list.hidden = true;
+  const labelled = select.labels?.[0];
+  if (labelled) {
+    if (!labelled.id) labelled.id = `${list.id}-label`;
+    list.setAttribute("aria-labelledby", labelled.id);
+  }
+  select.after(list);
+  select.setAttribute("aria-controls", list.id);
+  select.setAttribute("aria-expanded", "false");
+  const build = () => {
+    list.replaceChildren(
+      ...[...select.options].map((native, i) => {
+        const option = document.createElement("li");
+        option.className = "kp-combobox__option";
+        option.id = `${list.id}-option-${i}`;
+        option.setAttribute("role", "option");
+        option.setAttribute("aria-selected", "false");
+        option.dataset.kpOption = "";
+        option.dataset.value = native.value;
+        option.textContent = native.label || native.text;
+        if (native.disabled) option.setAttribute("aria-disabled", "true");
+        if (native.selected) option.dataset.kpChosen = "";
+        return option;
+      })
+    );
+    listbox.refresh();
+  };
+  const place2 = () => {
+    list.style.left = `${select.offsetLeft}px`;
+    list.style.top = `${select.offsetTop + select.offsetHeight}px`;
+    list.style.width = `${select.offsetWidth}px`;
+    const box = select.getBoundingClientRect();
+    const drawn = list.getBoundingClientRect();
+    const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
+    list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
+    list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
+    list.style.width = `${box.width}px`;
+  };
+  const isOpen = () => list.hidden === false;
+  const open = () => {
+    if (select.disabled) return;
+    build();
+    list.hidden = false;
+    place2();
+    select.setAttribute("aria-expanded", "true");
+    const chosen = listbox.options.findIndex((option) => option.dataset.kpChosen !== void 0);
+    listbox.highlight(Math.max(chosen, 0));
+    select.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: true } }));
+  };
+  const close = () => {
+    if (!isOpen()) return;
+    list.hidden = true;
+    select.setAttribute("aria-expanded", "false");
+    listbox.clear();
+    select.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
+  };
+  const take = (option) => {
+    const value = option.dataset.value ?? "";
+    const changed2 = select.value !== value;
+    select.value = value;
+    close();
+    select.focus();
+    if (changed2) {
+      select.dispatchEvent(new Event("input", { bubbles: true }));
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  };
+  const listbox = createListbox({
+    input: select,
+    list,
+    loop,
+    typeahead: true,
+    typeaheadMs,
+    onChoose: (_, option) => take(option),
+    onDismiss: close
+  });
+  const onKeyDownCapture = (event) => {
+    if (event.ctrlKey || event.metaKey) return;
+    const printable = event.key.length === 1 && !event.altKey;
+    if (!isOpen()) {
+      if (["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "F4"].includes(event.key) || printable) {
+        event.preventDefault();
+        open();
+        if (!printable) event.stopImmediatePropagation();
+        else if (event.key === " ") event.stopImmediatePropagation();
+      }
+      return;
+    }
+    if (event.key === "Tab") {
+      close();
+      return;
+    }
+    if (event.key === " " && listbox.index !== -1) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      listbox.choose();
+      return;
+    }
+    if (event.key === "Escape") event.preventDefault();
+    if (printable || event.key === "Enter") event.preventDefault();
+  };
+  const onMouseDown = (event) => {
+    if (event.button !== 0 || select.disabled) return;
+    event.preventDefault();
+    select.focus();
+    if (isOpen()) close();
+    else open();
+  };
+  const onListMouseDown = (event) => event.preventDefault();
+  const onFocusOut = () => {
+    setTimeout(() => {
+      if (document.activeElement !== select) close();
+    }, 0);
+  };
+  const onChange = () => {
+    if (isOpen()) build();
+  };
+  select.addEventListener("keydown", onKeyDownCapture, { capture: true });
+  select.addEventListener("mousedown", onMouseDown);
+  select.addEventListener("focusout", onFocusOut);
+  select.addEventListener("change", onChange);
+  list.addEventListener("mousedown", onListMouseDown);
+  build();
+  const handle = { element: select, list, open, close, refresh: build };
+  selectHandles.set(select, handle);
+  select.dataset.kpSelectAttached = "";
+  const detach = () => {
+    listbox.destroy();
+    select.removeEventListener("keydown", onKeyDownCapture, { capture: true });
+    select.removeEventListener("mousedown", onMouseDown);
+    select.removeEventListener("focusout", onFocusOut);
+    select.removeEventListener("change", onChange);
+    list.remove();
+    if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute("id");
+    for (
+      const [name, value] of
+      /** @type {const} */
+      [
+        ["aria-expanded", before.expanded],
+        ["aria-controls", before.controls]
+      ]
+    ) {
+      if (value === null) select.removeAttribute(name);
+      else select.setAttribute(name, value);
+    }
+    select.removeAttribute("aria-activedescendant");
+    selectHandles.delete(select);
+    delete select.dataset.kpSelectAttached;
+  };
+  return Object.assign(detach, { handle });
+}
+function attachSelects(root = document, options = {}) {
+  const cleanups = [];
+  const created = [];
+  for (const element of root.querySelectorAll(SELECT)) {
+    const select = (
+      /** @type {HTMLSelectElement} */
+      element
+    );
+    if (select.dataset.kpSelectAttached !== void 0 || select.multiple) continue;
+    const loopFlag = select.dataset.kpLoop;
+    const detach2 = attachSelect(select, { ...options, ...loopFlag === void 0 ? {} : { loop: loopFlag !== "false" } });
+    cleanups.push(detach2);
+    created.push(detach2.handle);
   }
   const detach = () => {
     for (const c of cleanups) c();
@@ -6963,6 +7179,7 @@ function attachAll(root = document) {
     attachTabs(root),
     attachThemePickers(root),
     attachComboboxes(root),
+    attachSelects(root),
     attachPalettes(root),
     attachDataTables(root),
     attachTableRegions(root),
@@ -7429,6 +7646,8 @@ export {
   attachNavToggles,
   attachPalettes,
   attachPatterns,
+  attachSelect,
+  attachSelects,
   attachSidenavs,
   attachSkipLinks,
   attachStructure,
@@ -7463,6 +7682,7 @@ export {
   diagnose,
   diagnostics,
   diagnostics_exports as diagnosticsExports,
+  drawnSelect,
   effects_exports as effectsExports,
   enforceContracts,
   ensureRegister,

@@ -459,6 +459,41 @@
         box-shadow: 0 24px 56px var(--kp-shadow-deep);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='solstice'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='solstice'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='solstice'] .kp-toast--destructive,
+    [data-theme='solstice'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='solstice']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     [data-theme='solstice'] .kp-toasts {
         gap: var(--kp-space-sm);
     }
@@ -543,10 +578,6 @@
     [data-theme='solstice'] .kp-progress {
         border-radius: var(--radius);
         background: var(--popover);
-    }
-
-    [data-theme='solstice'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='solstice'] .kp-spinner {

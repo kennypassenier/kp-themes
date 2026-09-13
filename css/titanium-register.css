@@ -769,6 +769,41 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='titanium'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='titanium'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='titanium'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='titanium'] .kp-toast--destructive,
+    [data-theme='titanium'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='titanium']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     [data-theme='titanium'] .kp-dialog__title {
         font-weight: 700;
         font-size: 1.2rem;
@@ -862,10 +897,6 @@
     [data-theme='titanium'] .kp-progress {
         background: var(--card);
         border: 1px solid var(--border-strong);
-    }
-
-    [data-theme='titanium'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='titanium'] .kp-spinner {

@@ -113,11 +113,13 @@
                 <h2>Toasts</h2>
                 <div class="cat-look">
                     <b>Look at:</b> the stack below is a real <code>.kp-toasts</code> region, pinned to the corner of this stage instead of the window
-                    so it can be reviewed in place. Five toasts: the plain one and four with a meaning, which wear a leading rule in their status
-                    colour and say the meaning in words as well. The toasts float on the popover surface with a boundary that must stay visible over
-                    anything behind them. The action button and the close button must sit on the toast's line, at its end — a close button that drops
-                    below the text or hugs it with no gap is a fault. Then press the buttons to raise real toasts in the window's corner: they must
-                    stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.
+                    so it can be reviewed in place. Five toasts: the plain one on the popover surface, and four with a meaning — success, info,
+                    warning and destructive — each on the same plate and ink as the severity badge and the alert of that meaning, with its words
+                    saying the meaning as well; every theme restates the four, so no toast of meaning may look like the plain one. The words and the
+                    buttons on each plate must pass contrast on it. The toasts float on the popover surface with a boundary that must stay visible
+                    over anything behind them. The action button and the close button must sit on the toast's line, at its end — a close button that
+                    drops below the text or hugs it with no gap is a fault. Then press the buttons to raise real toasts in the window's corner: they
+                    must stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 24rem">
                     <div class="kp-toasts" role="status" aria-live="polite">
@@ -134,7 +136,7 @@
                             <b>Warning:</b> the vendor has not answered in 2 hours.
                             <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
                         </div>
-                        <div class="kp-toast kp-toast--error" data-kp-variant="error">
+                        <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
                             <b>Error:</b> the note was not saved; you are offline.
                             <button type="button" class="kp-button kp-button--ghost">Retry</button>
                         </div>
@@ -183,9 +185,10 @@
                 <h2>A long badge</h2>
                 <div class="cat-look">
                     <b>Look at:</b> a badge holding 40 characters, and a badge holding an identifier with no spaces. By default the badge is allowed
-                    to break anywhere, so in a narrow pane it wraps — the pill must grow taller with its rounded ends intact, not clip the text and
-                    not leave the text hanging outside the pill. The third copy sits under <code>--kp-badge-wrap: normal</code>, the knob for a column
-                    of labels: it breaks only between words. Drag the pane narrow and compare the three.
+                    to break anywhere, so in a narrow pane it wraps — the pill must grow taller with its rounded ends intact (in nostromo a pill too,
+                    since 2026-09-13), not clip the text and not leave the text hanging outside the pill. The third copy sits under
+                    <code>--kp-badge-wrap: normal</code>, the knob for a column of labels: it breaks only between words. Drag the pane narrow and
+                    compare the three.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="cat-resize" style="inline-size: 20rem">
@@ -243,7 +246,8 @@
                     is not an invisible one. The indeterminate bar wears diagonal stripes in the accent on the muted track, so it can never be
                     mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion
                     preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar
-                    sits on its centre line.
+                    sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. The filled
+                    part of each bar follows the shape of its track: square in a square track, rounded in a rounded one.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>

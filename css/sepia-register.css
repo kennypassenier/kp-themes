@@ -658,6 +658,48 @@
         box-shadow: 0 20px 50px -12px hsl(from var(--foreground) h s l / 0.35);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='sepia'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='sepia'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='sepia'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='sepia'] .kp-toast--destructive,
+    [data-theme='sepia'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='sepia']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='sepia'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border: 0;
+        border-radius: 0;
+    }
+
     [data-theme='sepia'] .kp-toasts {
         gap: 0.6rem;
     }
@@ -787,10 +829,6 @@
         background: var(--card);
         border-radius: 999px;
         overflow: hidden;
-    }
-
-    [data-theme='sepia'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='sepia'] .kp-spinner {

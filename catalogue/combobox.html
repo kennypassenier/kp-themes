@@ -287,10 +287,12 @@
                     <b>Look at:</b> <code>data-kp-tags</code> turns the combobox into a tag input. The tags already chosen sit above the input as
                     <code>.kp-tag</code> pills; each has a remove button that must be hittable, must turn to the alarm colour on hover, and must be
                     named "Remove …" to a screen reader. Choose an option: it becomes a tag, disappears from the list, and the list stays open for the
-                    next one. With the input empty, Backspace removes the last tag. The tag row must wrap rather than scroll when it fills.
+                    next one. Type a label and press Enter, or end it with a comma: text that names an option takes that option, and any other text
+                    becomes a tag of its own, because this box carries <code>data-kp-creatable</code>. With the input empty, Backspace removes the
+                    last tag. The tag row must wrap rather than scroll when it fills.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 16rem">
-                    <div class="kp-combobox" data-kp-combobox data-kp-tags>
+                    <div class="kp-combobox" data-kp-combobox data-kp-tags data-kp-creatable>
                         <label class="kp-field__label" for="cb-tags">Labels on this incident</label>
                         <ul class="kp-tag-list" data-kp-tag-list>
                             <li class="kp-tag" data-value="pressure">

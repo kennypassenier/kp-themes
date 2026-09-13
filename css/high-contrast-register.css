@@ -522,6 +522,41 @@
         border-color: var(--success);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='high-contrast'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--destructive,
+    [data-theme='high-contrast'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='high-contrast']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     [data-theme='high-contrast'] .kp-menu__item:hover,
     [data-theme='high-contrast'] .kp-menu__item:focus-visible {
         background: var(--muted);
@@ -594,10 +629,6 @@
 
     [data-theme='high-contrast'] .kp-progress {
         border: 2px solid var(--border-strong);
-    }
-
-    [data-theme='high-contrast'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='high-contrast'] .kp-spinner {

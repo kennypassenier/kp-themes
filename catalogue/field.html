@@ -65,8 +65,11 @@
                     <b>Look at:</b> the textarea is <code>.kp-field__input--multiline</code>: it must be taller than a single-line input, it must
                     resize vertically only — drag its corner sideways and nothing should happen — and its text must start at the same inset as the
                     inputs above. Open the select: in a browser that allows it the list wears the theme (the popover surface, a soft highlight, a
-                    check on the chosen option); in one that does not, the native list appears, and that is the browser's, not a fault. Closed, the
-                    select must be the same height as a text input.
+                    check on the chosen option); in one that does not, the native list appears, and that is the browser's, not a fault. The select
+                    beside it asks for <code>data-kp-select</code>: its list is drawn by the package in the combobox's look in every browser, Firefox
+                    included — the same surface, highlight and boundary as an open combobox, the chosen option in weight with a check, the disabled
+                    one faded. Open it with a click and with the keyboard (Down, Up, Home, End, a letter, Enter, Escape); the value you take must show
+                    in the closed box. Closed, both selects must be the same height as a text input.
                 </div>
                 <div class="cat-stage">
                     <div class="kp-field">
@@ -79,6 +82,15 @@ Line closed at the manifold. Day shift to check the gauge against the sensor bef
                         <select class="kp-field__input" id="f-severity" name="severity">
                             <option>Low</option>
                             <option selected>High</option>
+                            <option>Critical — wake the on-call engineer</option>
+                        </select>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="f-severity-drawn">Severity, drawn</label>
+                        <select class="kp-field__input" id="f-severity-drawn" name="severity-drawn" data-kp-select>
+                            <option>Low</option>
+                            <option selected>High</option>
+                            <option disabled>Blocked — not for this site</option>
                             <option>Critical — wake the on-call engineer</option>
                         </select>
                     </div>
@@ -332,26 +344,49 @@ The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, re
             <section class="cat-block" id="narrow">
                 <h2>A form in a narrow pane</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> drag the pane's right edge until it is as narrow as it goes. Every field must shrink with it — no input may stick
-                    out past the dashed edge, and no label may overlap its neighbour. The checkbox's label and its error must wrap under the box
-                    rather than into a column one word wide. The buttons at the bottom must wrap onto two lines rather than overflow. The gap between
-                    fields must stay the same at every width: it is the form's, not the pane's.
+                    <b>Look at:</b> every control in this form is the package's own: the site is a drawn select, the start is the date picker, the
+                    rest are fields, a fieldset and buttons — a bare browser control here is a fault the catalogue gate refuses. Drag the pane's right
+                    edge until it is as narrow as it goes. Every field must shrink with it — no input may stick out past the dashed edge, and no label
+                    may overlap its neighbour; the date picker's calendar button must stay beside its input or wrap under it, never overflow. The
+                    checkbox's label and its error must wrap under the box rather than into a column one word wide. The buttons at the bottom must
+                    wrap onto two lines rather than overflow. The gap between fields must stay the same at every width: it is the form's, not the
+                    pane's.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="cat-resize">
                         <form class="kp-form" novalidate aria-label="Report an incident">
                             <div class="kp-field">
                                 <label class="kp-field__label" for="f-n-site">Site <span class="kp-field__required">required</span></label>
-                                <select class="kp-field__input" id="f-n-site">
+                                <select class="kp-field__input" id="f-n-site" data-kp-select>
                                     <option>Pump house 4</option>
                                     <option>Cold store</option>
                                     <option>Weighbridge</option>
                                 </select>
                             </div>
                             <div class="kp-field">
-                                <label class="kp-field__label" for="f-n-when">When did it start?</label>
-                                <input class="kp-field__input" id="f-n-when" type="datetime-local" value="2026-09-13T00:14" />
-                                <span class="kp-field__help">Your best guess is fine; the log will have the exact time.</span>
+                                <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                                    <label class="kp-field__label" for="f-n-when">When did it start?</label>
+                                    <input
+                                        class="kp-field__input"
+                                        id="f-n-when"
+                                        type="text"
+                                        inputmode="numeric"
+                                        data-kp-date-input
+                                        value="13/09/2026"
+                                        aria-describedby="f-n-when-help"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="kp-button"
+                                        data-kp-date-open
+                                        aria-label="Open the calendar"
+                                        title="Open the calendar"
+                                    >
+                                        <span aria-hidden="true">▦</span>
+                                    </button>
+                                    <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                                </div>
+                                <span class="kp-field__help" id="f-n-when-help">Your best guess is fine; the log will have the exact time.</span>
                             </div>
                             <div class="kp-field">
                                 <label class="kp-field__label" for="f-n-what">What did you see?</label>

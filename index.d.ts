@@ -16,7 +16,7 @@ export { CheckIcon, PaletteIcon } from './components/theme-switcher.jsx';
 export { attachAll } from './js/auto.js';
 export { NO_FLASH_SNIPPET, THEME_ATTRIBUTE, applyStoredTheme, noFlashSnippet } from './js/no-flash.js';
 export { default as Combobox } from './components/combobox.jsx';
-export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes } from './js/combobox.js';
+export { CHANGE_EVENT as COMBOBOX_CHANGE_EVENT, attachComboboxes, attachSelect, attachSelects } from './js/combobox.js';
 export { CHOOSE_EVENT as LISTBOX_CHOOSE_EVENT, HIGHLIGHT_EVENT as LISTBOX_HIGHLIGHT_EVENT, OPTION_SELECTOR, createListbox, subsequence, } from './js/listbox.js';
 export { CommandPalette, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';

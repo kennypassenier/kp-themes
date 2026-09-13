@@ -1,5 +1,6 @@
-import { forwardRef, useId } from 'react';
+import { forwardRef, useEffect, useId, useRef } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
+import { attachSelect } from '../js/combobox.js';
 
 // Form field [TH5, DI4].
 //
@@ -13,6 +14,14 @@ import { useStrings } from '../hooks/use-strings.jsx';
 // label can be visually hidden, `required` shows the word, a consumer's
 // `aria-describedby` is appended to rather than overwritten, the control
 // can be rendered by the consumer, and the ref reaches the input.
+//
+// Since 6.1 [scope-54]: `options` renders a <select> instead of an input,
+// and `drawn` lays the package's drawn list over it — the same
+// `attachSelect` the framework-free channel uses, because the native
+// select stays the control React owns and the drawn list is only a sibling
+// it never renders. Without `drawn` the select stays native.
+
+/** @typedef {{ value: string, label: string, disabled?: boolean }} FieldOption */
 
 /**
  * @typedef {object} FieldProps
@@ -27,11 +36,13 @@ import { useStrings } from '../hooks/use-strings.jsx';
  * @property {{ label?: string, input?: string, help?: string, error?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]   On the wrapper, as in 1.x.
+ * @property {FieldOption[]} [options]   Render a <select> with these options instead of an input [scope-54].
+ * @property {boolean} [drawn]   With `options`: lay the drawn list over the select (`data-kp-select`). Default false: the native list [scope-54].
  */
 
 /**
- * @param {FieldProps & Omit<import('react').InputHTMLAttributes<HTMLInputElement>, 'id' | 'required'>} props
- * @param {import('react').ForwardedRef<HTMLInputElement>} ref
+ * @param {FieldProps & Omit<import('react').InputHTMLAttributes<HTMLInputElement> & import('react').SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'required'>} props
+ * @param {import('react').ForwardedRef<HTMLInputElement | HTMLSelectElement>} ref
  */
 function FieldInner(
     {
@@ -46,17 +57,32 @@ function FieldInner(
         classNames = {},
         strings,
         className = '',
+        options,
+        drawn = false,
         ...rest
     },
     ref,
 ) {
     const s = useStrings(strings);
+    /** @type {import('react').MutableRefObject<HTMLSelectElement | null>} */
+    const selectRef = useRef(null);
+    // The drawn list is attached to the element React rendered and taken
+    // away with it; turning `drawn` off detaches it [KT6].
+    useEffect(() => {
+        const select = selectRef.current;
+        if (!drawn || select === null) return undefined;
+        return attachSelect(select);
+    }, [drawn, options !== undefined]);
     const generated = useId();
     const id = idProp ?? generated;
     const helpId = `${id}-help`;
     const errorId = `${id}-error`;
     const described = [rest['aria-describedby'], help && helpId, error && errorId].filter(Boolean).join(' ') || undefined;
     const { 'aria-describedby': _ignored, ...inputRest } = rest;
+    // One set of props and one ref, handed to whichever control renders.
+    const selectProps = /** @type {import('react').SelectHTMLAttributes<HTMLSelectElement>} */ (inputRest);
+    const inputProps = /** @type {import('react').InputHTMLAttributes<HTMLInputElement>} */ (inputRest);
+    const inputRef = /** @type {import('react').ForwardedRef<HTMLInputElement>} */ (ref);
 
     const control = {
         id,
@@ -72,7 +98,28 @@ function FieldInner(
                 {label}
                 {required && <span className="kp-field__required">{s.formRequired}</span>}
             </label>
-            {renderControl ? renderControl(control) : <input ref={ref} {...inputRest} {...control} />}
+            {renderControl ? (
+                renderControl(control)
+            ) : options ? (
+                <select
+                    ref={(element) => {
+                        selectRef.current = element;
+                        if (typeof ref === 'function') ref(element);
+                        else if (ref) ref.current = element;
+                    }}
+                    {...selectProps}
+                    {...control}
+                    data-kp-select={drawn ? '' : undefined}
+                >
+                    {options.map((option) => (
+                        <option key={option.value} value={option.value} disabled={option.disabled}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            ) : (
+                <input ref={inputRef} {...inputProps} {...control} />
+            )}
             {help && (
                 <span className={`kp-field__help ${classNames.help ?? ''}`.trim()} id={helpId}>
                     {help}

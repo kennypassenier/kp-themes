@@ -513,6 +513,36 @@
         gap: inherit;
     }
 
+    /* A marked accelerator letter stays in its label's text run [scope-57].
+       In a flex row every child is an item and the row's gap goes between
+       items, so `<span data-kp-key>S</span>ave` read "S ave" — half a rem
+       inside a word, in every theme — and the space in "Save as" collapsed
+       at the item's edge. A label that marks a letter is laid out as text
+       instead: one line box, the letter an inline box inside it (retro still
+       underlines it), centred both ways as the flex row was. An icon beside
+       such a label floats to its own side with the row's gap as its margin;
+       the float also swallows the markup's whitespace at the line's start,
+       so the gap is exactly the one an unmarked button has. */
+    .kp-button:has(> [data-kp-key]),
+    .kp-button__label:has(> [data-kp-key]) {
+        display: inline-block;
+        align-content: center;
+        text-align: center;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label):has(~ [data-kp-key]) {
+        float: inline-start;
+        margin-inline-end: 0.5rem;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > [data-kp-key]
+        ~ :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label) {
+        float: inline-end;
+        margin-inline-start: 0.5rem;
+    }
+
     /* The focus ring composed with the offset shadow, not instead of it
  * [AR30, DI2].
  *
@@ -2153,6 +2183,16 @@
         inset-block-start: var(--kp-space-sm);
     }
 
+    /* The title stops short of the close button, by at least half a rem
+ * [scope-60]. The button is out of flow in the corner, so the title's
+ * line ran under it in fifteen themes — formal's words 24px beneath it.
+ * The room is the button's size, its inset and the half rem, whatever
+ * padding the dialog has; padding rather than margin, because several
+ * registers restate the title's margin. */
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__title {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
+    }
+
     .kp-menu__separator {
         margin: var(--kp-space-xs) 0;
         border: 0;
@@ -2260,23 +2300,47 @@
         color: var(--popover-foreground);
     }
 
-    /* A toast with a meaning wears the status colour as a leading rule, and
- * says it in words too: the variant class is never the only carrier
- * [DI4]. The assertive region is a second stack for errors. */
+    /* A toast with a meaning wears its severity on the alert's four token
+ * pairs, as the severity badge does [scope-60]: a plate and the ink drawn
+ * for it, so a toast, a badge and an alert that mean one thing are one
+ * colour and the contrast gate already holds every pair. It says the
+ * meaning in words too: the variant class is never the only carrier
+ * [DI4]. `--error` is the name the React channel and 6.0 used for the
+ * destructive one, and paints the same. The leading rule stays, in the
+ * plate's own colour. Registers repaint the plain toast in a later layer,
+ * so every register restates these four [gap-1's shape]. Buttons on the
+ * plate take its ink. */
     .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
         border-inline-start: 3px solid var(--success);
     }
 
     .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
         border-inline-start: 3px solid var(--warning);
     }
 
     .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
         border-inline-start: 3px solid var(--info);
     }
 
+    .kp-toast--destructive,
     .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
         border-inline-start: 3px solid var(--destructive);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
     }
 
     .kp-toast__close {
@@ -2443,12 +2507,17 @@
         background: var(--muted);
     }
 
+    /* The fill follows the holder's shape [scope-60]: square in every theme
+ * before, under holders rounded up to a pill. `inherit` takes the holder's
+ * own radius, whatever a register set it to. */
     .kp-progress::-webkit-progress-value {
         background: var(--kp-control-accent, var(--primary));
+        border-radius: inherit;
     }
 
     .kp-progress::-moz-progress-bar {
         background: var(--kp-control-accent, var(--primary));
+        border-radius: inherit;
     }
 
     /* An indeterminate bar is not a full one [gap-11]. With the theme's own
@@ -2624,6 +2693,21 @@
         z-index: var(--kp-z-popover, 20);
     }
 
+    /* The theme menu scrolls inside its rounded box, not as it [scope-60].
+ * The popover was itself the scroll box, so its scrollbar ran square into
+ * the rounded corners. Now the popover clips and the list inside it
+ * scrolls, in both shapes: the markup's `.kp-popover > .kp-menu` and the
+ * React switcher's `.kp-theme-menu__list > .kp-menu`. */
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list):has(> .kp-menu) {
+        overflow: hidden;
+    }
+
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        max-block-size: calc(var(--kp-popover-max-height, min(80vh, 40rem)) - 1rem);
+        overflow-y: auto;
+        border-radius: 0;
+    }
+
     .kp-theme-menu__status {
         padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
         color: var(--destructive);
@@ -2797,6 +2881,28 @@
         margin: 0;
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The drawn select [scope-54]: `select[data-kp-select]` gets a listbox in
+ * the combobox's own classes laid over it, so every register that answers
+ * the combobox list answers this one with the same rule. What is its own:
+ * js/combobox.js places it under the select (a flex column like .kp-field
+ * gives an absolute box no useful static position), and the value the box
+ * holds is marked the way the native picker marks it — weight and a check. */
+    [data-kp-select-list] {
+        box-sizing: border-box;
+        inset-inline: auto;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen] {
+        display: flex;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen]::after {
+        content: var(--kp-glyph-check, '✓');
+        margin-inline-start: auto;
     }
 
     .kp-tag-list {

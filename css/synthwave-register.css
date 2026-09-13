@@ -868,6 +868,41 @@
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='synthwave'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='synthwave'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='synthwave'] .kp-toast--destructive,
+    [data-theme='synthwave'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='synthwave']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     [data-theme='synthwave'] .kp-toasts {
         gap: 0.6rem;
     }
@@ -1001,11 +1036,6 @@
         background: var(--sidebar-background);
         border: 1px solid var(--kp-hairline);
         border-radius: 0;
-    }
-
-    [data-theme='synthwave'] .kp-progress__value {
-        background: var(--kp-stripe);
-        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.6);
     }
 
     [data-theme='synthwave'] .kp-spinner {
