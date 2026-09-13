@@ -1337,4 +1337,7 @@ re-hashed on its own commit. A verdict only returns when the component itself
 looks different. Item verdict-import: "Terugzetten wat niet veranderde" — the
 131 verdicts of that day are restored where the block hashes alike at the
 commit they were given on and at the current one.
+Added the same day: verdicts are per browser engine as well — "er moet ook een
+verschil zijn tussen firedragon en chrome approved, dat zijn afzonderlijke
+testen". A block approved in Firefox is still to be judged in Chromium.
 
