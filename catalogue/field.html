@@ -64,12 +64,11 @@
                 <div class="cat-look">
                     <b>Look at:</b> the textarea is <code>.kp-field__input--multiline</code>: it must be taller than a single-line input, it must
                     resize vertically only — drag its corner sideways and nothing should happen — and its text must start at the same inset as the
-                    inputs above. Open the select: in a browser that allows it the list wears the theme (the popover surface, a soft highlight, a
-                    check on the chosen option); in one that does not, the native list appears, and that is the browser's, not a fault. The select
-                    beside it asks for <code>data-kp-select</code>: its list is drawn by the package in the combobox's look in every browser, Firefox
-                    included — the same surface, highlight and boundary as an open combobox, the chosen option in weight with a check, the disabled
-                    one faded. Open it with a click and with the keyboard (Down, Up, Home, End, a letter, Enter, Escape); the value you take must show
-                    in the closed box. Closed, both selects must be the same height as a text input.
+                    inputs above. The select is a plain <code>select.kp-field__input</code>: its list is drawn by the package in the combobox's look
+                    in every browser, Firefox included, without the page asking — the same surface, highlight and boundary as an open combobox, the
+                    chosen option in weight with a check, the disabled one faded. Open it with a click and with the keyboard (Down, Up, Home, End, a
+                    letter, Enter, Escape); the value you take must show in the closed box. Closed, it must be the same height as a text input. A page
+                    that wants the browser's own list writes <code>data-kp-select="native"</code>; a multiple select always keeps it.
                 </div>
                 <div class="cat-stage">
                     <div class="kp-field">
@@ -78,16 +77,8 @@
 Line closed at the manifold. Day shift to check the gauge against the sensor before reopening.</textarea>
                     </div>
                     <div class="kp-field">
-                        <label class="kp-field__label" for="f-severity">Severity</label>
-                        <select class="kp-field__input" id="f-severity" name="severity">
-                            <option>Low</option>
-                            <option selected>High</option>
-                            <option>Critical — wake the on-call engineer</option>
-                        </select>
-                    </div>
-                    <div class="kp-field">
-                        <label class="kp-field__label" for="f-severity-drawn">Severity, drawn</label>
-                        <select class="kp-field__input" id="f-severity-drawn" name="severity-drawn" data-kp-select>
+                        <label class="kp-field__label" for="f-severity-drawn">Severity</label>
+                        <select class="kp-field__input" id="f-severity-drawn" name="severity-drawn">
                             <option>Low</option>
                             <option selected>High</option>
                             <option disabled>Blocked — not for this site</option>
@@ -357,7 +348,7 @@ The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, re
                         <form class="kp-form" novalidate aria-label="Report an incident">
                             <div class="kp-field">
                                 <label class="kp-field__label" for="f-n-site">Site <span class="kp-field__required">required</span></label>
-                                <select class="kp-field__input" id="f-n-site" data-kp-select>
+                                <select class="kp-field__input" id="f-n-site">
                                     <option>Pump house 4</option>
                                     <option>Cold store</option>
                                     <option>Weighbridge</option>

@@ -45,10 +45,25 @@
                     </select>
                 </div>
                 <div class="kp-field">
-                    <label class="kp-field__label" for="plain-native">Region</label>
-                    <select class="kp-field__input" id="plain-native" name="region" data-test="plain-native">
+                    <label class="kp-field__label" for="plain-default">Region</label>
+                    <select class="kp-field__input" id="plain-default" name="region" data-test="plain-default">
                         <option>North</option>
                         <option>South</option>
+                    </select>
+                </div>
+                <!-- The two that stay the browser's: the opt-out, and a multiple select. -->
+                <div class="kp-field">
+                    <label class="kp-field__label" for="plain-native">Shift</label>
+                    <select class="kp-field__input" id="plain-native" name="shift" data-kp-select="native" data-test="plain-native">
+                        <option>Day</option>
+                        <option>Night</option>
+                    </select>
+                </div>
+                <div class="kp-field">
+                    <label class="kp-field__label" for="plain-multiple">Crews</label>
+                    <select class="kp-field__input" id="plain-multiple" name="crews" multiple data-test="plain-multiple">
+                        <option>Red</option>
+                        <option>Blue</option>
                     </select>
                 </div>
             </form>

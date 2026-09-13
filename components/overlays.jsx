@@ -411,7 +411,9 @@ function ToastsInner(
                 renderToast(m, () => onDismiss?.(m.id))
             ) : (
                 <>
-                    {m.text}
+                    {/* The words in their own box, so the buttons sit at the
+                        toast's end whatever the text's length. */}
+                    <span className="kp-toast__body">{m.text}</span>
                     {m.action && (
                         <button type="button" className="kp-button kp-button--ghost" onClick={m.action.onClick}>
                             {m.action.label}

@@ -235,7 +235,7 @@
                             <tr><td><code>data-kp-open-on-focus</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-option</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-remove-glyph</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-select</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-select</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-select-all</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-select-attached</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-select-list</code></td><td>written</td></tr>
@@ -270,7 +270,7 @@
                             <tr><td><code>match</code></td><td><code>keyof typeof MATCHERS | Matcher</code></td><td>optional</td><td>Default substring.</td></tr>
                             <tr><td><code>openOnFocus</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
                             <tr><td><code>closeOnBlur</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
-                            <tr><td><code>backspaceRemoves</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>backspaceRemoves</code></td><td><code>boolean</code></td><td>optional</td><td>Backspace in an empty field removes the last tag. Default false since 2026-09-13: a stray Backspace took a chosen tag away; each tag's remove button is the way out.</td></tr>
                             <tr><td><code>stayOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Keep the list open after adding a tag. Default true.</td></tr>
                             <tr><td><code>maxTags</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>allowDuplicates</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>

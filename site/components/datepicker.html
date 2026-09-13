@@ -204,16 +204,16 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-close-on-select</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-date-input</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-date-open</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-date-panel</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-date-input</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-open</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-panel</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-date-value</code></td><td>read, written</td></tr>
-                            <tr><td><code>data-kp-datepicker</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datepicker</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datepicker-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-day</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-disabled</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-disabled-days</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-locale</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-max</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-min</code></td><td>read</td></tr>
@@ -232,6 +232,7 @@
                     <h3 class="kp-fw-semibold"><code>DatePicker</code></h3>
                     <div class="kp-table-wrap" data-kp-region-label="DatePicker props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>label</code></td><td><code>string</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td>optional</td><td>The label stays for assistive technology but is not drawn, for a picker a visible heading already names (a data table's date filter). Default false.</td></tr>
                             <tr><td><code>value</code></td><td><code>string</code></td><td>optional</td><td>Controlled text.</td></tr>
                             <tr><td><code>defaultValue</code></td><td><code>string</code></td><td>optional</td><td>Initial text when uncontrolled.</td></tr>
                             <tr><td><code>onChange</code></td><td><code>(iso: string | null, date: Date | null) =&gt; void</code></td><td>optional</td><td></td></tr>

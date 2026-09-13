@@ -824,6 +824,14 @@
         color: inherit;
     }
 
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='cyberpunk'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='cyberpunk'] .kp-alert {
         border-left: 3px solid currentColor;
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
@@ -889,17 +897,20 @@
         accent-color: var(--primary);
     }
 
-    [data-theme='cyberpunk'] .kp-progress::-webkit-progress-bar {
+    /* Determinate bars only: this layer beats the components layer, so an
+       unguarded bar colour painted an indeterminate bar full, the fault
+       gap-11 closed (found again 2026-09-13 when its test was repaired). */
+    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-webkit-progress-bar {
         border-radius: 0;
         background: var(--card);
     }
 
-    [data-theme='cyberpunk'] .kp-progress::-webkit-progress-value {
+    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-webkit-progress-value {
         border-radius: 0;
         background: var(--primary);
     }
 
-    [data-theme='cyberpunk'] .kp-progress::-moz-progress-bar {
+    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-moz-progress-bar {
         border-radius: 0;
         background: var(--primary);
     }

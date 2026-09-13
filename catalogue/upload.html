@@ -52,7 +52,9 @@
                     <b>Look at:</b> while a file is held over the zone the module sets <code>data-kp-dragging</code>: the frame takes the primary
                     colour and the words the full ink. The difference from the empty zone above must be obvious at arm's length — a person dragging a
                     file is looking at the file, not at the zone. The frozen copy is on the left; drag a real file from your desktop over the live
-                    zone on the right and the two must match. Nothing may change size when the state flips, or the target jumps away from the pointer.
+                    zone on the right and the two must match from the moment the file enters the zone until it leaves or drops — the zone accepts the
+                    drag at its first event, and passing over the words inside it must not switch the state off. Nothing may change size when the
+                    state flips, or the target jumps away from the pointer.
                 </div>
                 <div class="cat-stage cat-grid">
                     <div class="cat-cell">

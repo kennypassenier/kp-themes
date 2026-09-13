@@ -507,13 +507,15 @@
                 <div class="cat-look">
                     <b>Look at:</b> <code>.kp-datatable</code> is the table with behaviour, all of it declared in the markup. Type <i>gate</i> in the
                     search box, then set <b>Search in</b> to <b>Site</b>: the rows whose note mentions a gate drop out. Press <b>Filters</b>: tick
-                    <b>Watching</b> under Status and give <b>Hours open</b> a range; each filter leaves a pill above the table, its remove button
-                    takes that one filter away, and the count on <b>Filters</b> matches the pills. Sort <b>Severity</b>: Low, Medium, High, Critical,
-                    by meaning and not by the alphabet. Switch the density to <b>Compact</b>: the rows and the search box both come down. The status
-                    line reads <i>Showing 1–24 of 24</i>; set <b>Rows per page</b> to 10 and page through. Tick rows: the action bar appears with the
-                    count; the header checkbox takes the rows on this page only, and after a search hides a ticked row it must not stay half-ticked.
-                    Every checkbox here must look exactly like the theme's own checkbox in a form. The status badges must never break inside a word.
-                    Narrow the window: the table turns into cards and a <b>Sort by</b> control appears in place of the hidden headers.
+                    <b>Watching</b> under Status and give <b>Hours open</b> a range. The two <b>Opened</b> bounds are the theme's own date picker
+                    (<code>.kp-datepicker</code>), never the browser's date input: type a date or press <b>Calendar</b>, and the calendar that opens
+                    must look exactly like the date picker on its own page. Each filter leaves a pill above the table, its remove button takes that
+                    one filter away, and the count on <b>Filters</b> matches the pills. Sort <b>Severity</b>: Low, Medium, High, Critical, by meaning
+                    and not by the alphabet. Switch the density to <b>Compact</b>: the rows and the search box both come down. The status line reads
+                    <i>Showing 1–24 of 24</i>; set <b>Rows per page</b> to 10 and page through. Tick rows: the action bar appears with the count; the
+                    header checkbox takes the rows on this page only, and after a search hides a ticked row it must not stay half-ticked. Every
+                    checkbox here must look exactly like the theme's own checkbox in a form. The status badges must never break inside a word. Narrow
+                    the window: the table turns into cards and a <b>Sort by</b> control appears in place of the hidden headers.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-datatable" data-kp-datatable data-kp-cards>

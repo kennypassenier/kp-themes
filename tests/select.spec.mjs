@@ -2,8 +2,9 @@
 //
 // Firefox cannot style a native select's open list, so on Kenny's review
 // page the one list in a form that was not the theme's was the select's.
-// `data-kp-select` asks for a listbox in the combobox's look laid over it;
-// a select without the attribute stays native. The native element is the
+// Since Kenny's form of 2026-09-13 every `select.kp-field__input` gets a
+// listbox in the combobox's look laid over it without asking;
+// `data-kp-select="native"` and a multiple select stay the browser's. The native element is the
 // one that holds the value, submits with the form and is what assistive
 // technology reads, so every test here reads the native element back.
 //
@@ -17,10 +18,24 @@ import { test, expect } from '@playwright/test';
 const URL = '/tests/fixtures/select.html';
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
-/** @type {{name: string, select: string, native: string, form: string}[]} */
+/** @type {{name: string, select: string, drawnByDefault: string, native: string, multiple: string, form: string}[]} */
 const CHANNELS = [
-    { name: 'framework-free', select: '[data-test="plain-select"]', native: '[data-test="plain-native"]', form: '[data-test="plain-form"]' },
-    { name: 'React', select: '[data-test="react-select"]', native: '[data-test="react-native"]', form: '[data-test="react-form"]' },
+    {
+        name: 'framework-free',
+        select: '[data-test="plain-select"]',
+        drawnByDefault: '[data-test="plain-default"]',
+        native: '[data-test="plain-native"]',
+        multiple: '[data-test="plain-multiple"]',
+        form: '[data-test="plain-form"]',
+    },
+    {
+        name: 'React',
+        select: '[data-test="react-select"]',
+        drawnByDefault: '[data-test="react-default"]',
+        native: '[data-test="react-native"]',
+        multiple: '[data-test="react-multiple"]',
+        form: '[data-test="react-form"]',
+    },
 ];
 
 /** The drawn list that belongs to a select. @param {import('@playwright/test').Page} page @param {string} select */
@@ -120,15 +135,68 @@ for (const channel of CHANNELS) {
             await expect(page.locator(`#${controls}`)).toHaveAttribute('role', 'listbox');
         });
 
-        test('a select without the attribute is untouched [scope-54]', async ({ page }) => {
+        test('a .kp-field__input select is drawn without asking, and its click takes an option [Kenny 2026-09-13, reverses scope-54’s opt-in]', async ({
+            page,
+        }) => {
+            // Before: the Region select, with no data-kp-select, stayed the browser's — no drawn list beside it.
             await ready(page);
-            const native = page.locator(channel.native);
-            await expect(page.locator(`${channel.native} + [data-kp-select-list]`)).toHaveCount(0);
-            await expect(native).not.toHaveAttribute('aria-expanded', /.*/);
-            await expect(native).not.toHaveAttribute('aria-controls', /.*/);
+            const select = page.locator(channel.drawnByDefault);
+            const list = listOf(page, channel.drawnByDefault);
+            await expect(list).toHaveCount(1);
+            await select.click();
+            await expect(list).toBeVisible();
+            await list.locator('[role="option"]', { hasText: 'South' }).click();
+            await expect(select).toHaveValue('South');
+        });
+
+        test('data-kp-select="native" and a multiple select stay the browser’s [Kenny 2026-09-13]', async ({ page }) => {
+            await ready(page);
+            for (const selector of [channel.native, channel.multiple]) {
+                const native = page.locator(selector);
+                await expect(native).toHaveCount(1);
+                await expect(page.locator(`${selector} + [data-kp-select-list]`)).toHaveCount(0);
+                await expect(native).not.toHaveAttribute('aria-expanded', /.*/);
+                await expect(native).not.toHaveAttribute('aria-controls', /.*/);
+            }
         });
     });
 }
+
+test('the data table’s own selects are drawn, in both channels [Kenny 2026-09-13]', async ({ page }) => {
+    // Before: the search scope, density, sort-by and page-size selects were the browser's in both channels.
+    await page.goto('/tests/fixtures/datatable.html');
+    for (const table of ['[data-test="plain-datatable"]', '[data-test="react-datatable"] .kp-datatable']) {
+        await expect(page.locator(`${table} [data-kp-datatable-page-size]`)).toHaveCount(1);
+        const bare = await page
+            .locator(`${table} select.kp-field__input`)
+            .evaluateAll((selects) =>
+                selects.filter((s) => !s.nextElementSibling?.matches('[data-kp-select-list]')).map((s) => s.outerHTML.slice(0, 80)),
+            );
+        expect(bare, table).toEqual([]);
+    }
+    const size = page.locator('[data-test="plain-datatable"] [data-kp-datatable-page-size]');
+    await size.click();
+    await listOf(page, '[data-test="plain-datatable"] [data-kp-datatable-page-size]').locator('[role="option"]', { hasText: /^10$/ }).click();
+    await expect(page.locator('[data-test="plain-datatable"] tbody tr:visible')).toHaveCount(10);
+});
+
+test('the React FormField’s select is drawn by default, and drawn={false} keeps it native [Kenny 2026-09-13]', async ({ page }) => {
+    // Before: FormField type="select" had no drawn list at all.
+    await page.goto('/tests/fixtures/components.html');
+    const land = page.locator('[data-test="react-rich-form"] select[name="land"]');
+    await expect(land).toHaveCount(1);
+    await expect(page.locator('[data-test="react-rich-form"] select[name="land"] + [data-kp-select-list]')).toHaveCount(1);
+    await expect(page.locator('[data-test="plain-rich-land"] + [data-kp-select-list]')).toHaveCount(1);
+});
+
+test('the catalogue’s textarea-and-select block shows only the drawn select [Kenny 2026-09-13]', async ({ page }) => {
+    // Before: two selects, the native Severity beside the drawn one.
+    await page.goto('/catalogue/field.html');
+    const selects = page.locator('#multiline select');
+    await expect(selects).toHaveCount(1);
+    await expect(page.locator('#multiline select + [data-kp-select-list]')).toHaveCount(1);
+    await expect(page.locator('#multiline .cat-look')).toContainText('data-kp-select="native"');
+});
 
 test('detach takes the drawn list away and leaves the native select as it was [scope-54]', async ({ page }) => {
     await ready(page);

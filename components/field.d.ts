@@ -3,6 +3,17 @@ export type FieldOption = {
     label: string;
     disabled?: boolean;
 };
+/** @typedef {{ value: string, label: string, disabled?: boolean }} FieldOption */
+/**
+ * A callback ref that lays the drawn list over the select it is given and
+ * takes it away again when the select goes or `enabled` turns false [KT6].
+ * Every React select of the package's uses it, so the default reaches the
+ * data table's and the form's selects as well as Field's.
+ *
+ * @param {boolean} [enabled] Default true.
+ * @returns {(element: HTMLSelectElement | null) => void}
+ */
+export declare function useDrawnSelect(enabled?: boolean): (element: HTMLSelectElement | null) => void;
 export type FieldProps = {
     label: import('react').ReactNode;
     help?: import('react').ReactNode;
@@ -37,7 +48,7 @@ export type FieldProps = {
      */
     options?: FieldOption[];
     /**
-     * With `options`: lay the drawn list over the select (`data-kp-select`). Default false: the native list [scope-54].
+     * With `options`: lay the package's drawn list over the select. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select="native"`). A `multiple` select is always the browser's.
      */
     drawn?: boolean;
 };

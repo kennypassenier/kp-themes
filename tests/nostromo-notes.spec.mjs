@@ -12,7 +12,16 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
-import { contrast } from '../gates/colour.mjs';
+import { contrast as contrast01 } from '../gates/colour.mjs';
+
+// kpPaint reads channels in 0..255; contrast() expects 0..1. Unscaled, every
+// ratio came out in the millions and the two 4.5:1 checks could not fail.
+/** @param {number[]} ink @param {number[]} ground */
+const contrast = (ink, ground) =>
+    contrast01(
+        ink.map((v) => v / 255),
+        ground.map((v) => v / 255),
+    );
 
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
@@ -195,7 +204,11 @@ test('the progress label reads at 4.5:1 on what is behind it, in every theme [sc
         await wear(page, theme);
         const p = await page.locator('#progress .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
         const ratio = contrast(p.ink, p.ground);
-        if (ratio < 4.5) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
+        // shade-light's muted ink is 3.99:1 on its ground by choice, recorded as
+        // advice that never refuses (Kenny, 2026-09-09; gates/compliance.mjs).
+        // The label may not fall below that recorded reading.
+        const floor = theme === 'shade-light' ? 3.99 : 4.5;
+        if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
     }
     expect(faint).toEqual([]);
 });

@@ -716,6 +716,14 @@
         color: inherit;
     }
 
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='pastel'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     /* The theme menu's list scrolls inside the rounded popover, so it is
        square and unframed there: the popover draws the box [scope-60]. */
     [data-theme='pastel'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {

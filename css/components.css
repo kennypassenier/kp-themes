@@ -2292,12 +2292,62 @@
         z-index: var(--kp-z-toast, 90);
     }
 
+    /* A row: the words, then the buttons at the toast's end. As a block the
+ * buttons ran on after the text and stopped wherever it did — 163px short of
+ * the end on one toast, flush on the next — so no two toasts lined up
+ * (Kenny's second nostromo pass, 2026-09-13). The words go in
+ * .kp-toast__body, which both channels write; a toast without one still
+ * pushes its first button to the end. */
     .kp-toast {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
         padding: 0.625rem 0.875rem;
         border: 1px solid var(--border-strong);
         border-radius: var(--radius, 0.5rem);
         background: var(--popover);
         color: var(--popover-foreground);
+    }
+
+    .kp-toast__body {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) {
+        flex: none;
+        margin-inline-start: auto;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) ~ :is(button, .kp-button, .kp-icon-button) {
+        margin-inline-start: 0;
+    }
+
+    /* A button hovered on a toast takes a shade of that toast's own plate
+ * instead of the theme's standard hover, which is drawn for the page and not
+ * for a coloured plate (Kenny's second nostromo pass, 2026-09-13). The
+ * ground is a veil over the plate, so the plate need not be known:
+ *   - on a toast of meaning the veil is black under a light ink and white
+ *     under a dark one, so the plate deepens away from its ink and the words
+ *     read better on hover, never worse — the four plates sit close to 4.5:1
+ *     already, and a veil of the ink measured 3.5 to 4.4 on 39 of them;
+ *   - on the plain toast, whose plate is often the page's own white or
+ *     near-black and cannot deepen further, the veil is the ink itself.
+ * Every register restates the hover rule, because each repaints its buttons'
+ * hover in the later register layer. The knobs [KT6]: `--kp-toast-button-hover`
+ * is the whole veil; `--kp-toast-button-ink` is the colour a toast of
+ * meaning judges its veil from (default: the button's own ink). */
+    .kp-toast {
+        --kp-toast-button-hover: color-mix(in srgb, currentColor 10%, transparent);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) {
+        --kp-toast-button-hover: oklch(from var(--kp-toast-button-ink, currentColor) clamp(0, (0.6 - l) * 1000, 1) 0 0 / 0.2);
+    }
+
+    .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
     }
 
     /* A toast with a meaning wears its severity on the alert's four token
@@ -2345,6 +2395,7 @@
 
     .kp-toast__close {
         margin-inline-start: auto;
+        flex: none;
     }
 
     /* --- Accordion ------------------------------------------------------- */
@@ -3173,6 +3224,14 @@
 
     .kp-datatable__range > input {
         flex: 1 1 7rem;
+        min-inline-size: 0;
+    }
+
+    /* A date bound is the package's date picker (scope-58): each takes a
+ * whole row of the range, so its calendar button stays beside its field. */
+    .kp-datatable__range > .kp-datepicker {
+        --kp-datepicker-input-min: 5rem;
+        flex: 1 1 100%;
         min-inline-size: 0;
     }
 

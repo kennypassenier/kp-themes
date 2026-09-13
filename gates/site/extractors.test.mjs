@@ -158,7 +158,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // row, the tree's selected wash and bar); the nostromo notes (scope-60)
     // added the dialog close button's size and held-60 the room inside the
     // wizard's frame (--kp-wizard-padding): 123 + 9 + 3 + 4 + 1 + 1.
-    assert.equal(result.expected, 141, 'AR21 counted 141 --kp-* properties in css/components.css');
+    // Kenny's second nostromo pass (2026-09-13) added two, the toast
+    // button's hover veil and the ink that veil is judged from
+    // (--kp-toast-button-hover, --kp-toast-button-ink): 141 + 2.
+    assert.equal(result.expected, 143, 'AR21 counted 143 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -191,7 +194,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 141);
+    assert.equal(result.readCount, 143);
     assert.deepEqual(result.unread, []);
 });
 

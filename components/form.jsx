@@ -1,6 +1,7 @@
-import { createContext, forwardRef, useContext, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
+import { createContext, forwardRef, useCallback, useContext, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
+import { useDrawnSelect } from './field.jsx';
 
 // Form, React [TH38].
 //
@@ -41,6 +42,7 @@ const FormContext = createContext(/** @type {FormState | null} */ (null));
  * @property {string} [type]            The control: an input type, or select, textarea, checkbox, radio.
  * @property {{ value: string, label: import('react').ReactNode, disabled?: boolean, help?: import('react').ReactNode }[]} [options]
  * @property {'stacked' | 'inline'} [layout]  For a radio group. Default stacked.
+ * @property {boolean} [drawn]          For a select: lay the package's drawn list over it. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select="native"`).
  * @property {import('react').HTMLAttributes<HTMLElement>} [wrapperProps]
  * @property {{ label?: string, control?: string, help?: string, error?: string, option?: string }} [classNames]
  * @property {import('react').ReactNode} [children]
@@ -72,6 +74,7 @@ function FormFieldInner(
         type = 'text',
         options,
         layout = 'stacked',
+        drawn = true,
         wrapperProps,
         classNames = {},
         children,
@@ -84,6 +87,18 @@ function FormFieldInner(
     const s = useStrings(strings);
     const id = useId();
     const form = useContext(FormContext);
+    // A select wears the package's drawn list unless `drawn` is false
+    // (Kenny's form of 2026-09-13). One stable ref, so a render does not
+    // detach and redraw it.
+    const drawnRef = useDrawnSelect(drawn);
+    const selectRef = useCallback(
+        (/** @type {HTMLSelectElement | null} */ element) => {
+            if (typeof ref === 'function') ref(element);
+            else if (ref) /** @type {import('react').MutableRefObject<Control | null>} */ (ref).current = element;
+            drawnRef(element);
+        },
+        [ref, drawnRef],
+    );
     const helpId = `${id}-help`;
     const errorId = `${id}-error`;
     // The form's own finding wins over a message passed in, so a
@@ -222,7 +237,7 @@ function FormFieldInner(
                 {marker}
             </label>
             {type === 'select' ? (
-                <select ref={/** @type {import('react').Ref<HTMLSelectElement>} */ (ref)} {...control} {...shared}>
+                <select ref={selectRef} {...control} {...shared} data-kp-select={drawn ? undefined : 'native'}>
                     {/* The options a consumer passes, or whatever they put
                         inside — an optgroup is theirs to write. */}
                     {children ??

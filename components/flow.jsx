@@ -36,6 +36,7 @@ function useLocale(ref, explicit) {
 /**
  * @typedef {object} DatePickerProps
  * @property {string} label
+ * @property {boolean} [hideLabel]     The label stays for assistive technology but is not drawn, for a picker a visible heading already names (a data table's date filter). Default false.
  * @property {string} [value]          Controlled text.
  * @property {string} [defaultValue]   Initial text when uncontrolled.
  * @property {(iso: string | null, date: Date | null) => void} [onChange]
@@ -71,6 +72,7 @@ function useLocale(ref, explicit) {
 function DatePickerInner(
     {
         label,
+        hideLabel = false,
         value,
         defaultValue = '',
         onChange,
@@ -190,7 +192,7 @@ function DatePickerInner(
             {...rest}
         >
             <div className="kp-field">
-                <label className="kp-field__label" htmlFor={id}>
+                <label className={hideLabel ? 'kp-field__label kp-sr-only' : 'kp-field__label'} htmlFor={id}>
                     {label}
                 </label>
                 <input
@@ -434,12 +436,25 @@ function UploadInner(
                 htmlFor={id}
                 data-kp-upload-zone
                 data-kp-dragging={dragging ? '' : undefined}
+                // The zone takes the drag at its first event, as the framework-free
+                // channel does: an uncancelled dragenter hands the drop target to
+                // the body (second nostromo pass, 2026-09-13).
+                onDragEnter={(event) => {
+                    if (!dropping || disabled) return;
+                    event.preventDefault();
+                    setDragging(true);
+                }}
                 onDragOver={(event) => {
                     if (!dropping || disabled) return;
                     event.preventDefault();
                     setDragging(true);
                 }}
-                onDragLeave={() => setDragging(false)}
+                onDragLeave={(event) => {
+                    // Moving onto a child of the zone is not leaving it.
+                    const to = event.relatedTarget;
+                    if (to instanceof Node && event.currentTarget.contains(to)) return;
+                    setDragging(false);
+                }}
                 onDrop={(event) => {
                     if (!dropping || disabled) return;
                     event.preventDefault();

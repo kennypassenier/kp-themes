@@ -226,7 +226,30 @@ export function attachUploads(
             event.preventDefault();
             zone.dataset.kpDragging = '';
         };
-        const onDragLeave = () => delete zone.dataset.kpDragging;
+        /**
+         * The zone takes the drag at its first event. Before, only dragover was
+         * answered: dragenter went uncancelled and set nothing, and the HTML
+         * drag-and-drop model then makes the body the drop target, so the zone
+         * need never see a dragover — Kenny dragged a real file over the live
+         * zone and saw no change (second nostromo pass, 2026-09-13).
+         *
+         * @param {DragEvent} event
+         */
+        const onDragEnter = (event) => {
+            event.preventDefault();
+            zone.dataset.kpDragging = '';
+        };
+        /**
+         * Leaving for a child of the zone is not leaving: an icon inside a
+         * consumer's zone would otherwise switch the state off under the pointer.
+         *
+         * @param {DragEvent} event
+         */
+        const onDragLeave = (event) => {
+            const to = event.relatedTarget;
+            if (to instanceof Node && zone.contains(to)) return;
+            delete zone.dataset.kpDragging;
+        };
         /** @param {DragEvent} event */
         const onDrop = (event) => {
             event.preventDefault();
@@ -238,6 +261,7 @@ export function attachUploads(
         input.addEventListener('change', onChange);
         list.addEventListener('click', onListClick);
         if (dropping) {
+            zone.addEventListener('dragenter', onDragEnter);
             zone.addEventListener('dragover', onDragOver);
             zone.addEventListener('dragleave', onDragLeave);
             zone.addEventListener('drop', onDrop);
@@ -259,6 +283,7 @@ export function attachUploads(
         cleanups.push(() => {
             input.removeEventListener('change', onChange);
             list.removeEventListener('click', onListClick);
+            zone.removeEventListener('dragenter', onDragEnter);
             zone.removeEventListener('dragover', onDragOver);
             zone.removeEventListener('dragleave', onDragLeave);
             zone.removeEventListener('drop', onDrop);

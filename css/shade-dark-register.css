@@ -498,6 +498,21 @@
         color: inherit;
     }
 
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    /* The plain toast's ink here is the muted text at 4.9:1, which a veil of
+       the ink would take under 4.5 (measured 4.24); its plate deepens away
+       from the ink instead, as a toast of meaning does. */
+    [data-theme='shade-dark'] .kp-toast {
+        --kp-toast-button-hover: oklch(from var(--kp-toast-button-ink, currentColor) clamp(0, (0.6 - l) * 1000, 1) 0 0 / 0.2);
+    }
+
+    [data-theme='shade-dark'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     /* The theme menu's list scrolls inside the rounded popover, so it is
        square and unframed there: the popover draws the box [scope-60]. */
     [data-theme='shade-dark'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {

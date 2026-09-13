@@ -962,6 +962,14 @@
         color: inherit;
     }
 
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='retro'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     /* And the keyboard highlight is the selection bar, as it is on a
        mark: navy with white on it [S49, A12]. */
     [data-theme='retro'] .kp-combobox__option.is-active,

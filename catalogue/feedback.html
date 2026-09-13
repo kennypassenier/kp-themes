@@ -117,27 +117,33 @@
                     warning and destructive — each on the same plate and ink as the severity badge and the alert of that meaning, with its words
                     saying the meaning as well; every theme restates the four, so no toast of meaning may look like the plain one. The words and the
                     buttons on each plate must pass contrast on it. The toasts float on the popover surface with a boundary that must stay visible
-                    over anything behind them. The action button and the close button must sit on the toast's line, at its end — a close button that
-                    drops below the text or hugs it with no gap is a fault. Then press the buttons to raise real toasts in the window's corner: they
+                    over anything behind them. The words sit in <code>.kp-toast__body</code>; the action button and the close button sit at the
+                    toast's right end, level with the words, in every toast and whatever the length of its text — so the buttons of the five line up
+                    down the stack. A close button that drops below the text or hugs it with no gap is a fault. Hover each button: its ground turns a
+                    shade of that toast's own plate (green on the success toast, red on the error toast, the popover colour on the plain one), never
+                    the theme's page hover, and its word still reads on it. Then press the buttons to raise real toasts in the window's corner: they
                     must stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 24rem">
                     <div class="kp-toasts" role="status" aria-live="polite">
-                        <div class="kp-toast">Saved. The handover note is visible to the day shift.</div>
+                        <div class="kp-toast">
+                            <span class="kp-toast__body">Saved. The handover note is visible to the day shift.</span>
+                            <button type="button" class="kp-button kp-button--ghost">Undo</button>
+                        </div>
                         <div class="kp-toast kp-toast--success" data-kp-variant="success">
-                            <b>Success:</b> incident INC-4471 closed.
+                            <span class="kp-toast__body"><b>Success:</b> incident INC-4471 closed.</span>
                             <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
                         </div>
                         <div class="kp-toast kp-toast--info" data-kp-variant="info">
-                            <b>Info:</b> 3 new readings since you opened this page.
+                            <span class="kp-toast__body"><b>Info:</b> 3 new readings since you opened this page.</span>
                             <button type="button" class="kp-button kp-button--ghost">Refresh</button>
                         </div>
                         <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
-                            <b>Warning:</b> the vendor has not answered in 2 hours.
+                            <span class="kp-toast__body"><b>Warning:</b> the vendor has not answered in 2 hours.</span>
                             <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
                         </div>
                         <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
-                            <b>Error:</b> the note was not saved; you are offline.
+                            <span class="kp-toast__body"><b>Error:</b> the note was not saved; you are offline.</span>
                             <button type="button" class="kp-button kp-button--ghost">Retry</button>
                         </div>
                     </div>

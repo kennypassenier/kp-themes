@@ -116,7 +116,9 @@ for (const channel of CHANNELS) {
             expect(label).toBe(S.removeNamed('Urgent'));
         });
 
-        test('Backspace in an empty field removes the last tag [TH41]', async ({ page }) => {
+        test('Backspace in an empty field leaves the last tag by default [TH41, note 2 of 2026-09-13]', async ({ page }) => {
+            // It removed it until Kenny's second nostromo pass; the opt-in is
+            // held in tests/nostromo-second-pass.spec.mjs.
             await page.goto(URL);
             const input = page.locator(channel.tagsInput);
             await input.click();
@@ -124,7 +126,7 @@ for (const channel of CHANNELS) {
             await input.press('Enter');
             await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(1);
             await input.press('Backspace');
-            await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(0);
+            await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(1);
         });
     });
 }

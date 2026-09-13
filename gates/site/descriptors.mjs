@@ -373,7 +373,7 @@ export const DESCRIPTORS = [
         accessibility: [
             'Built in — the label is a real label, the help and the error are pointed at by the control, and the invalid state is announced rather than only painted.',
             'Built in — the checkbox and the radio are drawn larger than the browser’s default, and their tick takes a colour the theme can correct; the label is clickable too, which is what actually makes the target big enough for WCAG 2.5.8.',
-            'Built in — where the browser lets a page take over the select’s own list, it wears the theme instead of the platform’s highlight colour.',
+            'Built in — a select’s open list is drawn by the package in the combobox’s look in every browser, Firefox included, while the native select stays the control a screen reader reads and a form submits. Write data-kp-select="native" (React: drawn={false}) on a select that should keep the browser’s own list; a multiple select always does.',
             'Yours — give every control an id and point the label at it, or wrap the control in the label.',
             'Yours — write the error as a sentence that says what to do. “Invalid” tells the reader only that you noticed.',
             'Yours — keep the help text short: it is read out before the reader has typed anything.',

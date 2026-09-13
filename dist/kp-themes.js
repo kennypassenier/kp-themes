@@ -1116,8 +1116,11 @@ function toast(content, { ms = TOAST_MS, region = null, live, className = "kp-to
     document.createElement("div")
   );
   el.className = className;
-  if (typeof content === "string") el.textContent = content;
-  else el.append(content);
+  const body = document.createElement("span");
+  body.className = "kp-toast__body";
+  if (typeof content === "string") body.textContent = content;
+  else body.append(content);
+  el.append(body);
   if (action) {
     const button = document.createElement("button");
     button.type = "button";
@@ -1397,7 +1400,8 @@ __export(combobox_exports, {
   attachSelect: () => attachSelect,
   attachSelects: () => attachSelects,
   combobox: () => combobox,
-  drawnSelect: () => drawnSelect
+  drawnSelect: () => drawnSelect,
+  drawsSelect: () => drawsSelect
 });
 
 // js/listbox.js
@@ -1435,9 +1439,19 @@ function createListbox({
   const stampedSelected = /* @__PURE__ */ new Set();
   let buffer = "";
   let bufferTimer = 0;
+  const shown = (option) => {
+    for (let el = (
+      /** @type {HTMLElement | null} */
+      option
+    ); el !== null && el !== list; el = el.parentElement) if (el.hidden) return false;
+    return true;
+  };
   const options = () => (
     /** @type {HTMLElement[]} */
-    [...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector))
+    [...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector) && shown(
+      /** @type {HTMLElement} */
+      el
+    ))
   );
   const identify = () => {
     const base = idPrefix ?? list.id ?? "kp-listbox";
@@ -1647,7 +1661,7 @@ function attachComboboxes(root = document, {
   loop = false,
   openOnFocus = true,
   closeOnBlur = true,
-  backspaceRemoves = true,
+  backspaceRemoves = false,
   stayOpen = true,
   maxTags = Infinity,
   allowDuplicates = false,
@@ -1887,10 +1901,12 @@ function attachComboboxes(root = document, {
         if (!box.contains(document.activeElement)) close();
       }, 0);
     };
+    const onListMouseDown = (event) => event.preventDefault();
     input.addEventListener("input", onInput);
     input.addEventListener("keydown", onKeyDown);
     input.addEventListener("focus", onFocus);
     box.addEventListener("focusout", onFocusOut);
+    list.addEventListener("mousedown", onListMouseDown);
     tagList?.addEventListener("click", onTagClick);
     filter();
     list.hidden = true;
@@ -1934,6 +1950,7 @@ function attachComboboxes(root = document, {
       input.removeEventListener("keydown", onKeyDown);
       input.removeEventListener("focus", onFocus);
       box.removeEventListener("focusout", onFocusOut);
+      list.removeEventListener("mousedown", onListMouseDown);
       tagList?.removeEventListener("click", onTagClick);
       if (before.expanded === null) input.removeAttribute("aria-expanded");
       else input.setAttribute("aria-expanded", before.expanded);
@@ -1954,7 +1971,12 @@ function attachComboboxes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var SELECT = "select[data-kp-select]";
+function drawsSelect(element) {
+  if (!(element instanceof HTMLSelectElement) || element.multiple) return false;
+  const asked = element.getAttribute("data-kp-select");
+  if (asked === "native") return false;
+  return asked !== null || element.classList.contains("kp-field__input");
+}
 var selectHandles = /* @__PURE__ */ new WeakMap();
 function drawnSelect(element) {
   return selectHandles.get(element) ?? null;
@@ -2125,12 +2147,11 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
 function attachSelects(root = document, options = {}) {
   const cleanups = [];
   const created = [];
-  for (const element of root.querySelectorAll(SELECT)) {
-    const select = (
-      /** @type {HTMLSelectElement} */
-      element
-    );
-    if (select.dataset.kpSelectAttached !== void 0 || select.multiple) continue;
+  const found = root instanceof Element && root.matches("select") ? [root] : [...root.querySelectorAll("select")];
+  for (const element of found) {
+    if (!drawsSelect(element)) continue;
+    const select = element;
+    if (select.dataset.kpSelectAttached !== void 0) continue;
     const loopFlag = select.dataset.kpLoop;
     const detach2 = attachSelect(select, { ...options, ...loopFlag === void 0 ? {} : { loop: loopFlag !== "false" } });
     cleanups.push(detach2);
@@ -2559,6 +2580,316 @@ function attachTableRegions(root = document, { label, selector = WRAP_SELECTOR }
   return Object.assign(detach, { handles: created });
 }
 
+// js/datepicker.js
+var datepicker_exports = {};
+__export(datepicker_exports, {
+  DATE_EVENT: () => DATE_EVENT,
+  MONTH_EVENT: () => MONTH_EVENT,
+  OPEN_EVENT: () => OPEN_EVENT3,
+  attachDatePickers: () => attachDatePickers,
+  datePicker: () => datePicker,
+  formatLocalDate: () => formatLocalDate,
+  parseDate: () => parseDate2,
+  toDutch: () => toDutch,
+  toISO: () => toISO
+});
+var PICKER2 = "[data-kp-datepicker]";
+var DATE_EVENT = "kp-date-change";
+var OPEN_EVENT3 = "kp-date-open";
+var MONTH_EVENT = "kp-date-month";
+function toISO(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+function formatLocalDate(date, locale) {
+  return formatDate(date, locale);
+}
+function toDutch(date) {
+  return formatDate(date, "nl-NL");
+}
+function parseDate2(text, locale) {
+  if (text.trim() === "") return null;
+  return parseDate(text, locale);
+}
+var handles4 = /* @__PURE__ */ new WeakMap();
+function datePicker(element) {
+  return handles4.get(element) ?? null;
+}
+function attachDatePickers(root = document, {
+  locale: localeOption,
+  weekStartsOn: weekOption,
+  closeOnSelect = true,
+  refocus = true,
+  isDateDisabled,
+  renderDay,
+  previousGlyph = "\u2039",
+  nextGlyph = "\u203A"
+} = {}) {
+  const cleanups = [];
+  const created = [];
+  for (const element of root.querySelectorAll(PICKER2)) {
+    const picker = (
+      /** @type {HTMLElement} */
+      element
+    );
+    if (picker.dataset.kpDatepickerAttached !== void 0) continue;
+    const input = (
+      /** @type {HTMLInputElement | null} */
+      picker.querySelector("[data-kp-date-input]")
+    );
+    const open = (
+      /** @type {HTMLButtonElement | null} */
+      picker.querySelector("[data-kp-date-open]")
+    );
+    const panel = (
+      /** @type {HTMLElement | null} */
+      picker.querySelector("[data-kp-date-panel]")
+    );
+    if (input === null || open === null || panel === null) continue;
+    picker.dataset.kpDatepickerAttached = "";
+    const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
+    const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(picker.dataset.kpWeekStartsOn));
+    const min = picker.dataset.kpMin ? parseDate(picker.dataset.kpMin, locale) : null;
+    const max = picker.dataset.kpMax ? parseDate(picker.dataset.kpMax, locale) : null;
+    const disabledDays = (picker.dataset.kpDisabledDays ?? "").split(",").map((d) => Number.parseInt(d, 10)).filter((d) => !Number.isNaN(d));
+    const closes = picker.dataset.kpCloseOnSelect === void 0 ? closeOnSelect : picker.dataset.kpCloseOnSelect !== "false";
+    const before = {
+      placeholder: input.placeholder,
+      value: input.dataset.kpDateValue,
+      expanded: open.getAttribute("aria-expanded"),
+      panelHidden: panel.hidden
+    };
+    if (input.placeholder === "") input.placeholder = datePattern(locale).hint;
+    const disabled = (date) => {
+      if (min !== null && date < min) return true;
+      if (max !== null && date > max) return true;
+      if (disabledDays.includes(date.getDay())) return true;
+      return isDateDisabled?.(date) ?? false;
+    };
+    const read = () => parseDate2(input.value, locale);
+    let cursor = read() ?? /* @__PURE__ */ new Date();
+    const draw = () => {
+      const year = cursor.getFullYear();
+      const month = cursor.getMonth();
+      const first = new Date(year, month, 1);
+      const lead = (first.getDay() - firstDay + 7) % 7;
+      const days = new Date(year, month + 1, 0).getDate();
+      const chosen = read();
+      const s = getStrings();
+      const names = calendarNames(s, DEFAULT_STRINGS, locale);
+      panel.textContent = "";
+      const head = document.createElement("div");
+      head.className = "kp-datepicker__head";
+      const back = document.createElement("button");
+      back.type = "button";
+      back.className = "kp-button kp-button--ghost";
+      back.setAttribute("aria-label", s.previousMonth);
+      back.textContent = picker.dataset.kpPreviousGlyph ?? previousGlyph;
+      back.addEventListener("click", () => {
+        cursor = new Date(year, month - 1, 1);
+        draw();
+        picker.dispatchEvent(
+          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
+        );
+      });
+      const title = document.createElement("span");
+      title.className = "kp-datepicker__title";
+      title.id = `${input.id || "kp-date"}-title`;
+      title.textContent = s.monthTitle(names.months[month] ?? "", year);
+      const next = document.createElement("button");
+      next.type = "button";
+      next.className = "kp-button kp-button--ghost";
+      next.setAttribute("aria-label", s.nextMonth);
+      next.textContent = picker.dataset.kpNextGlyph ?? nextGlyph;
+      next.addEventListener("click", () => {
+        cursor = new Date(year, month + 1, 1);
+        draw();
+        picker.dispatchEvent(
+          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
+        );
+      });
+      head.append(back, title, next);
+      const grid2 = document.createElement("div");
+      grid2.className = "kp-datepicker__grid";
+      grid2.setAttribute("role", "grid");
+      grid2.setAttribute("aria-labelledby", title.id);
+      for (let i = 0; i < 7; i += 1) {
+        const day = names.weekdays[(firstDay + i) % 7] ?? "";
+        const cell = document.createElement("span");
+        cell.className = "kp-datepicker__weekday";
+        cell.setAttribute("role", "columnheader");
+        cell.setAttribute("aria-label", day);
+        cell.textContent = day;
+        grid2.append(cell);
+      }
+      for (let i = 0; i < lead; i += 1) {
+        const blank = document.createElement("span");
+        blank.className = "kp-datepicker__blank";
+        grid2.append(blank);
+      }
+      for (let day = 1; day <= days; day += 1) {
+        const date = new Date(year, month, day);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "kp-datepicker__day";
+        button.dataset.kpDay = toISO(date);
+        button.setAttribute("role", "gridcell");
+        button.setAttribute("aria-label", s.dayLabel(day, names.months[month] ?? "", year));
+        button.textContent = String(day);
+        const isChosen = chosen !== null && toISO(chosen) === toISO(date);
+        button.setAttribute("aria-selected", String(isChosen));
+        if (disabled(date)) {
+          button.setAttribute("aria-disabled", "true");
+          button.dataset.kpDisabled = "";
+        }
+        button.tabIndex = day === cursor.getDate() ? 0 : -1;
+        renderDay?.(button, date);
+        grid2.append(button);
+      }
+      panel.append(head, grid2);
+    };
+    const setOpen = (next) => {
+      if (panel.hidden === !next) return;
+      if (next) {
+        cursor = read() ?? /* @__PURE__ */ new Date();
+        draw();
+      }
+      panel.hidden = !next;
+      open.setAttribute("aria-expanded", String(next));
+      if (next) panel.querySelector('[tabindex="0"]')?.focus();
+      picker.dispatchEvent(new CustomEvent(OPEN_EVENT3, { bubbles: true, detail: { open: next } }));
+    };
+    const show = () => setOpen(true);
+    const hide = () => setOpen(false);
+    const commit = (date, source) => {
+      if (date === null) {
+        delete input.dataset.kpDateValue;
+        if (source !== "typed") input.value = "";
+      } else {
+        if (source !== "typed") input.value = formatDate(date, locale);
+        input.dataset.kpDateValue = toISO(date);
+      }
+      picker.dispatchEvent(new CustomEvent(DATE_EVENT, { bubbles: true, detail: { iso: date === null ? null : toISO(date), date, source } }));
+    };
+    const choose = (date) => {
+      if (disabled(date)) return;
+      commit(date, "chosen");
+      if (closes) hide();
+      if (refocus) input.focus();
+    };
+    const onOpen = () => panel.hidden ? show() : hide();
+    const onInput = () => commit(read(), "typed");
+    const onPanelKey = (event) => {
+      const day = (
+        /** @type {HTMLElement | null} */
+        /** @type {HTMLElement} */
+        event.target.closest("[data-kp-day]")
+      );
+      if (day === null) {
+        if (event.key === "Escape") {
+          hide();
+          open.focus();
+        }
+        return;
+      }
+      const current2 = /* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`);
+      const y = current2.getFullYear();
+      const m = current2.getMonth();
+      const d = current2.getDate();
+      const offset = (current2.getDay() - firstDay + 7) % 7;
+      const moves = {
+        ArrowRight: new Date(y, m, d + 1),
+        ArrowLeft: new Date(y, m, d - 1),
+        ArrowDown: new Date(y, m, d + 7),
+        ArrowUp: new Date(y, m, d - 7),
+        PageDown: new Date(y, m + 1, d),
+        PageUp: new Date(y, m - 1, d),
+        Home: new Date(y, m, d - offset),
+        End: new Date(y, m, d + (6 - offset))
+      };
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        choose(current2);
+        return;
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        hide();
+        open.focus();
+        return;
+      }
+      const moved = moves[event.key];
+      if (moved === void 0) return;
+      event.preventDefault();
+      const monthChanged = moved.getMonth() !== cursor.getMonth() || moved.getFullYear() !== cursor.getFullYear();
+      cursor = moved;
+      draw();
+      if (monthChanged)
+        picker.dispatchEvent(
+          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
+        );
+      panel.querySelector(`[data-kp-day="${toISO(moved)}"]`)?.focus();
+    };
+    const onPanelClick = (event) => {
+      const day = (
+        /** @type {HTMLElement | null} */
+        /** @type {HTMLElement} */
+        event.target.closest("[data-kp-day]")
+      );
+      if (day === null) return;
+      choose(/* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`));
+    };
+    const onFocusOut = () => {
+      setTimeout(() => {
+        if (!picker.contains(document.activeElement)) hide();
+      }, 0);
+    };
+    open.setAttribute("aria-expanded", "false");
+    open.addEventListener("click", onOpen);
+    input.addEventListener("input", onInput);
+    panel.addEventListener("keydown", onPanelKey);
+    panel.addEventListener("click", onPanelClick);
+    picker.addEventListener("focusout", onFocusOut);
+    const initial = read();
+    if (initial !== null) input.dataset.kpDateValue = toISO(initial);
+    const handle = {
+      element: picker,
+      get: read,
+      set: (date) => {
+        const parsed = date === null ? null : typeof date === "string" ? parseDate(date, locale) : date;
+        commit(parsed, "set");
+        if (parsed !== null) cursor = parsed;
+        if (!panel.hidden) draw();
+      },
+      open: show,
+      close: hide
+    };
+    handles4.set(picker, handle);
+    created.push(handle);
+    cleanups.push(() => {
+      open.removeEventListener("click", onOpen);
+      input.removeEventListener("input", onInput);
+      panel.removeEventListener("keydown", onPanelKey);
+      panel.removeEventListener("click", onPanelClick);
+      picker.removeEventListener("focusout", onFocusOut);
+      panel.textContent = "";
+      panel.hidden = before.panelHidden;
+      input.placeholder = before.placeholder;
+      if (before.value === void 0) delete input.dataset.kpDateValue;
+      else input.dataset.kpDateValue = before.value;
+      if (before.expanded === null) open.removeAttribute("aria-expanded");
+      else open.setAttribute("aria-expanded", before.expanded);
+      handles4.delete(picker);
+      delete picker.dataset.kpDatepickerAttached;
+    });
+  }
+  const detach = () => {
+    for (const c of cleanups) c();
+  };
+  return Object.assign(detach, { handles: created });
+}
+
 // js/datatable.js
 var TABLE = "[data-kp-datatable]";
 var SEARCH = "[data-kp-datatable-search]";
@@ -2658,9 +2989,9 @@ function filterPills(kind, column, value, s) {
   return [{ label: s.tableFilterRange(column, from || s.tableFilterOpenEnd, to || s.tableFilterOpenEnd), without: void 0 }];
 }
 var defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
-var handles4 = /* @__PURE__ */ new WeakMap();
+var handles5 = /* @__PURE__ */ new WeakMap();
 function dataTable(element) {
-  return handles4.get(element) ?? null;
+  return handles5.get(element) ?? null;
 }
 var instances = 0;
 function attachDataTables(root = document, {
@@ -2922,12 +3253,39 @@ function attachDataTables(root = document, {
               /** @type {HTMLInputElement} */
               make("input", "kp-field__input")
             );
-            input.type = kind === "range" ? "number" : "date";
             input.dataset.kpFilterBound = bound;
             input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
-            range.append(input);
+            if (kind === "range") {
+              input.type = "number";
+              range.append(input);
+              continue;
+            }
+            const picker = make("div", "kp-datepicker");
+            picker.dataset.kpDatepicker = "";
+            picker.dataset.kpLocale = locale;
+            input.type = "text";
+            input.inputMode = "numeric";
+            input.id = `${id}-filter-${at}-${bound}`;
+            input.dataset.kpDateInput = "";
+            const opener = (
+              /** @type {HTMLButtonElement} */
+              make("button", "kp-button kp-button--ghost")
+            );
+            opener.type = "button";
+            opener.dataset.kpDateOpen = "";
+            opener.setAttribute("aria-label", s0.calendarOpen);
+            opener.textContent = s0.calendarButton;
+            const datePanel = make("div", "kp-datepicker__panel");
+            datePanel.dataset.kpDatePanel = "";
+            datePanel.hidden = true;
+            picker.append(input, opener, datePanel);
+            range.append(picker);
           }
           set.append(range);
+          if (kind === "date") {
+            const detachPickers = attachDatePickers(range);
+            undo.push(detachPickers);
+          }
         }
         panel.append(set);
       }
@@ -3156,6 +3514,7 @@ function attachDataTables(root = document, {
       pills.hidden = count === 0;
       if (toggle !== null) toggle.textContent = s.tableFilters(count);
     };
+    let writing = false;
     const writeControls = () => {
       if (panel === null) return;
       for (const set of panel.querySelectorAll("[data-kp-filter-column]")) {
@@ -3180,7 +3539,20 @@ function attachDataTables(root = document, {
             /** @type {{ from?: string, to?: string } | undefined} */
             Array.isArray(value) ? void 0 : value
           );
-          input.value = (input.dataset.kpFilterBound === "from" ? range?.from : range?.to) ?? "";
+          const wanted = (input.dataset.kpFilterBound === "from" ? range?.from : range?.to) ?? "";
+          const picker = input.closest("[data-kp-datepicker]");
+          const handle2 = picker === null ? null : datePicker(picker);
+          if (handle2 === null) {
+            input.value = wanted;
+            continue;
+          }
+          if ((input.dataset.kpDateValue ?? "") === wanted) continue;
+          writing = true;
+          try {
+            handle2.set(wanted === "" ? null : wanted);
+          } finally {
+            writing = false;
+          }
         }
       }
     };
@@ -3200,15 +3572,15 @@ function attachDataTables(root = document, {
             b.value
           ));
         else {
-          const from = (
-            /** @type {HTMLInputElement | null} */
-            set.querySelector('[data-kp-filter-bound="from"]')?.value ?? ""
-          );
-          const to = (
-            /** @type {HTMLInputElement | null} */
-            set.querySelector('[data-kp-filter-bound="to"]')?.value ?? ""
-          );
-          value = { from, to };
+          const read = (bound) => {
+            const input = (
+              /** @type {HTMLInputElement | null} */
+              set.querySelector(`[data-kp-filter-bound="${bound}"]`)
+            );
+            if (input === null) return "";
+            return input.dataset.kpDateInput === void 0 ? input.value : input.dataset.kpDateValue ?? "";
+          };
+          value = { from: read("from"), to: read("to") };
         }
         if (kind !== null && kind !== void 0 && filterActive(kind, value)) filters.set(at, value);
       }
@@ -3252,6 +3624,7 @@ function attachDataTables(root = document, {
       render();
     };
     const onPanel = () => {
+      if (writing) return;
       const before = JSON.stringify([...filters]);
       readControls();
       if (JSON.stringify([...filters]) === before) return;
@@ -3427,11 +3800,16 @@ function attachDataTables(root = document, {
         event.target.closest(RETRY) !== null
       ) onRetry();
     };
+    for (const select2 of [scopeSelect, densitySelect, sortBy, sizeSelect]) {
+      if (select2 === null || select2.dataset.kpSelectAttached !== void 0 || !drawsSelect(select2)) continue;
+      cleanups.push(attachSelect(select2));
+    }
     search?.addEventListener("input", onSearch);
     scopeSelect?.addEventListener("change", onScope);
     densitySelect?.addEventListener("change", onDensity);
     panel?.addEventListener("input", onPanel);
     panel?.addEventListener("change", onPanel);
+    panel?.addEventListener(DATE_EVENT, onPanel);
     toggle?.addEventListener("click", onToggle);
     sortBy?.addEventListener("change", onSortBy);
     sortDirection?.addEventListener("click", onSortDirection);
@@ -3498,7 +3876,7 @@ function attachDataTables(root = document, {
         applyFilter();
       }
     };
-    handles4.set(wrap, handle);
+    handles5.set(wrap, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(pending);
@@ -3507,6 +3885,7 @@ function attachDataTables(root = document, {
       densitySelect?.removeEventListener("change", onDensity);
       panel?.removeEventListener("input", onPanel);
       panel?.removeEventListener("change", onPanel);
+      panel?.removeEventListener(DATE_EVENT, onPanel);
       toggle?.removeEventListener("click", onToggle);
       sortBy?.removeEventListener("change", onSortBy);
       sortDirection?.removeEventListener("click", onSortDirection);
@@ -3542,7 +3921,7 @@ function attachDataTables(root = document, {
       if (busyWas === null) wrap.removeAttribute("aria-busy");
       else wrap.setAttribute("aria-busy", busyWas);
       delete wrap.dataset.kpState;
-      handles4.delete(wrap);
+      handles5.delete(wrap);
       delete wrap.dataset.kpDatatableAttached;
     });
   }
@@ -3626,9 +4005,9 @@ function clearError(field, { wrapper = ".kp-field", invalidClass = "kp-field--in
   if (described.length > 0) marked.setAttribute("aria-describedby", described.join(" "));
   else marked.removeAttribute("aria-describedby");
 }
-var handles5 = /* @__PURE__ */ new WeakMap();
+var handles6 = /* @__PURE__ */ new WeakMap();
 function form(element) {
-  return handles5.get(element) ?? null;
+  return handles6.get(element) ?? null;
 }
 function attachForms(root = document, {
   validateOn = "blur",
@@ -3774,7 +4153,7 @@ function attachForms(root = document, {
       },
       done
     };
-    handles5.set(form2, handle);
+    handles6.set(form2, handle);
     created.push(handle);
     cleanups.push(() => {
       form2.removeEventListener("focusout", onFocusOut);
@@ -3782,7 +4161,7 @@ function attachForms(root = document, {
       form2.removeEventListener("submit", onSubmit);
       handle.clear();
       form2.noValidate = hadNoValidate;
-      handles5.delete(form2);
+      handles6.delete(form2);
       delete form2.dataset.kpFormAttached;
     });
   }
@@ -4003,9 +4382,9 @@ function visibleItems(tree) {
     })
   );
 }
-var handles6 = /* @__PURE__ */ new WeakMap();
+var handles7 = /* @__PURE__ */ new WeakMap();
 function structure(element) {
-  return handles6.get(element) ?? null;
+  return handles7.get(element) ?? null;
 }
 function attachStructure(root = document, {
   typeahead = true,
@@ -4169,7 +4548,7 @@ function attachStructure(root = document, {
         return item ? idOf(item) : null;
       }
     };
-    handles6.set(tree, handle);
+    handles7.set(tree, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(bufferTimer);
@@ -4181,7 +4560,7 @@ function attachStructure(root = document, {
         if (b.selected === null) b.item.removeAttribute("aria-selected");
         else b.item.setAttribute("aria-selected", b.selected);
       }
-      handles6.delete(tree);
+      handles7.delete(tree);
       delete tree.dataset.kpTreeAttached;
     });
   }
@@ -4302,7 +4681,7 @@ function attachStructure(root = document, {
         list.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: order(), id: "", from: -1, to: -1 } }));
       }
     };
-    handles6.set(list, handle);
+    handles7.set(list, handle);
     created.push(handle);
     cleanups.push(() => {
       list.removeEventListener("keydown", onKey);
@@ -4310,7 +4689,7 @@ function attachStructure(root = document, {
       endDrag?.();
       list.replaceChildren(...original);
       if (madeLive) live?.remove();
-      handles6.delete(list);
+      handles7.delete(list);
       delete list.dataset.kpReorderAttached;
     });
   }
@@ -4380,7 +4759,7 @@ function attachStructure(root = document, {
     separator.addEventListener("pointerdown", onPointerDown);
     separator.addEventListener("dblclick", onDoubleClick);
     const handle = { element: split, value: () => value, setValue };
-    handles6.set(split, handle);
+    handles7.set(split, handle);
     created.push(handle);
     cleanups.push(() => {
       separator.removeEventListener("keydown", onKey);
@@ -4389,318 +4768,8 @@ function attachStructure(root = document, {
       separator.setAttribute("aria-valuenow", String(initial));
       if (hadVar === "") split.style.removeProperty("--kp-split");
       else split.style.setProperty("--kp-split", hadVar);
-      handles6.delete(split);
+      handles7.delete(split);
       delete split.dataset.kpSplitAttached;
-    });
-  }
-  const detach = () => {
-    for (const c of cleanups) c();
-  };
-  return Object.assign(detach, { handles: created });
-}
-
-// js/datepicker.js
-var datepicker_exports = {};
-__export(datepicker_exports, {
-  DATE_EVENT: () => DATE_EVENT,
-  MONTH_EVENT: () => MONTH_EVENT,
-  OPEN_EVENT: () => OPEN_EVENT3,
-  attachDatePickers: () => attachDatePickers,
-  datePicker: () => datePicker,
-  formatLocalDate: () => formatLocalDate,
-  parseDate: () => parseDate2,
-  toDutch: () => toDutch,
-  toISO: () => toISO
-});
-var PICKER2 = "[data-kp-datepicker]";
-var DATE_EVENT = "kp-date-change";
-var OPEN_EVENT3 = "kp-date-open";
-var MONTH_EVENT = "kp-date-month";
-function toISO(date) {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${date.getFullYear()}-${month}-${day}`;
-}
-function formatLocalDate(date, locale) {
-  return formatDate(date, locale);
-}
-function toDutch(date) {
-  return formatDate(date, "nl-NL");
-}
-function parseDate2(text, locale) {
-  if (text.trim() === "") return null;
-  return parseDate(text, locale);
-}
-var handles7 = /* @__PURE__ */ new WeakMap();
-function datePicker(element) {
-  return handles7.get(element) ?? null;
-}
-function attachDatePickers(root = document, {
-  locale: localeOption,
-  weekStartsOn: weekOption,
-  closeOnSelect = true,
-  refocus = true,
-  isDateDisabled,
-  renderDay,
-  previousGlyph = "\u2039",
-  nextGlyph = "\u203A"
-} = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(PICKER2)) {
-    const picker = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (picker.dataset.kpDatepickerAttached !== void 0) continue;
-    const input = (
-      /** @type {HTMLInputElement | null} */
-      picker.querySelector("[data-kp-date-input]")
-    );
-    const open = (
-      /** @type {HTMLButtonElement | null} */
-      picker.querySelector("[data-kp-date-open]")
-    );
-    const panel = (
-      /** @type {HTMLElement | null} */
-      picker.querySelector("[data-kp-date-panel]")
-    );
-    if (input === null || open === null || panel === null) continue;
-    picker.dataset.kpDatepickerAttached = "";
-    const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
-    const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(picker.dataset.kpWeekStartsOn));
-    const min = picker.dataset.kpMin ? parseDate(picker.dataset.kpMin, locale) : null;
-    const max = picker.dataset.kpMax ? parseDate(picker.dataset.kpMax, locale) : null;
-    const disabledDays = (picker.dataset.kpDisabledDays ?? "").split(",").map((d) => Number.parseInt(d, 10)).filter((d) => !Number.isNaN(d));
-    const closes = picker.dataset.kpCloseOnSelect === void 0 ? closeOnSelect : picker.dataset.kpCloseOnSelect !== "false";
-    const before = {
-      placeholder: input.placeholder,
-      value: input.dataset.kpDateValue,
-      expanded: open.getAttribute("aria-expanded"),
-      panelHidden: panel.hidden
-    };
-    if (input.placeholder === "") input.placeholder = datePattern(locale).hint;
-    const disabled = (date) => {
-      if (min !== null && date < min) return true;
-      if (max !== null && date > max) return true;
-      if (disabledDays.includes(date.getDay())) return true;
-      return isDateDisabled?.(date) ?? false;
-    };
-    const read = () => parseDate2(input.value, locale);
-    let cursor = read() ?? /* @__PURE__ */ new Date();
-    const draw = () => {
-      const year = cursor.getFullYear();
-      const month = cursor.getMonth();
-      const first = new Date(year, month, 1);
-      const lead = (first.getDay() - firstDay + 7) % 7;
-      const days = new Date(year, month + 1, 0).getDate();
-      const chosen = read();
-      const s = getStrings();
-      const names = calendarNames(s, DEFAULT_STRINGS, locale);
-      panel.textContent = "";
-      const head = document.createElement("div");
-      head.className = "kp-datepicker__head";
-      const back = document.createElement("button");
-      back.type = "button";
-      back.className = "kp-button kp-button--ghost";
-      back.setAttribute("aria-label", s.previousMonth);
-      back.textContent = picker.dataset.kpPreviousGlyph ?? previousGlyph;
-      back.addEventListener("click", () => {
-        cursor = new Date(year, month - 1, 1);
-        draw();
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
-      });
-      const title = document.createElement("span");
-      title.className = "kp-datepicker__title";
-      title.id = `${input.id || "kp-date"}-title`;
-      title.textContent = s.monthTitle(names.months[month] ?? "", year);
-      const next = document.createElement("button");
-      next.type = "button";
-      next.className = "kp-button kp-button--ghost";
-      next.setAttribute("aria-label", s.nextMonth);
-      next.textContent = picker.dataset.kpNextGlyph ?? nextGlyph;
-      next.addEventListener("click", () => {
-        cursor = new Date(year, month + 1, 1);
-        draw();
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
-      });
-      head.append(back, title, next);
-      const grid2 = document.createElement("div");
-      grid2.className = "kp-datepicker__grid";
-      grid2.setAttribute("role", "grid");
-      grid2.setAttribute("aria-labelledby", title.id);
-      for (let i = 0; i < 7; i += 1) {
-        const day = names.weekdays[(firstDay + i) % 7] ?? "";
-        const cell = document.createElement("span");
-        cell.className = "kp-datepicker__weekday";
-        cell.setAttribute("role", "columnheader");
-        cell.setAttribute("aria-label", day);
-        cell.textContent = day;
-        grid2.append(cell);
-      }
-      for (let i = 0; i < lead; i += 1) {
-        const blank = document.createElement("span");
-        blank.className = "kp-datepicker__blank";
-        grid2.append(blank);
-      }
-      for (let day = 1; day <= days; day += 1) {
-        const date = new Date(year, month, day);
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "kp-datepicker__day";
-        button.dataset.kpDay = toISO(date);
-        button.setAttribute("role", "gridcell");
-        button.setAttribute("aria-label", s.dayLabel(day, names.months[month] ?? "", year));
-        button.textContent = String(day);
-        const isChosen = chosen !== null && toISO(chosen) === toISO(date);
-        button.setAttribute("aria-selected", String(isChosen));
-        if (disabled(date)) {
-          button.setAttribute("aria-disabled", "true");
-          button.dataset.kpDisabled = "";
-        }
-        button.tabIndex = day === cursor.getDate() ? 0 : -1;
-        renderDay?.(button, date);
-        grid2.append(button);
-      }
-      panel.append(head, grid2);
-    };
-    const setOpen = (next) => {
-      if (panel.hidden === !next) return;
-      if (next) {
-        cursor = read() ?? /* @__PURE__ */ new Date();
-        draw();
-      }
-      panel.hidden = !next;
-      open.setAttribute("aria-expanded", String(next));
-      if (next) panel.querySelector('[tabindex="0"]')?.focus();
-      picker.dispatchEvent(new CustomEvent(OPEN_EVENT3, { bubbles: true, detail: { open: next } }));
-    };
-    const show = () => setOpen(true);
-    const hide = () => setOpen(false);
-    const commit = (date, source) => {
-      if (date === null) {
-        delete input.dataset.kpDateValue;
-        if (source !== "typed") input.value = "";
-      } else {
-        if (source !== "typed") input.value = formatDate(date, locale);
-        input.dataset.kpDateValue = toISO(date);
-      }
-      picker.dispatchEvent(new CustomEvent(DATE_EVENT, { bubbles: true, detail: { iso: date === null ? null : toISO(date), date, source } }));
-    };
-    const choose = (date) => {
-      if (disabled(date)) return;
-      commit(date, "chosen");
-      if (closes) hide();
-      if (refocus) input.focus();
-    };
-    const onOpen = () => panel.hidden ? show() : hide();
-    const onInput = () => commit(read(), "typed");
-    const onPanelKey = (event) => {
-      const day = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-day]")
-      );
-      if (day === null) {
-        if (event.key === "Escape") {
-          hide();
-          open.focus();
-        }
-        return;
-      }
-      const current2 = /* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`);
-      const y = current2.getFullYear();
-      const m = current2.getMonth();
-      const d = current2.getDate();
-      const offset = (current2.getDay() - firstDay + 7) % 7;
-      const moves = {
-        ArrowRight: new Date(y, m, d + 1),
-        ArrowLeft: new Date(y, m, d - 1),
-        ArrowDown: new Date(y, m, d + 7),
-        ArrowUp: new Date(y, m, d - 7),
-        PageDown: new Date(y, m + 1, d),
-        PageUp: new Date(y, m - 1, d),
-        Home: new Date(y, m, d - offset),
-        End: new Date(y, m, d + (6 - offset))
-      };
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        choose(current2);
-        return;
-      }
-      if (event.key === "Escape") {
-        event.preventDefault();
-        hide();
-        open.focus();
-        return;
-      }
-      const moved = moves[event.key];
-      if (moved === void 0) return;
-      event.preventDefault();
-      const monthChanged = moved.getMonth() !== cursor.getMonth() || moved.getFullYear() !== cursor.getFullYear();
-      cursor = moved;
-      draw();
-      if (monthChanged)
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
-      panel.querySelector(`[data-kp-day="${toISO(moved)}"]`)?.focus();
-    };
-    const onPanelClick = (event) => {
-      const day = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-day]")
-      );
-      if (day === null) return;
-      choose(/* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`));
-    };
-    const onFocusOut = () => {
-      setTimeout(() => {
-        if (!picker.contains(document.activeElement)) hide();
-      }, 0);
-    };
-    open.setAttribute("aria-expanded", "false");
-    open.addEventListener("click", onOpen);
-    input.addEventListener("input", onInput);
-    panel.addEventListener("keydown", onPanelKey);
-    panel.addEventListener("click", onPanelClick);
-    picker.addEventListener("focusout", onFocusOut);
-    const initial = read();
-    if (initial !== null) input.dataset.kpDateValue = toISO(initial);
-    const handle = {
-      element: picker,
-      get: read,
-      set: (date) => {
-        const parsed = date === null ? null : typeof date === "string" ? parseDate(date, locale) : date;
-        commit(parsed, "set");
-        if (parsed !== null) cursor = parsed;
-        if (!panel.hidden) draw();
-      },
-      open: show,
-      close: hide
-    };
-    handles7.set(picker, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      open.removeEventListener("click", onOpen);
-      input.removeEventListener("input", onInput);
-      panel.removeEventListener("keydown", onPanelKey);
-      panel.removeEventListener("click", onPanelClick);
-      picker.removeEventListener("focusout", onFocusOut);
-      panel.textContent = "";
-      panel.hidden = before.panelHidden;
-      input.placeholder = before.placeholder;
-      if (before.value === void 0) delete input.dataset.kpDateValue;
-      else input.dataset.kpDateValue = before.value;
-      if (before.expanded === null) open.removeAttribute("aria-expanded");
-      else open.setAttribute("aria-expanded", before.expanded);
-      handles7.delete(picker);
-      delete picker.dataset.kpDatepickerAttached;
     });
   }
   const detach = () => {
@@ -4866,7 +4935,15 @@ function attachUploads(root = document, { locale: localeOption, validate, render
       event.preventDefault();
       zone.dataset.kpDragging = "";
     };
-    const onDragLeave = () => delete zone.dataset.kpDragging;
+    const onDragEnter = (event) => {
+      event.preventDefault();
+      zone.dataset.kpDragging = "";
+    };
+    const onDragLeave = (event) => {
+      const to = event.relatedTarget;
+      if (to instanceof Node && zone.contains(to)) return;
+      delete zone.dataset.kpDragging;
+    };
     const onDrop = (event) => {
       event.preventDefault();
       delete zone.dataset.kpDragging;
@@ -4876,6 +4953,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
     input.addEventListener("change", onChange);
     list.addEventListener("click", onListClick);
     if (dropping) {
+      zone.addEventListener("dragenter", onDragEnter);
       zone.addEventListener("dragover", onDragOver);
       zone.addEventListener("dragleave", onDragLeave);
       zone.addEventListener("drop", onDrop);
@@ -4894,6 +4972,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
     cleanups.push(() => {
       input.removeEventListener("change", onChange);
       list.removeEventListener("click", onListClick);
+      zone.removeEventListener("dragenter", onDragEnter);
       zone.removeEventListener("dragover", onDragOver);
       zone.removeEventListener("dragleave", onDragLeave);
       zone.removeEventListener("drop", onDrop);
@@ -7692,6 +7771,7 @@ export {
   diagnostics,
   diagnostics_exports as diagnosticsExports,
   drawnSelect,
+  drawsSelect,
   effects_exports as effectsExports,
   enforceContracts,
   ensureRegister,

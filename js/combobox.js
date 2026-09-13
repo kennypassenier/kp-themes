@@ -93,6 +93,7 @@ export function combobox(element) {
  * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, emptyRow?: boolean, creatable?: boolean, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
  *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`, `data-kp-empty-row`, `data-kp-creatable`.
  *   A tag input adds from typed text with Enter or a comma [scope-60]: text that names an option (its label, any case) takes that option; other text becomes a tag of its own only with `creatable` (default false, as the React channel's prop).
+ *   `backspaceRemoves` (default false since Kenny's second nostromo pass, 2026-09-13): Backspace in an empty field removes the last tag; `data-kp-backspace-removes` opts one box in.
  *   `emptyRow` (default true): a query that matches nothing keeps the list open with a "no results" row — the server's own `[data-kp-combobox-empty]` element inside the list if it wrote one, else one built from the dictionary; `false` closes the list instead, as before 6.1 [gap-11].
  * @returns {(() => void) & { handles: ComboboxHandle[] }} detach
  */
@@ -103,7 +104,7 @@ export function attachComboboxes(
         loop = false,
         openOnFocus = true,
         closeOnBlur = true,
-        backspaceRemoves = true,
+        backspaceRemoves = false,
         stayOpen = true,
         maxTags = Infinity,
         allowDuplicates = false,
@@ -346,10 +347,12 @@ export function attachComboboxes(
                 if (addTyped()) event.preventDefault();
                 return;
             }
+            // Backspace in an empty field removes the last tag only where the
+            // box opts in. It was the default until Kenny's second nostromo
+            // pass (2026-09-13): one Backspace too many while correcting a
+            // typo took away a tag already chosen. Each tag's own remove
+            // button is the way out, and it is in the tab order.
             if (!backspaces) return;
-            // Backspace in an empty field removes the last tag: the
-            // behaviour every mail client has, and the one people try
-            // first.
             if (event.key === 'Backspace' && input.value === '' && chosen.length > 0) removeValue(chosen[chosen.length - 1] ?? '');
         };
 
@@ -376,10 +379,23 @@ export function attachComboboxes(
             }, 0);
         };
 
+        /**
+         * A press in the list keeps DOM focus in the input. Without this the
+         * press moved focus to the page, the focusout above closed the list
+         * a tick later, and the click that followed the release landed on a
+         * hidden list: choosing an option with the mouse did nothing [note 2
+         * of Kenny's second nostromo pass, 2026-09-13]. The React channel
+         * always did this on its options.
+         *
+         * @param {MouseEvent} event
+         */
+        const onListMouseDown = (event) => event.preventDefault();
+
         input.addEventListener('input', onInput);
         input.addEventListener('keydown', onKeyDown);
         input.addEventListener('focus', onFocus);
         box.addEventListener('focusout', onFocusOut);
+        list.addEventListener('mousedown', onListMouseDown);
         tagList?.addEventListener('click', onTagClick);
         filter();
         list.hidden = true;
@@ -426,6 +442,7 @@ export function attachComboboxes(
             input.removeEventListener('keydown', onKeyDown);
             input.removeEventListener('focus', onFocus);
             box.removeEventListener('focusout', onFocusOut);
+            list.removeEventListener('mousedown', onListMouseDown);
             tagList?.removeEventListener('click', onTagClick);
             if (before.expanded === null) input.removeAttribute('aria-expanded');
             else input.setAttribute('aria-expanded', before.expanded);
@@ -448,14 +465,21 @@ export function attachComboboxes(
     return Object.assign(detach, { handles: created });
 }
 
-// ── The drawn select [scope-54] ──────────────────────────────────────────
+// ── The drawn select [scope-54, Kenny's form of 2026-09-13] ──────────────
 //
 // Firefox cannot style a native select's open list, so the one list in a
-// form that did not wear the theme was the select's. On request — and only
-// on request, so no consumer's form changes unasked — a listbox in the
-// combobox's look is laid over it:
+// form that did not wear the theme was the select's. A listbox in the
+// combobox's look is laid over every single select the package styles —
+// `select.kp-field__input` — without asking. It was an opt-in under scope-54;
+// Kenny's form of 2026-09-13 made it the default, because a form whose one
+// unthemed list is the select's is the fault the opt-in left in place:
 //
-//   <select class="kp-field__input" data-kp-select>…</select>
+//   <select class="kp-field__input">…</select>                        drawn
+//   <select class="kp-field__input" data-kp-select="native">…</select> the browser's
+//   <select multiple>…</select>                                        always the browser's
+//
+// A bare `data-kp-select` still asks for the drawn list on a select without
+// the class, as it did in 6.1.
 //
 // The native select stays exactly where it was and stays the control: it
 // keeps DOM focus, holds the value, submits with the form, fires `change`,
@@ -466,7 +490,20 @@ export function attachComboboxes(
 // the select, rebuilt from the select's own options every time it opens —
 // so a value or an option the page changed behind its back is what shows.
 
-const SELECT = 'select[data-kp-select]';
+/**
+ * Whether a select gets the drawn list: a single select that is the
+ * package's field (`.kp-field__input`) or asks for it (`data-kp-select`),
+ * unless it opts out with `data-kp-select="native"`.
+ *
+ * @param {Element} element
+ * @returns {element is HTMLSelectElement}
+ */
+export function drawsSelect(element) {
+    if (!(element instanceof HTMLSelectElement) || element.multiple) return false;
+    const asked = element.getAttribute('data-kp-select');
+    if (asked === 'native') return false;
+    return asked !== null || element.classList.contains('kp-field__input');
+}
 
 /**
  * @typedef {object} SelectHandle
@@ -695,8 +732,10 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
 }
 
 /**
- * Lay a drawn list over every `select[data-kp-select]` under `root`
- * [scope-54]. A select without the attribute is left alone.
+ * Lay a drawn list over every select under `root` that `drawsSelect` accepts:
+ * each single `select.kp-field__input` and each `select[data-kp-select]`, but
+ * never one marked `data-kp-select="native"` and never a multiple select
+ * [scope-54; the default since Kenny's form of 2026-09-13].
  *
  * @param {ParentNode} [root]
  * @param {{ loop?: boolean, typeaheadMs?: number }} [options] Defaults; per select `data-kp-loop`.
@@ -707,9 +746,11 @@ export function attachSelects(root = document, options = {}) {
     const cleanups = [];
     /** @type {SelectHandle[]} */
     const created = [];
-    for (const element of root.querySelectorAll(SELECT)) {
-        const select = /** @type {HTMLSelectElement} */ (element);
-        if (select.dataset.kpSelectAttached !== undefined || select.multiple) continue;
+    const found = root instanceof Element && root.matches('select') ? [root] : [...root.querySelectorAll('select')];
+    for (const element of found) {
+        if (!drawsSelect(element)) continue;
+        const select = element;
+        if (select.dataset.kpSelectAttached !== undefined) continue;
         const loopFlag = select.dataset.kpLoop;
         const detach = attachSelect(select, { ...options, ...(loopFlag === undefined ? {} : { loop: loopFlag !== 'false' }) });
         cleanups.push(detach);

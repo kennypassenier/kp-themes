@@ -1,7 +1,9 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { compare as compareCells, compareByOrder, filterActive, filterPills, matchesFilter } from '../js/datatable.js';
 import { PAGE_SIZES, RETRY_EVENT, VIEW_EVENT } from '../js/datatable.js';
-import { collator, resolveLocale } from '../js/locale.js';
+import { collator, formatDate, resolveLocale } from '../js/locale.js';
+import { DatePicker } from './flow.jsx';
+import { useDrawnSelect } from './field.jsx';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -34,6 +36,40 @@ import { useControllable } from '../hooks/use-controllable.js';
 // the rows the table shows through `apiRef` and the view event.
 
 /** @typedef {import('../js/datatable.js').FilterValue} FilterValue */
+
+/**
+ * One bound of a date filter: the package's own date picker, so the filter
+ * wears every theme's picker instead of the browser's date input (scope-58,
+ * Kenny's second nostromo pass, 2026-09-13). The filter holds ISO; the
+ * picker is left to hold what the person typed, and is drawn afresh only
+ * when the bound changes from outside — a pill removed, the filters cleared.
+ *
+ * @param {{ label: string, iso: string, locale: string, onIso: (iso: string) => void, strings?: Partial<import('../js/strings.js').Strings> }} props
+ */
+function DateBound({ label, iso, locale, onIso, strings }) {
+    const reported = useRef(iso);
+    const [generation, setGeneration] = useState(0);
+    useEffect(() => {
+        if (iso === reported.current) return;
+        reported.current = iso;
+        setGeneration((n) => n + 1);
+    }, [iso]);
+    return (
+        <DatePicker
+            key={generation}
+            label={label}
+            hideLabel
+            locale={locale}
+            strings={strings}
+            defaultValue={iso === '' ? '' : formatDate(new Date(`${iso}T00:00:00`), locale)}
+            onChange={(next) => {
+                const value = next ?? '';
+                reported.current = value;
+                onIso(value);
+            }}
+        />
+    );
+}
 /** @typedef {{ key: string, label: import('react').ReactNode, kind?: 'text' | 'number' | 'date', sortable?: boolean, searchable?: boolean, filter?: 'choice' | 'range' | 'date', filterOptions?: string[], order?: string[], align?: 'start' | 'center' | 'end', width?: string, className?: string, truncate?: boolean, render?: (value: unknown, row: Record<string, unknown>, index: number) => import('react').ReactNode, compare?: (a: unknown, b: unknown) => number }} Column */
 /** @typedef {{ key: string, direction: 'ascending' | 'descending' } | null} Sort */
 /** @typedef {{ rows: (which?: 'view' | 'page') => Record<string, unknown>[] }} DataTableApi */
@@ -176,6 +212,12 @@ function DataTableInner(
     ref,
 ) {
     const s = useStrings(strings);
+    // The table's own selects wear the package's drawn list, as every
+    // .kp-field__input select does since Kenny's form of 2026-09-13.
+    const scopeSelectRef = useDrawnSelect();
+    const densitySelectRef = useDrawnSelect();
+    const sortBySelectRef = useDrawnSelect();
+    const pageSizeSelectRef = useDrawnSelect();
     /** @type {import('react').RefObject<HTMLDivElement | null>} */
     const inner = useRef(null);
     useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
@@ -366,6 +408,7 @@ function DataTableInner(
                     {searchable && searchScope && (
                         <select
                             className="kp-field__input kp-datatable__select"
+                            ref={scopeSelectRef}
                             data-kp-datatable-scope
                             aria-label={s.tableSearchScope}
                             value={scope ?? ''}
@@ -387,6 +430,7 @@ function DataTableInner(
                     {densityChoice && (
                         <select
                             className="kp-field__input kp-datatable__select"
+                            ref={densitySelectRef}
                             data-kp-datatable-density
                             aria-label={s.tableDensity}
                             value={density}
@@ -459,20 +503,41 @@ function DataTableInner(
                             <fieldset key={column.key} className="kp-fieldset kp-datatable__filter">
                                 <legend className="kp-field__label">{column.label}</legend>
                                 <div className="kp-datatable__range">
-                                    <input
-                                        className="kp-field__input"
-                                        type={column.filter === 'range' ? 'number' : 'date'}
-                                        aria-label={s.tableFilterFrom(label)}
-                                        value={range.from ?? ''}
-                                        onChange={(event) => setFilter(column.key, { from: event.target.value, to: range.to ?? '' })}
-                                    />
-                                    <input
-                                        className="kp-field__input"
-                                        type={column.filter === 'range' ? 'number' : 'date'}
-                                        aria-label={s.tableFilterTo(label)}
-                                        value={range.to ?? ''}
-                                        onChange={(event) => setFilter(column.key, { from: range.from ?? '', to: event.target.value })}
-                                    />
+                                    {column.filter === 'date' ? (
+                                        <>
+                                            <DateBound
+                                                label={s.tableFilterFrom(label)}
+                                                iso={range.from ?? ''}
+                                                locale={locale}
+                                                strings={strings}
+                                                onIso={(iso) => setFilter(column.key, { from: iso, to: range.to ?? '' })}
+                                            />
+                                            <DateBound
+                                                label={s.tableFilterTo(label)}
+                                                iso={range.to ?? ''}
+                                                locale={locale}
+                                                strings={strings}
+                                                onIso={(iso) => setFilter(column.key, { from: range.from ?? '', to: iso })}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <input
+                                                className="kp-field__input"
+                                                type="number"
+                                                aria-label={s.tableFilterFrom(label)}
+                                                value={range.from ?? ''}
+                                                onChange={(event) => setFilter(column.key, { from: event.target.value, to: range.to ?? '' })}
+                                            />
+                                            <input
+                                                className="kp-field__input"
+                                                type="number"
+                                                aria-label={s.tableFilterTo(label)}
+                                                value={range.to ?? ''}
+                                                onChange={(event) => setFilter(column.key, { from: range.from ?? '', to: event.target.value })}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </fieldset>
                         );
@@ -527,6 +592,7 @@ function DataTableInner(
                         {s.tableSortBy}{' '}
                         <select
                             className="kp-field__input kp-datatable__select"
+                            ref={sortBySelectRef}
                             data-kp-datatable-sort-by
                             aria-label={s.tableSortBy}
                             value={sort?.key ?? ''}
@@ -732,6 +798,7 @@ function DataTableInner(
                                 {s.tableRowsPerPage}{' '}
                                 <select
                                     className="kp-field__input kp-datatable__select kp-datatable__page-size"
+                                    ref={pageSizeSelectRef}
                                     data-kp-datatable-page-size
                                     aria-label={s.tableRowsPerPage}
                                     value={pageSize}

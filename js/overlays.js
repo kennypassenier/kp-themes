@@ -338,8 +338,13 @@ export function toast(content, { ms = TOAST_MS, region = null, live, className =
             : toastRegion({ region });
     const el = /** @type {HTMLElement & { dismiss: () => void }} */ (/** @type {unknown} */ (document.createElement('div')));
     el.className = className;
-    if (typeof content === 'string') el.textContent = content;
-    else el.append(content);
+    // The words in their own box, so the buttons sit at the toast's end
+    // whatever the text's length (second nostromo pass, 2026-09-13).
+    const body = document.createElement('span');
+    body.className = 'kp-toast__body';
+    if (typeof content === 'string') body.textContent = content;
+    else body.append(content);
+    el.append(body);
     if (action) {
         const button = document.createElement('button');
         button.type = 'button';

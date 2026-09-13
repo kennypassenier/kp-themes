@@ -1,6 +1,6 @@
-import { forwardRef, useEffect, useId, useRef } from 'react';
+import { forwardRef, useCallback, useId, useRef } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
-import { attachSelect } from '../js/combobox.js';
+import { attachSelect, drawsSelect } from '../js/combobox.js';
 
 // Form field [TH5, DI4].
 //
@@ -16,12 +16,37 @@ import { attachSelect } from '../js/combobox.js';
 // can be rendered by the consumer, and the ref reaches the input.
 //
 // Since 6.1 [scope-54]: `options` renders a <select> instead of an input,
-// and `drawn` lays the package's drawn list over it — the same
-// `attachSelect` the framework-free channel uses, because the native
-// select stays the control React owns and the drawn list is only a sibling
-// it never renders. Without `drawn` the select stays native.
+// and the package's drawn list is laid over it — the same `attachSelect`
+// the framework-free channel uses, because the native select stays the
+// control React owns and the drawn list is only a sibling it never renders.
+// Drawn by default since Kenny's form of 2026-09-13; `drawn={false}` keeps
+// the browser's list and writes `data-kp-select="native"`, as the
+// framework-free opt-out reads. A multiple select is always the browser's.
 
 /** @typedef {{ value: string, label: string, disabled?: boolean }} FieldOption */
+
+/**
+ * A callback ref that lays the drawn list over the select it is given and
+ * takes it away again when the select goes or `enabled` turns false [KT6].
+ * Every React select of the package's uses it, so the default reaches the
+ * data table's and the form's selects as well as Field's.
+ *
+ * @param {boolean} [enabled] Default true.
+ * @returns {(element: HTMLSelectElement | null) => void}
+ */
+export function useDrawnSelect(enabled = true) {
+    /** @type {import('react').MutableRefObject<(() => void) | null>} */
+    const detach = useRef(null);
+    return useCallback(
+        (element) => {
+            detach.current?.();
+            detach.current = null;
+            if (enabled && element !== null && drawsSelect(element) && element.dataset.kpSelectAttached === undefined)
+                detach.current = attachSelect(element);
+        },
+        [enabled],
+    );
+}
 
 /**
  * @typedef {object} FieldProps
@@ -37,7 +62,7 @@ import { attachSelect } from '../js/combobox.js';
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]   On the wrapper, as in 1.x.
  * @property {FieldOption[]} [options]   Render a <select> with these options instead of an input [scope-54].
- * @property {boolean} [drawn]   With `options`: lay the drawn list over the select (`data-kp-select`). Default false: the native list [scope-54].
+ * @property {boolean} [drawn]   With `options`: lay the package's drawn list over the select. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select="native"`). A `multiple` select is always the browser's.
  */
 
 /**
@@ -58,21 +83,25 @@ function FieldInner(
         strings,
         className = '',
         options,
-        drawn = false,
+        drawn = true,
         ...rest
     },
     ref,
 ) {
     const s = useStrings(strings);
-    /** @type {import('react').MutableRefObject<HTMLSelectElement | null>} */
-    const selectRef = useRef(null);
     // The drawn list is attached to the element React rendered and taken
     // away with it; turning `drawn` off detaches it [KT6].
-    useEffect(() => {
-        const select = selectRef.current;
-        if (!drawn || select === null) return undefined;
-        return attachSelect(select);
-    }, [drawn, options !== undefined]);
+    const drawnRef = useDrawnSelect(drawn);
+    // One stable ref for the select: an inline callback would be a new
+    // function each render, and React would detach and redraw the list every time.
+    const selectRef = useCallback(
+        (/** @type {HTMLSelectElement | null} */ element) => {
+            if (typeof ref === 'function') ref(element);
+            else if (ref) /** @type {import('react').MutableRefObject<HTMLSelectElement | null>} */ (ref).current = element;
+            drawnRef(element);
+        },
+        [ref, drawnRef],
+    );
     const generated = useId();
     const id = idProp ?? generated;
     const helpId = `${id}-help`;
@@ -101,16 +130,7 @@ function FieldInner(
             {renderControl ? (
                 renderControl(control)
             ) : options ? (
-                <select
-                    ref={(element) => {
-                        selectRef.current = element;
-                        if (typeof ref === 'function') ref(element);
-                        else if (ref) ref.current = element;
-                    }}
-                    {...selectProps}
-                    {...control}
-                    data-kp-select={drawn ? '' : undefined}
-                >
+                <select ref={selectRef} {...selectProps} {...control} data-kp-select={drawn ? undefined : 'native'}>
                     {options.map((option) => (
                         <option key={option.value} value={option.value} disabled={option.disabled}>
                             {option.label}

@@ -557,6 +557,16 @@
         color: inherit;
     }
 
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover; the
+       :not()s match the length of this register's own button hover, which
+       would otherwise win on specificity. */
+    [data-theme='high-contrast'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled):not(:active):not(.kp-button--mirror) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='high-contrast'] .kp-menu__item:hover,
     [data-theme='high-contrast'] .kp-menu__item:focus-visible {
         background: var(--muted);

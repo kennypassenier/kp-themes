@@ -52,7 +52,7 @@ export const MATCHERS = {
  * @property {keyof typeof MATCHERS | Matcher} [match]  Default substring.
  * @property {boolean} [openOnFocus]     Default true.
  * @property {boolean} [closeOnBlur]     Default true.
- * @property {boolean} [backspaceRemoves]  Default true.
+ * @property {boolean} [backspaceRemoves]  Backspace in an empty field removes the last tag. Default false since 2026-09-13: a stray Backspace took a chosen tag away; each tag's remove button is the way out.
  * @property {boolean} [stayOpen]        Keep the list open after adding a tag. Default true.
  * @property {number} [maxTags]
  * @property {boolean} [allowDuplicates]
@@ -97,7 +97,7 @@ function ComboboxInner(
         match = 'substring',
         openOnFocus = true,
         closeOnBlur = true,
-        backspaceRemoves = true,
+        backspaceRemoves = false,
         stayOpen = true,
         maxTags = Infinity,
         allowDuplicates = false,

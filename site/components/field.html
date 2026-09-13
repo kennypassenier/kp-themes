@@ -247,7 +247,7 @@
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td>On the wrapper, as in 1.x.</td></tr>
                             <tr><td><code>options</code></td><td><code>FieldOption[]</code></td><td>optional</td><td>Render a &lt;select&gt; with these options instead of an input [scope-54].</td></tr>
-                            <tr><td><code>drawn</code></td><td><code>boolean</code></td><td>optional</td><td>With `options`: lay the drawn list over the select (`data-kp-select`). Default false: the native list [scope-54].</td></tr>
+                            <tr><td><code>drawn</code></td><td><code>boolean</code></td><td>optional</td><td>With `options`: lay the package's drawn list over the select. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select=&quot;native&quot;`). A `multiple` select is always the browser's.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
@@ -282,7 +282,7 @@
                     <ul class="kp-stack">
                         <li>Built in — the label is a real label, the help and the error are pointed at by the control, and the invalid state is announced rather than only painted.</li>
                         <li>Built in — the checkbox and the radio are drawn larger than the browser’s default, and their tick takes a colour the theme can correct; the label is clickable too, which is what actually makes the target big enough for WCAG 2.5.8.</li>
-                        <li>Built in — where the browser lets a page take over the select’s own list, it wears the theme instead of the platform’s highlight colour.</li>
+                        <li>Built in — a select’s open list is drawn by the package in the combobox’s look in every browser, Firefox included, while the native select stays the control a screen reader reads and a form submits. Write data-kp-select=&quot;native&quot; (React: drawn={false}) on a select that should keep the browser’s own list; a multiple select always does.</li>
                         <li>Yours — give every control an id and point the label at it, or wrap the control in the label.</li>
                         <li>Yours — write the error as a sentence that says what to do. “Invalid” tells the reader only that you noticed.</li>
                         <li>Yours — keep the help text short: it is read out before the reader has typed anything.</li>

@@ -300,6 +300,19 @@ function Cases() {
                     ]}
                 />
             </div>
+            {/* The old Backspace behaviour, now an opt-in [note 2 of 2026-09-13, KT6]. */}
+            <div data-test="react-tags-backspace">
+                <Combobox
+                    label="Labels, Backspace removes"
+                    tags
+                    backspaceRemoves
+                    defaultValues={['bug']}
+                    options={[
+                        { value: 'urgent', label: 'Urgent' },
+                        { value: 'bug', label: 'Bug' },
+                    ]}
+                />
+            </div>
         </div>
     );
 }

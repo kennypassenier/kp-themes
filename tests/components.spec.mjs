@@ -340,7 +340,14 @@ test('an indeterminate progress bar is visibly different from a full one [gap-11
     const alike = [];
     for (const theme of THEME_NAMES) {
         await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        const [a, b] = await Promise.all([full.screenshot({ animations: 'disabled' }), unknown.screenshot({ animations: 'disabled' })]);
+        // One at a time and centred: taken together, both bars could scroll to the
+        // top edge and sit under the catalogue's sticky bar, two identical blank shots.
+        const shot = async (bar) => {
+            await bar.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+            return bar.screenshot({ animations: 'disabled' });
+        };
+        const a = await shot(full);
+        const b = await shot(unknown);
         if (a.equals(b)) alike.push(theme);
     }
     expect(alike).toEqual([]);

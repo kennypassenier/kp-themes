@@ -74,6 +74,8 @@
 import { getStrings } from './strings.js';
 import { collator, parseNumber, resolveLocale } from './locale.js';
 import { attachTableRegions } from './tables.js';
+import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
+import { attachSelect, drawsSelect } from './combobox.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -534,12 +536,40 @@ export function attachDataTables(
                     const range = make('div', 'kp-datatable__range');
                     for (const bound of ['from', 'to']) {
                         const input = /** @type {HTMLInputElement} */ (make('input', 'kp-field__input'));
-                        input.type = kind === 'range' ? 'number' : 'date';
                         input.dataset.kpFilterBound = bound;
                         input.setAttribute('aria-label', bound === 'from' ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
-                        range.append(input);
+                        if (kind === 'range') {
+                            input.type = 'number';
+                            range.append(input);
+                            continue;
+                        }
+                        // A date bound is the package's own date picker, not a
+                        // bare date input, so it wears every theme's picker
+                        // (scope-58, Kenny's second nostromo pass). The picker
+                        // holds ISO in data-kp-date-value whatever the field shows.
+                        const picker = make('div', 'kp-datepicker');
+                        picker.dataset.kpDatepicker = '';
+                        picker.dataset.kpLocale = locale;
+                        input.type = 'text';
+                        input.inputMode = 'numeric';
+                        input.id = `${id}-filter-${at}-${bound}`;
+                        input.dataset.kpDateInput = '';
+                        const opener = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--ghost'));
+                        opener.type = 'button';
+                        opener.dataset.kpDateOpen = '';
+                        opener.setAttribute('aria-label', s0.calendarOpen);
+                        opener.textContent = s0.calendarButton;
+                        const datePanel = make('div', 'kp-datepicker__panel');
+                        datePanel.dataset.kpDatePanel = '';
+                        datePanel.hidden = true;
+                        picker.append(input, opener, datePanel);
+                        range.append(picker);
                     }
                     set.append(range);
+                    if (kind === 'date') {
+                        const detachPickers = attachDatePickers(range);
+                        undo.push(detachPickers);
+                    }
                 }
                 panel.append(set);
             }
@@ -772,6 +802,8 @@ export function attachDataTables(
             if (toggle !== null) toggle.textContent = s.tableFilters(count);
         };
 
+        /** True while writeControls sets a date picker, whose change event must not be read back. */
+        let writing = false;
         /** Write the filter state into the panel's controls, so a pill or the handle and the panel agree. */
         const writeControls = () => {
             if (panel === null) return;
@@ -785,7 +817,23 @@ export function attachDataTables(
                 for (const bound of set.querySelectorAll('[data-kp-filter-bound]')) {
                     const input = /** @type {HTMLInputElement} */ (bound);
                     const range = /** @type {{ from?: string, to?: string } | undefined} */ (Array.isArray(value) ? undefined : value);
-                    input.value = (input.dataset.kpFilterBound === 'from' ? range?.from : range?.to) ?? '';
+                    const wanted = (input.dataset.kpFilterBound === 'from' ? range?.from : range?.to) ?? '';
+                    const picker = input.closest('[data-kp-datepicker]');
+                    const handle = picker === null ? null : datePicker(picker);
+                    if (handle === null) {
+                        input.value = wanted;
+                        continue;
+                    }
+                    // A date bound is set through its picker, which formats it for
+                    // the locale; what the person is typing is left alone while it
+                    // already means the same date.
+                    if ((input.dataset.kpDateValue ?? '') === wanted) continue;
+                    writing = true;
+                    try {
+                        handle.set(wanted === '' ? null : wanted);
+                    } finally {
+                        writing = false;
+                    }
                 }
             }
         };
@@ -801,9 +849,13 @@ export function attachDataTables(
                 if (kind === 'choice')
                     value = [...set.querySelectorAll('input[type="checkbox"]:checked')].map((b) => /** @type {HTMLInputElement} */ (b).value);
                 else {
-                    const from = /** @type {HTMLInputElement | null} */ (set.querySelector('[data-kp-filter-bound="from"]'))?.value ?? '';
-                    const to = /** @type {HTMLInputElement | null} */ (set.querySelector('[data-kp-filter-bound="to"]'))?.value ?? '';
-                    value = { from, to };
+                    // A date bound reads the ISO its picker holds, never the text on screen.
+                    const read = (/** @type {string} */ bound) => {
+                        const input = /** @type {HTMLInputElement | null} */ (set.querySelector(`[data-kp-filter-bound="${bound}"]`));
+                        if (input === null) return '';
+                        return input.dataset.kpDateInput === undefined ? input.value : (input.dataset.kpDateValue ?? '');
+                    };
+                    value = { from: read('from'), to: read('to') };
                 }
                 if (kind !== null && kind !== undefined && filterActive(kind, value)) filters.set(at, value);
             }
@@ -849,6 +901,8 @@ export function attachDataTables(
             render();
         };
         const onPanel = () => {
+            // A picker set by writeControls announces it; that is not a person's change.
+            if (writing) return;
             const before = JSON.stringify([...filters]);
             readControls();
             // A change event after the input event that already applied it.
@@ -1029,11 +1083,21 @@ export function attachDataTables(
             if (/** @type {HTMLElement} */ (event.target).closest(RETRY) !== null) onRetry();
         };
 
+        // The table's own selects wear the package's drawn list, as every
+        // .kp-field__input select does since Kenny's form of 2026-09-13 — here
+        // as well as in auto.js, because two of them are built by this attach
+        // after auto.js has passed, and a consumer may attach only the tables.
+        for (const select of [scopeSelect, densitySelect, sortBy, sizeSelect]) {
+            if (select === null || select.dataset.kpSelectAttached !== undefined || !drawsSelect(select)) continue;
+            cleanups.push(attachSelect(select));
+        }
+
         search?.addEventListener('input', onSearch);
         scopeSelect?.addEventListener('change', onScope);
         densitySelect?.addEventListener('change', onDensity);
         panel?.addEventListener('input', onPanel);
         panel?.addEventListener('change', onPanel);
+        panel?.addEventListener(DATE_EVENT, onPanel);
         toggle?.addEventListener('click', onToggle);
         sortBy?.addEventListener('change', onSortBy);
         sortDirection?.addEventListener('click', onSortDirection);
@@ -1112,6 +1176,7 @@ export function attachDataTables(
             densitySelect?.removeEventListener('change', onDensity);
             panel?.removeEventListener('input', onPanel);
             panel?.removeEventListener('change', onPanel);
+            panel?.removeEventListener(DATE_EVENT, onPanel);
             toggle?.removeEventListener('click', onToggle);
             sortBy?.removeEventListener('change', onSortBy);
             sortDirection?.removeEventListener('click', onSortDirection);
