@@ -1366,3 +1366,14 @@ een anchorlink zelfs … Zie dat de catalogus dit ondersteunt. Doe dit vanaf nu.
 Forms and replies link every page they mention, with an anchor to the block;
 a catalogue page keeps and scrolls to a linked block even when it is judged.
 
+**scope-73 · Which appearance tests leave, and when.** Kenny, 2026-09-14,
+the tests form, on the inventory of that day (1612 tests per engine: 721
+behaviour, 319 sweeps, 315 appearance with a catalogue block, 68 appearance
+without one, 189 mixed). tests-register: the 98 appearance-only register tests
+go, mixed tests stay whole. tests-other: all 217 appearance tests outside the
+registers go, the 169 that loop all themes included, and
+`tests/data-surfaces.spec.mjs` with them. tests-no-block: a catalogue page
+"Page effects" gets the missing blocks first, the ten example pages join the
+catalogue navigation, and only then do the 68 go. step-timing: a catalogue
+test waits for the page's reading to finish by default.
+
