@@ -156,8 +156,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // took one away (--kp-table-cell-pad, which nothing else read); gap-12
     // added four (the back-to-top glyph, the overhang above a scrolling tab
     // row, the tree's selected wash and bar); the nostromo notes (scope-60)
-    // added one, the dialog close button's size: 123 + 9 + 3 + 4 + 1.
-    assert.equal(result.expected, 140, 'AR21 counted 140 --kp-* properties in css/components.css');
+    // added the dialog close button's size and held-60 the room inside the
+    // wizard's frame (--kp-wizard-padding): 123 + 9 + 3 + 4 + 1 + 1.
+    assert.equal(result.expected, 141, 'AR21 counted 141 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -189,8 +190,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    // Every one of them is read through var(), all four rounds' included.
-    assert.equal(result.readCount, 140);
+    // Every one of them is read through var(), all five rounds' included.
+    assert.equal(result.readCount, 141);
     assert.deepEqual(result.unread, []);
 });
 

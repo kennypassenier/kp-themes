@@ -4025,6 +4025,13 @@
         color: var(--destructive);
     }
 
+    /* The frame a register draws around the wizard needs room inside it:
+ * without padding the step list, the step and the buttons touched the
+ * border in every theme [scope-60, held-60]. A knob, 1rem by default. */
+    .kp-wizard {
+        padding: var(--kp-wizard-padding, 1rem);
+    }
+
     .kp-wizard__steps {
         display: flex;
         flex-wrap: wrap;

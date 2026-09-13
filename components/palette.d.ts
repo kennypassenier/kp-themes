@@ -35,7 +35,7 @@ export type CommandPaletteProps = {
      */
     primary?: boolean;
     /**
-     * Default subsequence.
+     * Default substring; 'subsequence' lets "thm" find "Theme" [scope-56].
      */
     match?: keyof typeof MATCHERS | Matcher;
     /**

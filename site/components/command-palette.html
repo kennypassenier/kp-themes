@@ -230,7 +230,7 @@
                             <tr><td><code>onQueryChange</code></td><td><code>(query: string) =&gt; void</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>hotkey</code></td><td><code>string | null</code></td><td>optional</td><td>The letter, with Ctrl/⌘. Default 'k'; null disables it.</td></tr>
                             <tr><td><code>primary</code></td><td><code>boolean</code></td><td>optional</td><td>This palette answers the key when there are several. Default: the first in the document.</td></tr>
-                            <tr><td><code>match</code></td><td><code>keyof typeof MATCHERS | Matcher</code></td><td>optional</td><td>Default subsequence.</td></tr>
+                            <tr><td><code>match</code></td><td><code>keyof typeof MATCHERS | Matcher</code></td><td>optional</td><td>Default substring; 'subsequence' lets &quot;thm&quot; find &quot;Theme&quot; [scope-56].</td></tr>
                             <tr><td><code>resetOnClose</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
                             <tr><td><code>closeOnRun</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
                             <tr><td><code>loading</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
@@ -289,7 +289,7 @@
                             <tr><td><code>.kp-palette__description</code></td><td>A second line on a command, for one whose name is not enough.</td></tr>
                             <tr><td><code>.kp-palette__keys</code></td><td>The key hint at the end of a row, which never competes with the label.</td></tr>
                             <tr><td><code>.kp-palette__status</code></td><td>The live region that says how many commands are left after typing.</td></tr>
-                            <tr><td><code>matching</code></td><td>The filter is subsequence matching by default — “nap” finds “new application” — and can be made a plain substring instead.</td></tr>
+                            <tr><td><code>matching</code></td><td>The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match=&quot;subsequence&quot;` (the `match` prop in React) makes “nap” find “new application” instead.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

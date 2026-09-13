@@ -749,6 +749,7 @@ export const DESCRIPTORS = [
             { name: 'done step', what: 'Its number becomes a check in the success colour.' },
             { name: 'navigable labels', what: 'The step labels can be made clickable, for a wizard whose earlier steps stay open.' },
             { name: '.kp-wizard__actions', what: 'The back and next pair, at the end of the current step.' },
+            { name: '--kp-wizard-padding', what: 'The room between the frame a theme draws and what is inside it, 1rem by default.' },
             { name: 'held transition', what: 'A step change can be refused or delayed by a listener or an async check, which is what a step that needs a server answer was missing.' },
         ],
         accessibility: [
@@ -2180,7 +2181,7 @@ export const DESCRIPTORS = [
             { name: '.kp-palette__description', what: 'A second line on a command, for one whose name is not enough.' },
             { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
-            { name: 'matching', what: 'The filter is subsequence matching by default — “nap” finds “new application” — and can be made a plain substring instead.' },
+            { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
         ],
         accessibility: [
             'Built in — the dialog gives focus trapping, Escape and focus return, so the palette cannot strand the keyboard.',

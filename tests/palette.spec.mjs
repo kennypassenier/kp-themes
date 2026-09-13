@@ -2,7 +2,7 @@
 //
 // What is worth testing here is not that a dialog opens — the browser
 // does that — but the three things a palette gets wrong: the keystroke on
-// the wrong platform, the subsequence match, and a `?` that steals the
+// the wrong platform, the match, and a `?` that steals the
 // question mark someone is typing into a field.
 
 import { test, expect } from '@playwright/test';
@@ -24,14 +24,17 @@ for (const channel of CHANNELS) {
             await page.locator(`${channel.palette} .kp-palette__input`).focus();
         };
 
-        test('it matches a subsequence, not a substring [TH40]', async ({ page }) => {
+        test('it matches literally by default, not as a subsequence [TH40, scope-56]', async ({ page }) => {
             await page.goto(URL);
             await open(page);
             const palette = page.locator(channel.palette);
-            // "thm" is not a substring of "Thema wisselen"; a palette that
-            // uses `includes` finds nothing here, which is the difference
-            // people actually notice.
+            // Until scope-56 the default was a subsequence and "thm" found
+            // "Thema wisselen". Kenny read that as a wrong answer: the
+            // default is now literal, and subsequence is asked for per
+            // palette (tests/held-60.spec.mjs drives that half).
             await palette.locator('.kp-palette__input').fill('thm');
+            await expect(palette.locator('.kp-palette__option:visible')).toHaveCount(0);
+            await palette.locator('.kp-palette__input').fill('them');
             const options = palette.locator('.kp-palette__option:visible');
             await expect(options).toHaveCount(1);
             await expect(options.first()).toContainText('Thema wisselen');

@@ -42,9 +42,11 @@
                 <div class="cat-look">
                     <b>Look at:</b> the bar is on the card surface with a strong rule under it, and must read as the top of a page rather than as a
                     card lying on one. The brand leads; the file code beside it (<code>.kp-nav__brand-tag</code>) is quieter than the brand, not a
-                    second brand. <b>Incidents</b> is the current page: it must be marked by more than colour — weight and an underline — and a screen
-                    reader hears <code>aria-current</code>. Tab through the links: the focus ring must stay visible on the bar's own ground, and no
-                    link may shift its neighbours when it takes focus or hover.
+                    second brand — and still readable: in nostromo it reads at better than 4.5:1 on the dark strip, where it was 1.8:1.
+                    <b>Incidents</b> is the current page: it must be marked by more than colour — weight and an underline — and a screen reader hears
+                    <code>aria-current</code>. It keeps the size and the baseline of the other items: in nostromo its LED dot sits centred beside the
+                    text instead of pushing <b>Incidents</b> 1.6px below its neighbours. Tab through the links: the focus ring must stay visible on
+                    the bar's own ground, and no link may shift its neighbours when it takes focus or hover.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-nav-wrap">
@@ -119,9 +121,10 @@
                     open: the toggle wears the theme's accent as a plate (open is a state, and a state is visible), the links stack in a column under
                     the brand, and the dropdown under <b>Readings</b> is no longer a floating panel but an indented list in the flow — no frame, no
                     ground and no shadow in any theme, while the register's own type and item marks stay. Judge whether the indented list still reads
-                    as belonging to <b>Readings</b>. The second bar is live: press its toggle, press Escape with focus inside, or click anywhere
-                    outside it — each must close it, and the toggle's accessible name must change between "Open the navigation" and "Close the
-                    navigation". Drag the panes' edges wider than 40rem and both must turn back into a plain bar.
+                    as belonging to <b>Readings</b>, without touching it: in nostromo there is at least 0.5rem between <b>Readings</b> and the
+                    dropdown's caption, and again between the caption's rule and <b>Pressure</b>. The second bar is live: press its toggle, press
+                    Escape with focus inside, or click anywhere outside it — each must close it, and the toggle's accessible name must change between
+                    "Open the navigation" and "Close the navigation". Drag the panes' edges wider than 40rem and both must turn back into a plain bar.
                 </div>
                 <div class="cat-stage">
                     <div class="cat-resize" style="inline-size: 22rem">

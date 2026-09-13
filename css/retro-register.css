@@ -1374,7 +1374,6 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-raised);
-        padding: 3px;
     }
 
     [data-theme='retro'] .kp-wizard__steps {

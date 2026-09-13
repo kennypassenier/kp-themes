@@ -24,7 +24,7 @@ export declare function palette(element: Element): PaletteHandle | null;
  *
  * @param {ParentNode} root
  * @param {{ hotkey?: string | null, sheetKey?: string | null, match?: keyof typeof MATCHERS | Matcher, clearOnClose?: boolean, closeOnRun?: boolean, typingSelector?: string }} [options]
- *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match`, `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
+ *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match` (`substring` by default, or `subsequence`, `prefix`), `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
  * @returns {(() => void) & { handles: PaletteHandle[] }} detach
  */
 export declare function attachPalettes(root?: ParentNode, { hotkey, sheetKey, match, clearOnClose, closeOnRun, typingSelector, }?: {

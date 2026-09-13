@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>held-60 — a reorder drag across rows and the palette's matcher, both channels</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- Six reorder rows in each channel, the same ids in the same order,
+             so one drag can cross four rows and the two channels can be
+             compared with each other and with the keyboard [held-60, AR7]. -->
+        <section style="max-inline-size: 28rem">
+            <h2>Reorder, framework-free</h2>
+            <ul class="kp-reorder" data-kp-reorder data-test="plain-reorder-long">
+                <li data-kp-item="time" data-kp-label="Time"><button type="button" data-kp-handle aria-label="Move Time">⠿</button> Time</li>
+                <li data-kp-item="pressure" data-kp-label="Pressure">
+                    <button type="button" data-kp-handle aria-label="Move Pressure">⠿</button> Pressure
+                </li>
+                <li data-kp-item="flow" data-kp-label="Flow rate">
+                    <button type="button" data-kp-handle aria-label="Move Flow rate">⠿</button> Flow rate
+                </li>
+                <li data-kp-item="note" data-kp-label="Note"><button type="button" data-kp-handle aria-label="Move Note">⠿</button> Note</li>
+                <li data-kp-item="signed" data-kp-label="Signed by">
+                    <button type="button" data-kp-handle aria-label="Move Signed by">⠿</button> Signed by
+                </li>
+                <li data-kp-item="shift" data-kp-label="Shift"><button type="button" data-kp-handle aria-label="Move Shift">⠿</button> Shift</li>
+            </ul>
+        </section>
+
+        <!-- Two palettes with the same four commands: one on the default
+             matcher, one that asks for subsequence [scope-56]. -->
+        <section>
+            <h2>Palette, framework-free</h2>
+            <dialog class="kp-palette" data-kp-palette data-kp-primary aria-label="Commands" data-test="plain-palette-default">
+                <input class="kp-palette__input" type="text" role="combobox" aria-label="Commands" aria-expanded="true" autocomplete="off" />
+                <ul class="kp-palette__list" role="listbox" aria-label="Commands">
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="report">Report an incident</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="lockout">Lock out a line</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+                </ul>
+                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+            </dialog>
+            <dialog
+                class="kp-palette"
+                data-kp-palette
+                data-kp-hotkey="none"
+                data-kp-match="subsequence"
+                aria-label="Commands"
+                data-test="plain-palette-subsequence"
+            >
+                <input class="kp-palette__input" type="text" role="combobox" aria-label="Commands" aria-expanded="true" autocomplete="off" />
+                <ul class="kp-palette__list" role="listbox" aria-label="Commands">
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="report">Report an incident</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="lockout">Lock out a line</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+                </ul>
+                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+            </dialog>
+        </section>
+
+        <div id="react-held-60"></div>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-held-60.js"></script>
+    </body>
+</html>

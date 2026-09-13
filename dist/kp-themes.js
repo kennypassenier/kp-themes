@@ -2172,8 +2172,10 @@ var RESULTS_TEXT2 = (n) => {
   return n === 0 ? s.noCommands : n === 1 ? s.oneCommand : s.manyCommands(n);
 };
 var MATCHERS2 = {
-  // A subsequence, not a substring: "thm" should find "Theme", which is
-  // what people expect from a palette and what a plain `includes` refuses.
+  // Literal by default [scope-56]: a subsequence let "read" find "Report
+  // an incident", which reads as a wrong answer rather than a clever
+  // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
+  // a palette that wants it.
   subsequence: (text, query) => subsequence(text, query),
   substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
   prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
@@ -2192,7 +2194,7 @@ function palette(element) {
 function attachPalettes(root = document, {
   hotkey = "k",
   sheetKey = "?",
-  match = "subsequence",
+  match = "substring",
   clearOnClose = true,
   closeOnRun = true,
   typingSelector = 'input, textarea, select, [role="textbox"]'
@@ -2223,7 +2225,7 @@ function attachPalettes(root = document, {
     const key = dialog.dataset.kpHotkey === "none" ? null : dialog.dataset.kpHotkey ?? hotkey;
     const clears = dialog.dataset.kpClearOnClose === void 0 ? clearOnClose : dialog.dataset.kpClearOnClose !== "false";
     const closes = dialog.dataset.kpCloseOnRun === void 0 ? closeOnRun : dialog.dataset.kpCloseOnRun !== "false";
-    const matcher = typeof match === "function" ? match : MATCHERS2[dialog.dataset.kpMatch ?? match] ?? MATCHERS2.subsequence;
+    const matcher = typeof match === "function" ? match : MATCHERS2[dialog.dataset.kpMatch ?? match] ?? MATCHERS2.substring;
     for (const element2 of list.querySelectorAll(`${OPTION_SELECTOR}[data-kp-keys]`)) {
       const option = (
         /** @type {HTMLElement} */
@@ -4245,6 +4247,7 @@ function attachStructure(root = document, {
       moveTo(item, to);
       handle2.focus();
     };
+    let endDrag = null;
     const onPointerDown = (event) => {
       if (!pointer || event.button !== 0) return;
       const handle2 = (
@@ -4253,11 +4256,13 @@ function attachStructure(root = document, {
         event.target.closest("[data-kp-handle]")
       );
       const item = handle2?.closest("[data-kp-item]");
-      if (!handle2 || !(item instanceof HTMLElement)) return;
+      if (!handle2 || !(item instanceof HTMLElement) || item.parentElement !== list) return;
       event.preventDefault();
-      handle2.setPointerCapture(event.pointerId);
+      endDrag?.();
+      const pointerId = event.pointerId;
       item.dataset.kpDragging = "";
       const onMove = (move) => {
+        if (move.pointerId !== pointerId) return;
         for (const sibling of list.children) {
           if (sibling === item) continue;
           const box = sibling.getBoundingClientRect();
@@ -4268,15 +4273,18 @@ function attachStructure(root = document, {
           }
         }
       };
-      const onUp = () => {
+      const onUp = (up) => {
+        if (up && up.pointerId !== pointerId) return;
         delete item.dataset.kpDragging;
-        handle2.removeEventListener("pointermove", onMove);
-        handle2.removeEventListener("pointerup", onUp);
-        handle2.removeEventListener("pointercancel", onUp);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        endDrag = null;
       };
-      handle2.addEventListener("pointermove", onMove);
-      handle2.addEventListener("pointerup", onUp);
-      handle2.addEventListener("pointercancel", onUp);
+      endDrag = onUp;
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     };
     list.addEventListener("keydown", onKey);
     list.addEventListener("pointerdown", onPointerDown);
@@ -4299,6 +4307,7 @@ function attachStructure(root = document, {
     cleanups.push(() => {
       list.removeEventListener("keydown", onKey);
       list.removeEventListener("pointerdown", onPointerDown);
+      endDrag?.();
       list.replaceChildren(...original);
       if (madeLive) live?.remove();
       handles6.delete(list);

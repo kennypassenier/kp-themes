@@ -343,17 +343,25 @@ export function attachStructure(
         };
 
         // The pointer route: drag by the handle, drop between siblings.
+        // The move and release are heard on the window, not on the handle:
+        // moving the row in the DOM detaches the handle for a moment, which
+        // releases its pointer capture, and the first version then stopped
+        // hearing the pointer after one row [held-60].
+        /** @type {(() => void) | null} */
+        let endDrag = null;
         /** @param {PointerEvent} event */
         const onPointerDown = (event) => {
             if (!pointer || event.button !== 0) return;
             const handle = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (event.target).closest('[data-kp-handle]'));
             const item = handle?.closest('[data-kp-item]');
-            if (!handle || !(item instanceof HTMLElement)) return;
+            if (!handle || !(item instanceof HTMLElement) || item.parentElement !== list) return;
             event.preventDefault();
-            handle.setPointerCapture(event.pointerId);
+            endDrag?.();
+            const pointerId = event.pointerId;
             item.dataset.kpDragging = '';
             /** @param {PointerEvent} move */
             const onMove = (move) => {
+                if (move.pointerId !== pointerId) return;
                 for (const sibling of list.children) {
                     if (sibling === item) continue;
                     const box = sibling.getBoundingClientRect();
@@ -364,15 +372,19 @@ export function attachStructure(
                     }
                 }
             };
-            const onUp = () => {
+            /** @param {PointerEvent} [up] */
+            const onUp = (up) => {
+                if (up && up.pointerId !== pointerId) return;
                 delete item.dataset.kpDragging;
-                handle.removeEventListener('pointermove', onMove);
-                handle.removeEventListener('pointerup', onUp);
-                handle.removeEventListener('pointercancel', onUp);
+                window.removeEventListener('pointermove', onMove);
+                window.removeEventListener('pointerup', onUp);
+                window.removeEventListener('pointercancel', onUp);
+                endDrag = null;
             };
-            handle.addEventListener('pointermove', onMove);
-            handle.addEventListener('pointerup', onUp);
-            handle.addEventListener('pointercancel', onUp);
+            endDrag = onUp;
+            window.addEventListener('pointermove', onMove);
+            window.addEventListener('pointerup', onUp);
+            window.addEventListener('pointercancel', onUp);
         };
 
         list.addEventListener('keydown', onKey);
@@ -394,6 +406,7 @@ export function attachStructure(
         cleanups.push(() => {
             list.removeEventListener('keydown', onKey);
             list.removeEventListener('pointerdown', onPointerDown);
+            endDrag?.();
             list.replaceChildren(...original);
             if (madeLive) live?.remove();
             handles.delete(list);

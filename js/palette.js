@@ -89,8 +89,10 @@ const RESULTS_TEXT = (n) => {
 /** @typedef {(optionText: string, query: string) => boolean} Matcher */
 /** @type {Record<string, Matcher>} */
 export const MATCHERS = {
-    // A subsequence, not a substring: "thm" should find "Theme", which is
-    // what people expect from a palette and what a plain `includes` refuses.
+    // Literal by default [scope-56]: a subsequence let "read" find "Report
+    // an incident", which reads as a wrong answer rather than a clever
+    // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
+    // a palette that wants it.
     subsequence: (text, query) => subsequence(text, query),
     substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
     prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase()),
@@ -141,7 +143,7 @@ export function palette(element) {
  *
  * @param {ParentNode} root
  * @param {{ hotkey?: string | null, sheetKey?: string | null, match?: keyof typeof MATCHERS | Matcher, clearOnClose?: boolean, closeOnRun?: boolean, typingSelector?: string }} [options]
- *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match`, `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
+ *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match` (`substring` by default, or `subsequence`, `prefix`), `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
  * @returns {(() => void) & { handles: PaletteHandle[] }} detach
  */
 export function attachPalettes(
@@ -149,7 +151,7 @@ export function attachPalettes(
     {
         hotkey = 'k',
         sheetKey = '?',
-        match = 'subsequence',
+        match = 'substring',
         clearOnClose = true,
         closeOnRun = true,
         typingSelector = 'input, textarea, select, [role="textbox"]',
@@ -178,7 +180,7 @@ export function attachPalettes(
         const key = dialog.dataset.kpHotkey === 'none' ? null : (dialog.dataset.kpHotkey ?? hotkey);
         const clears = dialog.dataset.kpClearOnClose === undefined ? clearOnClose : dialog.dataset.kpClearOnClose !== 'false';
         const closes = dialog.dataset.kpCloseOnRun === undefined ? closeOnRun : dialog.dataset.kpCloseOnRun !== 'false';
-        const matcher = typeof match === 'function' ? match : (MATCHERS[dialog.dataset.kpMatch ?? match] ?? MATCHERS.subsequence);
+        const matcher = typeof match === 'function' ? match : (MATCHERS[dialog.dataset.kpMatch ?? match] ?? MATCHERS.substring);
 
         // data-kp-keys, rendered: the documented attribute nothing read.
         for (const element of list.querySelectorAll(`${OPTION_SELECTOR}[data-kp-keys]`)) {

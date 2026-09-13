@@ -266,8 +266,10 @@
                     <b>Look at:</b> each row is on the card surface with a boundary, and its handle is a real button with a boundary of its own and a
                     grab pointer. Tab to a handle and press Down: the row moves, focus stays on the <i>same</i> handle, and a screen reader hears
                     "Pressure moved to position 2 of 5". Drag a handle with the mouse: the row you hold (<code>data-kp-dragging</code>) turns its
-                    frame to the primary colour, dashed, and lifts off the list with a shadow; letting go takes all of it away. The fourth row's label
-                    is long: it must wrap beside the handle, with the handle staying at the top of the row.
+                    frame to the primary colour, dashed, and lifts off the list with a shadow; letting go takes all of it away. Drag Time's handle all
+                    the way to the bottom in one movement: the row must follow the pointer past every row it crosses, while the button is still held,
+                    not stop after one; the screen reader hears "Time moved to position 5 of 5", and the order is the one four presses of Down would
+                    have left. The fourth row's label is long: it must wrap beside the handle, with the handle staying at the top of the row.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div style="max-inline-size: 28rem">
@@ -300,7 +302,9 @@
                     the success colour inside their circle, the current step a filled circle in the primary colour with a bold label and
                     <code>aria-current="step"</code>, and the step still to come a plain numbered circle in the muted ink. The three states must be
                     told apart without colour: check, fill, and outline. The second list has seven steps with long names in a narrow pane: it must
-                    wrap onto rows with each circle staying beside its own label.
+                    wrap onto rows with each circle staying beside its own label. In every theme that draws a frame around the wizard, nothing inside
+                    may touch it: the step list, the step and the buttons keep at least 0.75rem from the frame on all four sides
+                    (<code>--kp-wizard-padding</code>, 1rem by default).
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-wizard">
@@ -345,7 +349,7 @@
                     the message itself when no <code>form[data-kp-form]</code> is around it. Type into the field and the message goes. Fill it in and
                     press <b>Next</b>: the second label turns current, the first gets its check, focus moves to the new step, and the status line
                     announces "Step 2 of 3". <b>Back</b> on the first step must be unavailable, and on the last step the <b>Next</b> button must read
-                    <b>Finish</b>.
+                    <b>Finish</b>. The same room inside the frame as the frozen wizard, on every step.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-wizard" data-kp-wizard>

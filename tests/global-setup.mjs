@@ -22,6 +22,7 @@ export default async function globalSetup() {
         'react-sidenav',
         'react-switch',
         'react-select',
+        'react-held-60',
     ]) {
         await build({
             entryPoints: [new URL(`fixtures/${name}.jsx`, import.meta.url).pathname],

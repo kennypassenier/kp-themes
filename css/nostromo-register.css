@@ -137,11 +137,15 @@
         flex: none;
     }
 
+    /* The site mark is quieter than the brand, not unreadable [scope-59]:
+       --muted-foreground is the light page's muted ink and read 1.82:1 on
+       the dark strip. The strip's own ink, desaturated and dimmed, keeps it
+       a step below the brand at 6:1 or so. */
     [data-theme='nostromo'] .kp-nav__brand-tag {
         font-family: var(--theme-font-mono);
         font-size: 0.7rem;
         letter-spacing: 0.14em;
-        color: var(--muted-foreground);
+        color: hsl(from var(--sidebar-foreground) h calc(s * 0.6) 64);
     }
 
     [data-theme='nostromo'] .kp-nav__links {
@@ -157,13 +161,12 @@
     }
 
     /* The current item carries a filled LED dot no other item has [DI4];
-   css/_rules.css already answers this generically for `nav
-   [aria-current='page']`, this refines the flex layout on the link
-   itself. */
-    [data-theme='nostromo'] .kp-nav__link[aria-current] {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
+   css/_rules.css draws it for `nav [aria-current='page']`. The link stays
+   inline like its neighbours [scope-59]: as an inline-flex box its
+   baseline was the dot's bottom edge, and "Incidents" sat 1.6px below the
+   other items. The dot is centred on the text instead. */
+    [data-theme='nostromo'] .kp-nav__link[aria-current]::before {
+        vertical-align: middle;
     }
 
     [data-theme='nostromo'] .kp-nav__link:hover,
@@ -206,9 +209,17 @@
         [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
             min-width: 0;
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            /* Room under the item it belongs to [scope-59]: the caption
+               touched "Readings" (4px, the panel's own padding). */
+            padding-block-start: 0.5rem;
             border: 0;
             background: transparent;
             box-shadow: none;
+        }
+
+        /* …and room under the caption's rule before the first item. */
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu[data-kp-menu-label]::before {
+            margin-block-end: 0.5rem;
         }
     }
 

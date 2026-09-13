@@ -6,7 +6,7 @@ import { useControllable } from '../hooks/use-controllable.js';
 // Command palette and shortcut sheet, React [TH40, TH49].
 //
 // Same contract as js/palette.js: a <dialog>, virtual focus, a
-// subsequence match, and the command's value handed back rather than run
+// literal match by default (subsequence on request, scope-56), and the command's value handed back rather than run
 // here. What a command DOES is the application's business.
 //
 // The dialog element is used through a ref because `showModal()` is a
@@ -42,7 +42,7 @@ export const MATCHERS = {
  * @property {(query: string) => void} [onQueryChange]
  * @property {string | null} [hotkey]   The letter, with Ctrl/⌘. Default 'k'; null disables it.
  * @property {boolean} [primary]        This palette answers the key when there are several. Default: the first in the document.
- * @property {keyof typeof MATCHERS | Matcher} [match]  Default subsequence.
+ * @property {keyof typeof MATCHERS | Matcher} [match]  Default substring; 'subsequence' lets "thm" find "Theme" [scope-56].
  * @property {boolean} [resetOnClose]   Default true.
  * @property {boolean} [closeOnRun]     Default true.
  * @property {boolean} [loading]
@@ -71,7 +71,7 @@ function CommandPaletteInner(
         onQueryChange,
         hotkey = 'k',
         primary = false,
-        match = 'subsequence',
+        match = 'substring',
         resetOnClose = true,
         closeOnRun = true,
         loading = false,
@@ -98,7 +98,7 @@ function CommandPaletteInner(
     const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
     const [query, setQuery] = useControllable(queryProp, '', onQueryChange);
     const [active, setActive] = useState(0);
-    const matcher = typeof match === 'function' ? match : (MATCHERS[match] ?? MATCHERS.subsequence);
+    const matcher = typeof match === 'function' ? match : (MATCHERS[match] ?? MATCHERS.substring);
 
     const visible = commands.filter((command) => matcher(command.label, query, command));
     /** @type {Map<string, Command[]>} */
