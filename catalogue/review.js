@@ -257,9 +257,13 @@ async function composeAll(host) {
 
         for (const block of blocks) {
             const section = /** @type {HTMLElement} */ (document.importNode(block.node, true));
-            // Headings step down one level under the component's own.
-            for (const h of section.querySelectorAll('h2')) {
+            // The block's own heading steps down one level under the component's.
+            // Only that one: a heading inside the stage is part of what is being
+            // reviewed (a dialog title, a card title), and rewriting it dropped its
+            // class — 17 of them lost their styling on this page (fix-21).
+            for (const h of section.querySelectorAll(':scope > h2')) {
                 const h3 = document.createElement('h3');
+                for (const { name, value } of h.attributes) h3.setAttribute(name, value);
                 h3.innerHTML = h.innerHTML;
                 h.replaceWith(h3);
             }

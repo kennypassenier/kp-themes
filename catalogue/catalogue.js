@@ -409,6 +409,16 @@ function mountComforts() {
     // throw away the scroll position (notes and verdicts are stored as they are
     // made, so those survive either way). A form that opts in to the package's
     // own validation still gets it; only the navigation is stopped.
+    // A file dropped anywhere but a live upload zone must not make the browser
+    // open it in place of the page (Kenny dropped an image on the frozen upload
+    // copy and lost the review page to it). A real zone still receives its drop.
+    for (const type of ['dragover', 'drop']) {
+        document.addEventListener(type, (event) => {
+            const zone = event.target instanceof Element ? event.target.closest('[data-kp-upload]') : null;
+            if (!zone || zone.closest('[data-cat-frozen], [inert]')) event.preventDefault();
+        });
+    }
+
     document.addEventListener('submit', (event) => {
         const form = event.target;
         if (form instanceof HTMLFormElement && form.method !== 'dialog') event.preventDefault();
