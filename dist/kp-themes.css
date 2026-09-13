@@ -5770,15 +5770,31 @@
         --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
     }
 
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
     .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) [data-kp-sidenav-slim-hide],
     .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
         display: none;
     }
 
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label,
     .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover [data-kp-sidenav-slim-hide] {
         display: none;
+    }
+
+    /* A label leaves the eye, never the accessibility tree [scope-45]. With
+       display:none a rail entry whose only visible content is an icon had no
+       name at all, so a screen reader said "button". The consumer's own
+       slim-hide hooks keep display:none: those are ornaments the consumer
+       chose to drop, where a label is the entry's name. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
     }
 
     /* Hovering a rail that was told to expand gives the labels back without

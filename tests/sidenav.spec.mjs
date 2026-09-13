@@ -163,7 +163,7 @@ test.describe('the side navigation', () => {
         });
 
         await width(panel, 'slim: narrower than it was').toBeLessThan(full);
-        await width(part(page, 'slim-footer'), 'slim: the words are gone').toBe(0);
+        await width(part(page, 'slim-footer'), 'slim: the words take no room (their name stays, see below)').toBeLessThanOrEqual(1);
         await width(part(page, 'slim-monogram'), 'slim: and what was kept for this moment is there').toBeGreaterThan(0);
         await width(part(page, 'slim-wordmark'), 'slim: while what it replaces is not').toBe(0);
 
@@ -172,6 +172,26 @@ test.describe('the side navigation', () => {
             sidenavOf(document.getElementById('nav-slim'))?.setSlim(false);
         });
         await width(panel, 'slim: and all the way back — every state has a way out').toBeCloseTo(full, 0);
+    });
+
+    test('slim: a rail that hides its words still says them to a screen reader [feat-nav-3, scope-45]', async ({ page }) => {
+        // Found by the navbar research of 2026-09-13: the slim rail hid every
+        // label with display:none, which takes it out of the accessibility
+        // tree too, so a rail entry whose only visible content is an icon had
+        // no name at all and a screen reader said "button". The demo page had
+        // to write an aria-label by hand on every link to be usable, which is
+        // the proof: a page using the package correctly had to work around it.
+        await page.goto(FIXTURE);
+        const toggle = part(page, 'cat-one-toggle');
+        await expect(toggle, 'slim: the category is named before the rail folds').toHaveAccessibleName('Reports');
+
+        await page.evaluate(async () => {
+            const { sidenavOf } = await import('/js/sidenav.js');
+            sidenavOf(document.getElementById('nav-slim'))?.setSlim(true);
+        });
+        await page.mouse.move(0, 0);
+
+        await expect(toggle, 'slim: and still named once the words are out of sight').toHaveAccessibleName('Reports');
     });
 
     test('accordion: opening one category closes the other [feat-nav-3]', async ({ page }) => {

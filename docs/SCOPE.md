@@ -1183,3 +1183,38 @@ user-level change and a separate item.
 **scope-44 · Worktrees for parallel streams.** Background agents work in
 their own worktree. Screenshots, Claude in Chrome and plan mode were
 offered and not taken.
+
+**The research-and-catalogue form, 2026-09-13.** Seven answers. They were
+given before the five review pages were reachable (`fix-19`), so the four
+that rest on looking — `scope-47`, `scope-48`, `scope-49` and `scope-51` —
+are put to Kenny once more now that the pages open.
+
+**scope-45 · The slim rail keeps its names.** A label in a collapsed rail
+leaves the eye and stays in the accessibility tree; the other four navbar
+findings wait for the navigation work. Test first:
+`tests/sidenav.spec.mjs` "a rail that hides its words still says them to a
+screen reader", red on the old rule (expected "Reports", received "").
+
+**scope-46 · The four orphan registers go.** `academia`, `mono`, `ticker`
+and `woodblock` minified registers and their maps are removed from
+`dist/css/`; no gate is added.
+
+**scope-47 · The catalogue's Look at notes stay English**, like the rest of
+the repository.
+
+**scope-48 · Navigation: all four.** The app shell (bar, rail and
+breadcrumb together, with a declared slim toggle), the command palette as
+navigation (a visible trigger, an option that is a link), the mega menu (a
+click-opened disclosure every register answers) and the shrinking header
+(after the three registers that bypass `--kp-nav-pad-block` are fixed).
+
+**scope-49 · Futuristic layouts: all four.** HUD brackets as a hook, the
+dispatch console, the LCARS elbow frame (with its colour trio on every
+theme in the same change) and the case file with its pinboard.
+
+**scope-50 · Loading: shared stylesheets and a lazily fetched register.**
+First paint from 1,320,113 to 371,900 bytes; the JavaScript split follows
+as its own step.
+
+**scope-51 · The catalogue page shape is approved** for the remaining
+components.

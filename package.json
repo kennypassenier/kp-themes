@@ -257,6 +257,7 @@
         "check:examples-wired": "node gates/check-examples-wired.mjs",
         "check:ids": "node gates/check-ids.mjs",
         "check:catalogue": "node gates/check-catalogue.mjs",
+        "catalogue": "node tests/fixtures/serve-catalogue.mjs",
         "check:inline-styles": "node gates/check-inline-styles.mjs",
         "generate:site": "node gates/generate-site.mjs",
         "check:site": "node gates/generate-site.mjs --check && node gates/check-site.mjs",

@@ -2758,3 +2758,53 @@ is done. Measured against this round's own history, it fired at
 the gate's answer is recorded while the work continues. A check that cries
 wolf is one people learn to skip, which is the lesson `check-doc-quotes`
 had already taught two days earlier. The explicit row replaced it.
+
+## fix-19 · Review links pointed at a server that was no longer running (2026-09-13)
+
+**1 · What went wrong.** The research-and-catalogue form listed five pages
+to look at "op de draaiende server", `http://localhost:4300/...`. Kenny:
+*"Die vijf dingen om naar te kijken zie ik niet? ofwel file not found
+ofwel kan het niet verbinden met die localhost link?"* Measured afterwards:
+`ss -ltnp | grep :4300` returned nothing and `curl` answered `000` for
+every link. The server had been started through the session's preview pane
+and ended when the session restarted for a model switch.
+
+**2 · Which gate let it through.** None. Every link returned 200 when it
+was written into the form; nothing checks a link at the moment it is
+handed over, and the server's lifetime belonged to a session rather than
+to the person using it.
+
+**3 · Where the same fault sits.** The property is **a URL handed to Kenny
+that depends on a process Claude started and does not keep alive**.
+Searched with `git grep -nE 'localhost:[0-9]{4}' -- '*.md'` over the
+tracked documents: none. Searched this session's transcript for Claude
+replies carrying a `localhost:NNNN` link: 6 replies, 19 links, all of them
+on a preview-pane server. The round-seven link Kenny opened himself worked
+only because an older server had been left running for four days.
+
+**4 · How we prevent recurrence.** Two parts. `npm run catalogue` starts
+the static server in Kenny's own terminal and prints every review page
+only after the running server has answered 200 for it
+(`tests/fixtures/serve-catalogue.mjs`), so a printed link works. And a
+review hand-over gives that command rather than a bare link; where Claude
+does give a link, it is checked with `curl` in the same turn, immediately
+before the message.
+
+**5 · What the remedy costs.** One command for Kenny to run before a
+review, in a terminal he keeps open, and one `curl` per link for Claude.
+
+**6 · Who enforces it.** The script is code: it cannot print a dead link.
+The hand-over habit is discipline-enforced.
+
+**7 · How we measure it works, and when.** At the next Kijken step: Kenny
+runs `npm run catalogue` and every printed page opens. Queued as
+`fix-19-M1`.
+
+**8 · If the measurement fails.** A page that `npm run catalogue` printed
+with ✓ and that Kenny cannot open means the fault is not the server's
+lifetime (a firewall, a browser profile, a port) — measured then, on his
+machine, with his permission for that occasion.
+
+**9 · When we review the measure.** When the catalogue is published by
+`pages.yml` and reviewing no longer needs a local server at all; then the
+command becomes optional and this record says so.
