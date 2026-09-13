@@ -27,13 +27,14 @@ never a silent deviation. This project follows
 
 ## Commands
 
-| Command                                                 | What                                    | When                                                                   |
-| ------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
-| `npm run gates`                                         | the blocking code checks, seconds       | every commit, by the hook in `.claude/hooks/gates.sh`                  |
-| `npx playwright test --grep "<tags>" --project=firefox` | the tests of what changed               | while building; the single spec file until `tests/tags.json` exists    |
-| `npm run test:browser`                                  | the whole suite, both engines           | before a release, on Kenny's go given in a form; never on Claude's own |
-| `npm run advice`                                        | contrast, invariants, motion, texture   | when Kenny wants the reading                                           |
-| `npm run verify`                                        | gates, affected tests, advice, in order | before a release, on the same go                                       |
+| Command                                                           | What                                            | When                                                                   |
+| ----------------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| `npm run gates`                                                   | the blocking code checks, seconds               | every commit, by the hook in `.claude/hooks/gates.sh`                  |
+| `npx playwright test --grep "<tags>" --project=firefox`           | the tests of what changed                       | while building; the single spec file until `tests/tags.json` exists    |
+| `npm run test:browser`                                            | the whole suite, both engines                   | before a release, on Kenny's go given in a form; never on Claude's own |
+| `npm run advice`                                                  | contrast, invariants, motion, texture           | when Kenny wants the reading                                           |
+| `npm run verify`                                                  | gates, affected tests, advice, in order         | before a release, on the same go                                       |
+| review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published | Claude pushes `round-six` whenever it asks Kenny to look [scope-67]    |
 
 No CI runs on commits; `release.yml` fires on a `v*` tag and `pages.yml`
 on a push to `main`. Node 26 (`.nvmrc`). All artefact text in English.
@@ -53,7 +54,7 @@ Kenny.
 | Current phase       | **Round eight, Kijken.** Every approved fix from the catalogue so far is on the branch: gap-11, gap-12, gap-13, the switch, the data table round, the nostromo notes (scope-54 to scope-60) and held-60 (`e387f11`). Changed blocks return to the review page on their own for Kenny to judge again |
 | Last completed gate | **Phase 0, 2026-09-13.** The scope form of round eight, all sixteen items answered                                                                                                                                                                                                                  |
 | Next gate           | Kenny's look at batch 1, as the prompt the catalogue's copy button produces; then batch 2 for review, and the navigation and futuristic-layout work (`scope-48`, `scope-49`)                                                                                                                        |
-| Next action         | waiting on Kenny: the pages-branch form (allow the github-pages environment to deploy from round-six), then his look at the published review site; meanwhile an agent builds the seven data table features (scope-66)                                                                               |
+| Next action         | waiting on Kenny: his look at the published review site (the review page, the data table demo's two filter designs, the control-height demo, grotesk's pressed button); meanwhile an agent builds the seven data table features (scope-66)                                                          |
 | Open queue items    | Fifteen, none Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1`, `fix-17-M1`, `fix-18-M1`, `fix-19-M1`, `gap-10`, `gap-11`, `fix-20-M1`, `gap-12`, `gap-13`, `fix-21-M1`                                                                                               |
 | Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                     |
 | AFK mode            | off                                                                                                                                                                                                                                                                                                 |
