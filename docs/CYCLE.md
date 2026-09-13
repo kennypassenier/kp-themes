@@ -80,6 +80,33 @@ for the current change. The session title carries the step. Enforcing the
 line with the Stop hook touches a user-level file and is a separate form
 item for Kenny.
 
+## The session title
+
+kp-themes runs three steps, not eleven phases, so the title carries the
+step and its subject: `🎨 kp-themes - Bouwen - catalogus`,
+`🎨 kp-themes - Kijken - reeks 2`, `🎨 kp-themes - Uitrol - 7.0.0`. The
+shape of standing rule 22 is unchanged — Kenny owns the name, Claude owns
+the suffix — and rule 22 itself is unchanged for every other project: this
+is an exception recorded here, approved 2026-09-13.
+
+## What is enforced outside this repository
+
+Two of round eight's decisions reach past the repo, and each was asked
+separately (2026-09-13):
+
+- **The lexicon holds everywhere.** `~/Projects/dev-procedure/LEXICON.md`
+  lists the words that do not reach Kenny and what is written instead;
+  `hooks/form-lint.py` refuses a form containing one and
+  `~/.claude/hooks/may-i-stop.py` refuses a reply containing one, in every
+  project, because the language rule it enforces is already global.
+- **The status line holds only here.** The same Stop hook checks the four
+  fields only in a project whose CLAUDE.md carries `status-line:
+  required`. kp-themes carries it; nothing else does.
+
+`~/Projects/dev-procedure/PROCEDURE.md` is deliberately untouched: the
+short route already covers this cycle, and a pointer would invite a second
+project to copy it unseen.
+
 ## Worktrees
 
 A background agent works in its own git worktree, never in the checkout

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — loading research demo</title>
+        <!-- The shared stylesheets, linked once whatever the theme. css/themes.css
+             goes first because its first statement fixes the layer order; a register
+             written above it would declare kp.register before kp.base exists. -->
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- The no-flash snippet of strategy (b), as research/loading/src/no-flash-lazy.js
+             writes it: the stored theme onto <html>, the reveals armed, and the FIRST
+             register written through the parser so the page never paints without it. -->
+        <script>
+            (function () {
+                var d = document.documentElement,
+                    t = null;
+                try {
+                    t = localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                d.setAttribute('data-kp-effects', '');
+                var theme = d.getAttribute('data-theme') || 'formal';
+                var names = [
+                    'formal',
+                    'light',
+                    'dark',
+                    'cyberpunk',
+                    'synthwave',
+                    'pastel',
+                    'terminal',
+                    'forest',
+                    'high-contrast',
+                    'sepia',
+                    'blueprint',
+                    'solstice',
+                    'brutalism',
+                    'deco',
+                    'phantom',
+                    'shade-light',
+                    'shade-dark',
+                    'retro',
+                    'grotesk',
+                    'lapis',
+                    'nostromo',
+                    'titanium',
+                ];
+                if (names.indexOf(theme) < 0) theme = 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <nav class="kp-nav" aria-label="Demo">
+            <span class="kp-nav__brand">kp-themes · loading research</span>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#main" aria-current="page" data-kp-text="Demo">Demo</a></li>
+                <li><a class="kp-nav__link" href="#fetched" data-kp-text="Fetched">Fetched</a></li>
+            </ul>
+        </nav>
+        <section data-kp-surface="hero">
+            <div class="kp-page kp-stack">
+                <h1 data-kp-reveal="headline">One register at a time</h1>
+                <p class="kp-prose" data-kp-reveal="emphasis">
+                    The shared stylesheets are linked once. The <mark>register of the active theme</mark> arrives when the theme does, and
+                    <mark>nothing another theme needs</mark> is fetched. The scripts follow the same rule: a module comes only when the page has
+                    something for it.
+                </p>
+                <div class="kp-row">
+                    <button type="button" class="kp-button kp-button--primary">Primary action</button>
+                    <button type="button" class="kp-button">Secondary</button>
+                </div>
+            </div>
+        </section>
+        <main id="main" class="kp-page kp-stack" data-kp-surface="app">
+            <section class="kp-card kp-stack">
+                <h2>Pick a theme</h2>
+                <p class="kp-text-muted">
+                    Each choice fetches that theme's register once and holds the switch until it has arrived; a theme already fetched costs nothing
+                    more. The choice is stored, so a reload paints it before anything else.
+                </p>
+                <div data-kp-theme-picker class="kp-row">
+                    <button type="button" class="kp-button" data-kp-theme="formal">Formal</button>
+                    <button type="button" class="kp-button" data-kp-theme="light">Light</button>
+                    <button type="button" class="kp-button" data-kp-theme="dark">Dark</button>
+                    <button type="button" class="kp-button" data-kp-theme="cyberpunk">Cyberpunk</button>
+                    <button type="button" class="kp-button" data-kp-theme="synthwave">Synthwave</button>
+                    <button type="button" class="kp-button" data-kp-theme="pastel">Pastel</button>
+                    <button type="button" class="kp-button" data-kp-theme="terminal">Terminal</button>
+                    <button type="button" class="kp-button" data-kp-theme="forest">Forest</button>
+                    <button type="button" class="kp-button" data-kp-theme="high-contrast">High contrast</button>
+                    <button type="button" class="kp-button" data-kp-theme="sepia">Sepia</button>
+                    <button type="button" class="kp-button" data-kp-theme="blueprint">Blueprint</button>
+                    <button type="button" class="kp-button" data-kp-theme="solstice">Solstice</button>
+                    <button type="button" class="kp-button" data-kp-theme="brutalism">Brutalism</button>
+                    <button type="button" class="kp-button" data-kp-theme="deco">Art Deco</button>
+                    <button type="button" class="kp-button" data-kp-theme="phantom">Phantom</button>
+                    <button type="button" class="kp-button" data-kp-theme="shade-light">Shade (light)</button>
+                    <button type="button" class="kp-button" data-kp-theme="shade-dark">Shade (dark)</button>
+                    <button type="button" class="kp-button" data-kp-theme="retro">Retro</button>
+                    <button type="button" class="kp-button" data-kp-theme="grotesk">Grotesk</button>
+                    <button type="button" class="kp-button" data-kp-theme="lapis">Lapis</button>
+                    <button type="button" class="kp-button" data-kp-theme="nostromo">Nostromo</button>
+                    <button type="button" class="kp-button" data-kp-theme="titanium">Titanium</button>
+                </div>
+                <p data-kp-theme-status hidden></p>
+            </section>
+            <div class="kp-marquee" data-kp-marquee aria-label="What this page does">
+                <span>shared stylesheets once</span>
+                <span>one register per theme</span>
+                <span>one module per component</span>
+                <span>one hook per reveal</span>
+            </div>
+            <section class="kp-card kp-stack" id="fetched">
+                <h2 data-kp-reveal="rule">What this page fetched</h2>
+                <p class="kp-text-muted" id="modules">Modules: waiting for the page to attach.</p>
+                <p class="kp-text-muted" id="registers"></p>
+                <p class="kp-text-muted" id="layers"></p>
+                <table class="kp-table" id="readout">
+                    <thead>
+                        <tr>
+                            <th scope="col">File</th>
+                            <th scope="col">Kind</th>
+                            <th scope="col">Bytes on the wire</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+                <p class="kp-text-muted">
+                    Bytes are what the browser reports for each resource (the fixture server sends no compression, so these are the raw sizes). Fonts
+                    are listed because the register decides which faces a theme asks for.
+                </p>
+            </section>
+        </main>
+        <script type="module">
+            import { attachLazyRegisters, registersPresent, REGISTER_EVENT } from './src/lazy-register.js';
+            import { READY_EVENT } from './src/auto-lazy.js';
+
+            attachLazyRegisters({ base: '../../css/' });
+
+            const modules = document.getElementById('modules');
+            const registers = document.getElementById('registers');
+            const layers = document.getElementById('layers');
+            const body = document.querySelector('#readout tbody');
+            const foot = document.querySelector('#readout tfoot');
+
+            const kindOf = (name) => (/\.css(\?|$)/.test(name) ? 'css' : /\.js(\?|$)/.test(name) ? 'js' : /\.woff2(\?|$)/.test(name) ? 'font' : '');
+            const short = (name) => new URL(name).pathname.replace(/^.*\/(css|js|fonts|src|out)\//, '$1/');
+
+            function render() {
+                const entries = performance.getEntriesByType('resource').filter((e) => kindOf(e.name));
+                body.replaceChildren(
+                    ...entries.map((e) => {
+                        const tr = document.createElement('tr');
+                        for (const text of [short(e.name), kindOf(e.name), String(e.decodedBodySize || e.transferSize || 0)]) {
+                            const td = document.createElement('td');
+                            td.textContent = text;
+                            tr.append(td);
+                        }
+                        return tr;
+                    }),
+                );
+                const totals = {};
+                for (const e of entries) totals[kindOf(e.name)] = (totals[kindOf(e.name)] ?? 0) + (e.decodedBodySize || e.transferSize || 0);
+                foot.replaceChildren(
+                    ...Object.entries(totals).map(([kind, bytes]) => {
+                        const tr = document.createElement('tr');
+                        const th = document.createElement('th');
+                        th.scope = 'row';
+                        th.textContent = `total ${kind}`;
+                        const count = document.createElement('td');
+                        count.textContent = `${entries.filter((e) => kindOf(e.name) === kind).length} files`;
+                        const td = document.createElement('td');
+                        td.textContent = String(bytes);
+                        tr.append(th, count, td);
+                        return tr;
+                    }),
+                );
+                registers.textContent = `Registers in the document: ${registersPresent().join(', ')} — theme worn: ${document.documentElement.dataset.theme}`;
+            }
+
+            // The layer question, answered by the paint: a utility class sits
+            // in kp.utilities and must beat a register rule whatever the order
+            // the files arrived in. The probe is a button with the register's
+            // own styling and a utility that sets its margin; the margin must be
+            // the utility's.
+            function probeLayers() {
+                const probe = document.createElement('button');
+                probe.type = 'button';
+                probe.className = 'kp-button kp-m-0';
+                probe.hidden = false;
+                document.body.append(probe);
+                const margin = getComputedStyle(probe).marginTop;
+                probe.remove();
+                layers.textContent = `Layer order held after the register arrived: a .kp-m-0 utility on a .kp-button computes margin-top ${margin} (the utility wins when it is 0px).`;
+            }
+
+            new PerformanceObserver(() => render()).observe({ type: 'resource', buffered: true });
+            document.documentElement.addEventListener(READY_EVENT, (e) => {
+                modules.textContent = `Modules attached: ${e.detail.modules.join(', ')}.`;
+                render();
+                probeLayers();
+            });
+            document.documentElement.addEventListener(REGISTER_EVENT, () => {
+                render();
+                probeLayers();
+            });
+            document.addEventListener('kp-theme-change', () => render());
+            render();
+        </script>
+        <script type="module" src="./src/auto-lazy.js"></script>
+    </body>
+</html>
