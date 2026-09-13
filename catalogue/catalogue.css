@@ -5,6 +5,40 @@
    `cat-`, and the whole file sits in its own layer above the package's so
    a stage can never win a declaration from a register by accident. */
 @layer catalogue {
+    /* The shell catalogue.js builds around every page: the package's own
+       side navigation beside a column holding the bar and the page. */
+    body.cat-shell {
+        display: flex;
+        align-items: flex-start;
+        min-block-size: 100vh;
+    }
+
+    /* Sticky only while it sits beside the page: this layer is above the
+       package's, so an unconditional position here would also pin the
+       panel in its "over" mode and stop it covering the page. */
+    .cat-nav:not([data-kp-sidenav-mode='over']) {
+        position: sticky;
+        inset-block-start: 0;
+        block-size: 100vh;
+        flex: 0 0 auto;
+    }
+
+    .cat-column {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    /* The toggle only matters where the navigation lies over the page. */
+    .cat-nav-toggle {
+        display: none;
+    }
+
+    @media (max-width: 56rem) {
+        .cat-nav-toggle {
+            display: inline-flex;
+        }
+    }
+
     .cat-bar {
         display: flex;
         flex-wrap: wrap;
@@ -136,6 +170,48 @@
 
     /* A pane the reviewer can widen and narrow to find the breaking point,
        because an extreme that only shows at one width is half measured. */
+    /* Feedback under each block, and the prompt that gathers it. */
+    .cat-feedback-field {
+        margin-block-start: 0.75rem;
+        display: grid;
+        gap: 0.3rem;
+        max-inline-size: 46rem;
+    }
+
+    .cat-feedback-field label {
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-feedback-input {
+        inline-size: 100%;
+        resize: vertical;
+    }
+
+    .cat-feedback {
+        margin-block-start: 4rem;
+        padding-block-start: 1.5rem;
+        border-block-start: 2px solid var(--border);
+    }
+
+    .cat-feedback-prompt {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.9rem 1rem;
+        font-size: 0.85rem;
+        max-block-size: 24rem;
+        overflow: auto;
+    }
+
+    .cat-feedback-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
     .cat-resize {
         resize: horizontal;
         overflow: auto;

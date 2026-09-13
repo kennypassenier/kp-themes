@@ -19,7 +19,7 @@
         <main id="main" class="cat-main">
             <h1>Tables</h1>
             <p class="cat-intro">
-                <code>.kp-table</code> inside <code>.kp-table-wrap</code>, and the four things that break a table: prose that will not fit a cell, an
+                <code>.kp-table</code> inside <code>.kp-table-wrap</code>, and the things that break a table — prose that will not fit a cell, an
                 identifier with nowhere to wrap, more columns than the screen has room for, and no rows at all.
             </p>
             <ul class="cat-toc">
@@ -28,6 +28,7 @@
                 <li><a href="#wide">Forty columns</a></li>
                 <li><a href="#empty">Empty, loading, failed</a></li>
                 <li><a href="#numbers">Numbers and alignment</a></li>
+                <li><a href="#datatable">Data table</a></li>
                 <li><a href="#many">Two hundred rows</a></li>
             </ul>
 
@@ -495,6 +496,301 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable">
+                <h2>Data table: search, sort, select, page</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-datatable</code> is the table with behaviour. Type in the search box: the rows filter as you type, the
+                    status line under the table says how many are left, and a search that finds nothing shows the empty message rather than a blank
+                    table. Click a column header twice: the arrow must say which way it sorts, and <b>Hours open</b> must sort as numbers (2, 6, 27),
+                    not as text (2, 27, 6). Tick rows and use the header checkbox: it selects what is visible, and a half-selected page must look
+                    half-selected. Page through with the pager and check that the current page is marked without colour alone. Narrow the window: the
+                    table turns into cards, one per row, each with its labels.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="8">
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search incidents" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select every visible row" /></th>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text">Site</th>
+                                        <th scope="col" data-kp-sort="text">Status</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="INC-4471">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4471" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">6</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line closed at the manifold pending a look in daylight."
+                                        >
+                                            The pump cycles every four minutes and the pressure reading disagrees with the wall gauge by two bar; line
+                                            closed at the manifold pending a look in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4468">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4468" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">27</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Door sensor reports open while the door is shut.">
+                                            Door sensor reports open while the door is shut.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4463">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4463" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4463</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">0</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Calibrated.">Calibrated.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4457">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4457" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4457</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">21</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4456">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4456" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">28</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Duplicate of an older report.">
+                                            Duplicate of an older report.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4455">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4455" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4455</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">35</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Calibrated.">Calibrated.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4454">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4454" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4454</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">42</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Awaiting a part from the supplier.">
+                                            Awaiting a part from the supplier.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4453">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4453" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">1</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4452">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4452" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4452</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">8</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4451">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4451" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4451</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">15</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Duplicate of an older report.">
+                                            Duplicate of an older report.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4450">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4450" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4450</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">22</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Calibrated.">Calibrated.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4449">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4449" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4449</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">29</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Awaiting a part from the supplier.">
+                                            Awaiting a part from the supplier.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4448">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4448" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4448</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">36</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4447">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4447" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4447</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">43</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4446">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4446" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4446</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Duplicate of an older report.">
+                                            Duplicate of an older report.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4445">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4445" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4445</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Calibrated.">Calibrated.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4444">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4444" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4444</code></td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Awaiting a part from the supplier.">
+                                            Awaiting a part from the supplier.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4443">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4443" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4443</code></td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4442">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4442" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4442</code></td>
+                                        <td data-label="Site">Weighbridge</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4441">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4441" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4441</code></td>
+                                        <td data-label="Site">Boiler room</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Duplicate of an older report.">
+                                            Duplicate of an older report.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4440">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4440" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4440</code></td>
+                                        <td data-label="Site">Loading bay</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">44</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Calibrated.">Calibrated.</td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4439">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4439" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4439</code></td>
+                                        <td data-label="Site">Main gate</td>
+                                        <td data-label="Status">Open</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">3</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Awaiting a part from the supplier.">
+                                            Awaiting a part from the supplier.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4438">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4438" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4438</code></td>
+                                        <td data-label="Site">Server room</td>
+                                        <td data-label="Status">Watching</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">10</td>
+                                        <td data-label="Note" class="kp-cell-truncate" title="Sensor replaced; watching for a week.">
+                                            Sensor replaced; watching for a week.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="INC-4437">
+                                        <td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select INC-4437" /></td>
+                                        <td data-label="Reference"><code class="kp-mono">INC-4437</code></td>
+                                        <td data-label="Site">Canteen</td>
+                                        <td data-label="Status">Closed</td>
+                                        <td data-label="Hours open" class="kp-text-end kp-numeric">17</td>
+                                        <td
+                                            data-label="Note"
+                                            class="kp-cell-truncate"
+                                            title="Reported twice by the night shift; no fault found in daylight."
+                                        >
+                                            Reported twice by the night shift; no fault found in daylight.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
                     </div>
                 </div>
             </section>

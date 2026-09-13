@@ -1218,3 +1218,15 @@ as its own step.
 
 **scope-51 · The catalogue page shape is approved** for the remaining
 components.
+
+**scope-52 · The catalogue is reviewed in the reviewer's own browser, with
+notes kept per theme.** Kenny, 2026-09-13, after opening the pages through
+`npm run catalogue`: *"goede start, zeker de navbar demo is al heel goed"*,
+and the four answers that rest on looking stand. Three additions, trial
+rather than final by his own words. Every page carries the package's own
+side navigation over every review page, built by `catalogue/catalogue.js`
+from one list the catalogue gate compares against the pages on disk. The
+tables page gains a data table (search, sort, select, pager, cards). And
+under every block a note field keeps a note per theme in the browser;
+switching theme swaps the note, and the foot of the page gathers every
+note of every theme into one prompt with a copy button.

@@ -95,9 +95,38 @@ function main() {
     if (gone.length) {
         console.error(`${gone.length} pending component(s) no longer exist in css/components.css:\n  ` + gone.join('\n  '));
     }
-    if (invisible.length || stale.length || gone.length) process.exit(1);
 
-    console.log(`catalogue: ${shown.size} of ${defined.size} component roots shown across ${pages.length} page(s), ` + `${pending.size} pending.`);
+    // Every review page is reachable from the navigation catalogue.js builds,
+    // and the navigation names no page that does not exist. A page written
+    // and left out of PAGES is a page nobody opens [scope-52].
+    const shell = read('catalogue/catalogue.js');
+    const listed = new Set([...shell.matchAll(/href:\s*'([^']+)'/g)].map((m) => m[1]));
+    const reviewPages = readdirSync(dir)
+        .filter((name) => name.endsWith('.html'))
+        .map((name) => `catalogue/${name}`);
+    const research = new URL('research/', root);
+    if (existsSync(research)) {
+        for (const topic of readdirSync(research)) {
+            if (existsSync(new URL(`research/${topic}/demo.html`, root))) reviewPages.push(`research/${topic}/demo.html`);
+        }
+    }
+    const unlisted = reviewPages.filter((page) => !listed.has(page)).sort();
+    const phantom = [...listed].filter((page) => !existsSync(new URL(page, root))).sort();
+    if (unlisted.length) {
+        console.error(
+            `${unlisted.length} review page(s) exist but the navigation in catalogue/catalogue.js does not list them:\n  ` + unlisted.join('\n  '),
+        );
+    }
+    if (phantom.length) {
+        console.error(`${phantom.length} page(s) in the navigation do not exist:\n  ` + phantom.join('\n  '));
+    }
+
+    if (invisible.length || stale.length || gone.length || unlisted.length || phantom.length) process.exit(1);
+
+    console.log(
+        `catalogue: ${shown.size} of ${defined.size} component roots shown across ${pages.length} page(s), ` +
+            `${pending.size} pending; ${reviewPages.length} review page(s), every one in the navigation.`,
+    );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main();
