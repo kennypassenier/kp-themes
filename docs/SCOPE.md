@@ -1101,3 +1101,85 @@ theme: one step off a 93% signal barely moves, so a rule that serves
 twenty-four themes well cannot serve the twenty-fifth at all. S47 already
 says the token contract is a floor and not a ceiling; this says the same
 of the derivation.
+
+## Round eight — the working method itself (opened 2026-09-13)
+
+Kenny's brief of 2026-09-13 put the process under review rather than a
+theme. Sixteen decisions from one form; the measurements they rest on are
+in the session of that date (180 commits since v4.0.0, 90 touching
+`css/` or `themes/` and 90 not; 1,371 tests of which 217 in the register
+specs assert appearance; 887 gate runs and 137 whole-suite runs in one
+transcript; CLAUDE.md at 447 lines). Every decision below is
+**kp-themes only** unless it says otherwise; a wish that touches
+`~/Projects/dev-procedure` or a user-level hook is a separate item with its
+own go.
+
+**scope-29 · The order.** Layer 1 the small machine (this file's
+neighbours: CLAUDE.md slimmed, the lexicon, the status line, the cycle
+written down), layer 2 the catalogue with its developer overlay, layer 3
+tests, tags, gates, drift and purge, research in the background from
+layer 1 on, content rounds last.
+
+**scope-30 · The short route is the route.** Bouwen → Kijken → Uitrol,
+written out in `docs/CYCLE.md`. The route exists in PROCEDURE.md since
+2026-09-09; this project takes it. Versions stay: a released theme never
+changes in place.
+
+**scope-31 · One fixed catalogue.** `catalogue/`, hand-written HTML per
+component: every variant, state and extreme, a "Kijk naar:" text beside
+each block, a theme switcher, the ten example pages as fixed pages. A
+gate compares the classes `components.css` defines with the classes the
+catalogue shows and refuses a component nobody can see. Nothing else is
+generated but CSS and JS. The same folder is the website.
+
+**scope-32 · Appearance goes to the page.** The 217 register tests are
+removed as their catalogue blocks arrive. Invisible behaviour and
+cross-product sweeps stay tests.
+
+**scope-33 · Tags decide what runs.** Every test carries
+`@component:<name>`, `@theme:<name>` or `@sweep`; `tests/tags.json` maps
+file → tag; three gradations (building · commit · release); the map is
+measured once against what it skips. Replaces `test:affected`.
+
+**scope-34 · The gates get a table.** Per gate what it caught and how
+often; Kenny decides per gate in a form. No gate leaves unseen.
+
+**scope-35 · Drift: derive, fewer documents, a source-hash gate.** A
+document declares which files it describes; the gate refuses a commit
+where a source changed and the document was not looked at. Not
+infallible, and said so.
+
+**scope-36 · Purge per document.** One proposal line per document —
+keep, to the site, archive, remove — and Kenny decides per document.
+
+**scope-37 · CLAUDE.md carries status and commands.** The rules moved to
+`docs/RULES.md`, the cycle to `docs/CYCLE.md`; the document index stays
+because `gates/gates.test.mjs` reads it.
+
+**scope-38 · Three agents, invoked by the step, never by Kenny.**
+`researcher`, `theme-builder`, `checker` in `.claude/agents/`, each with
+a "use proactively" description and only its tools. Kenny's words: "ik ga
+niet micromanagen".
+
+**scope-39 · A lexicon with a hook.** One word list, read by the form
+linter and by a Stop hook on every reply. The hook lives in a user-level
+file, so its scope is a separate item (global or marker-scoped).
+
+**scope-40 · One session, research in the background.** Bouwen overlaps
+with Kijken: Claude builds batch N+1 while Kenny looks at batch N.
+
+**scope-41 · Three research streams started 2026-09-13.** Navbar and
+component alternatives, futuristic layouts, per-theme loading — each a
+`researcher` in its own worktree.
+
+**scope-42 · The developer overlay.** Colour-and-token under the cursor,
+an animation timeline (measured feasible: `document.getAnimations()`
+pauses and scrubs CSS transitions), a ruler; one `catalogue/devtools.js`.
+
+**scope-43 · The status line.** Four fields at the top of every reply
+(step · busy with · tests · gates). Enforcing it with the Stop hook is a
+user-level change and a separate item.
+
+**scope-44 · Worktrees for parallel streams.** Background agents work in
+their own worktree. Screenshots, Claude in Chrome and plan mode were
+offered and not taken.
