@@ -2968,3 +2968,38 @@ blocklists themselves.
 
 **9 · When we review the measure.** At the end of round eight.
 
+## fix-24 · The ruler picked one click as both of its elements (2026-09-14)
+
+**1 · What went wrong.** Kenny: "waar ik ook klik, die pakt zowel het first als
+second element". `build()` in `catalogue/devtools.js` added document listeners
+on every open of the overlay and never removed them; after a second open one
+click ran the ruler twice and printed `first: 133 × 36 px` and `second: 133 ×
+36 px` for the same button.
+
+**2 · Which gate let it through.** None. The overlay had no test at all.
+
+**3 · Where the same fault sits.** The property is **a document or window
+listener added each time a catalogue tool opens or mounts, without removal**.
+Searched with `grep -n "document.addEventListener\|window.addEventListener"
+catalogue/*.js` (13 outside the overlay) and `grep -rn "mountPrompt(\|mountJudging(\|
+mountDevtools(\|mountComforts("` for their callers: each mount runs once per
+document, so the overlay was the only place.
+
+**4 · How we prevent recurrence.** The overlay's listeners share one
+AbortController, aborted on close and before a rebuild; the theme listener of
+`openDevtools()` too. `tests/catalogue-devtools.spec.mjs` opens the overlay
+three times and requires one click to pick only the first element; it failed
+with the fault in place.
+
+**5 · What the remedy costs.** One test of a few seconds.
+
+**6 · Who enforces it.** The test, code.
+
+**7 · How we measure it works, and when.** At Kenny's next use of the ruler on
+the published review site.
+
+**8 · If the measurement fails.** Claude records the sequence Kenny used and
+adds it to the test before changing the code again.
+
+**9 · When we review the measure.** At the end of round eight.
+

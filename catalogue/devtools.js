@@ -23,6 +23,11 @@ let mode = 'inspect';
 const recorded = new Set();
 let observer = null;
 const ruler = { first: null, second: null };
+// The document listeners of the open overlay. Each open used to add another
+// set and none were removed, so after a second open one click ran the ruler
+// twice and picked its element as first and second at once (Kenny,
+// 2026-09-14). They now go when the overlay closes.
+let listening = null;
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -305,13 +310,21 @@ function build() {
         out.textContent = `${live().length} animation(s) · ${range.value} of ${range.max} ms`;
     });
 
-    document.addEventListener('pointermove', (event) => {
-        if (mode !== 'inspect' || !panel) return;
-        const element = event.target;
-        if (!(element instanceof Element) || panel.contains(element)) return;
-        const { name, rows } = describe(element);
-        out.textContent = [name, ...rows].join('\n');
-    });
+    listening?.abort();
+    listening = new AbortController();
+    const { signal } = listening;
+
+    document.addEventListener(
+        'pointermove',
+        (event) => {
+            if (mode !== 'inspect' || !panel) return;
+            const element = event.target;
+            if (!(element instanceof Element) || panel.contains(element)) return;
+            const { name, rows } = describe(element);
+            out.textContent = [name, ...rows].join('\n');
+        },
+        { signal },
+    );
 
     document.addEventListener(
         'click',
@@ -340,7 +353,7 @@ function build() {
                 `gap:    ${x} px across, ${y} px down`,
             ].join('\n');
         },
-        true,
+        { capture: true, signal },
     );
 }
 
@@ -349,12 +362,18 @@ export function openDevtools() {
     armRecorder();
     tokenIndex = null; // the theme may have changed since the last open
     build();
-    document.addEventListener('kp-theme-change', () => {
-        tokenIndex = null;
-    });
+    document.addEventListener(
+        'kp-theme-change',
+        () => {
+            tokenIndex = null;
+        },
+        { signal: listening?.signal },
+    );
 }
 
 export function closeDevtools() {
+    listening?.abort();
+    listening = null;
     clearMarks();
     playAll();
     observer?.disconnect();
