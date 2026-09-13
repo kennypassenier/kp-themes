@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Buttons · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <label for="cat-theme">Theme</label>
+            <select id="cat-theme" class="kp-field__control" data-cat-theme></select>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Buttons</h1>
+            <p class="cat-intro">
+                <code>.kp-button</code> with its variants and sizes, every state a theme paints, and the extremes that break a button: a label that
+                will not fit, an icon alone, a row that must wrap.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#variants">Variants</a></li>
+                <li><a href="#states">States</a></li>
+                <li><a href="#sizes">Sizes</a></li>
+                <li><a href="#icons">Icons</a></li>
+                <li><a href="#extremes">Extremes</a></li>
+                <li><a href="#groups">In a row</a></li>
+            </ul>
+
+            <section class="cat-block" id="variants">
+                <h2>Variants</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the five variants must read as five different weights of the same family, not five different buttons.
+                    <b>Primary</b> is the loudest thing on the page; <b>secondary</b> and <b>outline</b> sit below it without competing;
+                    <b>ghost</b> has no ground until you touch it; <b>destructive</b> is the only one allowed to use the alarm colour. A theme that
+                    paints a bevel, a notch or a frame does it to all five, not to one.
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button">Save changes</button>
+                    <button type="button" class="kp-button kp-button--secondary">Save as draft</button>
+                    <button type="button" class="kp-button kp-button--outline">Preview</button>
+                    <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                    <button type="button" class="kp-button kp-button--destructive">Delete account</button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="states">
+                <h2>States</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> hover and press with the mouse, then walk the row with Tab. Every state must be visible <i>without</i> colour
+                    alone — a lift, an inset, a frame, a shift. The pressed state must differ from hover by more than a hair: the rule is at least ten
+                    steps of lightness, and the two themes that could not reach it were changed rather than excused. The focus ring must stay visible
+                    on the ground behind it in every theme, including the ones that paint their own elevation. <b>Disabled</b> must look unavailable
+                    and must not respond to hover at all.
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button">Rest</button>
+                    <button type="button" class="kp-button">Focus me with Tab</button>
+                    <button type="button" class="kp-button" disabled>Disabled</button>
+                    <button type="button" class="kp-button kp-button--secondary" disabled>Disabled secondary</button>
+                    <button type="button" class="kp-button kp-button--outline" disabled>Disabled outline</button>
+                    <button type="button" class="kp-button" aria-busy="true">Working…</button>
+                </div>
+                <p class="cat-note">
+                    <code>aria-busy</code> is the consumer's to set and the consumer's to clear; the package never leaves a button busy with no way
+                    back.
+                </p>
+            </section>
+
+            <section class="cat-block" id="sizes">
+                <h2>Sizes</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three sizes on one baseline. The label must stay centred at every size, the padding must scale with the text
+                    rather than jump, and the small size must still be large enough to hit — 44 px is the floor on a touch screen. Use the ruler in
+                    Devtools to check the height of each.
+                </div>
+                <div class="cat-stage" style="align-items: baseline">
+                    <button type="button" class="kp-button kp-button--sm">Small</button>
+                    <button type="button" class="kp-button">Default</button>
+                    <button type="button" class="kp-button kp-button--lg">Large</button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="icons">
+                <h2>Icons</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the icon and the label must share a baseline, and the gap between them must not grow with the button. The
+                    icon-only button must have an accessible name — hover it and read the tooltip, then Tab to it and listen: a screen reader has to
+                    say something other than "button".
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button">
+                        <span aria-hidden="true">↻</span>
+                        Retry
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary">
+                        Export
+                        <span aria-hidden="true">↓</span>
+                    </button>
+                    <button type="button" class="kp-icon-button" aria-label="Close this panel" title="Close">
+                        <span aria-hidden="true">✕</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="extremes">
+                <h2>Extremes</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> drag the right edge of the pane to narrow it. The long label must wrap or ellipse inside the button — it must
+                    never push the button past the pane, and it must never be cut mid-word with no sign that something is missing. The one-character
+                    button must stay square-ish rather than collapsing to a sliver. The button with no label at all is a fault to see, not to hide.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <p style="margin-block-start: 0">
+                            <button type="button" class="kp-button">
+                                Acknowledge the incident and notify every subscriber on the escalation list
+                            </button>
+                        </p>
+                        <p>
+                            <button type="button" class="kp-button kp-button--secondary">
+                                Ein außerordentlich langes Wort: Rindfleischetikettierungsüberwachungsaufgaben
+                            </button>
+                        </p>
+                        <p style="margin-block-end: 0">
+                            <button type="button" class="kp-button">؟</button>
+                            <button type="button" class="kp-button kp-button--outline"></button>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="groups">
+                <h2>In a row, and on a card</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> buttons side by side must line up on their text, not on their boxes, and the row must wrap rather than scroll when
+                    the pane narrows. On the card, the pair must sit against the card's ground and not against the page's — a theme that paints its
+                    card a different colour has to keep the button legible on it.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-card">
+                        <h3 class="kp-card__title">Discard this draft?</h3>
+                        <p>The draft has not been published. Nobody else has seen it.</p>
+                        <div class="kp-card__footer">
+                            <button type="button" class="kp-button kp-button--ghost">Keep editing</button>
+                            <button type="button" class="kp-button kp-button--destructive">Discard</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

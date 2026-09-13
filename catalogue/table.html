@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Tables · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <label for="cat-theme">Theme</label>
+            <select id="cat-theme" class="kp-field__control" data-cat-theme></select>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Tables</h1>
+            <p class="cat-intro">
+                <code>.kp-table</code> inside <code>.kp-table-wrap</code>, and the four things that break a table: prose that will not fit a cell, an
+                identifier with nowhere to wrap, more columns than the screen has room for, and no rows at all.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#plain">A plain table</a></li>
+                <li><a href="#long">Long text in a cell</a></li>
+                <li><a href="#wide">Forty columns</a></li>
+                <li><a href="#empty">Empty, loading, failed</a></li>
+                <li><a href="#numbers">Numbers and alignment</a></li>
+                <li><a href="#many">Two hundred rows</a></li>
+            </ul>
+
+            <section class="cat-block" id="plain">
+                <h2>A plain table</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the header row must stay told apart from the body in every theme — by weight, by rule, by ground, whatever the
+                    theme chooses, but by something. Hover a row: the highlight must not swallow the text. The zebra striping, where a theme has it,
+                    must not fight the hover. Check that the rule between rows is visible without being louder than the numbers.
+                </div>
+                <div class="cat-stage cat-stage--dense cat-stage--block">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                Recent incidents
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Reference</th>
+                                    <th scope="col">Site</th>
+                                    <th scope="col" class="kp-text-nowrap">Status</th>
+                                    <th scope="col" class="kp-text-end kp-text-nowrap">Open for</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4471</code></td>
+                                    <td>Pump house 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 12m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4468</code></td>
+                                    <td>Cold store</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1d 3h</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4463</code></td>
+                                    <td>Weighbridge</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="long">
+                <h2>Long text in a cell</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> drag the right edge of the pane narrower and watch all three columns. The <b>prose</b> column uses
+                    <code>.kp-cell-truncate</code>: it must end in an ellipsis and keep its full text in the title attribute, never cut a word with no
+                    sign that more exists. The <b>identifier</b> column uses <code>.kp-cell-break</code>: a 76-character key with nowhere to wrap must
+                    break inside itself rather than push the table sideways. The <b>link</b> column has neither — it is the fault to see: a long URL
+                    with no help widens the table until the page scrolls. Nothing in this block may make the <i>page</i> scroll horizontally; the
+                    wrapper scrolls instead.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Prose, truncated</th>
+                                        <th scope="col">Identifier, broken</th>
+                                        <th scope="col">Link, unhelped</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            class="kp-cell-truncate"
+                                            title="Reported by the night operator, who noted that the pump had been cycling every four minutes since shortly after midnight and that the pressure reading disagreed with the gauge on the wall by roughly two bar, which is more than the sensor has ever drifted before, so the shift was ended early and the line was closed off at the manifold pending a look in daylight."
+                                        >
+                                            Reported by the night operator, who noted that the pump had been cycling every four minutes since shortly
+                                            after midnight and that the pressure reading disagreed with the gauge on the wall by roughly two bar,
+                                            which is more than the sensor has ever drifted before, so the shift was ended early and the line was
+                                            closed off at the manifold pending a look in daylight.
+                                        </td>
+                                        <td class="kp-cell-break">
+                                            <code class="kp-mono">f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7e2504a71c6b8d3e9</code>
+                                        </td>
+                                        <td>
+                                            <a href="#long"
+                                                >https://status.example.internal/incidents/2026-09-13/pump-04/telemetry?window=24h&resolution=1m&format=csv</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-cell-truncate" title="Short.">Short.</td>
+                                        <td class="kp-cell-break"><code class="kp-mono">a1</code></td>
+                                        <td><a href="#long">/ok</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note">
+                    The pane above is resizable: drag its bottom-right corner. The page itself must never gain a horizontal scrollbar, whatever you do
+                    to the pane.
+                </p>
+            </section>
+
+            <section class="cat-block" id="wide">
+                <h2>Forty columns</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the wrapper must scroll on its own — put the pointer inside it and scroll sideways, then Tab through the cells and
+                    watch the wrapper follow the focus. The header must stay readable while you scroll. The <i>page</i> must not move sideways at all.
+                    In a theme that paints a frame or a bezel, check that the frame does not get scrolled away with the content.
+                </div>
+                <div class="cat-stage cat-stage--dense cat-stage--block">
+                    <div class="kp-table-wrap" tabindex="0" role="region" aria-label="Forty-column incident detail">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="kp-text-nowrap">Ref</th>
+                                    <th scope="col" class="kp-text-nowrap">Site</th>
+                                    <th scope="col" class="kp-text-nowrap">Line</th>
+                                    <th scope="col" class="kp-text-nowrap">Shift</th>
+                                    <th scope="col" class="kp-text-nowrap">Operator</th>
+                                    <th scope="col" class="kp-text-nowrap">Opened</th>
+                                    <th scope="col" class="kp-text-nowrap">Closed</th>
+                                    <th scope="col" class="kp-text-nowrap">Status</th>
+                                    <th scope="col" class="kp-text-nowrap">Severity</th>
+                                    <th scope="col" class="kp-text-nowrap">Pressure</th>
+                                    <th scope="col" class="kp-text-nowrap">Flow</th>
+                                    <th scope="col" class="kp-text-nowrap">Temp in</th>
+                                    <th scope="col" class="kp-text-nowrap">Temp out</th>
+                                    <th scope="col" class="kp-text-nowrap">Amps</th>
+                                    <th scope="col" class="kp-text-nowrap">Volts</th>
+                                    <th scope="col" class="kp-text-nowrap">Hz</th>
+                                    <th scope="col" class="kp-text-nowrap">Runtime</th>
+                                    <th scope="col" class="kp-text-nowrap">Cycles</th>
+                                    <th scope="col" class="kp-text-nowrap">Faults</th>
+                                    <th scope="col" class="kp-text-nowrap">Alarms</th>
+                                    <th scope="col" class="kp-text-nowrap">Last service</th>
+                                    <th scope="col" class="kp-text-nowrap">Next service</th>
+                                    <th scope="col" class="kp-text-nowrap">Vendor</th>
+                                    <th scope="col" class="kp-text-nowrap">Contract</th>
+                                    <th scope="col" class="kp-text-nowrap">Region</th>
+                                    <th scope="col" class="kp-text-nowrap">Cost centre</th>
+                                    <th scope="col" class="kp-text-nowrap">Owner</th>
+                                    <th scope="col" class="kp-text-nowrap">Deputy</th>
+                                    <th scope="col" class="kp-text-nowrap">Phone</th>
+                                    <th scope="col" class="kp-text-nowrap">Escalation</th>
+                                    <th scope="col" class="kp-text-nowrap">Checked by</th>
+                                    <th scope="col" class="kp-text-nowrap">Signed</th>
+                                    <th scope="col" class="kp-text-nowrap">Batch</th>
+                                    <th scope="col" class="kp-text-nowrap">Lot</th>
+                                    <th scope="col" class="kp-text-nowrap">Pallets</th>
+                                    <th scope="col" class="kp-text-nowrap">Weight</th>
+                                    <th scope="col" class="kp-text-nowrap">Moisture</th>
+                                    <th scope="col" class="kp-text-nowrap">Grade</th>
+                                    <th scope="col" class="kp-text-nowrap">Notes</th>
+                                    <th scope="col" class="kp-text-nowrap">Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="kp-text-nowrap">INC-4471</td>
+                                    <td class="kp-text-nowrap">Pump house 4</td>
+                                    <td class="kp-text-nowrap">L1</td>
+                                    <td class="kp-text-nowrap">Night</td>
+                                    <td class="kp-text-nowrap">A. Verhoeven</td>
+                                    <td class="kp-text-nowrap">00:14</td>
+                                    <td class="kp-text-nowrap">—</td>
+                                    <td class="kp-text-nowrap">Open</td>
+                                    <td class="kp-text-nowrap">High</td>
+                                    <td class="kp-text-nowrap">3.2 bar</td>
+                                    <td class="kp-text-nowrap">18 m³/h</td>
+                                    <td class="kp-text-nowrap">4 °C</td>
+                                    <td class="kp-text-nowrap">11 °C</td>
+                                    <td class="kp-text-nowrap">14.2</td>
+                                    <td class="kp-text-nowrap">400</td>
+                                    <td class="kp-text-nowrap">50</td>
+                                    <td class="kp-text-nowrap">612 h</td>
+                                    <td class="kp-text-nowrap">18 442</td>
+                                    <td class="kp-text-nowrap">3</td>
+                                    <td class="kp-text-nowrap">1</td>
+                                    <td class="kp-text-nowrap">2026-06-02</td>
+                                    <td class="kp-text-nowrap">2026-12-02</td>
+                                    <td class="kp-text-nowrap">Hydroflow</td>
+                                    <td class="kp-text-nowrap">HF-2201</td>
+                                    <td class="kp-text-nowrap">North</td>
+                                    <td class="kp-text-nowrap">CC-40</td>
+                                    <td class="kp-text-nowrap">K. Passenier</td>
+                                    <td class="kp-text-nowrap">M. Dries</td>
+                                    <td class="kp-text-nowrap">+32 3 000 00 00</td>
+                                    <td class="kp-text-nowrap">Tier 2</td>
+                                    <td class="kp-text-nowrap">Night shift</td>
+                                    <td class="kp-text-nowrap">Yes</td>
+                                    <td class="kp-text-nowrap">B-901</td>
+                                    <td class="kp-text-nowrap">L-41</td>
+                                    <td class="kp-text-nowrap">12</td>
+                                    <td class="kp-text-nowrap">480 kg</td>
+                                    <td class="kp-text-nowrap">13.1 %</td>
+                                    <td class="kp-text-nowrap">A</td>
+                                    <td class="kp-text-nowrap">Gauge disagrees</td>
+                                    <td class="kp-text-nowrap">04:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="kp-text-nowrap">INC-4472</td>
+                                    <td class="kp-text-nowrap">Pump house 4</td>
+                                    <td class="kp-text-nowrap">L2</td>
+                                    <td class="kp-text-nowrap">Night</td>
+                                    <td class="kp-text-nowrap">A. Verhoeven</td>
+                                    <td class="kp-text-nowrap">00:14</td>
+                                    <td class="kp-text-nowrap">—</td>
+                                    <td class="kp-text-nowrap">Open</td>
+                                    <td class="kp-text-nowrap">High</td>
+                                    <td class="kp-text-nowrap">3.2 bar</td>
+                                    <td class="kp-text-nowrap">18 m³/h</td>
+                                    <td class="kp-text-nowrap">4 °C</td>
+                                    <td class="kp-text-nowrap">11 °C</td>
+                                    <td class="kp-text-nowrap">14.2</td>
+                                    <td class="kp-text-nowrap">400</td>
+                                    <td class="kp-text-nowrap">50</td>
+                                    <td class="kp-text-nowrap">612 h</td>
+                                    <td class="kp-text-nowrap">18 442</td>
+                                    <td class="kp-text-nowrap">3</td>
+                                    <td class="kp-text-nowrap">1</td>
+                                    <td class="kp-text-nowrap">2026-06-02</td>
+                                    <td class="kp-text-nowrap">2026-12-02</td>
+                                    <td class="kp-text-nowrap">Hydroflow</td>
+                                    <td class="kp-text-nowrap">HF-2201</td>
+                                    <td class="kp-text-nowrap">North</td>
+                                    <td class="kp-text-nowrap">CC-40</td>
+                                    <td class="kp-text-nowrap">K. Passenier</td>
+                                    <td class="kp-text-nowrap">M. Dries</td>
+                                    <td class="kp-text-nowrap">+32 3 000 00 00</td>
+                                    <td class="kp-text-nowrap">Tier 2</td>
+                                    <td class="kp-text-nowrap">Night shift</td>
+                                    <td class="kp-text-nowrap">Yes</td>
+                                    <td class="kp-text-nowrap">B-902</td>
+                                    <td class="kp-text-nowrap">L-42</td>
+                                    <td class="kp-text-nowrap">12</td>
+                                    <td class="kp-text-nowrap">480 kg</td>
+                                    <td class="kp-text-nowrap">13.1 %</td>
+                                    <td class="kp-text-nowrap">A</td>
+                                    <td class="kp-text-nowrap">Gauge disagrees</td>
+                                    <td class="kp-text-nowrap">04:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="kp-text-nowrap">INC-4473</td>
+                                    <td class="kp-text-nowrap">Pump house 4</td>
+                                    <td class="kp-text-nowrap">L3</td>
+                                    <td class="kp-text-nowrap">Night</td>
+                                    <td class="kp-text-nowrap">A. Verhoeven</td>
+                                    <td class="kp-text-nowrap">00:14</td>
+                                    <td class="kp-text-nowrap">—</td>
+                                    <td class="kp-text-nowrap">Open</td>
+                                    <td class="kp-text-nowrap">High</td>
+                                    <td class="kp-text-nowrap">3.2 bar</td>
+                                    <td class="kp-text-nowrap">18 m³/h</td>
+                                    <td class="kp-text-nowrap">4 °C</td>
+                                    <td class="kp-text-nowrap">11 °C</td>
+                                    <td class="kp-text-nowrap">14.2</td>
+                                    <td class="kp-text-nowrap">400</td>
+                                    <td class="kp-text-nowrap">50</td>
+                                    <td class="kp-text-nowrap">612 h</td>
+                                    <td class="kp-text-nowrap">18 442</td>
+                                    <td class="kp-text-nowrap">3</td>
+                                    <td class="kp-text-nowrap">1</td>
+                                    <td class="kp-text-nowrap">2026-06-02</td>
+                                    <td class="kp-text-nowrap">2026-12-02</td>
+                                    <td class="kp-text-nowrap">Hydroflow</td>
+                                    <td class="kp-text-nowrap">HF-2201</td>
+                                    <td class="kp-text-nowrap">North</td>
+                                    <td class="kp-text-nowrap">CC-40</td>
+                                    <td class="kp-text-nowrap">K. Passenier</td>
+                                    <td class="kp-text-nowrap">M. Dries</td>
+                                    <td class="kp-text-nowrap">+32 3 000 00 00</td>
+                                    <td class="kp-text-nowrap">Tier 2</td>
+                                    <td class="kp-text-nowrap">Night shift</td>
+                                    <td class="kp-text-nowrap">Yes</td>
+                                    <td class="kp-text-nowrap">B-903</td>
+                                    <td class="kp-text-nowrap">L-43</td>
+                                    <td class="kp-text-nowrap">12</td>
+                                    <td class="kp-text-nowrap">480 kg</td>
+                                    <td class="kp-text-nowrap">13.1 %</td>
+                                    <td class="kp-text-nowrap">A</td>
+                                    <td class="kp-text-nowrap">Gauge disagrees</td>
+                                    <td class="kp-text-nowrap">04:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="kp-text-nowrap">INC-4474</td>
+                                    <td class="kp-text-nowrap">Pump house 4</td>
+                                    <td class="kp-text-nowrap">L4</td>
+                                    <td class="kp-text-nowrap">Night</td>
+                                    <td class="kp-text-nowrap">A. Verhoeven</td>
+                                    <td class="kp-text-nowrap">00:14</td>
+                                    <td class="kp-text-nowrap">—</td>
+                                    <td class="kp-text-nowrap">Open</td>
+                                    <td class="kp-text-nowrap">High</td>
+                                    <td class="kp-text-nowrap">3.2 bar</td>
+                                    <td class="kp-text-nowrap">18 m³/h</td>
+                                    <td class="kp-text-nowrap">4 °C</td>
+                                    <td class="kp-text-nowrap">11 °C</td>
+                                    <td class="kp-text-nowrap">14.2</td>
+                                    <td class="kp-text-nowrap">400</td>
+                                    <td class="kp-text-nowrap">50</td>
+                                    <td class="kp-text-nowrap">612 h</td>
+                                    <td class="kp-text-nowrap">18 442</td>
+                                    <td class="kp-text-nowrap">3</td>
+                                    <td class="kp-text-nowrap">1</td>
+                                    <td class="kp-text-nowrap">2026-06-02</td>
+                                    <td class="kp-text-nowrap">2026-12-02</td>
+                                    <td class="kp-text-nowrap">Hydroflow</td>
+                                    <td class="kp-text-nowrap">HF-2201</td>
+                                    <td class="kp-text-nowrap">North</td>
+                                    <td class="kp-text-nowrap">CC-40</td>
+                                    <td class="kp-text-nowrap">K. Passenier</td>
+                                    <td class="kp-text-nowrap">M. Dries</td>
+                                    <td class="kp-text-nowrap">+32 3 000 00 00</td>
+                                    <td class="kp-text-nowrap">Tier 2</td>
+                                    <td class="kp-text-nowrap">Night shift</td>
+                                    <td class="kp-text-nowrap">Yes</td>
+                                    <td class="kp-text-nowrap">B-904</td>
+                                    <td class="kp-text-nowrap">L-44</td>
+                                    <td class="kp-text-nowrap">12</td>
+                                    <td class="kp-text-nowrap">480 kg</td>
+                                    <td class="kp-text-nowrap">13.1 %</td>
+                                    <td class="kp-text-nowrap">A</td>
+                                    <td class="kp-text-nowrap">Gauge disagrees</td>
+                                    <td class="kp-text-nowrap">04:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="kp-text-nowrap">INC-4475</td>
+                                    <td class="kp-text-nowrap">Pump house 4</td>
+                                    <td class="kp-text-nowrap">L5</td>
+                                    <td class="kp-text-nowrap">Night</td>
+                                    <td class="kp-text-nowrap">A. Verhoeven</td>
+                                    <td class="kp-text-nowrap">00:14</td>
+                                    <td class="kp-text-nowrap">—</td>
+                                    <td class="kp-text-nowrap">Open</td>
+                                    <td class="kp-text-nowrap">High</td>
+                                    <td class="kp-text-nowrap">3.2 bar</td>
+                                    <td class="kp-text-nowrap">18 m³/h</td>
+                                    <td class="kp-text-nowrap">4 °C</td>
+                                    <td class="kp-text-nowrap">11 °C</td>
+                                    <td class="kp-text-nowrap">14.2</td>
+                                    <td class="kp-text-nowrap">400</td>
+                                    <td class="kp-text-nowrap">50</td>
+                                    <td class="kp-text-nowrap">612 h</td>
+                                    <td class="kp-text-nowrap">18 442</td>
+                                    <td class="kp-text-nowrap">3</td>
+                                    <td class="kp-text-nowrap">1</td>
+                                    <td class="kp-text-nowrap">2026-06-02</td>
+                                    <td class="kp-text-nowrap">2026-12-02</td>
+                                    <td class="kp-text-nowrap">Hydroflow</td>
+                                    <td class="kp-text-nowrap">HF-2201</td>
+                                    <td class="kp-text-nowrap">North</td>
+                                    <td class="kp-text-nowrap">CC-40</td>
+                                    <td class="kp-text-nowrap">K. Passenier</td>
+                                    <td class="kp-text-nowrap">M. Dries</td>
+                                    <td class="kp-text-nowrap">+32 3 000 00 00</td>
+                                    <td class="kp-text-nowrap">Tier 2</td>
+                                    <td class="kp-text-nowrap">Night shift</td>
+                                    <td class="kp-text-nowrap">Yes</td>
+                                    <td class="kp-text-nowrap">B-905</td>
+                                    <td class="kp-text-nowrap">L-45</td>
+                                    <td class="kp-text-nowrap">12</td>
+                                    <td class="kp-text-nowrap">480 kg</td>
+                                    <td class="kp-text-nowrap">13.1 %</td>
+                                    <td class="kp-text-nowrap">A</td>
+                                    <td class="kp-text-nowrap">Gauge disagrees</td>
+                                    <td class="kp-text-nowrap">04:02</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="empty">
+                <h2>Empty, loading, failed</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three tables with no data, and they must not look the same. <b>Empty</b> says plainly that there is nothing and
+                    what would put something there. <b>Loading</b> shows the shape of what is coming, not a spinner alone, and it must not flash —
+                    watch it in a theme with a loud register. <b>Failed</b> says what went wrong and offers the way back. None of the three may be a
+                    blank rectangle.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-empty">
+                        <p class="kp-empty__title">No incidents in this window</p>
+                        <p>Nothing was reported between 1 and 13 September. Widen the window to see older reports.</p>
+                        <button type="button" class="kp-button kp-button--secondary">Widen to 90 days</button>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--dense cat-stage--block" style="margin-block-start: 1rem">
+                    <div class="kp-table-wrap" aria-busy="true">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Reference</th>
+                                    <th scope="col">Site</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="kp-skeleton" style="inline-size: 6rem"></span></td>
+                                    <td><span class="kp-skeleton" style="inline-size: 9rem"></span></td>
+                                    <td><span class="kp-skeleton" style="inline-size: 4rem"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="kp-skeleton" style="inline-size: 5rem"></span></td>
+                                    <td><span class="kp-skeleton" style="inline-size: 11rem"></span></td>
+                                    <td><span class="kp-skeleton" style="inline-size: 4rem"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block" style="margin-block-start: 1rem">
+                    <div class="kp-alert kp-alert--destructive" role="alert">
+                        <p class="kp-alert__title">The incident list could not be loaded</p>
+                        <p>The status service answered 503. Nothing was changed; the list you saw before is unchanged.</p>
+                        <button type="button" class="kp-button kp-button--outline">Try again</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="numbers">
+                <h2>Numbers and alignment</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the digits must line up in a column — ones under ones, decimal point under decimal point — which is what
+                    <code>.kp-numeric</code> buys. Compare the two columns: the left one is aligned, the right one deliberately is not, and the
+                    difference must be obvious at a glance. In a theme with a display face, check that the figures are still tabular and not
+                    proportional.
+                </div>
+                <div class="cat-stage cat-stage--dense cat-stage--block">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Meter</th>
+                                    <th scope="col" class="kp-text-end">Aligned</th>
+                                    <th scope="col" class="kp-text-end">Not aligned</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Flow</td>
+                                    <td class="kp-text-end kp-numeric">1 004.50</td>
+                                    <td class="kp-text-end">1 004.50</td>
+                                </tr>
+                                <tr>
+                                    <td>Pressure</td>
+                                    <td class="kp-text-end kp-numeric">3.20</td>
+                                    <td class="kp-text-end">3.20</td>
+                                </tr>
+                                <tr>
+                                    <td>Runtime</td>
+                                    <td class="kp-text-end kp-numeric">118 442.00</td>
+                                    <td class="kp-text-end">118 442.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Faults</td>
+                                    <td class="kp-text-end kp-numeric">7.00</td>
+                                    <td class="kp-text-end">7.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="many">
+                <h2>Two hundred rows</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> scroll the block and watch the theme hold up: striping must stay regular, the hover must keep up with the pointer
+                    without lag, and a theme with a texture or a scanline must not start to shimmer. This is also the block to check with the Devtools
+                    timeline — if anything here animates per row, it is a fault.
+                </div>
+                <div class="cat-stage cat-stage--dense cat-stage--block">
+                    <div class="kp-table-wrap" style="max-block-size: 24rem; overflow: auto">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Reference</th>
+                                    <th scope="col">Line</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="kp-text-end">Open for</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4200</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 00m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4201</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 13m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4202</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 26m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4203</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 39m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4204</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 52m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4205</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 05m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4206</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 18m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4207</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 31m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4208</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 44m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4209</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 57m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4210</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 10m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4211</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 23m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4212</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 36m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4213</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 49m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4214</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 02m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4215</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 15m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4216</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 28m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4217</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 41m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4218</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 54m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4219</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 07m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4220</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 20m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4221</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 33m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4222</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 46m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4223</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 59m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4224</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 12m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4225</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 25m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4226</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 38m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4227</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 51m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4228</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 04m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4229</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 17m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4230</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 30m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4231</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 43m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4232</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 56m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4233</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 09m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4234</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 22m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4235</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 35m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4236</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 48m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4237</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 01m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4238</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 14m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4239</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 27m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4240</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 40m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4241</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 53m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4242</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 06m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4243</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 19m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4244</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 32m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4245</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 45m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4246</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 58m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4247</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 11m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4248</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 24m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4249</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 37m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4250</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 50m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4251</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 03m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4252</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 16m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4253</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 29m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4254</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 42m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4255</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 55m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4256</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 08m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4257</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 21m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4258</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 34m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4259</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 47m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4260</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 00m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4261</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 13m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4262</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 26m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4263</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 39m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4264</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 52m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4265</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 05m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4266</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 18m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4267</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 31m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4268</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 44m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4269</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 57m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4270</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 10m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4271</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 23m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4272</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 36m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4273</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 49m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4274</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 02m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4275</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 15m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4276</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 28m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4277</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 41m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4278</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 54m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4279</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 07m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4280</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 20m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4281</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 33m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4282</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 46m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4283</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 59m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4284</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 12m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4285</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 25m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4286</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 38m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4287</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 51m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4288</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 04m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4289</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 17m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4290</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 30m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4291</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 43m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4292</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 56m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4293</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 09m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4294</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 22m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4295</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 35m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4296</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 48m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4297</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 01m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4298</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 14m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4299</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 27m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4300</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 40m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4301</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 53m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4302</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 06m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4303</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 19m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4304</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 32m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4305</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 45m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4306</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 58m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4307</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 11m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4308</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 24m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4309</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 37m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4310</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 50m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4311</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 03m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4312</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 16m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4313</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 29m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4314</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 42m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4315</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 55m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4316</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 08m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4317</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 21m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4318</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 34m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4319</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 47m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4320</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 00m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4321</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 13m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4322</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 26m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4323</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 39m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4324</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 52m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4325</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 05m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4326</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 18m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4327</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 31m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4328</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 44m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4329</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 57m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4330</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 10m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4331</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 23m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4332</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 36m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4333</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 49m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4334</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 02m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4335</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 15m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4336</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 28m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4337</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 41m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4338</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 54m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4339</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 07m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4340</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 20m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4341</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 33m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4342</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 46m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4343</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 59m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4344</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 12m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4345</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 25m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4346</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 38m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4347</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 51m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4348</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 04m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4349</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 17m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4350</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 30m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4351</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 43m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4352</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 56m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4353</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 09m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4354</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 22m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4355</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 35m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4356</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 48m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4357</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 01m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4358</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 14m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4359</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 27m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4360</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 40m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4361</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 53m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4362</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 06m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4363</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 19m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4364</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 32m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4365</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 45m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4366</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 58m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4367</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 11m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4368</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 24m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4369</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 37m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4370</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 50m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4371</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 03m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4372</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 16m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4373</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 29m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4374</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 42m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4375</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 55m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4376</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">8h 08m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4377</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">15h 21m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4378</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">22h 34m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4379</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">5h 47m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4380</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">12h 00m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4381</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">19h 13m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4382</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">2h 26m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4383</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">9h 39m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4384</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">16h 52m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4385</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">23h 05m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4386</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">6h 18m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4387</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">13h 31m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4388</code></td>
+                                    <td>Line 9</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">20h 44m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4389</code></td>
+                                    <td>Line 10</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">3h 57m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4390</code></td>
+                                    <td>Line 11</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">10h 10m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4391</code></td>
+                                    <td>Line 12</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">17h 23m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4392</code></td>
+                                    <td>Line 1</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">0h 36m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4393</code></td>
+                                    <td>Line 2</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">7h 49m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4394</code></td>
+                                    <td>Line 3</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">14h 02m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4395</code></td>
+                                    <td>Line 4</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">21h 15m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4396</code></td>
+                                    <td>Line 5</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">4h 28m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4397</code></td>
+                                    <td>Line 6</td>
+                                    <td><span class="kp-badge">Closed</span></td>
+                                    <td class="kp-text-end kp-numeric">11h 41m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4398</code></td>
+                                    <td>Line 7</td>
+                                    <td><span class="kp-badge kp-badge--destructive">Open</span></td>
+                                    <td class="kp-text-end kp-numeric">18h 54m</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="kp-mono">INC-4399</code></td>
+                                    <td>Line 8</td>
+                                    <td><span class="kp-badge kp-badge--warning">Watching</span></td>
+                                    <td class="kp-text-end kp-numeric">1h 07m</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

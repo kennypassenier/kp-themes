@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Catalogue · kp-themes</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <label for="cat-theme">Theme</label>
+            <select id="cat-theme" class="kp-field__control" data-cat-theme></select>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>The catalogue</h1>
+            <p class="cat-intro">
+                Every component the package ships, on a fixed page, in every state and at its extremes — long text, empty, far too many rows — with a
+                note beside each block saying what to look at. Switch the theme in the bar and the whole page answers in it. Nothing here is
+                generated: these pages are written by hand and a gate refuses a component that has no page, so a new variant cannot hide.
+            </p>
+
+            <h2>How to review a page</h2>
+            <p class="cat-intro">
+                Read the <b>Look at</b> note first, then the block beside it. If what you see disagrees with the note, that is a finding — the note is
+                the promise. Open <b>Devtools</b> (Alt+D) for the three tools: the colour and token under the cursor with its contrast, a timeline
+                that pauses and scrubs every animation on the page, and a ruler for sizes and gaps.
+            </p>
+
+            <h2>Pages</h2>
+            <ul class="cat-toc">
+                <li><a href="./button.html">Buttons</a></li>
+                <li><a href="./table.html">Tables</a></li>
+            </ul>
+            <p class="cat-note">Two pages so far. The rest follow once the shape of these is approved — that is the review step, not a gap.</p>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

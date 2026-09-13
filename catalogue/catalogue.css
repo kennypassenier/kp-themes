@@ -1,0 +1,148 @@
+/* The catalogue's own chrome: the bar, the stage a component sits on, and
+   the "Look at" note beside it. Nothing here styles a kp- class — the page
+   must show what the package paints, not what this file paints, which is
+   the same trap KT3 caught in showcase.css. Every selector is prefixed
+   `cat-`, and the whole file sits in its own layer above the package's so
+   a stage can never win a declaration from a register by accident. */
+@layer catalogue {
+    .cat-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        border-block-end: 1px solid var(--border);
+        background: var(--card);
+        color: var(--card-foreground);
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 40;
+    }
+
+    .cat-bar__home {
+        font-weight: 600;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .cat-bar__spacer {
+        flex: 1 1 auto;
+    }
+
+    .cat-bar label {
+        font-size: 0.85rem;
+    }
+
+    .cat-main {
+        max-inline-size: 70rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 6rem;
+    }
+
+    .cat-intro {
+        max-inline-size: 46rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        padding: 0.75rem 0 0;
+        margin: 0 0 2rem;
+        list-style: none;
+        border-block-start: 1px solid var(--border);
+        font-size: 0.9rem;
+    }
+
+    .cat-block {
+        margin-block: 2.5rem;
+        scroll-margin-block-start: 4rem;
+    }
+
+    .cat-block > h2 {
+        margin-block-end: 0.35rem;
+    }
+
+    /* The reviewer's instruction. It is the point of the page: a block
+       without one is a screenshot, and a screenshot answers nothing. */
+    .cat-look {
+        border-inline-start: 3px solid var(--accent);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        padding: 0.6rem 0.9rem;
+        margin-block: 0.75rem;
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+
+    .cat-look b {
+        color: var(--foreground);
+    }
+
+    .cat-look code {
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85em;
+    }
+
+    /* The stage is deliberately plain: a hairline and breathing room, so
+       what is inside it is the theme's doing and not this file's. */
+    .cat-stage {
+        border: 1px dashed var(--border);
+        padding: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .cat-stage--block {
+        display: block;
+    }
+
+    .cat-stage--tight {
+        gap: 0.5rem;
+    }
+
+    .cat-stage--dense {
+        padding: 0;
+    }
+
+    .cat-note {
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+        margin-block-start: 0.4rem;
+    }
+
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .cat-cell {
+        min-inline-size: 0;
+    }
+
+    .cat-cell > h3 {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+    }
+
+    /* A pane the reviewer can widen and narrow to find the breaking point,
+       because an extreme that only shows at one width is half measured. */
+    .cat-resize {
+        resize: horizontal;
+        overflow: auto;
+        min-inline-size: 12rem;
+        max-inline-size: 100%;
+        inline-size: 32rem;
+        border: 1px dashed var(--border);
+        padding: 1rem;
+    }
+}

@@ -87,6 +87,9 @@ node gates/generate-examples.mjs --check
 echo "→ one ID means one thing [KT10]"
 node gates/check-ids.mjs
 
+echo "→ every component the package defines is shown somewhere in the catalogue [scope-31]"
+node gates/check-catalogue.mjs
+
 echo "→ every theme answers every hook (S45, AR36)"
 node gates/check-hooks.mjs
 

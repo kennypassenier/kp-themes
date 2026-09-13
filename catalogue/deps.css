@@ -1,0 +1,33 @@
+/* Everything a catalogue page needs, in one link. The order is the
+   cascade's: themes.css declares the layers, so every register that
+   follows lands in kp.register where it belongs. Hand-written like
+   the pages themselves; gates/check-catalogue.mjs refuses a theme
+   that exists in themes/order.json and is not imported here. */
+@import url('../css/fonts.css');
+@import url('../css/themes.css');
+@import url('../css/components.css');
+@import url('../css/layout.css');
+@import url('../css/utilities.css');
+@import url('../css/formal-register.css');
+@import url('../css/light-register.css');
+@import url('../css/dark-register.css');
+@import url('../css/cyberpunk-register.css');
+@import url('../css/synthwave-register.css');
+@import url('../css/pastel-register.css');
+@import url('../css/terminal-register.css');
+@import url('../css/forest-register.css');
+@import url('../css/high-contrast-register.css');
+@import url('../css/sepia-register.css');
+@import url('../css/blueprint-register.css');
+@import url('../css/solstice-register.css');
+@import url('../css/brutalism-register.css');
+@import url('../css/deco-register.css');
+@import url('../css/phantom-register.css');
+@import url('../css/shade-light-register.css');
+@import url('../css/shade-dark-register.css');
+@import url('../css/retro-register.css');
+@import url('../css/grotesk-register.css');
+@import url('../css/lapis-register.css');
+@import url('../css/nostromo-register.css');
+@import url('../css/titanium-register.css');
+@import url('./catalogue.css');
