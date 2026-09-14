@@ -1490,3 +1490,15 @@ option B's round. artifacts "Bewaren, dan verwijderen": the 17 artifacts no
 file links are saved under `docs/archive/artifacts/`, then deleted.
 step-timing "Akkoord", with a wish for later: the timing item names what each
 agent worked on, beside its duration.
+
+**scope-84 · A page to inspect the theme intros, and intro words per theme.**
+Kenny, 2026-09-15: a catalogue page where the intro screens some themes have
+can be inspected, played at a chosen speed with a slider; and the intro texts
+must match their theme ("Cyberpunk teksten passen niet bij een blueprint").
+Today four themes perform an arrival (`--kp-arrival`): synthwave, terminal
+and retro `boot`, phantom `card`. Retro and terminal carry their own lines in
+`arrivalLinesByTheme`; synthwave's boot shows the shared `arrivalLine`
+"▶ Calibrating neural uplink" with "Progress" and "OK". Every theme that
+performs an arrival gets words of its own world, proposed by Claude and
+judged by Kenny on the new page; a theme without its own words shows none of
+another theme's.
