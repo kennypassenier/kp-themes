@@ -558,3 +558,114 @@ test(
         expect(await read(1100, 900)).toEqual(tall);
     },
 );
+
+/* ------------------------------------------------------------------ fix-29 */
+
+// Kenny, 2026-09-15, on the review page in FireDragon, dark: "Sometimes when I
+// approve, I see it turn green, but the entry itself doesn't go away like the
+// others do", and "if there was already text in the comment and I approve,
+// that text is no longer relevant and may be removed."
+//
+// Red run first, on ae6ac250 in firefox, before the change:
+//   - "a block the address links to": the block the address linked to
+//     (#navigation--bar-long) turned "Approved" and stayed on the page; the
+//     pin of the anchor links held for as long as the address did;
+//   - "approving a block removes its note": the textarea still held the
+//     note, and the note stayed in storage and in the prompt.
+
+/** The review page in `theme`, at `anchor`, after `storage` was written into this browser. */
+async function openReviewIn(page, theme, { anchor = '', storage = {} } = {}) {
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/catalogue/index.html');
+    await page.evaluate(
+        ([name, items]) => {
+            localStorage.setItem('theme', name);
+            for (const [key, value] of Object.entries(items)) localStorage.setItem(key, JSON.stringify(value));
+        },
+        [theme, storage],
+    );
+    // A different document first: a change of the hash alone would not load the page again.
+    await page.goto('about:blank');
+    await page.goto(`/catalogue/index.html${anchor}`);
+    await waitForJudging(page, { timeout: 120_000 });
+}
+
+test(
+    'a block the address links to leaves the page once it is judged, like every other block [fix-29]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, context, browserName }) => {
+        test.skip(browserName !== 'firefox', 'firefox only while building');
+        // One block with a review note in dark, as bar-search had until 2026-09-15:
+        // its approval in this browser must end the note's hold on the page too.
+        await useRegister(
+            context,
+            {},
+            { 'navigation--bar-search': { dark: { rejected: 'Too wide', change: 'Narrower now.', given: '2026-09-14' } } },
+        );
+        await openReviewIn(page, 'dark', { anchor: '#navigation--bar-long' });
+        const verdict = (id, which) => page.locator(`[id="${id}"] > .cat-judge [data-cat-verdict="${which}"]`);
+
+        const linked = page.locator('[id="navigation--bar-long"]');
+        await expect(linked).toBeVisible();
+        await verdict('navigation--bar-long', 'approved').click();
+        await expect(linked).toHaveAttribute('data-cat-state', 'approved');
+        await expect(linked).toBeHidden();
+        // The address no longer pins it, so a reload does not bring it back.
+        expect(new URL(page.url()).hash).toBe('');
+
+        const noted = page.locator('[id="navigation--bar-search"]');
+        await expect(noted).toHaveAttribute('data-cat-review-note', '');
+        await verdict('navigation--bar-search', 'approved').click();
+        await expect(noted).toBeHidden();
+
+        // A rejection releases the pin as well: a link followed on the page itself.
+        await page.evaluate(() => (location.hash = 'navigation--mega-menu'));
+        const mega = page.locator('[id="navigation--mega-menu"]');
+        await expect(mega).toBeVisible();
+        await verdict('navigation--mega-menu', 'rejected').click();
+        await expect(mega).toHaveAttribute('data-cat-state', 'rejected');
+        await expect(mega).toBeHidden();
+
+        await page.reload();
+        await waitForJudging(page, { timeout: 120_000 });
+        for (const block of [linked, noted, mega]) await expect(block).toBeHidden();
+    },
+);
+
+test(
+    'approving a block removes its note in that theme; a rejection keeps it, Undo brings it back [fix-29]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, browserName }) => {
+        test.skip(browserName !== 'firefox', 'firefox only while building');
+        const id = 'navigation--bar-long';
+        await openReviewIn(page, 'dark', {
+            storage: { [FEEDBACK]: { 'catalogue/index.html': { [id]: { nostromo: 'A nostromo note' } } } },
+        });
+        const area = (block) => page.locator(`[id="${block}"] > .cat-judge textarea`);
+        const verdict = (block, which) => page.locator(`[id="${block}"] > .cat-judge [data-cat-verdict="${which}"]`);
+        const stored = () => page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}')['catalogue/index.html'] ?? {}, FEEDBACK);
+        const prompt = page.locator('.cat-feedback [data-cat-prompt]');
+
+        await area(id).fill('The search sits too far right');
+        await area('navigation--dropdown').fill('The caret is too small');
+        await expect(prompt).toContainText('The search sits too far right');
+
+        await verdict(id, 'approved').click();
+        await expect(area(id)).toHaveValue('');
+        expect((await stored())[id]).toEqual({ nostromo: 'A nostromo note' });
+        await expect(prompt).not.toContainText('The search sits too far right');
+        await expect(prompt).toContainText('A nostromo note');
+
+        // A mistaken click, undone: the verdict and the note both come back.
+        await page.locator('[data-cat-undo]').click();
+        await expect(page.locator(`[id="${id}"]`)).not.toHaveAttribute('data-cat-state', 'approved');
+        await expect(area(id)).toHaveValue('The search sits too far right');
+        expect((await stored())[id]?.dark).toBe('The search sits too far right');
+
+        await verdict('navigation--dropdown', 'rejected').click();
+        await page.locator('[data-cat-show-judged]').check();
+        await expect(area('navigation--dropdown')).toHaveValue('The caret is too small');
+        expect((await stored())['navigation--dropdown']?.dark).toBe('The caret is too small');
+        await expect(prompt).toContainText('The caret is too small');
+    },
+);

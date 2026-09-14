@@ -160,6 +160,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     // catalogue/index.html#button--variants) stays on the page even when it
     // is judged, and is scrolled to: Claude links to blocks by anchor
     // (Kenny, 2026-09-14: "je kan toch altijd links geven … een anchorlink").
+    // Until this page gives it a verdict: then it leaves like the rest (fix-29).
     const pinnedId = () => decodeURIComponent(location.hash.slice(1));
     let pinned = pinnedId();
     let last = null; // { key, theme, previous, title } for Undo
@@ -288,8 +289,28 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
                 const hash = current.get(item.entry.key);
                 if (!hash) return;
                 const theme = currentTheme();
-                const previous = storeVerdict(item.entry.key, theme, button.getAttribute('data-cat-verdict'), hash);
-                last = { key: item.entry.key, theme, previous, item };
+                const verdict = button.getAttribute('data-cat-verdict');
+                const previous = storeVerdict(item.entry.key, theme, verdict, hash);
+                // An approval answers the reviewer's note in this theme, so the
+                // note goes with it and no prompt carries it on (fix-29, Kenny
+                // 2026-09-15). A rejection keeps it: it says why. Undo puts it back.
+                const { notePage, noteBlock } = item.entry;
+                const note = verdict === 'approved' ? noteFor(notePage, noteBlock, theme) : '';
+                if (note) {
+                    setNote(notePage, noteBlock, theme, '');
+                    item.area.value = '';
+                    clearTimeout(item.timer);
+                    item.saved.textContent = '';
+                }
+                // The block a link pinned leaves like any other once it has its
+                // verdict, and the address stops pinning it, so a reload does not
+                // bring it back either (fix-29: it stayed, "Approved", for as long
+                // as the address named it).
+                if (pinned && item.entry.root.id === pinned) {
+                    pinned = '';
+                    history.replaceState(history.state, '', `${location.pathname}${location.search}`);
+                }
+                last = { key: item.entry.key, theme, previous, item, note };
                 if (undo) {
                     undo.hidden = false;
                     undo.textContent = `Undo: ${item.entry.title}`;
@@ -302,7 +323,9 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     undo?.addEventListener('click', () => {
         if (!last) return;
         restoreVerdict(last.key, last.theme, last.previous);
-        const { root } = last.item.entry;
+        const { root, notePage, noteBlock } = last.item.entry;
+        // The note an approval removed comes back with the verdict it was removed for.
+        if (last.note) setNote(notePage, noteBlock, last.theme, last.note);
         last = null;
         undo.hidden = true;
         render();

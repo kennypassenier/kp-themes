@@ -3167,3 +3167,63 @@ line with `node gates/verdicts.mjs compare --browser /usr/bin/firedragon`,
 and what they share becomes a correction of its own.
 
 **9 · When we review the measure.** At Kenny's next catalogue prompt.
+
+## fix-29 · An approved block stayed on the review page, and its note outlived the approval (2026-09-15)
+
+**1 · What went wrong.** Kenny, on the review page in FireDragon, theme
+dark: "Sometimes when I approve, I see it turn green, but the entry itself
+doesn't go away like the others do." And: "if there was already text in the
+comment and I approve, that text is no longer relevant and may be removed."
+The first is the anchor pin of 2026-09-14: a block the address names
+(`catalogue/index.html#navigation--bar-long`, the links Claude gives) stays
+on the page even when judged, and nothing ended that hold — approved, it
+turned "Approved" and stayed for as long as the address named it, a reload
+included. The second: an approval left the reviewer's own note in the
+textarea, in storage and in the next copied prompt.
+
+**2 · Which gate let it through.** None. `tests/catalogue-anchor.spec.mjs`
+checks that a linked block is shown and scrolled to, not that it leaves
+once judged; no test wrote a note and then approved.
+
+**3 · Where the same fault sits.** Measured in firefox on `ae6ac250`, with
+the register and review notes of the moment Kenny judged (`ae6ac250^`: notes
+on `bar-long`, `bar-search` and `table--datatable-add-filter` in dark), at
+1400×900: approving all 137 open dark blocks one after another left 0 on the
+page; a block with a review note, a rejection followed by an approval, an
+approval after "Copy prompt", the sticky bar approved while hovered, and a
+theme switch there and back all left as well. Only the block the address
+named stayed. The pin and the note live in `catalogue/judging.js`, shared by
+the review page, the component pages, the research demos and the compare
+columns, so all four had both faults.
+
+**4 · How we prevent recurrence.** A verdict given on the page to the pinned
+block releases the pin and takes the hash off the address
+(`history.replaceState`), so the block leaves like any other and a reload
+does not bring it back. An approval removes the note of that block in the
+theme on screen — textarea, storage, and therefore the prompt; a note in
+another theme stays; a rejection keeps it; Undo restores the verdict and the
+note together. Two tests in `tests/catalogue-review.spec.mjs`, marked
+`[fix-29]`, hold both.
+
+**5 · What the remedy costs.** An address that linked to a block loses its
+anchor once that block is judged; the link Claude gave still works when
+opened again. A note deleted by a mistaken approval is back only through
+Undo, which holds the last verdict only.
+
+**6 · Who enforces it.** The two browser tests, code, at the building level
+of `npm run test:tags` for any catalogue change.
+
+**7 · How we measure it works, and when.** When built: "a block the address
+links to leaves the page once it is judged" red on `ae6ac250` (the block
+resolved 13 times as visible with `data-cat-state="approved"`), and
+"approving a block removes its note" red (the textarea still held the note);
+both green after the change, with every test in `tests/catalogue-*.spec.mjs`
+green in firefox (22). At Kenny's next catalogue review: no approved block
+stays on the page, and no approved block's note in the copied prompt.
+
+**8 · If the measurement fails.** The block that stayed is named with its
+address, the "Show blocks already judged" toggle and its review note state,
+and read against `render()` in `catalogue/judging.js`: whatever else holds it
+becomes a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next catalogue review.
