@@ -1031,11 +1031,11 @@
     }
 
     [data-theme='blueprint'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='blueprint'] .kp-form {
-        gap: 0.85rem;
+        gap: calc(var(--kp-space-lg) * 0.85);
     }
 
     [data-theme='blueprint'] .kp-grid {

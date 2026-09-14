@@ -1135,11 +1135,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='dark'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='dark'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='dark'] .kp-breadcrumb,

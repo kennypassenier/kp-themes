@@ -954,11 +954,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='lapis'] .kp-field {
-        gap: 4px;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='lapis'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='lapis'] .kp-table {

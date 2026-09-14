@@ -4082,6 +4082,17 @@
 
    Every value is a knob with the compact value as its default, so a
    consumer retunes the density without restating the whole block (KT6).
+
+   The mode reaches only what reads the scale. A register that restates a
+   spacing or a pinned control height as a fixed length (`gap: 1rem`)
+   switches the mode off for its theme, which is how eighteen themes had a
+   compact form as roomy as the default one. A register writes its own
+   value as a multiple of a step (`calc(var(--kp-space-lg) * 1.1)`), or a
+   pinned height as an offset from the floor (`calc(3rem +
+   var(--kp-control-height, 2.25rem) - 2.25rem)`): the same length at the
+   default density, and tighter under this block.
+   tests/density-compact.spec.mjs holds it in every theme.
+
    The floor is not negotiable: --kp-control-height stays at 1.75rem
    (28px at a 16px root), above the 24px WCAG 2.5.8 asks of a pointer
    target, and that is why it is not a knob. */
@@ -4595,7 +4606,10 @@
         /* min-height, not height: forced text spacing must make this taller
      * rather than clip the label [DI11]. */
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.875rem;
+        /* The block padding is on the scale (0.75 of --kp-space-sm is the
+     * 0.375rem this was), so the density mode brings the rendered height
+     * down with the floor instead of the padding holding it up [TH105]. */
+        padding: calc(var(--kp-space-sm, 0.5rem) * 0.75) 0.875rem;
         border: 1px solid transparent;
         border-radius: var(--radius, 0.5rem);
         font: inherit;
@@ -5053,7 +5067,8 @@
 
     .kp-field__input {
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.625rem;
+        /* On the scale for the same reason as the button's [TH105]. */
+        padding: calc(var(--kp-space-sm, 0.5rem) * 0.75) 0.625rem;
         border: 1px solid var(--input);
         border-radius: var(--radius, 0.5rem);
         background: var(--background);
@@ -9306,7 +9321,7 @@
     /* ── Fields ───────────────────────────────────────────────────────── */
 
     [data-theme='cyberpunk'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='cyberpunk'] .kp-form__summary {
@@ -9315,7 +9330,7 @@
     }
 
     [data-theme='cyberpunk'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='cyberpunk'] .kp-field__label {
@@ -11886,11 +11901,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='retro'] .kp-field {
-        gap: 0.25rem;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='retro'] .kp-form {
-        gap: 0.8rem;
+        gap: calc(var(--kp-space-lg) * 0.8);
     }
 
     [data-theme='retro'] .kp-combobox,
@@ -12943,8 +12958,8 @@
         --kp-frame: var(--primary);
         --kp-glow: hsl(from var(--primary) h s l / 0.45);
         position: relative;
-        min-height: 3rem;
-        padding: 0.7rem 1.8rem;
+        min-height: calc(3rem + var(--kp-control-height, 2.25rem) - 2.25rem);
+        padding: calc(var(--kp-space-sm) * 1.4) 1.8rem;
         font-weight: 700;
         font-size: 0.95rem;
         letter-spacing: 0.16em;
@@ -13089,7 +13104,7 @@
         background: var(--sidebar-background);
         border: 2px solid hsl(from var(--kp-pink-text) h s l / 0.35);
         border-radius: var(--radius);
-        padding: 0.7rem 0.9rem;
+        padding: calc(var(--kp-space-sm) * 1.4) 0.9rem;
         caret-color: var(--accent);
     }
 
@@ -13716,11 +13731,11 @@
     /* A field, a form, a fieldset of data: the OSD rhythm between rows. */
     [data-theme='synthwave'] .kp-field,
     [data-theme='synthwave'] .kp-form {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='synthwave'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     /* The data pickers and panels: a hairline frame, square. */
@@ -14666,8 +14681,8 @@
         --kp-plate-frame: var(--foreground);
         position: relative;
         isolation: isolate;
-        min-height: 3rem;
-        padding: 0.65rem 1.6rem;
+        min-height: calc(3rem + var(--kp-control-height, 2.25rem) - 2.25rem);
+        padding: calc(var(--kp-space-sm) * 1.3) 1.6rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
         font-size: 1.05rem;
@@ -14838,7 +14853,7 @@
         background: var(--card);
         border: 2px solid var(--input);
         border-radius: 0;
-        padding: 0.65rem 0.85rem;
+        padding: calc(var(--kp-space-sm) * 1.3) 0.85rem;
         caret-color: var(--primary);
     }
 
@@ -15508,11 +15523,11 @@
 
     [data-theme='phantom'] .kp-field,
     [data-theme='phantom'] .kp-form {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='phantom'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='phantom'] .kp-combobox,
@@ -16453,7 +16468,7 @@
        where a theme pins one height, and tests/button.spec.mjs measures
        that rather than height alone. */
     [data-theme='terminal'] .kp-button {
-        min-block-size: 2.9rem;
+        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
     }
 
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -17175,11 +17190,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='terminal'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='terminal'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='terminal'] .kp-combobox,
@@ -18010,7 +18025,7 @@
     /* The demo's height, on every button [S49, A4]; TH111's amendment
        lets the sizes separate in padding and type instead. */
     [data-theme='brutalism'] .kp-button {
-        min-block-size: 3rem;
+        min-block-size: calc(3rem + var(--kp-control-height, 2.25rem) - 2.25rem);
     }
 
     [data-theme='brutalism'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -18083,7 +18098,7 @@
         border: var(--kp-line) solid var(--input);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-        padding: 0.65rem 0.8rem;
+        padding: calc(var(--kp-space-sm) * 1.3) 0.8rem;
     }
 
     /* Focus fills the well with the plate: the ring stays outside it. */
@@ -18778,11 +18793,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='brutalism'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='brutalism'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='brutalism'] .kp-combobox,
@@ -20308,11 +20323,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='titanium'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='titanium'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='titanium'] .kp-breadcrumb,
@@ -21073,7 +21088,7 @@
        [TH111]: the base component's own padding and type keep those two
        apart, the way every lifted theme's own size leaves them alone. */
     [data-theme='pastel'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
-        padding: 0.7rem 1.2rem;
+        padding: calc(var(--kp-space-sm) * 1.4) 1.2rem;
         font-size: 0.92rem;
     }
 
@@ -21159,7 +21174,7 @@
         border-radius: 0.65rem;
         background: var(--background);
         color: var(--foreground);
-        padding: 0.6rem 0.75rem;
+        padding: calc(var(--kp-space-sm) * 1.2) 0.75rem;
         font-size: 0.92rem;
     }
 
@@ -21660,11 +21675,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='pastel'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='pastel'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='pastel'] .kp-combobox,
@@ -22366,7 +22381,7 @@
     }
 
     [data-theme='shade-light'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='shade-light'] .kp-form__summary {
@@ -22896,7 +22911,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='shade-light'] .kp-field {
-        gap: 0.35em;
+        gap: calc(0.35em - 0.25rem + var(--kp-space-xs));
     }
 
     [data-theme='shade-light'] .kp-grid {
@@ -24719,7 +24734,7 @@
     }
 
     [data-theme='deco'] .kp-button {
-        min-block-size: 2.9rem;
+        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
     }
 
     [data-theme='deco'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -24820,7 +24835,7 @@
         background: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        padding: 0.6rem 0.7rem;
+        padding: calc(var(--kp-space-sm) * 1.2) 0.7rem;
     }
 
     [data-theme='deco'] .kp-field__input:focus-visible,
@@ -25384,11 +25399,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='deco'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='deco'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='deco'] .kp-combobox,
@@ -27717,11 +27732,11 @@
     }
 
     [data-theme='grotesk'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='grotesk'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='grotesk'] .kp-grid {
@@ -29086,11 +29101,11 @@
     }
 
     [data-theme='blueprint'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='blueprint'] .kp-form {
-        gap: 0.85rem;
+        gap: calc(var(--kp-space-lg) * 0.85);
     }
 
     [data-theme='blueprint'] .kp-grid {
@@ -30398,11 +30413,11 @@
     /* ── Layout roots the rules above reach only through their parts ─── */
 
     [data-theme='nostromo'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='nostromo'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='nostromo'] .kp-combobox,
@@ -31867,11 +31882,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='dark'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='dark'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='dark'] .kp-breadcrumb,
@@ -34240,11 +34255,11 @@
     /* ── The roots the rules above reach only by their parts ────────────── */
 
     [data-theme='sepia'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='sepia'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='sepia'] .kp-combobox,
@@ -35265,11 +35280,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='solstice'] .kp-field {
-        gap: 0.4rem;
+        gap: calc(var(--kp-space-xs) * 1.6);
     }
 
     [data-theme='solstice'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='solstice'] .kp-combobox,
@@ -36399,7 +36414,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='high-contrast'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='high-contrast'] .kp-form {
@@ -37567,11 +37582,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='lapis'] .kp-field {
-        gap: 4px;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='lapis'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='lapis'] .kp-table {
@@ -38615,11 +38630,11 @@
     }
 
     [data-theme='shade-dark'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='shade-dark'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='shade-dark'] .kp-split {

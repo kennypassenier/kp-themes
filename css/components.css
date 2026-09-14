@@ -453,7 +453,10 @@
         /* min-height, not height: forced text spacing must make this taller
      * rather than clip the label [DI11]. */
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.875rem;
+        /* The block padding is on the scale (0.75 of --kp-space-sm is the
+     * 0.375rem this was), so the density mode brings the rendered height
+     * down with the floor instead of the padding holding it up [TH105]. */
+        padding: calc(var(--kp-space-sm, 0.5rem) * 0.75) 0.875rem;
         border: 1px solid transparent;
         border-radius: var(--radius, 0.5rem);
         font: inherit;
@@ -911,7 +914,8 @@
 
     .kp-field__input {
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.625rem;
+        /* On the scale for the same reason as the button's [TH105]. */
+        padding: calc(var(--kp-space-sm, 0.5rem) * 0.75) 0.625rem;
         border: 1px solid var(--input);
         border-radius: var(--radius, 0.5rem);
         background: var(--background);

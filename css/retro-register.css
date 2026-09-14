@@ -1440,11 +1440,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='retro'] .kp-field {
-        gap: 0.25rem;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='retro'] .kp-form {
-        gap: 0.8rem;
+        gap: calc(var(--kp-space-lg) * 0.8);
     }
 
     [data-theme='retro'] .kp-combobox,

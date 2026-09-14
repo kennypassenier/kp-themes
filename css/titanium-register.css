@@ -1098,11 +1098,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='titanium'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='titanium'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='titanium'] .kp-breadcrumb,

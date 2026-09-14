@@ -448,7 +448,7 @@
     }
 
     [data-theme='shade-light'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='shade-light'] .kp-form__summary {
@@ -978,7 +978,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='shade-light'] .kp-field {
-        gap: 0.35em;
+        gap: calc(0.35em - 0.25rem + var(--kp-space-xs));
     }
 
     [data-theme='shade-light'] .kp-grid {

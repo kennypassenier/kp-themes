@@ -356,7 +356,7 @@
     }
 
     [data-theme='deco'] .kp-button {
-        min-block-size: 2.9rem;
+        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
     }
 
     [data-theme='deco'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -457,7 +457,7 @@
         background: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        padding: 0.6rem 0.7rem;
+        padding: calc(var(--kp-space-sm) * 1.2) 0.7rem;
     }
 
     [data-theme='deco'] .kp-field__input:focus-visible,
@@ -1021,11 +1021,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='deco'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='deco'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='deco'] .kp-combobox,

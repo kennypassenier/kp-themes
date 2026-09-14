@@ -836,7 +836,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='high-contrast'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='high-contrast'] .kp-form {

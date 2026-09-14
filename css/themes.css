@@ -4077,6 +4077,17 @@
 
    Every value is a knob with the compact value as its default, so a
    consumer retunes the density without restating the whole block (KT6).
+
+   The mode reaches only what reads the scale. A register that restates a
+   spacing or a pinned control height as a fixed length (`gap: 1rem`)
+   switches the mode off for its theme, which is how eighteen themes had a
+   compact form as roomy as the default one. A register writes its own
+   value as a multiple of a step (`calc(var(--kp-space-lg) * 1.1)`), or a
+   pinned height as an offset from the floor (`calc(3rem +
+   var(--kp-control-height, 2.25rem) - 2.25rem)`): the same length at the
+   default density, and tighter under this block.
+   tests/density-compact.spec.mjs holds it in every theme.
+
    The floor is not negotiable: --kp-control-height stays at 1.75rem
    (28px at a 16px root), above the 24px WCAG 2.5.8 asks of a pointer
    target, and that is why it is not a knob. */

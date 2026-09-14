@@ -805,11 +805,11 @@
     }
 
     [data-theme='shade-dark'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='shade-dark'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='shade-dark'] .kp-split {

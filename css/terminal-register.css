@@ -483,7 +483,7 @@
        where a theme pins one height, and tests/button.spec.mjs measures
        that rather than height alone. */
     [data-theme='terminal'] .kp-button {
-        min-block-size: 2.9rem;
+        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
     }
 
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -1205,11 +1205,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='terminal'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='terminal'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='terminal'] .kp-combobox,

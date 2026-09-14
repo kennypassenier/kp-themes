@@ -1079,11 +1079,11 @@
     }
 
     [data-theme='grotesk'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='grotesk'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='grotesk'] .kp-grid {
