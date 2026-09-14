@@ -154,6 +154,14 @@ The effects read `prefers-reduced-motion` through a subscribing hook and
 stop within the same session. If yours does not, you are on a copy from
 before that fix — the components used to read the setting once at mount.
 
+### The boot screen ignores the `arrivalLine` I set
+
+Since scope-84 (2026-09-15) a theme with words of its own reads them
+first: synthwave's boot takes `arrivalWordsByTheme.synthwave`, terminal's
+and retro's take `arrivalLinesByTheme`. `arrivalLine`, `arrivalProgress`
+and `arrivalReady` are the neutral words for a theme without an entry.
+Set the theme's own entry with `setStrings({ arrivalWordsByTheme: { … } })`.
+
 ## When a gate says no
 
 Every gate names the theme, the token and the number. The messages below

@@ -195,6 +195,20 @@ export const KNOBS = Object.freeze({
      * phantom"; the picker was fine.
      */
     arrivalDismiss: '--kp-arrival-dismiss',
+    /**
+     * How fast the arrival plays, as a factor [scope-84]. Default 1.
+     *
+     * Every wait of the arrival — a boot line's step, a percentage's step,
+     * the card's hold, the pause before it switches off — is divided by
+     * it, and every CSS animation on the overlay (the CRT switching off,
+     * the card's bar and its shove) plays at it as its playback rate. So
+     * `0.5` takes twice as long and `2` half as long, and the sequence
+     * stays the same sequence. A value that is not a number above zero
+     * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+     * sets it on the root of a frame; no register declares it, and a page
+     * that never sets it plays exactly as before.
+     */
+    arrivalRate: '--kp-arrival-rate',
 });
 /**
  * How long a counting number takes, in milliseconds [feat-count-1].
@@ -1660,7 +1674,10 @@ export function attachEffects(root = document, options = {}) {
     // phantom's [PH2]: the theme's own name as the line, a bar the register
     // runs under it, and the overlay shoved off to the left. Once per
     // session, never under reduced motion, and every word from the
-    // dictionary [KT5] — a theme's name is data, not copy.
+    // dictionary [KT5] — a theme's name is data, not copy. The words are
+    // the theme's own (`arrivalWordsByTheme`, `arrivalLinesByTheme`) or the
+    // neutral ones, and `--kp-arrival-rate` scales the whole sequence
+    // [scope-84].
     const arrival = () => {
         const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
         const routine = asked === '' || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
@@ -1671,6 +1688,27 @@ export function attachEffects(root = document, options = {}) {
             return;
         }
         const words = getStrings();
+        const theme = html.getAttribute('data-theme') ?? '';
+        // The words of this theme's own world [scope-84]: a theme with an
+        // entry reads its own, and a theme without one reads the neutral
+        // default — never another theme's.
+        const own = words.arrivalWordsByTheme?.[theme] ?? {};
+        const said = {
+            line: own.line ?? words.arrivalLine,
+            progress: own.progress ?? words.arrivalProgress,
+            ready: own.ready ?? words.arrivalReady,
+        };
+        const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? '');
+        const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
+        /** @param {() => void} fn @param {number} ms */
+        const paced = (fn, ms) => later(fn, ms / rate);
+        // The overlay's CSS animations at the same rate. Read after a style
+        // flush, so an animation a class has just started is in the list.
+        const pace = () => {
+            if (rate === 1 || typeof overlay.getAnimations !== 'function') return;
+            void view?.getComputedStyle(overlay).opacity;
+            for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
+        };
         const overlay = doc.createElement('div');
         overlay.className = ARRIVAL.root;
         const line = doc.createElement('pre');
@@ -1690,6 +1728,7 @@ export function attachEffects(root = document, options = {}) {
         }
         overlay.append(line, ...(bar ? [bar] : []), skip);
         doc.body.append(overlay);
+        pace();
         pending++;
         let ended = false;
         let pct = 0;
@@ -1707,18 +1746,17 @@ export function attachEffects(root = document, options = {}) {
                 return;
             }
             overlay.classList.add(STATE.off);
+            pace();
             overlay.addEventListener('animationend', remove, { once: true });
-            later(remove, TIMINGS[card ? 'kp-load-out' : 'kp-crt-off'].durationMs + 50);
+            paced(remove, TIMINGS[card ? 'kp-load-out' : 'kp-crt-off'].durationMs + 50);
         };
         const step = () => {
             if (ended) return;
             pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
-            line.textContent = [words.arrivalLine, words.arrivalProgress + ' ' + pct + '%', pct === 100 ? words.arrivalReady : '']
-                .filter(Boolean)
-                .join('\n');
+            line.textContent = [said.line, `${said.progress} ${pct}%`.trim(), pct === 100 ? said.ready : ''].filter(Boolean).join('\n');
             bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
-            if (pct === 100) later(end, 220);
-            else later(step, 110);
+            if (pct === 100) paced(end, 220);
+            else paced(step, 110);
         };
 
         // The lines mode [S49, A11]: a theme whose own boot is a POST
@@ -1727,7 +1765,7 @@ export function attachEffects(root = document, options = {}) {
         // five lines. The words are the dictionary's (KT5), the cadence
         // the demos' own 190ms, and a `{count}` counts up to the theme's
         // declared total the way a memory test does.
-        const lines = words.arrivalLinesByTheme?.[html.getAttribute('data-theme') ?? ''] ?? null;
+        const lines = words.arrivalLinesByTheme?.[theme] ?? null;
         let shown = 0;
         const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
         const lineStep = () => {
@@ -1740,8 +1778,8 @@ export function attachEffects(root = document, options = {}) {
                 )
                 .join('\n');
             bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
-            if (shown === lines.length) later(end, 320);
-            else later(lineStep, 190);
+            if (shown === lines.length) paced(end, 320);
+            else paced(lineStep, 190);
         };
         skip.addEventListener('click', end);
         // CP1, Kenny 2026-09-09: "remember it for the next version". This is
@@ -1754,8 +1792,8 @@ export function attachEffects(root = document, options = {}) {
         finishers.push(end);
         cleanups.push(() => overlay.remove());
         if (card) {
-            line.textContent = html.getAttribute('data-theme') ?? '';
-            later(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
+            line.textContent = theme;
+            paced(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
         } else if (lines && lines.length > 0) lineStep();
         else step();
     };

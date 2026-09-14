@@ -191,6 +191,38 @@
         padding-block: 0.5rem;
     }
 
+    /* The intro inspector (catalogue/intros.html): a window tall enough for
+       a boot screen, and the words beside it as the dictionary gives them. */
+    .cat-intro-controls {
+        flex-wrap: wrap;
+    }
+
+    .cat-intro-controls .kp-field__label {
+        margin: 0;
+    }
+
+    .cat-intro-frame {
+        display: block;
+        inline-size: 100%;
+        block-size: 22rem;
+    }
+
+    .cat-intro-words > h3 {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+        margin: 0 0 0.35rem;
+        font-weight: 600;
+    }
+
+    .cat-intro-words > pre {
+        white-space: pre-wrap;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85rem;
+        margin: 0 0 1rem;
+    }
+
     .cat-note {
         font-size: 0.8rem;
         color: var(--muted-foreground);

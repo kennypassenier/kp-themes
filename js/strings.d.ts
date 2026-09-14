@@ -328,19 +328,27 @@ export type Strings = {
      */
     classified: string;
     /**
-     * The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+     * The neutral boot line of an arrival, for a theme that performs one and has no words of its own in `arrivalWordsByTheme` or `arrivalLinesByTheme` [SW2, scope-84]
      */
     arrivalLine: string;
+    /**
+     * A theme's own words for the counting boot, keyed by theme [scope-84]: its line, the word before the percentage, and the word that closes it. A word the entry leaves out is the neutral one.
+     */
+    arrivalWordsByTheme: Record<string, {
+        line?: string;
+        progress?: string;
+        ready?: string;
+    }>;
     /**
      * The lines a theme's own boot shows instead of that one line, in order, keyed by theme [S49, A11]. A `{count}` in a line is replaced by a number counting up to `--kp-arrival-count` (640 by default), which is how retro's memory test reads.
      */
     arrivalLinesByTheme: Record<string, string[]>;
     /**
-     * The word before the percentage on that line
+     * The neutral word before the percentage on that line
      */
     arrivalProgress: string;
     /**
-     * The word that closes the boot line
+     * The neutral word that closes the boot line
      */
     arrivalReady: string;
     /**
@@ -540,10 +548,11 @@ export type Strings = {
  * @property {string} diagnosticsEffects  The diagnostics row that lists unknown hook values [AR44]
  * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
- * @property {string} arrivalLine  The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+ * @property {string} arrivalLine  The neutral boot line of an arrival, for a theme that performs one and has no words of its own in `arrivalWordsByTheme` or `arrivalLinesByTheme` [SW2, scope-84]
+ * @property {Record<string, { line?: string, progress?: string, ready?: string }>} arrivalWordsByTheme  A theme's own words for the counting boot, keyed by theme [scope-84]: its line, the word before the percentage, and the word that closes it. A word the entry leaves out is the neutral one.
  * @property {Record<string, string[]>} arrivalLinesByTheme  The lines a theme's own boot shows instead of that one line, in order, keyed by theme [S49, A11]. A `{count}` in a line is replaced by a number counting up to `--kp-arrival-count` (640 by default), which is how retro's memory test reads.
- * @property {string} arrivalProgress  The word before the percentage on that line
- * @property {string} arrivalReady  The word that closes the boot line
+ * @property {string} arrivalProgress  The neutral word before the percentage on that line
+ * @property {string} arrivalReady  The neutral word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
  * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]

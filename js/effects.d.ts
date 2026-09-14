@@ -103,6 +103,20 @@ export declare const KNOBS: Readonly<{
      * phantom"; the picker was fine.
      */
     arrivalDismiss: "--kp-arrival-dismiss";
+    /**
+     * How fast the arrival plays, as a factor [scope-84]. Default 1.
+     *
+     * Every wait of the arrival — a boot line's step, a percentage's step,
+     * the card's hold, the pause before it switches off — is divided by
+     * it, and every CSS animation on the overlay (the CRT switching off,
+     * the card's bar and its shove) plays at it as its playback rate. So
+     * `0.5` takes twice as long and `2` half as long, and the sequence
+     * stays the same sequence. A value that is not a number above zero
+     * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+     * sets it on the root of a frame; no register declares it, and a page
+     * that never sets it plays exactly as before.
+     */
+    arrivalRate: "--kp-arrival-rate";
 }>;
 /**
  * How long a counting number takes, in milliseconds [feat-count-1].

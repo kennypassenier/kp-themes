@@ -1357,6 +1357,18 @@ reduced motion — a page without the script shows the rest states.
 `README.md` has the table of what each theme answers;
 `themes/hooks.json` is the matrix the gate reads.
 
+The arrival's words are the theme's own [scope-84]: synthwave's counting
+boot reads `arrivalWordsByTheme.synthwave` ("▶ Play", "Tracking",
+"Press start"), terminal's and retro's POST lines are
+`arrivalLinesByTheme`, and phantom's card is the theme's name. A theme
+that asks for `boot` with no entry shows the neutral `arrivalLine`,
+`arrivalProgress` and `arrivalReady` ("Loading", "Progress", "Ready").
+To change synthwave's words, set `arrivalWordsByTheme` with `setStrings`;
+setting `arrivalLine` alone changes only the neutral line. How fast the
+arrival plays is `--kp-arrival-rate` on the root: every wait is divided
+by it and the overlay's animations play at it, so `0.5` takes twice as
+long; unset, it is 1.
+
 ## The side navigation [feat-nav-3]
 
 A navigation that stands beside the content instead of above it: three

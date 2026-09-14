@@ -166,7 +166,11 @@ The reveals run through `js/effects.js` (`attachEffects()`, which
 `js/auto.js` attaches); once per session per page by default,
 `data-kp-reveal-every="load"` opts back in, reduced motion resolves every
 one to its rest state, and a page without the script shows the rest
-states. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
+states. The arrival speaks in its theme's own words
+(`arrivalWordsByTheme` and `arrivalLinesByTheme` in `js/strings.js`; a
+theme without an entry gets the neutral "Loading") and plays at
+`--kp-arrival-rate` on the root, 1 by default, 0.5 for twice as long
+[scope-84]. `catalogue/intros.html` plays every theme's arrival on demand. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
 refuses a theme that leaves a hook unanswered.
 
 ### `data-theme` and the `.dark` class
@@ -800,7 +804,7 @@ setStrings({
 });
 ```
 
-`js/strings.js` is the full list — 186 keys on 2026-09-14, each with its English default
+`js/strings.js` is the full list — 187 keys on 2026-09-15, each with its English default
 beside it.
 
 ### Theme names

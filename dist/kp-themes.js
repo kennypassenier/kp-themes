@@ -368,13 +368,21 @@ var DEFAULT_STRINGS = Object.freeze({
   mainNavigation: "Main navigation",
   skipToContent: "Skip to the content",
   classified: "Classified",
-  arrivalLine: "\u25B6 Calibrating neural uplink",
+  // The neutral words: no theme's world. Until scope-84 these were
+  // "▶ Calibrating neural uplink", "Progress" and "OK" — cyberpunk's
+  // voice, shown by synthwave's boot and by any theme that asked for one.
+  arrivalLine: "Loading",
+  // Synthwave's boot is a VCR's on-screen display and an arcade cabinet's
+  // attract screen: the tape plays, the tracking settles, press start.
+  arrivalWordsByTheme: {
+    synthwave: { line: "\u25B6 Play", progress: "Tracking", ready: "Press start" }
+  },
   arrivalLinesByTheme: {
     retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
     terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
   },
   arrivalProgress: "Progress",
-  arrivalReady: "OK",
+  arrivalReady: "Ready",
   arrivalSkip: "Skip",
   measureLoading: "measuring\u2026",
   measureBox: (w, h) => `${w} \xD7 ${h} px`,
@@ -7910,7 +7918,21 @@ var KNOBS = Object.freeze({
    * JobTracker reported that as "the theme picker does not work on
    * phantom"; the picker was fine.
    */
-  arrivalDismiss: "--kp-arrival-dismiss"
+  arrivalDismiss: "--kp-arrival-dismiss",
+  /**
+   * How fast the arrival plays, as a factor [scope-84]. Default 1.
+   *
+   * Every wait of the arrival — a boot line's step, a percentage's step,
+   * the card's hold, the pause before it switches off — is divided by
+   * it, and every CSS animation on the overlay (the CRT switching off,
+   * the card's bar and its shove) plays at it as its playback rate. So
+   * `0.5` takes twice as long and `2` half as long, and the sequence
+   * stays the same sequence. A value that is not a number above zero
+   * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+   * sets it on the root of a frame; no register declares it, and a page
+   * that never sets it plays exactly as before.
+   */
+  arrivalRate: "--kp-arrival-rate"
 });
 var COUNT_KNOB = "--kp-count";
 var COUNT_FROM_KNOB = "--kp-count-from";
@@ -8988,6 +9010,21 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     const words = getStrings();
+    const theme = html.getAttribute("data-theme") ?? "";
+    const own = words.arrivalWordsByTheme?.[theme] ?? {};
+    const said = {
+      line: own.line ?? words.arrivalLine,
+      progress: own.progress ?? words.arrivalProgress,
+      ready: own.ready ?? words.arrivalReady
+    };
+    const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? "");
+    const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
+    const paced = (fn, ms) => later(fn, ms / rate);
+    const pace = () => {
+      if (rate === 1 || typeof overlay.getAnimations !== "function") return;
+      void view?.getComputedStyle(overlay).opacity;
+      for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
+    };
     const overlay = doc.createElement("div");
     overlay.className = ARRIVAL.root;
     const line = doc.createElement("pre");
@@ -9005,6 +9042,7 @@ function attachEffects(root = document, options = {}) {
     }
     overlay.append(line, ...bar ? [bar] : [], skip);
     doc.body.append(overlay);
+    pace();
     pending++;
     let ended = false;
     let pct = 0;
@@ -9022,18 +9060,19 @@ function attachEffects(root = document, options = {}) {
         return;
       }
       overlay.classList.add(STATE.off);
+      pace();
       overlay.addEventListener("animationend", remove, { once: true });
-      later(remove, TIMINGS[card ? "kp-load-out" : "kp-crt-off"].durationMs + 50);
+      paced(remove, TIMINGS[card ? "kp-load-out" : "kp-crt-off"].durationMs + 50);
     };
     const step = () => {
       if (ended) return;
       pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
-      line.textContent = [words.arrivalLine, words.arrivalProgress + " " + pct + "%", pct === 100 ? words.arrivalReady : ""].filter(Boolean).join("\n");
+      line.textContent = [said.line, `${said.progress} ${pct}%`.trim(), pct === 100 ? said.ready : ""].filter(Boolean).join("\n");
       bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
-      if (pct === 100) later(end, 220);
-      else later(step, 110);
+      if (pct === 100) paced(end, 220);
+      else paced(step, 110);
     };
-    const lines = words.arrivalLinesByTheme?.[html.getAttribute("data-theme") ?? ""] ?? null;
+    const lines = words.arrivalLinesByTheme?.[theme] ?? null;
     let shown2 = 0;
     const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
     const lineStep = () => {
@@ -9044,16 +9083,16 @@ function attachEffects(root = document, options = {}) {
         (text, index) => text.replace("{count}", String(index === shown2 - 1 ? Math.round(total * shown2 / lines.length) : total))
       ).join("\n");
       bar?.style.setProperty(BOOT_PROGRESS, String(shown2 / lines.length));
-      if (shown2 === lines.length) later(end, 320);
-      else later(lineStep, 190);
+      if (shown2 === lines.length) paced(end, 320);
+      else paced(lineStep, 190);
     };
     skip.addEventListener("click", end);
     if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== "skip-only") overlay.addEventListener("click", end);
     finishers.push(end);
     cleanups.push(() => overlay.remove());
     if (card) {
-      line.textContent = html.getAttribute("data-theme") ?? "";
-      later(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);
+      line.textContent = theme;
+      paced(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);
     } else if (lines && lines.length > 0) lineStep();
     else step();
   };

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>One theme's intro · kp-themes catalogue</title>
+        <link rel="stylesheet" href="../deps.css" />
+    </head>
+    <body class="cat-viewport-page">
+        <!-- A window of its own for catalogue/intros.html: the arrival overlay
+             is fixed over the whole viewport, so only a document of its own
+             shows it without covering the review page. The address says which
+             theme, how fast (`rate`, written to --kp-arrival-rate), whether to
+             play at all (`play`) and whether to play under reduced motion
+             (`force`, for inspection only). intro.js reads it. -->
+        <section class="kp-section kp-stack" data-kp-surface="hero">
+            <p class="microlabel">The page under the intro</p>
+            <h1 data-cat-intro-theme>formal</h1>
+            <p>What stands here once the intro has gone.</p>
+        </section>
+        <script type="module" src="./intro.js"></script>
+    </body>
+</html>

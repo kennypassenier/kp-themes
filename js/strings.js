@@ -192,10 +192,11 @@
  * @property {string} diagnosticsEffects  The diagnostics row that lists unknown hook values [AR44]
  * @property {string} diagnosticsEffectsNone
  * @property {string} classified  The stamp a register may print on an emphasis reveal (the dossier) [AR35]
- * @property {string} arrivalLine  The boot line of an arrival a theme performs (synthwave's CRT) [SW2]
+ * @property {string} arrivalLine  The neutral boot line of an arrival, for a theme that performs one and has no words of its own in `arrivalWordsByTheme` or `arrivalLinesByTheme` [SW2, scope-84]
+ * @property {Record<string, { line?: string, progress?: string, ready?: string }>} arrivalWordsByTheme  A theme's own words for the counting boot, keyed by theme [scope-84]: its line, the word before the percentage, and the word that closes it. A word the entry leaves out is the neutral one.
  * @property {Record<string, string[]>} arrivalLinesByTheme  The lines a theme's own boot shows instead of that one line, in order, keyed by theme [S49, A11]. A `{count}` in a line is replaced by a number counting up to `--kp-arrival-count` (640 by default), which is how retro's memory test reads.
- * @property {string} arrivalProgress  The word before the percentage on that line
- * @property {string} arrivalReady  The word that closes the boot line
+ * @property {string} arrivalProgress  The neutral word before the percentage on that line
+ * @property {string} arrivalReady  The neutral word that closes the boot line
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
  * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]
@@ -456,13 +457,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     mainNavigation: 'Main navigation',
     skipToContent: 'Skip to the content',
     classified: 'Classified',
-    arrivalLine: '▶ Calibrating neural uplink',
+    // The neutral words: no theme's world. Until scope-84 these were
+    // "▶ Calibrating neural uplink", "Progress" and "OK" — cyberpunk's
+    // voice, shown by synthwave's boot and by any theme that asked for one.
+    arrivalLine: 'Loading',
+    // Synthwave's boot is a VCR's on-screen display and an arcade cabinet's
+    // attract screen: the tape plays, the tracking settles, press start.
+    arrivalWordsByTheme: {
+        synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' },
+    },
     arrivalLinesByTheme: {
         retro: ['KP Modular BIOS v4.51PG', 'kp-themes 95 — retro build', 'Memory Test : {count}K'],
         terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
     },
     arrivalProgress: 'Progress',
-    arrivalReady: 'OK',
+    arrivalReady: 'Ready',
     arrivalSkip: 'Skip',
     measureLoading: 'measuring…',
     measureBox: (w, h) => `${w} × ${h} px`,
