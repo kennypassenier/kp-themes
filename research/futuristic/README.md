@@ -56,7 +56,7 @@ file.
 ## 2 · Layout concepts
 
 Not colour themes: page shapes a theme could adopt. "Reuse" names what
-exists today (`docs/LAYOUT.md`, `css/components.css`, the hook vocabulary
+exists today (`css/layout.css`, `css/components.css`, the hook vocabulary
 in `js/effects.js`); "New" is what would have to be added. Every new
 paint is a token, never a literal (DI9); every new token lands on all
 twenty-five themes in the same change (S47).

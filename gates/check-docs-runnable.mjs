@@ -47,18 +47,15 @@ const LOOKS_LIKE_A_FILE = /^(?:css|js|fx|hooks|components|gates|tests|themes|sho
  */
 export const FOLLOWED = [
     'README.md',
-    'HANDOFF.md',
     'MIGRATION.md',
     'docs/USER_GUIDE.md',
     'docs/TROUBLESHOOTING.md',
     'docs/DEBUGGING_GUIDE.md',
     'docs/OPERATIONS_RUNBOOK.md',
-    'docs/ADOPTION_PROMPTS.md',
     'docs/ARCHITECTURE_REFERENCE.md',
     'docs/TEST_PLAN.md',
-    'docs/LAYOUT.md',
     'docs/UTILITIES.md',
-    // docs/THEMING.md is deliberately absent: its first line says it is a
+    // docs/archive/legacy/THEMING.md is deliberately absent: its first line says it is a
     // verbatim copy of kp-soft's guide, so the paths in it are claims about
     // THAT repository. A reader follows it to understand where the house
     // themes came from, not to find a file here.
@@ -72,7 +69,12 @@ export const NOT_OURS = [
 
 /** @param {(f: string) => string} [read] */
 export function claims(read = (f) => readFileSync(new URL(f, root), 'utf8')) {
-    const files = execFileSync('git', ['-C', here, 'ls-files', '*.md'], { encoding: 'utf8' }).trim().split('\n');
+    // docs/archive/ holds dated records kept for provenance [scope-77]; a
+    // script they name is a fact about their day, not an instruction.
+    const files = execFileSync('git', ['-C', here, 'ls-files', '*.md'], { encoding: 'utf8' })
+        .trim()
+        .split('\n')
+        .filter((f) => !f.startsWith('docs/archive/'));
     const pkg = JSON.parse(read('package.json'));
     const scripts = new Set(Object.keys(pkg.scripts ?? {}));
     const exported = new Set(Object.keys(pkg.exports ?? {}));

@@ -151,12 +151,12 @@ ${stories}
 /**
  * The layout layer, read out of the stylesheet that ships it.
  *
- * Not rendered from docs/LAYOUT.md: that document holds tables and code
- * fences, which the story renderer refuses by design (T10 measured the
- * seven constructs the anatomy documents use, and no more). Reading the
- * stylesheet instead is the stronger version anyway -- a class renamed in
- * css/layout.css changes this page, where a prose document would keep
- * its old claim [AR21].
+ * Read from the stylesheet rather than from a prose document: a class
+ * renamed in css/layout.css changes this page, where a document would keep
+ * its old claim [AR21]. The comment directly above each rule is the
+ * explanation printed beside it, and it carries the rule's knob defaults;
+ * docs/LAYOUT.md, which used to hold that prose a second time, went at
+ * scope-77.
  */
 function layoutClasses() {
     const css = readFileSync(join(ROOT, 'css/layout.css'), 'utf8');

@@ -3,7 +3,7 @@
    The retro register, 5.0.0 [S48, LIFT_PLAN row 3]: the 1995 desktop.
    Scoped to [data-theme='retro'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Bevel 95", 2026-09-08) is
-   the reference for every value here, and docs/RESEARCH_2026-09.md §21 is
+   the reference for every value here, and docs/archive/RESEARCH_2026-09.md §21 is
    where each mechanism was measured: 98.css (the four-inset bevel, its
    inversion with the label stepping one pixel, the sunken well, the
    title-bar ramp, the tab that lifts, the checkerboard scrollbar track),
@@ -25,7 +25,7 @@
    control keeps its --border-strong edge, which check-invariants holds at
    3:1, and the two-tone bevel sits inside that edge as inset shadows. The
    original's mid-grey-on-light-grey bevel measured 2.17:1 and was the
-   whole reason the boundary could not be the bevel (docs/THEME_CANDIDATES.md,
+   whole reason the boundary could not be the bevel (docs/archive/THEME_CANDIDATES.md,
    C7). The dotted focus rectangle of the original is forbidden by DI2; the
    two-channel ring is composed in front of the bevel, never instead of it.
 

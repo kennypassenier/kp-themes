@@ -43,7 +43,7 @@
 /**
  * What owning a name actually takes: an id and the names it answers to.
  * A component page is one of these; so is the layout page, which is
- * generated from docs/LAYOUT.md and has no descriptor.
+ * generated from css/layout.css and has no descriptor.
  *
  * @typedef {{ id: string, classes: string[], aliases?: string[] }} Page
  */

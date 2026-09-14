@@ -3,7 +3,7 @@
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Sepia is lifted
 > in 5.0.0 (S48, LIFT_PLAN row 9). The research behind it is §9 of
-> [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the concept demo
+> [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the concept demo
 > Kenny approved on 2026-09-08 is "Aged Well".
 
 ## The idea
@@ -108,7 +108,7 @@ implementation matches the demo everywhere else.
 
 - **A full paper-grain texture is refused, not merely capped.** The
   demo's own comment names this explicitly and disagrees with
-  `docs/LIFT_PLAN.md` row 9's one-line mechanism shorthand ("multiply
+  `docs/archive/LIFT_PLAN.md` row 9's one-line mechanism shorthand ("multiply
   paper layer"): the demo's hazards section says "No aged-paper texture.
   The obvious flourish, and the wrong one: a mottled background reduces
   text contrast for exactly the reader this theme is for." That sentence

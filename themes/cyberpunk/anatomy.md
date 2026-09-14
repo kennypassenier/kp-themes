@@ -5,8 +5,8 @@
 > 5.0.0 theme (S39, S40): it replaces the 4.x cyberpunk under the same
 > name, and 4.0.0's theme stays what 4.0.0 shipped, retrievable from its
 > tag (S20). The research behind it is
-> [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the older
-> [CYBERPUNK_THEME_RESEARCH.md](../../docs/legacy/CYBERPUNK_THEME_RESEARCH.md)
+> [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the older
+> [CYBERPUNK_THEME_RESEARCH.md](../../docs/archive/legacy/CYBERPUNK_THEME_RESEARCH.md)
 > is the 4.x theme's.
 
 ## The idea

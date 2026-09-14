@@ -8,8 +8,8 @@ You are the researcher for kp-themes. You work in your own git worktree and
 you never commit: leave your files where they are and report their absolute
 paths.
 
-Read first: `css/components.css` for the component classes, `docs/LAYOUT.md`
-for the layout layer, one register in `css/<theme>-register.css` to see how a
+Read first: `css/components.css` for the component classes, `css/layout.css`
+and `site/layout.html` for the layout layer (its classes, knobs and defaults), one register in `css/<theme>-register.css` to see how a
 theme expresses itself, and `themes/<theme>/tokens.json` for the token names.
 
 Every deliverable is two files under `research/<topic>/`:

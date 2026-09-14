@@ -740,7 +740,7 @@ And three things that are **not** here, each checked:
   `gates/checksums.mjs` — it needs no key and can always be rebuilt.
 - **No npm token.** `package.json` declares `"private": true`, which
   blocks `npm publish`; consumers install from a git tag
-  (`docs/INVENTORY.md`, JobTracker's entry). There is no registry
+  (`docs/archive/INVENTORY.md`, JobTracker's entry). There is no registry
   credential to lose.
 
 So the single credential whose loss stops work is the maintainer's own

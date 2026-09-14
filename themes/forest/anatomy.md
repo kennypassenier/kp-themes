@@ -4,7 +4,7 @@
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Topo is lifted
 > in 5.0.0 (S48, LIFT_PLAN forest row). The concept demo Kenny approved on
 > 2026-09-08 is "Contour Register"; its own header comment cites
-> docs/RESEARCH_2026-09.md §7 (the perturbed-circle contour field and the
+> docs/archive/RESEARCH_2026-09.md §7 (the perturbed-circle contour field and the
 > headline's trace) and §2 (the razor tear and the concentric-ring
 > divider). Kenny is renaming this theme to **forest** at its lift; the
 > rename touches every generated file and document and is done centrally,
@@ -74,7 +74,7 @@ type routines the other five round-six demos used.
 Kenny's rule of 2026-09-08 is that an approved demo is implemented
 exactly, and that a test or a gate which disagrees produces a finding
 for him rather than a quiet change. No dedicated audit document exists
-yet for this theme (the four `docs/audits/DEMO_FIDELITY_*.md` files are
+yet for this theme (the four `docs/archive/audits/DEMO_FIDELITY_*.md` files are
 phantom, retro, terminal and brutalism); the findings below are this
 lift's own reading, done the same way.
 

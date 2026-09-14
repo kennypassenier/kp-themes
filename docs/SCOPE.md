@@ -926,7 +926,7 @@ brutalism cut none and he calls both very good, solstice cuts ten and he
 calls it sober. So the pass is about behaviour rather than decoration.
 The per-theme verdicts, the measurements behind them and the three
 observations that turned out differently than expected are in
-[THEME_VERDICTS.md](THEME_VERDICTS.md).
+[THEME_VERDICTS.md](archive/THEME_VERDICTS.md).
 
 **scope-13 · Six worlds refused, and what that says.** Kenny saw three
 concept worlds on 2026-09-11, called the spectral instrument the best but
@@ -1407,3 +1407,5 @@ migration into `check:docs-runnable`, fonts-css into `check:fonts`, tear into
 printed but never refusing a commit: variant-ground, compliance, baseline and
 prettier. Removed: none. step-timing "Akkoord": after the change Claude
 measures the new duration of `npm run gates`.
+
+**scope-77 · One decision per document.** Kenny, 2026-09-14, the documents form of `scope-36`, on the table of that day (71 tracked Markdown files; 46 judged, the 22 theme stories and 3 agent definitions left out as sources). Kept: 26. To the site: `docs/LAYOUT.md`, its prose and defaults now in the comments of `css/layout.css` that the layout page renders. Archived under `docs/archive/`, out of the document index, the path and privacy gates and the npm package: 18, among them `docs/ARCHITECTURE_DECISIONS.md` against the recommendation to keep it, so the ID gate no longer reads its IDs. Removed: `HANDOFF.md`. worktrees "Verwijderen": the 22 old agent worktrees are deleted. step-timing "Akkoord": the drift gate of `scope-35` follows for the documents that stayed.

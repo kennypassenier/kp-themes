@@ -26,7 +26,7 @@ It is written here rather than left unsaid, because the reason the step
 exists is exactly this shape of confidence: latch 2.0.1 passed CI, a
 hardening round and an external security review and was still unusable in
 every real project — the first genuine use found it in one command. So
-what this release has instead is thirty-two gates, 2,502 browser tests
+what this release has instead is the blocking gates, the browser suite
 over both engines, and Kenny's own look at the pages. What it does not
 have is one run through a consumer's own path: `npm pack`, install into
 an empty directory, build a page with a theme, a register and a component
@@ -42,7 +42,7 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 
 | Command | What it runs | When |
 | --- | --- | --- |
-| `npm run gates` | the twenty-nine blocking checks, seconds [scope-76] | every commit, by the hook |
+| `npm run gates` | the blocking checks, seconds [scope-76] | every commit, by the hook |
 | `npm run test:tags` | the tests tagged with what a change touches (building), plus every `@sweep` test (commit), Firefox only | during work, and once before a commit |
 | `npm run test:browser` | the whole suite, Chromium and Firefox | when Kenny asks for it |
 | `npm run advice` | contrast, invariants, motion, texture, and since scope-76 variant grounds, the compliance table, the baseline checksums and prettier — a reading, never a verdict | when Kenny wants the reading |
@@ -125,7 +125,7 @@ catches everything. The full numbers are under `measured` in
 
 **Fail.** Every check in this project has been shown red on a deliberately
 injected violation before being trusted, and those drills are recorded in
-`docs/REALIZATION_PLAN.md`. The Phase 7 audit found the reason that rule
+`docs/archive/REALIZATION_PLAN.md`. The Phase 7 audit found the reason that rule
 exists: a check for the visited link had been written, reported as built,
 and never ran once — it guarded on a token that is derived rather than
 declared, so its condition was false for all seven themes on every run. It
@@ -172,7 +172,7 @@ a reason, written down; a silent hole is neither.
 - **Nothing compares how the page looks.** Every check here is a number —
   contrast, distance, flashes per second, whether an element exists — and
   there are no screenshot comparisons. A theme can therefore look wrong
-  while every one of the 2,502 tests passes. The cost is real and was paid once already: at
+  while every test passes. The cost is real and was paid once already: at
   L3-EXIT, 42 colours were converted to tokens and the proof that nothing
   changed on screen had to be computed by hand, because no test could see
   it.
@@ -222,9 +222,10 @@ round measures are the engine-divergent kind: computed `clip-path` polygon
 serialisation, `scale` shorthand strings, pseudo-element `background-size`,
 `mix-blend-mode` on an absolutely positioned child, canvas
 `fontBoundingBoxAscent`, and `border-image` against a row background. The
-suite is 2,502 tests over 92 files across both engines and 1,251 in
-firefox alone (2026-09-14, after scope-32 and scope-73 removed the
-appearance-only tests the catalogue now shows); the second engine roughly doubles the wall-clock.
+suite runs across both engines, and firefox alone is half of it (scope-32
+and scope-73 removed the appearance-only tests the catalogue now shows);
+the second engine roughly doubles the wall-clock. How many tests there are
+is what `npx playwright test --list` counts, not a number kept here.
 
 **No support-probed skip any more.** `tests/fixtures.spec.mjs` used to
 skip the themed select list where `appearance: base-select` is not

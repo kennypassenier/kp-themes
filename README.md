@@ -6,7 +6,7 @@ brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
 cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
 shade-dark, lapis, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
-form fields, print), eighteen components, a theme picker, and a register
+form fields, print), twenty components, a theme picker, and a register
 for every one of the twenty-two themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and razor tear
 to titanium's oxide film.
@@ -512,7 +512,7 @@ navigation.
 configurable, with a default — the norm mature component libraries hold
 themselves to, applied here after an audit found the package short of it
 in some two hundred places. The record of that audit and what was done is
-[docs/GENERIC_SWEEP.md](docs/GENERIC_SWEEP.md). The shape, in five rules:
+[docs/archive/GENERIC_SWEEP.md](docs/archive/GENERIC_SWEEP.md). The shape, in five rules:
 
 **State is yours to own.** Every React component takes its state
 controlled (`value` + `onChange`) or uncontrolled (`defaultValue`), through
@@ -642,7 +642,7 @@ readable on that theme's card. A test asserts all four ink colours clear
 | [docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md) | the system as built                                        |
 | [docs/TEST_PLAN.md](docs/TEST_PLAN.md)                           | what is tested, and what is not by decision                |
 | [docs/DESIGN_INVARIANTS.md](docs/DESIGN_INVARIANTS.md)           | the rules every theme must keep, with the compliance table |
-| [MIGRATION.md](MIGRATION.md)                                     | the five breaks in v1                                      |
+| [MIGRATION.md](MIGRATION.md)                                     | every break, from v1 to 6.0.0, and what to do about each   |
 
 ## Provenance
 
@@ -651,8 +651,8 @@ Extracted from kp-soft at commit `2983abb`
 `resources/css/app.css`, `resources/js/hooks/use-appearance.tsx`,
 `resources/js/components/theme-switcher.tsx`,
 `resources/js/components/fx/{boot-sequence,decipher-text,digital-rain,scramble-number}.tsx`,
-`gates/check-contrast.mjs`, `docs/legacy/THEMING.md`,
-`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
+`gates/check-contrast.mjs`, `docs/archive/legacy/THEMING.md`,
+`docs/archive/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
 
@@ -698,7 +698,7 @@ git config core.hooksPath .githooks
 ```
 
 After that a commit runs the gates and refuses a message without feature
-IDs. Both were proved by making them fail; see `docs/REALIZATION_PLAN.md`.
+IDs. Both were proved by making them fail; see `docs/archive/REALIZATION_PLAN.md`.
 
 ## Installing from the git tag (npm 12)
 

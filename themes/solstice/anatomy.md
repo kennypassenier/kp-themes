@@ -98,7 +98,7 @@ nothing here was silently adapted.
 - **The calibration wipe's mechanism**, above: one `clip-path` sweep
   standing in for the demo's three independently-transformed `<span>`s.
   Same triad, same total duration, a different technique — the same kind
-  of substitution `docs/audits/DEMO_FIDELITY_TERMINAL_2026-09-08.md`
+  of substitution `docs/archive/audits/DEMO_FIDELITY_TERMINAL_2026-09-08.md`
   records for the cursor-in-the-box (B4: "same visual result, different
   technique").
 - **The headline's emphasised word** (small-caps, amber, tighter

@@ -3,7 +3,7 @@
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Pastel is the
 > sixth theme lifted in 5.0.0 (S48, LIFT_PLAN row 6). The research behind
-> it is §5 of [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the
+> it is §5 of [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the
 > concept demo Kenny approved on 2026-09-08 is "Second Pass".
 
 ## The idea

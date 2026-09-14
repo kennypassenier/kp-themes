@@ -231,6 +231,7 @@
         "gates",
         "ha",
         "docs",
+        "!docs/archive",
         "README.md",
         "MIGRATION.md",
         "CHANGELOG.md"

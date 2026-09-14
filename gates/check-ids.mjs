@@ -22,14 +22,7 @@ import process from 'node:process';
 
 const root = new URL('../', import.meta.url);
 
-export const DOCUMENTS = [
-    'docs/FEATURES.md',
-    'docs/MINI_ROUNDS.md',
-    'docs/INVENTORY.md',
-    'docs/SCOPE.md',
-    'docs/ARCHITECTURE_DECISIONS.md',
-    'docs/CORRECTIONS.md',
-];
+export const DOCUMENTS = ['docs/FEATURES.md', 'docs/MINI_ROUNDS.md', 'docs/SCOPE.md', 'docs/CORRECTIONS.md'];
 
 /**
  * The pairs that are one thing written down twice rather than two things
@@ -49,8 +42,9 @@ export const CROSS_REFERENCES = [
 /** An ID definition: a table row that opens with one, or a heading that names one. */
 // An optional PREFIX- part, because the repair for KT10's eighteen
 // collisions was to give the inventory its own namespace rather than to
-// renumber it: INV-T1 is a different symbol from T1, and both are still
-// read, so neither document falls outside the check.
+// renumber it: INV-T1 is a different symbol from T1. (Both the inventory
+// and the architecture decisions were archived at scope-77 and are no
+// longer read; the prefix shape stays for any document that needs one.)
 //
 // Phase 7 widened both, and added the third shape. The gate was written
 // for the T/D/F/TH series and saw nothing else, so the whole of round
@@ -81,9 +75,10 @@ export function definitions(read = (/** @type {string} */ f) => readFileSync(new
             // Shape, not just file. The old form deduplicated within a
             // document, so a document defining an ID twice could not
             // collide with itself — and that is exactly how it happened.
-            // But a document may index its own entries: docs/INVENTORY.md
-            // lists INV-T1 in a summary table and again as the heading of
-            // the section about it, which is one definition seen twice.
+            // But a document may index its own entries: a summary table
+            // lists an ID and the heading of the section about it names it
+            // again, which is one definition seen twice (the archived
+            // docs/archive/INVENTORY.md did this with INV-T1).
             // So one row and one heading in a file is an index; two of
             // the same shape is two definitions.
             const shape = row ? 'row' : 'prose';

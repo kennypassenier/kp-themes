@@ -3,7 +3,7 @@
    The pastel register, 5.0.0 [S48, LIFT_PLAN row 6]: risograph printing.
    Scoped to [data-theme='pastel'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Second Pass", 2026-09-08)
-   is the reference for every value here, and docs/RESEARCH_2026-09.md §5
+   is the reference for every value here, and docs/archive/RESEARCH_2026-09.md §5
    is where each mechanism was measured: chrislemke's overprint offset and
    halftone raster, Aardvark Book Club's rounded outer clip, the torn-tab
    divider and the base/soft colour-pair system, and the theme's own

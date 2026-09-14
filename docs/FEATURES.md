@@ -172,7 +172,7 @@ defines themes and builds components on them.
 ## Round three — themes, rated 2026-09-05
 
 Kenny's form of 2026-09-05 over eleven candidates and ten ideas; the
-research and the overlap scores are in `THEME_CANDIDATES.md`. One test
+research and the overlap scores are in `docs/archive/THEME_CANDIDATES.md`. One test
 bar for every theme: `tokens.json` passes every gate in `npm run gates`
 (all 39 contrast pairs, the invariants, the layers), an `anatomy.md`
 answers the invariant questions, the bare fixture and the showcase render
@@ -397,8 +397,8 @@ Essential, one Later.
 | TH131 | The DI5 test reads the register's real keyframes instead of pinning `fx-flicker` by name | Essential | stays green after the register is replaced; drill: a 5/s keyframe turns it red                                                           |
 | TH132 | `.fx-pulse` capped with `--fx-pulse-cycles` (default 3)                  | Later     | queued in `docs/MINI_ROUNDS.md`; the pulse still appears in TH129's report                                                               |
 | TH133 | Three repairs from the inventory: `.kp-card` instead of `[data-slot]`, a mono fallback for `.microlabel`, the phantom "doubled selector" comment | Essential | a bare `.kp-card` gets the register rule (computed); `.microlabel` renders mono without the Tailwind bridge; the README claim holds      |
-| TH134 | The lift plan for 5.0.0, `docs/LIFT_PLAN.md`                             | Essential | 24 rows, each with research, demo and build status; the CLAUDE.md status block points at it                                              |
-| TH135 | The research as a repository document (`docs/RESEARCH_2026-09.md`)      | Essential | every reference carries a URL and the label measured/observed; every theme has a row, "nothing found" included — **delivered 2026-09-07** |
+| TH134 | The lift plan for 5.0.0, `docs/archive/LIFT_PLAN.md`                             | Essential | 24 rows, each with research, demo and build status; the CLAUDE.md status block points at it                                              |
+| TH135 | The research as a repository document (`docs/archive/RESEARCH_2026-09.md`)      | Essential | every reference carries a URL and the label measured/observed; every theme has a row, "nothing found" included — **delivered 2026-09-07** |
 | TH136 | The hook vocabulary as a contract in README, USER_GUIDE and the site     | Essential | `check-site` truth: every attribute the section names exists in the effects module; every hook in the parity gate is in the table        |
 
 **M1, M3 and M4 re-put and confirmed unchanged. M2 re-put and confirmed

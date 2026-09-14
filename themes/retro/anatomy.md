@@ -3,7 +3,7 @@
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Retro is the
 > third theme lifted in 5.0.0 (S48, LIFT_PLAN row 3). The research behind
-> it is §21 of [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the
+> it is §21 of [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the
 > concept demo Kenny approved on 2026-09-08 is "Bevel 95".
 
 ## The idea
@@ -90,7 +90,7 @@ window and menu has the hard drop shadow. One answer per component root
 Kenny's rule of 2026-09-08 is that an approved demo is implemented
 exactly, and that a test or a gate which disagrees produces a finding for
 him rather than a quiet change. The audit of this theme against its demo
-is `docs/audits/DEMO_FIDELITY_RETRO_2026-09-08.md`; every deviation it
+is `docs/archive/audits/DEMO_FIDELITY_RETRO_2026-09-08.md`; every deviation it
 found was put to him, and every one he answered "Demo exact" is built.
 What is left is named here, with its reason.
 

@@ -4,7 +4,7 @@
    register. Scoped to [data-theme='synthwave'] and inert elsewhere;
    opt-in, imported after themes.css. The approved concept demo ("Outrun
    Horizon", 2026-09-08) is the reference for every value here, and
-   docs/RESEARCH_2026-09.md §25 is where each mechanism was measured.
+   docs/archive/RESEARCH_2026-09.md §25 is where each mechanism was measured.
 
    Cyberpunk is diagonal and day; synthwave is horizontal and night. What
    this file does, in order: the knobs and the texture; the type; the

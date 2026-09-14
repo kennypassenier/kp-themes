@@ -1,13 +1,38 @@
-# Migrating to v1
+# Migrating between versions
 
-v1 is a break, deliberately. Backward compatibility for the old imports
-was considered and declined (TH24): keeping a shim alive would have kept
-alive the thing the break exists to remove — a copy of every theme's
-colours living in JavaScript, drifting away from the stylesheet with no
-error and no failing gate.
+Every break this package has made, newest first: what changed, and what
+a consumer does about it. A minor release that needs no action has no
+section. The break into v1 itself, the five numbered sections, is at the
+end.
 
-Five things changed. Each one is a search-and-replace, and each is here
-with what it becomes.
+## Coming from 5.x to 6.0.0
+
+Two breaks, both about theme names; everything else in 6.0.0 is additive
+(CHANGELOG.md lists it).
+
+**Four themes are gone** [scope-11]: `academia`, `mono`, `ticker` and
+`woodblock`. Twenty-two remain. The registry no longer knows the four
+names, so `applyTheme('mono')` warns once in the console and applies the
+fallback, `formal`, rather than writing an attribute nothing styles. Their
+token blocks, registers, export paths and Home Assistant theme files are
+gone with them, so an import of one of those registers fails at build
+time.
+
+A consumer that stores a theme name maps the four old values once, to
+whichever remaining theme it wants in their place:
+
+```js
+const REMOVED = { academia: 'formal', mono: 'formal', ticker: 'formal', woodblock: 'formal' };
+const theme = REMOVED[stored] ?? stored;
+```
+
+**`dark` is a different theme under the same name** [scope-16]: the
+spectral instrument, rebuilt from its own approved demo. The token
+contract is unchanged, so nothing fails; the page simply looks different,
+because it is a different theme. Its register now declares
+`--kp-pointer: track`, so a page that loads it also gets `--kp-px` and
+`--kp-py` written to the root while the pointer moves. 5.x stays what it
+shipped (pin the tag if you want the old `dark`).
 
 ## Three themes changed name (5.0.0)
 
@@ -571,6 +596,17 @@ read out of config or a database still passes. Narrow it with `isTheme()`
 where you want the guarantee.
 
 ---
+
+## Coming from 0.x to v1
+
+v1 is a break, deliberately. Backward compatibility for the old imports
+was considered and declined (TH24): keeping a shim alive would have kept
+alive the thing the break exists to remove — a copy of every theme's
+colours living in JavaScript, drifting away from the stylesheet with no
+error and no failing gate.
+
+Five things changed. Each one is a search-and-replace, and each is here
+with what it becomes.
 
 ## 1 · `THEME_META` is gone → `THEME_RECORDS`
 

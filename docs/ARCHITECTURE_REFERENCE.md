@@ -1,6 +1,6 @@
 # Architecture reference
 
-The system as built. `docs/ARCHITECTURE_DECISIONS.md` says what was
+The system as built. `docs/archive/ARCHITECTURE_DECISIONS.md` says what was
 decided and why; this says what is there.
 
 ## The shape of it
@@ -17,7 +17,7 @@ themes/<name>/tokens.json   authored: the colours, one file per theme
 css/_header.css  ─┐
 css/_rules.css   ─┴─ concatenated verbatim into css/themes.css
 css/components.css   separate: only for consumers who take the components
-css/layout.css       separate: nineteen classes for the shape of a page
+css/layout.css       separate: twenty-one classes for the shape of a page
 css/utilities.css    separate: 118 generated one-property classes
 css/fonts.css        separate: the @font-face block for the shipped faces
 css/<name>-register.css      opt-in, one per theme, 22 of them
@@ -60,7 +60,7 @@ js/contrast.js       the reading, for a consumer ┘
 hooks/use-theme.js   React, sitting on theme-core
 hooks/use-strings.jsx  React, the strings provider
 components/*.jsx     React, rendering the same classes as the CSS above
-                     — nineteen of them, including the side navigation,
+                     — twenty of them, including the side navigation,
                      which has both channels since 2026-09-12
 fx/*.jsx             cyberpunk effects
 ```
@@ -187,15 +187,15 @@ because a table that lies by omission is worse than a gap.
 
 **A gate must have been red.** Every one of them has been shown failing on
 a deliberately injected violation, and those drills are recorded in
-`docs/REALIZATION_PLAN.md`. One check in this project was written,
+`docs/archive/REALIZATION_PLAN.md`. One check in this project was written,
 reported as built, and never ran once — it guarded on a derived token that
 no theme declares. That is why the drill is not optional.
 
 ## The browser tests
 
 Playwright, Chromium and Firefox, against a small static server
-(`tests/global-setup.mjs`). 2,594 tests over 76 spec files — counted by `npx playwright test --list`
-on 2026-09-12, not by hand — run when
+(`tests/global-setup.mjs`). How many there are is whatever
+`npx playwright test --list` counts today, not a number kept here. They run when
 Kenny runs them — `npm run test:tags` for what a change touches, selected by tag (`tests/tags.json`),
 `npm run test:browser` for all of it.
 They cover what Node cannot see: whether the browser received a

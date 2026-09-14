@@ -107,9 +107,9 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 | `titanium` | Titanium | yes |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `solstice`
-on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
+on arrived in 3.1.0, chosen and researched in `docs/archive/THEME_CANDIDATES.md`;
 `synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
-research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
+research in `docs/archive/RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
 second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
 is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"

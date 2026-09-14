@@ -55,7 +55,7 @@ Kenny.
 | Current phase       | **Round eight, layer 3 (tests, tags, gates, drift, purge).** Every approved fix from the catalogue so far is on the branch: gap-11, gap-12, gap-13, the switch, the data table round, the nostromo notes (scope-54 to scope-60) and held-60 (`e387f11`). Changed blocks return to the review page on their own for Kenny to judge again |
 | Last completed gate | **Phase 0, 2026-09-13.** The scope form of round eight, all sixteen items answered                                                                                                                                                                                                                                                      |
 | Next gate           | Kenny's look at batch 1, as the prompt the catalogue's copy button produces; then batch 2 for review, and the navigation and futuristic-layout work (`scope-48`, `scope-49`)                                                                                                                                                            |
-| Next action         | waiting on Kenny: the documents form, one item per document (scope-36), and the 22 old worktrees                                                                                                                                                                                                                                        |
+| Next action         | Claude: the drift gate of scope-35 for the documents that stayed                                                                                                                                                                                                                                                                        |
 | Open queue items    | Sixteen, none Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1`, `fix-17-M1`, `fix-18-M1`, `fix-19-M1`, `gap-10`, `gap-11`, `fix-20-M1`, `gap-12`, `gap-13`, `fix-21-M1`, `fix-23-M1`                                                                                                                      |
 | Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                                                         |
 | Step timing         | `step-timing: required` — every form carries a measured item `step-timing · …` from `~/Projects/dev-procedure/hooks/step-timing.py`; `hooks/form-lint.py` refuses a form without it [scope-69]                                                                                                                                          |
@@ -64,41 +64,29 @@ Kenny.
 
 ## Project documents
 
-| Doc                                     | Purpose                                                     |
-| --------------------------------------- | ----------------------------------------------------------- |
-| README.md                               | how to consume the package, tokens, provenance              |
-| HANDOFF.md                              | start prompt for a procedure session (Dutch)                |
-| docs/CYCLE.md                           | the three steps this project works in, from round eight     |
-| docs/RULES.md                           | the project rules and the corrections they came from        |
-| docs/SCOPE.md                           | every approved scope decision (S1–S49, scope-1–scope-44)    |
-| docs/CORRECTIONS.md                     | live-found faults and their approved measures               |
-| docs/DESIGN_INVARIANTS.md               | what must hold in every theme (DI1–DI11)                    |
-| docs/FEATURES.md                        | the frozen feature list with its test bars                  |
-| docs/ARCHITECTURE_DECISIONS.md          | the tech choices, frozen at Phase 4                         |
-| docs/ARCHITECTURE_REFERENCE.md          | the system as built, as opposed to as decided               |
-| docs/USER_GUIDE.md                      | how a consumer builds a page with this                      |
-| docs/LAYOUT.md                          | the layout classes and their knobs                          |
-| docs/UTILITIES.md                       | the generated utility classes                               |
-| docs/MINIFIED.md                        | the minified build and its per-file sizes (generated)       |
-| docs/TEST_PLAN.md                       | what is tested, where, and what deliberately is not         |
-| docs/TROUBLESHOOTING.md                 | when it looks wrong, or a check says no                     |
-| docs/DEBUGGING_GUIDE.md                 | symptom to cause, and what to look at first                 |
-| docs/OPERATIONS_RUNBOOK.md              | the numbered procedures a maintainer performs               |
-| docs/REALIZATION_PLAN.md                | the milestones of the full-route rounds, and their gate log |
-| docs/INVENTORY.md                       | the Phase 1 inventory of 2026-09-03                         |
-| docs/COVERAGE_GAPS.md                   | what the themes do not reach yet                            |
-| docs/MINI_ROUNDS.md                     | open measurements and mini-rounds                           |
-| docs/GENERIC_SWEEP.md                   | the KT6 audit: every feature configurable                   |
-| docs/LIFT_PLAN.md                       | the nineteen lifts of round six, one row each               |
-| docs/RESEARCH_2026-09.md                | the measured references the lifts were built from           |
-| docs/THEME_CANDIDATES.md                | the twenty-one candidates thirteen themes came from         |
-| docs/THEME_VERDICTS.md                  | what each theme was judged to need, and why                 |
-| docs/REQUESTS_FROM_CONSUMERS.md         | what the consumers asked for, 2026-09-03                    |
-| docs/ADOPTION_PROMPTS.md                | the two consumer prompts, one per project (Dutch)           |
-| docs/ID_TRANSLATIONS.md                 | the KT10 renames, one row each                              |
-| docs/legacy/THEMING.md                  | kp-soft's maintainer guide, verbatim copy (2026-09-02)      |
-| docs/legacy/CYBERPUNK_THEME_RESEARCH.md | kp-soft's cyberpunk research, verbatim copy (2026-09-02)    |
-| docs/legacy/README.md                   | what the two copied documents are, and what replaced them   |
+| Doc                            | Purpose                                                            |
+| ------------------------------ | ------------------------------------------------------------------ |
+| README.md                      | how to consume the package, tokens, provenance                     |
+| docs/CYCLE.md                  | the three steps this project works in, from round eight            |
+| docs/RULES.md                  | the project rules and the corrections they came from               |
+| docs/SCOPE.md                  | every approved scope decision (S1–S49, scope-1–scope-77)           |
+| docs/CORRECTIONS.md            | live-found faults and their approved measures                      |
+| docs/DESIGN_INVARIANTS.md      | what must hold in every theme (DI1–DI11)                           |
+| docs/FEATURES.md               | the frozen feature list with its test bars                         |
+| docs/ARCHITECTURE_REFERENCE.md | the system as built, as opposed to as decided                      |
+| docs/USER_GUIDE.md             | how a consumer builds a page with this                             |
+| docs/UTILITIES.md              | the generated utility classes                                      |
+| docs/MINIFIED.md               | the minified build and its per-file sizes (generated)              |
+| docs/TEST_PLAN.md              | what is tested, where, and what deliberately is not                |
+| docs/TROUBLESHOOTING.md        | when it looks wrong, or a check says no                            |
+| docs/DEBUGGING_GUIDE.md        | symptom to cause, and what to look at first                        |
+| docs/OPERATIONS_RUNBOOK.md     | the numbered procedures a maintainer performs                      |
+| docs/MINI_ROUNDS.md            | open measurements and mini-rounds                                  |
+| docs/ID_TRANSLATIONS.md        | the KT10 renames, one row each                                     |
+| site/layout.html               | the layout classes, their knobs and defaults (from css/layout.css) |
+| docs/archive/                  | dated records kept for provenance, out of the index and the gates  |
 
-The document list is long on purpose for now: `scope-36` gives every
-document its own keep-or-go decision, and this table shrinks with it.
+Each document here had its own keep-or-go decision at `scope-77`
+(2026-09-14): `HANDOFF.md` was removed, `docs/LAYOUT.md` moved into the
+comments of `css/layout.css` that the layout page renders, and eighteen
+dated records went to `docs/archive/`.

@@ -40,7 +40,7 @@ under DI5's flash threshold is not offered. Code-enforced where a test can
 pin it (a test per state that sets it and opens it, both channels);
 discipline-enforced as a rule, because no gate can tell a prop-derived
 `disabled` from an internal one. The audit that measured the package
-against this rule is `docs/GENERIC_SWEEP.md`.
+against this rule is `docs/archive/GENERIC_SWEEP.md`.
 
 ## Correction KT5 (2026-09-05) — no string in the code that renders it
 
@@ -80,7 +80,7 @@ way to get one. Scope stays: define themes, build components on them.
 One ID means one thing. A symbol defined in two of this project's
 documents is refused by `gates/check-ids.mjs`, which runs in `npm run
 gates` and in the commit hook — with an exception list for the handful of
-genuine cross-references, each carrying its reason. `docs/INVENTORY.md`
+genuine cross-references, each carrying its reason. `docs/archive/INVENTORY.md`
 has its own `INV-` namespace, because it documents units and has no claim
 on the T, D or F series the other documents use.
 
@@ -197,8 +197,8 @@ engine, Claude asks rather than decides.
 
 **Amended 2026-09-11, and this is the half that costs the time.**
 `test:affected` falls back to the whole suite for any change to a
-stylesheet or a module, by design — `gates/affected.mjs` says so in its
-own comment, because a map subtle enough to split them would be wrong
+stylesheet or a module, by design — `gates/affected.mjs` (removed at
+scope-33) said so in its own comment, because a map subtle enough to split them would be wrong
 where nobody looks. In practice that means nearly every step Claude takes
 runs everything: 1293 tests, three and a half minutes, dozens of times in
 one session, to check five. Kenny noticed from the other side — his
@@ -282,7 +282,7 @@ notched buttons with a slit, a razor tear between sections, decipher,
 one-shot glitch, redactions that clear. It replaced the theme under the
 same name in a new major; 4.0.0 stays what it shipped (S20). Scope S38–S46
 in `SCOPE.md`; the measured references in
-`legacy/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
+`archive/legacy/CYBERPUNK_THEME_RESEARCH.md`. Three rules came out of the gate:
 DI5 findings are reported, not silently corrected (S42); meaning lives in
 the HTML and expression in the theme, through a hook vocabulary every
 theme must answer (S45); and the concept demo, same structure and

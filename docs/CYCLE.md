@@ -153,7 +153,7 @@ separately (2026-09-13):
 
 - **The lexicon holds everywhere.** `~/Projects/dev-procedure/LEXICON.md`
   lists the words that do not reach Kenny and what is written instead;
-  `hooks/form-lint.py` refuses a form containing one and
+  `~/Projects/dev-procedure/hooks/form-lint.py` refuses a form containing one and
   `~/.claude/hooks/may-i-stop.py` refuses a reply containing one, in every
   project, because the language rule it enforces is already global.
 - **The status line holds only here.** The same Stop hook checks the four

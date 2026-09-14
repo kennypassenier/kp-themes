@@ -4,7 +4,7 @@
    Scoped to [data-theme='terminal'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Green Phosphor",
    2026-09-08) is the reference for every value here, and
-   docs/RESEARCH_2026-09.md §6 is where each mechanism was measured: the
+   docs/archive/RESEARCH_2026-09.md §6 is where each mechanism was measured: the
    block cursor of one character cell (Measham, dottxt.ai), the sweep band
    resting eight of ten seconds (ekeijl, a transform), the bezel by
    border-image (ekeijl, a gradient instead of the reference's image), the
