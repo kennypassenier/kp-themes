@@ -33,6 +33,8 @@ export declare const OPTIONS: {
     slimHide: string;
     slimShow: string;
     expanded: string;
+    overBelow: string;
+    narrow: string;
 };
 export type Sidenav = {
     element: HTMLElement;

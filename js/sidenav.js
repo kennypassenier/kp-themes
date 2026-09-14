@@ -59,7 +59,17 @@ export const OPTIONS = {
     slimHide: 'data-kp-sidenav-slim-hide',
     slimShow: 'data-kp-sidenav-slim-show',
     expanded: 'data-kp-sidenav-expanded',
+    overBelow: 'data-kp-sidenav-over-below',
+    narrow: 'data-kp-sidenav-narrow',
 };
+
+/**
+ * The width at and below which a panel with `data-kp-sidenav-over-below`
+ * and no length of its own becomes an `over` panel [scope-80]: the 40rem
+ * the bar collapses at and the table falls into cards at, so the package
+ * steps at one width rather than at two [TH104, TH26].
+ */
+const NARROW_STEP = '40rem';
 
 /** @type {WeakMap<Element, Sidenav>} */
 const handles = new WeakMap();
@@ -360,6 +370,80 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             close();
         };
 
+        // Narrow [scope-80]. A rail beside the content is right on a wide
+        // screen and a column of its own on a phone, so a panel that says
+        // `data-kp-sidenav-over-below` — with a length, or the package's
+        // 40rem — becomes the `over` panel while the box it lives in is that
+        // wide or narrower: away until its toggle opens it, with the focus
+        // trap, Escape, the backdrop and the focus return that mode already
+        // has, and its words back even when the rail was collapsed to
+        // icons. Above the width it is what the markup declared again, slim
+        // state included. The box is the panel's parent, as the bar measures
+        // its own wrapper [TH104]; an over panel is fixed, so it does not
+        // change the width it is measured by.
+        //
+        // The controls follow the state, through `hidden`, which the package
+        // lets win over every display rule [KT13]: this panel's
+        // `data-kp-sidenav-toggle` buttons — the one in the bar and the close
+        // inside the panel, which is the way out while the panel covers the
+        // bar — are shown only while narrow, and its slim toggles only while
+        // wide. Markup that starts them `hidden` stays right without the
+        // module. `data-kp-sidenav-narrow` on the panel says which it is.
+        const overBelow = read(OPTIONS.overBelow);
+        /** @type {{ mode: string | null, slim: boolean } | null} */
+        let declared = null;
+        /** @type {Map<HTMLElement, boolean>} */
+        const hiddenAtAttach = new Map();
+        /** @param {Element} control @param {boolean} hide */
+        const hideControl = (control, hide) => {
+            if (!(control instanceof HTMLElement) || (ownedBy !== '' && control.matches(ownedBy))) return;
+            if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute('hidden'));
+            control.toggleAttribute('hidden', hide);
+        };
+        const threshold = () => {
+            const length = (overBelow ?? '').trim() || NARROW_STEP;
+            const size = parseFloat(length);
+            if (length.endsWith('rem')) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
+            if (length.endsWith('em')) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
+            return size;
+        };
+        /** Change the mode without the slide: a resize is not an opening. @param {() => void} change */
+        const still = (change) => {
+            const before = panel.style.transition;
+            panel.style.transition = 'none';
+            change();
+            void panel.offsetWidth;
+            panel.style.transition = before;
+        };
+        const applyNarrow = () => {
+            const box = panel.parentElement;
+            if (overBelow === null || box === null) return;
+            const narrow = box.clientWidth <= threshold();
+            for (const control of togglers()) hideControl(control, !narrow);
+            if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
+            if (narrow === (declared !== null)) return;
+            still(() => {
+                if (narrow) {
+                    declared = { mode: read(OPTIONS.mode), slim: panel.hasAttribute(OPTIONS.slimCollapsed) };
+                    panel.setAttribute(OPTIONS.narrow, '');
+                    panel.removeAttribute(OPTIONS.slimCollapsed);
+                    panel.setAttribute(OPTIONS.mode, 'over');
+                    set(false, false);
+                } else {
+                    const was = /** @type {{ mode: string | null, slim: boolean }} */ (declared);
+                    declared = null;
+                    panel.removeAttribute(OPTIONS.narrow);
+                    if (was.mode === null) panel.removeAttribute(OPTIONS.mode);
+                    else panel.setAttribute(OPTIONS.mode, was.mode);
+                    panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
+                    saySlim(was.slim);
+                    set(mode() === 'side', false);
+                }
+            });
+        };
+        const narrowWatch =
+            overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === 'function' ? new ResizeObserver(applyNarrow) : null;
+
         // The starting state. A side panel is there unless told otherwise;
         // the two that cover are away until asked, which is the reference's
         // `hidden` default written as a mode rather than as a flag.
@@ -377,6 +461,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, '');
         set(start, false);
         saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
+        applyNarrow();
+        if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
 
         for (const toggle of panel.querySelectorAll('.kp-sidenav__category-toggle')) {
             const category = toggle.closest('.kp-sidenav__category');
@@ -402,6 +488,15 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         };
 
         const detach = () => {
+            narrowWatch?.disconnect();
+            if (declared !== null) {
+                panel.removeAttribute(OPTIONS.narrow);
+                if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
+                else panel.setAttribute(OPTIONS.mode, declared.mode);
+                panel.toggleAttribute(OPTIONS.slimCollapsed, declared.slim);
+                declared = null;
+            }
+            for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute('hidden', hidden);
             doc.removeEventListener('click', onToggleClick);
             doc.removeEventListener('click', onSlimClick);
             panel.removeEventListener('click', onCategory);

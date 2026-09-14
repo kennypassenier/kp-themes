@@ -2295,6 +2295,7 @@ __export(palette_exports, {
   OPEN_EVENT: () => OPEN_EVENT2,
   RUN_EVENT: () => RUN_EVENT,
   attachPalettes: () => attachPalettes,
+  closeOnOutsidePress: () => closeOnOutsidePress,
   isMac: () => isMac,
   palette: () => palette
 });
@@ -2305,6 +2306,28 @@ var LIST2 = '[role="listbox"]';
 var STATUS3 = '[role="status"]';
 var GROUP = "[data-kp-group]";
 var OPENER = "[data-kp-palette-open]";
+function closeOnOutsidePress(dialog) {
+  const outside = (event) => {
+    if (event.target !== dialog) return false;
+    const box = dialog.getBoundingClientRect();
+    return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+  };
+  let pressedOutside = false;
+  const onDown = (event) => {
+    pressedOutside = dialog.open && outside(event);
+  };
+  const onClick = (event) => {
+    const both = pressedOutside && outside(event);
+    pressedOutside = false;
+    if (both && dialog.open) dialog.close();
+  };
+  dialog.addEventListener("pointerdown", onDown);
+  dialog.addEventListener("click", onClick);
+  return () => {
+    dialog.removeEventListener("pointerdown", onDown);
+    dialog.removeEventListener("click", onClick);
+  };
+}
 function openerFor(event, dialog, answersKey) {
   const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
   if (opener === null) return false;
@@ -2469,6 +2492,7 @@ function attachPalettes(root = document, {
       dialog.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } }));
     };
     dialog.addEventListener("close", onClose);
+    const releaseOutside = closeOnOutsidePress(dialog);
     const onKey = (event) => {
       if (key === null || !isHotkey(event, key)) return;
       if (!answers(PALETTE, dialog)) return;
@@ -2513,6 +2537,7 @@ function attachPalettes(root = document, {
       for (const undo of unstamp) undo();
       input.removeEventListener("input", onInput);
       dialog.removeEventListener("close", onClose);
+      releaseOutside();
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("click", onOpener);
       for (const el of list.querySelectorAll(OPTION_SELECTOR)) el.hidden = false;
@@ -8840,8 +8865,11 @@ var OPTIONS = {
   slimToggle: "data-kp-sidenav-slim-toggle",
   slimHide: "data-kp-sidenav-slim-hide",
   slimShow: "data-kp-sidenav-slim-show",
-  expanded: "data-kp-sidenav-expanded"
+  expanded: "data-kp-sidenav-expanded",
+  overBelow: "data-kp-sidenav-over-below",
+  narrow: "data-kp-sidenav-narrow"
 };
+var NARROW_STEP = "40rem";
 var handles12 = /* @__PURE__ */ new WeakMap();
 function sidenavOf(element) {
   return element === null ? void 0 : handles12.get(element);
@@ -9048,6 +9076,58 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode() === "side" || !isOpen()) return;
       close();
     };
+    const overBelow = read(OPTIONS.overBelow);
+    let declared = null;
+    const hiddenAtAttach = /* @__PURE__ */ new Map();
+    const hideControl = (control, hide) => {
+      if (!(control instanceof HTMLElement) || ownedBy !== "" && control.matches(ownedBy)) return;
+      if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute("hidden"));
+      control.toggleAttribute("hidden", hide);
+    };
+    const threshold = () => {
+      const length = (overBelow ?? "").trim() || NARROW_STEP;
+      const size = parseFloat(length);
+      if (length.endsWith("rem")) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
+      if (length.endsWith("em")) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
+      return size;
+    };
+    const still = (change) => {
+      const before = panel.style.transition;
+      panel.style.transition = "none";
+      change();
+      void panel.offsetWidth;
+      panel.style.transition = before;
+    };
+    const applyNarrow = () => {
+      const box = panel.parentElement;
+      if (overBelow === null || box === null) return;
+      const narrow = box.clientWidth <= threshold();
+      for (const control of togglers()) hideControl(control, !narrow);
+      if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
+      if (narrow === (declared !== null)) return;
+      still(() => {
+        if (narrow) {
+          declared = { mode: read(OPTIONS.mode), slim: panel.hasAttribute(OPTIONS.slimCollapsed) };
+          panel.setAttribute(OPTIONS.narrow, "");
+          panel.removeAttribute(OPTIONS.slimCollapsed);
+          panel.setAttribute(OPTIONS.mode, "over");
+          set(false, false);
+        } else {
+          const was = (
+            /** @type {{ mode: string | null, slim: boolean }} */
+            declared
+          );
+          declared = null;
+          panel.removeAttribute(OPTIONS.narrow);
+          if (was.mode === null) panel.removeAttribute(OPTIONS.mode);
+          else panel.setAttribute(OPTIONS.mode, was.mode);
+          panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
+          saySlim(was.slim);
+          set(mode() === "side", false);
+        }
+      });
+    };
+    const narrowWatch = overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(applyNarrow) : null;
     let start = mode() === "side";
     if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === "true";
     if (key && memory) {
@@ -9061,6 +9141,8 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, "");
     set(start, false);
     saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
+    applyNarrow();
+    if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
     for (const toggle of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
       const category = toggle.closest(".kp-sidenav__category");
       toggle.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
@@ -9090,6 +9172,15 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       }
     };
     const detach = () => {
+      narrowWatch?.disconnect();
+      if (declared !== null) {
+        panel.removeAttribute(OPTIONS.narrow);
+        if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
+        else panel.setAttribute(OPTIONS.mode, declared.mode);
+        panel.toggleAttribute(OPTIONS.slimCollapsed, declared.slim);
+        declared = null;
+      }
+      for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute("hidden", hidden);
       doc.removeEventListener("click", onToggleClick);
       doc.removeEventListener("click", onSlimClick);
       panel.removeEventListener("click", onCategory);
@@ -9637,6 +9728,7 @@ export {
   auto_exports as autoExports,
   clearError,
   closeLabel,
+  closeOnOutsidePress,
   colorPicker,
   colorpicker_exports as colorpickerExports,
   combobox,

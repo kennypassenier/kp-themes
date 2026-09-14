@@ -959,23 +959,32 @@
         opacity: 1;
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the body face at a size above the small
+       text, in the full ink, on a half radius; under the pointer the primary
+       ink this register gives its quiet language link, and the two-pixel
+       weight a pointed-at link's underline takes, drawn as a rule because a
+       button has no underline to thicken. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-family: var(--theme-font-body);
+        font-size: 0.9375rem;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: calc(var(--radius) / 2);
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: currentcolor;
     }
 }

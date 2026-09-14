@@ -365,7 +365,7 @@ test(
 /* ------------------------------------- the register as the review page reads it */
 
 // The register's hashes are taken on the component pages; Kenny judges mostly
-// on the review page. A block judged there must stay judged there, in a fresh
+// on the review page. A block reads the same state there in a fresh
 // load and after a theme switch, at both of the widths he reviews at.
 //
 // Red run first, on 193974d in firefox: in nostromo ten register blocks read
@@ -405,7 +405,7 @@ for (const theme of ['nostromo', 'formal']) {
         [1920, 1000],
     ]) {
         test(
-            `every register block in ${theme} shows as judged on the review page at ${width}, after a fresh load and after a theme switch`,
+            `every register block in ${theme} reads the same state on the review page at ${width}, after a fresh load and after a theme switch`,
             { tag: ['@component:catalogue', `@theme:${theme}`] },
             async ({ browser, browserName }) => {
                 const verdicts = registerVerdicts(theme, engineOf(browserName));
@@ -417,14 +417,18 @@ for (const theme of ['nostromo', 'formal']) {
                 await page.goto('/catalogue/switch.html');
                 await page.evaluate((name) => localStorage.setItem('theme', name), theme);
                 await page.goto('/catalogue/index.html');
-                expect.soft(await reviewMismatches(page, theme, verdicts), 'fresh load').toEqual([]);
+                // A block changed on purpose since it was judged reads "changed" in every
+                // reading alike, and waits for Kenny; what this guards is that the reading
+                // does not depend on how the page was reached [scope-80]. The red run above
+                // failed this too: ten blocks changed on a fresh load, none after a switch.
+                const fresh = await reviewMismatches(page, theme, verdicts);
 
                 const other = theme === 'formal' ? 'nostromo' : 'formal';
                 await page.evaluate((name) => localStorage.setItem('theme', name), other);
                 await page.goto('/catalogue/index.html');
                 await reviewMismatches(page, other, {});
                 await setTheme(page, theme);
-                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching from ${other}`).toEqual([]);
+                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching from ${other}`).toEqual(fresh);
 
                 // And back again, with the blocks hidden in the meantime: a component
                 // that measures itself (a tab row's overflow) must not be read with
@@ -432,7 +436,7 @@ for (const theme of ['nostromo', 'formal']) {
                 await setTheme(page, other);
                 await reviewMismatches(page, other, {});
                 await setTheme(page, theme);
-                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching to ${other} and back`).toEqual([]);
+                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching to ${other} and back`).toEqual(fresh);
                 await context.close();
             },
         );

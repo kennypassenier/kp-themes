@@ -142,6 +142,8 @@ const TO_MARKUP = {
                 'aria-label': p.label,
                 'data-kp-sidenav-slim': p.slim === undefined ? undefined : p.slim ? '' : 'false',
                 'data-kp-sidenav-slim-collapsed': p.slimCollapsed === undefined ? undefined : p.slimCollapsed ? '' : 'false',
+                'data-kp-sidenav-over-below':
+                    p.overBelow === undefined || p.overBelow === false ? undefined : p.overBelow === true ? '' : p.overBelow,
             },
             p.title !== undefined ? el('div', { class: 'kp-sidenav__header' }, el('p', { class: 'kp-sidenav__title' }, p.title)) : null,
             el(
@@ -171,6 +173,22 @@ const TO_MARKUP = {
     // the panel it controls; js/sidenav.js writes the state and the name.
     SidenavSlimToggle: (p, kids) =>
         el('button', { type: 'button', class: p.class, 'data-kp-sidenav-slim-toggle': '', 'aria-controls': p.controls }, kids),
+
+    // components/sidenav.jsx, SidenavToggle: the opener's class, the declared
+    // attribute and the panel it opens; js/sidenav.js writes the state, the
+    // name and — for a panel that turns `over` when narrow — `hidden`.
+    SidenavToggle: (p, kids) =>
+        el(
+            'button',
+            {
+                type: 'button',
+                class: cx('kp-sidenav__toggle', p.class),
+                'data-kp-sidenav-toggle': '',
+                'aria-controls': p.controls,
+                hidden: p.hidden ? '' : undefined,
+            },
+            kids,
+        ),
 
     // components/overlays.jsx, Breadcrumb: the last item is where the reader
     // is, a span rather than a link, and carries aria-current.
@@ -821,13 +839,15 @@ export const EXAMPLES = [
     {
         id: 'app-shell',
         title: 'Application shell',
-        note: 'The bar across the top, a side navigation beside the content that collapses to a rail of icons from its own toggle, and a breadcrumb before the main content [scope-48].',
+        note: 'The bar across the top, a side navigation beside the content that collapses to a rail of icons from its own toggle and runs to the bottom of the window, and a breadcrumb before the main content [scope-48]. Narrow, the rail is a panel over the page, opened from the bar [scope-80].',
         probes: [
             'nav.kp-sidenav[data-kp-sidenav-slim]',
             '[data-kp-sidenav-slim-toggle]',
             'nav.kp-breadcrumb',
             '.kp-autogrid',
             '[popovertarget="user-menu"]',
+            '.kp-shell > .kp-shell__body',
+            '[data-kp-sidenav-over-below]',
         ],
         // The composition research/navbar/README.md recommends first: every
         // part was in the package, and this page had faked its side column
@@ -835,103 +855,126 @@ export const EXAMPLES = [
         // pages of the area the reader is in; the breadcrumb says where in
         // it. The breadcrumb comes before <main>, so the skip link passes it
         // along with both navigations (GOV.UK, "Navigate a service").
+        //
+        // scope-80, "Uitschuifpaneel": the shell fills the window, so the rail
+        // runs to its bottom; at the package's 40rem step and below, the rail
+        // is the `over` panel. The bar's toggle opens it and the close in its
+        // footer shuts it — the panel covers the bar, so the way out has to
+        // be inside. Both start `hidden`; the module shows whichever applies.
         body: [
             el(
-                'NavBar',
-                {
-                    brand: 'Northwind',
-                    links: [
-                        { href: '#overview', label: 'Overview' },
-                        { href: '#invoices', label: 'Invoices', current: true },
-                        { href: '#reports', label: 'Reports' },
-                        { href: '#settings', label: 'Settings' },
-                    ],
-                },
+                'div',
+                { class: 'kp-shell' },
                 el(
-                    'div',
-                    { class: 'kp-mx-auto' },
-                    el(
-                        'button',
-                        {
-                            type: 'button',
-                            class: 'kp-button kp-button--ghost',
-                            popovertarget: 'user-menu',
-                            style: 'anchor-name: --user-menu',
-                        },
-                        'Ada Lovelace',
-                    ),
+                    'NavBar',
+                    {
+                        brand: 'Northwind',
+                        links: [
+                            { href: '#overview', label: 'Overview' },
+                            { href: '#invoices', label: 'Invoices', current: true },
+                            { href: '#reports', label: 'Reports' },
+                            { href: '#settings', label: 'Settings' },
+                        ],
+                    },
+                    el('SidenavToggle', { controls: 'app-rail', class: 'kp-icon-button', hidden: true }, el('span', { 'aria-hidden': 'true' }, '☰')),
                     el(
                         'div',
-                        { popover: 'auto', id: 'user-menu', class: 'kp-popover', style: 'position-anchor: --user-menu' },
+                        { class: 'kp-mx-auto' },
                         el(
-                            'ul',
-                            { class: 'kp-menu' },
-                            el('li', {}, el('button', { type: 'button', class: 'kp-menu__item' }, 'Profile')),
-                            el('li', {}, el('button', { type: 'button', class: 'kp-menu__item' }, 'Sign out')),
+                            'button',
+                            {
+                                type: 'button',
+                                class: 'kp-button kp-button--ghost',
+                                popovertarget: 'user-menu',
+                                style: 'anchor-name: --user-menu',
+                            },
+                            'Ada Lovelace',
+                        ),
+                        el(
+                            'div',
+                            { popover: 'auto', id: 'user-menu', class: 'kp-popover', style: 'position-anchor: --user-menu' },
+                            el(
+                                'ul',
+                                { class: 'kp-menu' },
+                                el('li', {}, el('button', { type: 'button', class: 'kp-menu__item' }, 'Profile')),
+                                el('li', {}, el('button', { type: 'button', class: 'kp-menu__item' }, 'Sign out')),
+                            ),
                         ),
                     ),
                 ),
-            ),
-            el(
-                'div',
-                { class: 'kp-d-flex kp-flex-wrap', 'data-example': 'app-shell-body' },
-                el('Sidenav', {
-                    id: 'app-rail',
-                    label: 'Invoices',
-                    slim: true,
-                    items: [
-                        { href: '#all', label: 'All invoices', icon: '▤', current: true },
-                        { href: '#drafts', label: 'Drafts', icon: '✎' },
-                        { href: '#overdue', label: 'Overdue', icon: '!' },
-                        { href: '#customers', label: 'Customers', icon: '◎' },
-                    ],
-                    footer: el(
-                        'SidenavSlimToggle',
-                        { controls: 'app-rail', class: 'kp-sidenav__link' },
-                        el('span', { class: 'kp-sidenav__icon', 'aria-hidden': 'true', 'data-kp-sidenav-slim-hide': '' }, '«'),
-                        el('span', { class: 'kp-sidenav__icon', 'aria-hidden': 'true', 'data-kp-sidenav-slim-show': '' }, '»'),
-                    ),
-                }),
                 el(
                     'div',
-                    { class: 'kp-flex-1' },
+                    { class: 'kp-shell__body', 'data-example': 'app-shell-body' },
+                    el('Sidenav', {
+                        id: 'app-rail',
+                        label: 'Invoices',
+                        slim: true,
+                        overBelow: true,
+                        items: [
+                            { href: '#all', label: 'All invoices', icon: '▤', current: true },
+                            { href: '#drafts', label: 'Drafts', icon: '✎' },
+                            { href: '#overdue', label: 'Overdue', icon: '!' },
+                            { href: '#customers', label: 'Customers', icon: '◎' },
+                        ],
+                        footer: [
+                            el(
+                                'SidenavSlimToggle',
+                                { controls: 'app-rail', class: 'kp-sidenav__link' },
+                                el('span', { class: 'kp-sidenav__icon', 'aria-hidden': 'true', 'data-kp-sidenav-slim-hide': '' }, '«'),
+                                el('span', { class: 'kp-sidenav__icon', 'aria-hidden': 'true', 'data-kp-sidenav-slim-show': '' }, '»'),
+                            ),
+                            el(
+                                'SidenavToggle',
+                                { controls: 'app-rail', class: 'kp-sidenav__link', hidden: true },
+                                el('span', { class: 'kp-sidenav__icon', 'aria-hidden': 'true' }, '×'),
+                            ),
+                        ],
+                    }),
                     el(
                         'div',
-                        { class: 'kp-page kp-py-sm' },
-                        el('Breadcrumb', {
-                            items: [{ href: '#overview', label: 'Northwind' }, { href: '#invoices', label: 'Invoices' }, { label: 'All invoices' }],
-                        }),
-                    ),
-                    el(
-                        'main',
-                        { id: 'main', class: 'kp-page', tabindex: '-1' },
+                        { class: 'kp-flex-1' },
                         el(
                             'div',
-                            { class: 'kp-stack' },
-                            el('h1', {}, 'All invoices'),
-                            el(
-                                'p',
-                                { class: 'kp-text-muted kp-prose' },
-                                'Everything on this page is laid out by the package: no page stylesheet, no style attribute except the two the popover anchor needs.',
-                            ),
+                            { class: 'kp-page kp-py-sm' },
+                            el('Breadcrumb', {
+                                items: [
+                                    { href: '#overview', label: 'Northwind' },
+                                    { href: '#invoices', label: 'Invoices' },
+                                    { label: 'All invoices' },
+                                ],
+                            }),
+                        ),
+                        el(
+                            'main',
+                            { id: 'main', class: 'kp-page', tabindex: '-1' },
                             el(
                                 'div',
-                                { class: 'kp-autogrid' },
-                                el('Card', { title: 'Open invoices' }, el('p', { class: 'kp-mono' }, '128')),
-                                el('Card', { title: 'Overdue' }, el('p', { class: 'kp-mono' }, '7')),
-                                el('Card', { title: 'Paid this month' }, el('p', { class: 'kp-mono' }, '1284')),
-                            ),
-                            el(
-                                'section',
-                                { class: 'kp-section kp-stack' },
-                                el('h2', {}, 'Latest activity'),
-                                el('Table', {
-                                    columns: ['When', 'What', 'Who'],
-                                    rows: [
-                                        ['09:14', 'Invoice 2026-0114 sent', 'Ada'],
-                                        ['08:02', 'Report generated', 'System'],
-                                    ],
-                                }),
+                                { class: 'kp-stack' },
+                                el('h1', {}, 'All invoices'),
+                                el(
+                                    'p',
+                                    { class: 'kp-text-muted kp-prose' },
+                                    'Everything on this page is laid out by the package: no page stylesheet, no style attribute except the two the popover anchor needs.',
+                                ),
+                                el(
+                                    'div',
+                                    { class: 'kp-autogrid' },
+                                    el('Card', { title: 'Open invoices' }, el('p', { class: 'kp-mono' }, '128')),
+                                    el('Card', { title: 'Overdue' }, el('p', { class: 'kp-mono' }, '7')),
+                                    el('Card', { title: 'Paid this month' }, el('p', { class: 'kp-mono' }, '1284')),
+                                ),
+                                el(
+                                    'section',
+                                    { class: 'kp-section kp-stack' },
+                                    el('h2', {}, 'Latest activity'),
+                                    el('Table', {
+                                        columns: ['When', 'What', 'Who'],
+                                        rows: [
+                                            ['09:14', 'Invoice 2026-0114 sent', 'Ada'],
+                                            ['08:02', 'Report generated', 'System'],
+                                        ],
+                                    }),
+                                ),
                             ),
                         ),
                     ),

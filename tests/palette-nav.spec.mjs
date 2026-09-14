@@ -63,6 +63,43 @@ test.describe('the palette as navigation', { tag: ['@component:page', '@componen
             await expect(trigger).toBeFocused();
         });
 
+        test(`${channel}: a click outside the palette closes it and gives focus back to the trigger, like Escape [scope-80]`, async ({ page }) => {
+            // Kenny's note on catalogue/navigation.html#bar-search, dark: a
+            // click outside the popup should close it, the way Escape does.
+            // Before: the press landed on the dialog's backdrop and nothing
+            // happened; the palette stayed open in both channels.
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(FIXTURE);
+            const { trigger, palette, input } = parts(page, channel);
+            await trigger.click();
+            await expect(palette).toBeVisible();
+            // Inside the box first: a press on the palette itself keeps it open.
+            await input.click();
+            await palette.locator('.kp-palette__status').click({ force: true });
+            await expect(palette, 'a press inside the box keeps the palette open').toBeVisible();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await palette.boundingBox());
+            // Below the palette's box, on the backdrop.
+            await page.mouse.click(box.x + box.width / 2, Math.min(890, box.y + box.height + 40));
+            await expect(palette, 'a press on the backdrop closes it').toBeHidden();
+            await expect(trigger).toBeFocused();
+        });
+
+        test(`${channel}: a press that starts inside the palette and ends outside it does not close it [scope-80]`, async ({ page }) => {
+            // Selecting the query with the mouse and letting go past the box
+            // is not a click outside.
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(FIXTURE);
+            const { trigger, palette, input } = parts(page, channel);
+            await trigger.click();
+            await input.fill('settings');
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await input.boundingBox());
+            await page.mouse.move(box.x + 10, box.y + box.height / 2);
+            await page.mouse.down();
+            await page.mouse.move(box.x + 10, 5, { steps: 4 });
+            await page.mouse.up();
+            await expect(palette).toBeVisible();
+        });
+
         test(`${channel}: the highlight still travels by aria-activedescendant onto a link option [scope-48]`, async ({ page }) => {
             await page.goto(FIXTURE);
             const { trigger, input, option } = parts(page, channel);

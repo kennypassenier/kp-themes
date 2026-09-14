@@ -55,6 +55,10 @@ export type SidenavProps = {
      */
     slimCollapsed?: boolean;
     /**
+     * Become the `over` panel while the box it lives in is this wide or narrower: `true` for the package's 40rem step, or a length. Its toggles are shown only then, its slim toggles only above it [scope-80].
+     */
+    overBelow?: boolean | string;
+    /**
      * Widen while the pointer is over it.
      */
     expandOnHover?: boolean;

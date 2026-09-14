@@ -21,7 +21,7 @@ import Card from '../components/card.jsx';
 import Field from '../components/field.jsx';
 import Table from '../components/table.jsx';
 import Marquee from '../components/marquee.jsx';
-import Sidenav, { SidenavSlimToggle } from '../components/sidenav.jsx';
+import Sidenav, { SidenavSlimToggle, SidenavToggle } from '../components/sidenav.jsx';
 import { Breadcrumb } from '../components/overlays.jsx';
 import { EXAMPLES, conceptBody, isComponent } from './examples.mjs';
 import { conceptCopy } from './concept-copy.mjs';
@@ -213,6 +213,7 @@ const TO_REACT = {
             title={p.title === undefined ? undefined : toReact(p.title, 'title')}
             slim={p.slim}
             slimCollapsed={p.slimCollapsed}
+            overBelow={p.overBelow}
             className={p.class}
             items={(p.items ?? []).map((/** @type {Record<string, any>} */ item) => ({
                 href: item.href,
@@ -220,8 +221,13 @@ const TO_REACT = {
                 icon: item.icon === undefined ? undefined : toReact(item.icon, 'icon'),
                 label: toReact(item.label, 'label'),
             }))}
-            footer={p.footer === undefined ? undefined : toReact(p.footer, 'footer')}
+            footer={p.footer === undefined ? undefined : Array.isArray(p.footer) ? kids(p.footer) : toReact(p.footer, 'footer')}
         />
+    ),
+    SidenavToggle: (p, children, key) => (
+        <SidenavToggle key={key} controls={p.controls} className={p.class} hidden={p.hidden}>
+            {kids(children)}
+        </SidenavToggle>
     ),
     SidenavSlimToggle: (p, children, key) => (
         <SidenavSlimToggle key={key} controls={p.controls} className={p.class}>

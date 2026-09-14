@@ -174,8 +174,10 @@
                 <div class="cat-look">
                     <b>Look at:</b> the wide bar must wrap its fourteen links onto more rows with an even gap between rows and columns — never scroll
                     sideways, never push the page wider. The tenth link is sixty characters: it must wrap inside itself or take a row of its own, and
-                    its current-page underline must follow the text onto its second line rather than draw under one line only. The bar in the narrow
-                    pane collapses; open it with its toggle and check that the long label wraps in the column instead of running out of the pane.
+                    its current-page underline must follow the text onto its second line rather than draw under one line only. No link's plate or rule
+                    may touch or cover a link in the row above it — in dark the current page's plate used to lie over the first row. The bar in the
+                    narrow pane collapses; open it with its toggle and check that the long label wraps in the column instead of running out of the
+                    pane.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-nav-wrap">
@@ -239,13 +241,15 @@
                 <h2>Search in the bar</h2>
                 <div class="cat-look">
                     <b>Look at:</b> the command palette's trigger sits in <code>.kp-nav__search</code> at the bar's far end, pushed right by the slot
-                    itself, and reads as a quiet search box: the word <b>Search</b> in the muted ink with the key hint <b>Ctrl K</b> (<b>⌘K</b> on a
-                    Mac) at its end, a thin boundary in the theme's strong border and the theme's radius, no ground of its own. It must be quieter
-                    than the bar's links, never a loud button, and pointing at it takes the word to the full ink. In the narrow pane the bar collapses
-                    and the trigger stays beside the toggle on the brand's row without pushing the pane wider. Press either trigger, or Ctrl+K: the
-                    palette opens with the focus in its input; type "tabs" and press Enter — the page must jump to <b>Tabs</b> and the palette close.
-                    Open it again and press Escape: the focus must return to the trigger you pressed, with its focus ring. Choosing
-                    <b>Breadcrumb</b> with the mouse jumps there the same way.
+                    itself, and speaks in the voice of this theme's own bar links (Kenny, 2026-09-14, "Per thema"): the word <b>Search</b> with the
+                    key hint <b>Ctrl K</b> (<b>⌘K</b> on a Mac) at its end, in the links' typeface, case, letter-spacing and shape, and pointing at it
+                    or tabbing to it must do what pointing at <b>Overview</b> does — the same plate, rule, slash or ink — without the underline a link
+                    carries. Compare it with the links in every theme: it must read as one more item of this bar, not as a box from another theme. In
+                    the narrow pane the bar collapses and the trigger stays beside the toggle on the brand's row without pushing the pane wider. Press
+                    either trigger, or Ctrl+K: the palette opens with the focus in its input; type "tabs" and press Enter — the page must jump to
+                    <b>Tabs</b> and the palette close. Open it again and press Escape: the focus must return to the trigger you pressed, with its
+                    focus ring. Open it once more and click anywhere outside the palette: it must close the same way, focus back on the trigger.
+                    Choosing <b>Breadcrumb</b> with the mouse jumps there the same way.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-nav-wrap">
@@ -817,7 +821,12 @@
                     bottom of the box, the breadcrumb lined up with the content rather than with the rail. Collapse the rail from its arrow: the
                     content must take the room without jumping, and the breadcrumb and the heading must move with it. Open <b>Reports</b> in the bar:
                     its dropdown must lie above the rail and the content, never under them — that is the bar's layer, now the same in all 22 themes
-                    (<code>--kp-z-nav</code>).
+                    (<code>--kp-z-nav</code>). Then make the window narrower than 40rem of this stage (or open <code>examples/app-shell.html</code> at
+                    phone width): the rail leaves the page, and a <b>☰</b> appears in the bar. Press it: the rail slides in over the page with every
+                    label written out, even if you had collapsed it to icons, and the page behind it dims. It covers the bar, so it must close from
+                    inside — the <b>×</b> in its footer, Escape, or a press on the dimmed page — and the focus must land back on the <b>☰</b>. Widen
+                    the window again: the rail is back beside the content as it was, and the ☰ and × are gone. On the examples page at full width the
+                    rail must run to the bottom of the window, not stop where the content ends.
                 </div>
                 <div class="cat-stage cat-stage--block" style="padding: 0">
                     <div class="kp-nav-wrap">
@@ -836,10 +845,19 @@
                                 </li>
                                 <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
                             </ul>
+                            <button
+                                type="button"
+                                class="kp-sidenav__toggle kp-icon-button"
+                                data-kp-sidenav-toggle
+                                aria-controls="nv-shell-rail"
+                                hidden
+                            >
+                                <span aria-hidden="true">☰</span>
+                            </button>
                         </nav>
                     </div>
                     <div class="kp-d-flex kp-flex-wrap" style="min-block-size: 26rem">
-                        <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim>
+                        <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim data-kp-sidenav-over-below>
                             <div class="kp-sidenav__scroll">
                                 <ul class="kp-sidenav__list">
                                     <li>
@@ -872,6 +890,15 @@
                                 <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-shell-rail">
                                     <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
                                     <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-sidenav__toggle kp-sidenav__link"
+                                    data-kp-sidenav-toggle
+                                    aria-controls="nv-shell-rail"
+                                    hidden
+                                >
+                                    <span class="kp-sidenav__icon" aria-hidden="true">×</span>
                                 </button>
                             </div>
                         </nav>

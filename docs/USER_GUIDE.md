@@ -951,7 +951,10 @@ can be the places themselves:
 
 `js/auto.js` (through `attachPalettes`) does the rest. The trigger is an
 ordinary `data-kp-palette-open` opener: pressing it opens the palette with
-the focus in its input, and Escape gives the focus back to the trigger.
+the focus in its input, and Escape — or a click anywhere outside the
+palette's box — closes it and gives the focus back to the trigger. A press
+that starts inside the box and ends outside it, the way a mouse selects
+the query, does not close it [scope-80].
 What the markup leaves out the module writes — `aria-haspopup="dialog"`,
 and `aria-keyshortcuts` when the palette has a key — and it fills the empty
 `<kbd data-kp-palette-keys>` with the key in the platform's spelling, ⌘K
@@ -969,7 +972,9 @@ module attaches, and on a page without JavaScript, the list is a list of
 plain links that work on their own.
 
 `.kp-nav__search` pushes itself to the bar's end, and every register
-answers it. The one knob is `--kp-nav-search-min` (10rem), the trigger's
+answers it in the voice of its own bar links — their typeface, case,
+spacing, shape and pointer answer, without the underline that marks a
+link [scope-80]. The one knob is `--kp-nav-search-min` (10rem), the trigger's
 minimum width, never more than the bar itself.
 
 In React, NavBar's `search` prop fills the slot and `PaletteTrigger` is the
@@ -998,6 +1003,59 @@ bar's layer: a `.kp-sidenav__toggle` placed in the bar sits under an
 `over` panel (60) rather than above it, so give that panel
 `--kp-sidenav-inset-block` to start below the bar, or put its closing
 control inside the panel.
+
+### An application shell, and its rail on a phone [scope-80]
+
+`.kp-shell` is the whole window: the bar, then `.kp-shell__body`, a row
+that takes the rest of the window's height, so a rail beside the content
+runs to the bottom of the window rather than stopping where the content
+does. The page gives up the browser's 8px body margin while a shell is on
+it. Knob: `--kp-shell-min` (100dvh).
+
+On a phone that rail is in the way, so `data-kp-sidenav-over-below` turns
+it into the `over` panel while the box it lives in is 40rem wide or
+narrower — the width the bar and the table already step at — or at the
+length you give it (`data-kp-sidenav-over-below="52rem"`):
+
+```html
+<div class="kp-shell">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Main">
+            <span class="kp-nav__brand">Your app</span>
+            <ul class="kp-nav__links">…</ul>
+            <button type="button" class="kp-sidenav__toggle kp-icon-button" data-kp-sidenav-toggle aria-controls="rail" hidden>
+                <span aria-hidden="true">☰</span>
+            </button>
+        </nav>
+    </div>
+    <div class="kp-shell__body">
+        <nav class="kp-sidenav" id="rail" aria-label="Section" data-kp-sidenav-slim data-kp-sidenav-over-below>
+            <div class="kp-sidenav__scroll">…</div>
+            <div class="kp-sidenav__footer">
+                <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail">…</button>
+                <button type="button" class="kp-sidenav__toggle kp-sidenav__link" data-kp-sidenav-toggle aria-controls="rail" hidden>
+                    <span class="kp-sidenav__icon" aria-hidden="true">×</span>
+                </button>
+            </div>
+        </nav>
+        <div class="kp-flex-1">…</div>
+    </div>
+</div>
+```
+
+Narrow, the module sets `data-kp-sidenav-mode="over"` and
+`data-kp-sidenav-narrow` on the panel, closes it, and gives the labels back
+if the rail was collapsed to icons; the toggle opens it with the focus
+trap, Escape, the backdrop and the focus return `over` already has. Wide
+again, the panel is what the markup declared, slim state included. The
+controls follow through `hidden`: the panel's `data-kp-sidenav-toggle`
+buttons show only while narrow, its slim toggles only while wide, so
+write the narrow ones `hidden` and a page without JavaScript never shows a
+button that does nothing. The close inside the panel matters: the panel
+covers the bar, and the bar's toggle with it. The width is the panel's
+parent's, measured as the bar measures its wrapper. In React it is
+`<Sidenav overBelow>` (or `overBelow="52rem"`) with `SidenavToggle`, which
+passes `hidden` through.
 
 ## The page shell [TH36]
 

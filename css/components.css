@@ -1495,6 +1495,9 @@
         color: var(--muted-foreground);
         font: inherit;
         font-size: var(--kp-text-sm, 0.8125rem);
+        /* One line: squeezed on grotesk's bar, the key hint broke into
+     * "Ctrl" over "K" inside its own chip [scope-80]. */
+        white-space: nowrap;
         cursor: pointer;
     }
 
@@ -1522,6 +1525,19 @@
      * keyboard reaches every item by Tab; the register decides its look. */
     .kp-nav__links > li {
         position: relative;
+        /* The item is a column, so the link in it is a flex item, and a flex
+     * item is a block box whatever `display` a register gives the link
+     * [scope-80]. An inline link takes no room for its block padding: a
+     * register's plate under the current page, on a bar that wraps, painted
+     * 13px over the row above in dark (catalogue/navigation.html#bar-long,
+     * Kenny's note of 2026-09-14), and a label that wraps inside itself
+     * laid its second line's plate over its first. As a block, the plate
+     * holds its own room, the row gap sits between plates, and a text
+     * underline still follows each line. The column keeps a collapsed
+     * bar's nested menu under its link (tests/nav-wrap.spec.mjs). */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     /* A marquee [S45, M1 of 2026-09-08]: a row that runs, and the first

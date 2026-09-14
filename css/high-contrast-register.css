@@ -1047,23 +1047,29 @@
         background: var(--secondary-active);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): bold words in the link ink with a two-pixel
+       rule in the full ink under them when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        font-weight: 700;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--link);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        border-bottom-color: var(--foreground);
+        color: var(--link);
     }
 }

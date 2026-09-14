@@ -41,6 +41,7 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @property {boolean} [defaultOpen]  Open on first render. The module owns it afterwards.
  * @property {boolean} [slim]  Offer the narrow state at all.
  * @property {boolean} [slimCollapsed]  Start narrow.
+ * @property {boolean | string} [overBelow]  Become the `over` panel while the box it lives in is this wide or narrower: `true` for the package's 40rem step, or a length. Its toggles are shown only then, its slim toggles only above it [scope-80].
  * @property {boolean} [expandOnHover]  Widen while the pointer is over it.
  * @property {boolean} [accordion]  One nested list open at a time.
  * @property {boolean} [backdrop]  Dim the page behind it in `over`.
@@ -103,6 +104,7 @@ function SidenavInner(
         defaultOpen,
         slim,
         slimCollapsed,
+        overBelow,
         expandOnHover,
         accordion,
         backdrop,
@@ -132,6 +134,7 @@ function SidenavInner(
         ...flag('data-kp-sidenav-open', defaultOpen),
         ...flag('data-kp-sidenav-slim', slim),
         ...flag('data-kp-sidenav-slim-collapsed', slimCollapsed),
+        ...(overBelow === undefined || overBelow === false ? null : { 'data-kp-sidenav-over-below': overBelow === true ? '' : overBelow }),
         ...flag('data-kp-sidenav-expand-on-hover', expandOnHover),
         ...flag('data-kp-sidenav-accordion', accordion),
         ...flag('data-kp-sidenav-backdrop', backdrop),

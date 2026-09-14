@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
-import { isMac } from '../js/palette.js';
+import { closeOnOutsidePress, isMac } from '../js/palette.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -129,6 +129,13 @@ function CommandPaletteInner(
         }
         if (!open && element.open) element.close();
     }, [open]);
+
+    // A press outside the box closes it, as Escape does [scope-80]; the
+    // element's close event then sets the state, as it does for Escape.
+    useEffect(() => {
+        const element = dialog.current;
+        return element === null ? undefined : closeOnOutsidePress(element);
+    }, []);
 
     useEffect(() => {
         if (hotkey === null) return;

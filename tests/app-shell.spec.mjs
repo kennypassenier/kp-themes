@@ -103,6 +103,63 @@ test.describe('the application shell', { tag: ['@component:navigation', '@compon
         });
     }
 
+    for (const channel of CHANNELS) {
+        // scope-80, shell-narrow "Uitschuifpaneel": below the package's 40rem
+        // step the rail is the `over` panel, opened from a toggle in the bar.
+        // Before: at 320px the rail wrapped above the content as a full-width
+        // block and the bar had no toggle for it.
+        test(`${channel.name}: at 320px the rail is away and the bar's toggle opens it over the page, focus in and back [scope-80]`, async ({
+            page,
+        }) => {
+            await page.setViewportSize({ width: 320, height: 700 });
+            await page.goto(channel.url);
+            const rail = page.locator(`${channel.root} nav.kp-sidenav#app-rail`);
+            const opener = page.locator(`${channel.root} .kp-nav [data-kp-sidenav-toggle][aria-controls="app-rail"]`);
+            await expect(opener, 'the bar carries a toggle for the rail').toBeVisible();
+            await expect(rail).toHaveAttribute('data-kp-sidenav-mode', 'over');
+            const away = () => rail.evaluate((el) => el.getBoundingClientRect().right);
+            await expect.poll(away, { message: 'closed, the rail is off the screen' }).toBeLessThanOrEqual(0);
+            await expect(opener).toHaveAttribute('aria-expanded', 'false');
+            await expect(opener).toHaveAccessibleName(s.sidebar);
+
+            await opener.focus();
+            await page.keyboard.press('Enter');
+            await expect(rail).toHaveAttribute('data-kp-sidenav-open', 'true');
+            await expect
+                .poll(() => rail.evaluate((el) => Math.round(el.getBoundingClientRect().left)), { message: 'open, it is on the screen' })
+                .toBe(0);
+            await expect.poll(() => rail.evaluate((el) => el.contains(document.activeElement)), { message: 'focus moved into the panel' }).toBe(true);
+            // Every destination has its words in the panel, not a rail of glyphs.
+            await expect(rail.getByRole('link', { name: 'Drafts', exact: true })).toBeVisible();
+            await page.keyboard.press('Escape');
+            await expect(rail).toHaveAttribute('data-kp-sidenav-open', 'false');
+            await expect(opener, 'Escape gives the focus back to the toggle in the bar').toBeFocused();
+
+            // The panel covers the bar (layer 60 over 30), so closing works from inside it.
+            await opener.click();
+            const close = rail.locator('[data-kp-sidenav-toggle]');
+            await expect(close, 'the panel carries its own close').toBeVisible();
+            await expect(close).toHaveAccessibleName(s.closeSidebar);
+            await close.click();
+            await expect(rail).toHaveAttribute('data-kp-sidenav-open', 'false');
+            await expect(opener, 'the close inside gives the focus back to the toggle in the bar').toBeFocused();
+        });
+
+        test(`${channel.name}: at 1400px the rail runs to the bottom of the window, and the narrow controls are gone [scope-80]`, async ({
+            page,
+        }) => {
+            await page.setViewportSize({ width: 1400, height: 900 });
+            await page.goto(channel.url);
+            const rail = page.locator(`${channel.root} nav.kp-sidenav#app-rail`);
+            await expect(page.locator(`${channel.root} [data-kp-sidenav-slim-toggle]`)).toHaveAttribute('aria-expanded', 'true');
+            await expect(rail).not.toHaveAttribute('data-kp-sidenav-mode', 'over');
+            await expect(page.locator(`${channel.root} [data-kp-sidenav-toggle]`).first()).toBeHidden();
+            await expect(rail.locator('[data-kp-sidenav-toggle]')).toBeHidden();
+            const bottom = await rail.evaluate((el) => el.getBoundingClientRect().bottom);
+            expect(Math.abs(bottom - 900), `the rail ends at ${bottom}, the window at 900`).toBeLessThanOrEqual(1);
+        });
+    }
+
     test('a slim toggle whose only content is a hidden glyph is named from the strings, and the name follows the state', async ({ page }) => {
         // Before: the module named a toggle only when it was empty or already
         // carried aria-label, so a button holding an aria-hidden arrow had no

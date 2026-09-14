@@ -82,6 +82,46 @@ const GROUP = '[data-kp-group]';
 export const OPENER = '[data-kp-palette-open]';
 
 /**
+ * Close a modal dialog on a press outside its box [scope-80].
+ *
+ * A modal `<dialog>` paints its backdrop as part of itself, so a press on
+ * the dimmed page lands on the dialog element with coordinates outside its
+ * border box. Both the press and the release have to fall outside: a drag
+ * that selects the query and lets go past the box is not a click outside.
+ * `dialog.close()` is what Escape does too, so focus goes back to the
+ * opener the same way, and the `close` event runs every channel's own
+ * bookkeeping. Returns the function that takes the listeners off.
+ *
+ * @param {HTMLDialogElement} dialog
+ * @returns {() => void}
+ */
+export function closeOnOutsidePress(dialog) {
+    /** @param {MouseEvent} event */
+    const outside = (event) => {
+        if (event.target !== dialog) return false;
+        const box = dialog.getBoundingClientRect();
+        return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+    };
+    let pressedOutside = false;
+    /** @param {PointerEvent} event */
+    const onDown = (event) => {
+        pressedOutside = dialog.open && outside(event);
+    };
+    /** @param {MouseEvent} event */
+    const onClick = (event) => {
+        const both = pressedOutside && outside(event);
+        pressedOutside = false;
+        if (both && dialog.open) dialog.close();
+    };
+    dialog.addEventListener('pointerdown', onDown);
+    dialog.addEventListener('click', onClick);
+    return () => {
+        dialog.removeEventListener('pointerdown', onDown);
+        dialog.removeEventListener('click', onClick);
+    };
+}
+
+/**
  * Whether a click landed on an opener meant for this dialog.
  *
  * @param {Event} event
@@ -313,6 +353,7 @@ export function attachPalettes(
             dialog.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
         };
         dialog.addEventListener('close', onClose);
+        const releaseOutside = closeOnOutsidePress(dialog);
 
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
@@ -373,6 +414,7 @@ export function attachPalettes(
             for (const undo of unstamp) undo();
             input.removeEventListener('input', onInput);
             dialog.removeEventListener('close', onClose);
+            releaseOutside();
             document.removeEventListener('keydown', onKey);
             document.removeEventListener('click', onOpener);
             for (const el of list.querySelectorAll(OPTION_SELECTOR)) /** @type {HTMLElement} */ (el).hidden = false;

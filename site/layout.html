@@ -148,7 +148,7 @@
                     <p class="kp-prose">Classes for the shape of a page, in the cascade layer after the components, so a layout class wins on a component that sets the same property itself. Every value reads a knob whose default is the theme spacing scale.</p>
                 </header>
                 <section class="kp-section" data-sc-section="classes" id="classes">
-                    <h2 class="kp-fw-semibold">The 24 rules</h2>
+                    <h2 class="kp-fw-semibold">The 26 rules</h2>
                     <div class="sc-example__live"><table class="kp-table"><thead><tr><th>Selector</th><th>What it is for</th><th>Knobs</th></tr></thead><tbody>
                             <tr><td><code>.kp-page</code></td><td>The page itself: a measure to read within, centred, with margins that shrink on a phone instead of stepping at a breakpoint. Knobs: --kp-page-max (64rem), --kp-page-pad (between the md and xl steps of the scale, 3vw in between), --kp-page-pad-block (the xl step).</td><td><code>--kp-page-max</code>, <code>--kp-page-pad</code>, <code>--kp-space-md</code>, <code>--kp-space-xl</code>, <code>--kp-page-pad-block</code></td></tr>
                             <tr><td><code>.kp-stack</code></td><td>Vertical rhythm. This is the fault the round started from: two fields and a button touched because a field has no vertical margin and nothing above it supplied one. Knob: --kp-stack-gap (the md step).</td><td><code>--kp-stack-gap</code>, <code>--kp-space-md</code></td></tr>
@@ -163,6 +163,8 @@
                             <tr><td><code>.kp-sidebar</code></td><td>Content with a side column that drops below when there is no room for both — no media query, so it behaves the same inside a narrow container as it does in a narrow window. The aside drops once the main column would be narrower than half the track. Knob: --kp-sidebar-gap (the lg step).</td><td><code>--kp-sidebar-gap</code>, <code>--kp-space-lg</code></td></tr>
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__aside</code></td><td>The side column. Knob: --kp-sidebar-width (16rem).</td><td><code>--kp-sidebar-width</code></td></tr>
                             <tr><td><code>.kp-sidebar &gt; .kp-sidebar__main</code></td><td>The main column, which takes every spare pixel. Knob: --kp-sidebar-break (50%), the narrowest it may be before the aside drops below it.</td><td><code>--kp-sidebar-break</code></td></tr>
+                            <tr><td><code>.kp-shell</code></td><td>An application shell: the bar on top and a body under it that fills the rest of the window, so a rail beside the content runs to the bottom of the window rather than stopping where the content does (scope-80). The body is a row that wraps, the rail and the content its items. Knob: --kp-shell-min (100dvh), the least height of the whole shell.</td><td><code>--kp-shell-min</code></td></tr>
+                            <tr><td><code>.kp-shell &gt; .kp-shell__body</code></td><td>The shell's body, which takes every spare pixel of that height.</td><td>—</td></tr>
                             <tr><td><code>.kp-section</code></td><td>A section of a page: space above it, and nothing else. The heading inside keeps whatever the theme gives it. Knob: --kp-section-gap (the 2xl step).</td><td><code>--kp-section-gap</code>, <code>--kp-space-2xl</code></td></tr>
                             <tr><td><code>.kp-section:first-child</code></td><td>As the first child a section puts no space above itself, where the space would push the page down for no reason.</td><td>—</td></tr>
                             <tr><td><code>.kp-center</code></td><td>A box with a ceiling, centred — the login card, the empty state, the one-column form. Knob: --kp-center-max (28rem).</td><td><code>--kp-center-max</code></td></tr>
@@ -177,7 +179,7 @@
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
-                    <h2 class="kp-fw-semibold">The 25 knobs</h2>
+                    <h2 class="kp-fw-semibold">The 26 knobs</h2>
                     <p class="kp-prose">Set any of these on a page, a theme or a single element. Each falls back to the scale.</p>
                     <ul class="kp-row kp-gap-sm">
                         <li><code>--kp-autogrid-gap</code></li>
@@ -194,6 +196,7 @@
                         <li><code>--kp-row-align</code></li>
                         <li><code>--kp-row-gap</code></li>
                         <li><code>--kp-section-gap</code></li>
+                        <li><code>--kp-shell-min</code></li>
                         <li><code>--kp-sidebar-break</code></li>
                         <li><code>--kp-sidebar-gap</code></li>
                         <li><code>--kp-sidebar-width</code></li>

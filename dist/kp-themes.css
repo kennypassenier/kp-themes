@@ -5648,6 +5648,9 @@
         color: var(--muted-foreground);
         font: inherit;
         font-size: var(--kp-text-sm, 0.8125rem);
+        /* One line: squeezed on grotesk's bar, the key hint broke into
+     * "Ctrl" over "K" inside its own chip [scope-80]. */
+        white-space: nowrap;
         cursor: pointer;
     }
 
@@ -5675,6 +5678,19 @@
      * keyboard reaches every item by Tab; the register decides its look. */
     .kp-nav__links > li {
         position: relative;
+        /* The item is a column, so the link in it is a flex item, and a flex
+     * item is a block box whatever `display` a register gives the link
+     * [scope-80]. An inline link takes no room for its block padding: a
+     * register's plate under the current page, on a bar that wraps, painted
+     * 13px over the row above in dark (catalogue/navigation.html#bar-long,
+     * Kenny's note of 2026-09-14), and a label that wraps inside itself
+     * laid its second line's plate over its first. As a block, the plate
+     * holds its own room, the row gap sits between plates, and a text
+     * underline still follows each line. The column keeps a collapsed
+     * bar's nested menu under its link (tests/nav-wrap.spec.mjs). */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     /* A marquee [S45, M1 of 2026-09-08]: a row that runs, and the first
@@ -10540,24 +10556,50 @@
         text-align: start;
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): spaced yellow capitals on the dark strip
+       with its cut corner, a faint yellow wash under the pointer. The links'
+       strip is drawn by the list, so the trigger, which stands outside it on
+       the yellow bar, carries its own piece of that strip, drawn behind it
+       the way the list draws its own, so the cut never clips the focus ring.
+       The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
     [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        position: relative;
+        isolation: isolate;
+        padding: 0.7rem 1.1rem 0.8rem;
+        font-size: 0.92rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--primary);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: none;
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--background);
+        clip-path: polygon(var(--kp-nav-notch) 0, 100% 0, 100% 62%, calc(100% - 15px) 100%, 0 100%, 0 var(--kp-nav-notch));
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:hover::before,
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:focus-visible::before {
+        background: linear-gradient(hsl(from var(--primary) h s l / 0.12), hsl(from var(--primary) h s l / 0.12)), var(--background);
     }
 }
 
@@ -12538,24 +12580,30 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the menu bar's plain words in a frame that
+       is invisible until the item is pointed at, when it takes the primary
+       selection. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
     [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.3rem 0.7rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
     }
 }
 
@@ -14349,24 +14397,57 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): widely spaced capitals with room under them
+       for the gradient stripe that runs out beneath them, and the core ink
+       with a low inner glow, when pointed at. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        position: relative;
+        padding: 0.7rem 1.1rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--kp-core);
+        background: none;
+        box-shadow: inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+        content: '';
+        position: absolute;
+        left: 0.6rem;
+        right: 0.6rem;
+        bottom: 0;
+        height: 4px;
+        background: var(--kp-stripe);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover::after,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible::after {
+        transform: scaleX(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
     }
 }
 
@@ -16178,24 +16259,58 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): tall condensed display capitals in the full
+       ink, and under the pointer the skewed red slash that sweeps in behind
+       them. The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
     [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        position: relative;
+        z-index: 0;
+        padding: 0.5rem 0.95rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.02rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary-foreground);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
+        content: '';
+        position: absolute;
+        left: -4%;
+        top: 14%;
+        height: 72%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover::before,
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible::before {
+        width: 108%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
+            transition: width var(--fx-duration) var(--kp-cut);
+        }
     }
 }
 
@@ -17857,24 +17972,31 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): lightly spaced phosphor words that invert
+       onto the primary block when pointed at, the glow switched off on the
+       block. The link's typeface, case, spacing, shape and pointer answer
+       are restated here, because the trigger is a button beside the list
+       rather than a link in it. The underline a plain link carries is not:
+       it says "this is a link", and the trigger is not one. */
     [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.35rem 0.7rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-shadow: none;
     }
 }
 
@@ -19475,24 +19597,32 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): heavy spaced capitals in a thick frame that
+       is invisible until pointed at, when the frame and the secondary slab
+       appear. The link's typeface, case, spacing, shape and pointer answer
+       are restated here, because the trigger is a button beside the list
+       rather than a link in it. The underline a plain link carries is not:
+       it says "this is a link", and the trigger is not one. */
     [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: var(--kp-line) solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-color: var(--border-strong);
     }
 }
 
@@ -20941,23 +21071,28 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
     [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
+        padding: 0.5rem 0.8rem;
+        font-size: 0.94rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
         background: transparent;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
         color: var(--foreground);
     }
 }
@@ -22231,24 +22366,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): soft words on a well-rounded plate that
+       fills with the muted ground when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.5rem 0.7rem;
+        font-size: 0.9rem;
+        border: 0;
+        border-radius: 0.6rem;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--muted);
         color: var(--foreground);
+        box-shadow: none;
     }
 }
 
@@ -23500,24 +23640,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the full ink
+       over a hairline that, with the text, takes the primary ink when
+       pointed at. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
     [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
     }
 }
 
@@ -24716,24 +24861,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): plain words at the bar's own size with a
+       two-pixel rule under them that takes the primary green, with the text,
+       when pointed at. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
     [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
     }
 }
 
@@ -26100,24 +26250,31 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): small widely spaced capitals in the muted
+       ink, a gilt hairline under them and the primary ink when pointed at.
+       The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
     [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
+        padding: 0.5rem 0.7rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        background: none;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: var(--border-strong);
     }
 }
 
@@ -27033,24 +27190,27 @@
             0 2px 5px hsl(from var(--foreground) h s l / 0.2);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the link ink
+       on the theme's radius, taking the primary ink when pointed at. The
+       link's typeface, case, spacing, shape and pointer answer are restated
+       here, because the trigger is a button beside the list rather than a
+       link in it. The underline a plain link carries is not: it says "this
+       is a link", and the trigger is not one. */
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
         border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        background: none;
+        color: var(--link);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
     }
 }
 
@@ -28470,24 +28630,55 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): bold muted words that take the full ink
+       when pointed at, while the baseline rule this register draws under its
+       links grows out from the start. The link's typeface, case, spacing,
+       shape and pointer answer are restated here, because the trigger is a
+       button beside the list rather than a link in it. The underline a plain
+       link carries is not: it says "this is a link", and the trigger is not
+       one. */
     [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
+        position: relative;
+        padding: 0.25rem 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        border: 0;
+        border-radius: 0;
+        background: none;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger::after {
+        content: '';
+        position: absolute;
+        inset-inline: calc(-1 * var(--kp-baseline-reach, 0.5rem));
+        inset-block-end: calc(var(--kp-baseline-drop, 0.225em) - var(--kp-baseline-weight, 2px));
+        block-size: var(--kp-baseline-weight, 2px);
+        background: var(--kp-baseline-colour, var(--primary));
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:hover::after,
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:focus-visible::after {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger::after {
+            transition: scale var(--fx-duration, 220ms) var(--fx-ease, ease);
+        }
     }
 }
 
@@ -29839,24 +30030,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): muted drafting text with no plate, a
+       hairline that inks in under it when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
     [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
+        font-size: 0.9rem;
+        padding: 0.25rem 0;
+        border: 0;
+        border-block-end: 1px solid transparent;
+        border-radius: 0;
+        background: none;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
+        border-block-end-color: var(--border-strong);
     }
 }
 
@@ -31189,24 +31385,31 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the control strip's small spaced monospace
+       capitals on a barely rounded key that lights with the strip's accent
+       when pointed at. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
     [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0.4rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0.2rem;
+        background: none;
+        color: var(--sidebar-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--sidebar-accent);
+        color: var(--sidebar-foreground);
     }
 }
 
@@ -31353,6 +31556,25 @@
         content: ']';
         inset-inline-end: 0.55rem;
         translate: 0.5rem 0;
+    }
+
+    /* The brackets need room of their own [scope-80]. Kenny's note on the
+       data table's add-filter editor: its small ghost Cancel is narrower
+       than the brackets, and on hover they sat on the letters (6.8px and
+       6.4px into "Cancel", firefox). The inline padding is therefore never
+       less than the bracket's inset, its glyph (0.85em of a monospace face,
+       about 0.55em wide) and a quarter rem of air; each size keeps its own
+       padding wherever that is already wider. */
+    [data-theme='dark'] .kp-button {
+        padding-inline: max(0.875rem, calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--sm {
+        padding-inline: max(var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem)), calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--lg {
+        padding-inline: max(var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem)), calc(0.55rem + 0.55em + 0.25rem));
     }
 
     [data-theme='dark'] .kp-button:hover::before,
@@ -32686,23 +32908,28 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
     [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
+        padding: 0.5rem 0.8rem;
+        font-size: 0.94rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
         background: transparent;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
         color: var(--foreground);
     }
 }
@@ -33668,24 +33895,33 @@
         opacity: 1;
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the body face at a size above the small
+       text, in the full ink, on a half radius; under the pointer the primary
+       ink this register gives its quiet language link, and the two-pixel
+       weight a pointed-at link's underline takes, drawn as a rule because a
+       button has no underline to thicken. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-family: var(--theme-font-body);
+        font-size: 0.9375rem;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: calc(var(--radius) / 2);
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: currentcolor;
     }
 }
 
@@ -35002,24 +35238,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words in the full ink on a small radius
+       that lift onto the card ground in the primary ink when pointed at. The
+       link's typeface, case, spacing, shape and pointer answer are restated
+       here, because the trigger is a button beside the list rather than a
+       link in it. The underline a plain link carries is not: it says "this
+       is a link", and the trigger is not one. */
     [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.5rem 0.7rem;
+        font-size: 0.92rem;
+        border: 0;
+        border-radius: 0.25rem;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--card);
+        color: var(--primary);
+        box-shadow: none;
     }
 }
 
@@ -36098,24 +36339,27 @@
         border-color: var(--destructive-active);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the muted
+       ink, taking the primary ink when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
+        border-radius: 0;
+        background: none;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
     }
 }
 
@@ -37168,24 +37412,30 @@
         background: var(--secondary-active);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): bold words in the link ink with a two-pixel
+       rule in the full ink under them when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        font-weight: 700;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--link);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        border-bottom-color: var(--foreground);
+        color: var(--link);
     }
 }
 
@@ -38387,24 +38637,29 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the full
+       ink, with a hairline under them that, with the text, takes the primary
+       gold when pointed at. The link's typeface, case, spacing, shape and
+       pointer answer are restated here, because the trigger is a button
+       beside the list rather than a link in it. The underline a plain link
+       carries is not: it says "this is a link", and the trigger is not one. */
     [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
-        color: var(--muted-foreground);
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
+        border-block-end: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:hover {
-        color: var(--foreground);
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-block-end-color: var(--primary);
     }
 }
 
@@ -39573,23 +39828,26 @@
         background-color: var(--muted);
     }
 
-    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
-    /* The same answer in all twenty-two registers: the trigger sits on the
-       bar's own ground rather than a box of its own, in the muted ink, with
-       this theme's strong boundary and radius. What makes it this theme's
-       is the tokens those words resolve to, so it cannot out-shout the
-       bar's links in any of them. */
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the muted
+       ink on the theme's radius, taking the full ink when pointed at. The
+       link's typeface, case, spacing, shape and pointer answer are restated
+       here, because the trigger is a button beside the list rather than a
+       link in it. The underline a plain link carries is not: it says "this
+       is a link", and the trigger is not one. */
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger {
-        border-color: var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
-        background: transparent;
+        padding: 0.25rem 0;
+        font-size: inherit;
+        border: 0;
+        border-radius: var(--radius);
+        background: none;
         color: var(--muted-foreground);
     }
 
-    /* Pointed at, it takes the full ink: restated here because this layer
-       beats the hover of kp.components. */
-    [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:hover {
+    [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
     }
 }
@@ -39598,7 +39856,7 @@
     /* @kp-soft/themes — css/layout.css
        The layout layer [TH90, TH91, S22].
 
-       Twenty-one classes, and the reason they exist is measured rather than
+       Twenty-three classes, and the reason they exist is measured rather than
        assumed: the chassis kit wrote 71 lines of its own layout glue plus
        28 inline style attributes, and its stylesheet header said in so many
        words that this is "layout glue and the few utilities @kp-soft/themes
@@ -39729,6 +39987,33 @@
         flex-basis: 0;
         flex-grow: 999;
         min-inline-size: var(--kp-sidebar-break, 50%);
+    }
+
+    /* An application shell: the bar on top and a body under it that fills
+       the rest of the window, so a rail beside the content runs to the
+       bottom of the window rather than stopping where the content does
+       (scope-80). The body is a row that wraps, the rail and the content
+       its items. Knob: --kp-shell-min (100dvh), the least height of the
+       whole shell. */
+    .kp-shell {
+        display: flex;
+        flex-direction: column;
+        min-block-size: var(--kp-shell-min, 100dvh);
+    }
+
+    /* A shell is the whole window, so the page around it gives up the
+       browser's default body margin: with it the bar stood 8px off the
+       edges and a shell as tall as the window scrolled by 16px, the rail
+       ending 8px under the window's bottom (measured at 1400 by 900). */
+    body:has(.kp-shell) {
+        margin: 0;
+    }
+
+    /* The shell's body, which takes every spare pixel of that height. */
+    .kp-shell > .kp-shell__body {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
     }
 
     /* A section of a page: space above it, and nothing else. The heading
