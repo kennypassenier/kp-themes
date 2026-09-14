@@ -31,6 +31,35 @@ import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel
  * @property {() => Element[]} [elements]  the component's elements, where root is not the block
  */
 
+/* ------------------------------------------------------------ review notes */
+
+// While a block is rejected in a theme, catalogue/review-notes.json can say
+// why and what changed to answer it (Kenny, 2026-09-14: a temporary text that
+// goes once he approves, so the blocks' own explanations do not fill up with
+// addendums). The note sits in the judging panel, outside the component under
+// review, and is not part of the block's hash: writing one sends no other
+// theme back to review. `node gates/verdicts.mjs note` writes one and
+// `record` clears it with the approval.
+//
+//   { "<verdict key>": { "<theme>": { rejected, change, commit?, given } } }
+
+/** @type {Record<string, Record<string, { rejected: string, change: string, commit?: string, given: string }>>} */
+let reviewNotes = {};
+/** Resolves once catalogue/review-notes.json is read (or found missing); never rejects. */
+const notesReady = (async () => {
+    try {
+        const response = await fetch(new URL('./review-notes.json', import.meta.url), { cache: 'no-cache' });
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data && typeof data === 'object' && !Array.isArray(data)) reviewNotes = data;
+    } catch {
+        /* no notes */
+    }
+})();
+
+/** The review note of a block in a theme, if Claude left one. */
+const reviewNoteOf = (key, theme) => reviewNotes[key]?.[theme] ?? null;
+
 const STATES = {
     new: { glyph: '○', words: 'Not yet judged', tone: '' },
     approved: { glyph: '✓', words: 'Approved', tone: ' kp-badge--success' },
@@ -44,6 +73,14 @@ function panelFor(entry) {
     panel.className = 'cat-judge';
     panel.setAttribute('data-cat-block', entry.key);
     panel.innerHTML = `
+        <div class="kp-alert kp-alert--warning cat-judge__review-note" role="note" data-cat-review-note hidden>
+            <span class="kp-alert__icon" aria-hidden="true">↻</span>
+            <div class="kp-alert__body">
+                <p class="cat-judge__review-note-title"><span class="kp-alert__label">Rejected — what changed</span> <span class="cat-judge__review-note-meta" data-cat-review-note-meta></span></p>
+                <p class="cat-judge__review-note-text"><span class="kp-alert__label">Your note:</span> <span data-cat-review-note-rejected></span></p>
+                <p class="cat-judge__review-note-text"><span class="kp-alert__label">What changed:</span> <span data-cat-review-note-change></span></p>
+            </div>
+        </div>
         <div class="cat-judge__head">
             <p class="cat-judge__status">
                 <span class="kp-badge cat-judge__badge" data-cat-approval-tone>
@@ -96,6 +133,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             label: panel.querySelector('label'),
             area: panel.querySelector('textarea'),
             saved: panel.querySelector('[data-cat-note-saved]'),
+            reviewNote: panel.querySelector('[data-cat-review-note]'),
             timer: 0,
         };
     });
@@ -146,7 +184,14 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             item.reject.disabled = state === 'rejected' || !hash;
             item.entry.root.dataset.catState = state;
             item.panel.dataset.catState = state;
-            const judged = state === 'approved' || state === 'rejected';
+            // A review note asks for a look whatever the hash says, until this
+            // browser holds a verdict of its own not yet in the register: the
+            // answer, waiting to be recorded (record then clears the note).
+            const note = reviewNoteOf(item.entry.key, theme);
+            const asking = Boolean(note) && verdict?.source !== 'browser';
+            showReviewNote(item, note);
+            item.entry.root.toggleAttribute('data-cat-review-note', asking);
+            const judged = (state === 'approved' || state === 'rejected') && !asking;
             if (!judged) open += 1;
             // Judged blocks leave the page, so the reviewer stays at the top and
             // judges one block after another; a block that changed since comes back.
@@ -155,6 +200,16 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
         if (count) count.textContent = open ? `${open} of ${items.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
         onRender?.();
         document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
+    }
+
+    /** The callout of a block's review note in the theme on screen, or none. */
+    function showReviewNote(item, note) {
+        const box = item.reviewNote;
+        box.hidden = !note;
+        if (!note) return;
+        box.querySelector('[data-cat-review-note-rejected]').textContent = note.rejected;
+        box.querySelector('[data-cat-review-note-change]').textContent = note.change;
+        box.querySelector('[data-cat-review-note-meta]').textContent = `(${[note.given, note.commit].filter(Boolean).join(' · ')})`;
     }
 
     function renderNotes() {
@@ -288,10 +343,12 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     // The register arrives after the first paint; a block judged in it is
     // judged in every browser of its engine.
     registerReady.then(render);
+    notesReady.then(render);
     return {
         /** Measure every block in the theme on screen, once fonts are in. */
         async start() {
             await registerReady;
+            await notesReady;
             await document.fonts?.ready;
             await new Promise((resolve) => setTimeout(resolve, 150));
             await measure();

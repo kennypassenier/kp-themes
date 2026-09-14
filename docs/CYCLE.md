@@ -74,6 +74,22 @@ finish); why is at the head of `catalogue/block-hash.js`. A window narrow
 enough to switch a component to another layout (a data table's cards below
 a 40rem container) is a different look and hashes differently.
 
+### A rejection's temporary note
+
+When Kenny rejects a block with a note and Claude proposes a change, the
+answer does not go into the block's "Look at:" text: changing that text
+changes the block's markup and sends all 22 themes back (Kenny,
+2026-09-14). It goes into `catalogue/review-notes.json`, per block and
+theme, written with `node gates/verdicts.mjs note <block> <theme>
+--rejected "<his note, verbatim>" --change "<what changed and why>"`. The
+judging panel shows it in that theme only, as a "Rejected — what changed"
+alert above the verdict buttons, outside the component and outside the
+hash, and the block stays on the page as left to judge even when its hash
+did not move. Recording an approved verdict for that block and theme, in
+any engine, removes the note and prints `note cleared: <block> · <theme>`;
+a rejection leaves it for Claude to rewrite. `npm run gates` refuses a
+note on an unknown block or theme, or with an empty text.
+
 ## Research is a side stream
 
 A question that needs outside references — an alternative component, a

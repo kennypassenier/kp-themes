@@ -389,6 +389,27 @@
         box-sizing: border-box;
     }
 
+    /* A rejected block's temporary note (catalogue/review-notes.json): the
+       package's own warning alert, so its ink and ground are the theme's
+       measured pair; the panel only spaces it. Its text stays in the alert's
+       own foreground, no lighter ink for the date. */
+    .cat-judge__review-note {
+        margin-block-end: 0.85rem;
+    }
+
+    .cat-judge__review-note p {
+        margin: 0;
+        max-inline-size: 72ch;
+    }
+
+    .cat-judge__review-note p + p {
+        margin-block-start: 0.35rem;
+    }
+
+    .cat-judge__review-note-meta {
+        font-size: 0.8rem;
+    }
+
     /* The prompt bar every page carries under its header. */
     .cat-prompt-bar {
         padding: 0.45rem 1rem;

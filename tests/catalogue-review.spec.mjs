@@ -362,6 +362,94 @@ test(
     },
 );
 
+/* ------------------------------------------------------------ review notes */
+
+// Kenny, 2026-09-14: a rejected block carries a temporary text — his note and
+// what changed to answer it — until he approves it, instead of an addendum to
+// the block's own "Look at:" text, which would send all 22 themes back.
+//
+// Red run first, on 2738d1c in firefox: no `[data-cat-review-note]` callout
+// existed, and the rejected block with a note stayed hidden behind "Show
+// blocks already judged".
+test(
+    'a review note shows in its own theme only, leaves the block hash alone, and brings a judged block back',
+    { tag: ['@component:catalogue'] },
+    async ({ browser, browserName }) => {
+        const engine = engineOf(browserName);
+        const note = {
+            rejected: 'the checked state is too faint',
+            change: 'The checked track now fills with the primary colour, so on and off differ by more than the knob position.',
+            commit: 'abc1234',
+            given: '2026-09-14',
+        };
+        // The hashes without any note file.
+        const first = await browser.newContext({ viewport: { width: 1400, height: 900 } });
+        await useEmptyRegister(first);
+        const measuring = await first.newPage();
+        await measuring.goto('/catalogue/switch.html');
+        await waitForJudging(measuring);
+        const hashes = {};
+        for (const block of ['states', 'invalid']) {
+            const reject = measuring.locator(`#${block} [data-cat-verdict="rejected"]`);
+            await expect(reject).toBeEnabled();
+            await reject.click();
+            hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
+            expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
+        }
+        await first.close();
+
+        // Both blocks rejected in the register with those hashes; only one carries a note.
+        const entry = (hash) => ({ verdict: 'rejected', hash, commit: '2a32791', given: '2026-09-13' });
+        const context = await browser.newContext({ viewport: { width: 1400, height: 900 } });
+        await useRegister(
+            context,
+            { 'switch--states': { formal: { [engine]: entry(hashes.states) } }, 'switch--invalid': { formal: { [engine]: entry(hashes.invalid) } } },
+            { 'switch--states': { formal: note } },
+        );
+        const page = await context.newPage();
+        await page.goto('/catalogue/switch.html');
+        await waitForJudging(page);
+
+        // The same look, so the same verdict — and still on the page, because of the note.
+        await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'rejected');
+        await expect(page.locator('#states')).toBeVisible();
+        await expect(page.locator('#invalid')).toHaveAttribute('data-cat-state', 'rejected');
+        await expect(page.locator('#invalid')).toBeHidden();
+        await expect(page.locator('[data-cat-review-count]')).toContainText(/^\d+ of \d+ block\(s\) left to judge/);
+
+        const callout = page.locator('#states [data-cat-review-note]');
+        await expect(callout).toBeVisible();
+        await expect(callout).toContainText('Rejected — what changed');
+        await expect(callout).toContainText(note.rejected);
+        await expect(callout).toContainText(note.change);
+        // Outside the component under review, inside the judging panel.
+        expect(await callout.evaluate((el) => Boolean(el.closest('.cat-judge')) && !el.closest('.cat-stage'))).toBe(true);
+
+        // The note does not change the hash: the page reads what the first browser read.
+        const read = await page.evaluate(async () => {
+            const { readBlocks } = await import('/catalogue/block-hash.js');
+            const raw = new DOMParser().parseFromString(await (await fetch(location.href)).text(), 'text/html');
+            const [r] = await readBlocks([{ root: document.getElementById('states'), source: raw.getElementById('states').outerHTML }]);
+            return r.hash;
+        });
+        expect(read).toBe(hashes.states);
+
+        // Another theme has no note: no callout, and the block follows its own verdict there.
+        await setTheme(page, 'nostromo');
+        await waitForJudging(page);
+        await expect(page.locator('#states [data-cat-review-note]')).toBeHidden();
+
+        // Back in formal, approving it in this browser answers the note: the block leaves the page.
+        await setTheme(page, 'formal');
+        await waitForJudging(page);
+        await expect(callout).toBeVisible();
+        await page.locator('#states [data-cat-verdict="approved"]').click();
+        expect(await storedHash(page, 'switch--states', 'formal', engine)).toBe(hashes.states);
+        await expect(page.locator('#states')).toBeHidden();
+        await context.close();
+    },
+);
+
 /* ------------------------------------- the register as the review page reads it */
 
 // The register's hashes are taken on the component pages; Kenny judges mostly

@@ -1,6 +1,7 @@
 // The verdict register's gate: catalogue/verdicts.json is well formed, every
 // key in it is a block a review page shows, and its hashes were taken with
-// the recipe the pages use now.
+// the recipe the pages use now. The review notes beside it
+// (catalogue/review-notes.json) name known blocks and themes and say something.
 //
 // Kenny, 2026-09-13, on the register: his verdicts are kept for good, and
 // "dit mag nooit veranderen door een change". A change to the hash recipe
@@ -125,6 +126,55 @@ export function registerFaults(register, { hashVersion, known, themes, commitExi
     return faults;
 }
 
+/**
+ * The review notes: while a block is rejected in a theme, what Kenny's note
+ * said and what Claude changed to answer it (Kenny, 2026-09-14: a temporary
+ * text, gone once he approves, so the blocks' own explanations do not fill
+ * up with addendums). Kept apart from the block's markup, so writing one
+ * sends no other theme back to review.
+ *
+ *   { "<block key>": { "<theme>": { rejected, change, commit?, given } } }
+ */
+export const NOTES = 'catalogue/review-notes.json';
+export const NOTE_FIELDS = ['change', 'commit', 'given', 'rejected'];
+
+/**
+ * Everything wrong with the review notes, one line each.
+ * @param {any} notes the parsed catalogue/review-notes.json
+ * @param {{ known: Set<string> | Map<string, unknown>, themes: string[] }} context
+ * @returns {string[]}
+ */
+export function notesFaults(notes, { known, themes }) {
+    const faults = [];
+    const isObject = (/** @type {unknown} */ value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+    if (!isObject(notes)) return ['the review notes are not a JSON object'];
+    for (const [key, byTheme] of Object.entries(notes)) {
+        if (!known.has(key)) faults.push(`${key}: not a block any review page shows`);
+        if (!isObject(byTheme)) {
+            faults.push(`${key}: not an object of themes`);
+            continue;
+        }
+        if (!Object.keys(byTheme).length) faults.push(`${key}: no theme holds a note; remove the block`);
+        for (const [theme, note] of Object.entries(byTheme)) {
+            const at = `${key} · ${theme}`;
+            if (!themes.includes(theme)) faults.push(`${at}: not a theme`);
+            if (!isObject(note)) {
+                faults.push(`${at}: not a note object`);
+                continue;
+            }
+            const extra = Object.keys(note).filter((field) => !NOTE_FIELDS.includes(field));
+            if (extra.length) faults.push(`${at}: unknown field(s) ${extra.join(', ')}`);
+            for (const field of ['rejected', 'change']) {
+                if (typeof note[field] !== 'string' || !note[field].trim()) faults.push(`${at}: ${field} is missing or empty`);
+            }
+            if ('commit' in note && !/^[0-9a-f]{7,40}$/.test(String(note.commit))) faults.push(`${at}: commit is not a commit id`);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(String(note.given)) || Number.isNaN(Date.parse(note.given)))
+                faults.push(`${at}: given is not a YYYY-MM-DD date`);
+        }
+    }
+    return faults;
+}
+
 /** Whether a commit is in the repository at `root`, asked once per id. */
 export function commitChecker(at = fileURLToPath(root)) {
     /** @type {Map<string, boolean>} */
@@ -164,19 +214,38 @@ async function main() {
         process.exit(1);
     }
     const known = await knownBlocks();
+    const themes = THEMES.map((t) => t.name);
     const faults = registerFaults(register, {
         hashVersion: HASH_VERSION,
         known,
-        themes: THEMES.map((t) => t.name),
+        themes,
         commitExists: commitChecker(),
     });
     if (faults.length) {
         console.error(`${faults.length} fault(s) in ${REGISTER}:\n  ${faults.join('\n  ')}`);
         process.exit(1);
     }
+    let notes = {};
+    if (existsSync(new URL(NOTES, root))) {
+        try {
+            notes = JSON.parse(readFileSync(new URL(NOTES, root), 'utf8'));
+        } catch (error) {
+            console.error(`${NOTES} cannot be read as JSON: ${error instanceof Error ? error.message : error}`);
+            process.exit(1);
+        }
+    }
+    const noteFaults = notesFaults(notes, { known, themes });
+    if (noteFaults.length) {
+        console.error(`${noteFaults.length} fault(s) in ${NOTES}:\n  ${noteFaults.join('\n  ')}`);
+        process.exit(1);
+    }
     let count = 0;
-    for (const themes of Object.values(register.verdicts)) for (const engines of Object.values(themes)) count += Object.keys(engines).length;
-    console.log(`verdicts: ${count} recorded verdict(s) at hash version ${HASH_VERSION}, every key one of ${known.size} known block(s).`);
+    for (const byTheme of Object.values(register.verdicts)) for (const engines of Object.values(byTheme)) count += Object.keys(engines).length;
+    let noteCount = 0;
+    for (const byTheme of Object.values(notes)) noteCount += Object.keys(byTheme).length;
+    console.log(
+        `verdicts: ${count} recorded verdict(s) at hash version ${HASH_VERSION}, ${noteCount} review note(s), every key one of ${known.size} known block(s).`,
+    );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main();

@@ -8,6 +8,15 @@
 //       review page shows, a theme that does not exist, and lines taken with
 //       another hash recipe.
 //
+//       An approved verdict recorded for a block clears its review note in
+//       that theme (catalogue/review-notes.json); a rejected one leaves it.
+//
+//   node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]
+//       Writes the review note a block shows in one theme until it is
+//       approved there: Kenny's rejection, verbatim, and what Claude changed
+//       to answer it. Refuses a block no review page shows and a theme that
+//       does not exist.
+//
 //   node gates/verdicts.mjs rehash [--width 1920]
 //       After a change to the hash recipe (catalogue/block-hash.js,
 //       HASH_VERSION): every entry is measured again at the commit it was
@@ -21,13 +30,13 @@
 //       block by block (see compare below).
 //
 // The register's gate is gates/check-verdicts.mjs.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { hashVersion, knownBlocks, REGISTER, VERDICTS } from './check-verdicts.mjs';
+import { hashVersion, knownBlocks, NOTES, REGISTER, VERDICTS } from './check-verdicts.mjs';
 
 /**
  * @typedef {{ verdict: string, hash: string, commit: string, given: string }} Entry
@@ -36,6 +45,7 @@ import { hashVersion, knownBlocks, REGISTER, VERDICTS } from './check-verdicts.m
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const registerPath = join(ROOT, REGISTER);
+const notesPath = join(ROOT, NOTES);
 /** @param {string[]} args */
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 
@@ -146,34 +156,148 @@ export function applyVerdictLines(register, { version, lines }, { hashVersion: c
     return report;
 }
 
-async function record() {
-    const HASH_VERSION = hashVersion();
-    const { THEMES } = await import('../js/theme-registry.js');
-    const input = readFileSync(0, 'utf8');
-    const parsed = parseVerdictLines(input);
-    if (parsed.faults.length) {
-        console.error(`Nothing recorded:\n  ${parsed.faults.join('\n  ')}`);
-        process.exit(1);
+/* ------------------------------------------------------------ review notes */
+
+/**
+ * @typedef {{ rejected: string, change: string, commit?: string, given: string }} Note
+ * @typedef {Record<string, Record<string, Note>>} Notes
+ */
+
+/** @returns {Notes} the review notes, or none when the file is not there */
+export function readNotes(path = notesPath) {
+    return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {};
+}
+
+/**
+ * Blocks and themes in a fixed order, fields in the order a reader wants them.
+ * @param {Notes} notes
+ * @returns {Notes}
+ */
+export function sortedNotes(notes) {
+    /** @type {Notes} */
+    const out = {};
+    for (const key of Object.keys(notes).sort()) {
+        const themes = Object.keys(notes[key]).sort();
+        if (!themes.length) continue;
+        out[key] = {};
+        for (const theme of themes) {
+            const { rejected, change, commit, given } = notes[key][theme];
+            out[key][theme] = { rejected, change, ...(commit ? { commit } : {}), given };
+        }
     }
-    const register = readRegister();
-    const report = applyVerdictLines(register, parsed, {
-        hashVersion: HASH_VERSION,
+    return out;
+}
+
+/** @param {Notes} notes */
+export function writeNotes(notes, path = notesPath) {
+    writeFileSync(path, `${JSON.stringify(sortedNotes(notes), null, 4)}\n`);
+}
+
+/**
+ * Clear the note of every block and theme an approved line covers, in any
+ * engine; a rejected line leaves the note, for Claude to rewrite.
+ * @param {Notes} notes
+ * @param {{ key: string, theme: string, verdict: string }[]} lines
+ * @returns {string[]} `block · theme` for every note cleared
+ */
+export function clearApprovedNotes(notes, lines) {
+    const cleared = [];
+    for (const { key, theme, verdict } of lines) {
+        if (verdict !== 'approved' || !notes[key]?.[theme]) continue;
+        delete notes[key][theme];
+        if (!Object.keys(notes[key]).length) delete notes[key];
+        cleared.push(`${key} · ${theme}`);
+    }
+    return cleared;
+}
+
+/**
+ * Write one note into `notes`, or say why not.
+ * @param {Notes} notes
+ * @param {{ key?: string, theme?: string, rejected?: string, change?: string, commit?: string }} note
+ * @param {{ known: Set<string> | Map<string, unknown>, themes: string[], commit: string, given: string }} context
+ * @returns {string[]} faults; none means the note is written
+ */
+export function putNote(notes, { key, theme, rejected, change, commit }, context) {
+    const faults = [];
+    const at = `${key} · ${theme}`;
+    if (!key || !context.known.has(key)) faults.push(`${at}: not a block any review page shows`);
+    if (!theme || !context.themes.includes(theme)) faults.push(`${at}: not a theme`);
+    if (!rejected?.trim()) faults.push(`${at}: --rejected "<Kenny's note>" is missing or empty`);
+    if (!change?.trim()) faults.push(`${at}: --change "<what changed>" is missing or empty`);
+    const id = commit ?? context.commit;
+    if (!/^[0-9a-f]{7,40}$/.test(id)) faults.push(`${at}: --commit ${id} is not a commit id`);
+    if (faults.length || !key || !theme) return faults;
+    (notes[key] ??= {})[theme] = { rejected: String(rejected), change: String(change).trim(), commit: id, given: context.given };
+    return [];
+}
+
+/**
+ * Record a pasted prompt: the verdicts into the register, and every note an
+ * approval answers out of the notes.
+ * @param {string} input
+ * @param {{ registerFile?: string, notesFile?: string, hashVersion: number, known: Set<string> | Map<string, unknown>, themes: string[], commit: string, given: string }} context
+ * @returns {{ ok: boolean, out: string[], err: string[] }}
+ */
+export function recordPrompt(input, { registerFile = registerPath, notesFile = notesPath, ...context }) {
+    const parsed = parseVerdictLines(input);
+    if (parsed.faults.length) return { ok: false, out: [], err: [`Nothing recorded:\n  ${parsed.faults.join('\n  ')}`] };
+    const register = readRegister(registerFile);
+    const report = applyVerdictLines(register, parsed, context);
+    if (report.faults.length) {
+        return { ok: false, out: [], err: [`Nothing recorded; ${report.faults.length} line(s) refused:\n  ${report.faults.join('\n  ')}`] };
+    }
+    writeRegister(register, registerFile);
+    /** @type {string[]} */
+    const out = [];
+    const list = (/** @type {string} */ title, /** @type {string[]} */ rows) => {
+        if (rows.length) out.push(`${title} (${rows.length}):\n  ${rows.join('\n  ')}`);
+    };
+    list('Added', report.added);
+    list('Changed', report.changed);
+    list('Already recorded', report.unchanged);
+    out.push(`${REGISTER}: ${report.added.length} added, ${report.changed.length} changed, ${report.unchanged.length} already there.`);
+    const notes = readNotes(notesFile);
+    const cleared = clearApprovedNotes(notes, parsed.lines);
+    if (cleared.length) {
+        writeNotes(notes, notesFile);
+        for (const row of cleared) out.push(`note cleared: ${row}`);
+    }
+    return { ok: true, out, err: [] };
+}
+
+async function record() {
+    const { THEMES } = await import('../js/theme-registry.js');
+    const result = recordPrompt(readFileSync(0, 'utf8'), {
+        hashVersion: hashVersion(),
         known: await knownBlocks(),
         themes: THEMES.map((t) => t.name),
         commit: git('rev-parse', 'HEAD'),
         given: today(),
     });
-    if (report.faults.length) {
-        console.error(`Nothing recorded; ${report.faults.length} line(s) refused:\n  ${report.faults.join('\n  ')}`);
+    for (const line of result.err) console.error(line);
+    for (const line of result.out) console.log(line);
+    if (!result.ok) process.exit(1);
+}
+
+/** @param {string[]} args */
+async function note(args) {
+    const [key, theme] = args;
+    const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
+    const { THEMES } = await import('../js/theme-registry.js');
+    const file = process.env.KP_REVIEW_NOTES ?? notesPath;
+    const notes = readNotes(file);
+    const faults = putNote(
+        notes,
+        { key, theme, rejected: option('--rejected'), change: option('--change'), commit: option('--commit') },
+        { known: await knownBlocks(), themes: THEMES.map((t) => t.name), commit: git('rev-parse', '--short', 'HEAD'), given: today() },
+    );
+    if (faults.length) {
+        console.error(`No note written:\n  ${faults.join('\n  ')}`);
         process.exit(1);
     }
-    writeRegister(register);
-    const list = (/** @type {string} */ title, /** @type {string[]} */ rows) =>
-        rows.length && console.log(`${title} (${rows.length}):\n  ${rows.join('\n  ')}`);
-    list('Added', report.added);
-    list('Changed', report.changed);
-    list('Already recorded', report.unchanged);
-    console.log(`${REGISTER}: ${report.added.length} added, ${report.changed.length} changed, ${report.unchanged.length} already there.`);
+    writeNotes(notes, file);
+    console.log(`${NOTES}: note written for ${key} · ${theme}.`);
 }
 
 /* ------------------------------------------------------------------ rehash */
@@ -356,10 +480,12 @@ async function compare(args) {
 async function main() {
     const [command, ...args] = process.argv.slice(2);
     if (command === 'record') return record();
+    if (command === 'note') return note(args);
     if (command === 'rehash') return rehash(args);
     if (command === 'compare') return compare(args);
     console.error(
         'usage: node gates/verdicts.mjs record < prompt.txt\n' +
+            '       node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]\n' +
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]',
     );
