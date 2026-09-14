@@ -103,8 +103,8 @@ reasoning is in the header of `js/diagnostics.js`.
 npm run gates
 ```
 
-Twenty-nine steps chained with `&&` (counted from `scripts.gates` in
-`package.json` on 2026-09-14, after scope-76): twenty-eight `check:*`
+Thirty steps chained with `&&` (counted from `scripts.gates` in
+`package.json` on 2026-09-14, after scope-78): twenty-nine `check:*`
 scripts, then `npm test` (the unit tests through `node --test gates/`).
 Six older checks run inside those steps and print their own lines there:
 the tear in `check:generated`, the bundle in `check:min`, the migration

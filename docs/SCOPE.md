@@ -1409,3 +1409,15 @@ prettier. Removed: none. step-timing "Akkoord": after the change Claude
 measures the new duration of `npm run gates`.
 
 **scope-77 · One decision per document.** Kenny, 2026-09-14, the documents form of `scope-36`, on the table of that day (71 tracked Markdown files; 46 judged, the 22 theme stories and 3 agent definitions left out as sources). Kept: 26. To the site: `docs/LAYOUT.md`, its prose and defaults now in the comments of `css/layout.css` that the layout page renders. Archived under `docs/archive/`, out of the document index, the path and privacy gates and the npm package: 18, among them `docs/ARCHITECTURE_DECISIONS.md` against the recommendation to keep it, so the ID gate no longer reads its IDs. Removed: `HANDOFF.md`. worktrees "Verwijderen": the 22 old agent worktrees are deleted. step-timing "Akkoord": the drift gate of `scope-35` follows for the documents that stayed.
+
+**scope-78 · The drift gate blocks, on the narrower sources.** Kenny,
+2026-09-14, the drift form of `scope-35`, on a replay of the last 100 commits
+(28 would have stopped with the sources first derived, 22 with the narrower
+ones; 10 and 6 of the last 30). drift-mode "Blokkerend": `check:drift` runs
+in `npm run gates` and the commit hook, and leaves `npm run advice`. Fifteen
+documents take the narrower sources — most leave `package.json` out, several
+follow a module's `.d.ts` instead of its implementation — and
+`docs/UTILITIES.md` keeps its one source. The gate is not infallible and says
+so: touching a document counts as looked at. step-timing "Akkoord": agents
+whose work does not overlap start together, and the tests run while they
+work.

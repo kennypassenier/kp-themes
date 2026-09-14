@@ -142,7 +142,7 @@ colour space, and lightness alone left their pressed state invisible.
 
 ## The gates, and the advice beside them
 
-Twenty-nine checks, all in Node, the whole chain in seconds, all run by
+Thirty checks, all in Node, the whole chain in seconds, all run by
 `.claude/hooks/gates.sh` before every commit. Since scope-76 six older
 checks run inside them rather than on their own line — tokens in `npm test`,
 the bundle in `generate-min --check`, the migration note in

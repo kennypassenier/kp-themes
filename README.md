@@ -16,7 +16,7 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Twenty-nine gates run in seconds and refuse a commit that breaks them:
+Thirty gates run in seconds and refuse a commit that breaks them:
 token parity, layer discipline, the hook vocabulary, the register
 coverage, the shipped fonts, the strings dictionary, the types, whether
 every command, path and quoted message a document carries is real, and

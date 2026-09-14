@@ -133,10 +133,10 @@ keyboard work need not be — see correction fix-2 below):
 
 | Command                 | What                                                             | When                                                                                                                          |
 | ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `npm run gates`         | the blocking checks, seconds                                     | every commit, by the hook                                                                                                     |
+| `npm run gates`         | the blocking checks, seconds; a document whose sources moved stops the commit until `npm run drift:seen` [scope-78] | every commit, by the hook                                                                                                     |
 | `npm run test:tags`     | the tests tagged with what a change touches, Firefox only        | `--level building` while building, `--level commit` once before each report or commit — scope-33, replacing `test:affected` |
 | `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks               |
-| `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                                  |
+| `npm run advice`        | contrast, invariants, motion, texture, variant grounds, compliance, baseline, prettier [scope-76] | when Kenny wants the reading                                                                                                  |
 | `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                                   |
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:

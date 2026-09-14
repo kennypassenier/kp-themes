@@ -74,7 +74,7 @@ with its amendments of 2026-09-10 and 2026-09-11. They are recorded in
 
 | Command                 | What it runs                                                                  | When, and whose                                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `npm run gates`         | 28 `check:` scripts, then the unit tests — 29 steps; six older checks run inside them [scope-76] | every commit, by the hook. Seconds                                     |
+| `npm run gates`         | 29 `check:` scripts, then the unit tests — 30 steps; six older checks run inside them [scope-76], the drift check among them [scope-78] | every commit, by the hook. Seconds                                     |
 | `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit |
 | `npm run test:browser`  | `playwright test` — the whole suite, both engines                             | **Kenny's to authorise.** Before a release Claude asks in a form       |
 | `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants, variant grounds, the compliance table, the baseline, prettier | when Kenny wants the reading                                           |
@@ -90,6 +90,12 @@ Three things about that table are not style, they are code:
   `KT7: every check script runs in the gates chain, in the hook, and CI runs the chain`).
   Adding a gate therefore means three edits, not one, and the unit tests
   say so on the next commit.
+- **A document stops a commit when a file it describes moved.** `docs/drift.json`
+  names each kept document's sources; `npm run check:drift` refuses a commit
+  where one changed and the document did not. Read the document, update it if
+  it no longer holds, then `npm run drift:seen -- <document>` [scope-35,
+  scope-78]. Touching the document counts as looked at; the gate knows files,
+  not meaning.
 - **The advisory checks never refuse.** `npm run advice` separates its
   nine checks with `;`, not `&&`, so a non-zero exit does not stop the
   next one; and `gates/verify.mjs` marks the advice phase

@@ -123,6 +123,11 @@ node gates/check-docs-runnable.mjs
 echo "→ a message a document quotes is the message the code prints [Phase 8]"
 node gates/check-doc-quotes.mjs
 
+echo "→ a document is looked at when a file it describes changes [scope-35, scope-78]"
+# Not infallible: touching the document counts as looked at, and the gate
+# knows files, not meaning. After reading it, `npm run drift:seen -- <doc>`.
+node gates/check-drift.mjs --check
+
 echo "→ every user-visible string comes from the dictionary (KT5)"
 node gates/check-strings.mjs
 
