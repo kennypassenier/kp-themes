@@ -75,6 +75,42 @@ and deco their 46 px buttons; nostromo the `1.7rem` lamp gutter on every button 
 rows grow to 36. E: `option-e.css` is 2,029 bytes (`wc -c`), about that much in `css/components.css`; registers keep their type sizes, caps and paddings; the 48 px plates still
 go, and dialogs and nav bars keep differing (dialog 1.42).
 
+## Implemented (E, 2026-09-14)
+
+Kenny chose E first and B later (`scope-80`). What landed, and where it differs from `option-e.css`:
+
+- **Package-owned box.** `css/components.css`: `.kp-button` (all sizes and variants), `.kp-field__input` (text, select, date field,
+  inline editor; not `--multiline`) and `.kp-combobox__input` (also the tag input) are border-box with `min-height:
+var(--kp-control-height, 2.25rem)` (small and large keep `--kp-button-height-sm` / `-lg`) and `line-height:
+var(--kp-control-line-height, 1.25)`. `.kp-table th, td` take `block-size: var(--kp-row-height, calc(var(--kp-control-height) +
+0.25rem))` — 40 px, 32 px compact — and the same line height; a cell in card mode sizes to its value. `css/_rules.css` gives `body`
+  `line-height: var(--kp-line-height, 1.5)`.
+- **Block padding, not zero.** Fields keep none. Buttons take `max(0px, min(var(--kp-space-xs), (floor − 1lh) / 2 − 3px))`
+  (`--kp-control-padding-block`) and cells `var(--kp-space-xs)`: never enough to lift a one-line box past its floor, but a two-line
+  label no longer touches its frame, which it did with E's zero in brutalism, titanium and phantom (`catalogue/button.html#extremes`).
+- **Registers.** The 48 and 46.4 px pins, phantom's and synthwave's sm/lg pins, the hero-row pins of dark, retro, terminal and titanium,
+  and every block padding on those boxes (brutalism, deco, pastel, phantom, synthwave) are gone; each keeps its `padding-inline`, type,
+  border and paint. Retro's pressed label moves a pixel of block padding from bottom to top. Tabs, badges, nav and side-nav links,
+  labels and titles were not taken (nav and side nav had other work in flight; labels and titles are B).
+- **Guard.** `gates/box-metrics.test.mjs` (in `npm test`) refuses a register rule whose subject is one of those boxes and that sets a
+  height, block size, line height or block padding, and a register that restates one of the tokens; 26 findings on the registers of
+  `2738d1c`.
+
+Measured with `node research/uniform-size/measure.mjs --options a --out measurements-implemented.json` and
+`node research/uniform-size/analyze.mjs --in measurements-implemented.json --detail` (firefox, the package as built, no option sheet):
+
+| max ÷ min            | form 22  | table 22 | column 22 | page 22  | tabs 22 | shell 22 | form 3 | column 3 | page 3 |
+| -------------------- | -------- | -------- | --------- | -------- | ------- | -------- | ------ | -------- | ------ |
+| A, before            | 1.18     | 1.17     | 1.22      | 1.16     | 1.36    | 1.69     | 1.15   | 1.20     | 1.16   |
+| E, predicted         | 1.07     | 1.06     | 1.12      | 1.10     | 1.24    | 1.63     | 1.03   | 1.12     | 1.08   |
+| **E, implemented**   | **1.08** | **1.06** | 1.15      | **1.09** | 1.32    | 1.64     | 1.02   | 1.13     | 1.05   |
+| implemented, compact | 1.09     | 1.07     | 1.16      | 1.10     | 1.32    | 1.64     | —      | —        | —      |
+
+The "3" columns are the research's three: brutalism, titanium, blueprint. Buttons, small buttons, fields, selects, comboboxes, table
+headers and rows are one height in all 22: 36, 28, 36, 36, 36, 40, 40 px (compact 28, 28, 28, 28, 28, 32, 32; brutalism's field,
+with its 3 px border, 30). The column misses the prediction by the tabs, nav and side nav that were not taken; the form card by a
+hundredth, its title and labels.
+
 ## Recommendation
 
 Take **E now and B's type scale second**. E is small, lives in the base layer, and removes causes 1 and 2 for what users touch most:

@@ -588,7 +588,6 @@
 
     [data-theme='dark'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.5rem;
     }
 
     [data-theme='dark'] .kp-button--primary,

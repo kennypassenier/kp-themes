@@ -106,10 +106,7 @@ test('note writes a note with the commit and date, and replaces an older one', (
     const notes = {};
     assert.deepEqual(putNote(notes, { key: 'button--variants', theme: 'formal', rejected: 'first', change: 'one' }, context), []);
     assert.deepEqual(notes['button--variants'].formal, { rejected: 'first', change: 'one', commit: 'abc1234', given: '2026-09-14' });
-    assert.deepEqual(
-        putNote(notes, { key: 'button--variants', theme: 'formal', rejected: 'second', change: 'two', commit: 'def5678' }, context),
-        [],
-    );
+    assert.deepEqual(putNote(notes, { key: 'button--variants', theme: 'formal', rejected: 'second', change: 'two', commit: 'def5678' }, context), []);
     assert.equal(notes['button--variants'].formal.commit, 'def5678');
     assert.equal(notes['button--variants'].formal.rejected, 'second');
     assert.deepEqual(Object.keys(sortedNotes(notes)['button--variants'].formal), ['rejected', 'change', 'commit', 'given']);

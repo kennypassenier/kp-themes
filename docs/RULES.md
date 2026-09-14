@@ -274,6 +274,20 @@ on purpose" without asking, which is the fault recorded as KT15 in
 Discipline-enforced; the measured diff of the compare page (R6-Q4) is the
 mechanical half.
 
+## Kenny's answer of 2026-09-14 (scope-80, scope-82) — a new theme keeps the median's sizes
+
+A theme changes how the package looks, not how big it is. Since option E
+(`scope-80`) controls and table rows take their height from the package
+(`--kp-control-height`, `--kp-row-height`, `--kp-control-line-height`) and
+`gates/box-metrics.test.mjs` refuses a register that sets them. A new theme
+goes further: its type sizes, paddings and gaps stay as close as possible to
+the median theme's — titanium, index 1.008 on 2026-09-14 in
+`research/uniform-size/` — so no new drift in element sizes enters with it.
+Discipline-enforced for now: before a new theme is integrated, Claude runs
+`research/uniform-size/measure.mjs` and `analyze.mjs` over it and reports its
+size index beside the median's in the integration form. Option B's round turns
+the rest into tokens a register may not override.
+
 ## Round six — the next cyberpunk (opened 2026-09-07)
 
 Kenny wanted a cyberpunk that "spits off the screen": signal yellow with

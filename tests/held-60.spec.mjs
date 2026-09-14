@@ -60,6 +60,13 @@ for (const channel of REORDER_CHANNELS) {
             await page.reload();
             await expect(rows).toHaveCount(6);
             await expect.poll(order).toEqual(['time', 'pressure', 'flow', 'note', 'signed', 'shift']);
+            // The whole list on screen before a box is read: a pointer moved
+            // below the viewport sends no pointermove. Since scope-80's taller
+            // rows the React list ended at 796 px in a 720 px viewport, and the
+            // drag stopped one row short of the last.
+            await list.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+            const viewport = /** @type {{ width: number, height: number }} */ (page.viewportSize());
+            expect(await list.evaluate((el) => el.getBoundingClientRect().bottom), 'the list fits the viewport').toBeLessThanOrEqual(viewport.height);
             const grip = list.locator('[data-kp-item="pressure"] [data-kp-handle]');
             const from = /** @type {{ x: number, y: number, width: number, height: number }} */ (await grip.boundingBox());
             const last = /** @type {{ x: number, y: number, width: number, height: number }} */ (

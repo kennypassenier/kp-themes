@@ -357,10 +357,6 @@
         padding-inline: 1.7rem;
     }
 
-    [data-theme='deco'] .kp-button {
-        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
-    }
-
     [data-theme='deco'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
     }
@@ -459,7 +455,14 @@
         background: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        padding: calc(var(--kp-space-sm) * 1.2) 0.7rem;
+        padding-inline: 0.7rem;
+    }
+
+    /* The field and the combobox take their height from the package
+       [scope-80]; the search box and the palette keep their own. */
+    [data-theme='deco'] .kp-datatable__search,
+    [data-theme='deco'] .kp-palette__input {
+        padding-block: calc(var(--kp-space-sm) * 1.2);
     }
 
     [data-theme='deco'] .kp-field__input:focus-visible,

@@ -70,6 +70,9 @@ test.describe('the compact density mode', { tag: ['@component:button', '@compone
     test('a consumer can retune the density through its knobs [TH105]', async ({ page }) => {
         const before = await heightOf(page, 'compact');
         await page.evaluate(() => {
+            // Since option E (scope-80) heights come from --kp-control-height and
+            // --kp-row-height; the table cells' block padding still reads the xs step.
+            document.documentElement.style.setProperty('--kp-compact-xs', '1.5rem');
             document.documentElement.style.setProperty('--kp-compact-md', '1.5rem');
             document.documentElement.style.setProperty('--kp-compact-sm', '1.5rem');
         });

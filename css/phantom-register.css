@@ -493,8 +493,7 @@
         --kp-plate-frame: var(--foreground);
         position: relative;
         isolation: isolate;
-        min-height: calc(3rem + var(--kp-control-height, 2.25rem) - 2.25rem);
-        padding: calc(var(--kp-space-sm) * 1.3) 1.6rem;
+        padding-inline: 1.6rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
         font-size: 1.05rem;
@@ -622,13 +621,8 @@
 
     [data-theme='phantom'] .kp-button--sm {
         min-width: 0;
-        min-height: 2.25rem;
-        padding: 0.4rem 1rem;
+        padding-inline: 1rem;
         font-size: 0.9rem;
-    }
-
-    [data-theme='phantom'] .kp-button--lg {
-        min-height: 3.5rem;
     }
 
     [data-theme='phantom'] .kp-icon-button {
@@ -665,7 +659,7 @@
         background: var(--card);
         border: 2px solid var(--input);
         border-radius: 0;
-        padding: calc(var(--kp-space-sm) * 1.3) 0.85rem;
+        padding-inline: 0.85rem;
         caret-color: var(--primary);
     }
 

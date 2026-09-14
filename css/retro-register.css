@@ -542,7 +542,6 @@
        pager's or a menu's button keeps its own width (DI11 at 320 px). */
     [data-theme='retro'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.2rem;
     }
 
     [data-theme='retro'] .kp-button:hover {
@@ -567,12 +566,23 @@
     }
 
     /* Pressed: the bevel inverts and the label steps one pixel down and
-       right, the way the original's did. No transition: --fx-duration is 0. */
+       right, the way the original's did. No transition: --fx-duration is 0.
+       The button's box is the package's and centres its label [scope-80]:
+       a pixel moved from the bottom padding to the top moves the label one
+       and keeps the box's height; the icon button's own box still takes
+       the old step. */
     [data-theme='retro'] .kp-button:active:not(:disabled),
     [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
         box-shadow: var(--kp-pressed);
-        padding-block-start: calc(0.375rem + 1px);
         padding-inline-start: calc(0.875rem + 1px);
+    }
+
+    [data-theme='retro'] .kp-button:active:not(:disabled) {
+        padding-block: calc(var(--kp-space-xs) + 1px) max(0px, calc(var(--kp-space-xs) - 1px));
+    }
+
+    [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+        padding-block-start: calc(0.375rem + 1px);
     }
 
     /* The default button: the navy fill with its own bevel. The mirror

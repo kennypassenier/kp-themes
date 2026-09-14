@@ -3,7 +3,10 @@
 // research/uniform-size/summary.json, which demo.html reads nothing from (the
 // demo measures itself live) but the README's tables come from.
 //
-//   node research/uniform-size/analyze.mjs [--run a-comfortable] [--detail]
+//   node research/uniform-size/analyze.mjs [--detail] [--in measurements-implemented.json]
+//
+// --in reads another measurement file and writes summary-<its suffix>.json
+// beside it, so the research's own summary.json stays as it was measured.
 //
 // The size index of a theme is the geometric mean, over the 19 index elements, of
 //   height(theme, element) / median over the 22 themes of height(·, element).
@@ -15,9 +18,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const HERE = fileURLToPath(new URL('./', import.meta.url));
-const data = JSON.parse(readFileSync(`${HERE}measurements.json`, 'utf8'));
-const THEMES = JSON.parse(readFileSync(`${HERE}../../themes/order.json`, 'utf8'));
 const args = process.argv.slice(2);
+const IN = args.includes('--in') ? args[args.indexOf('--in') + 1] : 'measurements.json';
+const SUMMARY = IN === 'measurements.json' ? 'summary.json' : IN.replace(/^measurements/, 'summary');
+const data = JSON.parse(readFileSync(`${HERE}${IN}`, 'utf8'));
+const THEMES = JSON.parse(readFileSync(`${HERE}../../themes/order.json`, 'utf8'));
 const detail = args.includes('--detail');
 
 export const INDEX_ELEMENTS = [
@@ -92,7 +97,7 @@ for (const [key, run] of Object.entries(data.runs)) {
     );
 }
 
-writeFileSync(`${HERE}summary.json`, JSON.stringify(summary, null, 1) + '\n');
+writeFileSync(`${HERE}${SUMMARY}`, JSON.stringify(summary, null, 1) + '\n');
 
 // The size tokens themselves: how many distinct values each has across the 22.
 const tokenValues = {};

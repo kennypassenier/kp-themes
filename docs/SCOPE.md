@@ -1469,3 +1469,10 @@ loading (`scope-50`), data tables (built), grotesk hover (option B),
 control heights (superseded by uniform sizes) and uniform sizes (`scope-80`)
 — and sit under "Archived research". A new demo goes in a "Research to look
 at" group above it and moves down once he has decided.
+
+**scope-82 · A new theme keeps the median's sizes.** Kenny, 2026-09-14:
+"nieuwe thema's blijven zo dicht mogelijk bij de maten van de mediaan zodat we
+geen nieuwe drift veroorzaken in sizes van elementen." Written as a rule in
+`docs/RULES.md`: a new theme's type sizes, paddings and gaps stay as close as
+possible to the median theme's, and its size index is measured with
+`research/uniform-size/` and reported in its integration form.

@@ -191,7 +191,10 @@ for (const channel of CHANNELS) {
                         if (m.top < 0 || m.bottom > m.window) faults.push(`${read}, outside the window`);
                         // A menu that opens into the window leaves the page where it was; one that
                         // opened below it pulled the page up to its focused item.
-                        else if (Math.abs(m.buttonBottom - before) > 2)
+                        // The allowance is a register's hover step plus rounding: light's pressed
+                        // button reads 719 -> 722 since option E (scope-80); a pulled page moves
+                        // hundreds of pixels.
+                        else if (Math.abs(m.buttonBottom - before) > 3)
                             faults.push(`${read}, the page moved: button bottom ${before} -> ${m.buttonBottom}`);
                         // Still its button's menu: an edge within 24px of the button's.
                         else if (Math.min(Math.abs(m.bottom - m.buttonTop), Math.abs(m.top - m.buttonBottom)) > 24)

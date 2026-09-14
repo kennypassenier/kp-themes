@@ -4,6 +4,8 @@
 //
 //   node research/uniform-size/measure.mjs            all options, firefox
 //   node research/uniform-size/measure.mjs --options a --engine chromium
+//   node research/uniform-size/measure.mjs --options a --out measurements-implemented.json
+//                                                     the package as built, no option sheet
 //
 // Writes research/uniform-size/measurements.json (or measurements-<engine>.json
 // for another engine). Serves the worktree itself on a free port and closes
@@ -25,7 +27,7 @@ const arg = (name, fallback) => {
 const ENGINE = arg('engine', 'firefox');
 const OPTIONS = arg('options', 'a,b,c,d,e').split(',');
 const THEMES = JSON.parse(await readFile(join(ROOT, 'themes/order.json'), 'utf8'));
-const OUT = join(HERE, ENGINE === 'firefox' ? 'measurements.json' : `measurements-${ENGINE}.json`);
+const OUT = join(HERE, arg('out', ENGINE === 'firefox' ? 'measurements.json' : `measurements-${ENGINE}.json`));
 
 const TYPES = {
     '.html': 'text/html',

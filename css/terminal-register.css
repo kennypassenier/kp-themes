@@ -480,17 +480,8 @@
         background: var(--secondary);
     }
 
-    /* The demo's height, on every button [S49, A4 of 2026-09-08]. TH111's
-       amendment of the same day: the sizes separate in padding and type
-       where a theme pins one height, and tests/button.spec.mjs measures
-       that rather than height alone. */
-    [data-theme='terminal'] .kp-button {
-        min-block-size: calc(2.9rem + var(--kp-control-height, 2.25rem) - 2.25rem);
-    }
-
     [data-theme='terminal'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.9rem;
     }
 
     [data-theme='terminal'] .kp-button--primary,

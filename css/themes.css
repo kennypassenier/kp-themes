@@ -3639,6 +3639,14 @@
  * rather than to whatever the browser picked in 1996. */
     body {
         font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+        /* One line height for running text, the package's in every theme
+     * [scope-80, option E of research/uniform-size/]. `normal` let each
+     * face's own ascent and descent decide how tall a line is: the same
+     * two-line alert was 60px in dark and 78px in nostromo. A number, so it
+     * scales with the font size of whatever inherits it. One-line boxes —
+     * controls and table rows, css/components.css — read the tighter
+     * --kp-control-line-height instead. */
+        line-height: var(--kp-line-height, 1.5);
     }
 
     h1,
@@ -4082,10 +4090,11 @@
    spacing or a pinned control height as a fixed length (`gap: 1rem`)
    switches the mode off for its theme, which is how eighteen themes had a
    compact form as roomy as the default one. A register writes its own
-   value as a multiple of a step (`calc(var(--kp-space-lg) * 1.1)`), or a
-   pinned height as an offset from the floor (`calc(3rem +
-   var(--kp-control-height, 2.25rem) - 2.25rem)`): the same length at the
-   default density, and tighter under this block.
+   value as a multiple of a step (`calc(var(--kp-space-lg) * 1.1)`): the
+   same length at the default density, and tighter under this block. A
+   control's or a table row's height is not a register's to pin at all
+   since scope-80: css/components.css derives both from
+   --kp-control-height, and gates/box-metrics.test.mjs refuses the pin.
    tests/density-compact.spec.mjs holds it in every theme.
 
    The floor is not negotiable: --kp-control-height stays at 1.75rem

@@ -178,7 +178,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // bar's search trigger, --kp-nav-search-min, and the app shell moved the
     // bar's layer into the base, --kp-z-nav, which eleven registers had each
     // read on their own: 167 + 2.
-    assert.equal(result.expected, 169, 'AR21 counted 169 --kp-* properties in css/components.css');
+    // Option E of research/uniform-size/ (scope-80) put the control and row
+    // heights in the package and added four: the one-line boxes' line
+    // height, the running text's (read by the multi-line field), the table
+    // row's height and the button's block padding: 169 + 4.
+    assert.equal(result.expected, 173, 'AR21 counted 173 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -211,7 +215,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 169);
+    assert.equal(result.readCount, 173);
     assert.deepEqual(result.unread, []);
 });
 

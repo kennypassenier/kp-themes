@@ -279,6 +279,14 @@
  * rather than to whatever the browser picked in 1996. */
     body {
         font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+        /* One line height for running text, the package's in every theme
+     * [scope-80, option E of research/uniform-size/]. `normal` let each
+     * face's own ascent and descent decide how tall a line is: the same
+     * two-line alert was 60px in dark and 78px in nostromo. A number, so it
+     * scales with the font size of whatever inherits it. One-line boxes —
+     * controls and table rows, css/components.css — read the tighter
+     * --kp-control-line-height instead. */
+        line-height: var(--kp-line-height, 1.5);
     }
 
     h1,
