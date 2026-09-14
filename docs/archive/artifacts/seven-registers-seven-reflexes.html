@@ -1,0 +1,642 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Seven Registers, Seven Reflexes</title>
+<style>
+    :root {
+        --page: hsl(30, 8%, 96%);
+        --ink: hsl(30, 10%, 12%);
+        --mute: hsl(30, 6%, 42%);
+        --rule: hsl(30, 10%, 85%);
+        --mark: hsl(16, 72%, 46%);
+        --panel: hsl(0, 0%, 100%);
+        --sans: 'Inter Tight', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    :root:not([data-theme='light']) {
+        color-scheme: light dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+            --page: hsl(30, 8%, 9%);
+            --ink: hsl(30, 12%, 92%);
+            --mute: hsl(30, 6%, 62%);
+            --rule: hsl(30, 8%, 22%);
+            --mark: hsl(20, 85%, 62%);
+            --panel: hsl(30, 8%, 13%);
+        }
+    }
+
+    :root[data-theme='dark'] {
+        --page: hsl(30, 8%, 9%);
+        --ink: hsl(30, 12%, 92%);
+        --mute: hsl(30, 6%, 62%);
+        --rule: hsl(30, 8%, 22%);
+        --mark: hsl(20, 85%, 62%);
+        --panel: hsl(30, 8%, 13%);
+    }
+
+    body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    .wrap {
+        max-width: 58rem;
+        margin: 0 auto;
+        padding: 0 1.4rem 6rem;
+    }
+
+    header {
+        padding-block: 3.5rem 1.2rem;
+        border-block-end: 1px solid var(--rule);
+        margin-block-end: 1rem;
+    }
+
+    .kicker {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        color: var(--mark);
+        margin: 0 0 0.9rem;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 5.5vw, 3.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        font-weight: 720;
+        margin: 0 0 0.7rem;
+        text-wrap: balance;
+    }
+
+    .lede {
+        max-width: 36rem;
+        color: var(--mute);
+        margin: 0;
+    }
+
+    .card {
+        background: var(--panel);
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        margin-block-start: 1.6rem;
+        overflow: hidden;
+    }
+
+    .card > header {
+        border: 0;
+        padding: 1.1rem 1.3rem 0.9rem;
+        margin: 0;
+        display: flex;
+        gap: 0.8rem;
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+
+    .card h2 {
+        font-size: 1.12rem;
+        letter-spacing: -0.01em;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .theme-name {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--mark);
+        border: 1px solid currentcolor;
+        border-radius: 999px;
+        padding: 0.1rem 0.5rem;
+    }
+
+    .card p {
+        margin: 0;
+        padding: 0 1.3rem 1rem;
+        color: var(--mute);
+        font-size: 0.92rem;
+        max-width: 44rem;
+    }
+
+    .try {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--mark);
+        padding: 0 1.3rem 0.9rem;
+    }
+
+    /* The stage wears the theme's own tokens. */
+    .stage {
+        padding: 1.8rem 1.3rem 2rem;
+        background: var(--background);
+        color: var(--foreground);
+        border-block-start: 1px solid var(--rule);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem 1rem;
+        align-items: center;
+    }
+
+    .kp-button {
+        font: inherit;
+        font-family: var(--theme-font, inherit);
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.2;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        padding: 0.55rem 1.1rem;
+        cursor: pointer;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .kp-button:hover {
+        background: var(--secondary-active);
+    }
+
+    .kp-button:active {
+        background: var(--secondary-active);
+    }
+
+    .kp-button--primary {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+
+    .kp-button--primary:hover,
+    .kp-button--primary:active {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    .kp-button:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-field__input {
+        font: inherit;
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.5rem 0.8rem;
+        position: relative;
+    }
+
+    /* ═══ high-contrast · nothing fades ═══════════════════════════════ */
+    [data-q='high-contrast'] {
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(0, 0%, 0%);
+        --card: hsl(0, 0%, 100%);
+        --primary: hsl(220, 100%, 30%);
+        --primary-foreground: hsl(0, 0%, 100%);
+        --primary-active: hsl(238, 100%, 22%);
+        --secondary: hsl(0, 0%, 100%);
+        --secondary-foreground: hsl(0, 0%, 0%);
+        --secondary-active: hsl(44, 0%, 84%);
+        --border: hsl(0, 0%, 45%);
+        --radius: 0.25rem;
+        --focus-ring: hsl(0, 0%, 0%);
+    }
+
+    [data-q='high-contrast'] .kp-button {
+        transition: none;
+    }
+
+    [data-q='high-contrast'] .kp-button:hover:not(:active) {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+    }
+
+    /* ═══ nostromo · the lamp ═════════════════════════════════════════ */
+    [data-q='nostromo'] {
+        --background: hsl(38, 28%, 78%);
+        --foreground: hsl(24, 12%, 15%);
+        --card: hsl(38, 30%, 83%);
+        --primary: hsl(24, 12%, 17%);
+        --primary-foreground: hsl(38, 30%, 90%);
+        --primary-active: hsl(24, 30%, 6%);
+        --secondary: hsl(38, 22%, 70%);
+        --secondary-foreground: hsl(24, 12%, 15%);
+        --secondary-active: hsl(38, 14%, 55%);
+        --border: hsl(38, 18%, 62%);
+        --radius: 0.75rem;
+        --focus-ring: hsl(24, 12%, 15%);
+    }
+
+    [data-q='nostromo'] .kp-button {
+        padding-inline-start: 1.7rem;
+    }
+
+    [data-q='nostromo'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-block-start: -0.22rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-q='nostromo'] .kp-button::before {
+            transition: opacity 180ms ease;
+        }
+    }
+
+    [data-q='nostromo'] .kp-button:hover::before {
+        opacity: 0.7;
+    }
+
+    [data-q='nostromo'] .kp-button:active::before {
+        opacity: 1;
+    }
+
+    /* ═══ shade-light · one light ═════════════════════════════════════ */
+    [data-q='shade-light'] {
+        --background: hsl(44, 87%, 94%);
+        --foreground: hsl(194, 14%, 40%);
+        --card: hsl(44, 87%, 97%);
+        --primary: hsl(205, 70%, 38%);
+        --primary-foreground: hsl(44, 87%, 96%);
+        --primary-active: hsl(205, 100%, 25%);
+        --secondary: hsl(46, 42%, 88%);
+        --secondary-foreground: hsl(194, 25%, 22%);
+        --secondary-active: hsl(46, 18%, 73%);
+        --border: hsl(46, 42%, 84%);
+        --radius: 0.25rem;
+        --focus-ring: hsl(194, 14%, 40%);
+    }
+
+    [data-q='shade-light'] .kp-button {
+        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-q='shade-light'] .kp-button {
+            transition:
+                box-shadow 160ms ease,
+                translate 160ms ease;
+        }
+    }
+
+    [data-q='shade-light'] .kp-button:hover {
+        translate: -1px -1px;
+        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    [data-q='shade-light'] .kp-button:active {
+        transition-duration: 0s;
+        translate: 1px 1px;
+        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* ═══ shade-dark · the same light ═════════════════════════════════ */
+    [data-q='shade-dark'] {
+        --background: hsl(192, 100%, 11%);
+        --foreground: hsl(186, 8%, 64%);
+        --card: hsl(192, 81%, 14%);
+        --primary: hsl(205, 72%, 60%);
+        --primary-foreground: hsl(192, 100%, 11%);
+        --primary-active: hsl(202, 100%, 73%);
+        --secondary: hsl(192, 60%, 18%);
+        --secondary-foreground: hsl(180, 10%, 80%);
+        --secondary-active: hsl(193, 34%, 31%);
+        --border: hsl(192, 50%, 20%);
+        --radius: 0.25rem;
+        --focus-ring: hsl(186, 8%, 64%);
+    }
+
+    [data-q='shade-dark'] .kp-button {
+        box-shadow: 2px 3px 5px hsl(from var(--background) h s l / 0.9);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-q='shade-dark'] .kp-button {
+            transition:
+                box-shadow 160ms ease,
+                translate 160ms ease;
+        }
+    }
+
+    [data-q='shade-dark'] .kp-button:hover {
+        translate: -1px -1px;
+        box-shadow: 4px 6px 10px hsl(from var(--background) h s l / 0.95);
+    }
+
+    [data-q='shade-dark'] .kp-button:active {
+        transition-duration: 0s;
+        translate: 1px 1px;
+        box-shadow: inset 2px 3px 5px hsl(from var(--background) h s l / 0.95);
+    }
+
+    /* ═══ sepia · the marginal bracket ════════════════════════════════ */
+    [data-q='sepia'] {
+        --background: hsl(38, 42%, 94%);
+        --foreground: hsl(28, 45%, 16%);
+        --card: hsl(38, 50%, 97%);
+        --primary: hsl(24, 55%, 32%);
+        --primary-foreground: hsl(38, 55%, 97%);
+        --primary-active: hsl(26, 100%, 18%);
+        --secondary: hsl(36, 30%, 88%);
+        --secondary-foreground: hsl(28, 40%, 22%);
+        --secondary-active: hsl(36, 13%, 73%);
+        --border: hsl(34, 25%, 83%);
+        --radius: 0.375rem;
+        --focus-ring: hsl(28, 45%, 16%);
+    }
+
+    [data-q='sepia'] .kp-button {
+        margin-inline-start: 0.8rem;
+    }
+
+    [data-q='sepia'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -0.65rem;
+        inset-block: 0.1rem;
+        inline-size: 0.35rem;
+        border: 1px solid var(--primary);
+        border-inline-end: none;
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-q='sepia'] .kp-button::before {
+            transition: opacity 200ms ease;
+        }
+    }
+
+    [data-q='sepia'] .kp-button:hover::before,
+    [data-q='sepia'] .kp-button:focus-visible::before {
+        opacity: 1;
+    }
+
+    /* ═══ solstice · the rake ═════════════════════════════════════════ */
+    [data-q='solstice'] {
+        --background: hsl(20, 14%, 10%);
+        --foreground: hsl(35, 30%, 90%);
+        --card: hsl(20, 14%, 14%);
+        --primary: hsl(28, 85%, 58%);
+        --primary-foreground: hsl(24, 60%, 10%);
+        --primary-active: hsl(30, 83%, 72%);
+        --secondary: hsl(20, 14%, 22%);
+        --secondary-foreground: hsl(35, 25%, 86%);
+        --secondary-active: hsl(20, 10%, 35%);
+        --border: hsl(22, 14%, 24%);
+        --radius: 0.625rem;
+        --focus-ring: hsl(35, 30%, 90%);
+    }
+
+    [data-q='solstice'] .kp-button {
+        overflow: hidden;
+    }
+
+    [data-q='solstice'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -60%;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-q='solstice'] .kp-button:hover::after {
+            animation: kp-rake 620ms ease-out both;
+        }
+    }
+
+    @keyframes kp-rake {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 340% 0;
+        }
+    }
+
+    /* ═══ brutalism · the thing names itself ══════════════════════════ */
+    [data-q='brutalism'] {
+        --background: hsl(50, 100%, 97%);
+        --foreground: hsl(0, 0%, 7%);
+        --card: hsl(0, 0%, 100%);
+        --primary: hsl(0, 0%, 7%);
+        --primary-foreground: hsl(48, 100%, 60%);
+        --primary-active: hsl(44, 0%, 0%);
+        --secondary: hsl(48, 100%, 60%);
+        --secondary-foreground: hsl(0, 0%, 7%);
+        --secondary-active: hsl(49, 100%, 42%);
+        --border: hsl(0, 0%, 7%);
+        --radius: 0rem;
+        --focus-ring: hsl(0, 0%, 7%);
+    }
+
+    [data-q='brutalism'] .stage {
+        padding-block-start: 2.6rem;
+    }
+
+    [data-q='brutalism'] .kp-button,
+    [data-q='brutalism'] .kp-field__input,
+    [data-q='brutalism'] .named {
+        position: relative;
+    }
+
+    [data-q='brutalism'] .kp-button::after,
+    [data-q='brutalism'] .kp-field__input::after,
+    [data-q='brutalism'] .named::after {
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        font-family: var(--mono);
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+        background: var(--foreground);
+        color: var(--background);
+        padding: 0.1rem 0.3rem;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-q='brutalism'] .kp-button::after {
+        content: var(--kp-label, 'BUTTON');
+    }
+
+    [data-q='brutalism'] .kp-field__input::after {
+        content: var(--kp-label, 'FIELD');
+    }
+
+    [data-q='brutalism'] .named::after {
+        content: var(--kp-label, 'CARD');
+    }
+
+    [data-q='brutalism'] .kp-button:hover::after,
+    [data-q='brutalism'] .kp-field__input:hover::after,
+    [data-q='brutalism'] .named:hover::after {
+        opacity: 1;
+    }
+
+    [data-q='brutalism'] .named {
+        border: 2px solid var(--foreground);
+        background: var(--card);
+        color: var(--foreground);
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .field-wrap {
+        display: inline-block;
+        position: relative;
+    }
+
+    footer {
+        margin-block-start: 3.4rem;
+        border-block-start: 1px solid var(--rule);
+        padding-block-start: 1rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+    }
+
+    footer b {
+        color: var(--ink);
+    }
+</style>
+
+<div class="wrap">
+    <header>
+        <p class="kicker">kp-themes · round seven · scope-12</p>
+        <h1>Seven registers,<br />seven reflexes</h1>
+        <p class="lede">
+            Every panel below is one theme's own tokens with its own quirk on top, exactly as the register now carries it. Hover the buttons, hold
+            them down, tab to them. Six of these are in the package; the seventh is shade-dark, which is new.
+        </p>
+    </header>
+
+    <div class="card" data-q="high-contrast">
+        <header><h2>Nothing fades</h2><span class="theme-name">high-contrast</span></header>
+        <p>
+            The constraint of this theme is the idea. A transition is by definition a run of half-contrasts — every frame between two legible
+            states is less legible than either. So a state change is a switch, and the touched control inverts outright, keeping the two solid
+            bars its side navigation already uses for the row you are on.
+        </p>
+        <p class="try">↳ hover: instant inversion · hold: the base layer's pressed grey, so the press is its own thing</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button kp-button--primary" type="button">Bevestig</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="nostromo">
+        <header><h2>Every switch has a lamp</h2><span class="theme-name">nostromo</span></header>
+        <p>
+            Your own example of what a quirk is, carried through: the dot no longer marks only the page you are on but every control there is.
+            Dark at rest, lit under the pointer, full when pressed — a console where each switch has its own lamp. Same size and same gutter as the
+            one in the navigation.
+        </p>
+        <p class="try">↳ the lamp burns in the control's own ink, so it is pale on the dark button and dark on the pale one</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button kp-button--primary" type="button">Bevestig</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="shade-light">
+        <header><h2>One light, one direction</h2><span class="theme-name">shade-light</span></header>
+        <p>
+            Not a colour but a law: a single source at the top left that everything obeys. At rest a control lies on the surface; under the pointer
+            it lifts and its shadow lengthens; pressed, it goes below the surface and the shadow turns inward. The press is instant on the way in,
+            because a click is shorter than a transition.
+        </p>
+        <p class="try">↳ hold the button down and let go — the inward shadow arrives with no run-up</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button" type="button">Annuleer</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="shade-dark">
+        <header><h2>The same light, the other material</h2><span class="theme-name">shade-dark · new</span></header>
+        <p>
+            The twin. On a dark ground the shadow has to fall further and softer to be seen at all — 2px against the light twin's 1, blurred 5
+            against 3, and cast in the theme's own near-black rather than its text colour. Both things you found on 2026-09-11 are fixed
+            underneath: the hover was a relative colour resolving to nothing, and the press was a register cancelling a state it did not replace.
+        </p>
+        <p class="try">↳ this is the one to judge — it was not approved, it was rebuilt</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button" type="button">Annuleer</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="sepia">
+        <header><h2>The marginal note</h2><span class="theme-name">sepia</span></header>
+        <p>
+            Aged paper, and on paper you mark what you are reading in the margin. Touching a control draws a bracket to the left of it — beside the
+            thing, not on it, because that is where a reader writes. The same gesture its side navigation already uses for the row you are on.
+        </p>
+        <p class="try">↳ tab to the buttons as well: the bracket answers the keyboard too</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button" type="button">Annuleer</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="solstice">
+        <header><h2>The low sun rakes across</h2><span class="theme-name">solstice</span></header>
+        <p>
+            A low sun is the whole picture of this theme, and a low sun moves. Touching a control draws a warm band across it once, from the
+            leading edge to the far one. Once, never in a loop: a loop would be an animation demanding attention rather than light falling on a
+            thing.
+        </p>
+        <p class="try">↳ move away and back to see it again · nothing runs under reduced motion</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button kp-button--primary" type="button">Bevestig</button>
+        </div>
+    </div>
+
+    <div class="card" data-q="brutalism">
+        <header><h2>The thing names itself</h2><span class="theme-name">brutalism</span></header>
+        <p>
+            Brutalism labels its own construction: services on the outside, functions painted on the wall. So a control says what it is when you
+            touch it. Your two conditions are in it — it reaches more than the buttons, and the words are English by default and replaceable
+            through a custom property, so a consumer writing VERZENDEN gets VERZENDEN.
+        </p>
+        <p class="try">↳ the third button carries an overridden label, to show the door works</p>
+        <div class="stage">
+            <button class="kp-button" type="button">Verstuur</button>
+            <button class="kp-button" type="button" style="--kp-label: 'VERZENDEN'">Overschreven</button>
+            <span class="field-wrap"><input class="kp-field__input" type="text" value="Naam" aria-label="Naam" /></span>
+            <span class="named">Een kaart</span>
+        </div>
+    </div>
+
+    <footer>
+        Six are committed: <b>202a0ff</b> (high-contrast, nostromo, shade-light, sepia, solstice, brutalism) and <b>8de211c</b> (shade-dark). The
+        pressed states behind them are <b>4178d27</b>. Nothing on this page is a mock-up — the rules are copied out of the registers.
+    </footer>
+</div>
+
+</body></html>

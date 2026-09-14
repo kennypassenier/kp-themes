@@ -1,0 +1,535 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Two Still Open</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+    :root {
+        --page: hsl(30, 6%, 96%);
+        --ink: hsl(30, 8%, 12%);
+        --mute: hsl(30, 5%, 44%);
+        --rule: hsl(30, 8%, 86%);
+        --mark: hsl(355, 72%, 45%);
+        --panel: hsl(0, 0%, 100%);
+        --sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        --display: 'Archivo', 'Inter', system-ui, sans-serif;
+        --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+            --page: hsl(30, 7%, 10%);
+            --ink: hsl(30, 10%, 92%);
+            --mute: hsl(30, 5%, 62%);
+            --rule: hsl(30, 7%, 23%);
+            --mark: hsl(355, 85%, 66%);
+            --panel: hsl(30, 7%, 14%);
+        }
+    }
+
+    :root[data-theme='dark'] {
+        --page: hsl(30, 7%, 10%);
+        --ink: hsl(30, 10%, 92%);
+        --mute: hsl(30, 5%, 62%);
+        --rule: hsl(30, 7%, 23%);
+        --mark: hsl(355, 85%, 66%);
+        --panel: hsl(30, 7%, 14%);
+    }
+
+    body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    .wrap {
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 0 1.4rem 6rem;
+    }
+
+    header.top {
+        padding-block: 3.4rem 1.2rem;
+        border-block-end: 1px solid var(--rule);
+    }
+
+    .kicker {
+        font-family: var(--mono);
+        font-size: 0.67rem;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        color: var(--mark);
+        margin: 0 0 0.9rem;
+    }
+
+    h1 {
+        font-family: var(--display);
+        font-size: clamp(2rem, 5.4vw, 3.1rem);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        font-weight: 700;
+        margin: 0 0 0.7rem;
+        text-wrap: balance;
+    }
+
+    .lede {
+        max-width: 36rem;
+        color: var(--mute);
+        margin: 0;
+    }
+
+    h2 {
+        font-family: var(--display);
+        font-size: 1.35rem;
+        letter-spacing: -0.015em;
+        font-weight: 700;
+        margin: 0 0 0.3rem;
+    }
+
+    section {
+        margin-block-start: 3rem;
+    }
+
+    .card {
+        background: var(--panel);
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        margin-block-start: 1.4rem;
+        overflow: hidden;
+    }
+
+    .card-head {
+        padding: 1.1rem 1.3rem 0.4rem;
+        display: flex;
+        gap: 0.7rem;
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        font-family: var(--mono);
+        font-size: 0.63rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        padding: 0.12rem 0.55rem;
+        border: 1px solid currentcolor;
+    }
+
+    .badge--broken {
+        color: var(--mute);
+    }
+
+    .badge--new {
+        color: var(--mark);
+    }
+
+    .card p {
+        margin: 0;
+        padding: 0 1.3rem 1rem;
+        color: var(--mute);
+        font-size: 0.92rem;
+        max-width: 45rem;
+    }
+
+    .measure {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+        padding: 0 1.3rem 1rem;
+    }
+
+    .measure b {
+        color: var(--ink);
+        font-weight: 500;
+    }
+
+    /* ── The grotesk stage: the theme's real tokens ─────────────────── */
+    .g {
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(0, 0%, 7%);
+        --primary: hsl(355, 95%, 45%);
+        --primary-active: hsl(4, 78%, 38%);
+        --secondary: hsl(0, 0%, 94%);
+        --border: hsl(0, 0%, 85%);
+        background: var(--background);
+        color: var(--foreground);
+        border-block-start: 1px solid var(--rule);
+        padding: 2rem 1.3rem 2.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .g .btn {
+        font-family: var(--sans);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--foreground);
+        background: var(--background);
+        border: 1px solid var(--border);
+        border-radius: 0;
+        padding: 0.6rem 1.4rem;
+        cursor: pointer;
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .g .btn:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .hint {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: hsl(0, 0%, 40%);
+    }
+
+    /* ── A, as it actually painted ──────────────────────────────────── */
+    .btn--a::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left center;
+        mix-blend-mode: difference;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--a::before {
+            transition: transform 260ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--a:hover::before {
+        transform: scaleX(1);
+    }
+
+    /* ── C · the ground arrives, in a tone the letters survive ──────── */
+    .btn--c {
+        --field: color-mix(in srgb, var(--primary) 18%, var(--background));
+        background-image: linear-gradient(90deg, var(--field) calc(100% - 3px), var(--primary) 0);
+        background-repeat: no-repeat;
+        background-position: left center;
+        background-size: 0% 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--c {
+            transition: background-size 260ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--c:hover,
+    .btn--c:focus-visible {
+        background-size: 100% 100%;
+    }
+
+    .btn--c:active {
+        --field: color-mix(in srgb, var(--primary) 35%, var(--background));
+        transition-duration: 0s;
+    }
+
+    /* ── D · the baseline appears ───────────────────────────────────── */
+    .btn--d .lbl {
+        position: relative;
+        display: inline-block;
+    }
+
+    .btn--d .lbl::after {
+        content: '';
+        position: absolute;
+        inset-inline: -0.75rem;
+        inset-block-end: -0.14em;
+        block-size: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--d .lbl::after {
+            transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--d:hover .lbl::after,
+    .btn--d:focus-visible .lbl::after {
+        transform: scaleX(1);
+    }
+
+    .btn--d:active .lbl::after {
+        transition-duration: 0s;
+        block-size: 4px;
+        background: var(--primary-active);
+    }
+
+    /* ── The mirror stage: high-contrast's real tokens ──────────────── */
+    .hc {
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(0, 0%, 0%);
+        --primary: hsl(220, 100%, 30%);
+        --primary-foreground: hsl(0, 0%, 100%);
+        --border-strong: hsl(0, 0%, 0%);
+        --secondary-active: hsl(44, 0%, 84%);
+        --kp-mirror-offset: 4px;
+        background: var(--background);
+        color: var(--foreground);
+        border-block-start: 1px solid var(--rule);
+        padding: 2.2rem 1.3rem 2.4rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.6rem 2rem;
+        align-items: center;
+    }
+
+    .hc .btn {
+        font-family: var(--sans);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.2;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border: 1px solid var(--primary);
+        border-radius: 0.25rem;
+        padding: 0.6rem 1.4rem;
+        cursor: pointer;
+        transition: none;
+        position: relative;
+    }
+
+    .hc .mirror {
+        box-shadow: var(--kp-mirror-offset) var(--kp-mirror-offset) 0 0 var(--border-strong);
+    }
+
+    .hc .mirror:active {
+        box-shadow: none;
+        translate: var(--kp-mirror-offset) var(--kp-mirror-offset);
+    }
+
+    /* The inversion, as the register now writes it: not on the mirror,
+       and not while pressed. */
+    .hc .plain:hover:not(:active) {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+    }
+
+    .hc .plain {
+        background: var(--background);
+        color: var(--foreground);
+        border-color: hsl(0, 0%, 45%);
+    }
+
+    .hc .plain:active {
+        background: var(--secondary-active);
+    }
+
+    /* The rejected variant: the inversion reaching the mirror too. */
+    .hc .mirror--inverted:hover {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+    }
+
+    .hc .mirror--inverted:active {
+        box-shadow:
+            inset 0.35rem 0 0 var(--background),
+            inset -0.35rem 0 0 var(--background);
+        translate: var(--kp-mirror-offset) var(--kp-mirror-offset);
+    }
+
+    .col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        align-items: flex-start;
+    }
+
+    .col span {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: hsl(0, 0%, 35%);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+        margin-block-start: 1.2rem;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 0.5rem 0.8rem 0.5rem 0;
+        border-block-end: 1px solid var(--rule);
+        vertical-align: top;
+    }
+
+    th {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--mute);
+        font-weight: 400;
+    }
+
+    footer {
+        margin-block-start: 3.6rem;
+        border-block-start: 1px solid var(--rule);
+        padding-block-start: 1rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+    }
+</style>
+
+<div class="wrap">
+    <header class="top">
+        <p class="kicker">kp-themes · ronde zeven · nog open</p>
+        <h1>Twee dingen,<br />meer niet</h1>
+        <p class="lede">
+            De zes eigenaardigheden en shade-dark zijn afgetekend en staan hier niet meer. Wat overblijft is grotesk — waar wat je zag kapot was —
+            en de spiegelknop, die je nog nooit gezien hebt.
+        </p>
+    </header>
+
+    <section>
+        <h2>Grotesk</h2>
+
+        <div class="card">
+            <div class="card-head"><h2 style="font-size:1.05rem">Wat je zag</h2><span class="badge badge--broken">kapot</span></div>
+            <p>
+                Je meldde appelblauwzeegroen, en dat was geen smaakkwestie. Het blok lag er met <code>mix-blend-mode: difference</code> overheen, en
+                difference trekt af: het rood van grotesk op een witte ondergrond wordt 255−224, 255−6, 255−24. Precies dat blauwgroen. De techniek
+                was gekozen om wat ze met de lettérs doet en nooit nagekeken op wat ze met de grond eronder doet.
+            </p>
+            <div class="g">
+                <button class="btn btn--a" type="button"><span class="lbl">Verstuur</span></button>
+                <span class="hint">↑ hetzelfde als toen · rgb(31, 249, 231)</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-head"><h2 style="font-size:1.05rem">C · De grond komt aan</h2><span class="badge badge--new">nieuw</span></div>
+            <p>
+                Hetzelfde idee zonder blend: een veld van het rood van grotesk schuift binnen de knop naar binnen, met een harde rode rand van 3
+                pixel die op de kop van de beweging meerijdt. Het veld is een lichte toon van datzelfde rood, zodat de zwarte letters er gewoon op
+                blijven staan — niets keert om, niets verdwijnt. Indrukken verdiept het veld en gaat meteen in, zonder aanloop.
+            </p>
+            <div class="g">
+                <button class="btn btn--c" type="button"><span class="lbl">Verstuur</span></button>
+                <button class="btn btn--c" type="button"><span class="lbl">Annuleer</span></button>
+                <span class="hint">↑ houd ingedrukt voor het diepere veld</span>
+            </div>
+            <p class="measure">
+                Gemeten in firefox: veld bij hover <b>rgb(249, 210, 213)</b>, contrast met de letters <b>13,6 : 1</b> · ingedrukt
+                <b>rgb(244, 168, 174)</b>, contrast <b>9,9 : 1</b> · doos <b>110,38 × 39,43</b> in rust én bij hover, tot op de honderdste.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-head"><h2 style="font-size:1.05rem">D · De basislijn verschijnt</h2><span class="badge badge--new">nieuw</span></div>
+            <p>
+                De stillere. Aanraken tekent één rode lijn op precies de basislijn van het label — de lijn waar de letters op staan, niet de
+                onderrand van de knop — die vanaf de aanloopkant uitschuift tot voorbij het woord. Dat is het instrument van de Zwitserse
+                typografie zelf: het raster waar de tekst op rust, even zichtbaar gemaakt. Indrukken verdikt hem naar 4 pixel in het diepere rood.
+            </p>
+            <div class="g">
+                <button class="btn btn--d" type="button"><span class="lbl">Verstuur</span></button>
+                <button class="btn btn--d" type="button"><span class="lbl">Annuleer</span></button>
+                <span class="hint">↑ kijk waar de lijn ligt ten opzichte van de letters</span>
+            </div>
+            <p class="measure">Gemeten in firefox: de lijn is <b>2px</b> in <b>rgb(224, 6, 24)</b> en raakt de letters niet, dus er is geen contrastvraag · doos
+                <b>110,38 × 39,43</b> in rust én bij hover.</p>
+        </div>
+
+        <table>
+            <tr>
+                <th>&nbsp;</th>
+                <th>C · de grond komt aan</th>
+                <th>D · de basislijn</th>
+            </tr>
+            <tr>
+                <td><b style="font-weight:500">Volume</b></td>
+                <td>luid — het hele element verkleurt</td>
+                <td>stil — één lijn van 2 pixel</td>
+            </tr>
+            <tr>
+                <td><b style="font-weight:500">Zegt</b></td>
+                <td>hier gebeurt iets</td>
+                <td>hier staat de tekst op</td>
+            </tr>
+            <tr>
+                <td><b style="font-weight:500">Werkt op</b></td>
+                <td>elk element met een grond: knoppen, velden, rijen</td>
+                <td>alles met een label</td>
+            </tr>
+            <tr>
+                <td><b style="font-weight:500">Indrukken</b></td>
+                <td>het veld verdiept, meteen</td>
+                <td>de lijn verdikt, meteen</td>
+            </tr>
+            <tr>
+                <td><b style="font-weight:500">Risico</b></td>
+                <td>op een donker thema zou deze aanpak opnieuw uitgerekend moeten worden — grotesk is wit, dus hier niet</td>
+                <td>kan te subtiel zijn om als eigenaardigheid te tellen</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>De spiegelknop</h2>
+
+        <div class="card">
+            <div class="card-head"><h2 style="font-size:1.05rem">Wat het is</h2></div>
+            <p>
+                Een knop met een harde slagschaduw van 4 pixel rechtsonder — geen zachte schaduw, een tweede zwart vlak. Indrukken laat de knop
+                letterlijk op die schaduw vallen: de schaduw verdwijnt en de knop verschuift precies die 4 pixel. Dat is het hele gebaar, en het
+                staat zo in de goedgekeurde demo van high-contrast. Druk de linker knop in en laat weer los.
+            </p>
+            <div class="hc">
+                <span class="col"><button class="btn mirror" type="button">Bevestig</button><span>spiegelknop · druk in</span></span>
+                <span class="col"><button class="btn plain" type="button">Verstuur</button><span>gewone knop · de omkering</span></span>
+            </div>
+            <p class="measure">Gemeten in firefox: ingedrukt <b>box-shadow: none</b> en <b>translate: 4px 4px</b> — het vlak blijft waar het lag.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-head"><h2 style="font-size:1.05rem">Wat de vraag is</h2></div>
+            <p>
+                De eigenaardigheid van high-contrast keert een aangeraakt element om in zijn negatief, met twee witte balken binnenin. Als die
+                omkering ook op de spiegelknop zou gelden, zet ze twee witte balken op de plek waar de demo een schone val tekent. Hieronder staat
+                die variant: druk hem in en vergelijk met de knop hierboven.
+            </p>
+            <div class="hc">
+                <span class="col"
+                    ><button class="btn mirror mirror--inverted" type="button">Bevestig</button><span>mét de omkering · druk in</span></span
+                >
+                <span class="col"><button class="btn mirror" type="button">Bevestig</button><span>zoals het nu is · druk in</span></span>
+            </div>
+            <p class="measure">
+                Gemeten in firefox, met de omkering erop: ingedrukt <b>rgb(255, 255, 255) 5.6px 0 0 0 inset, rgb(255, 255, 255) −5.6px 0 0 0 inset</b>
+                in plaats van <b>none</b>. De val zelf blijft, maar de schone zwarte val is nu twee witte balken.
+            </p>
+        </div>
+    </section>
+
+    <footer>Niets op deze pagina zit in het pakket. Grotesk heeft nog geen eigen gebaar, en de spiegelknop staat zoals rechtsonder.</footer>
+</div>
+
+</body></html>

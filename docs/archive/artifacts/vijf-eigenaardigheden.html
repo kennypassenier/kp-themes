@@ -1,0 +1,256 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Vijf eigenaardigheden</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Markazi+Text:wght@400;600&family=Vazirmatn:wght@400;500;600&family=Instrument+Serif&family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400..700&family=Source+Sans+3:wght@400;600&family=Archivo:wght@400;700;800&display=swap">
+<style>
+/* The five themes that still had no quirk of their own. Each idea comes
+   out of that theme's own opening sentence rather than out of a shape
+   left over from a demo, which is the whole point of the rule this round
+   is built on. Colours and faces are read from themes/<name>/tokens.json;
+   where the package ships a renamed face of its own, the nearest public
+   family stands in and is named in the text. */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:"Instrument Sans",system-ui,sans-serif;background:hsl(220 16% 5%);
+  color:hsl(205 20% 94%);-webkit-font-smoothing:antialiased;--kp-px:.5;--kp-py:.5}
+h1{font-family:"Archivo",system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.75rem);line-height:1;
+  letter-spacing:-.03em;margin:0;font-weight:800}
+p{margin:0}
+.intro{max-width:74rem;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1.1rem,4vw,3rem) 1.5rem}
+.intro p{max-width:64ch;color:hsl(210 12% 74%);margin-top:.85rem;line-height:1.65}
+.eyebrow{font-family:ui-monospace,monospace;font-size:.625rem;letter-spacing:.22em;
+  text-transform:uppercase;color:hsl(214 10% 52%)}
+.t{padding:clamp(1.6rem,4vw,2.6rem) clamp(1.1rem,4vw,3rem);
+  background:var(--background);color:var(--foreground);font-family:var(--body)}
+.t__head{max-width:74rem;margin:0 auto 1.2rem;display:flex;flex-wrap:wrap;gap:.4rem 1rem;
+  align-items:baseline;justify-content:space-between}
+.t__name{font-family:var(--display);font-size:1.5rem;letter-spacing:-.01em}
+.t__what{font-family:ui-monospace,monospace;font-size:.6875rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted-foreground)}
+.t__why{max-width:74rem;margin:0 auto 1.4rem;font-size:.875rem;line-height:1.65;
+  color:var(--muted-foreground);max-inline-size:68ch}
+.t__why b{color:var(--foreground);font-weight:600}
+.pair{max-width:74rem;margin:0 auto;display:grid;gap:1rem;grid-template-columns:1fr}
+@media(min-width:52rem){.pair{grid-template-columns:1fr 1fr}}
+.side{border:1px solid var(--border);padding:1.05rem 1.15rem 1.25rem;background:var(--card);
+  display:flex;flex-direction:column;gap:.8rem}
+.side__tag{font-family:ui-monospace,monospace;font-size:.5625rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted-foreground)}
+.row{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}
+.b{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  font-family:inherit;font-size:.875rem;font-weight:600;padding:.64rem 1.05rem;
+  border:1px solid var(--border-strong);background:transparent;color:var(--foreground);
+  cursor:pointer;border-radius:var(--r);
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),
+  color var(--dur) var(--ease)}
+.b>span{position:relative;z-index:3}
+.b--go{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}
+.b--gh{border-color:transparent;color:var(--muted-foreground)}
+.f{font:inherit;font-size:.875rem;color:var(--foreground);background:var(--card);
+  border:1px solid var(--border-strong);padding:.56rem .76rem;width:100%;border-radius:var(--r);
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.f::placeholder{color:var(--muted-foreground)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+/* ═══ high-contrast — de omslag ═══════════════════════════════════════
+   "Black on white, one signal yellow, and nothing in between." A theme
+   that says there is nothing in between should not fade: it flips. The
+   control turns into its own negative with no transition at all, and the
+   yellow appears only in the instant something is actually pressed. */
+[data-t="high-contrast"]{--background:hsl(0 0% 100%);--card:hsl(0 0% 100%);
+  --foreground:hsl(0 0% 0%);--primary:hsl(220 100% 30%);--primary-foreground:hsl(0 0% 100%);
+  --muted-foreground:hsl(0 0% 20%);--border:hsl(0 0% 45%);--border-strong:hsl(0 0% 0%);
+  --accent:hsl(48 100% 50%);
+  --display:"Atkinson Hyperlegible",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,sans-serif;
+  --r:.25rem;--dur:120ms;--ease:linear}
+[data-t="high-contrast"] .new .b{transition:none}
+[data-t="high-contrast"] .new .b:hover,[data-t="high-contrast"] .new .b:focus-visible{
+  background:var(--foreground);color:var(--background);border-color:var(--foreground)}
+[data-t="high-contrast"] .new .b--go:hover,[data-t="high-contrast"] .new .b--go:focus-visible{
+  background:var(--background);color:var(--primary);border-color:var(--primary)}
+[data-t="high-contrast"] .new .b:active{background:var(--accent);color:var(--foreground);
+  border-color:var(--foreground)}
+[data-t="high-contrast"] .new .f{transition:none}
+[data-t="high-contrast"] .new .f:focus{background:var(--foreground);color:var(--background);
+  outline:none;border-color:var(--foreground)}
+[data-t="high-contrast"] .new .f:focus::placeholder{color:hsl(0 0% 72%)}
+
+/* ═══ lapis — het bladgoud dat licht vangt ════════════════════════════
+   Tazhib is gold leaf on ultramarine, and leaf is not a colour but a
+   surface: it catches the light as the page turns. So the gold on a
+   control takes its highlight from where the pointer is, and a single
+   bright band crosses it when the control is touched. */
+[data-t="lapis"]{--background:hsl(228 60% 26%);--card:hsl(228 57% 31%);
+  --foreground:hsl(42 55% 89%);--primary:hsl(43 67% 50%);--primary-foreground:hsl(228 60% 12%);
+  --muted-foreground:hsl(230 30% 74%);--border:hsl(228 45% 36%);--border-strong:hsl(43 45% 52%);
+  --display:"Markazi Text",Georgia,serif;--body:"Vazirmatn",system-ui,sans-serif;
+  --r:.5rem;--dur:220ms;--ease:cubic-bezier(.4,0,.2,1)}
+[data-t="lapis"] .new .b{overflow:hidden;
+  border-color:transparent;
+  background:linear-gradient(var(--card),var(--card)) padding-box,
+    linear-gradient(calc(90deg + (var(--kp-px) - .5) * 120deg),
+      hsl(43 55% 38%),hsl(45 85% 72%) 45%,hsl(43 55% 38%)) border-box}
+[data-t="lapis"] .new .b--go{background:
+    linear-gradient(calc(90deg + (var(--kp-px) - .5) * 120deg),
+      hsl(43 60% 42%),hsl(46 90% 68%) 45%,hsl(43 60% 42%)) padding-box,
+    linear-gradient(hsl(45 85% 72%),hsl(45 85% 72%)) border-box;
+  color:var(--primary-foreground)}
+[data-t="lapis"] .new .b--gh{background:none;border-color:transparent}
+[data-t="lapis"] .new .b::after{content:"";position:absolute;inset:0;z-index:2;
+  background:linear-gradient(105deg,transparent 34%,hsl(48 100% 88% / .6) 50%,transparent 66%);
+  transform:translateX(-130%);transition:transform .66s var(--ease)}
+[data-t="lapis"] .new .b:hover::after,[data-t="lapis"] .new .b:focus-visible::after{
+  transform:translateX(130%)}
+[data-t="lapis"] .new .f{border-color:transparent;
+  background:linear-gradient(var(--card),var(--card)) padding-box,
+    linear-gradient(calc(90deg + (var(--kp-px) - .5) * 120deg),
+      hsl(43 55% 38%),hsl(45 85% 72%) 45%,hsl(43 55% 38%)) border-box}
+
+/* ═══ sepia — de inkt die in het papier trekt ═════════════════════════
+   Warm parchment and brown ink. A nib resting on paper bleeds a hair
+   into it and dries back when it lifts, so pressing a control here
+   spreads a soft brown halo rather than changing its colour — and the
+   rule that draws under it on hover is thickest in the middle, the way
+   a stroke is where the pen bears down. */
+[data-t="sepia"]{--background:hsl(38 42% 94%);--card:hsl(38 50% 97%);
+  --foreground:hsl(28 45% 16%);--primary:hsl(24 55% 32%);--primary-foreground:hsl(38 55% 97%);
+  --muted-foreground:hsl(28 22% 36%);--border:hsl(34 25% 83%);--border-strong:hsl(30 22% 52%);
+  --display:"Instrument Serif",Georgia,serif;--body:"Instrument Sans",system-ui,sans-serif;
+  --r:.375rem;--dur:220ms;--ease:cubic-bezier(.4,0,.2,1)}
+[data-t="sepia"] .new .b{transition:box-shadow .26s var(--ease),border-color var(--dur) var(--ease),
+  background var(--dur) var(--ease),color var(--dur) var(--ease)}
+[data-t="sepia"] .new .b::after{content:"";position:absolute;left:.5rem;right:.5rem;bottom:-.28rem;
+  height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,hsl(24 55% 32%),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .42s var(--ease)}
+[data-t="sepia"] .new .b:hover::after,[data-t="sepia"] .new .b:focus-visible::after{
+  transform:scaleX(1)}
+[data-t="sepia"] .new .b:active{box-shadow:0 0 0 .3rem hsl(24 55% 32% / .16),
+  0 0 .5rem .1rem hsl(24 55% 32% / .2)}
+[data-t="sepia"] .new .f:focus{outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 .22rem hsl(24 55% 32% / .13)}
+
+/* ═══ shade-light en shade-dark — de schaduw volgt het licht ══════════
+   The pair share one sentence and nothing else. One mechanism with two
+   readings ties them together: the pointer is the light. In the light
+   half a control sits in the sun and throws its shade away from the
+   pointer. In the dark half it sits in shade, and the pointer lifts it
+   out — the shade shrinks and the surface comes up. */
+[data-t="shade-light"]{--background:hsl(44 87% 94%);--card:hsl(44 87% 97%);
+  --foreground:hsl(194 14% 40%);--primary:hsl(205 70% 38%);--primary-foreground:hsl(44 87% 96%);
+  --muted-foreground:hsl(194 14% 40%);--border:hsl(46 42% 84%);--border-strong:hsl(180 8% 48%);
+  --display:"Source Serif 4",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;
+  --r:.25rem;--dur:180ms;--ease:cubic-bezier(.2,0,0,1)}
+[data-t="shade-light"] .new .b,[data-t="shade-light"] .new .f{
+  box-shadow:calc((.5 - var(--kp-px)) * 14px) calc((.5 - var(--kp-py)) * 14px) 16px -10px
+    hsl(194 30% 30% / .55);
+  transition:box-shadow .18s linear,border-color var(--dur) var(--ease),
+  background var(--dur) var(--ease)}
+[data-t="shade-light"] .new .b:hover{box-shadow:calc((.5 - var(--kp-px)) * 22px)
+  calc((.5 - var(--kp-py)) * 22px) 22px -10px hsl(194 30% 30% / .6)}
+
+[data-t="shade-dark"]{--background:hsl(192 100% 11%);--card:hsl(192 81% 14%);
+  --foreground:hsl(186 8% 64%);--primary:hsl(205 72% 60%);--primary-foreground:hsl(192 100% 11%);
+  --muted-foreground:hsl(186 8% 62%);--border:hsl(192 50% 20%);--border-strong:hsl(194 14% 50%);
+  --display:"Source Serif 4",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;
+  --r:.25rem;--dur:180ms;--ease:cubic-bezier(.2,0,0,1)}
+[data-t="shade-dark"] .new .b,[data-t="shade-dark"] .new .f{
+  box-shadow:inset calc((var(--kp-px) - .5) * 10px) calc((var(--kp-py) - .5) * 10px) 14px -6px
+    hsl(192 100% 4% / .8);
+  transition:box-shadow .18s linear,border-color var(--dur) var(--ease),
+  background var(--dur) var(--ease),color var(--dur) var(--ease)}
+[data-t="shade-dark"] .new .b:hover,[data-t="shade-dark"] .new .b:focus-visible{
+  box-shadow:inset 0 0 0 0 hsl(192 100% 4% / 0),0 0 20px -4px hsl(205 72% 60% / .35);
+  color:hsl(186 20% 86%);border-color:var(--primary)}
+
+@media(prefers-reduced-motion:reduce){.b,.b::after,.f{transition-duration:1ms !important}}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Vijf voorgestelde eigenaardigheden, elk in de echte kleuren en letters van zijn thema, met de huidige knop ernaast.</h2>
+
+<div class="intro">
+  <p class="eyebrow">ronde zeven &middot; vijf eigenaardigheden &middot; nu naast voorstel</p>
+  <h1>De laatste vijf, elk uit zijn eigen zin.</h1>
+  <p>Dit zijn de thema's die nog niets eigens hadden. Geen van de vijf krijgt een vorm die van een demo is overgebleven: elk idee komt uit de openingszin waarmee dat thema zichzelf beschrijft. Links staat het element zoals het vandaag is, rechts met de eigenaardigheid erop. Beweeg erover én druk ze in — bij drie van de vijf zit het verschil in de aanraking, en bij twee beweegt er iets zodra de muis ergens anders op de pagina is.</p>
+</div>
+
+<section class="t" data-t="high-contrast">
+  <div class="t__head"><span class="t__name">high-contrast</span><span class="t__what">de omslag</span></div>
+  <p class="t__why">Het thema zegt over zichzelf: zwart op wit, één signaalgeel, en <b>niets daartussen</b>. Een thema dat dat zegt hoort niet te vervagen — het slaat om. De knop wordt zijn eigen negatief, zonder enige overgang, en het geel verschijnt alleen op het moment dat er echt gedrukt wordt. Als bijvangst is elke toestand maximaal leesbaar, want zwart-op-wit en wit-op-zwart zijn allebei het uiterste.</p>
+  <div class="pair">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side new"><span class="side__tag">voorstel</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+<section class="t" data-t="lapis">
+  <div class="t__head"><span class="t__name">lapis</span><span class="t__what">het bladgoud dat licht vangt</span></div>
+  <p class="t__why">Tazhib is bladgoud op ultramarijn, en blad is geen kleur maar een <b>oppervlak</b>: het vangt het licht terwijl je de bladzijde draait. Dus de gouden rand van een element haalt zijn glanspunt uit waar de muis is — beweeg de muis ergens op deze pagina en kijk naar de randen — en bij aanraken trekt er één heldere baan overheen, zoals licht over een gepolijst blad.</p>
+  <div class="pair">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side new"><span class="side__tag">voorstel</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+<section class="t" data-t="sepia">
+  <div class="t__head"><span class="t__name">sepia</span><span class="t__what">de inkt trekt in het papier</span></div>
+  <p class="t__why">Warm perkament en bruine inkt, en geen enkel koel accent. Een pen die op papier blijft rusten <b>loopt een haar uit</b> en droogt weer op als hij optilt. Dus indrukken verandert hier geen kleur maar spreidt een zachte bruine hof rond het element. En de lijn die bij aanraken onder de knop getrokken wordt is dikker in het midden, zoals een streek is waar de pen het hardst drukt.</p>
+  <div class="pair">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side new"><span class="side__tag">voorstel</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+<section class="t" data-t="shade-light">
+  <div class="t__head"><span class="t__name">shade-light</span><span class="t__what">de schaduw volgt het licht &middot; helft een</span></div>
+  <p class="t__why">Het paar deelt één zin en verder niets — dat is precies wat het paar geen paar maakt. Eén mechanisme met twee lezingen bindt ze: <b>de muis is het licht</b>. In deze helft staat een element in de zon en werpt het zijn schaduw van de muis af. Beweeg de muis langs de randen van het scherm en de schaduwen draaien mee.</p>
+  <div class="pair">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side new"><span class="side__tag">voorstel</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+<section class="t" data-t="shade-dark">
+  <div class="t__head"><span class="t__name">shade-dark</span><span class="t__what">de schaduw volgt het licht &middot; helft twee</span></div>
+  <p class="t__why">Dezelfde muis, hetzelfde licht, de omgekeerde lezing. Hier ligt het element <b>ín</b> de schaduw: de schaduw zit binnenin en draait mee met de muis, en aanwijzen tilt het eruit — de schaduw trekt weg en het oppervlak komt op. Twee helften van één gedachte, wat de twee thema's voor het eerst tot een paar maakt.</p>
+  <div class="pair">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side new"><span class="side__tag">voorstel</span>
+      <div class="row"><button class="b b--go"><span>Verstuur</span></button><button class="b"><span>Lees spec</span></button><button class="b b--gh"><span>Ghost</span></button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+<script>
+(function () {
+    var root = document.documentElement, px = .5, py = .5, queued = false;
+    function publish() {
+        queued = false;
+        document.body.style.setProperty('--kp-px', px.toFixed(4));
+        document.body.style.setProperty('--kp-py', py.toFixed(4));
+    }
+    addEventListener('pointermove', function (e) {
+        px = e.clientX / innerWidth; py = e.clientY / innerHeight;
+        if (!queued) { queued = true; requestAnimationFrame(publish); }
+    }, { passive: true });
+})();
+</script>
+
+</body></html>

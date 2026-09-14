@@ -1,0 +1,997 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<meta charset="utf-8" />
+<title>Working Drawing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Geist+Mono:wght@400..600&display=swap" />
+<style>
+/* =====================================================================
+   HEADER COMMENT — kp-themes blueprint concept demo ("Working Drawing")
+   Round six, S46/S48. Self-contained fragment; literal hex, not tokens
+   (a demo paints itself — the register spends the tokens later).
+   =====================================================================
+
+   (1) MECHANISMS AND THEIR RESEARCH SOURCE
+   -----------------------------------------------------------------
+   - Ruled guide grid (two axes of hairlines at 24px), sparse "+"
+     crosshairs at chosen intersections: Vercel design system grid,
+     vercel.com — measured [D blueprint R1] ("--light-dashed-png" tile;
+     ".AMTIxG_cross" plus-mark at intersections). Ported as CSS-only
+     gradients (no PNG shipped) plus one inline SVG data-URI "+" tile,
+     since no external images are allowed here. Held under DI9's ~6%
+     texture ceiling (grid gradients at 4.5% alpha, crosshair tile at
+     8% alpha but only 3px of a 24px cell, so the felt effect is lower
+     than either number alone suggests).
+   - Cyanotype tint on the hero diagram: SUTERA — Blueprint Reality,
+     sutera.ch — measured [A R24] (".blueprint-filter:before
+     { background-color:var(--color-blue); mix-blend-mode:color }").
+     Ported onto a self-drawn inline SVG isometric diagram (there is no
+     photograph to tint — the mechanism is the blend-mode overlay, not
+     the photo it was applied to).
+   - Chamfered corner from a clip-path polygon: SUTERA's
+     ".project-clip-path" — measured [A R24]. Ported as a one-corner
+     chamfer driven by a custom property (`--kp-chamfer`) on the primary
+     button, the spec card and the dossier card, instead of their two-
+     corner shape — a smaller cut reads as "drafted", a bigger one reads
+     as "logo".
+   - Nav band height as a fraction of the sheet: teenage.engineering —
+     measured [D blueprint R3] ("--header-height: calc(.0816327 *
+     var(--client-width))"). Ported loosely as a `clamp()` between a
+     fixed floor and a vw-scaled ceiling — the idea (the chrome scales
+     with the sheet, not with a breakpoint list), not the literal
+     constant, per the lift plan's "next level as a layout idea".
+   - Dimension-line / anchor-circle / annotation-stamp vocabulary
+     ("Tech Spec" trend): studio2am.co and kittl.com — observed [B]
+     ("1-2px stroke", "45° connectors", "anchor circles at endpoints",
+     "dotted secondary connectors", mono type, cold blue + warning
+     orange, approval stamps). Used for: the construction frame around
+     the headline (anchor circles at its four corners), the drawn
+     underline under a "rule" heading, the dossier's rotated approval
+     stamp, and the two dividers (fold mark with a dimension label, and
+     a ruler tick-mark rule) as blueprint's own answer to a "razor
+     tear" — a controlled, measured cut instead of a violent one, which
+     is the point of difference from cyberpunk's tear (anatomy.md: "a
+     dark blue theme that measures", not "a dark blue theme that
+     glows").
+   - Headline "draws itself": not a research recipe (S46 asks each
+     theme for its own arrival mechanism — decipher, tracking, shout-in,
+     dither dissolve and typing were the previous four). Built from the
+     same dimension-line vocabulary above: an SVG frame strokes itself
+     around the headline (stroke-dashoffset, one pass), four anchor
+     circles pop in at its corners, and the headline itself resolves
+     from a slight drop with a quick fade — a sheet being drafted, not
+     a signal decoding.
+   - Mono type for labels, dimensions and the spec sheet: the same
+     "Tech Spec" observation [B] plus Setproduct's guide (Geist
+     Sans/Mono, Inter) — observed [D]. Geist Mono is already a shipped,
+     licence-clear family (see (3)); nothing new was licensed for this.
+
+   (2) HAZARDS REFUSED (see docs/RESEARCH_2026-09.md, "## Hazards")
+   -----------------------------------------------------------------
+   - Flicker over DI5 (CRT/scanline recipes at .05s-.15s, 10-133
+     changes/s): refused outright — this demo has no looping animation
+     of any kind. Every effect below is one pass, once, see (5).
+   - Oscillating patterns (Denerz sun snap, scanline translateY jitter,
+     "motion-sick" grid drift 0.5s-1s loops): refused — the guide grid
+     and crosshairs are static images (CSS gradients / one SVG tile),
+     never animated, so there is no oscillating high-contrast pattern
+     over the viewport at all.
+   - Neon-on-neon / near-white-without-glow text pairs: refused —
+     blueprint carries no neon token; every text pair used here is
+     checked below at (4) before use, the way cyberpunk's palette
+     should have been.
+   - Personal-use / no-Google-Fonts display faces (Streamster, Lazer
+     84, Road Rage, VCR OSD Mono, etc.): refused — both faces used are
+     already shipped by this package (fonts/families.json), OFL-1.1,
+     `reservedFontName: false`. No new font licence risk introduced.
+   - 98.css-style single-colour dotted focus outline: refused — the
+     focus ring below is DI2's two-channel ring, not a single flat
+     outline.
+
+   (3) FONTS AND LICENCES
+   -----------------------------------------------------------------
+   - Instrument Sans — OFL-1.1, reservedFontName: false. Already shipped
+     for blueprint (`theme-font-body`/`theme-font-display`,
+     fonts/families.json → "instrumentsans" → themes includes
+     "blueprint"). Used for all running text, headings and buttons.
+   - Geist Mono — OFL-1.1, reservedFontName: false. Already shipped
+     (fonts/families.json → "geistmono", themes: ["mono"]; reused here
+     under its own unmodified name, no renaming, no Reserved-Font-Name
+     conflict — it simply is not yet in blueprint's own theme list,
+     which is a build-phase decision, not a demo-time one). Used for
+     the microlabel, side note, spec sheet, dimension labels and the
+     nav's language item — the drafting-table register of the type.
+   - One Google Fonts link carries both, each pinned to the same
+     upstream family the package already subsets, so nothing here
+     could diverge from what ships later.
+
+   (4) CONTRAST — WCAG 2.x, computed 2026-09-08 from themes/blueprint/
+   tokens.json (hsl → sRGB → relative luminance → ratio; script run at
+   /tmp/.../scratchpad/contrast.mjs). Every pair this file paints text
+   or a boundary with, lowest first:
+   -----------------------------------------------------------------
+     TEXT PAIRS (need ≥ 4.5):
+     --foreground #dff2f6 on --background #0b1b32 ......... 14.93
+     --foreground #dff2f6 on --card       #102541 ......... 13.33
+     --foreground #dff2f6 on --popover    #142c4d ......... 12.14
+     --secondary-fg #d3eaee on --secondary #223959 ......... 9.33
+     --muted-fg #a2c2cd on --background #0b1b32 ............ 9.15
+     --primary #51d2ec on --background #0b1b32 (links/mark ink) 9.68
+     --primary-fg #08172b on --primary #51d2ec (button text) . 10.09
+     --accent #f0a742 on --background #0b1b32 (amber label) .. 8.47
+     --accent-fg #301a03 on --accent #f0a742 (stamp text) .... 8.09
+     --selected #2fbeda on --background #0b1b32 (check mark) . 7.80
+     --destructive #e25f5a on --background #0b1b32 ........... 4.94
+     --destructive-fg #290a0a on --destructive #e25f5a ....... 5.27  <- LOWEST text pair, still clears 4.5
+     BOUNDARY PAIRS (need ≥ 3, DI1 — component edges only, never the
+     plain --border hairline below):
+     --border-strong #64a4c4 on --background #0b1b32 ......... 6.28
+     --border-strong #64a4c4 on --card       #102541 ......... 5.61  <- LOWEST boundary pair, clears 3
+     DI2's two-channel ring, worst surface (a primary button):
+     --foreground (inner) on --primary  ........................ 1.54 (loses)
+     --background (outer) on --primary  ........................ 9.68 (wins — exactly DI2's "whichever
+                                                                          one loses, the other wins")
+     --foreground (inner) on --background page (no button under it) 14.93 (wins)
+     DECORATIVE ONLY, not gated by DI1 (never used as a control edge):
+     --border #28425d on --background #0b1b32 ................ 1.67 (grid hairlines, dividers, side note
+                                                                       rule — decoration, per DI1's own
+                                                                       "hairline vs boundary" split)
+   Lowest gated pair overall: 4.94/5.27 (destructive text) for text,
+   5.61 (border-strong on card) for boundaries — both clear their floor.
+
+   (5) DI5 — every animation, its duration, whether it loops
+   -----------------------------------------------------------------
+   All arrival animations below are gated behind a `.kp-arrive` class
+   that a head-blocking inline script adds to <html> ONLY when
+   `prefers-reduced-motion: reduce` does NOT match — so under reduced
+   motion these six never run at all (not "run fast": never start), and
+   every element they would have animated is at its final/rest CSS
+   state by default. This is the "kill it, don't just shorten it"
+   pattern the hazards doc credits to Dead North / Culpepper / Magic UI.
+     a. kp-frame-draw   — 0.9s, ONE pass, fires once on load, no loop.
+                           Strokes an SVG rect frame around the headline.
+     b. kp-headline-fade— 0.3s (delay 0.6s), ONE pass, no loop. Headline
+                           opacity 0→1 + a 6px rise.
+     c. kp-anchor-pop ×4— 0.2s each, staggered 0.70/0.75/0.80/0.85s
+                           delays, ONE pass each, no loop. Corner dots.
+     d. kp-mark-reveal ×2 — 0.5s each, staggered 1.0/1.2s delays, ONE
+                           pass each, no loop. A one-directional
+                           background-size sweep behind each <mark>,
+                           each under ~170×28 CSS px — far below DI5's
+                           341×256 area floor even before counting
+                           passes.
+     e. kp-rule-draw ×2 — 0.6s each, small stagger, ONE pass each, no
+                           loop. Underline beneath the two "rule"
+                           headings.
+   Every one of the six above is a single, one-directional change — at
+   most one opposing luminance transition inside its own ≤0.9s window,
+   so read pessimistically (DI5's own method: the whole area assumed
+   full-bright over full-dark) each is "1 change/≤1s", nowhere near the
+   3/s bar, and none repeats.
+   Interactive, not load-gated (a person clicks to start them, so they
+   cannot be an "arrival overlay"):
+     f. kp-redaction-clear ×3 — 0.4s each, staggered 0.15s apart, ONE
+                           pass per click of "Lift the redactions",
+                           never automatic, no loop. A blanket rule
+                           (below) sets every `transition-duration` to
+                           0.001ms under reduced motion, so this and all
+                           hover/focus colour transitions resolve
+                           instantly and stay reactive if the OS setting
+                           changes mid-session (a live @media query,
+                           not a one-time JS check) — this is the half
+                           of DI7 the load-gate above cannot cover.
+   The confirm dialog opens and closes with no animation at all (native
+   `<dialog>` show/hide) — deliberately excluded rather than given a
+   transition, so there is one fewer thing to prove safe.
+   ===================================================================== */
+
+:root {
+    --bg: #0b1b32;
+    --fg: #dff2f6;
+    --card: #102541;
+    --popover: #142c4d;
+    --primary: #51d2ec;
+    --primary-fg: #08172b;
+    --secondary: #223959;
+    --secondary-fg: #d3eaee;
+    --muted: #22344f;
+    --muted-fg: #a2c2cd;
+    --accent: #f0a742;
+    --accent-fg: #301a03;
+    --destructive: #e25f5a;
+    --destructive-fg: #290a0a;
+    --border: #28425d;
+    --border-strong: #64a4c4;
+    --selected: #2fbeda;
+    --font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --kp-chamfer: 12px;
+    --kp-radius: 3px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; } /* KT13: the paint honours the attribute, not a class */
+
+html { background: var(--bg); color-scheme: dark; }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0 0 0.5em; }
+p { margin: 0 0 1em; }
+a { color: var(--primary); }
+img, svg { max-width: 100%; }
+
+.kp-blueprint-root { max-width: 100vw; overflow-x: clip; }
+
+/* -------------------------------------------------- focus (DI2) -- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px var(--bg),
+        0 0 0 4px var(--fg);
+    border-radius: 2px;
+}
+
+/* -------------------------------------------------- skip link ---- */
+.kp-skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: -3rem;
+    background: var(--fg);
+    color: var(--bg);
+    padding: 0.5rem 0.9rem;
+    z-index: 100;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    border-radius: var(--kp-radius);
+    transition: top 0.001ms;
+}
+.kp-skip-link:focus { top: 0.5rem; }
+
+/* -------------------------------------------------- guide grid ---- */
+.kp-guide-grid {
+    background-image:
+        linear-gradient(rgba(100, 164, 196, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 164, 196, 0.045) 1px, transparent 1px),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 9v6M9 12h6' stroke='%2364a4c4' stroke-width='1' stroke-opacity='0.08'/%3E%3C/svg%3E");
+    background-size: 24px 24px, 24px 24px, 96px 96px;
+    background-position: -1px -1px, -1px -1px, 0 0;
+}
+
+/* -------------------------------------------------- nav ---------- */
+.kp-nav-wrap { border-bottom: 1px solid var(--border); background: var(--bg); }
+.kp-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: clamp(3.25rem, 6vw, 4.25rem);
+    padding: 0 clamp(1rem, 4vw, 2rem);
+    max-width: 1180px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+.kp-nav__brand {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    font-size: 0.95rem;
+}
+.kp-nav__brand::before { content: "⌗ "; color: var(--primary); }
+.kp-nav__links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+}
+.kp-nav__links > li { position: relative; }
+.kp-nav__link {
+    color: var(--muted-fg);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.35rem 0.1rem;
+    border-bottom: 1px solid transparent;
+    transition-property: color, border-color;
+    transition-duration: 0.15s;
+}
+.kp-nav__link:hover { color: var(--fg); border-color: var(--border-strong); }
+.kp-nav__link[aria-haspopup="true"]::after { content: " ▾"; font-size: 0.7em; color: var(--border-strong); }
+.kp-nav__menu {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0.4rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 10rem;
+    background: var(--popover);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius);
+    box-shadow: 0 8px 20px rgba(2, 8, 18, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition-property: opacity, transform, visibility;
+    transition-duration: 0.15s;
+    z-index: 20;
+}
+.kp-nav__links > li:hover > .kp-nav__menu,
+.kp-nav__links > li:focus-within > .kp-nav__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.kp-nav__menu li { margin: 0; }
+.kp-nav__menu a {
+    display: block;
+    padding: 0.4rem 0.6rem;
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-radius: 2px;
+}
+.kp-nav__menu a:hover { background: var(--secondary); }
+.kp-nav__link--lang { font-family: var(--font-mono); font-size: 0.8rem; }
+.kp-nav__link--cta {
+    margin-left: auto;
+    color: var(--primary-fg);
+    background: var(--primary);
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--kp-radius);
+    font-weight: 600;
+}
+.kp-nav__link--cta:hover { background: var(--fg); }
+
+/* -------------------------------------------------- layout -------- */
+.kp-section { padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 2rem); }
+.kp-shell { max-width: 1180px; margin: 0 auto; }
+.kp-autogrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+}
+.kp-autogrid--tight { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+@media (max-width: 760px) {
+    .kp-autogrid,
+    .kp-autogrid--tight { grid-template-columns: minmax(0, 1fr); }
+}
+.kp-stack { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
+.kp-row { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; }
+
+/* -------------------------------------------------- hero ---------- */
+[data-kp-surface="hero"] { position: relative; }
+.kp-side-note {
+    position: absolute;
+    left: 0.4rem;
+    top: 2rem;
+    bottom: 2rem;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--muted-fg);
+    border-left: 1px solid var(--border);
+    padding-left: 0.4rem;
+    display: none;
+}
+@media (min-width: 900px) { .kp-side-note { display: block; } }
+[data-kp-hero-grid] { padding-left: 0; }
+@media (min-width: 900px) { [data-kp-hero-grid] { padding-left: 1.75rem; } }
+
+.kp-laurels {
+    list-style: none;
+    margin: 0 0 0.25rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted-fg);
+}
+.kp-laurels li { display: flex; gap: 0.35em; align-items: baseline; }
+.kp-laurels b { color: var(--fg); font-family: var(--font-mono); font-weight: 600; }
+.kp-laurels li::before { content: "⌐"; color: var(--border-strong); }
+
+.microlabel {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+}
+
+.kp-headline-wrap { position: relative; display: inline-block; padding: 0.35em 0.1em; }
+.kp-headline-frame {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+}
+.kp-headline-frame rect {
+    fill: none;
+    stroke: var(--border-strong);
+    stroke-width: 1.25;
+    stroke-dasharray: 480;
+    stroke-dashoffset: 0; /* rest state: fully drawn already */
+}
+.kp-headline-frame circle {
+    fill: var(--bg);
+    stroke: var(--primary);
+    stroke-width: 1.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(1); /* rest state: already visible */
+}
+h1[data-kp-reveal="headline"] {
+    font-size: clamp(1.9rem, 4.4vw, 3rem);
+    max-width: 16ch;
+    opacity: 1;
+    transform: none;
+}
+.kp-lede {
+    max-width: 46ch;
+    color: var(--muted-fg);
+    font-size: 1.02rem;
+}
+.kp-lede mark {
+    background-color: rgba(81, 210, 236, 0.28);
+    background-image: linear-gradient(rgba(81, 210, 236, 0.28), rgba(81, 210, 236, 0.28));
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: var(--fg);
+    padding: 0 0.15em;
+    border-radius: 2px;
+}
+
+/* -------------------------------------------------- buttons ------- */
+.kp-button {
+    font: inherit;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--kp-radius);
+    border: 1px solid var(--border-strong);
+    background: var(--secondary);
+    color: var(--secondary-fg);
+    cursor: pointer;
+    transition-property: background, color, border-color, transform;
+    transition-duration: 0.15s;
+}
+.kp-button:hover { border-color: var(--primary); color: var(--fg); }
+.kp-button--primary { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+.kp-button--primary:hover { background: var(--fg); border-color: var(--fg); }
+.kp-button--mirror {
+    clip-path: polygon(var(--kp-chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-chamfer));
+}
+.kp-button--ghost { background: transparent; color: var(--muted-fg); border-color: var(--border); }
+.kp-button--ghost:hover { color: var(--fg); border-color: var(--border-strong); }
+.kp-button--destructive { background: var(--destructive); color: var(--destructive-fg); border-color: var(--destructive); }
+.kp-button--destructive:hover { background: #f3897f; }
+
+.kp-platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted-fg);
+    letter-spacing: 0.04em;
+}
+.kp-platforms span::before { content: "▪ "; color: var(--border-strong); }
+
+/* -------------------------------------------------- spec sheet ---- */
+.kp-spec {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius);
+    clip-path: polygon(var(--kp-chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-chamfer));
+    padding: 1.25rem 1.35rem;
+    min-width: 0;
+}
+.kp-spec dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.55rem 0.85rem; }
+.kp-spec dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted-fg);
+    align-self: center;
+}
+.kp-spec dd {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--fg);
+    min-width: 0;
+    word-break: break-word;
+}
+.kp-spec__swatch {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 2px;
+    border: 1px solid var(--border-strong);
+    flex: none;
+    display: inline-block;
+}
+.kp-spec__font {
+    font-family: var(--kp-spec-font, var(--font-body));
+    font-size: 1rem;
+    color: var(--fg);
+}
+
+/* ------------------------------------------- cyanotype diagram ---- */
+.kp-diagram { position: relative; margin-top: 0.5rem; max-width: 220px; }
+.kp-diagram svg { display: block; width: 100%; height: auto; }
+.kp-diagram::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--primary);
+    mix-blend-mode: color;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* -------------------------------------------------- dividers ------ */
+[data-kp-divider],
+[data-kp-divider="alt"] {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted-fg);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+}
+[data-kp-divider]::before,
+[data-kp-divider]::after,
+[data-kp-divider="alt"]::before,
+[data-kp-divider="alt"]::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-image: linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px);
+    background-size: 12px 1px;
+}
+[data-kp-divider="alt"]::before,
+[data-kp-divider="alt"]::after { background-image: none; background-color: var(--border); height: 1px; }
+
+/* -------------------------------------------------- app / form ---- */
+.kp-form {
+    background: transparent;
+}
+.kp-field { display: flex; flex-direction: column; gap: 0.3rem; }
+.kp-field__label { font-size: 0.85rem; color: var(--fg); display: flex; gap: 0.4em; align-items: baseline; }
+.kp-field__required { font-size: 0.68rem; color: var(--accent); font-family: var(--font-mono); }
+.kp-field__input {
+    font: inherit;
+    font-family: var(--font-body);
+    background: var(--card);
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    padding: 0.55rem 0.7rem;
+    width: 100%;
+    max-width: 100%;
+}
+.kp-field__input::placeholder { color: var(--muted-fg); }
+.kp-field__input--multiline { min-height: 5.5rem; resize: vertical; font-family: var(--font-mono); font-size: 0.85rem; }
+.kp-field__help { font-size: 0.75rem; color: var(--muted-fg); }
+.kp-field--check { flex-direction: row; align-items: flex-start; gap: 0.55rem; }
+.kp-field--check .kp-field__check { margin-top: 0.2rem; accent-color: var(--selected); width: 1rem; height: 1rem; flex: none; }
+.kp-field--check .kp-field__label { font-size: 0.8rem; color: var(--muted-fg); }
+
+.kp-rule-heading { position: relative; display: inline-block; padding-bottom: 0.35em; }
+.kp-rule-heading svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 6px; overflow: visible; }
+.kp-rule-heading svg line { stroke: var(--primary); stroke-width: 2; stroke-dasharray: 220; stroke-dashoffset: 0; }
+
+/* -------------------------------------------------- dossier ------- */
+.kp-card {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius);
+    clip-path: polygon(var(--kp-chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-chamfer));
+    padding: 1.35rem 1.5rem;
+    position: relative;
+    min-width: 0;
+}
+.kp-card__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; }
+.kp-card__title { margin: 0; font-size: 1.1rem; }
+.kp-stamp {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.25rem 0.5rem;
+    transform: rotate(-6deg);
+    white-space: nowrap;
+    flex: none;
+}
+.kp-redaction {
+    display: inline-block;
+    background: var(--border);
+    color: var(--border);
+    border-radius: 2px;
+    padding: 0 0.15em;
+    transform: scaleX(1);
+    transform-origin: left;
+    transition-property: background, color, transform;
+    transition-duration: 0.4s;
+}
+.kp-redaction.is-cleared { background: transparent; color: var(--fg); }
+.kp-redaction mark {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* -------------------------------------------------- confirm dialog  */
+.kp-dialog {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius);
+    background: var(--popover);
+    color: var(--fg);
+    padding: 1.5rem;
+    max-width: min(26rem, 92vw);
+    box-shadow: 0 20px 48px rgba(2, 8, 18, 0.6);
+}
+.kp-dialog::backdrop { background: rgba(4, 11, 22, 0.72); }
+.kp-dialog p { margin: 0 0 1rem; }
+.kp-dialog h2 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+
+/* -------------------------------------------------- footer --------- */
+.kp-footer { padding: 2.5rem clamp(1rem, 4vw, 2rem) 2rem; border-top: 1px solid var(--border); }
+.kp-footer h4 { margin: 0 0 0.5rem; font-size: 0.85rem; font-family: var(--font-mono); letter-spacing: 0.06em; }
+.kp-footer p { color: var(--muted-fg); font-size: 0.85rem; }
+.kp-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.kp-footer a { color: var(--muted-fg); text-decoration: none; font-size: 0.85rem; }
+.kp-footer a:hover { color: var(--fg); }
+.kp-footer .microlabel { margin-top: 1.5rem; color: var(--muted-fg); }
+
+/* -------------------------------------------------- arrival (5) ---- */
+.kp-arrive .kp-headline-frame rect { stroke-dashoffset: 480; animation: kp-frame-draw 0.9s ease-out both; }
+.kp-arrive h1[data-kp-reveal="headline"] { opacity: 0; transform: translateY(6px); animation: kp-headline-fade 0.3s ease-out 0.6s both; }
+.kp-arrive .kp-headline-frame circle { transform: scale(0); animation: kp-anchor-pop 0.2s ease-out both; }
+.kp-arrive .kp-headline-frame circle:nth-of-type(1) { animation-delay: 0.7s; }
+.kp-arrive .kp-headline-frame circle:nth-of-type(2) { animation-delay: 0.75s; }
+.kp-arrive .kp-headline-frame circle:nth-of-type(3) { animation-delay: 0.8s; }
+.kp-arrive .kp-headline-frame circle:nth-of-type(4) { animation-delay: 0.85s; }
+.kp-arrive .kp-lede mark:nth-of-type(1) { background-size: 0% 100%; animation: kp-mark-reveal 0.5s ease-out 1s both; }
+.kp-arrive .kp-lede mark:nth-of-type(2) { background-size: 0% 100%; animation: kp-mark-reveal 0.5s ease-out 1.2s both; }
+.kp-arrive .kp-rule-heading svg line { stroke-dashoffset: 220; animation: kp-rule-draw 0.6s ease-out both; }
+.kp-arrive #app-heading .kp-rule-heading svg line { animation-delay: 0.1s; }
+.kp-arrive #dossier-heading .kp-rule-heading svg line { animation-delay: 0.2s; }
+
+@keyframes kp-frame-draw { from { stroke-dashoffset: 480; } to { stroke-dashoffset: 0; } }
+@keyframes kp-headline-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes kp-anchor-pop { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes kp-mark-reveal { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
+@keyframes kp-rule-draw { from { stroke-dashoffset: 220; } to { stroke-dashoffset: 0; } }
+
+/* -------------------------------------------------- reduced motion  */
+@media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
+}
+
+/* -------------------------------------------------- 320px floor ---- */
+@media (max-width: 420px) {
+    .kp-nav__link--cta { margin-left: 0; }
+    .kp-laurels { font-size: 0.72rem; }
+    h1[data-kp-reveal="headline"] { max-width: 100%; }
+    .kp-diagram { display: none; }
+}
+</style>
+<div class="kp-blueprint-root">
+<a class="kp-skip-link" href="#kp-main">Skip to the content</a>
+<div class="kp-nav-wrap kp-guide-grid">
+    <nav class="kp-nav" aria-label="Main navigation">
+        <span class="kp-nav__brand">kp-themes / blueprint</span>
+        <ul class="kp-nav__links">
+            <li>
+                <a class="kp-nav__link" href="#sheets" aria-haspopup="true">Sheets</a>
+                <ul class="kp-nav__menu">
+                    <li><a href="#elevations">Elevations</a></li>
+                    <li><a href="#sections">Sections</a></li>
+                    <li><a href="#details">Details</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="kp-nav__link" href="#legend" aria-haspopup="true">Legend</a>
+                <ul class="kp-nav__menu">
+                    <li><a href="#line-weights">Line weights</a></li>
+                    <li><a href="#annotations">Annotations</a></li>
+                </ul>
+            </li>
+            <li><a class="kp-nav__link" href="#kp-app">Request</a></li>
+            <li>
+                <a class="kp-nav__link kp-nav__link--lang" href="#lang" aria-haspopup="true">EN</a>
+                <ul class="kp-nav__menu">
+                    <li><a href="#lang-nl">Nederlands</a></li>
+                    <li><a href="#lang-en">English</a></li>
+                </ul>
+            </li>
+            <li><a class="kp-nav__link kp-nav__link--cta" href="#kp-app">Request a set</a></li>
+        </ul>
+    </nav>
+</div>
+<main id="kp-main" tabindex="-1">
+    <section class="kp-section kp-guide-grid" data-kp-surface="hero">
+        <div class="kp-shell" data-kp-hero-grid style="position:relative;">
+            <p class="kp-side-note" aria-hidden="true">SHEET 07 · SCALE 1:1 · REV C · 0x1F</p>
+            <div class="kp-autogrid">
+                <div class="kp-stack">
+                    <ul class="kp-laurels" aria-label="What this demo is measured against">
+                        <li><b>Vercel's crosshair</b> grid intersections, not decoration</li>
+                        <li><b>94 tokens</b> one register, nothing hidden</li>
+                        <li><b>DI5 clear</b> nothing here loops or flickers</li>
+                    </ul>
+                    <p class="microlabel">SHEET 07 · BLUEPRINT · REV A</p>
+                    <div class="kp-headline-wrap">
+                        <svg class="kp-headline-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                            <rect x="2" y="6" width="96" height="88" rx="1" />
+                            <circle cx="2" cy="6" r="2.4" />
+                            <circle cx="98" cy="6" r="2.4" />
+                            <circle cx="98" cy="94" r="2.4" />
+                            <circle cx="2" cy="94" r="2.4" />
+                        </svg>
+                        <h1 class="kp-text-balance" data-kp-reveal="headline">Draw it before you build it.</h1>
+                    </div>
+                    <p class="kp-prose kp-lede">
+                        Cyan ink on Prussian blue, ruled like a drawing that hasn't been
+                        built yet. Nothing is rendered
+                        <mark>until it's dimensioned</mark>
+                        , and nothing ships
+                        <mark>without a boundary you can see</mark>
+                        .
+                    </p>
+                    <div class="kp-row">
+                        <button type="button" class="kp-button kp-button--primary kp-button--mirror">Open the drawing set</button>
+                        <button type="button" class="kp-button">Read the annotations</button>
+                        <button type="button" class="kp-button kp-button--ghost">View the sheet index</button>
+                    </div>
+                    <div class="kp-platforms" aria-label="Where it renders">
+                        <span>Chromium</span>
+                        <span>Firefox</span>
+                        <span>Framework-free</span>
+                        <span>React</span>
+                    </div>
+                </div>
+                <aside class="kp-spec" id="spec" aria-label="Palette and type">
+                    <dl>
+                        <dt>line</dt>
+                        <dd><i class="kp-spec__swatch" style="background:var(--primary);"></i> --primary #51d2ec</dd>
+                        <dt>annotation</dt>
+                        <dd><i class="kp-spec__swatch" style="background:var(--accent);"></i> --accent #f0a742</dd>
+                        <dt>alert</dt>
+                        <dd><i class="kp-spec__swatch" style="background:var(--destructive);"></i> --destructive #e25f5a</dd>
+                        <dt>boundary</dt>
+                        <dd><i class="kp-spec__swatch" style="background:var(--border-strong);"></i> --border-strong #64a4c4</dd>
+                        <dt>ground</dt>
+                        <dd><i class="kp-spec__swatch" style="background:var(--bg); border-color:var(--border-strong);"></i> --background #0b1b32</dd>
+                        <dt>display</dt>
+                        <dd><span class="kp-spec__font">Aa Bb Cc</span> Instrument Sans</dd>
+                        <dt>mono</dt>
+                        <dd><span class="kp-spec__font" style="--kp-spec-font: var(--font-mono);">Aa Bb Cc</span> Geist Mono</dd>
+                    </dl>
+                    <div class="kp-diagram" aria-hidden="true">
+                        <svg viewBox="0 0 200 140">
+                            <g fill="none" stroke="#dff2f6" stroke-width="1">
+                                <polygon points="100,10 180,52 180,110 100,150 20,110 20,52" />
+                                <line x1="100" y1="10" x2="100" y2="80" />
+                                <line x1="20" y1="52" x2="100" y2="80" />
+                                <line x1="180" y1="52" x2="100" y2="80" />
+                                <circle cx="100" cy="10" r="2" />
+                                <circle cx="180" cy="52" r="2" />
+                                <circle cx="20" cy="52" r="2" />
+                            </g>
+                        </svg>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <div data-kp-divider aria-hidden="true">FOLD — 1200mm</div>
+
+    <section class="kp-section" data-kp-surface="app" id="kp-app">
+        <div class="kp-shell kp-autogrid">
+            <div class="kp-stack">
+                <p class="microlabel">access.request_form</p>
+                <h2 id="app-heading" class="kp-rule-heading" data-kp-reveal="rule">
+                    Request a print
+                    <svg aria-hidden="true"><line x1="0" y1="3" x2="100%" y2="3" /></svg>
+                </h2>
+                <form class="kp-form kp-stack" data-kp-form novalidate id="kp-request-form">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="kp-dwg">Drawing number <span class="kp-field__required">required</span></label>
+                        <input id="kp-dwg" class="kp-field__input" type="text" name="dwg" placeholder="DWG-2031-A" autocomplete="off" aria-describedby="kp-dwg-help" required />
+                        <span class="kp-field__help" id="kp-dwg-help">The reference this print is filed under.</span>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="kp-contact">Contact <span class="kp-field__required">required</span></label>
+                        <input id="kp-contact" class="kp-field__input" type="email" name="contact" placeholder="drafting@studio.blue" autocomplete="email" aria-describedby="kp-contact-help" required />
+                        <span class="kp-field__help" id="kp-contact-help">We answer within one revision cycle.</span>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="kp-size">Sheet size</label>
+                        <select class="kp-field__input" id="kp-size" name="size">
+                            <option>A4</option>
+                            <option>A3</option>
+                            <option>A1</option>
+                            <option>Custom</option>
+                        </select>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="kp-notes">Notes</label>
+                        <textarea class="kp-field__input kp-field__input--multiline" id="kp-notes" name="notes" placeholder="Annotations go here, one line per revision."></textarea>
+                    </div>
+                    <div class="kp-field kp-field--check">
+                        <input class="kp-field__check" id="kp-terms" name="terms" type="checkbox" />
+                        <label class="kp-field__label" for="kp-terms">I understand this theme ships no theme picker of its own.</label>
+                    </div>
+                    <div class="kp-row">
+                        <button type="submit" class="kp-button kp-button--primary">Submit for review</button>
+                        <button type="button" id="kp-wipe-btn" class="kp-button kp-button--destructive kp-button--mirror" data-kp-destructive data-kp-confirm="Wipe the form">Wipe form</button>
+                    </div>
+                </form>
+            </div>
+            <div class="kp-stack" id="dossier">
+                <p class="microlabel">dossier.blueprint-07</p>
+                <h2 id="dossier-heading" class="kp-rule-heading" data-kp-reveal="rule">
+                    The sheet, on file
+                    <svg aria-hidden="true"><line x1="0" y1="3" x2="100%" y2="3" /></svg>
+                </h2>
+                <div class="kp-card" data-slot="card" data-kp-reveal="emphasis" data-kp-label="Approved">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title">Blueprint</h3>
+                        <span class="kp-stamp">APPROVED FOR CONSTRUCTION</span>
+                    </div>
+                    <div class="kp-card__body">
+                        <p class="microlabel">FILE 07 · STATUS: DRAFT · CLEARANCE: KENNY</p>
+                        <p>
+                            The seventh theme lifted for 5.0.0. Where cyberpunk is
+                            <span class="kp-redaction" data-redaction><mark>a dark blue theme that glows</mark></span>,
+                            this one is
+                            <span class="kp-redaction" data-redaction><mark>a dark blue theme that measures</mark></span>.
+                        </p>
+                        <p>
+                            Open the file to clear the redactions:
+                            <span class="kp-redaction" data-redaction><mark>the third line is the one Kenny asked for</mark></span>.
+                            They lift one after another, on request — not all at once.
+                        </p>
+                        <div class="kp-row">
+                            <button type="button" id="kp-reveal-trigger" class="kp-button kp-button--primary" data-kp-reveal-trigger>Lift the redactions</button>
+                            <button type="button" id="kp-dossier-close" class="kp-button kp-button--ghost" hidden>Close file</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div data-kp-divider="alt" aria-hidden="true">— — — — — — — — — —</div>
+
+    <footer class="kp-footer">
+        <div class="kp-autogrid kp-autogrid--tight">
+            <div>
+                <h4>kp-themes</h4>
+                <p>Twenty-five themes, three registers, one promise: a released theme never changes.</p>
+            </div>
+            <div>
+                <h4>Legend</h4>
+                <ul>
+                    <li><a href="#line-weights">Line weights</a></li>
+                    <li><a href="#annotations">Annotations</a></li>
+                    <li><a href="#tokens">94 tokens</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Channels</h4>
+                <ul>
+                    <li><a href="#framework-free">Framework-free</a></li>
+                    <li><a href="#react">React</a></li>
+                    <li><a href="#home-assistant">Home Assistant</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="microlabel">/// SHEET 07 · DRAWN FROM TOKENS · NO PHOTOGRAPHS WERE TAKEN</p>
+    </footer>
+</main>
+
+<dialog class="kp-dialog" id="kp-wipe-dialog" aria-labelledby="kp-wipe-title">
+    <h2 id="kp-wipe-title">Wipe the form?</h2>
+    <p>Every field on the request print clears. This cannot be undone.</p>
+    <div class="kp-row">
+        <button type="button" id="kp-wipe-cancel" class="kp-button kp-button--primary">Cancel</button>
+        <button type="button" id="kp-wipe-confirm" class="kp-button kp-button--destructive">Confirm</button>
+    </div>
+</dialog>
+</div>
+<script>
+(function () {
+    "use strict";
+
+    /* Arrival gate: add .kp-arrive only when the OS is NOT asking for
+       reduced motion. Never toggled later — the arrival plays once or
+       not at all, per (5) in the header comment. */
+    try {
+        var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduce) document.documentElement.classList.add("kp-arrive");
+    } catch (e) {}
+
+    function on(id, evt, fn) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener(evt, fn);
+    }
+
+    /* Dossier redactions: clear on trigger, unhide the close button;
+       close re-masks and re-hides itself. */
+    on("kp-reveal-trigger", "click", function () {
+        document.querySelectorAll("[data-redaction]").forEach(function (el) {
+            el.classList.add("is-cleared");
+        });
+        var closeBtn = document.getElementById("kp-dossier-close");
+        if (closeBtn) closeBtn.hidden = false;
+    });
+    on("kp-dossier-close", "click", function () {
+        document.querySelectorAll("[data-redaction]").forEach(function (el) {
+            el.classList.remove("is-cleared");
+        });
+        var closeBtn = document.getElementById("kp-dossier-close");
+        if (closeBtn) closeBtn.hidden = true;
+    });
+
+    /* Wipe confirmation: a real <dialog>, not a button that relabels
+       itself (Kenny, 2026-09-08). Cancel is the emphasised default per
+       DI10's companion — the destructive action is never the
+       emphasised default in a dialog. */
+    var dialog = document.getElementById("kp-wipe-dialog");
+    var form = document.getElementById("kp-request-form");
+    on("kp-wipe-btn", "click", function () {
+        if (dialog && typeof dialog.showModal === "function") {
+            dialog.showModal();
+            var cancel = document.getElementById("kp-wipe-cancel");
+            if (cancel) cancel.focus();
+        }
+    });
+    on("kp-wipe-cancel", "click", function () {
+        if (dialog) dialog.close();
+    });
+    on("kp-wipe-confirm", "click", function () {
+        if (form) form.reset();
+        if (dialog) dialog.close();
+    });
+    /* Escape closing the dialog is native <dialog> behaviour — no
+       extra listener needed, and none is added, so nothing here can
+       accidentally prevent it. */
+})();
+</script>
+
+</body></html>
