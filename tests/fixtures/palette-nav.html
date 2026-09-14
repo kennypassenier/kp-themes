@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The command palette as navigation</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <!-- Both channels, one behaviour [AR7, rule 7g, scope-48]. The
+             framework-free half is written out: a trigger in the bar's
+             `.kp-nav__search` slot and a palette whose first two options are
+             links. The React half renders the same through NavBar's `search`
+             slot, PaletteTrigger and CommandPalette. `?bare` leaves the
+             framework-free half unattached, which is the page a reader sees
+             before (or without) the module. -->
+        <div id="free">
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <ul class="kp-nav__links">
+                        <li><a class="kp-nav__link" href="#top">Home</a></li>
+                    </ul>
+                    <div class="kp-nav__search">
+                        <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="free-palette" data-test="free-trigger">
+                            Search <kbd class="kp-palette__keys" data-kp-palette-keys data-test="free-keys"></kbd>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+            <dialog class="kp-palette" id="free-palette" data-kp-palette aria-label="Go to" data-test="free-palette">
+                <input
+                    class="kp-palette__input"
+                    type="text"
+                    role="combobox"
+                    aria-label="Go to"
+                    aria-expanded="true"
+                    aria-controls="free-palette-list"
+                    autocomplete="off"
+                />
+                <ul class="kp-palette__list" id="free-palette-list" role="listbox" aria-label="Go to">
+                    <li role="presentation">
+                        <a class="kp-palette__option" role="option" data-kp-option data-value="reports" href="#reports">Reports</a>
+                    </li>
+                    <li role="presentation">
+                        <a class="kp-palette__option" role="option" data-kp-option data-value="settings" href="#settings">Settings</a>
+                    </li>
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="theme">Change theme</li>
+                </ul>
+                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+            </dialog>
+        </div>
+
+        <div id="react"></div>
+
+        <script type="module">
+            import { attachPalettes } from '/js/palette.js';
+            window.runs = { free: [], react: [] };
+            document.getElementById('free').addEventListener('kp-palette-run', (event) => window.runs.free.push(event.detail.value));
+            if (!new URLSearchParams(location.search).has('bare')) attachPalettes(document.getElementById('free'));
+        </script>
+        <script type="module" src="/tests/fixtures/.build/react-palette-nav.js"></script>
+    </body>
+</html>

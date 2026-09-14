@@ -47,6 +47,14 @@ export type Strings = {
     commandPlaceholder: string;
     commandsLabel: string;
     shortcutsLabel: string;
+    /**
+     * The visible word on the command palette's trigger in the bar [scope-48]
+     */
+    paletteTrigger: string;
+    /**
+     * The hotkey as that trigger prints it: ⌘K on a Mac, Ctrl K elsewhere [scope-48]
+     */
+    paletteHotkey: (key: string, mac: boolean) => string;
     tableSearch: string;
     tableSearchLabel: string;
     tableSelectAll: string;
@@ -401,6 +409,8 @@ export type Strings = {
  * @property {string} commandPlaceholder
  * @property {string} commandsLabel
  * @property {string} shortcutsLabel
+ * @property {string} paletteTrigger  The visible word on the command palette's trigger in the bar [scope-48]
+ * @property {(key: string, mac: boolean) => string} paletteHotkey  The hotkey as that trigger prints it: ⌘K on a Mac, Ctrl K elsewhere [scope-48]
  * @property {string} tableSearch
  * @property {string} tableSearchLabel
  * @property {string} tableSelectAll

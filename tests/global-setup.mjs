@@ -24,6 +24,7 @@ export default async function globalSetup() {
         'react-switch',
         'react-select',
         'react-held-60',
+        'react-palette-nav',
     ]) {
         await build({
             entryPoints: [new URL(`fixtures/${name}.jsx`, import.meta.url).pathname],

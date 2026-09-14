@@ -390,6 +390,64 @@ function shell({ links = LINKS, navChildren = [] }, ...blocks) {
     ];
 }
 
+/**
+ * The bar's search slot with the command palette behind it [scope-48]: the
+ * trigger a hotkey alone would keep secret, and a palette whose commands
+ * are the pages this example links to — plain anchors until js/palette.js
+ * attaches, followed on Enter or a click once it has.
+ *
+ * @param {string} id the palette's id, unique per page
+ * @returns {Child}
+ */
+function searchSlot(id) {
+    const places = [
+        { value: 'overview', href: '#overview', label: 'Overview' },
+        { value: 'invoices', href: '#invoices', label: 'Invoices' },
+        { value: 'reports', href: '#reports', label: 'Reports' },
+        { value: 'settings', href: '#settings', label: 'Settings' },
+    ];
+    return el(
+        'div',
+        { class: 'kp-nav__search' },
+        el(
+            'button',
+            { type: 'button', class: 'kp-nav__search-trigger', 'data-kp-palette-open': id },
+            s.paletteTrigger,
+            el('kbd', { class: 'kp-palette__keys', 'data-kp-palette-keys': '' }),
+        ),
+        el(
+            'dialog',
+            { class: 'kp-palette', id, 'data-kp-palette': '', 'aria-label': 'Go to' },
+            el('input', {
+                class: 'kp-palette__input',
+                type: 'text',
+                role: 'combobox',
+                'aria-label': 'Go to',
+                'aria-expanded': 'true',
+                'aria-controls': `${id}-list`,
+                autocomplete: 'off',
+                placeholder: 'Where to?',
+            }),
+            el(
+                'ul',
+                { class: 'kp-palette__list', id: `${id}-list`, role: 'listbox', 'aria-label': 'Go to' },
+                places.map((place) =>
+                    el(
+                        'li',
+                        { role: 'presentation' },
+                        el(
+                            'a',
+                            { class: 'kp-palette__option', role: 'option', 'data-kp-option': '', 'data-value': place.value, href: place.href },
+                            place.label,
+                        ),
+                    ),
+                ),
+            ),
+            el('p', { class: 'kp-palette__status', role: 'status', 'aria-live': 'polite' }),
+        ),
+    );
+}
+
 /** A 70-character value with no place to break — the chassis-rs shape. */
 const LONG_VALUE = 'f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7e2504a71c6';
 
@@ -820,9 +878,9 @@ export const EXAMPLES = [
         id: 'list-with-form',
         title: 'List with a filter form',
         note: 'The two shapes the chassis-rs report named: two fields with a button on one row, and a table cell holding a 70-character value.',
-        probes: ['[data-example="filter-row"]', '[data-example="long-cell"]', '.kp-table-wrap'],
+        probes: ['[data-example="filter-row"]', '[data-example="long-cell"]', '.kp-table-wrap', '.kp-nav__search-trigger'],
         body: shell(
-            {},
+            { navChildren: [searchSlot('invoices-palette')] },
             el('h1', {}, 'Invoices'),
             el(
                 'form',
@@ -867,9 +925,9 @@ export const EXAMPLES = [
         id: 'settings',
         title: 'Settings',
         note: 'A side column of sections beside stacked cards, and a destructive action that carries its way back [DI10].',
-        probes: ['.kp-sidebar__aside', '[data-example="danger"]', '[data-kp-confirm]'],
+        probes: ['.kp-sidebar__aside', '[data-example="danger"]', '[data-kp-confirm]', '.kp-nav__search-trigger'],
         body: shell(
-            {},
+            { navChildren: [searchSlot('settings-palette')] },
             el('h1', {}, 'Settings'),
             el(
                 'div',

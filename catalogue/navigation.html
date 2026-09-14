@@ -19,14 +19,16 @@
             <p class="cat-intro">
                 Every way the package takes a reader somewhere else: the bar <code>.kp-nav</code> in its <code>.kp-nav-wrap</code> with a dropdown
                 <code>.kp-nav__menu</code>, <code>.kp-breadcrumb</code>, <code>.kp-pagination</code>, <code>.kp-tabs</code>, the side navigation
-                <code>.kp-sidenav</code> in its three shapes, and the back-to-top control <code>.kp-to-top</code>. Whatever opens is shown open, and
-                the two extremes a bar meets in real life are here too: fourteen items, and one label sixty characters long.
+                <code>.kp-sidenav</code> in its three shapes, the command palette's trigger <code>.kp-nav__search</code>, and the back-to-top control
+                <code>.kp-to-top</code>. Whatever opens is shown open, and the two extremes a bar meets in real life are here too: fourteen items, and
+                one label sixty characters long.
             </p>
             <ul class="cat-toc">
                 <li><a href="#bar">Bar</a></li>
                 <li><a href="#dropdown">Dropdown</a></li>
                 <li><a href="#bar-collapsed">Collapsed bar</a></li>
                 <li><a href="#bar-long">Fourteen items</a></li>
+                <li><a href="#bar-search">Search in the bar</a></li>
                 <li><a href="#breadcrumb">Breadcrumb</a></li>
                 <li><a href="#pagination">Pagination</a></li>
                 <li><a href="#tabs">Tabs</a></li>
@@ -228,6 +230,84 @@
                             </nav>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="bar-search">
+                <h2>Search in the bar</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the command palette's trigger sits in <code>.kp-nav__search</code> at the bar's far end, pushed right by the slot
+                    itself, and reads as a quiet search box: the word <b>Search</b> in the muted ink with the key hint <b>Ctrl K</b> (<b>⌘K</b> on a
+                    Mac) at its end, a thin boundary in the theme's strong border and the theme's radius, no ground of its own. It must be quieter
+                    than the bar's links, never a loud button, and pointing at it takes the word to the full ink. In the narrow pane the bar collapses
+                    and the trigger stays beside the toggle on the brand's row without pushing the pane wider. Press either trigger, or Ctrl+K: the
+                    palette opens with the focus in its input; type "tabs" and press Enter — the page must jump to <b>Tabs</b> and the palette close.
+                    Open it again and press Escape: the focus must return to the trigger you pressed, with its focus ring. Choosing
+                    <b>Breadcrumb</b> with the mouse jumps there the same way.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Site operations, with search">
+                            <a class="kp-nav__brand" href="#bar-search">Pump house 4</a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#bar-search">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#bar-search" aria-current="page">Incidents</a></li>
+                                <li><a class="kp-nav__link" href="#bar-search">Readings</a></li>
+                            </ul>
+                            <div class="kp-nav__search">
+                                <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="nav-search-palette">
+                                    Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+                                </button>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Site operations, with search, narrow">
+                                <a class="kp-nav__brand" href="#bar-search">Pump house 4</a>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar-search">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-search" aria-current="page">Incidents</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-search">Readings</a></li>
+                                </ul>
+                                <div class="kp-nav__search">
+                                    <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="nav-search-palette">
+                                        Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+                                    </button>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <dialog class="kp-palette" id="nav-search-palette" data-kp-palette aria-label="Go to">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Go to"
+                            aria-expanded="true"
+                            aria-controls="nav-search-palette-list"
+                            autocomplete="off"
+                            placeholder="Where to?"
+                        />
+                        <ul class="kp-palette__list" id="nav-search-palette-list" role="listbox" aria-label="Go to">
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="bar" href="#bar">Bar</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="breadcrumb" href="#breadcrumb">Breadcrumb</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="tabs" href="#tabs">Tabs</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="sidenav" href="#sidenav-side"
+                                    >Side navigation</a
+                                >
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
                 </div>
             </section>
 

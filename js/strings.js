@@ -65,6 +65,8 @@
  * @property {string} commandPlaceholder
  * @property {string} commandsLabel
  * @property {string} shortcutsLabel
+ * @property {string} paletteTrigger  The visible word on the command palette's trigger in the bar [scope-48]
+ * @property {(key: string, mac: boolean) => string} paletteHotkey  The hotkey as that trigger prints it: ⌘K on a Mac, Ctrl K elsewhere [scope-48]
  * @property {string} tableSearch
  * @property {string} tableSearchLabel
  * @property {string} tableSelectAll
@@ -273,6 +275,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     commandPlaceholder: 'Type a command…',
     commandsLabel: 'Commands',
     shortcutsLabel: 'Keyboard shortcuts',
+    // The trigger in the bar [scope-48]: a hotkey alone is a secret, so the
+    // bar says the word and prints the key beside it, in the platform's
+    // own spelling — ⌘ is a Mac's modifier, and nowhere else's.
+    paletteTrigger: 'Search',
+    paletteHotkey: (key, mac) => (mac ? `⌘${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`),
     tableSearch: 'Search…',
     tableSearchLabel: 'Search the table',
     // "On this page", because that is what it does [gap-13]: the header box

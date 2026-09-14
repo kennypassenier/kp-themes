@@ -60,6 +60,10 @@ export type NavBarProps = {
      * What goes in that button. Empty draws three bars; this package ships type, not icons.
      */
     toggleIcon?: import('react').ReactNode;
+    /**
+     * The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
+     */
+    search?: import('react').ReactNode;
     classNames?: {
         brand?: string;
         list?: string;
@@ -69,6 +73,7 @@ export type NavBarProps = {
         menu?: string;
         menuLink?: string;
         toggle?: string;
+        search?: string;
     };
     strings?: Partial<import('../js/strings.js').Strings>;
     className?: string;

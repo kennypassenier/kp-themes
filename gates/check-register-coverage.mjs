@@ -85,6 +85,11 @@ export const HELPERS = {
  */
 export const REQUIRED_PARTS = {
     nav__menu: 'the dropdown: a theme that styles the bar and not the menu loses the reader the moment it opens (Kenny, 2026-09-08)',
+    // The command palette's trigger in the bar's end slot [scope-48]: a part
+    // of the nav root, so the root audit alone would let a register style
+    // the bar and leave its one control in the package's neutral voice.
+    nav__search:
+        'the palette trigger in the bar: the one control the bar holds besides its links, so it has to wear the theme the bar wears [scope-48]',
     // The `.kp-switch` root is required like every root, read from
     // css/components.css at run time; this is its track. A register can
     // answer the row with a knob and leave the part that changes when it

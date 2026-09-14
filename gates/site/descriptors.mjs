@@ -1716,6 +1716,7 @@ export const DESCRIPTORS = [
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
             { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
+            { name: '.kp-nav__search', what: 'The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.' },
             { name: 'data-kp-nav-menu-open', what: 'On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.' },
         ],
         accessibility: [
@@ -2174,7 +2175,7 @@ export const DESCRIPTORS = [
         title: 'Command palette',
         group: 'Navigation',
         classes: ['kp-palette'],
-        exports: ['CommandPalette'],
+        exports: ['CommandPalette', 'PaletteTrigger'],
         aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run'],
         intro: 'A dialog with a filter box and a list of commands, opened by a key from anywhere on the page. The commands are markup a server wrote, not an array this module owns, so they are there before any script runs.',
         whenToUse:
@@ -2202,6 +2203,31 @@ export const DESCRIPTORS = [
 </dialog>
 `,
             },
+            {
+                title: 'Places to go, opened from the bar',
+                why: 'A hotkey alone is a secret, so the bar keeps a visible trigger in its `.kp-nav__search` slot: a `data-kp-palette-open` button the module marks as opening a dialog, whose empty key hint it fills with ⌘K or Ctrl K when the palette has a key. The commands are links: Enter and a click both follow them, `kp-palette-run` still fires first and can be cancelled by a router that navigates itself, and until the module attaches they are plain anchors that work on their own. The hotkey is off here, so the trigger prints no key.',
+                markup: `
+<div class="kp-nav-wrap">
+<nav class="kp-nav" aria-label="Main">
+<a class="kp-nav__brand" href="#command-palette">kp</a>
+<ul class="kp-nav__links">
+<li><a class="kp-nav__link" href="#command-palette" aria-current="page">Overview</a></li>
+</ul>
+<div class="kp-nav__search">
+<button type="button" class="kp-nav__search-trigger" data-kp-palette-open="doc-places">Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd></button>
+</div>
+</nav>
+</div>
+<dialog class="kp-palette" data-kp-palette data-kp-hotkey="none" id="doc-places" aria-label="Go to">
+<input class="kp-palette__input" type="text" role="combobox" aria-label="Go to" aria-expanded="true" aria-controls="doc-places-list" autocomplete="off" placeholder="Where to?" />
+<ul class="kp-palette__list" id="doc-places-list" role="listbox" aria-label="Go to">
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="overview" href="#command-palette">Overview</a></li>
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="nav-bar" href="nav-bar.html">Navigation bar</a></li>
+</ul>
+<p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+`,
+            },
         ],
         variants: [
             { name: '.kp-palette', what: 'The dialog: near the top rather than in the middle, so a list that grows downwards does not push its own input off centre.' },
@@ -2211,6 +2237,7 @@ export const DESCRIPTORS = [
             { name: '.kp-palette__description', what: 'A second line on a command, for one whose name is not enough.' },
             { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
+            { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
             { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
         ],
         accessibility: [
@@ -2219,6 +2246,7 @@ export const DESCRIPTORS = [
             'Built in — the number of matches is announced after typing.',
             'Yours — offer every command somewhere else as well. A palette is a shortcut, not an interface.',
             'Yours — write the commands as markup, with a value each, and name the groups.',
+            'Built in — the trigger in the bar says it opens a dialog and which key does the same, and Escape gives focus back to it.',
             'Yours — pick a key that is not already the browser’s, and say what it is somewhere visible.',
         ],
     },

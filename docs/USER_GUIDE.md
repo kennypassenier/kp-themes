@@ -917,6 +917,70 @@ the button. That channel wires its own button and marks it
 `data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
 `ownedBy: ''` if you want the module over a React nav anyway.
 
+### The command palette as navigation [scope-48]
+
+A palette that only opens on a key is a secret, so the bar keeps a
+visible door to it in a slot at its far end, and the palette's commands
+can be the places themselves:
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <ul class="kp-nav__links">…</ul>
+        <div class="kp-nav__search">
+            <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="places">
+                Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+            </button>
+        </div>
+    </nav>
+</div>
+
+<dialog class="kp-palette" id="places" data-kp-palette aria-label="Go to">
+    <input class="kp-palette__input" type="text" role="combobox" aria-label="Go to"
+           aria-expanded="true" aria-controls="places-list" autocomplete="off" />
+    <ul class="kp-palette__list" id="places-list" role="listbox" aria-label="Go to">
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option
+               data-value="reports" href="/reports">Reports</a>
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+```
+
+`js/auto.js` (through `attachPalettes`) does the rest. The trigger is an
+ordinary `data-kp-palette-open` opener: pressing it opens the palette with
+the focus in its input, and Escape gives the focus back to the trigger.
+What the markup leaves out the module writes — `aria-haspopup="dialog"`,
+and `aria-keyshortcuts` when the palette has a key — and it fills the empty
+`<kbd data-kp-palette-keys>` with the key in the platform's spelling, ⌘K
+on a Mac and Ctrl K elsewhere (the dictionary's `paletteHotkey`; the
+visible word is yours, or `paletteTrigger` in React).
+
+An option that is an `<a href>` is followed: on a click by the browser, on
+Enter by a click the module makes, so `target` and a router's own click
+handler behave as they would anywhere. `kp-palette-run` still fires first,
+with `{ value, option, href }`, and it is cancelable: a single-page
+application calls `preventDefault()` on it and routes itself. The module
+takes the link out of the Tab order while it is attached, because the
+highlight is virtual focus and the focus belongs in the input. Before the
+module attaches, and on a page without JavaScript, the list is a list of
+plain links that work on their own.
+
+`.kp-nav__search` pushes itself to the bar's end, and every register
+answers it. The one knob is `--kp-nav-search-min` (10rem), the trigger's
+minimum width, never more than the bar itself.
+
+In React, NavBar's `search` prop fills the slot and `PaletteTrigger` is the
+button; a command with an `href` is a link, and `linkComponent` hands its
+rendering to your router the way NavBar's does:
+
+```jsx
+<NavBar brand="Your app" links={links} search={<PaletteTrigger palette="places" />} />
+<CommandPalette id="places" commands={[{ value: 'reports', label: 'Reports', href: '/reports' }]} />
+```
+
 ## The page shell [TH36]
 
 ```html

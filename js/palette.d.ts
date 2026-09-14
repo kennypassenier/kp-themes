@@ -1,6 +1,10 @@
 /** The attribute that opens a palette or a sheet on a press [gap-12]. */
 export declare const OPENER = "[data-kp-palette-open]";
-/** Fired on the palette when a command is chosen. A contract value [TH26]: `{ value, option }`. */
+/** An empty `<kbd>` inside an opener that the module fills with the hotkey [scope-48]. */
+export declare const KEYS_SLOT = "[data-kp-palette-keys]";
+/** Whether this is a Mac, where the modifier is ⌘ rather than Ctrl. */
+export declare function isMac(): boolean;
+/** Fired on the palette when a command is chosen, cancelable. A contract value [TH26]: `{ value, option, href }`. */
 export declare const RUN_EVENT = "kp-palette-run";
 /** Fired on the palette or the sheet when it opens or closes: `{ open }`. */
 export declare const OPEN_EVENT = "kp-palette-open";

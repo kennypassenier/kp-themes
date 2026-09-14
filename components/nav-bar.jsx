@@ -49,7 +49,8 @@ import { skipTo as jumpTo } from '../js/components.js';
  * @property {string} [label]       The nav's accessible name. Default: the dictionary's.
  * @property {boolean} [collapsible]  Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.
  * @property {import('react').ReactNode} [toggleIcon]  What goes in that button. Empty draws three bars; this package ships type, not icons.
- * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string }} [classNames]
+ * @property {import('react').ReactNode} [search]  The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
+ * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string, search?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
  * @property {import('react').ReactNode} [children]  Trailing slot.
@@ -77,6 +78,7 @@ function NavBarInner(
         classNames = {},
         collapsible = false,
         toggleIcon,
+        search,
         strings,
         className = '',
         children,
@@ -198,6 +200,7 @@ function NavBarInner(
                             );
                         })}
                     </List>
+                    {search !== undefined && <div className={`kp-nav__search ${classNames.search ?? ''}`.trim()}>{search}</div>}
                     {children}
                 </nav>
             </Wrap>

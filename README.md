@@ -488,8 +488,8 @@ same treatment.
 
 ## Links inside a router
 
-`NavBar`, `Breadcrumb` and `Pagination` render `<a href>` by default,
-which reloads the page. Inside React Router or Next that throws the state
+`NavBar`, `Breadcrumb`, `Pagination` and a `CommandPalette` command with
+an `href` render `<a href>` by default, which reloads the page. Inside React Router or Next that throws the state
 away, so hand in your own:
 
 ```jsx

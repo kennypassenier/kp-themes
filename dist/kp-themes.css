@@ -5611,6 +5611,48 @@
         }
     }
 
+    /* The command palette's trigger in the bar [scope-48]. A hotkey alone is
+ * a secret, so the bar keeps a visible door to the palette at its end:
+ * a slot that pushes itself to the far edge, holding a button that reads
+ * as a quiet search box — a word in the muted ink and the key beside it —
+ * rather than as one more loud action. The button is an ordinary
+ * `data-kp-palette-open` opener; js/palette.js fills its empty
+ * `<kbd data-kp-palette-keys>` with ⌘K or Ctrl K. Every register answers
+ * the slot (gates/check-register-coverage.mjs, REQUIRED_PARTS). */
+    .kp-nav__search {
+        display: flex;
+        align-items: center;
+        margin-inline-start: auto;
+    }
+
+    .kp-nav__search-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        /* Never wider than the bar it sits in: a narrow bar gives the
+     * row to the brand and the toggle rather than to an empty box. */
+        min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
+        padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    /* The key sits at the button's far end, the way it sits at a palette
+ * row's end. Empty until the module fills it, and then out of the way. */
+    .kp-nav__search-trigger .kp-palette__keys:empty {
+        display: none;
+    }
+
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */
@@ -7253,6 +7295,13 @@
         padding: 0.5rem 0.75rem;
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         cursor: pointer;
+    }
+
+    /* A command that is a link [scope-48] looks like every other command:
+ * the row is the affordance, not an underline. */
+    a.kp-palette__option {
+        color: inherit;
+        text-decoration: none;
     }
 
     .kp-palette__option.is-active {
@@ -10457,6 +10506,26 @@
         color: var(--muted-foreground);
         text-align: start;
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -12397,6 +12466,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -14185,6 +14274,26 @@
     [data-theme='synthwave'] .kp-field__input[readonly] {
         border-style: dashed;
         background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -15981,6 +16090,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -17625,6 +17754,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -19221,6 +19370,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -20659,6 +20828,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -21929,6 +22118,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -23178,6 +23387,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -24373,6 +24602,26 @@
     [data-theme='forest'] .kp-field__input[readonly] {
         border-style: dashed;
         background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -25736,6 +25985,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -26648,6 +26917,26 @@
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -28066,6 +28355,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -29413,6 +29722,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -30742,6 +31071,26 @@
     [data-theme='nostromo'] .kp-field__input[readonly] {
         border-style: dashed;
         background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -32222,6 +32571,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -33183,6 +33552,26 @@
     [data-theme='formal'] .kp-button:hover:not(:disabled)::after,
     [data-theme='formal'] .kp-button:focus-visible::after {
         opacity: 1;
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -34498,6 +34887,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -35574,6 +35983,26 @@
         background: var(--destructive-active);
         border-color: var(--destructive-active);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -36623,6 +37052,26 @@
 
     [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 
@@ -37821,6 +38270,26 @@
         border-style: dashed;
         background-color: var(--muted);
     }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+    }
 }
 
 @layer kp.register {
@@ -38986,6 +39455,26 @@
     [data-theme='shade-dark'] .kp-field__input[readonly] {
         border-style: dashed;
         background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48] ──────────────────── */
+
+    /* The same answer in all twenty-two registers: the trigger sits on the
+       bar's own ground rather than a box of its own, in the muted ink, with
+       this theme's strong boundary and radius. What makes it this theme's
+       is the tokens those words resolve to, so it cannot out-shout the
+       bar's links in any of them. */
+    [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger {
+        border-color: var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    /* Pointed at, it takes the full ink: restated here because this layer
+       beats the hover of kp.components. */
+    [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--foreground);
     }
 }
 

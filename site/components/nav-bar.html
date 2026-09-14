@@ -216,7 +216,8 @@
                             <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The nav's accessible name. Default: the dictionary's.</td></tr>
                             <tr><td><code>collapsible</code></td><td><code>boolean</code></td><td>optional</td><td>Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.</td></tr>
                             <tr><td><code>toggleIcon</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What goes in that button. Empty draws three bars; this package ships type, not icons.</td></tr>
-                            <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; toggle?: string; }</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>search</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].</td></tr>
+                            <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; toggle?: string; search?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>Trailing slot.</td></tr>
@@ -236,9 +237,12 @@
                             <tr><td><code>--kp-nav-pad-block</code></td><td><code>0.625rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline-narrow</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-nav-search-min</code></td><td><code>10rem</code></td></tr>
                             <tr><td><code>--kp-nav-toggle-size</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-nav-wrap-min</code></td><td><code>auto</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-z-popover</code></td><td><code>20</code></td></tr>
                     </tbody></table></div>
@@ -260,6 +264,7 @@
                             <tr><td><code>.kp-nav__links</code></td><td>The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.</td></tr>
                             <tr><td><code>.kp-nav-wrap</code></td><td>The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.</td></tr>
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
+                            <tr><td><code>.kp-nav__search</code></td><td>The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.</td></tr>
                             <tr><td><code>data-kp-nav-menu-open</code></td><td>On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.</td></tr>
                     </tbody></table></div>
                 </section>

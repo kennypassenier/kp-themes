@@ -6,9 +6,12 @@ export type Command = {
     description?: string;
     icon?: import('react').ReactNode;
     disabled?: boolean;
+    href?: string;
+    target?: string;
+    rel?: string;
 };
 export type Matcher = (label: string, query: string, command: Command) => boolean;
-/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean }} Command */
+/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
 /** @typedef {(label: string, query: string, command: Command) => boolean} Matcher */
 /** @type {Record<string, Matcher>} */
 export declare const MATCHERS: Record<string, Matcher>;
@@ -51,6 +54,10 @@ export type CommandPaletteProps = {
         active: boolean;
     }) => import('react').ReactNode;
     emptyState?: import('react').ReactNode;
+    /**
+     * What renders a command with an `href`. Default: a plain `<a>`.
+     */
+    linkComponent?: import('react').ElementType;
     placeholder?: string;
     label?: string;
     strings?: Partial<import('../js/strings.js').Strings>;
@@ -65,6 +72,23 @@ export type CommandPaletteProps = {
     };
 };
 export declare const CommandPalette: import("react").ForwardRefExoticComponent<CommandPaletteProps & import("react").RefAttributes<HTMLDialogElement>>;
+export type PaletteTriggerProps = {
+    /**
+     * The palette's id; empty for the one that answers the key.
+     */
+    palette: string;
+    /**
+     * The letter it prints. Default 'k'; null prints none.
+     */
+    hotkey?: string | null;
+    /**
+     * Default: the dictionary's word.
+     */
+    label?: import('react').ReactNode;
+    strings?: Partial<import('../js/strings.js').Strings>;
+    className?: string;
+};
+export declare const PaletteTrigger: import("react").ForwardRefExoticComponent<PaletteTriggerProps & Omit<import("react").ButtonHTMLAttributes<HTMLButtonElement>, "children"> & import("react").RefAttributes<HTMLButtonElement>>;
 export type ShortcutSheetProps = {
     shortcuts: {
         keys: string;

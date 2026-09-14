@@ -27,6 +27,7 @@
                 <li><a href="#side-note">Side note</a></li>
                 <li><a href="#palette">Command palette</a></li>
                 <li><a href="#palette-empty">Palette with no match</a></li>
+                <li><a href="#palette-links">Palette of links</a></li>
                 <li><a href="#theme-menu">Theme menu</a></li>
                 <li><a href="#theme-menu-react">Theme menu, React shape</a></li>
                 <li><a href="#theme-buttons">Theme picker as buttons</a></li>
@@ -207,6 +208,52 @@
                             </li>
                         </ul>
                         <p class="kp-palette__status" role="status">No commands</p>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="palette-links">
+                <h2>Palette of links</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a palette whose commands are links (<code>&lt;a href&gt;</code> with the option's role), frozen with the second
+                    one highlighted. A link command must look exactly like any other command: the row's own ink, no underline, no link colour, the
+                    same padding and the same soft wash when highlighted — the row is the affordance, not an underline. The key hint still sits at the
+                    row's end. This one is frozen and does nothing; the live one, opened from the bar's trigger, is on the navigation page under
+                    <b>Search in the bar</b>, where Enter and a click follow the link.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 16rem">
+                    <dialog class="kp-palette" open aria-label="Go to, frozen">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Go to"
+                            aria-expanded="true"
+                            aria-controls="pg-pal-links-list"
+                            aria-activedescendant="pg-pal-links-readings"
+                            autocomplete="off"
+                            placeholder="Where to?"
+                        />
+                        <ul class="kp-palette__list" id="pg-pal-links-list" role="listbox" aria-label="Go to">
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Incidents</a>
+                            </li>
+                            <li role="presentation">
+                                <a
+                                    class="kp-palette__option is-active"
+                                    role="option"
+                                    aria-selected="true"
+                                    tabindex="-1"
+                                    id="pg-pal-links-readings"
+                                    href="#palette-links"
+                                    >Readings for line 2<kbd class="kp-palette__keys">G R</kbd></a
+                                >
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Rota</a>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status">3 commands</p>
                     </dialog>
                 </div>
             </section>

@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
+import { isMac } from '../js/palette.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -20,8 +21,15 @@ import { useControllable } from '../hooks/use-controllable.js';
 // the matcher is a choice; commands can be grouped; and the sheet's
 // heading reads the resolved label rather than the raw prop, which left
 // it empty whenever the default was wanted.
+//
+// Since scope-48: a command with an `href` is a link — Enter and a click
+// both follow it, `onRun` still hears about it first, and `linkComponent`
+// hands the rendering to a router the way NavBar's does. `PaletteTrigger`
+// is the button for the bar's `search` slot; it and any
+// `data-kp-palette-open` naming this palette's id open it, as they open the
+// framework-free one.
 
-/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean }} Command */
+/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
 /** @typedef {(label: string, query: string, command: Command) => boolean} Matcher */
 
 /** @type {Record<string, Matcher>} */
@@ -48,6 +56,7 @@ export const MATCHERS = {
  * @property {boolean} [loading]
  * @property {(command: Command, state: { active: boolean }) => import('react').ReactNode} [renderItem]
  * @property {import('react').ReactNode} [emptyState]
+ * @property {import('react').ElementType} [linkComponent]  What renders a command with an `href`. Default: a plain `<a>`.
  * @property {string} [placeholder]
  * @property {string} [label]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
@@ -77,6 +86,7 @@ function CommandPaletteInner(
         loading = false,
         renderItem,
         emptyState,
+        linkComponent: Link = 'a',
         placeholder,
         label,
         strings,
@@ -143,6 +153,27 @@ function CommandPaletteInner(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hotkey]);
 
+    // A trigger opens it without a line of script [gap-12, scope-48]: a
+    // `data-kp-palette-open` naming this dialog's id, or an empty one when
+    // this is the palette that answers the key.
+    useEffect(() => {
+        /** @param {MouseEvent} event */
+        const onOpener = (event) => {
+            const opener = event.target instanceof Element ? event.target.closest('[data-kp-palette-open]') : null;
+            const element = dialog.current;
+            if (opener === null || element === null) return;
+            const name = opener.getAttribute('data-kp-palette-open') ?? '';
+            if (name === '') {
+                const nominated = document.querySelector('[data-kp-palette][data-kp-primary]');
+                if ((nominated ?? document.querySelector('[data-kp-palette]')) !== element) return;
+            } else if (name !== element.id) return;
+            setOpen(true);
+        };
+        document.addEventListener('click', onOpener);
+        return () => document.removeEventListener('click', onOpener);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     /** @param {Command} command */
     const run = (command) => {
         if (command.disabled) return;
@@ -155,29 +186,41 @@ function CommandPaletteInner(
     const option = (command) => {
         index += 1;
         const i = index;
+        const props = {
+            className: `kp-palette__option ${i === active ? 'is-active' : ''} ${classNames.option ?? ''}`.trim(),
+            id: `${listId}-option-${i}`,
+            role: 'option',
+            'aria-selected': i === active,
+            'aria-disabled': command.disabled ? /** @type {const} */ ('true') : undefined,
+            'data-kp-option': '',
+            'data-value': command.value,
+            onMouseOver: () => setActive(i),
+            onClick: () => run(command),
+        };
+        const content = renderItem ? (
+            renderItem(command, { active: i === active })
+        ) : (
+            <>
+                {command.icon}
+                <span>{command.label}</span>
+                {command.description && <span className="kp-palette__description">{command.description}</span>}
+                {command.keys && <kbd className="kp-palette__keys">{command.keys}</kbd>}
+            </>
+        );
+        // A link is the option itself, inside a presentational item, so the
+        // listbox still holds options and the browser still follows the link
+        // [scope-48]. Pointed at, never tabbed to: focus stays in the input.
+        if (command.href !== undefined)
+            return (
+                <li role="presentation" key={command.value}>
+                    <Link {...props} href={command.href} target={command.target} rel={command.rel} tabIndex={-1}>
+                        {content}
+                    </Link>
+                </li>
+            );
         return (
-            <li
-                className={`kp-palette__option ${i === active ? 'is-active' : ''} ${classNames.option ?? ''}`.trim()}
-                id={`${listId}-option-${i}`}
-                key={command.value}
-                role="option"
-                aria-selected={i === active}
-                aria-disabled={command.disabled ? 'true' : undefined}
-                data-kp-option
-                data-value={command.value}
-                onMouseOver={() => setActive(i)}
-                onClick={() => run(command)}
-            >
-                {renderItem ? (
-                    renderItem(command, { active: i === active })
-                ) : (
-                    <>
-                        {command.icon}
-                        <span>{command.label}</span>
-                        {command.description && <span className="kp-palette__description">{command.description}</span>}
-                        {command.keys && <kbd className="kp-palette__keys">{command.keys}</kbd>}
-                    </>
-                )}
+            <li {...props} key={command.value}>
+                {content}
             </li>
         );
     };
@@ -232,7 +275,13 @@ function CommandPaletteInner(
                         const command = visible[active];
                         if (command !== undefined) {
                             event.preventDefault();
-                            run(command);
+                            // A link is clicked, so the browser — or the
+                            // router behind linkComponent — follows it, and
+                            // the click runs the command on its way.
+                            const link =
+                                command.href !== undefined && !command.disabled ? document.getElementById(`${listId}-option-${active}`) : null;
+                            if (link !== null) link.click();
+                            else run(command);
                         }
                     }
                 }}
@@ -261,6 +310,53 @@ function CommandPaletteInner(
     );
 }
 export const CommandPalette = forwardRef(CommandPaletteInner);
+
+/**
+ * The palette's trigger, for NavBar's `search` slot [scope-48]: a button
+ * that says it opens a dialog and prints the hotkey in the platform's own
+ * spelling. It opens the palette whose id it names — either channel's.
+ *
+ * @typedef {object} PaletteTriggerProps
+ * @property {string} palette            The palette's id; empty for the one that answers the key.
+ * @property {string | null} [hotkey]    The letter it prints. Default 'k'; null prints none.
+ * @property {import('react').ReactNode} [label]  Default: the dictionary's word.
+ * @property {Partial<import('../js/strings.js').Strings>} [strings]
+ * @property {string} [className]
+ */
+
+/**
+ * @param {PaletteTriggerProps & Omit<import('react').ButtonHTMLAttributes<HTMLButtonElement>, 'children'>} props
+ * @param {import('react').ForwardedRef<HTMLButtonElement>} ref
+ */
+function PaletteTriggerInner({ palette, hotkey = 'k', label, strings, className = '', ...rest }, ref) {
+    const s = useStrings(strings);
+    // Read after mounting, so a server render and the first client render
+    // agree; a Mac changes Ctrl to ⌘ one frame later.
+    const [mac, setMac] = useState(false);
+    useEffect(() => setMac(isMac()), []);
+    return (
+        <button
+            ref={ref}
+            type="button"
+            className={`kp-nav__search-trigger ${className}`.trim()}
+            data-kp-palette-open={palette}
+            aria-haspopup="dialog"
+            aria-keyshortcuts={hotkey === null ? undefined : `${mac ? 'Meta' : 'Control'}+${hotkey.toUpperCase()}`}
+            {...rest}
+        >
+            {label ?? s.paletteTrigger}
+            {hotkey !== null && (
+                <>
+                    {' '}
+                    <kbd className="kp-palette__keys" data-kp-palette-keys>
+                        {s.paletteHotkey(hotkey, mac)}
+                    </kbd>
+                </>
+            )}
+        </button>
+    );
+}
+export const PaletteTrigger = forwardRef(PaletteTriggerInner);
 
 /**
  * The shortcut sheet [TH49]. `?` opens it, unless someone is typing one.

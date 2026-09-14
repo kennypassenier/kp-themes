@@ -189,6 +189,11 @@ var DEFAULT_STRINGS = Object.freeze({
   commandPlaceholder: "Type a command\u2026",
   commandsLabel: "Commands",
   shortcutsLabel: "Keyboard shortcuts",
+  // The trigger in the bar [scope-48]: a hotkey alone is a secret, so the
+  // bar says the word and prints the key beside it, in the platform's
+  // own spelling — ⌘ is a Mac's modifier, and nowhere else's.
+  paletteTrigger: "Search",
+  paletteHotkey: (key, mac) => mac ? `\u2318${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`,
   tableSearch: "Search\u2026",
   tableSearchLabel: "Search the table",
   // "On this page", because that is what it does [gap-13]: the header box
@@ -1548,6 +1553,7 @@ function createListbox({
     index = -1;
     input.removeAttribute("aria-activedescendant");
     for (const option of options()) {
+      if (!option.hasAttribute("aria-selected")) stampedSelected.add(option);
       option.setAttribute("aria-selected", "false");
       option.classList.remove(activeClass);
     }
@@ -2283,11 +2289,13 @@ function attachSelects(root = document, options = {}) {
 // js/palette.js
 var palette_exports = {};
 __export(palette_exports, {
+  KEYS_SLOT: () => KEYS_SLOT,
   MATCHERS: () => MATCHERS2,
   OPENER: () => OPENER,
   OPEN_EVENT: () => OPEN_EVENT2,
   RUN_EVENT: () => RUN_EVENT,
   attachPalettes: () => attachPalettes,
+  isMac: () => isMac,
   palette: () => palette
 });
 var PALETTE = "[data-kp-palette]";
@@ -2302,6 +2310,15 @@ function openerFor(event, dialog, answersKey) {
   if (opener === null) return false;
   const name = opener.getAttribute("data-kp-palette-open") ?? "";
   return name === "" ? answersKey : name === dialog.id;
+}
+var KEYS_SLOT = "[data-kp-palette-keys]";
+function isMac() {
+  if (typeof navigator === "undefined") return false;
+  const platform = (
+    /** @type {any} */
+    navigator.userAgentData?.platform ?? navigator.platform ?? ""
+  );
+  return /mac|iphone|ipad/i.test(platform);
 }
 var RUN_EVENT = "kp-palette-run";
 var OPEN_EVENT2 = "kp-palette-open";
@@ -2400,16 +2417,40 @@ function attachPalettes(root = document, {
       if (visible > 0) listbox.highlight(0);
       if (status !== null) status.textContent = RESULTS_TEXT2(visible);
     };
+    let clicking = null;
+    const onClickStart = (event) => {
+      clicking = event;
+    };
+    const onClickEnd = () => {
+      clicking = null;
+    };
+    list.addEventListener("click", onClickStart, true);
     const listbox = createListbox({
       input,
       list,
       onChoose: (_, option) => {
+        const link = option instanceof HTMLAnchorElement && option.hasAttribute("href") ? option : null;
+        if (link !== null && clicking === null) {
+          link.click();
+          return;
+        }
         const value = option.dataset.value ?? (option.textContent ?? "").trim();
-        dialog.dispatchEvent(new CustomEvent(RUN_EVENT, { bubbles: true, detail: { value, option } }));
+        const run = new CustomEvent(RUN_EVENT, { bubbles: true, cancelable: true, detail: { value, option, href: link?.href ?? null } });
+        dialog.dispatchEvent(run);
+        if (run.defaultPrevented && link !== null) clicking?.preventDefault();
         if (closes) dialog.close();
       },
       onDismiss: () => dialog.close()
     });
+    list.addEventListener("click", onClickEnd);
+    const untabbed = [];
+    for (const element2 of list.querySelectorAll(`a${OPTION_SELECTOR}[href]:not([tabindex])`)) {
+      element2.setAttribute("tabindex", "-1");
+      untabbed.push(
+        /** @type {HTMLElement} */
+        element2
+      );
+    }
     const openWith = (query) => {
       if (dialog.open) return;
       if (query !== void 0) input.value = query;
@@ -2441,12 +2482,35 @@ function attachPalettes(root = document, {
       openWith();
     };
     document.addEventListener("click", onOpener);
+    const unstamp = [];
+    const mac = isMac();
+    for (const opener of document.querySelectorAll(OPENER)) {
+      const name = opener.getAttribute("data-kp-palette-open") ?? "";
+      if (name === "" ? !answers(PALETTE, dialog) : name !== dialog.id) continue;
+      const stamp = (attribute, value) => {
+        if (opener.hasAttribute(attribute)) return;
+        opener.setAttribute(attribute, value);
+        unstamp.push(() => opener.removeAttribute(attribute));
+      };
+      stamp("aria-haspopup", "dialog");
+      if (key === null) continue;
+      stamp("aria-keyshortcuts", `${mac ? "Meta" : "Control"}+${key.toUpperCase()}`);
+      for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
+        if ((slot.textContent ?? "").trim() !== "") continue;
+        slot.textContent = getStrings().paletteHotkey(key, mac);
+        unstamp.push(() => slot.textContent = "");
+      }
+    }
     filter();
     const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
     handles3.set(dialog, handle);
     created.push(handle);
     cleanups.push(() => {
       listbox.destroy();
+      list.removeEventListener("click", onClickStart, true);
+      list.removeEventListener("click", onClickEnd);
+      for (const el of untabbed) el.removeAttribute("tabindex");
+      for (const undo of unstamp) undo();
       input.removeEventListener("input", onInput);
       dialog.removeEventListener("close", onClose);
       document.removeEventListener("keydown", onKey);
@@ -9450,6 +9514,7 @@ export {
   HIGHLIGHT_EVENT,
   HOOKS,
   INVALID_EVENT,
+  KEYS_SLOT,
   KNOBS,
   LAYOUT_COMMIT_EVENT,
   LAYOUT_EVENT,
@@ -9602,6 +9667,7 @@ export {
   hsl,
   hslToRgb,
   initializeTheme,
+  isMac,
   isTheme,
   layoutOf,
   lazy_register_exports as lazyRegisterExports,

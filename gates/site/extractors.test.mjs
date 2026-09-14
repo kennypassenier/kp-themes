@@ -174,7 +174,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // the filter editor's ground, ink, border, border width, radius, padding,
     // gap, maximum width and title weight, the floors under a choice and a
     // bound, and the gap before a filtered column's mark: 155 + 12.
-    assert.equal(result.expected, 167, 'AR21 counted 167 --kp-* properties in css/components.css');
+    // The palette as navigation (scope-48) added one: the minimum width of
+    // the bar's search trigger, --kp-nav-search-min: 167 + 1.
+    assert.equal(result.expected, 168, 'AR21 counted 168 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -207,7 +209,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 167);
+    assert.equal(result.readCount, 168);
     assert.deepEqual(result.unread, []);
 });
 

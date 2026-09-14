@@ -48,6 +48,26 @@
 // page that opened the dialog with `data-kp-dialog` instead got a modal
 // with a stale list and no event. An empty value means the palette that
 // answers the key.
+//
+// Since scope-48: the palette navigates. A trigger in the bar's
+// `.kp-nav__search` slot is such an opener, and the module gives it what a
+// trigger owes its reader — `aria-haspopup="dialog"` and `aria-keyshortcuts`
+// when the markup left them out, and the hotkey printed into an empty
+// `<kbd data-kp-palette-keys>` in the platform's own spelling (⌘K, Ctrl K).
+// And an option may be a link:
+//
+//   <li role="presentation">
+//     <a class="kp-palette__option" role="option" data-kp-option
+//        data-value="reports" href="/reports">Reports</a>
+//   </li>
+//
+// Enter and a click both follow it, and `kp-palette-run` still fires first,
+// cancelable: a consumer with a router calls preventDefault() and routes.
+// Before the module attaches — or on a page with no JavaScript — it is a
+// plain anchor, so the list the server wrote is a list of working links.
+// The module takes the link out of the Tab order (`tabindex="-1"`, taken
+// back on detach): the highlight is virtual focus, and a Tab that walked
+// into the list would leave the input the combobox is built on.
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
@@ -75,7 +95,17 @@ function openerFor(event, dialog, answersKey) {
     return name === '' ? answersKey : name === dialog.id;
 }
 
-/** Fired on the palette when a command is chosen. A contract value [TH26]: `{ value, option }`. */
+/** An empty `<kbd>` inside an opener that the module fills with the hotkey [scope-48]. */
+export const KEYS_SLOT = '[data-kp-palette-keys]';
+
+/** Whether this is a Mac, where the modifier is ⌘ rather than Ctrl. */
+export function isMac() {
+    if (typeof navigator === 'undefined') return false;
+    const platform = /** @type {any} */ (navigator).userAgentData?.platform ?? navigator.platform ?? '';
+    return /mac|iphone|ipad/i.test(platform);
+}
+
+/** Fired on the palette when a command is chosen, cancelable. A contract value [TH26]: `{ value, option, href }`. */
 export const RUN_EVENT = 'kp-palette-run';
 /** Fired on the palette or the sheet when it opens or closes: `{ open }`. */
 export const OPEN_EVENT = 'kp-palette-open';
@@ -217,16 +247,48 @@ export function attachPalettes(
             if (status !== null) status.textContent = RESULTS_TEXT(visible);
         };
 
+        // The click a choice rides on, while it is being dispatched: a link
+        // chosen by a click is followed by the browser, one chosen by Enter
+        // is clicked here so the browser follows it the same way — target,
+        // rel and a router's own click handler included.
+        /** @type {MouseEvent | null} */
+        let clicking = null;
+        /** @param {MouseEvent} event */
+        const onClickStart = (event) => {
+            clicking = event;
+        };
+        const onClickEnd = () => {
+            clicking = null;
+        };
+        list.addEventListener('click', onClickStart, true);
+
         const listbox = createListbox({
             input,
             list,
             onChoose: (_, option) => {
+                const link = option instanceof HTMLAnchorElement && option.hasAttribute('href') ? option : null;
+                if (link !== null && clicking === null) {
+                    // Comes straight back through the listbox as a click.
+                    link.click();
+                    return;
+                }
                 const value = option.dataset.value ?? (option.textContent ?? '').trim();
-                dialog.dispatchEvent(new CustomEvent(RUN_EVENT, { bubbles: true, detail: { value, option } }));
+                const run = new CustomEvent(RUN_EVENT, { bubbles: true, cancelable: true, detail: { value, option, href: link?.href ?? null } });
+                dialog.dispatchEvent(run);
+                if (run.defaultPrevented && link !== null) clicking?.preventDefault();
                 if (closes) dialog.close();
             },
             onDismiss: () => dialog.close(),
         });
+        list.addEventListener('click', onClickEnd);
+
+        // A link option is pointed at, never tabbed to [scope-48].
+        /** @type {HTMLElement[]} */
+        const untabbed = [];
+        for (const element of list.querySelectorAll(`a${OPTION_SELECTOR}[href]:not([tabindex])`)) {
+            element.setAttribute('tabindex', '-1');
+            untabbed.push(/** @type {HTMLElement} */ (element));
+        }
 
         /** @param {string} [query] */
         const openWith = (query) => {
@@ -273,6 +335,31 @@ export function attachPalettes(
         };
         document.addEventListener('click', onOpener);
 
+        // The triggers that open this palette say so, and print its key
+        // [scope-48]. Only what the markup left out is written, and only
+        // that is taken back.
+        /** @type {(() => void)[]} */
+        const unstamp = [];
+        const mac = isMac();
+        for (const opener of document.querySelectorAll(OPENER)) {
+            const name = opener.getAttribute('data-kp-palette-open') ?? '';
+            if (name === '' ? !answers(PALETTE, dialog) : name !== dialog.id) continue;
+            /** @param {string} attribute @param {string} value */
+            const stamp = (attribute, value) => {
+                if (opener.hasAttribute(attribute)) return;
+                opener.setAttribute(attribute, value);
+                unstamp.push(() => opener.removeAttribute(attribute));
+            };
+            stamp('aria-haspopup', 'dialog');
+            if (key === null) continue;
+            stamp('aria-keyshortcuts', `${mac ? 'Meta' : 'Control'}+${key.toUpperCase()}`);
+            for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
+                if ((slot.textContent ?? '').trim() !== '') continue;
+                slot.textContent = getStrings().paletteHotkey(key, mac);
+                unstamp.push(() => (slot.textContent = ''));
+            }
+        }
+
         filter();
         /** @type {PaletteHandle} */
         const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
@@ -280,6 +367,10 @@ export function attachPalettes(
         created.push(handle);
         cleanups.push(() => {
             listbox.destroy();
+            list.removeEventListener('click', onClickStart, true);
+            list.removeEventListener('click', onClickEnd);
+            for (const el of untabbed) el.removeAttribute('tabindex');
+            for (const undo of unstamp) undo();
             input.removeEventListener('input', onInput);
             dialog.removeEventListener('close', onClose);
             document.removeEventListener('keydown', onKey);

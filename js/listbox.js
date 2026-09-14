@@ -163,6 +163,9 @@ export function createListbox({
         index = -1;
         input.removeAttribute('aria-activedescendant');
         for (const option of options()) {
+            // Recorded like highlight's stamp: a clear before any highlight
+            // left `aria-selected="false"` behind after destroy [scope-48].
+            if (!option.hasAttribute('aria-selected')) stampedSelected.add(option);
             option.setAttribute('aria-selected', 'false');
             option.classList.remove(activeClass);
         }
