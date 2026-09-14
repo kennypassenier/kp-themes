@@ -293,11 +293,13 @@
         "test:tags": "node gates/run-tags.mjs",
         "check:tags": "node gates/check-tags.mjs",
         "test:firefox": "playwright test --project=firefox",
-        "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:format",
+        "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:format ; npm run check:drift",
         "verify": "node gates/verify.mjs",
         "check:docs-private": "node gates/check-docs-private.mjs",
         "check:docs-runnable": "node gates/check-docs-runnable.mjs",
-        "check:doc-quotes": "node gates/check-doc-quotes.mjs"
+        "check:doc-quotes": "node gates/check-doc-quotes.mjs",
+        "check:drift": "node gates/check-drift.mjs --check",
+        "drift:seen": "node gates/check-drift.mjs --seen"
     },
     "peerDependencies": {
         "motion": ">=12",
