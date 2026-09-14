@@ -53,22 +53,6 @@
             "given": "2026-09-14"
         }
     },
-    "navigation--bar-long": {
-        "dark": {
-            "rejected": "the long text wraps around to a new line, making the line above almost unreadable",
-            "change": "Each bar link is now a block box, so a wrapped label pushes the row down instead of its padded plate lying over the row above: overlap went from 12.6px to 0. The label still wraps, as this block's Look at asks.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
-    "navigation--bar-search": {
-        "dark": {
-            "rejected": "Looks great, but clicking the mouse outside the popup should close the popup again, like ESC already does (correctly)",
-            "change": "A press and release outside the palette's box now close it and return focus to the Search button, in both channels. The trigger also takes the voice of dark's own nav links now.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
     "table--datatable-add-filter": {
         "dark": {
             "rejected": "Als ik de filter \"hours open\" en dan hover over de cancel knop, zijn de \"[]\" haakjes op de letters van \"Cancel\"",
