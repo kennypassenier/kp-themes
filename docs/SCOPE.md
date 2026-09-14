@@ -1421,3 +1421,18 @@ follow a module's `.d.ts` instead of its implementation — and
 so: touching a document counts as looked at. step-timing "Akkoord": agents
 whose work does not overlap start together, and the tests run while they
 work.
+
+**scope-79 · After layer 3: uniform sizes are measured first, navigation starts.**
+Kenny, 2026-09-14, the next-round form. control-height, his own answer:
+not one control's height but whether every element can keep nearly the
+same size and layout when the theme changes — options on a demo page,
+comparing the themes with the largest elements against the smallest, with
+the median theme as control. A researcher measures every component's box in
+all 22 themes first and builds that demo; nothing in `css/` changes until he
+has looked. next-round "Navigatie": `scope-48` starts in two waves. The
+first builds the application shell (bar, rail and breadcrumb composed, a
+declared slim toggle) and the command palette as navigation (a visible
+trigger in the bar, an option that is a link) side by side; the second the
+mega menu and the shrinking header, after the three registers that set the
+bar's padding directly read `--kp-nav-pad-block`. step-timing "Akkoord":
+work that does not overlap starts together.
