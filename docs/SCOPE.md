@@ -1397,3 +1397,13 @@ firefox) before every report to Kenny, and the status line names the result.
 step-timing "Akkoord": the status row is committed with the work it describes,
 never in a commit of its own.
 
+**scope-76 · Every gate judged once.** Kenny, 2026-09-14, the gates form of
+`scope-34`, one item per gate on the table of that day (39 gates, 18.5 s per
+commit, 18 recorded catches over 13 gates). All 39 answers follow the
+recommendation. Kept as blocking: 29. Merged, the check survives inside its
+target and blocks there: tokens into `npm test`, bundle into `check:min`,
+migration into `check:docs-runnable`, fonts-css into `check:fonts`, tear into
+`check:generated`, package into `check:manifest`. Moved to `npm run advice`,
+printed but never refusing a commit: variant-ground, compliance, baseline and
+prettier. Removed: none. step-timing "Akkoord": after the change Claude
+measures the new duration of `npm run gates`.

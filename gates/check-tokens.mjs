@@ -8,6 +8,9 @@
 // everything", not only "did what I ran pass".
 //
 // Usage: node gates/check-tokens.mjs
+//
+// Since scope-76 no commit runs this command: the same check runs, and
+// blocks, in `npm test` (gates/gates.test.mjs, the TH22 tests).
 
 import { readFileSync } from 'node:fs';
 import process from 'node:process';

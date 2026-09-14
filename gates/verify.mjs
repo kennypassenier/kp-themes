@@ -98,7 +98,7 @@ const only = (process.argv.find((a) => a.startsWith('--only=')) ?? '').slice('--
 const PHASES = [
     {
         name: 'gates',
-        what: 'the thirty blocking checks — generated files, tokens, layers, hooks, registers, fonts, strings, types',
+        what: 'the twenty-nine blocking checks — generated files, tokens, layers, hooks, registers, fonts, strings, types',
         command: 'npm',
         args: ['run', 'gates'],
         blocking: true,
@@ -112,7 +112,7 @@ const PHASES = [
     },
     {
         name: 'advice',
-        what: 'contrast, the design invariants, motion, the DI5 report, the texture ceiling — a reading, never a verdict',
+        what: 'contrast, the design invariants, motion, the DI5 report, the texture ceiling, variant grounds, the compliance table, the baseline checksums, prettier — a reading, never a verdict',
         command: 'npm',
         args: ['run', 'advice'],
         // Kenny, 2026-09-09: the accessibility floors report and do not

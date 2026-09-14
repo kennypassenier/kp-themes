@@ -20,8 +20,11 @@
 // HTTPSwitchboard fault was about — a command the software refuses — and
 // gates/check-package.mjs already runs the export map against a packed
 // tarball.
+//
+// A fourth claim runs here too, since scope-76: every class MIGRATION.md
+// names exists (gates/check-migration.mjs, spawned).
 import { readFileSync, existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import process from 'node:process';
 
 const root = new URL('../', import.meta.url);
@@ -108,6 +111,11 @@ export function claims(read = (f) => readFileSync(new URL(f, root), 'utf8')) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+    // scope-76: the migration note's own `check:migration` line is gone,
+    // and its check runs here — a class the note names is one more claim a
+    // document makes that the package has to keep. Spawned rather than
+    // inlined, so it prints and refuses with exactly what it always did.
+    const migration = spawnSync(process.execPath, [new URL('check-migration.mjs', import.meta.url).pathname], { stdio: 'inherit' });
     const { files, checked, broken } = claims();
     for (const line of broken) console.error(line);
     if (broken.length > 0) {
@@ -119,4 +127,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
     console.log(`Runnable docs: ${checked} executable claim(s) across ${files} documents — every script, path and import subpath is real.`);
+    if (migration.status !== 0) process.exit(1);
 }

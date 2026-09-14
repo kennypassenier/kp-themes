@@ -13,9 +13,13 @@
 //
 // Usage:
 //   node gates/generate-themes.mjs           write the artefacts
-//   node gates/generate-themes.mjs --check   exit 1 if either would change
+//   node gates/generate-themes.mjs --check   exit 1 if either would change,
+//                                            or if the tear block would
+//                                            (gates/generate-tear.mjs --check)
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { derive, deriveVisible, deriveVisited } from './colour.mjs';
 
@@ -400,12 +404,14 @@ if (process.argv.includes('--check')) {
             console.error(`${a.name} does not match its source.`);
         }
     }
-    if (stale > 0) {
-        console.error('Run `npm run generate` and commit the result.');
-        process.exit(1);
-    }
-    console.log(`${artefacts.length} generated files match their source (${ORDER.length} themes).`);
-    process.exit(0);
+    if (stale > 0) console.error('Run `npm run generate` and commit the result.');
+    else console.log(`${artefacts.length} generated files match their source (${ORDER.length} themes).`);
+    // scope-76: the tear's own `check:tear` line is gone, and its check
+    // runs here, where the other generated-from-source checks already
+    // live. It is spawned rather than inlined so it prints, and refuses
+    // with, exactly what it always did.
+    const tear = spawnSync(process.execPath, [fileURLToPath(new URL('generate-tear.mjs', import.meta.url)), '--check'], { stdio: 'inherit' });
+    process.exit(stale > 0 || tear.status !== 0 ? 1 : 0);
 }
 
 for (const a of artefacts) writeFileSync(a.url, a.content);

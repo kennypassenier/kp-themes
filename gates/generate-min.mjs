@@ -27,9 +27,12 @@
 //
 // Usage:
 //   node gates/generate-min.mjs           write dist/ and the table
-//   node gates/generate-min.mjs --check   exit 1 if anything would change
+//   node gates/generate-min.mjs --check   exit 1 if anything would change,
+//                                         the dist bundle included
+//                                         (gates/generate-bundle.mjs --check)
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -161,6 +164,11 @@ Version ${version}.
 files.push({ name: 'docs/MINIFIED.md', content: table });
 
 if (process.argv.includes('--check')) {
+    // scope-76: the bundle's own `check:bundle` line is gone, and its check
+    // runs here, first, because every minified bundle file above is made
+    // from the dist bundle it verifies. Spawned rather than inlined, so it
+    // prints and refuses with exactly what it always did.
+    const bundle = spawnSync(process.execPath, [join(ROOT, 'gates', 'generate-bundle.mjs'), '--check'], { stdio: 'inherit' });
     let stale = 0;
     for (const file of files) {
         const path = join(ROOT, file.name);
@@ -170,12 +178,9 @@ if (process.argv.includes('--check')) {
             console.error(`${file.name} does not match its source.`);
         }
     }
-    if (stale > 0) {
-        console.error('Run `npm run generate:min` and commit the result.');
-        process.exit(1);
-    }
-    console.log(`Minified: ${SHEETS.length} stylesheets plus the bundle match their sources (${saved(total)} smaller).`);
-    process.exit(0);
+    if (stale > 0) console.error('Run `npm run generate:min` and commit the result.');
+    else console.log(`Minified: ${SHEETS.length} stylesheets plus the bundle match their sources (${saved(total)} smaller).`);
+    process.exit(stale > 0 || bundle.status !== 0 ? 1 : 0);
 }
 
 for (const file of files) {

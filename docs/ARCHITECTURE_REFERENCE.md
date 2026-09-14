@@ -142,8 +142,12 @@ colour space, and lightness alone left their pressed state invisible.
 
 ## The gates, and the advice beside them
 
-Thirty checks, all in Node, the whole chain in seconds, all run by
-`.claude/hooks/gates.sh` before every commit. Nothing runs on a server:
+Twenty-nine checks, all in Node, the whole chain in seconds, all run by
+`.claude/hooks/gates.sh` before every commit. Since scope-76 six older
+checks run inside them rather than on their own line — tokens in `npm test`,
+the bundle in `generate-min --check`, the migration note in
+`check-docs-runnable`, the fonts stylesheet in `check-fonts`, the tear in
+`generate-themes --check`, the package in `check-manifest`. Nothing runs on a server:
 Kenny deleted the CI on 2026-09-09 and runs the browser suite himself.
 `package.json`'s `gates` script is the authoritative list; the table below
 is the shape of it rather than the whole.
@@ -151,7 +155,7 @@ is the shape of it rather than the whole.
 | Gate | Reads | Answers |
 | --- | --- | --- |
 | `generate-themes --check` | source + artefact | has the generated output drifted |
-| `check-tokens` | token sources | do all twenty-five declare the same 96 names |
+| `check-tokens`, via `npm test` | token sources | do all twenty-five declare the same 96 names |
 | `check-layers` | the authored stylesheets | does any colour live outside the token layer |
 | `check-hooks` | the registers | does every theme answer all six hooks |
 | `check-register-coverage` | the registers | does a register answer every component root, and the nav dropdown [KT14] |
@@ -159,7 +163,6 @@ is the shape of it rather than the whole.
 | `check-strings` | the source | does every user-visible string come from the dictionary [KT5] |
 | `generate-showcase --check` | source + artefact | has the showcase drifted |
 | `generate-min --check` | source + artefact | does the minified build match, and its size table |
-| `compliance --check` | the other gates | does the published table match what they measure |
 | `tsc --noEmit`, `check-types` | everything | the type check, and the shipped declarations [KT4] |
 
 Five more checks are **advice, not gates** [Kenny, 2026-09-09]. They run
@@ -169,7 +172,9 @@ colour pair and every token accounted for), `check-invariants`
 badge plates), `check-motion` (flashes per second, reduced-motion guards),
 its DI5 report, and `check-texture` (DI9's ceiling). The package measures
 those floors and does not promise to have met them; `README.md` says so
-in the same words.
+in the same words. Four more joined them on 2026-09-14 [scope-76]:
+`check-variant-ground`, `compliance --check` (does the published table
+match what the checks measure), `check-baseline` and `prettier --check .`.
 
 Two properties matter more than the list.
 

@@ -98,7 +98,8 @@ an element needs a token the contract does not have, the token is added
 and **every other theme declares it in the same change** — the parity
 gate stays at 100% at every commit, and nothing a concept demo showed is
 lost for want of a token. Code-enforced by `gates/check-tokens.mjs`
-(parity) and discipline-enforced for the "in the same change" half.
+(parity; since scope-76 a commit runs it through the TH22 tests in
+`npm test`) and discipline-enforced for the "in the same change" half.
 Recorded as S47 in [SCOPE.md](SCOPE.md).
 
 ## Correction KT11 (2026-09-08) — the approved demo is an inventory

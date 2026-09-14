@@ -14,6 +14,8 @@
 // Usage:
 //   node gates/generate-fonts-css.mjs           write css/fonts.css
 //   node gates/generate-fonts-css.mjs --check   exit 1 if it would change
+//
+// Since scope-76 the check runs inside `npm run check:fonts`.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';

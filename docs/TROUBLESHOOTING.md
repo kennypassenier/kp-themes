@@ -145,7 +145,9 @@ the design invariants, the flash threshold, the reduced-motion guards and
 the texture ceiling print their findings in `npm run advice` and refuse
 nothing. They read exactly as below; what differs is that seeing one does
 not stop a commit. The rows from `hsl(…) is a colour written outside the
-token layer` down are gates and do.
+token layer` down are gates and do — except the compliance table's, which
+moved to `npm run advice` on 2026-09-14 [scope-76] and refuses nothing
+either.
 
 | It says | It means | Where to look |
 | --- | --- | --- |
@@ -173,7 +175,7 @@ npm run generate          # only the token stylesheets, when that is all you tou
 npm run gates             # everything that blocks a commit, in seconds
 npm run test:tags         # the tests tagged with what your change touches, Firefox
 npm run test:browser      # Chromium and Firefox, all of it — when you ask for it
-npm run advice            # contrast, invariants, motion, texture: a reading
+npm run advice            # contrast, invariants, motion, texture, prettier…: a reading
 npm run verify            # gates, then the whole suite, then the advice
 ```
 

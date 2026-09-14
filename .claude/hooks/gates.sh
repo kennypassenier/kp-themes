@@ -31,14 +31,17 @@ gate_tree_fingerprint() {
 }
 gate_tree_before=$(gate_tree_fingerprint)
 
-echo "→ generated files match their source"
+# Kenny, 2026-09-14 [scope-76]: every gate judged once. Six checks lost
+# their own line and run inside a target that already covers the same
+# ground — tokens in the unit tests, bundle in the minified build,
+# migration in the runnable docs, the fonts stylesheet in the fonts gate,
+# the tear in the generated files, the package in the manifest. Each still
+# blocks, with the message it always printed. Four moved to
+# `npm run advice`, printed and never refusing: variant grounds, the
+# compliance table, the vendored baseline and prettier.
+
+echo "→ generated files match their source, and the tear its parameters (TH121, AR41) [scope-76]"
 node gates/generate-themes.mjs --check
-
-echo "→ prettier"
-npx prettier --check .
-
-echo "→ token parity across the seven themes (TH22)"
-node gates/check-tokens.mjs
 
 # Kenny, 2026-09-09: the checks that exist for people with disabilities —
 # the contrast floors, the flash threshold, the reduced-motion guards, the
@@ -57,23 +60,14 @@ node gates/check-relative-colour.mjs
 echo "→ a register that cancels the pressed state [fix-12]"
 node gates/check-pressed-state.mjs
 
-echo "→ a register that repaints a variant's ground [gap-1]"
-node gates/check-variant-ground.mjs
-
 echo "→ the import closure of the modules chassis-rs vendors (AR28)"
 node gates/check-closure.mjs
 
 echo "→ the utility API matches its source and its documented list (TH93)"
 node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs
 
-echo "→ the dist bundle matches its sources (TH106)"
-node gates/generate-bundle.mjs --check
-
-echo "→ the minified build matches its sources, and its size table with it"
+echo "→ the dist bundle (TH106) and the minified build match their sources, and the size table with them [scope-76]"
 node gates/generate-min.mjs --check
-
-echo "→ the migration note points at classes that exist (TH108)"
-node gates/check-migration.mjs
 
 echo "→ a converted component sits inside its container (TH104, AR31)"
 node gates/check-wrappers.mjs
@@ -102,17 +96,11 @@ node gates/check-register-coverage.mjs
 echo "→ every browser test carries a tag, and every file is under a rule of the tag map [scope-33]"
 node gates/check-tags.mjs
 
-echo "→ the shipped fonts: licence, reserved names, budget (T19, AR39)"
+echo "→ the shipped fonts: licence, reserved names, budget, and css/fonts.css matches its listing (T19, AR39) [scope-76]"
 node gates/check-fonts.mjs
-node gates/generate-fonts-css.mjs --check
-
-echo "→ the tear matches its parameters (TH121, AR41)"
-node gates/generate-tear.mjs --check
 
 echo "→ an example page carries the hooks its descriptor asks for"
 node gates/check-examples-wired.mjs
-echo "→ the vendored 4.0.0 baseline matches the checksums the release published (MR-R6-COMPARE)"
-node gates/check-baseline.mjs
 
 echo "→ no inline styles on the example pages (TH109)"
 node gates/check-inline-styles.mjs
@@ -123,19 +111,13 @@ node gates/generate-site.mjs --check && node gates/check-site.mjs
 echo "→ the Home Assistant themes match their source"
 node gates/generate-ha-themes.mjs --check
 
-echo "→ everything the package exports is actually published"
-node gates/check-package.mjs
-
-echo "→ the checksum manifest holds every file a consumer can copy (TH103)"
+echo "→ everything the package exports is published, and the checksum manifest holds every file a consumer can copy (TH103) [scope-76]"
 node gates/check-manifest.mjs
-
-echo "→ the compliance table still says what the gates measure"
-node gates/compliance.mjs --check
 
 echo "→ nothing private in a document of a public repository [Phase 8]"
 node gates/check-docs-private.mjs
 
-echo "→ every command, path and import a document names is real [Phase 8]"
+echo "→ every command, path and import a document names is real, and the migration note's classes exist (TH108) [Phase 8, scope-76]"
 node gates/check-docs-runnable.mjs
 
 echo "→ a message a document quotes is the message the code prints [Phase 8]"
@@ -150,7 +132,7 @@ npx tsc --noEmit -p jsconfig.json
 echo "→ the shipped declarations, and a consumer type-checks against them (KT4)"
 node gates/check-types.mjs
 
-echo "→ tests"
+echo "→ tests, token parity across the themes among them (TH22) [scope-76]"
 node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:

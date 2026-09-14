@@ -16,7 +16,7 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty-eight gates run in seconds and refuse a commit that breaks them:
+Twenty-nine gates run in seconds and refuse a commit that breaks them:
 token parity, layer discipline, the hook vocabulary, the register
 coverage, the shipped fonts, the strings dictionary, the types, whether
 every command, path and quoted message a document carries is real, and
@@ -35,6 +35,11 @@ excuses. If you consume this package and
 need those floors held, run `npm run advice` yourself and read it: the
 package tells you what it measures, and does not promise to have obeyed
 it.
+
+Four more joined the advice on 2026-09-14 [scope-76]: the variant-ground
+check, the compliance table, the vendored baseline's checksums and
+`prettier --check .` (`npm run check:format`). They print and never refuse a
+commit either.
 
 Consumers: JobTracker and kp-soft (React, git dependency), kyu and almanac
 (framework-free — they copy the stylesheet).
@@ -584,7 +589,7 @@ your own `@theme` aliases.
 ```sh
 npm run check:contrast            # css/themes.css
 node gates/check-contrast.mjs path/to/other.css
-npm run advice                    # contrast, and the other four readings
+npm run advice                    # contrast, and the other eight readings
 ```
 
 The script discovers every `[data-theme='…']` block that declares

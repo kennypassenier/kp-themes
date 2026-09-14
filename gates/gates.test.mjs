@@ -92,7 +92,10 @@ test('TH22: no token is asymmetric beyond the recorded exceptions', () => {
     assert.deepEqual(
         unexpected,
         [],
-        'new asymmetric tokens:\n' + unexpected.map((a) => `  --${a.token}: missing from ${a.missing.join(', ')}`).join('\n'),
+        // scope-76: this test is the commit's token-parity gate now, so it
+        // refuses in the words gates/check-tokens.mjs always used.
+        `${unexpected.length} token name(s) are not declared by every theme (TH22):\n` +
+            unexpected.map((a) => `  --${a.token}\n      declared by: ${a.have.join(', ')}\n      missing from: ${a.missing.join(', ')}`).join('\n'),
     );
 });
 
@@ -100,7 +103,7 @@ test('TH22: the ratchet refuses to list a token that is already symmetric', () =
     // A list that outlives its problem is how an exception becomes permanent.
     const asymmetric = new Set(findAsymmetry(tokenNamesByTheme()).map((a) => a.token));
     const stale = [...knownAsymmetry()].filter((t) => !asymmetric.has(t));
-    assert.deepEqual(stale, [], `known-asymmetry.json is stale for: ${stale.join(', ')}`);
+    assert.deepEqual(stale, [], `themes/known-asymmetry.json lists ${stale.length} token(s) that are now declared everywhere: ${stale.join(', ')}`);
 });
 
 test('TH22: the parity check notices a token removed from one theme', () => {
@@ -530,6 +533,18 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
         const command = pkg.scripts[name].replace(/^node /, '');
         assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
     }
+    // scope-76 moved variant-ground, compliance, baseline and prettier to
+    // advice. The other direction holds that: a check listed in `advice`
+    // that also sits in the chain or the hook refuses a commit, which is
+    // exactly what advice promises not to do.
+    for (const name of advisory) {
+        assert.ok(!chain.includes(`npm run ${name}`), `\`${name}\` is advice and still in \`npm run gates\``);
+        const command = pkg.scripts[name].replace(/^node /, '');
+        assert.ok(
+            !hook.split('\n').some((line) => line.trim() === command || line.trim() === `npx ${command}` || line.trim() === `node ${command}`),
+            `\`${name}\` is advice and still in .claude/hooks/gates.sh`,
+        );
+    }
     // The CI list is gone [Kenny, 2026-09-09]: there is no CI. He runs the
     // suite himself with `npm run verify`, which is the fourth list this
     // test now holds — gates, the whole browser suite, then the advisory
@@ -545,6 +560,26 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     // the tag, and until then nothing held it: it ran the hook script,
     // which is equivalent only for as long as nobody changes either.
     assert.ok(/run:\s*npm run gates/.test(release), 'release.yml does not run `npm run gates`');
+});
+
+test('scope-76: every merged check still runs, inside the target that took it', () => {
+    // Six checks lost their own `check:` script and hook line. KT7 cannot
+    // see them any more — there is no script to hold — so this does: each
+    // target must still spawn the old script, and the old script must still
+    // be there to spawn. Token parity is the seventh name on the list and
+    // needs no spawn: the TH22 tests above run it over the real themes.
+    const merged = [
+        ['generate-themes.mjs', 'generate-tear.mjs'],
+        ['generate-min.mjs', 'generate-bundle.mjs'],
+        ['check-docs-runnable.mjs', 'check-migration.mjs'],
+        ['check-fonts.mjs', 'generate-fonts-css.mjs'],
+        ['check-manifest.mjs', 'check-package.mjs'],
+    ];
+    for (const [target, old] of merged) {
+        const source = readFileSync(new URL(target, import.meta.url), 'utf8');
+        assert.ok(source.includes(`spawnSync(`) && source.includes(`'${old}'`), `gates/${target} no longer runs gates/${old}`);
+        assert.ok(existsSync(new URL(old, import.meta.url)), `gates/${old} is gone, and gates/${target} spawns it`);
+    }
 });
 
 test('KT7: the strings gate does not flag code that only looks like text', () => {
@@ -1435,6 +1470,10 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
     const WORDS = {
         twenty: 20,
         'twenty-five': 25,
+        'twenty-six': 26,
+        'twenty-seven': 27,
+        'twenty-eight': 28,
+        'twenty-nine': 29,
         thirty: 30,
         'thirty-one': 31,
         'thirty-two': 32,

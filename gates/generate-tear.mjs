@@ -26,6 +26,8 @@
 // Usage:
 //   node gates/generate-tear.mjs           write the block
 //   node gates/generate-tear.mjs --check   exit 1 if the block would change
+//
+// Since scope-76 the check runs inside `npm run check:generated`.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';

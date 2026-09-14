@@ -42,10 +42,10 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 
 | Command | What it runs | When |
 | --- | --- | --- |
-| `npm run gates` | the thirty blocking checks, seconds | every commit, by the hook |
+| `npm run gates` | the twenty-nine blocking checks, seconds [scope-76] | every commit, by the hook |
 | `npm run test:tags` | the tests tagged with what a change touches (building), plus every `@sweep` test (commit), Firefox only | during work, and once before a commit |
 | `npm run test:browser` | the whole suite, Chromium and Firefox | when Kenny asks for it |
-| `npm run advice` | contrast, invariants, motion, texture — a reading, never a verdict | when Kenny wants the reading |
+| `npm run advice` | contrast, invariants, motion, texture, and since scope-76 variant grounds, the compliance table, the baseline checksums and prettier — a reading, never a verdict | when Kenny wants the reading |
 | `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
 
 `verify` is `gates/verify.mjs` rather than three commands joined by `&&`:

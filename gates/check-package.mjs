@@ -14,6 +14,8 @@
 // includes, which is the whole of that defect.
 //
 // Usage: node gates/check-package.mjs
+//
+// Since scope-76 it runs inside `npm run check:manifest`.
 
 import { readFileSync, existsSync } from 'node:fs';
 import process from 'node:process';

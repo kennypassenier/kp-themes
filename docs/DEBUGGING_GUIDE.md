@@ -103,10 +103,14 @@ reasoning is in the header of `js/diagnostics.js`.
 npm run gates
 ```
 
-Thirty-five steps chained with `&&` (counted from `scripts.gates` in
-`package.json` on 2026-09-12): thirty-three `check:*` scripts, then
-`npm test` (107 unit tests through `node --test gates/`), then
-`prettier --check .`. It finishes in seconds and the commit hook
+Twenty-nine steps chained with `&&` (counted from `scripts.gates` in
+`package.json` on 2026-09-14, after scope-76): twenty-eight `check:*`
+scripts, then `npm test` (the unit tests through `node --test gates/`).
+Six older checks run inside those steps and print their own lines there:
+the tear in `check:generated`, the bundle in `check:min`, the migration
+note in `check:docs-runnable`, the fonts stylesheet in `check:fonts`, the
+package in `check:manifest`, token parity in `npm test`. It finishes in
+seconds and the commit hook
 (`.claude/hooks/gates.sh`) runs exactly the same set — a unit test named
 `KT7: every check script runs in the gates chain, in the hook, and CI
 runs the chain` in `gates/gates.test.mjs` holds the two lists together.
@@ -125,7 +129,9 @@ FAIL shade-light: muted-foreground on card = 4.13 (need >= 4.5)
 3 pair(s) short of the floor. This is advice: it is measured and printed, never refused [Kenny, 2026-09-09].
 ```
 
-`gates/compliance.mjs` shells out to `gates/check-contrast.mjs` to quote
+Since scope-76 `check:compliance` runs in `npm run advice`, so that
+reading no longer appears in the gates at all; the shape is still worth
+knowing. `gates/compliance.mjs` shells out to `gates/check-contrast.mjs` to quote
 its reading into `docs/DESIGN_INVARIANTS.md`. The contrast reading is
 advice by Kenny's decision of 2026-09-09, so the call quotes both streams
 and deliberately does not obey the exit code. If it ever does fail the
@@ -156,12 +162,13 @@ thing under test is unmeasured, not clean.
 npm run advice
 ```
 
-Five readings: contrast, motion, the DI5 report, texture, the invariant
-sweep. **None of them blocks anything**, and the accessibility floors
+Nine readings: contrast, motion, the DI5 report, texture, the invariant
+sweep, and since scope-76 the variant grounds, the compliance table, the
+vendored baseline and `prettier --check .`. **None of them blocks anything**, and the accessibility floors
 stopped being gates on 2026-09-09 — `docs/DESIGN_INVARIANTS.md` states
 what that costs in its "Kenny's override" section.
 
-The script joins the five with `;`, not `&&`, so all five always run and
+The script joins the nine with `;`, not `&&`, so all nine always run and
 the process exit code is the last one's. Measured on 2026-09-12,
 `npm run advice` exited **1** on a tree whose `npm run gates` exited 0,
 because `gates/check-invariants.mjs` ends with
@@ -279,13 +286,13 @@ edit.
 | `.kp-<root> has no rule in css/<theme>-register.css and no exception with a reason (HELPERS or gates/register-pending.json).` | `gates/check-register-coverage.mjs` | style the root, or record the exception with its reason |
 | `.kp-nav__menu has no rule in css/<theme>-register.css — … [KT14].` | `gates/check-register-coverage.mjs` | the dropdown is a required part: nineteen demos styled the bar and left the menu alone |
 | `.kp-<root> is listed as an exception but css/<theme>-register.css covers it or css/components.css does not declare it — remove the entry.` | `gates/check-register-coverage.mjs` | an exception list outliving its problem |
-| `N token name(s) are not declared by every theme (TH22):` then, indented per token, `  --<token>`, `      declared by: …`, `      missing from: …` | `gates/check-tokens.mjs` | add the token to every theme in the same change — S47, the contract is a floor, not a ceiling |
-| `themes/known-asymmetry.json lists N token(s) that are now declared everywhere:` … `Remove them from that file — the ratchet only turns one way.` | `gates/check-tokens.mjs` | delete the stale entries |
+| `N token name(s) are not declared by every theme (TH22):` then, indented per token, `  --<token>`, `      declared by: …`, `      missing from: …` | `gates/check-tokens.mjs` (in a commit: the TH22 tests of `npm test`) | add the token to every theme in the same change — S47, the contract is a floor, not a ceiling |
+| `themes/known-asymmetry.json lists N token(s) that are now declared everywhere:` … `Remove them from that file — the ratchet only turns one way.` | `gates/check-tokens.mjs` (in a commit: the TH22 tests of `npm test`) | delete the stale entries |
 | `<file>:NN: "…" is user-visible text outside the dictionary (KT5). Add a key to js/strings.js and read it from there.` | `gates/check-strings.mjs` | every user-visible string, screen-reader announcements included, comes from `js/strings.js` |
 | `<file>:NN: "…" is a dictionary value written out again — read it from the strings instead.` | `gates/check-strings.mjs` | a consumer's override would not reach a repeated literal |
 | `An ID means one thing [KT10]. These mean two:` | `gates/check-ids.mjs` | one symbol, one definition, across this project's documents |
 | `<name> does not match its source.` followed by `Run npm run generate and commit the result.` (backticked around the command in the real output) | `gates/generate-themes.mjs --check` | edit `themes/<name>/tokens.json`, never the generated stylesheet |
-| `The compliance table no longer matches what the gates measure. Run: node gates/compliance.mjs` | `gates/compliance.mjs --check` | regenerate |
+| `The compliance table no longer matches what the gates measure. Run: node gates/compliance.mjs` | `gates/compliance.mjs --check`, advice since scope-76 | regenerate |
 | `<file>:NN tells a reader to run npm run <script>, which package.json does not have` (backticked around the command in the real output) | `gates/check-docs-runnable.mjs` | a document's commands, paths and import subpaths are executed, not reviewed |
 | `<file>:NN names path, which this repository does not have` (backticked around the path in the real output) | `gates/check-docs-runnable.mjs` | only for the documents a person **follows**; a correction naming a theme that has since gone is history, and history is correct |
 | `<file>:NN carries an email address: …` | `gates/check-docs-private.mjs` | nothing private in a document of a public repository |

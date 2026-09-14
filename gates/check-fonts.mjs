@@ -32,9 +32,13 @@
 // an absent directory is not a fault, an unlisted one is. Drilled red at
 // C0 on an injected family directory without a LICENSE.
 //
+// Since scope-76 it also runs `node gates/generate-fonts-css.mjs --check`,
+// which refuses when css/fonts.css no longer matches fonts/families.json.
+//
 // Usage: node gates/check-fonts.mjs
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { nameRecords } from './woff2-names.mjs';
 import process from 'node:process';
 
@@ -218,6 +222,12 @@ export function themeFamilies() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+    // scope-76: the stylesheet's own `check:fonts-css` line is gone, and its
+    // check runs here, first: css/fonts.css is generated from the same
+    // fonts/families.json this gate audits. Spawned rather than inlined, so
+    // it prints and refuses with exactly what it always did.
+    const fontsCss = spawnSync(process.execPath, [new URL('generate-fonts-css.mjs', import.meta.url).pathname, '--check'], { stdio: 'inherit' });
+    const mergedStatus = fontsCss.status === 0 ? 0 : 1;
     const fontsDir = new URL('fonts/', root);
     const declared = declaredFamilies(readFileSync(new URL('css/fonts.css', root), 'utf8'));
     if (!existsSync(fontsDir)) {
@@ -231,9 +241,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         // it stayed after the seven renamed OFL faces shipped in 5.0.0.
         // css/fonts.css is generated FROM fonts/, so the two fall to zero
         // together — delete the directory, regenerate, and both this gate
-        // and check:fonts-css pass on a package with no faces at all. The
-        // themes are the independent witness: they name the families in
-        // their own tokens, and they are not generated from fonts/.
+        // and the stylesheet check inside it pass on a package with no
+        // faces at all. The themes are the independent witness: they name
+        // the families in their own tokens, and they are not generated
+        // from fonts/.
         const wanted = themeFamilies();
         if (wanted.length > 0) {
             console.error(
@@ -243,7 +254,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             process.exit(1);
         }
         console.log('Fonts: css/fonts.css declares 0 families and fonts/ does not exist yet (C4); 0 checked, nothing promised.');
-        process.exit(0);
+        process.exit(mergedStatus);
     }
     /** @type {Record<string, Family>} */
     let families = {};
@@ -284,4 +295,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
     console.log(`Fonts: ${declared.length} families declared in css/fonts.css, all listed, licensed, named by a theme and under budget.`);
+    process.exit(mergedStatus);
 }

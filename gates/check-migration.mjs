@@ -13,6 +13,8 @@
 // Drill: rename a class in the note and the gate names it.
 //
 // Usage: node gates/check-migration.mjs
+//
+// Since scope-76 it runs inside `npm run check:docs-runnable`.
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
