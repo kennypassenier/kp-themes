@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="synthwave" data-kp-effects data-kp-reveal-every="load" data-sim="blank">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>One option, one simulated load · intro-loading research</title>
+        <!-- One window of research/intro-loading/demo.html. The address names the
+             option (A, B or C), the theme, and three moments in milliseconds:
+             `paint` (the stylesheets have arrived, the browser may paint),
+             `fonts` (the web fonts swap in) and `scripts` (js/auto.js has run).
+             `scripts=never` holds a load open forever, for the opened state.
+
+             What is simulated and what is real:
+             - the stylesheets are all here from the start; until `paint` the
+               window shows what a browser shows while stylesheets block it: blank
+               (MOCK);
+             - css/fonts.css is linked at `fonts`, so until then every face is the
+               fallback (MOCK timing, REAL fonts once linked);
+             - at `scripts`, option A imports the package's own js/effects.js and
+               attaches it: the arrival and the headline reveal are the package's
+               (REAL);
+             - options B and C run the prototype in proto/intro-proto.js (a COPY of
+               the arrival, not the package) on the simulated milestones, and still
+               attach the package's effects at `scripts` for the headline. -->
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="./proto/intro-proto.css" />
+        <style>
+            /* The browser's own blank while stylesheets block rendering. */
+            html[data-sim='blank'] {
+                background: #fff !important;
+            }
+            html[data-sim='blank'] body {
+                visibility: hidden;
+            }
+            html[data-sim='blank']::after,
+            html[data-sim='blank']::before {
+                display: none;
+            }
+            body {
+                margin: 0;
+            }
+            .sim-page {
+                padding: 1rem;
+                display: grid;
+                gap: 0.75rem;
+            }
+            .sim-page h1 {
+                margin: 0;
+                font-size: 1.6rem;
+            }
+            .sim-page p {
+                margin: 0;
+            }
+        </style>
+        <script src="./proto/intro-proto.js"></script>
+    </head>
+    <body>
+        <div class="sim-page">
+            <nav class="kp-nav" aria-label="Sample navigation">
+                <span class="kp-nav__brand">Northwind</span>
+            </nav>
+            <h1 data-kp-reveal="headline">Invoices, settled on time.</h1>
+            <p>Every invoice you send is matched to its payment the same day, and anything overdue is flagged before it becomes a problem.</p>
+            <div class="kp-card">
+                <p><strong>March</strong>: 214 invoices, 3 overdue.</p>
+            </div>
+            <p><button type="button" class="kp-button">Open the ledger</button></p>
+        </div>
+        <script type="module">
+            const params = new URLSearchParams(location.search);
+            const option = params.get('option') ?? 'A';
+            const theme = params.get('theme') ?? 'synthwave';
+            const at = (name, fallback) => {
+                const v = params.get(name);
+                return v === 'never' ? Infinity : Number(v ?? fallback);
+            };
+            const paintAt = at('paint', 50);
+            const fontsAt = at('fonts', 100);
+            const scriptsAt = at('scripts', 90);
+            const root = document.documentElement;
+            root.setAttribute('data-theme', theme);
+            const t0 = performance.now();
+            const now = () => Math.round(performance.now() - t0);
+            const report = (event) => parent.postMessage({ type: 'kp-intro-loading', option, event, t: now() }, location.origin);
+
+            const after = (ms) => new Promise((resolve) => (Number.isFinite(ms) ? setTimeout(resolve, ms) : null));
+            const paint = after(paintAt).then(() => {
+                root.removeAttribute('data-sim');
+                report('paint');
+            });
+            const fonts = after(fontsAt).then(() => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = '../../css/fonts.css';
+                document.head.prepend(link);
+                return new Promise((resolve) => link.addEventListener('load', resolve, { once: true }))
+                    .then(() => document.fonts.ready)
+                    .then(() => report('fonts'));
+            });
+            const scripts = after(scriptsAt);
+
+            // Who built the overlay, and when it went, whatever the option.
+            new MutationObserver((records) => {
+                for (const r of records) {
+                    for (const n of r.addedNodes) if (n.nodeType === 1 && n.classList.contains('kp-boot')) report('intro-start');
+                    for (const n of r.removedNodes) if (n.nodeType === 1 && n.classList.contains('kp-boot')) report('intro-end');
+                }
+            }).observe(document.body, { childList: true });
+            new MutationObserver(() => {
+                if (root.getAttribute('data-kp-veil') === 'off') report('veil-off');
+            }).observe(root, { attributes: true, attributeFilter: ['data-kp-veil'] });
+
+            const attach = async () => {
+                const { attachEffects } = await import('../../js/effects.js');
+                attachEffects(document);
+                report('scripts');
+            };
+
+            if (option === 'A') {
+                scripts.then(attach);
+            } else {
+                // The package's arrival stays quiet; the prototype performs it.
+                root.style.setProperty('--kp-arrival', 'initial');
+                const milestones = [
+                    { name: 'stylesheets', promise: paint },
+                    { name: 'scripts', promise: scripts.then(attach) },
+                    { name: 'fonts', promise: fonts },
+                ];
+                const wantsArrival = Boolean(kpIntroProto.ARRIVALS[theme]) && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const maxMs = Number(params.get('max') ?? 4000);
+                // On a real page the prototype starts at the start of <body>,
+                // which is the first paint, and its maximum counts from there;
+                // here it starts at the simulated paint.
+                if (option === 'B') {
+                    paint.then(() => {
+                        let handle = null;
+                        const ready = kpIntroProto.gate(window, milestones, maxMs, (done, total) => handle?.setShare(done / total));
+                        if (wantsArrival) handle = kpIntroProto.arrival(document, theme, { ready });
+                    });
+                } else if (option === 'C') {
+                    // The veil is on from the start (the blank hides it until paint).
+                    root.setAttribute('data-kp-veil', 'on');
+                    paint.then(() =>
+                        kpIntroProto.veil(document, milestones, maxMs, () => {
+                            if (wantsArrival) kpIntroProto.arrival(document, theme, { ready: null });
+                        }),
+                    );
+                }
+            }
+            report('start');
+        </script>
+    </body>
+</html>

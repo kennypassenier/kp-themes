@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en" data-theme="synthwave" data-cat-theme="synthwave">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Intros and loading · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            @layer research {
+                .il-controls {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.75rem;
+                    align-items: end;
+                }
+                .il-controls .kp-field {
+                    margin: 0;
+                }
+                .il-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+                    gap: 1rem;
+                }
+                .il-window {
+                    display: grid;
+                    gap: 0.5rem;
+                    align-content: start;
+                }
+                .il-window h3 {
+                    margin: 0;
+                    font-size: 1rem;
+                }
+                .il-window iframe {
+                    display: block;
+                    inline-size: 100%;
+                    block-size: 20rem;
+                    border: 1px dashed var(--border);
+                    background: #fff;
+                }
+                .il-readout {
+                    font-family: var(--font-mono, monospace);
+                    font-size: 0.8rem;
+                    white-space: pre-wrap;
+                    margin: 0;
+                    min-block-size: 6.5em;
+                    color: var(--muted-foreground);
+                }
+                .il-table {
+                    overflow-x: auto;
+                }
+                .il-table td,
+                .il-table th {
+                    font-variant-numeric: tabular-nums;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Intros and loading: can the intro wait for the page?</h1>
+            <p class="cat-intro">
+                Measured on 2026-09-15 in chromium and firefox on <code>examples/concept.html</code>, served gzipped with a cache like GitHub Pages,
+                at full speed and on a throttled "Fast 3G" link (562 ms per request, 180 kB/s shared). Stylesheets never flash: they block the first
+                paint, the lazily fetched register included. What does show is the page itself before the intro: the intro is built by
+                <code>js/auto.js</code>, which runs after the page has painted — up to 61 ms on a fast load, 0.6 to 4.1 seconds on a cold Fast 3G
+                load, with the fallback font visible for up to 2 seconds of that. The page opens in synthwave; the theme menu, or the buttons below,
+                switch it, and the windows follow.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#inventory">Every theme's on-load motion</a></li>
+                <li><a href="#side-by-side">A, B and C side by side</a></li>
+                <li><a href="#held-open">B and C held open</a></li>
+                <li><a href="#numbers">The measured numbers</a></li>
+                <li><a href="#mock">What is mock, what is the package</a></li>
+            </ul>
+
+            <section class="cat-block" id="inventory">
+                <h2>Every theme's on-load motion</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the arrival column. Four themes have an intro: synthwave, terminal, retro and phantom. <b>Cyberpunk has none</b>:
+                    what it plays on load is its headline <code>decipher</code> — glyph noise resolving letter by letter, then one slice burst — and
+                    its marks clearing. The line "Calibrating neural uplink" that may be remembered as cyberpunk's intro was cyberpunk's voice shown
+                    by synthwave's boot until scope-84. Also check the last column against the intro column: in all four intro themes the headline
+                    reveal is over before the intro ends, so on a first visit nobody sees it.
+                </div>
+                <div class="il-table">
+                    <table class="kp-table">
+                        <thead>
+                            <tr>
+                                <th>Theme</th>
+                                <th>Arrival (intro)</th>
+                                <th>Intro, measured</th>
+                                <th>Headline on load</th>
+                                <th>Reveal, measured</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>synthwave</td>
+                                <td>boot — "▶ Play", "Tracking N%", "Press start"</td>
+                                <td>1.81 s</td>
+                                <td>tracking + shine</td>
+                                <td>0.74 s</td>
+                            </tr>
+                            <tr>
+                                <td>terminal</td>
+                                <td>boot — five POST lines, "READY."</td>
+                                <td>1.53 s</td>
+                                <td>type</td>
+                                <td>0.86 s</td>
+                            </tr>
+                            <tr>
+                                <td>retro</td>
+                                <td>boot — BIOS banner, memory test to 640K, block bar</td>
+                                <td>1.24 s</td>
+                                <td>dissolve</td>
+                                <td>0.65 s</td>
+                            </tr>
+                            <tr>
+                                <td>phantom</td>
+                                <td>card — the name "phantom", red bar</td>
+                                <td>1.86 s</td>
+                                <td>shout</td>
+                                <td>0.81 s</td>
+                            </tr>
+                            <tr>
+                                <td>cyberpunk</td>
+                                <td>none</td>
+                                <td>–</td>
+                                <td>decipher (glyphs <code>01&lt;&gt;/\|=+*#%@&amp;$?!ZXKQ</code>)</td>
+                                <td>1.24 s + 0.6 s burst</td>
+                            </tr>
+                            <tr>
+                                <td>eighteen others</td>
+                                <td>none</td>
+                                <td>–</td>
+                                <td>see the README's table</td>
+                                <td>0.34 – 1.10 s</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="cat-block" id="side-by-side">
+                <h2>A, B and C side by side</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> pick a network and press <b>Replay</b>. The white at the start is the browser waiting for stylesheets. In
+                    <b>A</b> (today) the page appears, often in a plain fallback font, and the intro only drops over it when the scripts have run — a
+                    page you were already reading is covered. In <b>B</b> the intro is there from the first paint, its percentage never passes the
+                    share of real milestones done (stylesheets, scripts, fonts), and it lifts after all three — never earlier than today's sequence,
+                    never later than 4 s. In <b>C</b> a plain veil in the theme's background with a thin progress bar covers every theme until the
+                    same milestones, then the intro plays as today. Switch to cyberpunk to see C cost a theme without an intro its early, readable
+                    page. Under reduced motion A and B show no intro and C still shows the veil, without its fade.
+                </div>
+                <div class="il-controls">
+                    <label class="kp-field">
+                        <span class="kp-field__label">Network (simulated from the measurements)</span>
+                        <select class="kp-field__input" data-il-network>
+                            <option value="50,60,90">Warm cache, any network: paint 0.05 s, fonts 0.06 s, scripts 0.09 s</option>
+                            <option value="2470,3730,5460" selected>
+                                Fast 3G, cold, lazy register, chromium: paint 2.47, fonts 3.73, scripts 5.46
+                            </option>
+                            <option value="3940,5250,4510">Fast 3G, cold, lazy register, firefox: paint 3.94, scripts 4.51, fonts 5.25</option>
+                            <option value="4020,5420,7710">
+                                Fast 3G, cold, every register linked, chromium: paint 4.02, fonts 5.42, scripts 7.71
+                            </option>
+                        </select>
+                    </label>
+                    <button type="button" class="kp-button" data-il-replay>Replay</button>
+                    <span class="kp-row" role="group" aria-label="Theme of the windows">
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-il-theme="synthwave">synthwave</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-il-theme="terminal">terminal</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-il-theme="retro">retro</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-il-theme="phantom">phantom</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-il-theme="cyberpunk">cyberpunk</button>
+                    </span>
+                </div>
+                <div class="il-grid">
+                    <div class="il-window" data-il-window="A">
+                        <h3>A — today: fixed timers, started by the script</h3>
+                        <iframe title="Option A, a simulated load" data-il-frame></iframe>
+                        <pre class="il-readout" data-il-readout aria-live="polite">Not played yet.</pre>
+                    </div>
+                    <div class="il-window" data-il-window="B">
+                        <h3>B — the intro holds for the resources (min today, max 4 s)</h3>
+                        <iframe title="Option B, a simulated load" data-il-frame></iframe>
+                        <pre class="il-readout" data-il-readout aria-live="polite">Not played yet.</pre>
+                    </div>
+                    <div class="il-window" data-il-window="C">
+                        <h3>C — a neutral veil for every theme, then the intro</h3>
+                        <iframe title="Option C, a simulated load" data-il-frame></iframe>
+                        <pre class="il-readout" data-il-readout aria-live="polite">Not played yet.</pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="held-open">
+                <h2>B and C held open</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the opened state, standing still: the scripts in these two windows never arrive, so B's intro waits at the share
+                    of milestones done (stylesheets and fonts, two of three: at most 66 %, or the line before the last) and C's veil waits with its
+                    bar at two thirds. These two windows have no maximum, so they stand still; the real prototype would end at 4 s and show the page.
+                    Check that the held B still reads as "loading" in the theme's own words, and that the C veil is quiet enough for a theme like
+                    formal.
+                </div>
+                <div class="il-grid">
+                    <div class="il-window" data-il-window="B" data-il-held>
+                        <h3>B, scripts never arrive</h3>
+                        <iframe title="Option B held open" data-il-frame></iframe>
+                        <pre class="il-readout" data-il-readout aria-live="polite">Not played yet.</pre>
+                    </div>
+                    <div class="il-window" data-il-window="C" data-il-held>
+                        <h3>C, scripts never arrive</h3>
+                        <iframe title="Option C held open" data-il-frame></iframe>
+                        <pre class="il-readout" data-il-readout aria-live="polite">Not played yet.</pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="numbers">
+                <h2>The measured numbers</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> "waits" is when the page is uncovered and in its own font; "flash" is the time the page was visible before its
+                    intro covered it, plus the time a fallback font was visible. Warm rows are the same in both engines within 0.1 s. Read the
+                    cyberpunk rows as the price of C: its page is readable at the first paint today. D (preload hints only) is in the README: it moves
+                    the scripts earlier in chromium but delays the first paint in firefox, and removes no flash in chromium.
+                </div>
+                <div class="il-table">
+                    <table class="kp-table">
+                        <thead>
+                            <tr>
+                                <th>Load (lazy register)</th>
+                                <th>Engine</th>
+                                <th>A waits · flash</th>
+                                <th>B waits · flash</th>
+                                <th>C waits · flash</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>synthwave, Fast 3G cold</td>
+                                <td>chromium</td>
+                                <td>7.13 s · 2.99 + 1.26 s</td>
+                                <td>7.71 s · 0 + 0.72 s (inside the intro)</td>
+                                <td>7.83 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>synthwave, Fast 3G cold</td>
+                                <td>firefox</td>
+                                <td>6.43 s · 0.57 + 1.31 s</td>
+                                <td>6.29 s · 0 + 0.63 s (inside the intro)</td>
+                                <td>6.95 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>synthwave, warm</td>
+                                <td>chromium</td>
+                                <td>1.89 s · 0.04 s</td>
+                                <td>1.80 s · 0</td>
+                                <td>2.01 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>synthwave, warm</td>
+                                <td>firefox</td>
+                                <td>1.88 s · 0.04 + 0.04 s</td>
+                                <td>1.96 s · 0</td>
+                                <td>1.74 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>phantom, Fast 3G cold</td>
+                                <td>chromium</td>
+                                <td>7.47 s · 3.15 + 1.08 s</td>
+                                <td>6.92 s · 0.65 s (4 s maximum reached)</td>
+                                <td>–</td>
+                            </tr>
+                            <tr>
+                                <td>cyberpunk, Fast 3G cold</td>
+                                <td>chromium</td>
+                                <td>readable 2.47, final font 3.96 s · 1.50 s</td>
+                                <td>no intro: as A</td>
+                                <td>6.19 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>cyberpunk, Fast 3G cold</td>
+                                <td>firefox</td>
+                                <td>readable 3.94, final font 4.96 s · 1.01 s</td>
+                                <td>no intro: as A</td>
+                                <td>5.09 s · 0</td>
+                            </tr>
+                            <tr>
+                                <td>synthwave, reduced motion, Fast 3G cold</td>
+                                <td>chromium</td>
+                                <td>readable 2.47, final font 3.73 s · 1.26 s</td>
+                                <td>as A</td>
+                                <td>6.24 s · 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="cat-block" id="mock">
+                <h2>What is mock, what is the package</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> nothing to judge here; this says what the windows are made of. The windows are <code>frame.html</code>. Its page
+                    (nav, headline, card, button) uses package classes (<code>kp-nav</code>, <code>kp-card</code>, <code>kp-button</code>) and the
+                    package registers. The network is MOCK: the stylesheets are already there, and the blank, the late fonts and the late scripts are
+                    timers set to the measured moments. Option A is REAL: it imports <code>js/effects.js</code> and attaches it, so the intro and the
+                    headline are the package's. Options B and C are a PROTOTYPE: <code>proto/intro-proto.js</code> is a copy of the arrival with the
+                    package's overlay classes (<code>kp-boot</code>, <code>kp-boot__line</code>, <code>kp-boot__bar</code>,
+                    <code>kp-boot__skip</code>) and <code>proto/intro-proto.css</code> is the veil; nothing in <code>css/</code> or
+                    <code>js/</code> changed. The numbers are from <code>measure.mjs</code> on real loads, not from these windows.
+                </div>
+            </section>
+        </main>
+
+        <script type="module">
+            import { applyTheme } from '../../js/theme-core.js';
+
+            const FRAME = new URL('./frame.html', import.meta.url);
+            const network = document.querySelector('[data-il-network]');
+            const windows = [...document.querySelectorAll('[data-il-window]')];
+            const logs = new Map();
+
+            function play() {
+                const [paint, fonts, scripts] = network.value.split(',');
+                const theme = document.documentElement.getAttribute('data-theme') || 'formal';
+                for (const win of windows) {
+                    const option = win.getAttribute('data-il-window');
+                    const held = win.hasAttribute('data-il-held');
+                    const address = new URL(FRAME);
+                    address.search = new URLSearchParams({
+                        option,
+                        theme,
+                        paint,
+                        fonts: held ? '600' : fonts,
+                        scripts: held ? 'never' : scripts,
+                        ...(held ? { paint: '300', max: '3600000' } : {}),
+                    }).toString();
+                    const frame = win.querySelector('[data-il-frame]');
+                    logs.set(frame, { events: [], win });
+                    win.querySelector('[data-il-readout]').textContent = 'Loading…';
+                    frame.src = address.href;
+                }
+            }
+
+            const label = {
+                paint: 'first paint',
+                fonts: 'fonts in',
+                scripts: 'scripts ran',
+                'intro-start': 'intro on',
+                'intro-end': 'intro gone',
+                'veil-off': 'veil lifted',
+            };
+            window.addEventListener('message', (event) => {
+                if (event.origin !== location.origin || event.data?.type !== 'kp-intro-loading') return;
+                const frame = [...logs.keys()].find((f) => f.contentWindow === event.source);
+                if (!frame || event.data.event === 'start') return;
+                const log = logs.get(frame);
+                log.events.push(event.data);
+                const at = (name) => log.events.find((e) => e.event === name)?.t;
+                const lines = log.events.map((e) => `${(e.t / 1000).toFixed(2)} s  ${label[e.event] ?? e.event}`);
+                const paint = at('paint');
+                const covered = [at('intro-start'), at('veil-off')];
+                const uncovered = Math.max(paint ?? 0, at('intro-end') ?? 0, at('veil-off') ?? 0);
+                if (at('intro-start') !== undefined && paint !== undefined && at('intro-start') > paint + 20 && !covered[1]) {
+                    lines.push(`flash: page visible ${((at('intro-start') - paint) / 1000).toFixed(2)} s before its intro`);
+                }
+                if (at('intro-end') !== undefined || at('veil-off') !== undefined) lines.push(`waits until ${(uncovered / 1000).toFixed(2)} s`);
+                log.win.querySelector('[data-il-readout]').textContent = lines.join('\n');
+            });
+
+            document.querySelector('[data-il-replay]').addEventListener('click', play);
+            network.addEventListener('change', play);
+            for (const button of document.querySelectorAll('[data-il-theme]')) {
+                button.addEventListener('click', () => applyTheme(button.getAttribute('data-il-theme')));
+            }
+            // The windows wear the page's theme, whichever control changed it.
+            let current = document.documentElement.getAttribute('data-theme');
+            new MutationObserver(() => {
+                const next = document.documentElement.getAttribute('data-theme');
+                if (next !== current) {
+                    current = next;
+                    play();
+                }
+            }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            play();
+        </script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
