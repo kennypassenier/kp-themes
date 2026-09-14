@@ -332,7 +332,9 @@
         padding-block: 3px;
         gap: 0.5rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The three window controls the demo's title bar ends on [S49, A2]:

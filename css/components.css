@@ -1312,6 +1312,15 @@
      * zero. `auto` is the initial value in every context, so the default
      * is a true no-op [R3-CQ, KT6]. */
         min-inline-size: var(--kp-nav-wrap-min, auto);
+        /* The bar's layer, in the base so every theme gives the same answer
+     * [scope-48, research/navbar finding 3]. Two registers lifted the
+     * wrapper and nine the nav inside it; in six themes nothing did, and
+     * the next element on the popover layer painted over an open dropdown
+     * (tests/app-shell.spec.mjs). One layer for the whole bar: its dropdown rides on it, and
+     * a page stacks against one number. Knob: --kp-z-nav (30), between the
+     * popover layer (20) and back-to-top (50). */
+        position: relative;
+        z-index: var(--kp-z-nav, 30);
     }
 
     .kp-nav {

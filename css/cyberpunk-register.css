@@ -273,7 +273,9 @@
         border-bottom: 0;
         padding-block: 1.2rem 0.4rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='cyberpunk'] .kp-nav__brand {

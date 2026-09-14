@@ -204,6 +204,34 @@
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A rail that collapses from its own toggle</figcaption>
+                        <p class="kp-text-muted">Added at scope-48, with the application shell (examples/app-shell.html). data-kp-sidenav-slim allows the rail; a button with data-kp-sidenav-slim-toggle, pointed at the panel by aria-controls, collapses it to its icons and gives the words back — no script of your own. The module keeps aria-expanded on the button, and a button whose only content is an aria-hidden glyph gets its accessible name from the strings, changing with the state. The labels leave the eye and stay in the accessibility tree, so every link in the collapsed rail keeps its name. The button is not replaced, so the focus stays on it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<nav class="kp-sidenav" id="rail" aria-label="Invoices" data-kp-sidenav-slim>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li><a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">All invoices</span></a></li>
+            <li><a class="kp-sidenav__link" href="#example"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Overdue</span></a></li>
+        </ul>
+    </div>
+    <div class="kp-sidenav__footer">
+        <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail"><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span></button>
+    </div>
+</nav>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;rail&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Invoices&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;All invoices&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overdue&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;rail&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;«&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;»&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Over the page, with a toggler</figcaption>
                         <p class="kp-text-muted">data-kp-sidenav-mode=&quot;over&quot; puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -258,8 +286,8 @@
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
-                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Sidenav, SidenavToggle } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
-                    <p class="kp-text-muted">Declared in <code>components/sidenav.jsx</code>, <code>components/sidenav.jsx</code>; the package re-exports every component from its root.</p>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Sidenav, SidenavToggle, SidenavSlimToggle } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/sidenav.jsx</code>, <code>components/sidenav.jsx</code>, <code>components/sidenav.jsx</code>; the package re-exports every component from its root.</p>
                 </section>
                 <section class="kp-section" data-sc-section="props" id="props">
                     <h2 class="kp-fw-semibold">Props</h2>
@@ -267,6 +295,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Sidenav props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>items</code></td><td><code>SidenavItem[]</code></td><td>optional</td><td>The list. Omit and pass children to build it by hand.</td></tr>
                             <tr><td><code>title</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The heading above the list. Omit for no header.</td></tr>
+                            <tr><td><code>footer</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What stays under the list, in `.kp-sidenav__footer` — an account row, or the rail's own SidenavSlimToggle. Omit for no footer.</td></tr>
                             <tr><td><code>mode</code></td><td><code>'over' | 'side' | 'push'</code></td><td>optional</td><td>How it sits beside the content. Default: the module's 'side'.</td></tr>
                             <tr><td><code>position</code></td><td><code>'fixed' | 'absolute'</code></td><td>optional</td><td>Default: the module's own.</td></tr>
                             <tr><td><code>side</code></td><td><code>'start' | 'end'</code></td><td>optional</td><td>Which edge it lives on. Default: the module's own.</td></tr>
@@ -294,6 +323,12 @@
                             <tr><td><code>controls</code></td><td><code>string</code></td><td>required</td><td>The `id` of the navigation this opens.</td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The consumer's own word for it [KT5].</td></tr>
+                    </tbody></table></div>
+                    <h3 class="kp-fw-semibold"><code>SidenavSlimToggle</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="SidenavSlimToggle props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>controls</code></td><td><code>string</code></td><td>required</td><td>The `id` of the rail this collapses and expands.</td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The consumer's own word or glyph [KT5]. A glyph alone, marked aria-hidden, takes its accessible name from js/strings.js and the name follows the state.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
@@ -334,6 +369,7 @@
                         <li>Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.</li>
                         <li>Built in — the current page carries aria-current, so it is announced and not only drawn.</li>
                         <li>Built in — the toggler says whether it is expanded and which panel it controls.</li>
+                        <li>Built in — a collapsed rail keeps every label in the accessibility tree, and the slim toggle keeps the focus while the rail changes.</li>
                         <li>Yours — give the nav element a name; a page with a bar and a side navigation has two of them.</li>
                         <li>Yours — put a label in every link. A rail of bare icons reads as a column of nothing.</li>
                     </ul>
@@ -345,6 +381,7 @@
                             <tr><td><code>data-kp-sidenav-position</code></td><td>fixed or absolute. Absolute puts the panel inside a positioned box rather than against the window, which is what a page with two of them needs.</td></tr>
                             <tr><td><code>data-kp-sidenav-side</code></td><td>end puts the panel on the other edge, logically: in a right-to-left page that is the left, and it still slides out of the side it came from.</td></tr>
                             <tr><td><code>data-kp-sidenav-slim</code></td><td>Allows the rail. With data-kp-sidenav-slim-collapsed it starts collapsed; data-kp-sidenav-expand-on-hover gives the words back while the pointer is over it.</td></tr>
+                            <tr><td><code>data-kp-sidenav-slim-toggle</code></td><td>On a button, collapses the rail to its icons and expands it again. aria-controls names the panel; without it the button drives every rail on the page, the way data-kp-sidenav-toggle does. The module keeps aria-expanded on it, and names a button that has no words of its own.</td></tr>
                             <tr><td><code>data-kp-sidenav-slim-hide</code></td><td>On an element inside, hides it in the rail; data-kp-sidenav-slim-show is its other half, so a wordmark can become a monogram instead of only disappearing.</td></tr>
                             <tr><td><code>data-kp-sidenav-accordion</code></td><td>One category open at a time. Without it they are independent.</td></tr>
                             <tr><td><code>data-kp-sidenav-backdrop</code></td><td>false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.</td></tr>

@@ -448,9 +448,7 @@
 
     [data-theme='dark'] .kp-nav-wrap {
         background: var(--card);
-        position: relative;
         border-bottom: 1px solid var(--border-strong);
-        z-index: var(--kp-z-nav, 30);
     }
 
     [data-theme='dark'] .kp-nav {

@@ -751,12 +751,12 @@ including the screen-reader-only announcements, which are the half that
 fails silently.
 
 ```js
-import { DEFAULT_STRINGS, STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings';
+import { DEFAULT_STRINGS, setStrings } from '@kp-soft/themes/js/strings';
 ```
 
-`DEFAULT_STRINGS` is the English set, frozen. `STRINGS_NL` is the Dutch
-that this package used to render by default, kept as one import for the
-projects that want those words back.
+`DEFAULT_STRINGS` is the English set, frozen. The package ships no other
+language since 4.0.0: a project that wants Dutch writes its own object of
+the keys it needs, called `NL` below.
 
 ### Three ways in, nearest wins
 
@@ -773,7 +773,7 @@ doing:
 ```jsx
 import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 
-<StringsProvider value={STRINGS_NL}>
+<StringsProvider value={NL}>
     <App />
 </StringsProvider>;
 ```
@@ -782,7 +782,7 @@ import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 also seeds the React default:
 
 ```js
-setStrings({ ...STRINGS_NL, tableSearch: 'Zoeken in de tabel' });
+setStrings({ ...NL, tableSearch: 'Zoeken in de tabel' });
 ```
 
 Every override is partial: what you do not name keeps its default.
@@ -800,7 +800,7 @@ setStrings({
 });
 ```
 
-`js/strings.js` is the full list — 111 keys, each with its English default
+`js/strings.js` is the full list — 185 keys on 2026-09-14, each with its English default
 beside it.
 
 ### Theme names

@@ -48,10 +48,10 @@
                 <span class="kp-nav__brand">Northwind</span>
                 <ul class="kp-nav__links">
                     <li>
-                        <a class="kp-nav__link" href="#overview" aria-current="page" data-kp-text="Overview">Overview</a>
+                        <a class="kp-nav__link" href="#overview" data-kp-text="Overview">Overview</a>
                     </li>
                     <li>
-                        <a class="kp-nav__link" href="#invoices" data-kp-text="Invoices">Invoices</a>
+                        <a class="kp-nav__link" href="#invoices" aria-current="page" data-kp-text="Invoices">Invoices</a>
                     </li>
                     <li>
                         <a class="kp-nav__link" href="#reports" data-kp-text="Reports">Reports</a>
@@ -75,32 +75,63 @@
                 </div>
             </nav>
         </div>
-        <main id="main" class="kp-page" tabindex="-1">
-            <div class="kp-stack">
-                <h1>Overview</h1>
-                <p class="kp-text-muted kp-prose">Everything on this page is laid out by the package: no page stylesheet, no style attribute except the two the popover anchor needs.</p>
-                <div class="kp-sidebar">
-                    <aside class="kp-sidebar__aside">
-                        <div class="kp-card" data-slot="card">
-                            <div class="kp-card__header">
-                                <h3 class="kp-card__title">Sections</h3>
-                            </div>
-                            <div class="kp-card__body">
-                                <ul class="kp-stack kp-gap-xs">
-                                    <li>
-                                        <a href="#overview">Overview</a>
-                                    </li>
-                                    <li>
-                                        <a href="#invoices">Invoices</a>
-                                    </li>
-                                    <li>
-                                        <a href="#reports">Reports</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </aside>
-                    <div class="kp-sidebar__main">
+        <div class="kp-d-flex kp-flex-wrap" data-example="app-shell-body">
+            <nav class="kp-sidenav" id="app-rail" aria-label="Invoices" data-kp-sidenav-slim>
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#all" aria-current="page">
+                                <span class="kp-sidenav__icon" aria-hidden="true">▤</span>
+                                <span class="kp-sidenav__label">All invoices</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#drafts">
+                                <span class="kp-sidenav__icon" aria-hidden="true">✎</span>
+                                <span class="kp-sidenav__label">Drafts</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#overdue">
+                                <span class="kp-sidenav__icon" aria-hidden="true">!</span>
+                                <span class="kp-sidenav__label">Overdue</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#customers">
+                                <span class="kp-sidenav__icon" aria-hidden="true">◎</span>
+                                <span class="kp-sidenav__label">Customers</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="kp-sidenav__footer">
+                    <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="app-rail">
+                        <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+                        <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+                    </button>
+                </div>
+            </nav>
+            <div class="kp-flex-1">
+                <div class="kp-page kp-py-sm">
+                    <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li>
+                                <a href="#overview">Northwind</a>
+                            </li>
+                            <li>
+                                <a href="#invoices">Invoices</a>
+                            </li>
+                            <li>
+                                <span aria-current="page">All invoices</span>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <main id="main" class="kp-page" tabindex="-1">
+                    <div class="kp-stack">
+                        <h1>All invoices</h1>
+                        <p class="kp-text-muted kp-prose">Everything on this page is laid out by the package: no page stylesheet, no style attribute except the two the popover anchor needs.</p>
                         <div class="kp-autogrid">
                             <div class="kp-card" data-slot="card">
                                 <div class="kp-card__header">
@@ -127,36 +158,36 @@
                                 </div>
                             </div>
                         </div>
+                        <section class="kp-section kp-stack">
+                            <h2>Latest activity</h2>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">When</th>
+                                            <th scope="col">What</th>
+                                            <th scope="col">Who</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>09:14</td>
+                                            <td>Invoice 2026-0114 sent</td>
+                                            <td>Ada</td>
+                                        </tr>
+                                        <tr>
+                                            <td>08:02</td>
+                                            <td>Report generated</td>
+                                            <td>System</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
                     </div>
-                </div>
-                <section class="kp-section kp-stack">
-                    <h2>Latest activity</h2>
-                    <div class="kp-table-wrap">
-                        <table class="kp-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">When</th>
-                                    <th scope="col">What</th>
-                                    <th scope="col">Who</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>09:14</td>
-                                    <td>Invoice 2026-0114 sent</td>
-                                    <td>Ada</td>
-                                </tr>
-                                <tr>
-                                    <td>08:02</td>
-                                    <td>Report generated</td>
-                                    <td>System</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                </main>
             </div>
-        </main>
+        </div>
         <script type="module" src="../js/auto.js"></script>
         <script>
             if (new URLSearchParams(location.search).has('review')) {

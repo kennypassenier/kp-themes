@@ -27,6 +27,10 @@ export type SidenavProps = {
      */
     title?: import('react').ReactNode;
     /**
+     * What stays under the list, in `.kp-sidenav__footer` — an account row, or the rail's own SidenavSlimToggle. Omit for no footer.
+     */
+    footer?: import('react').ReactNode;
+    /**
      * How it sits beside the content. Default: the module's 'side'.
      */
     mode?: 'over' | 'side' | 'push';
@@ -104,3 +108,15 @@ export type SidenavToggleProps = {
     children?: import('react').ReactNode;
 };
 export declare const SidenavToggle: import("react").ForwardRefExoticComponent<SidenavToggleProps & import("react").ButtonHTMLAttributes<HTMLButtonElement> & import("react").RefAttributes<HTMLButtonElement>>;
+export type SidenavSlimToggleProps = {
+    /**
+     * The `id` of the rail this collapses and expands.
+     */
+    controls: string;
+    className?: string;
+    /**
+     * The consumer's own word or glyph [KT5]. A glyph alone, marked aria-hidden, takes its accessible name from js/strings.js and the name follows the state.
+     */
+    children?: import('react').ReactNode;
+};
+export declare const SidenavSlimToggle: import("react").ForwardRefExoticComponent<SidenavSlimToggleProps & import("react").ButtonHTMLAttributes<HTMLButtonElement> & import("react").RefAttributes<HTMLButtonElement>>;

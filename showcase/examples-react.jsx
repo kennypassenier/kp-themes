@@ -21,6 +21,8 @@ import Card from '../components/card.jsx';
 import Field from '../components/field.jsx';
 import Table from '../components/table.jsx';
 import Marquee from '../components/marquee.jsx';
+import Sidenav, { SidenavSlimToggle } from '../components/sidenav.jsx';
+import { Breadcrumb } from '../components/overlays.jsx';
 import { EXAMPLES, conceptBody, isComponent } from './examples.mjs';
 import { conceptCopy } from './concept-copy.mjs';
 
@@ -198,6 +200,40 @@ const TO_REACT = {
             as={p.as}
             className={p.class}
             {...Object.fromEntries(Object.entries(p).filter(([name]) => name.startsWith('data-')))}
+        />
+    ),
+    // components/sidenav.jsx: the rail's items are descriptor data, their
+    // labels and icons page copy; the footer is a descriptor node like any
+    // child [scope-48].
+    Sidenav: (p, _children, key) => (
+        <Sidenav
+            key={key}
+            id={p.id}
+            label={p.label}
+            title={p.title === undefined ? undefined : toReact(p.title, 'title')}
+            slim={p.slim}
+            slimCollapsed={p.slimCollapsed}
+            className={p.class}
+            items={(p.items ?? []).map((/** @type {Record<string, any>} */ item) => ({
+                href: item.href,
+                current: item.current,
+                icon: item.icon === undefined ? undefined : toReact(item.icon, 'icon'),
+                label: toReact(item.label, 'label'),
+            }))}
+            footer={p.footer === undefined ? undefined : toReact(p.footer, 'footer')}
+        />
+    ),
+    SidenavSlimToggle: (p, children, key) => (
+        <SidenavSlimToggle key={key} controls={p.controls} className={p.class}>
+            {kids(children)}
+        </SidenavSlimToggle>
+    ),
+    Breadcrumb: (p, _children, key) => (
+        <Breadcrumb
+            key={key}
+            label={p.label}
+            className={p.class}
+            items={(p.items ?? []).map((/** @type {Record<string, any>} */ item) => ({ href: item.href, label: toReact(item.label, 'label') }))}
         />
     ),
     Table: (p, _children, key) => (

@@ -96,6 +96,24 @@ function storage() {
     }
 }
 
+/**
+ * Whether a toggler has no name of its own, so the module gives it one.
+ *
+ * A toggler that already carries `aria-label` is renamed as the state
+ * changes; one with words in it keeps them. What counts as words is what a
+ * screen reader would read: a button holding only an `aria-hidden` glyph —
+ * the arrow a rail toggle usually is — has text content and no name, and
+ * was left as a bare "button" [scope-48].
+ *
+ * @param {Element} toggler
+ */
+function wantsName(toggler) {
+    if (toggler.getAttribute('aria-label') !== null) return true;
+    const clone = /** @type {Element} */ (toggler.cloneNode(true));
+    for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+    return (clone.textContent ?? '').trim() === '';
+}
+
 const FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -171,7 +189,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
                 toggler.setAttribute('aria-expanded', String(open));
                 toggler.setAttribute('aria-controls', panel.id);
-                if (toggler.getAttribute('aria-label') !== null || toggler.textContent?.trim() === '') {
+                if (wantsName(toggler)) {
                     toggler.setAttribute('aria-label', open ? s.closeSidebar : s.sidebar);
                 }
             }
@@ -267,7 +285,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 // collapsed rail widens [ARIA disclosure].
                 toggler.setAttribute('aria-expanded', String(!collapsed));
                 toggler.setAttribute('aria-controls', panel.id);
-                if (toggler.getAttribute('aria-label') !== null || toggler.textContent?.trim() === '') {
+                if (wantsName(toggler)) {
                     toggler.setAttribute('aria-label', collapsed ? s.expandRail : s.collapseRail);
                 }
             }

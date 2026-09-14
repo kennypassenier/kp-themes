@@ -19,8 +19,8 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "bfb40d8dd2924e44049b22089049f219a7c7e13fcf587a286dd31bd2ce90a683",
-            "doc": "c644b08268256a8e6fbcb6913b6c2bb805b8ac8ade97bd161c992f934bbdd55b",
+            "hash": "c178a5235e2821ad65635c956aabdd273f3b481930dea8fb775680832b3ee2a1",
+            "doc": "060f576e14985c3dc23b514201a7aa3206983b60094a1245bc5940b2ded895cc",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
@@ -38,7 +38,7 @@
                 "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
                 "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
                 "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
-                "components/sidenav.d.ts": "03cf2d2caa4a78c5dc9bef3edaf87433f531f611406ba78a125ec7a8e0827ddd",
+                "components/sidenav.d.ts": "9370f05ab0111b5e38601e040a5aff64c5f12774940e0920951a52592e46b125",
                 "components/structure.d.ts": "cb15de5af7c7b758e9c6e732fd23c89a197b4025a1e2d56fa1a6dff87ca26d87",
                 "components/switch.d.ts": "f1ae0185c1a08dae513dafa95f801ce672b68d27c7c99a7cad7714d30c743403",
                 "components/table.d.ts": "b6a5495a0f1fe6e650310fee839f5c7a0b83cba69ef1d6ffd4e46682a157ea47",
@@ -46,7 +46,7 @@
                 "css/tailwind-bridge.css": "3d5243279dfac04cb77b2b588d42308f1ade7381a30a63b38468303e14d48547",
                 "fonts/families.json": "520ea80794f69ab310ed00d1d8e3a95f883edf871ff932938245edb2af6adf2a",
                 "gates/generate-ha-themes.mjs": "3dc26149391dec23ac8cb74c7215c11c7378832574ee196ae1c86f86dd076acf",
-                "index.d.ts": "77e9545d7a6c3ab899eefcdc5610db47a7ab4b0e2e8c6634dd9777bbbc500153",
+                "index.d.ts": "9e5af9b9063a3d2b813007467a7b96ee5610ecab663ab4eeb25d56f2e4d28dc0",
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
                 "js/locale.d.ts": "f1ad46a4afb65c848fb497707d4a3d5f62938bf6a4a05157ad45d40fe123efd2",
@@ -80,7 +80,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "a14550b2956a222c9c99e9e2057f76bc7b21ff6d8c3ca9ac1e5d39feb16319a7",
+            "hash": "48419793dcfe8252b5bc4e0331a6c6854cabf01edb3f46b9010e48fa94b1b006",
             "doc": "5da7917a1493b3940dd2ef9921ddf93c75135a2175321ae873f35ba2af7b6fc1",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
@@ -88,7 +88,7 @@
                 "gates/colour.mjs": "a937662bbb79c5125bc5eb84639f5c67c9261e498d57e7135f98a2d04988bc95",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
                 "gates/generate-themes.mjs": "dfa9205f7c631762560d6800c3cfaf9d54d558d4bafb7bb61f6cd96156b45488",
-                "index.js": "aa4ab9d663b066aab3752ee75d1201b2e7b3cf6711fe517b26f94875c6145abb",
+                "index.js": "d120abafcbb02084b25c2692e2af4cb81b14d9bfebe6c948af00889fd0b8f58c",
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",

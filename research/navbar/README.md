@@ -90,6 +90,13 @@ its own keyboard model and tests.
    registers' reveals — a demo cannot show the "at rest" chrome without
    `manageRoot: false`.
 
+Where they stand (2026-09-14, scope-48 wave one): finding 1 was fixed at
+scope-45 (labels in a collapsed rail are visually hidden, not removed);
+finding 4 at gap-12 (`data-kp-sidenav-slim-toggle`), with the React
+`SidenavSlimToggle` and a glyph-only toggle named from the strings added at
+scope-48; finding 3 at scope-48 (`--kp-z-nav` on `.kp-nav-wrap` in the
+base). Findings 2 and 5 are open.
+
 ## Recommendation
 
 Build, in this order:

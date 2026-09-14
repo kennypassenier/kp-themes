@@ -371,7 +371,9 @@
     [data-theme='blueprint'] .kp-nav {
         background: var(--background);
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='blueprint'] .kp-nav__brand {

@@ -396,7 +396,9 @@
         border-bottom: 1px solid hsl(from var(--foreground) h s l / 0.08);
         padding-block: 1.1rem 0;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The brand in small chrome. */

@@ -981,6 +981,24 @@ rendering to your router the way NavBar's does:
 <CommandPalette id="places" commands={[{ value: 'reports', label: 'Reports', href: '/reports' }]} />
 ```
 
+### The bar's layer [scope-48]
+
+`.kp-nav-wrap` is positioned and sits on `--kp-z-nav` (30): above the
+popover layer (20), below back-to-top (50) and a covering side navigation
+(60). The whole bar is one layer, so its open dropdown stays above
+whatever follows the bar on the popover layer, in every theme. Until
+scope-48 two registers lifted the wrapper, nine the nav inside it and the
+rest nothing, so an element at `z-index: 20` after the bar covered the
+dropdown in six themes.
+
+Two consequences. A page that wants the bar sticky writes
+`position: sticky; top: 0` on `.kp-nav-wrap` in its own stylesheet, which
+wins over the package's layers. And a control inside the bar is on the
+bar's layer: a `.kp-sidenav__toggle` placed in the bar sits under an
+`over` panel (60) rather than above it, so give that panel
+`--kp-sidenav-inset-block` to start below the bar, or put its closing
+control inside the panel.
+
 ## The page shell [TH36]
 
 ```html
@@ -1195,6 +1213,70 @@ Without React, write the same markup and let `js/auto.js` find it:
     </div>
 </nav>
 ```
+
+### A rail that collapses from its own toggle [scope-48]
+
+`data-kp-sidenav-slim` allows the rail. A button with
+`data-kp-sidenav-slim-toggle`, pointed at the panel by `aria-controls`,
+collapses it to its icons and gives the words back; without
+`aria-controls` it drives every rail on the page. No script of your own:
+the module keeps `aria-expanded` on the button (true while the rail is
+wide) and fires `kp-sidenav-slim` with `{ collapsed }` on the panel. A
+button with no words of its own — empty, or holding only an `aria-hidden`
+glyph — is named from the dictionary (`collapseRail`, `expandRail`), and
+the name says which way the press goes. The button is not replaced when
+the rail changes, so the focus stays on it.
+
+```html
+<nav class="kp-sidenav" id="rail" aria-label="Invoices" data-kp-sidenav-slim>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="/invoices" aria-current="page"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">All invoices</span></a
+                >
+            </li>
+        </ul>
+    </div>
+    <div class="kp-sidenav__footer">
+        <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail">
+            <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+            <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+        </button>
+    </div>
+</nav>
+```
+
+In React the button is `SidenavSlimToggle`, and `footer` on `Sidenav` puts
+it under the list:
+
+```jsx
+import { Sidenav, SidenavSlimToggle } from '@kp-soft/themes';
+
+<Sidenav
+    id="rail"
+    label="Invoices"
+    slim
+    items={[{ label: 'All invoices', href: '/invoices', icon: '▤', current: true }]}
+    footer={<SidenavSlimToggle controls="rail" className="kp-sidenav__link">…</SidenavSlimToggle>}
+/>;
+```
+
+The labels of a collapsed rail leave the eye and stay in the
+accessibility tree, so every link keeps its name; give every link a label
+even when the rail starts collapsed.
+
+### The application shell
+
+`examples/app-shell.html` puts the parts together, in both channels from
+one descriptor (`showcase/examples.mjs`): the bar across the top for the
+product's areas, the rail beside the content for the pages of the area the
+reader is in, and a `.kp-breadcrumb` that says where in it. The row is
+`kp-d-flex kp-flex-wrap` with the rail and a `kp-flex-1` column, so in a
+narrow window the content drops under the rail instead of pushing the page
+sideways; the breadcrumb comes
+before `<main>`, so the skip link passes it along with both navigations.
+No page stylesheet is involved.
 
 ## Numbers that count up [feat-count-1]
 

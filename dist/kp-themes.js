@@ -8853,6 +8853,15 @@ function storage() {
     return null;
   }
 }
+function wantsName(toggler) {
+  if (toggler.getAttribute("aria-label") !== null) return true;
+  const clone = (
+    /** @type {Element} */
+    toggler.cloneNode(true)
+  );
+  for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+  return (clone.textContent ?? "").trim() === "";
+}
 var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
   const cleanups = [];
@@ -8903,7 +8912,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
         toggler.setAttribute("aria-expanded", String(open2));
         toggler.setAttribute("aria-controls", panel.id);
-        if (toggler.getAttribute("aria-label") !== null || toggler.textContent?.trim() === "") {
+        if (wantsName(toggler)) {
           toggler.setAttribute("aria-label", open2 ? s.closeSidebar : s.sidebar);
         }
       }
@@ -8973,7 +8982,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
         toggler.setAttribute("aria-expanded", String(!collapsed));
         toggler.setAttribute("aria-controls", panel.id);
-        if (toggler.getAttribute("aria-label") !== null || toggler.textContent?.trim() === "") {
+        if (wantsName(toggler)) {
           toggler.setAttribute("aria-label", collapsed ? s.expandRail : s.collapseRail);
         }
       }

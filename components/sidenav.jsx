@@ -34,6 +34,7 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @typedef {object} SidenavProps
  * @property {SidenavItem[]} [items]  The list. Omit and pass children to build it by hand.
  * @property {import('react').ReactNode} [title]  The heading above the list. Omit for no header.
+ * @property {import('react').ReactNode} [footer]  What stays under the list, in `.kp-sidenav__footer` — an account row, or the rail's own SidenavSlimToggle. Omit for no footer.
  * @property {'over' | 'side' | 'push'} [mode]  How it sits beside the content. Default: the module's 'side'.
  * @property {'fixed' | 'absolute'} [position]  Default: the module's own.
  * @property {'start' | 'end'} [side]  Which edge it lives on. Default: the module's own.
@@ -95,6 +96,7 @@ function SidenavInner(
     {
         items,
         title,
+        footer,
         mode,
         position,
         side,
@@ -178,6 +180,7 @@ function SidenavInner(
                 </div>
             )}
             <div className="kp-sidenav__scroll">{items === undefined ? children : list(items, Link)}</div>
+            {footer === undefined ? null : <div className="kp-sidenav__footer">{footer}</div>}
         </nav>
     );
 }
@@ -216,3 +219,31 @@ function SidenavToggleInner({ controls, className = '', children, ...rest }, ref
 }
 
 export const SidenavToggle = forwardRef(SidenavToggleInner);
+
+/**
+ * @typedef {object} SidenavSlimToggleProps
+ * @property {string} controls  The `id` of the rail this collapses and expands.
+ * @property {string} [className]
+ * @property {import('react').ReactNode} [children]  The consumer's own word or glyph [KT5]. A glyph alone, marked aria-hidden, takes its accessible name from js/strings.js and the name follows the state.
+ */
+
+/**
+ * The button that collapses the rail to its icons and gives the words back
+ * [scope-48]. The React half of `data-kp-sidenav-slim-toggle`: it renders
+ * that attribute and nothing else of its own, and js/sidenav.js writes
+ * `aria-expanded`, `aria-controls` and — when the button has no words — the
+ * accessible name, exactly as it does for the markup a server writes. The
+ * button is not replaced when the rail changes, so the focus stays on it.
+ *
+ * @param {SidenavSlimToggleProps & import('react').ButtonHTMLAttributes<HTMLButtonElement>} props
+ * @param {import('react').ForwardedRef<HTMLButtonElement>} ref
+ */
+function SidenavSlimToggleInner({ controls, className, children, ...rest }, ref) {
+    return (
+        <button ref={ref} type="button" className={className} data-kp-sidenav-slim-toggle="" aria-controls={controls} {...rest}>
+            {children}
+        </button>
+    );
+}
+
+export const SidenavSlimToggle = forwardRef(SidenavSlimToggleInner);

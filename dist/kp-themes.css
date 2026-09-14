@@ -5465,6 +5465,15 @@
      * zero. `auto` is the initial value in every context, so the default
      * is a true no-op [R3-CQ, KT6]. */
         min-inline-size: var(--kp-nav-wrap-min, auto);
+        /* The bar's layer, in the base so every theme gives the same answer
+     * [scope-48, research/navbar finding 3]. Two registers lifted the
+     * wrapper and nine the nav inside it; in six themes nothing did, and
+     * the next element on the popover layer painted over an open dropdown
+     * (tests/app-shell.spec.mjs). One layer for the whole bar: its dropdown rides on it, and
+     * a page stacks against one number. Knob: --kp-z-nav (30), between the
+     * popover layer (20) and back-to-top (50). */
+        position: relative;
+        z-index: var(--kp-z-nav, 30);
     }
 
     .kp-nav {
@@ -9056,7 +9065,9 @@
         border-bottom: 0;
         padding-block: 1.2rem 0.4rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='cyberpunk'] .kp-nav__brand {
@@ -10862,7 +10873,9 @@
         padding-block: 3px;
         gap: 0.5rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The three window controls the demo's title bar ends on [S49, A2]:
@@ -12886,7 +12899,9 @@
         border-bottom: 1px solid hsl(from var(--foreground) h s l / 0.08);
         padding-block: 1.1rem 0;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The brand in small chrome. */
@@ -14615,7 +14630,9 @@
         border-bottom: 2px solid var(--border);
         padding-block: 1.1rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The brand: italic capitals with the red offset. */
@@ -16419,7 +16436,9 @@
         border-bottom: 1px solid var(--border);
         padding-block: 1rem 0.6rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='terminal'] .kp-nav__brand {
@@ -17990,7 +18009,9 @@
         background: var(--background);
         padding-block: 1.1rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='brutalism'] .kp-nav__brand {
@@ -19807,9 +19828,7 @@
 
     [data-theme='titanium'] .kp-nav-wrap {
         background: var(--card);
-        position: relative;
         border-bottom: 1px solid var(--border-strong);
-        z-index: var(--kp-z-nav, 30);
     }
 
     [data-theme='titanium'] .kp-nav {
@@ -24850,7 +24869,9 @@
         background: var(--sidebar-background);
         padding-block: 0.9rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='deco'] .kp-nav__brand {
@@ -28750,7 +28771,9 @@
     [data-theme='blueprint'] .kp-nav {
         background: var(--background);
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='blueprint'] .kp-nav__brand {
@@ -31544,9 +31567,7 @@
 
     [data-theme='dark'] .kp-nav-wrap {
         background: var(--card);
-        position: relative;
         border-bottom: 1px solid var(--border-strong);
-        z-index: var(--kp-z-nav, 30);
     }
 
     [data-theme='dark'] .kp-nav {
@@ -37333,7 +37354,9 @@
     [data-theme='lapis'] .kp-nav {
         background: var(--sidebar-background);
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='lapis'] .kp-nav__brand {
