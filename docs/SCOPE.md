@@ -1436,3 +1436,26 @@ trigger in the bar, an option that is a link) side by side; the second the
 mega menu and the shrinking header, after the three registers that set the
 bar's padding directly read `--kp-nav-pad-block`. step-timing "Akkoord":
 work that does not overlap starts together.
+
+**scope-80 · Wave 1 judged: E then B, per-theme search trigger, an off-canvas
+rail, and the catalogue notes of 2026-09-14.** Kenny, 2026-09-14, the wave-1
+form. uniform-size "E, daarna B": control and row heights plus one line
+height are fixed in the package first, in all 22 themes; B (headings, labels
+and navigation as tokens a register may not override, with a gate) follows as
+its own round after he judges E. search-voice "Per thema": each register
+draws `.kp-nav__search-trigger` in the voice of its own nav links.
+shell-narrow "Uitschuifpaneel": below a breakpoint the shell's rail becomes the
+existing `over` panel opened from the bar, and on wide screens the rail runs
+to the bottom of the window. fix-27 "Aanpassen", without a text: asked again.
+artifacts, his own answer: whether the unlinked ones can be archived and
+whether that touches the limit of five; answered in the next form.
+step-timing, his own answer: "akkoord", and from now on step durations are
+written in minutes and seconds, and in hours past sixty minutes. The notes of
+his catalogue prompt of the same day become work: the add-filter editor's
+Cancel brackets overlap its label (dark); a sixty-character bar label wraps
+over the line above; a click outside the search palette closes it; cyberpunk's
+button variants animate unevenly and the animation colour must differ from
+the ground; terminal's cursor sits at the text's height and is red on the
+destructive button; phantom's primary gets a press animation like the others;
+retro's accelerator appears on every button; titanium's primary shows a
+visible hover. 156 verdicts recorded in `catalogue/verdicts.json`.
