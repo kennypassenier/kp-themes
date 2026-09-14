@@ -23,6 +23,7 @@ import { HASH_VERSION } from '../catalogue/block-hash.js';
 // A register of the test's own in place of catalogue/verdicts.json, so the
 // verdicts recorded in the repository do not decide what these tests can press.
 import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
+import { waitForJudging } from './helpers/catalogue.mjs';
 
 test.describe.configure({ timeout: 180_000 });
 
@@ -54,7 +55,7 @@ async function setTheme(page, theme) {
 async function openReview(page) {
     await page.setViewportSize({ width: 1400, height: 900 });
     await page.goto('/catalogue/index.html');
-    await expect(page.locator('#button--variants [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 120_000 });
+    await waitForJudging(page, { timeout: 120_000 });
 }
 
 /** Approve a block on the review page in the theme on screen; returns the stored hash. */
@@ -65,8 +66,9 @@ async function approveOnReview(page, id, theme) {
     // Unhide everything, so an already judged block is still pressable.
     await page.locator('[data-cat-show-judged]').check();
     await expect(section.locator('[data-cat-approval-state]')).toContainText(` · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'}`);
+    await waitForJudging(page, { timeout: 120_000 });
     const approve = section.locator('[data-cat-verdict="approved"]');
-    await expect(approve).toBeEnabled({ timeout: 60_000 });
+    await expect(approve).toBeEnabled();
     await approve.click();
     return storedHash(page, id, theme, engine);
 }
@@ -134,12 +136,10 @@ test('the same block in the same theme hashes the same on the review page, its c
         const block = id.slice(component.length + 2);
         for (const theme of ['formal', 'cyberpunk']) {
             await setTheme(ownPage, theme);
+            await waitForJudging(ownPage);
             const panel = ownPage.locator(`#${block} .cat-judge`);
             await expect(panel.locator('[data-cat-approval-state]')).toContainText(
                 `Not yet judged · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'} · ${ENGINE_LABEL[engine]}`,
-                {
-                    timeout: 60_000,
-                },
             );
             await panel.locator('[data-cat-verdict="approved"]').click();
             await ownPage.locator('[data-cat-show-judged]').check();
@@ -215,7 +215,7 @@ test('a verdict made in a compare column shows as that verdict on the review pag
     await page.evaluate(() => localStorage.setItem('theme', 'cyberpunk'));
     await openReview(page);
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('cyberpunk');
-    await expect(page.locator('#button--variants')).toHaveAttribute('data-cat-state', 'rejected', { timeout: 60_000 });
+    await expect(page.locator('#button--variants')).toHaveAttribute('data-cat-state', 'rejected');
     await page.locator('[data-cat-show-judged]').check();
     await expect(page.locator('#button--variants [data-cat-approval-state]')).toHaveText(`Not approved · Cyberpunk · ${label}`);
     // The note from the formal column is the review page's note for that block in formal.
@@ -260,10 +260,11 @@ test('a verdict in the register shows as judged in a fresh browser, only in its 
     const measuring = await first.newPage();
     await measuring.setViewportSize({ width: 1400, height: 900 });
     await measuring.goto('/catalogue/switch.html');
+    await waitForJudging(measuring);
     const hashes = {};
     for (const block of ['states', 'invalid']) {
         const approve = measuring.locator(`#${block} [data-cat-verdict="approved"]`);
-        await expect(approve).toBeEnabled({ timeout: 60_000 });
+        await expect(approve).toBeEnabled();
         await approve.click();
         hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
         expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
@@ -282,7 +283,8 @@ test('a verdict in the register shows as judged in a fresh browser, only in its 
     await page.setViewportSize({ width: 1400, height: 900 });
     await page.goto('/catalogue/switch.html');
     expect(await page.evaluate((key) => localStorage.getItem(key), JUDGEMENTS)).toBeNull();
-    await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'approved', { timeout: 60_000 });
+    await waitForJudging(page);
+    await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'approved');
     // Judged, so it leaves the page like a block judged in this browser.
     await expect(page.locator('#states')).toBeHidden();
     await page.locator('[data-cat-show-judged]').check();
@@ -300,8 +302,9 @@ test('a new verdict in this browser carries a verdict line in the prompt that re
     const engine = engineOf(browserName);
     await page.setViewportSize({ width: 1400, height: 900 });
     await page.goto('/catalogue/button.html');
+    await waitForJudging(page);
     const reject = page.locator('#sizes [data-cat-verdict="rejected"]');
-    await expect(reject).toBeEnabled({ timeout: 60_000 });
+    await expect(reject).toBeEnabled();
     await reject.click();
     const hash = await storedHash(page, 'button--sizes', 'formal', engine);
     await expect(page.locator('#sizes [data-cat-verdict-source]')).toHaveText('In this browser, not yet recorded');
@@ -328,7 +331,7 @@ test('a verdict stored before engines counts for this browser’s engine, and is
         localStorage.setItem('kp-catalogue-copied:v2', JSON.stringify([`verdict|switch--states|cyberpunk|approved|${hash}`]));
     }, old);
     await page.goto('/catalogue/switch.html');
-    await expect(page.locator('#states [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 60_000 });
+    await waitForJudging(page);
     const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
     expect(stored['switch--states'].cyberpunk[engine]).toEqual({ verdict: 'approved', hash: old });
     await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
@@ -361,16 +364,7 @@ const registerVerdicts = (theme, engine) =>
 /** Every register block on the review page whose state is not its verdict, once measuring is done. */
 async function reviewMismatches(page, theme, verdicts) {
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme), { timeout: 30_000 }).toBe(theme);
-    await expect
-        .poll(
-            () =>
-                page.evaluate(() => {
-                    const states = [...document.querySelectorAll('[data-cat-approval-state]')];
-                    return states.length > 0 && !states.some((el) => /Checking/.test(el.textContent ?? ''));
-                }),
-            { timeout: 150_000 },
-        )
-        .toBe(true);
+    await waitForJudging(page, { timeout: 150_000 });
     const states = await page.evaluate(
         (keys) => Object.fromEntries(keys.map((key) => [key, document.getElementById(key)?.dataset.catState])),
         Object.keys(verdicts),
@@ -427,7 +421,7 @@ test('a block hashes the same in a short window and a tall one, a narrow one and
         await useEmptyRegister(context);
         const page = await context.newPage();
         await page.goto('/catalogue/page.html');
-        await expect(page.locator('#palette [data-cat-approval-state]')).not.toContainText('Checking', { timeout: 60_000 });
+        await waitForJudging(page);
         const hashes = await page.evaluate(async () => {
             const { readBlocks } = await import('/catalogue/block-hash.js');
             const raw = new DOMParser().parseFromString(await (await fetch(location.href)).text(), 'text/html');

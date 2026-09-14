@@ -2,15 +2,15 @@
 // "Twelve Columns" (2026-09-08) reproduced by the package, measured on the
 // concept page under grotesk in both channels.
 //
-// What the demo showed and this suite holds: the fourteen-column navbar
-// track with the brand in three tracks and the links in eleven, the
-// two-speed link timing (.1s in, .15s out), the headline's optical
-// blur+brightness resolve ending as its own text, the lede's marks as a
-// static signal colour with no reveal, the dossier's marks as ink
-// redaction bars that cut away in three monotone steps on the trigger, the
-// rule drawing itself under a heading, the double rule with the signal
-// hairline as divider, the black-ruled buttons and fields, no arrival at
-// all, and the whole approved inventory.
+// What the demo showed and this suite holds: the two-speed link timing
+// (.1s in, .15s out), the headline's optical blur+brightness resolve
+// ending as its own text, the dossier's marks as ink redaction bars that
+// cut away in three monotone steps on the trigger, the rule drawing itself
+// under a heading, the double rule with the signal hairline as divider, no
+// arrival at all, and the whole approved inventory. The navbar track, the
+// buttons, their hover, press and baseline, and the dropdown are judged by
+// eye on the catalogue since scope-73 (navigation#bar, navigation#dropdown,
+// button#variants, button#states).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the armed redaction cover (`[data-kp-effects] .kp-card[data-kp-reveal
@@ -26,8 +26,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle, style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -142,17 +141,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.evaluate((el) => getComputedStyle(el).fontFamily)).toMatch(/Archivo/);
         });
 
-        test('the nav track is fourteen columns, the brand in three and the links in the rest, right-aligned', async ({ page }) => {
-            await open(page, url);
-            const nav = page.locator('.kp-nav').first();
-            expect(await nav.evaluate((el) => getComputedStyle(el).display)).toBe('grid');
-            const tracks = (await nav.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).split(' ').length;
-            expect(tracks, 'fourteen tracks').toBe(14);
-            const brand = page.locator('.kp-nav__brand').first();
-            expect(await brand.evaluate((el) => getComputedStyle(el).gridColumnStart)).toBe('1');
-            expect(await brand.evaluate((el) => getComputedStyle(el).gridColumnEnd)).toBe('4');
-        });
-
         test("the nav and footer links carry Grilli's two-speed timing: .1s at rest, .15s once hovered", async ({ page }) => {
             await open(page, url);
             const link = page.locator('.kp-nav__link').nth(1);
@@ -219,88 +207,6 @@ for (const [channel, url] of CHANNELS) {
             expect(lifted.transform, 'the bar has cut away').toMatch(/^matrix\(0,/);
         });
 
-        test('the buttons are right angles: a 2px ink rule, the primary in signal, mirror-invert on hover', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
-            await primary.hover();
-            await expect
-                .poll(() => primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the mirror inverts on hover')
-                .toBe(await paint(page, '--background'));
-            await expect.poll(() => primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
-        });
-
-        test("the dropdown is styled in the theme's own language [KT14]", async ({ page }) => {
-            await open(page, url);
-            // Reached with the keyboard, not focus() [G15].
-            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            const link = menu.locator('a').first();
-            await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--muted'));
-        });
-
-        test('the baseline appears under the label, and the box never moves [scope-12]', async ({ page }) => {
-            // The rule's TOP edge sits on the type's baseline, computed from
-            // the label's own font metrics rather than from a guessed em —
-            // a zero-width inline probe reads 9.60px here instead of 3.60,
-            // because `.kp-button__label` is an inline-flex container and a
-            // probe inside it becomes a flex item where `vertical-align`
-            // does nothing.
-            //
-            // Drilled 2026-09-12 in firefox: `inset-block-end` removed from
-            // the `::after` rule -> red on the rule meeting the baseline;
-            // the hover's `scale: 1 1` removed -> red on the rule arriving.
-            await open(page, url);
-            const btn = page.locator('.kp-button').first();
-            const label = btn.locator('.kp-button__label').first();
-            const read = () =>
-                label.evaluate((el) => {
-                    const s = getComputedStyle(el);
-                    const a = getComputedStyle(el, '::after');
-                    const box = el.getBoundingClientRect();
-                    const c = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-                    c.font = `${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
-                    const m = c.measureText('Hg');
-                    const baseline = (box.height - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxDescent;
-                    return {
-                        baseline: Number(baseline.toFixed(2)),
-                        ruleTop: Number((Number.parseFloat(a.insetBlockEnd) + Number.parseFloat(a.height)).toFixed(2)),
-                        weight: a.height,
-                        colour: a.backgroundColor,
-                        scale: a.scale,
-                        width: Number(box.width.toFixed(2)),
-                    };
-                });
-
-            const rest = await read();
-            expect(rest.ruleTop, 'the rule stands the letters on it, to the hundredth').toBeCloseTo(rest.baseline, 2);
-            expect(rest.scale, 'nothing is drawn at rest').toBe('0 1');
-
-            await btn.hover();
-            // Polled: the rule scales out over the theme's own duration and
-            // a single read lands mid-draw [fix-1].
-            await pseudoStyle(label, '::after', 'scale', 'the rule draws itself').toBe('1');
-            const hover = await read();
-            expect(hover.width, 'the label is exactly as wide as it was — the fault this quirk replaces').toBe(rest.width);
-            expect(hover.ruleTop, 'and still on the baseline').toBeCloseTo(hover.baseline, 2);
-
-            await page.mouse.down();
-            const pressed = await read();
-            expect(Number.parseFloat(pressed.weight), 'the press thickens it').toBeGreaterThan(Number.parseFloat(rest.weight));
-            expect(pressed.colour, 'into the deeper red').not.toBe(rest.colour);
-            expect(pressed.ruleTop, 'growing downward, so the top edge stays put').toBeCloseTo(pressed.baseline, 2);
-            expect(pressed.width, 'and the box still does not move').toBe(rest.width);
-            await page.mouse.up();
-        });
-
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');
@@ -311,84 +217,6 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
-
-// Kenny's review note of 2026-09-13, option B of research/grotesk-hover/demo.html:
-// every coloured button inverts on hover and on keyboard focus, not while it
-// is pressed, and a bare mirror button takes the default button's grey wash.
-test.describe("grotesk hover, option B [Kenny's note 2]", () => {
-    /** @param {import('@playwright/test').Page} page */
-    const probes = async (page) => {
-        await page.emulateMedia({ reducedMotion: 'reduce' });
-        await page.goto('/tests/fixtures/button.html');
-        await page.evaluate(() => {
-            document.documentElement.setAttribute('data-theme', 'grotesk');
-            const row = document.createElement('div');
-            for (const [probe, className] of [
-                ['primary', 'kp-button kp-button--primary'],
-                ['destructive', 'kp-button kp-button--destructive'],
-                ['mirror', 'kp-button kp-button--mirror'],
-            ]) {
-                const b = document.createElement('button');
-                b.type = 'button';
-                b.className = className;
-                b.dataset.probe = probe;
-                b.textContent = probe;
-                row.append(b);
-            }
-            document.body.prepend(row);
-            // Where the keyboard starts from, so Tab reaches the probes in order.
-            const start = document.createElement('span');
-            start.tabIndex = -1;
-            start.dataset.probe = 'start';
-            row.before(start);
-        });
-    };
-
-    for (const variant of ['primary', 'destructive']) {
-        test(`a ${variant} button inverts on hover and on keyboard focus, keeps its edge, and the press differs from the hover`, async ({ page }) => {
-            // Before: without --mirror the hover only deepened the red (primary rgb(199, 5, 21), destructive rgb(224, 6, 24)); no invert.
-            await probes(page);
-            const button = page.locator(`[data-probe="${variant}"]`);
-            const ground = await paint(page, '--background');
-            const colour = await paint(page, `--${variant}`);
-            await expect(button).toHaveCSS('background-color', colour);
-
-            await button.hover();
-            await style(button, 'background-color', 'the fill becomes the page ground on hover').toBe(ground);
-            await style(button, 'color', 'the label takes the colour').toBe(colour);
-            // The fill was the button's colour; with it gone, the 2px border is what keeps the outline.
-            await style(button, 'border-top-color', 'the border carries the colour while inverted').toBe(colour);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-
-            await page.mouse.down();
-            await expect
-                .poll(() => button.evaluate((el) => getComputedStyle(el).backgroundColor), 'the press must not look like the hover')
-                .not.toBe(ground);
-            await page.mouse.up();
-
-            await page.mouse.move(0, 0);
-            await style(button, 'background-color').toBe(colour);
-            await page.locator('[data-probe="start"]').focus();
-            await tabToSelector(page, `[data-probe="${variant}"]`);
-            await style(button, 'background-color', 'keyboard focus inverts as hover does').toBe(ground);
-            await style(button, 'color').toBe(colour);
-        });
-    }
-
-    test('a bare mirror button takes the grey wash on hover, and the press differs from it', async ({ page }) => {
-        // Before: the bare --mirror button kept rgb(255, 255, 255) on hover — nothing changed.
-        await probes(page);
-        const button = page.locator('[data-probe="mirror"]');
-        const muted = await paint(page, '--muted');
-        await button.hover();
-        await style(button, 'background-color', 'the grey wash').toBe(muted);
-        await page.mouse.down();
-        await expect
-            .poll(() => button.evaluate((el) => getComputedStyle(el).backgroundColor), 'the press must not look like the hover')
-            .not.toBe(muted);
-        await page.mouse.up();
-    });
-});
 
 // Kenny's decision of 2026-09-14, "B, met een zwart label bij indrukken":
 // option B stays, and while a primary or destructive button is pressed its

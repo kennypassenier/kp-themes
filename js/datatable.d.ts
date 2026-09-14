@@ -348,7 +348,7 @@ export type DataTableHandle = {
     selected: () => string[];
     select: (keys: readonly string[]) => void;
     /**
-     * re-read the rows after the consumer added or removed some
+     * re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them
      */
     refresh: () => void;
 };

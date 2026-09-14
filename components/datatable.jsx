@@ -1439,11 +1439,11 @@ function DataTableInner(
                         const value = filters[column.key];
                         if (column.filter === 'choice') {
                             const ticked = Array.isArray(value) ? value : [];
-                            const options =
-                                column.filterOptions ??
-                                [...new Set(rows.map((row) => textOf(row, column.key)).filter((v) => v !== ''))].sort((a, b) =>
-                                    column.order ? compareByOrder(column.order, a, b, collator(locale).compare) : collator(locale).compare(a, b),
-                                );
+                            // The values the rows hold now, and a ticked one no row holds any
+                            // more, so it can still be unticked (the framework-free panel's
+                            // fillChoices does the same).
+                            const options = [...choicesOf(column)];
+                            for (const option of ticked) if (!options.includes(option)) options.push(option);
                             return (
                                 <fieldset key={column.key} className="kp-fieldset kp-datatable__filter">
                                     <legend className="kp-field__label">{column.label}</legend>

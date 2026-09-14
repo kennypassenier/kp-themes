@@ -494,7 +494,7 @@ Next are the theme's own button (`kp-button`; `pagerClassName` in
 Previous carries `data-kp-direction="back"`, which a theme may answer —
 cyberpunk turns its notch to that side.
 
-## Seven more things a data table does [Kenny, 2026-09-13]
+## Eight more things a data table does [Kenny, 2026-09-13 and 2026-09-14]
 
 Each is off until the markup (or a prop) asks for it, each keeps its
 state in the handle `attachDataTables()` returns (`dataTable(element)`

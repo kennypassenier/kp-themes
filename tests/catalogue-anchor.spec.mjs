@@ -10,6 +10,7 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
 
 const REGISTER = JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8'));
 const judged = REGISTER.verdicts['button--variants']?.formal?.firefox;
@@ -24,10 +25,12 @@ for (const [page, id] of [
         await tab.evaluate(() => localStorage.setItem('theme', 'formal'));
         await tab.goto(`${page}#${id}`);
         const block = tab.locator(`[id="${id}"]`);
-        await expect(block).toHaveAttribute('data-cat-state', 'approved', { timeout: 30000 });
-        // While a reading runs every block is shown; only once other judged
-        // blocks are hidden again has the page decided what leaves it.
-        await expect.poll(() => tab.locator('.cat-block[hidden]').count(), { timeout: 30000 }).toBeGreaterThan(0);
+        // While a reading runs every block is shown; only once it is done has
+        // the page decided what leaves it.
+        await waitForJudging(tab, { timeout: 60_000 });
+        await expect(block).toHaveAttribute('data-cat-state', 'approved');
+        // Other judged blocks have left the page, so the one linked to stays by choice.
+        expect(await tab.locator('.cat-block[hidden]').count()).toBeGreaterThan(0);
         await expect(block).not.toHaveAttribute('hidden', '');
         await expect(block).toBeVisible();
         await expect.poll(() => block.evaluate((el) => Math.round(el.getBoundingClientRect().top)), { timeout: 10000 }).toBeLessThan(200);

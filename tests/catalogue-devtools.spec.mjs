@@ -8,11 +8,13 @@
 
 import { test, expect } from '@playwright/test';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { waitForJudging } from './helpers/catalogue.mjs';
 
 test('after opening the overlay again, one click picks only the first element for the ruler', async ({ page }) => {
     // An empty register, so no block is hidden as already judged.
     await useEmptyRegister(page.context());
     await page.goto('/catalogue/button.html');
+    await waitForJudging(page);
     await expect(page.locator('.cat-nav')).toBeVisible();
     // Open, close, open: the sequence a reviewer goes through within minutes.
     for (let i = 0; i < 3; i++) await page.keyboard.press('Alt+d');

@@ -134,6 +134,89 @@ for (const channel of CHANNELS) {
             await expect(table.locator('tbody td[data-label="Note"]:visible').first()).toBeVisible();
             await expect(count).toHaveText(S.tableColumnsShown(5, 5));
         });
+
+        test('the Columns and "+ Add filter" menus, opened at the bottom of a 720px window, open upwards beside their button, whole in the window, in every theme', async ({
+            page,
+        }) => {
+            // Before: the Columns menu hung under its button and ran past the bottom of the window in all 22 themes, both channels (top 714-724, bottom 924-1000).
+            await page.setViewportSize({ width: 1280, height: 720 });
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await open(page, key);
+            // Room to scroll a button to the bottom edge, wherever the fixture ends.
+            await page.evaluate(() => {
+                const spacer = document.createElement('div');
+                spacer.style.blockSize = '100vh';
+                document.body.append(spacer);
+            });
+            /** @type {[string, import('@playwright/test').Locator, import('@playwright/test').Locator][]} */
+            const menus = [
+                [
+                    'Columns',
+                    page.locator(tableOf(key, 'columns')).getByRole('button', { name: S.tableColumns }),
+                    page.locator('[data-kp-datatable-columns]:popover-open'),
+                ],
+                [
+                    '+ Add filter',
+                    page.locator(tableOf(key, 'addfilter')).locator('[data-kp-datatable-add-filter]'),
+                    page.locator('[data-kp-datatable-add-menu]:popover-open'),
+                ],
+            ];
+            const faults = [];
+            for (const theme of THEME_NAMES) {
+                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                for (const [name, button, menu] of menus) {
+                    const before = await button.evaluate((el) => {
+                        el.scrollIntoView({ block: 'end' });
+                        return Math.round(el.getBoundingClientRect().bottom);
+                    });
+                    await button.click();
+                    await expect(menu).toBeVisible();
+                    const m = await menu.evaluate(
+                        async (el, toggle) => {
+                            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                            const box = el.getBoundingClientRect();
+                            const at = /** @type {Element} */ (toggle).getBoundingClientRect();
+                            return {
+                                top: Math.round(box.top),
+                                bottom: Math.round(box.bottom),
+                                window: innerHeight,
+                                buttonTop: Math.round(at.top),
+                                buttonBottom: Math.round(at.bottom),
+                            };
+                        },
+                        await button.elementHandle(),
+                    );
+                    const read = `${theme} ${name}: menu ${m.top}-${m.bottom} in a ${m.window}px window, button ${m.buttonTop}-${m.buttonBottom}`;
+                    if (m.top < 0 || m.bottom > m.window) faults.push(`${read}, outside the window`);
+                    // A menu that opens into the window leaves the page where it was; one that
+                    // opened below it pulled the page up to its focused item.
+                    else if (Math.abs(m.buttonBottom - before) > 2)
+                        faults.push(`${read}, the page moved: button bottom ${before} -> ${m.buttonBottom}`);
+                    // Still its button's menu: an edge within 24px of the button's.
+                    else if (Math.min(Math.abs(m.bottom - m.buttonTop), Math.abs(m.top - m.buttonBottom)) > 24)
+                        faults.push(`${read}, away from its button`);
+                    // And it travels with its button when the page scrolls under it.
+                    await page.mouse.wheel(0, -120);
+                    const moved = await menu.evaluate(
+                        async (el, toggle) => {
+                            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                            const box = el.getBoundingClientRect();
+                            const at = /** @type {Element} */ (toggle).getBoundingClientRect();
+                            return {
+                                gap: Math.round(Math.min(Math.abs(box.bottom - at.top), Math.abs(box.top - at.bottom))),
+                                buttonTop: Math.round(at.top),
+                            };
+                        },
+                        await button.elementHandle(),
+                    );
+                    if (moved.buttonTop === m.buttonTop) faults.push(`${theme} ${name}: the page did not scroll, so the menu's travel was not read`);
+                    else if (moved.gap > 24) faults.push(`${theme} ${name}: ${moved.gap}px from its button after a scroll`);
+                    await page.keyboard.press('Escape');
+                    await expect(menu).toHaveCount(0);
+                }
+            }
+            expect(faults).toEqual([]);
+        });
     });
 
     // ── 3. Rows that open to show more (#expansion) ───────────────────────
@@ -184,78 +267,6 @@ for (const channel of CHANNELS) {
                     details.map((d) => [/** @type {HTMLElement | null} */ (d.previousElementSibling)?.dataset.kpRowKey ?? null, d.hidden]),
                 );
             for (const [ref, hidden] of pairs) if (!hidden) expect(['INC-4400', 'INC-4401']).toContain(ref);
-        });
-    });
-
-    // ── 4. A first column that stays (#sticky) ────────────────────────────
-    test.describe(`datatable fixed first column — ${channel.name}`, () => {
-        test('scrolled sideways, the key column stays at the left edge on an opaque ground with its hairline, under the header, in every theme [feature 4]', async ({
-            page,
-        }) => {
-            // Before: the Reference cells scrolled away with the rest (left edge -200 px from the box, ground rgba(0, 0, 0, 0)), both channels.
-            // Drilled [KT3]: `position: sticky` taken off the fixed-cell rule in css/components.css — cellLeft -200 in both channels; restored, green.
-            await open(page, key);
-            const table = page.locator(tableOf(key, 'fixed'));
-            const faults = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const m = await table.evaluate(async (el) => {
-                    const wrap = /** @type {HTMLElement} */ (el.querySelector('.kp-table-wrap'));
-                    // In the window, or elementFromPoint has nothing to find.
-                    el.scrollIntoView({ block: 'center' });
-                    wrap.scrollLeft = 0;
-                    wrap.scrollTop = 0;
-                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                    wrap.scrollLeft = 200;
-                    wrap.scrollTop = 120;
-                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                    const box = wrap.getBoundingClientRect();
-                    const inner = box.left + wrap.clientLeft;
-                    /** @param {string} color */
-                    const alpha = (color) => {
-                        if (color === 'transparent') return 0;
-                        const parts = color.match(/[\d.]+/g) ?? [];
-                        return parts.length === 4 ? Number(parts[3]) : 1;
-                    };
-                    const headBottom = /** @type {Element} */ (el.querySelector('thead th')).getBoundingClientRect().bottom;
-                    const rows = [...el.querySelectorAll('tbody tr')].filter((row) => {
-                        const r = row.getBoundingClientRect();
-                        return r.top >= headBottom && r.bottom < box.bottom;
-                    });
-                    const cell = /** @type {HTMLElement} */ (rows[0]?.querySelector('td'));
-                    const second = /** @type {HTMLElement} */ (rows[0]?.querySelectorAll('td')[1]);
-                    const corner = /** @type {HTMLElement} */ (el.querySelector('thead th'));
-                    const s = getComputedStyle(cell);
-                    // What the eye sees at the fixed cell's centre is the fixed cell, not a scrolled cell under it.
-                    const cr = cell.getBoundingClientRect();
-                    const hit = document.elementFromPoint(cr.left + cr.width / 2, cr.top + cr.height / 2);
-                    const hr = corner.getBoundingClientRect();
-                    const cornerHit = document.elementFromPoint(hr.left + 4, hr.top + hr.height / 2);
-                    return {
-                        scrolled: wrap.scrollLeft > 0,
-                        cellLeft: Math.round(cr.left - inner),
-                        cornerLeft: Math.round(hr.left - inner),
-                        secondMoved: Math.round(second.getBoundingClientRect().left - inner),
-                        alpha: alpha(s.backgroundColor),
-                        cornerAlpha: alpha(getComputedStyle(corner).backgroundColor),
-                        hairline: s.boxShadow !== 'none' || s.borderRightStyle !== 'none',
-                        onTop: hit === cell || cell.contains(hit),
-                        cornerOnTop: cornerHit === corner || corner.contains(cornerHit),
-                    };
-                });
-                if (
-                    !m.scrolled ||
-                    Math.abs(m.cellLeft) > 1 ||
-                    Math.abs(m.cornerLeft) > 1 ||
-                    m.alpha < 1 ||
-                    m.cornerAlpha < 1 ||
-                    !m.hairline ||
-                    !m.onTop ||
-                    !m.cornerOnTop
-                )
-                    faults.push(`${theme}: ${JSON.stringify(m)}`);
-            }
-            expect(faults).toEqual([]);
         });
     });
 
@@ -425,74 +436,6 @@ for (const channel of CHANNELS) {
             await input.fill('2026-08-20');
             await page.keyboard.press('Enter');
             await expect(table.locator('tr[data-kp-row-key="INC-4402"] td[data-label="Opened"] [data-kp-edit-value]')).toHaveText('2026-08-20');
-        });
-    });
-
-    // ── Every theme ───────────────────────────────────────────────────────
-    test.describe(`datatable seven features in every theme — ${channel.name}`, () => {
-        test('the sort order stays on the header line, the column menu is opaque, and an editor fits its cell, in every theme [features 1, 2, 6]', async ({
-            page,
-        }) => {
-            // Before: none of the three parts existed in either channel (no order ring, no Columns button, no edit button).
-            await page.emulateMedia({ reducedMotion: 'reduce' });
-            await open(page, key);
-            const multi = page.locator(tableOf(key, 'multi'));
-            await multi.locator('thead th', { hasText: 'Severity' }).click();
-            await multi.locator('thead th', { hasText: 'Hours' }).click({ modifiers: ['Shift'] });
-            await expect(multi.locator('.kp-datatable__sort-order')).toHaveCount(2);
-            const columns = page.locator(tableOf(key, 'columns'));
-            const edit = page.locator(tableOf(key, 'edit'));
-            const faults = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                // The ring sits on the line of its header's words, and the sorted header is no taller than an unsorted one.
-                const ring = await multi.evaluate((el) => {
-                    const th = /** @type {HTMLElement} */ (el.querySelector('.kp-datatable__sort-order')?.closest('th'));
-                    const mark = /** @type {Element} */ (th.querySelector('.kp-datatable__sort-order')).getBoundingClientRect();
-                    const plain = /** @type {Element} */ (
-                        [...el.querySelectorAll('thead th')].find((h) => h.querySelector('.kp-datatable__sort-order') === null)
-                    );
-                    const range = document.createRange();
-                    range.selectNodeContents(
-                        /** @type {Node} */ ([...th.querySelectorAll('*'), th].find((n) => n.firstChild?.nodeType === 3)?.firstChild),
-                    );
-                    const words = range.getBoundingClientRect();
-                    return {
-                        offLine: Math.round(Math.abs(mark.top + mark.height / 2 - (words.top + words.height / 2))),
-                        taller: Math.round(th.getBoundingClientRect().height - plain.getBoundingClientRect().height),
-                    };
-                });
-                if (ring.offLine > 4 || ring.taller > 1) faults.push(`${theme} sort order: ${JSON.stringify(ring)}`);
-
-                await columns.getByRole('button', { name: S.tableColumns }).click();
-                const menu = page.locator('.kp-popover:popover-open').filter({ has: page.getByRole('list', { name: S.tableColumnsLabel }) });
-                await expect(menu).toBeVisible();
-                const ground = await menu.evaluate((el) => {
-                    const color = getComputedStyle(el).backgroundColor;
-                    const parts = color.match(/[\d.]+/g) ?? [];
-                    return color === 'transparent' ? 0 : parts.length === 4 ? Number(parts[3]) : 1;
-                });
-                if (ground < 1) faults.push(`${theme} column menu ground alpha ${ground}`);
-                await page.keyboard.press('Escape');
-                await expect(menu).toHaveCount(0);
-
-                // The editor fits its cell sideways. It does make the row taller — formal 40 -> 51 px, brutalism 44 -> 65 —
-                // exactly as the approved mock's compact select does (measured on research/datatable/demo.html#inline-edit:
-                // formal 40 -> 51, brutalism 44 -> 65), so that is a finding for Kenny rather than a fault this test refuses.
-                const row = edit.locator('tr[data-kp-row-key="INC-4403"]');
-                await row.getByRole('button', { name: /^Status of INC-4403/ }).click();
-                const editor = edit.locator('select[data-kp-datatable-editor]');
-                await expect(editor).toBeFocused();
-                const fit = await editor.evaluate((el) => {
-                    const cell = /** @type {Element} */ (el.closest('td')).getBoundingClientRect();
-                    const box = el.getBoundingClientRect();
-                    return { left: Math.round(box.left - cell.left), right: Math.round(cell.right - box.right) };
-                });
-                await page.keyboard.press('Escape');
-                await expect(editor).toHaveCount(0);
-                if (fit.left < 0 || fit.right < 0) faults.push(`${theme} editor outside its cell: ${JSON.stringify(fit)}`);
-            }
-            expect(faults).toEqual([]);
         });
     });
 

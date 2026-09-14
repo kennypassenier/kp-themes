@@ -230,8 +230,8 @@ var DEFAULT_STRINGS = Object.freeze({
   tableFilterEditor: (column) => `Filter on ${column}`,
   tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
   tableFilterBound: (kind, bound, column) => {
-    if (kind === "date") return bound === "to" ? `${column} on or before` : `${column} on or after`;
-    return bound === "to" ? "To" : "From";
+    if (kind === "date") return bound === "from" ? `${column} on or after` : `${column} on or before`;
+    return bound === "from" ? "From" : "To";
   },
   tableFilterChoicePill: (column, values) => `${column}: ${values.join(", ")}`,
   tableFilterSpanPill: (column, from, to, kind) => {
@@ -3434,6 +3434,27 @@ function attachDataTables(root = document, {
       const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
       const order = orders[at];
       return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
+    }, fillChoices2 = function(set, at, ticked) {
+      const values = [...choiceValues2(at)];
+      for (const value of ticked) if (!values.includes(value)) values.push(value);
+      const boxes = (
+        /** @type {HTMLInputElement[]} */
+        [...set.querySelectorAll('input[type="checkbox"]')]
+      );
+      if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
+      for (const box of boxes) box.closest(".kp-field__option")?.remove();
+      for (const value of values) {
+        const option = make2("label", "kp-field__option");
+        const box = (
+          /** @type {HTMLInputElement} */
+          make2("input", CHECK_CLASS)
+        );
+        box.type = "checkbox";
+        box.value = value;
+        box.checked = ticked.includes(value);
+        option.append(box, ` ${value}`);
+        set.append(option);
+      }
     }, datePickerFor2 = function(input) {
       const picker = make2("div", "kp-datepicker");
       picker.dataset.kpDatepicker = "";
@@ -3460,7 +3481,7 @@ function attachDataTables(root = document, {
       picker.append(input, opener, datePanel);
       return picker;
     };
-    var add = add2, make = make2, choiceValues = choiceValues2, datePickerFor = datePickerFor2;
+    var add = add2, make = make2, choiceValues = choiceValues2, fillChoices = fillChoices2, datePickerFor = datePickerFor2;
     const wrap = (
       /** @type {HTMLElement} */
       element
@@ -3813,19 +3834,8 @@ function attachDataTables(root = document, {
         const legend = make2("legend", "kp-field__label");
         legend.textContent = label;
         set.append(legend);
-        if (kind === "choice") {
-          for (const value of choiceValues2(at)) {
-            const option = make2("label", "kp-field__option");
-            const box = (
-              /** @type {HTMLInputElement} */
-              make2("input", CHECK_CLASS)
-            );
-            box.type = "checkbox";
-            box.value = value;
-            option.append(box, ` ${value}`);
-            set.append(option);
-          }
-        } else {
+        if (kind === "choice") fillChoices2(set, at, []);
+        else {
           const range = make2("div", "kp-datatable__range");
           for (const bound of ["from", "to"]) {
             const input = (
@@ -4778,6 +4788,18 @@ function attachDataTables(root = document, {
         }
       }
     };
+    const refreshChoices = () => {
+      if (panel === null) return;
+      for (const set of panel.querySelectorAll("[data-kp-filter-column]")) {
+        const at = Number(
+          /** @type {HTMLElement} */
+          set.dataset.kpFilterColumn
+        );
+        if (filterKinds[at] !== "choice") continue;
+        const value = filters.get(at);
+        fillChoices2(set, at, Array.isArray(value) ? value : []);
+      }
+    };
     const readControls = () => {
       if (panel === null) return;
       filters.clear();
@@ -5627,6 +5649,7 @@ function attachDataTables(root = document, {
           prepareRow(row);
         }
         syncColumns();
+        refreshChoices();
         applyFilter({ keepPage: false });
       }
     };

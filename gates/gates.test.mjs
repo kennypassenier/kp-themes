@@ -419,6 +419,34 @@ test('AR28: the closure walk reads an import it must not miss', () => {
     assert.deepEqual(specifiers("// import { a } from './f.js';"), []);
 });
 
+test('AR28: the closure walk reads code, not the words inside a string or a template', () => {
+    // Before: the scan ran from `export` to the first `from` followed by a
+    // quote anywhere after it, so `bound === 'from' ? `…` : …` in js/strings.js
+    // read as an import of " ? `${column} on or after` : …" (2026-09-14).
+    const strings = [
+        'export const S = Object.freeze({',
+        '    bound: (kind, bound, column) => {',
+        "        if (kind === 'date') return bound === 'from' ? `${column} on or after` : `${column} on or before`;",
+        "        return bound === 'from' ? 'From' : 'To';",
+        '    },',
+        '    span: (from, to) => `from ${from} to ${to}`,',
+        '    quoted: "import { a } from \'./g.js\'",',
+        "    nested: (a) => `${a ? `from '${a}'` : 'none'} // import('./h.js')`,",
+        '});',
+    ].join('\n');
+    assert.deepEqual(specifiers(strings), []);
+    // A regular expression with a quote in it does not open a string that swallows the import after it.
+    assert.deepEqual(specifiers("const q = /['\"]/g;\nimport { a } from './i.js';"), ['./i.js']);
+    // The shapes the six use still read, next to such code, and a bare side-effect import too.
+    assert.deepEqual(specifiers(`${strings}\nimport { a } from './b.js';\nexport * from './c.js';\nimport './d.js';`), [
+        './b.js',
+        './c.js',
+        './d.js',
+    ]);
+    assert.deepEqual(specifiers('const x = y / 2; const m = import(\'./e.js\'); export { z } from "./f.js";'), ['./e.js', './f.js']);
+    assert.deepEqual(specifiers('const url = import.meta.url;'), []);
+});
+
 test('TH104: the wrapper check answers by ancestry, not by proximity', () => {
     // The whole point of the gate is depth: a container query binds to the
     // NEAREST container at ANY depth, so a wrapper three elements up is a

@@ -3275,8 +3275,15 @@
  * of columns under "+ Add filter", an editor between the bar and the
  * pills, and one pill per filter whose words reopen its editor. */
 
-    /* Under its button, and above it where the window has no room below. */
+    /* Under its button, and above it where the window has no room below.
+ * Fixed, not the popover's absolute: in the top layer an absolute box is
+ * placed in the initial containing block, which a page scrolled down has
+ * left, so the fallback never found room and the menu opened below the
+ * window — where its focused first item then pulled the whole page up
+ * (measured 2026-09-14 at 720px, all 22 themes, both channels). A fixed
+ * box is tried against the window and still follows its anchor. */
     .kp-datatable__add-menu {
+        position: fixed;
         position-try-fallbacks: flip-block;
     }
 
@@ -3449,8 +3456,16 @@
         --kp-spinner-size: 1em;
     }
 
-    /* Choosing which columns show: a checkbox and its column on one line in
- * the menu [#columns]. */
+    /* Choosing which columns show [#columns]. The menu hangs under its
+ * button, and above it where the window has no room below, placed as the
+ * "+ Add filter" menu is (fixed, see there): opened at the bottom of a
+ * 720px window it ran 212 to 288px past the edge in all 22 themes. */
+    .kp-datatable__columns {
+        position: fixed;
+        position-try-fallbacks: flip-block;
+    }
+
+    /* A checkbox and its column on one line in the menu. */
     .kp-datatable__column-option {
         display: flex;
         align-items: center;

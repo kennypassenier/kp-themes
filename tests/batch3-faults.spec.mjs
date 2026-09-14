@@ -17,6 +17,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { measured } from './paint.mjs';
 
 const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8')));
@@ -56,6 +58,9 @@ const PAINT = `(el) => {
 
 test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    // The catalogue pages hide a block once it is judged; these tests read the
+    // blocks, whatever the committed register says about them.
+    await useEmptyRegister(page.context());
 });
 
 // --- 1 · The nav dropdown and the tab row ----------------------------------
@@ -148,14 +153,28 @@ test('a horizontal split stacks its panes with a horizontal separator in every t
 test('a row being dragged is visibly marked in every theme, and the mark goes on release [gap-12]', async ({ page }) => {
     // Before: the row under a held handle (data-kp-dragging, written by the module) painted exactly like it did at rest, all 22 themes.
     await page.goto('/catalogue/structure.html');
+    await waitForJudging(page);
     const row = page.locator('#reorder [data-kp-item="pressure"]');
     const handle = row.locator('[data-kp-handle]');
     const faults = [];
     for (const theme of THEMES) {
         await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        await handle.scrollIntoViewIfNeeded();
+        // In the middle of the window, and the handle itself under the pointer. A
+        // theme changes the page's height, and scrollIntoViewIfNeeded counts a
+        // handle as in view while the catalogue's two sticky bars cover it: from
+        // forest on the pointer pressed the review count, and in high-contrast
+        // the bar's home link, which left the page (measured 2026-09-14).
+        await row.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+        await handle.hover();
         const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await handle.boundingBox());
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        expect(
+            await page.evaluate(
+                ([x, y]) => document.elementFromPoint(x, y)?.closest('[data-kp-handle]') !== null,
+                [box.x + box.width / 2, box.y + box.height / 2],
+            ),
+            `${theme}: the pointer is on the handle`,
+        ).toBe(true);
         const rest = await row.evaluate((el, paint) => eval(paint)(el), PAINT);
         await page.mouse.down();
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 1);

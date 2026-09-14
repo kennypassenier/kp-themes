@@ -8,10 +8,12 @@
 import { expect, test } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { waitForJudging } from './helpers/catalogue.mjs';
 
 test('the table page shows the add-filter mode on a live table, starting with the Status pill', async ({ page }) => {
     await useEmptyRegister(page.context());
     await page.goto('/catalogue/table.html');
+    await waitForJudging(page);
     const block = page.locator('#datatable-add-filter.cat-block');
     await expect(block.locator('h2')).toHaveText('Data table: adding a filter, one at a time');
     await expect(block.locator('.cat-look')).toContainText('Look at:');

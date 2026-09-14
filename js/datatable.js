@@ -616,7 +616,7 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {(which?: 'view' | 'page') => HTMLTableRowElement[]} rows  the rows the table shows, in order: every page of the view, or this page
  * @property {() => string[]} selected
  * @property {(keys: readonly string[]) => void} select
- * @property {() => void} refresh re-read the rows after the consumer added or removed some
+ * @property {() => void} refresh re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them
  */
 
 /** @type {WeakMap<Element, DataTableHandle>} */
@@ -1053,16 +1053,8 @@ export function attachDataTables(
                 const legend = make('legend', 'kp-field__label');
                 legend.textContent = label;
                 set.append(legend);
-                if (kind === 'choice') {
-                    for (const value of choiceValues(at)) {
-                        const option = make('label', 'kp-field__option');
-                        const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
-                        box.type = 'checkbox';
-                        box.value = value;
-                        option.append(box, ` ${value}`);
-                        set.append(option);
-                    }
-                } else {
+                if (kind === 'choice') fillChoices(set, at, []);
+                else {
                     const range = make('div', 'kp-datatable__range');
                     for (const bound of ['from', 'to']) {
                         const input = /** @type {HTMLInputElement} */ (make('input', 'kp-field__input'));
@@ -1112,8 +1104,9 @@ export function attachDataTables(
         /**
          * A choice filter's values: the header's `data-kp-filter-options`, else
          * every value the rows hold, in the column's declared order or the
-         * locale's. The add-filter editor asks when it opens, so rows written
-         * after the attach are in it.
+         * locale's. The add-filter editor asks when it opens and the filter
+         * panel asks again on refresh(), so rows written after the attach are
+         * in both.
          *
          * @param {number} at
          */
@@ -1123,6 +1116,32 @@ export function attachDataTables(
             const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ''))];
             const order = orders[at];
             return values.sort((a, b) => (order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b)));
+        }
+
+        /**
+         * Put a panel fieldset's boxes in step with the choice values: one box
+         * per value the rows hold now, ticked where `ticked` has it, and a
+         * ticked value no row holds any more stays, so it can still be
+         * unticked. Nothing is rebuilt while the list already matches, so a
+         * focused box keeps its focus.
+         *
+         * @param {Element} set @param {number} at @param {string[]} ticked
+         */
+        function fillChoices(set, at, ticked) {
+            const values = [...choiceValues(at)];
+            for (const value of ticked) if (!values.includes(value)) values.push(value);
+            const boxes = /** @type {HTMLInputElement[]} */ ([...set.querySelectorAll('input[type="checkbox"]')]);
+            if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
+            for (const box of boxes) box.closest('.kp-field__option')?.remove();
+            for (const value of values) {
+                const option = make('label', 'kp-field__option');
+                const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
+                box.type = 'checkbox';
+                box.value = value;
+                box.checked = ticked.includes(value);
+                option.append(box, ` ${value}`);
+                set.append(option);
+            }
         }
 
         /**
@@ -2023,6 +2042,20 @@ export function attachDataTables(
                 }
             }
         };
+        /**
+         * The panel's choice lists, read again from the rows. At attach they
+         * hold the rows the markup had; a page that writes its rows afterwards
+         * (and calls refresh) would otherwise keep an empty list for good.
+         */
+        const refreshChoices = () => {
+            if (panel === null) return;
+            for (const set of panel.querySelectorAll('[data-kp-filter-column]')) {
+                const at = Number(/** @type {HTMLElement} */ (set).dataset.kpFilterColumn);
+                if (filterKinds[at] !== 'choice') continue;
+                const value = filters.get(at);
+                fillChoices(set, at, Array.isArray(value) ? value : []);
+            }
+        };
         /** Read the panel's controls into the filter state. */
         const readControls = () => {
             if (panel === null) return;
@@ -2879,6 +2912,7 @@ export function attachDataTables(
                     prepareRow(row);
                 }
                 syncColumns();
+                refreshChoices();
                 applyFilter({ keepPage: false });
             },
         };

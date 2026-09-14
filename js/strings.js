@@ -314,8 +314,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableFilterEditor: (column) => `Filter on ${column}`,
     tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
     tableFilterBound: (kind, bound, column) => {
-        if (kind === 'date') return bound === 'to' ? `${column} on or before` : `${column} on or after`;
-        return bound === 'to' ? 'To' : 'From';
+        if (kind === 'date') return bound === 'from' ? `${column} on or after` : `${column} on or before`;
+        return bound === 'from' ? 'From' : 'To';
     },
     tableFilterChoicePill: (column, values) => `${column}: ${values.join(', ')}`,
     tableFilterSpanPill: (column, from, to, kind) => {

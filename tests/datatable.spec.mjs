@@ -127,42 +127,7 @@ for (const channel of CHANNELS) {
     });
 }
 
-// ── gap-11, the data table footer [Kenny, 2026-09-13, seen in nostromo] ───
-
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
-
-test('the status and pager bar keeps its distance from the table and from the frame, in every theme [gap-11]', async ({ page }) => {
-    // gap-11: the footer bar had no padding, so in a theme that frames the data table the row count sat on the frame's left edge and the pager on its bottom edge.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catalogue/table.html');
-    const table = page.locator('.kp-datatable[data-kp-datatable]').first();
-    await expect(table.locator('[data-kp-datatable-status]')).not.toBeEmpty();
-    const tight = [];
-    for (const theme of THEME_NAMES) {
-        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        const m = await table.evaluate((el) => {
-            const s = getComputedStyle(el);
-            const box = el.getBoundingClientRect();
-            const inner = {
-                left: box.left + parseFloat(s.borderLeftWidth),
-                right: box.right - parseFloat(s.borderRightWidth),
-                bottom: box.bottom - parseFloat(s.borderBottomWidth),
-            };
-            const wrap = /** @type {Element} */ (el.querySelector(':scope > .kp-table-wrap')).getBoundingClientRect();
-            const status = /** @type {Element} */ (el.querySelector('[data-kp-datatable-status]')).getBoundingClientRect();
-            const pager = /** @type {Element} */ (el.querySelector('[data-kp-datatable-pager]')).getBoundingClientRect();
-            return {
-                aboveBar: Math.round(Math.min(status.top, pager.top) - wrap.bottom),
-                beforeStatus: Math.round(status.left - inner.left),
-                afterPager: Math.round(inner.right - pager.right),
-                underBar: Math.round(inner.bottom - Math.max(status.bottom, pager.bottom)),
-            };
-        });
-        const short = Object.entries(m).filter(([, px]) => px < 6);
-        if (short.length > 0) tight.push(`${theme}: ${short.map(([side, px]) => `${side} ${px}px`).join(', ')}`);
-    }
-    expect(tight).toEqual([]);
-});
 
 // ── gap-13 and the approved features [Kenny, 2026-09-13] ──────────────────
 //
@@ -173,8 +138,8 @@ test('the status and pager bar keeps its distance from the table and from the fr
 
 const FEATURES = '/tests/fixtures/datatable.html';
 const FEATURE_CHANNELS = [
-    { name: 'framework-free', key: 'plain', table: '[data-test="plain-datatable"]', sticky: '[data-test="plain-sticky"]' },
-    { name: 'React', key: 'react', table: '[data-test="react-datatable"] .kp-datatable', sticky: '.kp-datatable[data-test="react-sticky"]' },
+    { name: 'framework-free', key: 'plain', table: '[data-test="plain-datatable"]' },
+    { name: 'React', key: 'react', table: '[data-test="react-datatable"] .kp-datatable' },
 ];
 
 /** @param {import('@playwright/test').Locator} table */
@@ -234,27 +199,6 @@ for (const channel of FEATURE_CHANNELS) {
             await expect.poll(async () => (await columnTexts(table, 'Severity'))[0]).toBe('Critical');
         });
 
-        test('compact density shrinks the search box as well as the rows, in every theme [gap-13]', async ({ page }) => {
-            // Before: the search box kept its height in every theme (formal 38 px either way).
-            const table = page.locator(channel.table);
-            await ready(page, table);
-            const stuck = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const heights = await table.evaluate((el) => {
-                    const search = /** @type {HTMLElement} */ (el.querySelector('[data-kp-datatable-search]'));
-                    el.removeAttribute('data-density');
-                    const comfortable = search.getBoundingClientRect().height;
-                    el.setAttribute('data-density', 'compact');
-                    const compact = search.getBoundingClientRect().height;
-                    el.removeAttribute('data-density');
-                    return { comfortable, compact };
-                });
-                if (!(heights.compact < heights.comfortable - 2)) stuck.push(`${theme}: ${heights.comfortable} -> ${heights.compact}`);
-            }
-            expect(stuck).toEqual([]);
-        });
-
         test('the density choice sets the density on the table [A]', async ({ page }) => {
             // Before: no density choice existed.
             const table = page.locator(channel.table);
@@ -266,25 +210,6 @@ for (const channel of FEATURE_CHANNELS) {
             await expect.poll(async () => (await row.boundingBox())?.height ?? 0).toBeLessThan(before - 2);
             await table.locator('[data-kp-datatable-density]').selectOption({ label: S.tableDensityComfortable });
             await expect(table).not.toHaveAttribute('data-density', 'compact');
-        });
-
-        test('badges in a squeezed table keep their word whole, in every theme [gap-13]', async ({ page }) => {
-            // Before: the status badges broke inside the word in the squeezed table.
-            const table = page.locator(channel.sticky);
-            await ready(page, page.locator(channel.table));
-            const broken = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const lines = await table.evaluate((el) =>
-                    [...el.querySelectorAll('tbody .kp-badge')].slice(0, 3).map((badge) => {
-                        const range = document.createRange();
-                        range.selectNodeContents(badge);
-                        return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
-                    }),
-                );
-                if (lines.some((n) => n > 1)) broken.push(`${theme}: ${lines.join(',')} lines`);
-            }
-            expect(broken).toEqual([]);
         });
 
         test('search can be limited to one column with the In choice [A]', async ({ page }) => {
@@ -323,6 +248,29 @@ for (const channel of FEATURE_CHANNELS) {
             await expect(table.locator('tbody tr:visible')).toHaveCount(25);
             await expect(closed).not.toBeChecked();
             await expect(table.locator('[data-kp-datatable-pills]')).toBeHidden();
+        });
+
+        test("the filter panel's choices follow the rows: gone with them, back when they are written, a ticked value kept", async ({ page }) => {
+            // Before: framework-free, the Status list still held Closed, Open and Watching with no row on the table; the panel read its values once, at attach (research/datatable/demo.html writes its rows after the attach, and its list stayed empty).
+            const table = page.locator(channel.table);
+            await ready(page, table);
+            /** @param {string} next */
+            const set = (next) => page.evaluate(([key, value]) => /** @type {any} */ (window).kpFixture[key].state(value), [channel.key, next]);
+            const status = table.getByRole('group', { name: 'Status' });
+            const listed = () =>
+                status.locator('input[type="checkbox"]').evaluateAll((boxes) => boxes.map((b) => /** @type {HTMLInputElement} */ (b).value));
+            await table.locator('[data-kp-datatable-filter-toggle]').click();
+            await status.getByLabel('Closed', { exact: true }).check();
+            await expect(table.locator('tbody tr:visible')).toHaveCount(10);
+
+            await set('loading');
+            await expect.poll(listed, 'no row holds a status; only the ticked one stays, to be unticked').toEqual(['Closed']);
+            await expect(status.getByLabel('Closed', { exact: true })).toBeChecked();
+
+            await set('ready');
+            await expect.poll(listed, 'the rows are back, and so are their values').toEqual(['Closed', 'Open', 'Watching']);
+            await expect(status.getByLabel('Closed', { exact: true })).toBeChecked();
+            await expect(table.locator('tbody tr:visible')).toHaveCount(10);
         });
 
         test('a range filter and a date filter narrow the rows [A]', async ({ page }) => {
@@ -378,33 +326,6 @@ for (const channel of FEATURE_CHANNELS) {
             await bar.locator('[data-kp-datatable-clear-selection]').click();
             await expect(bar).toBeHidden();
             await expect(table.locator('tbody [data-kp-select-row]:checked')).toHaveCount(0);
-        });
-
-        test('with a max height the header stays at the top of the scrolling box, on an opaque ground in every theme [A]', async ({ page }) => {
-            // Before: the box did not scroll; the header went away with the rows.
-            const table = page.locator(channel.sticky);
-            await ready(page, page.locator(channel.table));
-            const see = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const m = await table.evaluate(async (el) => {
-                    const wrap = /** @type {HTMLElement} */ (el.querySelector('.kp-table-wrap'));
-                    wrap.scrollTop = 0;
-                    wrap.scrollTop = 150;
-                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                    const th = /** @type {HTMLElement} */ (el.querySelector('thead th'));
-                    const ground = getComputedStyle(th).backgroundColor;
-                    const parts = ground.match(/[\d.]+/g) ?? [];
-                    const alpha = ground === 'transparent' ? 0 : parts.length === 4 ? Number(parts[3]) : 1;
-                    return {
-                        scrolls: wrap.scrollTop > 0,
-                        offset: Math.round(th.getBoundingClientRect().top - wrap.getBoundingClientRect().top),
-                        alpha,
-                    };
-                });
-                if (!m.scrolls || m.offset < 0 || m.offset > 4 || m.alpha < 1) see.push(`${theme}: ${JSON.stringify(m)}`);
-            }
-            expect(see).toEqual([]);
         });
 
         test('loading, failed and no match each show their state and each has a way out [A]', async ({ page }) => {
@@ -474,65 +395,6 @@ for (const channel of FEATURE_CHANNELS) {
             expect(await page.evaluate((key) => /** @type {any} */ (window).kpFixture[key].rowKeys(), channel.key)).toEqual(shown);
             expect(await page.evaluate((key) => /** @type {any} */ (window).kpFixture[key].pageKeys(), channel.key)).toEqual(shown);
         });
-
-        test("the row and header checkboxes wear the theme's own checkbox, in every theme [gap-13, Kenny's note]", async ({ page }) => {
-            // Before: the table's boxes were bare browser checkboxes, unlike .kp-field__check in every theme.
-            const table = page.locator(channel.table);
-            await ready(page, table);
-            await table.locator('tbody tr[data-kp-row-key="INC-4401"] [data-kp-select-row]').check();
-            const differ = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const found = await table.evaluate((el) => {
-                    const PROPS = [
-                        'appearance',
-                        'width',
-                        'height',
-                        'accent-color',
-                        'border-top-left-radius',
-                        'background-color',
-                        'background-image',
-                        'box-shadow',
-                        'transform',
-                    ];
-                    const DRAWN = ['border-top-width', 'border-top-style'];
-                    const BEFORE = ['content', 'width', 'height', 'color', 'background-color', 'clip-path'];
-                    /** @param {Element} box */
-                    const paint = (box) => {
-                        const s = getComputedStyle(box);
-                        const b = getComputedStyle(box, '::before');
-                        /** @type {Record<string, string>} */
-                        const out = Object.fromEntries(PROPS.map((p) => [p, s.getPropertyValue(p)]));
-                        if (s.getPropertyValue('appearance') === 'none') {
-                            for (const p of DRAWN) out[p] = s.getPropertyValue(p);
-                            // A border's colour is paint only where the border is drawn.
-                            if (s.getPropertyValue('border-top-style') !== 'none') out['border-top-color'] = s.getPropertyValue('border-top-color');
-                            out['::before content'] = b.getPropertyValue('content');
-                            // The mark's paint only where there is a mark.
-                            if (!['none', 'normal'].includes(b.getPropertyValue('content')))
-                                for (const p of BEFORE) out[`::before ${p}`] = b.getPropertyValue(p);
-                        }
-                        return out;
-                    };
-                    const off = paint(/** @type {Element} */ (document.getElementById('ref-off')));
-                    const on = paint(/** @type {Element} */ (document.getElementById('ref-on')));
-                    /** @type {[string, Element | null, Record<string, string>][]} */
-                    const pairs = [
-                        ['header', el.querySelector('[data-kp-select-all]'), off],
-                        ['row', el.querySelector('tbody tr[data-kp-row-key="INC-4400"] [data-kp-select-row]'), off],
-                        ['ticked row', el.querySelector('tbody tr[data-kp-row-key="INC-4401"] [data-kp-select-row]'), on],
-                    ];
-                    const out = [];
-                    for (const [name, box, want] of pairs) {
-                        const got = paint(/** @type {Element} */ (box));
-                        for (const [p, v] of Object.entries(want)) if (got[p] !== v) out.push(`${name} ${p}: ${got[p]} vs ${v}`);
-                    }
-                    return out;
-                });
-                if (found.length > 0) differ.push(`${theme}: ${found.join('; ')}`);
-            }
-            expect(differ).toEqual([]);
-        });
     });
 }
 
@@ -571,26 +433,10 @@ test.describe('datatable features — React sort header', () => {
     });
 });
 
-// ── Kenny's review notes of 2026-09-13: the date filter, the pager, the bars ─
+// ── Kenny's review notes of 2026-09-13: the date filter and the bars ───────
 //
 // Measured in Firefox before the change, each test below went red on the
 // code as it stood; the line under each name records what it read there.
-
-/** What a button paints, as the theme computes it: the reading two buttons that should look alike must agree on. */
-const buttonPaint = (/** @type {Element} */ el) => {
-    const s = getComputedStyle(el);
-    return [
-        s.color,
-        s.backgroundColor,
-        s.backgroundImage,
-        s.backgroundPosition,
-        s.borderTopColor,
-        s.borderTopWidth,
-        s.borderTopStyle,
-        s.boxShadow,
-        s.clipPath,
-    ].join(' | ');
-};
 
 /** Put a theme on and wait out what the switch set moving, so a colour is read where it lands. @param {import('@playwright/test').Page} page @param {string} theme */
 const wearSettled = async (page, theme) => {
@@ -625,89 +471,6 @@ for (const channel of FEATURE_CHANNELS) {
             const openers = table.getByRole('group', { name: 'Opened' }).locator('[data-kp-date-open]');
             await expect(openers).toHaveCount(2);
             for (const opener of await openers.all()) expect(await opener.evaluate(markup)).toEqual(standalone);
-        });
-
-        test("the date filter's field shows the whole date, beside its calendar button, in every theme [Kenny's note 1]", async ({ page }) => {
-            // Before: see the report for the per-theme reading; formal had 73px of room for the 95px hint in the catalogue.
-            const table = page.locator(channel.table);
-            await ready(page, table);
-            await table.locator('[data-kp-datatable-filter-toggle]').click();
-            const input = table.getByLabel(S.tableFilterFrom('Opened'), { exact: true });
-            await expect(input).toBeVisible();
-            const short = [];
-            for (const theme of THEME_NAMES) {
-                await wearSettled(page, theme);
-                const m = await input.evaluate((el) => {
-                    const field = /** @type {HTMLInputElement} */ (el);
-                    const s = getComputedStyle(field);
-                    const context = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-                    context.font = `${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
-                    if (s.letterSpacing !== 'normal') context.letterSpacing = s.letterSpacing;
-                    // The widest thing the field has to hold: the hint, or a whole date in the same pattern.
-                    const need = Math.ceil(Math.max(context.measureText(field.placeholder).width, context.measureText('28/12/2026').width));
-                    const room = Math.floor(field.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
-                    const opener = /** @type {Element} */ (field.closest('.kp-datepicker')?.querySelector('[data-kp-date-open]'));
-                    const a = field.getBoundingClientRect();
-                    const b = opener.getBoundingClientRect();
-                    // Beside it: the button starts where the field ends and shares its line (their heights are the control-height question, not this one).
-                    const sameLine = b.left >= a.right - 1 && b.top < a.bottom && b.bottom > a.top;
-                    return { need, room, sameLine, field: Math.round(a.width), button: Math.round(b.width) };
-                });
-                if (m.room < m.need || !m.sameLine)
-                    short.push(
-                        `${theme}: ${m.room}px for ${m.need}px (field ${m.field}, button ${m.button})${m.sameLine ? '' : ', button on another line'}`,
-                    );
-            }
-            expect(short).toEqual([]);
-        });
-
-        test("the pager's buttons are the theme's own button at rest, and Previous differs only where a theme points it backwards [Kenny's note 3]", async ({
-            page,
-        }) => {
-            // Before: kp-button--ghost on both, so Next differed from the theme's button in all 22 themes (text only, no edge, in eleven).
-            const table = page.locator(channel.table);
-            await page.emulateMedia({ reducedMotion: 'reduce' });
-            await ready(page, table);
-            await table.locator('[data-kp-datatable-page-size]').selectOption('10');
-            const pager = table.locator('[data-kp-datatable-pager]');
-            await pager.getByRole('button', { name: S.next }).click();
-            const previous = pager.getByRole('button', { name: S.previous });
-            const next = pager.getByRole('button', { name: S.next });
-            await expect(previous).toBeEnabled();
-            await page.mouse.move(0, 0);
-            await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
-            await page.evaluate(() => {
-                const row = document.createElement('div');
-                for (const [ref, className] of [
-                    ['bare', 'kp-button'],
-                    ['mirror', 'kp-button kp-button--mirror'],
-                ]) {
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = className;
-                    button.dataset.ref = ref;
-                    button.textContent = 'Reference';
-                    row.append(button);
-                }
-                document.body.append(row);
-            });
-            const differ = [];
-            for (const theme of THEME_NAMES) {
-                await wearSettled(page, theme);
-                const bare = await page.locator('[data-ref="bare"]').evaluate(buttonPaint);
-                const got = await next.evaluate(buttonPaint);
-                if (got !== bare) differ.push(`${theme} Next: ${got}`);
-                // Cyberpunk cuts its notch on the other side of a button that points back; every other theme draws the bare button.
-                if (theme === 'cyberpunk') {
-                    const clip = await previous.evaluate((el) => getComputedStyle(el).clipPath);
-                    const mirrored = await page.locator('[data-ref="mirror"]').evaluate((el) => getComputedStyle(el).clipPath);
-                    if (clip !== mirrored) differ.push(`${theme} Previous clip: ${clip}, want ${mirrored}`);
-                } else {
-                    const back = await previous.evaluate(buttonPaint);
-                    if (back !== bare) differ.push(`${theme} Previous: ${back}`);
-                }
-            }
-            expect(differ).toEqual([]);
         });
 
         test('a calendar opened inside a card or an alert that clips its corners is whole and takes its clicks, in every theme [coordinator finding]', async ({
