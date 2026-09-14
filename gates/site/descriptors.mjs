@@ -231,6 +231,14 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A label beside an icon',
+                why: 'The words go in their own `.kp-button__text` and the icon stays a hidden sibling. Retro underlines the first letter of the label when the button is pointed at, and CSS cannot tell a bare run of text from the icon next to it, so without the element that letter is never found. No other theme styles it: in the button’s flex row it lays out exactly as the bare text did. `<Button>` and the generated examples write it for you when the label mixes text with an element; by hand, add it yourself.',
+                markup: `
+<button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+<button type="button" class="kp-button kp-button--primary"><span class="kp-button__text">Export</span><span aria-hidden="true">↓</span></button>
+`,
+            },
+            {
                 title: 'A destructive button that confirms',
                 why: 'Since 4.0.0 the click opens a modal dialog carrying your phrase: Escape and Cancel do nothing, Confirm re-fires the click so your own handler runs exactly once, and focus comes back to the button. Add `data-kp-confirm-mode="inline"` for the arm-then-act of 3.x, where the label changes and a second click acts. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.',
                 markup: `
@@ -260,6 +268,10 @@ export const DESCRIPTORS = [
                 what: 'The small step, for a control that sits inside a table row or a menu. Its height is floored so the compact density cannot take it under the 24px pointer target.',
             },
             { name: '.kp-button--lg', what: 'The large step, for the one action a landing page is about. There is no modifier for the middle step: that is `.kp-button` itself.' },
+            {
+                name: '.kp-button__text',
+                what: 'The words of a label that also holds an icon or another element. Public: use it whenever the label is more than bare text. A label of text alone needs none, and a label that marks its own access key with `data-kp-key` is left as written.',
+            },
             { name: '.kp-button__undo', what: 'The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.' },
             {
                 name: '.kp-confirm',

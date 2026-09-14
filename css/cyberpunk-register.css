@@ -271,7 +271,8 @@
         background: var(--surface-hero-bg);
         color: var(--surface-hero-fg);
         border-bottom: 0;
-        padding-block: var(--kp-nav-pad-block, 1.2rem) var(--kp-nav-pad-block, 0.4rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1.2rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0.4rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */

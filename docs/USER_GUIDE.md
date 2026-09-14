@@ -252,15 +252,31 @@ Framework-free, the same markup by hand:
 <span class="kp-badge" data-kp-semantic data-status="offer">Aanbod</span>
 ```
 
-**A label beside an icon.** Put the words in their own
-`.kp-button__text`; the icon stays a hidden sibling. Retro underlines the
-first letter of a label when the button is pointed at, and CSS cannot tell
-bare text from the icon beside it. No other theme styles the element, so it
-lays out as the bare text did. `<Button>` writes it for you around text it
-is given beside an element [scope-83].
+**A label beside an icon.** `.kp-button__text` is public API: the
+element that holds the words of a button label which also holds an icon
+or any other element. Use it whenever the label is more than bare text;
+a label of text alone needs none. The icon stays a hidden sibling.
+
+Why it exists: retro underlines the first letter of a label when the
+button is pointed at — its accelerator key, the way a menu bar marks one —
+and CSS cannot tell a bare run of text from the icon beside it. Without
+the element, retro's underline never finds that letter next to an icon.
+No other theme styles it, so in the button's flex row it lays out exactly
+as the bare text did. A label that marks its own letter with
+`data-kp-key` is left as written.
+
+In framework-free markup you write it yourself. `<Button>` wraps each run of text it is given
+beside an element in `.kp-button__text`, and the generated framework-free
+examples do the same [scope-83, scope-85].
 
 ```html
 <button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+```
+
+```jsx
+<Button>
+    <span aria-hidden="true">↻</span> Retry
+</Button>
 ```
 
 **A badge that only ever holds a label.** Five components share one rule
@@ -946,8 +962,11 @@ that scrolls it, on the bar's own layer (`--kp-z-nav`, 30). `js/auto.js`
 (or `attachStickyNavs(root)` from `js/components.js`) does two things:
 
 - once that box has scrolled further than the bar is tall, it sets
-  `data-kp-nav-compact` on the wrapper, and the bar's block padding drops
-  to `--kp-nav-sticky-shrink` (0.125rem). Back within that distance less
+  `data-kp-nav-compact` on the wrapper, and the bar keeps half of its own
+  block padding, top and bottom each: every theme's padding, and a
+  `--kp-nav-pad-block` you set, is multiplied by `--kp-nav-sticky-shrink`
+  (0.5). A theme whose top and bottom differ keeps that ratio, and the
+  compact bar is never taller than the bar at rest. Back within that distance less
   the bar's height, the attribute goes again — the gap stops the bar
   flipping between its two heights when the browser's scroll anchoring
   moves the page. `data-kp-nav-sticky-after="200"` starts it later; a
@@ -963,8 +982,10 @@ that scrolls it, on the bar's own layer (`--kp-z-nav`, 30). `js/auto.js`
 
 The padding glides over `--kp-nav-sticky-duration` (the theme's
 `--fx-duration`) only under `prefers-reduced-motion: no-preference`;
-otherwise it changes at once. Every register reads `--kp-nav-pad-block`,
-so the bar shrinks in all 22 themes. Keep the skip link before the
+otherwise it changes at once. Every register reads `--kp-nav-pad-block`
+and multiplies it by `--kp-nav-pad-scale` (1 at rest, the shrink factor
+when compact — the stylesheet sets it; set `--kp-nav-sticky-shrink`
+instead), so the bar shrinks in all 22 themes. Keep the skip link before the
 wrapper: it stays the first thing Tab reaches.
 
 A sticky box sticks inside its parent, so the wrapper's parent has to be

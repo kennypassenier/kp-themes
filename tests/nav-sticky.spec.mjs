@@ -70,6 +70,46 @@ test(
     },
 );
 
+// sticky-shrink "De helft" [scope-85]: the compact bar keeps half of its own
+// block padding, per side, instead of a fixed 0.125rem. Cyberpunk, synthwave
+// and terminal pad the top and the bottom differently; retro rests at 3px.
+// Red at aa1c7b6d, firefox: every compact bar at 2px 2px, 42 of the 44
+// sides wrong — synthwave's bottom larger than its 0px rest. Only retro's
+// two sides passed, 2px being within half a pixel of 1.5px.
+test(
+    'the compact bar keeps half of its own block padding, per side, in every theme [scope-85]',
+    { tag: ['@component:navigation', '@sweep'] },
+    async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto('/tests/fixtures/nav-sticky.html');
+        await loadEveryRegister(page);
+        const wrap = page.locator('[data-test="wrap"]');
+        const nav = page.locator('[data-test="nav"]');
+        const padding = () =>
+            nav.evaluate((el) => {
+                const style = getComputedStyle(el);
+                return [parseFloat(style.paddingTop), parseFloat(style.paddingBottom)];
+            });
+        /** @type {string[]} */
+        const wrong = [];
+        for (const theme of THEMES) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme.name);
+            await page.evaluate(() => scrollTo(0, 0));
+            await expect(wrap).not.toHaveAttribute('data-kp-nav-compact');
+            const rest = await padding();
+            await page.evaluate(() => scrollTo(0, 600));
+            await expect(wrap).toHaveAttribute('data-kp-nav-compact', '');
+            const compact = await padding();
+            ['top', 'bottom'].forEach((side, i) => {
+                if (Math.abs(compact[i] - rest[i] / 2) > 0.5 || compact[i] > rest[i]) {
+                    wrong.push(`${theme.name} ${side}: rest ${rest[i]}px, compact ${compact[i]}px`);
+                }
+            });
+        }
+        expect(wrong, 'sides whose compact padding is not half of rest').toEqual([]);
+    },
+);
+
 const CHANNELS = [
     { channel: 'free', url: '/tests/fixtures/nav-sticky.html' },
     { channel: 'react', url: '/tests/fixtures/nav-sticky-react.html' },

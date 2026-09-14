@@ -418,7 +418,7 @@
 
     [data-theme='titanium'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.7rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='titanium'] .kp-nav__brand {

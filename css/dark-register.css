@@ -472,7 +472,7 @@
 
     [data-theme='dark'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.7rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='dark'] .kp-nav__brand {

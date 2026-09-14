@@ -1386,7 +1386,7 @@
      * was given the padding of a 1280px page. The two ends of that ramp
      * are now the wide default here and the narrow value in the
      * @container block below [TH104]. Both are knobs [KT6]. */
-        padding: var(--kp-nav-pad-block, 0.625rem) var(--kp-nav-pad-inline, 1.5rem);
+        padding: calc(var(--kp-nav-pad-block, 0.625rem) * var(--kp-nav-pad-scale, 1)) var(--kp-nav-pad-inline, 1.5rem);
         background: var(--card);
         color: var(--card-foreground);
         border-bottom: 1px solid var(--border-strong);
@@ -1412,12 +1412,16 @@
  * box that scrolls it, on the bar's one layer (--kp-z-nav, above). Once the
  * page has scrolled past a threshold, attachStickyNavs (js/components.js)
  * or NavBar's `sticky` sets `data-kp-nav-compact`, and the compact state
- * lowers --kp-nav-pad-block — the knob every register reads since research
- * finding 2 was closed, so the bar gets shorter in all 22 themes. Knobs:
- * --kp-nav-sticky-shrink (0.125rem), the block padding of the compact bar;
- * --kp-nav-sticky-duration (the theme's --fx-duration), how long it glides.
- * It is set on the nav itself so it wins over an at-rest value a consumer
- * put on the nav. The same module measures the bar and writes its height to
+ * scales the bar's own block padding: every register reads
+ * --kp-nav-pad-block since research finding 2 was closed, and multiplies it,
+ * per side, by --kp-nav-pad-scale (1 at rest). The compact bar keeps half of
+ * whatever its theme or its page gave it [scope-85] — cyberpunk's 1.2rem top
+ * and 0.4rem bottom become 0.6rem and 0.2rem, retro's 3px becomes 1.5px — so
+ * it gets shorter in all 22 themes and is never taller than at rest. Knobs:
+ * --kp-nav-sticky-shrink (0.5), the factor the compact bar's block padding
+ * is multiplied by; --kp-nav-sticky-duration (the theme's --fx-duration),
+ * how long it glides. The factor is set on the nav itself, so a consumer's
+ * at-rest --kp-nav-pad-block on the nav is halved rather than replaced. The same module measures the bar and writes its height to
  * --kp-nav-sticky-height on the scrolling box, which scroll-padding reads
  * when --kp-scroll-offset is not set: an anchor or a focused element lands
  * below the bar instead of under it. */
@@ -1427,7 +1431,7 @@
     }
 
     .kp-nav-wrap--sticky[data-kp-nav-compact] > .kp-nav {
-        --kp-nav-pad-block: var(--kp-nav-sticky-shrink, 0.125rem);
+        --kp-nav-pad-scale: var(--kp-nav-sticky-shrink, 0.5);
     }
 
     [data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky) {

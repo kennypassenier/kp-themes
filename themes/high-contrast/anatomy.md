@@ -135,12 +135,13 @@ they cannot, each a finding rather than a silent adaptation:
 
 Two smaller findings, both measured rather than asserted:
 
-- **The nav recolour on scroll has no JS to drive it.** The demo's
-  `.kp-nav-wrap[data-scrolled]` rule is kept in the register — inert,
-  because no module in this package writes `[data-scrolled]` anywhere
-  (`grep -rn "data-scrolled" js/*.js css/*.css` before this lift returned
-  nothing). It will render exactly as the demo shows the moment such a
-  hook exists; today it never fires.
+- **The nav recolour on scroll had no JS to drive it.** The demo's
+  `.kp-nav-wrap[data-scrolled]` rule was kept in the register, inert,
+  because no module in this package wrote `[data-scrolled]` (a grep of
+  `js/*.js css/*.css` before this lift found nothing). Since scope-85
+  (hc-scrolled) the rule answers `[data-kp-nav-compact]`, the attribute
+  the shrinking header sets on a sticky bar once it turns compact: that
+  bar draws the demo's 3px accent line under itself.
 - **The spec sheet's five swatches are the template's fixed five, not
   the demo's own five.** The demo's mockup labels ground/ink/signal/
   action/alert against `surface-hero-bg`/`foreground`/`accent`/

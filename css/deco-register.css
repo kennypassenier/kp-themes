@@ -221,7 +221,7 @@
 
     [data-theme='deco'] .kp-nav {
         background: var(--sidebar-background);
-        padding-block: var(--kp-nav-pad-block, 0.9rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */

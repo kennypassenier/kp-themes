@@ -196,3 +196,33 @@ for (const [channel, url] of CHANNELS) {
         },
     );
 }
+
+// hc-scrolled "Aansluiten" [scope-85]: the demo's scrolled-bar rule — a 3px
+// accent line under the bar — waited for a hook no module wrote,
+// `data-scrolled`. The shrinking header's `data-kp-nav-compact` is that
+// hook now. Red at aa1c7b6d, firefox: the compact bar's box-shadow was none.
+test(
+    'a compact sticky bar carries the scrolled-bar accent line under high-contrast [scope-85]',
+    { tag: ['@theme:high-contrast', '@component:navigation'] },
+    async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto('/tests/fixtures/nav-sticky.html');
+        await page.evaluate(
+            () =>
+                new Promise((done) => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = '/css/high-contrast-register.css';
+                    link.onload = done;
+                    document.head.append(link);
+                    document.documentElement.setAttribute('data-theme', 'high-contrast');
+                }),
+        );
+        const wrap = page.locator('[data-test="wrap"]');
+        const accent = await paint(page, '--accent');
+        await style(wrap, 'box-shadow', 'no line at rest').toBe('none');
+        await page.evaluate(() => scrollTo(0, 600));
+        await expect(wrap).toHaveAttribute('data-kp-nav-compact', '');
+        await style(wrap, 'box-shadow', 'the compact bar draws the accent line').toBe(`${accent} 0px 3px 0px 0px`);
+    },
+);

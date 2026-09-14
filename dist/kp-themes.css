@@ -5548,7 +5548,7 @@
      * was given the padding of a 1280px page. The two ends of that ramp
      * are now the wide default here and the narrow value in the
      * @container block below [TH104]. Both are knobs [KT6]. */
-        padding: var(--kp-nav-pad-block, 0.625rem) var(--kp-nav-pad-inline, 1.5rem);
+        padding: calc(var(--kp-nav-pad-block, 0.625rem) * var(--kp-nav-pad-scale, 1)) var(--kp-nav-pad-inline, 1.5rem);
         background: var(--card);
         color: var(--card-foreground);
         border-bottom: 1px solid var(--border-strong);
@@ -5574,12 +5574,16 @@
  * box that scrolls it, on the bar's one layer (--kp-z-nav, above). Once the
  * page has scrolled past a threshold, attachStickyNavs (js/components.js)
  * or NavBar's `sticky` sets `data-kp-nav-compact`, and the compact state
- * lowers --kp-nav-pad-block — the knob every register reads since research
- * finding 2 was closed, so the bar gets shorter in all 22 themes. Knobs:
- * --kp-nav-sticky-shrink (0.125rem), the block padding of the compact bar;
- * --kp-nav-sticky-duration (the theme's --fx-duration), how long it glides.
- * It is set on the nav itself so it wins over an at-rest value a consumer
- * put on the nav. The same module measures the bar and writes its height to
+ * scales the bar's own block padding: every register reads
+ * --kp-nav-pad-block since research finding 2 was closed, and multiplies it,
+ * per side, by --kp-nav-pad-scale (1 at rest). The compact bar keeps half of
+ * whatever its theme or its page gave it [scope-85] — cyberpunk's 1.2rem top
+ * and 0.4rem bottom become 0.6rem and 0.2rem, retro's 3px becomes 1.5px — so
+ * it gets shorter in all 22 themes and is never taller than at rest. Knobs:
+ * --kp-nav-sticky-shrink (0.5), the factor the compact bar's block padding
+ * is multiplied by; --kp-nav-sticky-duration (the theme's --fx-duration),
+ * how long it glides. The factor is set on the nav itself, so a consumer's
+ * at-rest --kp-nav-pad-block on the nav is halved rather than replaced. The same module measures the bar and writes its height to
  * --kp-nav-sticky-height on the scrolling box, which scroll-padding reads
  * when --kp-scroll-offset is not set: an anchor or a focused element lands
  * below the bar instead of under it. */
@@ -5589,7 +5593,7 @@
     }
 
     .kp-nav-wrap--sticky[data-kp-nav-compact] > .kp-nav {
-        --kp-nav-pad-block: var(--kp-nav-sticky-shrink, 0.125rem);
+        --kp-nav-pad-scale: var(--kp-nav-sticky-shrink, 0.5);
     }
 
     [data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky) {
@@ -9312,7 +9316,8 @@
         background: var(--surface-hero-bg);
         color: var(--surface-hero-fg);
         border-bottom: 0;
-        padding-block: var(--kp-nav-pad-block, 1.2rem) var(--kp-nav-pad-block, 0.4rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1.2rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0.4rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -11169,7 +11174,7 @@
 
     [data-theme='retro'] .kp-nav {
         background: var(--background);
-        padding-block: var(--kp-nav-pad-block, 3px);
+        padding-block: calc(var(--kp-nav-pad-block, 3px) * var(--kp-nav-pad-scale, 1));
         gap: 0.5rem;
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
@@ -13261,7 +13266,8 @@
     [data-theme='synthwave'] .kp-nav {
         background: var(--background);
         border-bottom: 1px solid hsl(from var(--foreground) h s l / 0.08);
-        padding-block: var(--kp-nav-pad-block, 1.1rem) var(--kp-nav-pad-block, 0);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0px) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -15021,7 +15027,7 @@
     [data-theme='phantom'] .kp-nav {
         background: var(--background);
         border-bottom: 2px solid var(--border);
-        padding-block: var(--kp-nav-pad-block, 1.1rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -16869,7 +16875,8 @@
     [data-theme='terminal'] .kp-nav {
         background: var(--background);
         border-bottom: 1px solid var(--border);
-        padding-block: var(--kp-nav-pad-block, 1rem) var(--kp-nav-pad-block, 0.6rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0.6rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -18463,7 +18470,7 @@
 
     [data-theme='brutalism'] .kp-nav {
         background: var(--background);
-        padding-block: var(--kp-nav-pad-block, 1.1rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -20300,7 +20307,7 @@
 
     [data-theme='titanium'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.7rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='titanium'] .kp-nav__brand {
@@ -21632,7 +21639,7 @@
 
     [data-theme='pastel'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.9rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='pastel'] .kp-nav__brand {
@@ -25372,7 +25379,7 @@
 
     [data-theme='deco'] .kp-nav {
         background: var(--sidebar-background);
-        padding-block: var(--kp-nav-pad-block, 0.9rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */
@@ -32162,7 +32169,7 @@
 
     [data-theme='dark'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.7rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='dark'] .kp-nav__brand {
@@ -33396,7 +33403,7 @@
     }
 
     [data-theme='formal'] .kp-nav {
-        padding-block: var(--kp-nav-pad-block, 1rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='formal'] .kp-nav__brand {
@@ -34534,7 +34541,7 @@
 
     [data-theme='sepia'] .kp-nav {
         background: var(--background);
-        padding-block: var(--kp-nav-pad-block, 1.1rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='sepia'] .kp-nav__brand {
@@ -36821,12 +36828,12 @@
         box-shadow: none;
     }
 
-    /* No script sets data-scrolled today [finding, S49]: the demo's nav
-       recolour on scroll has no shared JS hook to drive it (no module in
-       this package writes [data-scrolled], and a page-local script is
-       forbidden, TH109). The rule is kept, inert, so the mechanism is
-       exactly what the demo specifies the moment such a hook exists. */
-    [data-theme='high-contrast'] .kp-nav-wrap[data-scrolled] {
+    /* The demo's nav recolour on scroll [S49]. It was written for a
+       [data-scrolled] no module ever set, and sat inert until the shrinking
+       header gave it a hook: a sticky bar that has turned compact
+       (`data-kp-nav-compact`, set by attachStickyNavs or NavBar's `sticky`)
+       draws the accent line under itself [scope-85, hc-scrolled]. */
+    [data-theme='high-contrast'] .kp-nav-wrap[data-kp-nav-compact] {
         border-bottom-color: var(--border-strong);
         box-shadow: 0 3px 0 0 var(--accent);
     }

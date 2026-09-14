@@ -174,12 +174,12 @@
         box-shadow: none;
     }
 
-    /* No script sets data-scrolled today [finding, S49]: the demo's nav
-       recolour on scroll has no shared JS hook to drive it (no module in
-       this package writes [data-scrolled], and a page-local script is
-       forbidden, TH109). The rule is kept, inert, so the mechanism is
-       exactly what the demo specifies the moment such a hook exists. */
-    [data-theme='high-contrast'] .kp-nav-wrap[data-scrolled] {
+    /* The demo's nav recolour on scroll [S49]. It was written for a
+       [data-scrolled] no module ever set, and sat inert until the shrinking
+       header gave it a hook: a sticky bar that has turned compact
+       (`data-kp-nav-compact`, set by attachStickyNavs or NavBar's `sticky`)
+       draws the accent line under itself [scope-85, hc-scrolled]. */
+    [data-theme='high-contrast'] .kp-nav-wrap[data-kp-nav-compact] {
         border-bottom-color: var(--border-strong);
         box-shadow: 0 3px 0 0 var(--accent);
     }

@@ -184,7 +184,7 @@
     }
 
     [data-theme='formal'] .kp-nav {
-        padding-block: var(--kp-nav-pad-block, 1rem);
+        padding-block: calc(var(--kp-nav-pad-block, 1rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='formal'] .kp-nav__brand {

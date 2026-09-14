@@ -192,7 +192,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // writes to line the panel up with the bar's edges
     // (--kp-nav-mega-start, --kp-nav-mega-end): 177 + 4.
     // Both additions together, as measured after the merge: 173 + 4 + 4 = 181.
-    assert.equal(result.expected, 181, 'AR21 counted 181 --kp-* properties in css/components.css');
+    // sticky-shrink (scope-85) added one: --kp-nav-pad-scale, the factor
+    // every bar multiplies its block padding by, which the compact state
+    // sets from --kp-nav-sticky-shrink: 181 + 1.
+    assert.equal(result.expected, 182, 'AR21 counted 182 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -225,7 +228,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 181);
+    assert.equal(result.readCount, 182);
     assert.deepEqual(result.unread, []);
 });
 

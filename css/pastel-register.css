@@ -278,7 +278,7 @@
 
     [data-theme='pastel'] .kp-nav {
         background: var(--card);
-        padding-block: var(--kp-nav-pad-block, 0.9rem);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='pastel'] .kp-nav__brand {
