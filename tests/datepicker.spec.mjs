@@ -9,6 +9,8 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 // The fixture's pickers sit under lang="nl", and since gap-11 the month
@@ -208,7 +210,9 @@ test("a consumer's own month names still win over the locale's [gap-11, KT6]", a
 
 test('a disabled day keeps aria-disabled and looks unavailable, in every theme [gap-11]', async ({ page }) => {
     // gap-11: a disabled day carried aria-disabled and nothing else, so it painted exactly like a day that can be chosen.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/datepicker.html');
+    await waitForJudging(page);
     const off = page.locator('#limits [data-kp-day="2026-09-05"]');
     const on = page.locator('#limits [data-kp-day="2026-09-08"]');
     await expect(off).toHaveAttribute('aria-disabled', 'true');

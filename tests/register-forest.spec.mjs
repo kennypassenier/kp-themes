@@ -2,17 +2,17 @@
 // "Contour Register" (2026-09-08) reproduced by the package, measured on
 // the concept page under forest in both channels.
 //
-// What the demo showed and this suite holds: the plain lede highlight
-// (always visible, no reveal), the dossier's redactions covered while
-// armed and cleared on the single trigger with a staggered crossfade,
-// the section rule drawing in from the left when its heading enters the
-// viewport, the razor-tear divider and the second, concentric-ring
-// divider, the headline settled with no routine (its fade and contour
+// What the demo showed and this suite holds: the dossier's redactions
+// covered while armed and cleared on the single trigger with a staggered
+// crossfade, the section rule drawing in from the left when its heading
+// enters the viewport, the headline settled with no routine (its fade and contour
 // trace are CSS-only per the demo's own verdict, so this suite checks
 // the fade the shared page can show — the trace SVG has no home on the
 // generated page, recorded as a finding in themes/forest/anatomy.md), the
 // nav dropdown [KT14], the mirror button's sheen, the stamp, and the
-// whole approved inventory.
+// whole approved inventory. The plain lede highlight and the two dividers
+// are judged by eye on the catalogue since scope-73
+// (page-effects#lede-marks, page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -20,9 +20,6 @@
 //   - the armed cover (`[data-kp-effects] [data-kp-reveal='emphasis']
 //     mark:not(.is-cleared)`) removed → the redactions read from the
 //     first paint, red on "the redactions are covered while armed";
-//   - the razor-tear `clip-path` removed from `[data-kp-divider]` →
-//     the divider paints as a plain rectangle, red on "the divider is
-//     torn paper";
 //   - the rule's `:not(.is-in)::before { width: 0 }` removed → the rule
 //     stands drawn before its heading enters the viewport, red on "the
 //     rule draws in on scroll".
@@ -102,29 +99,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.textContent()).toContain('Read the ground before you walk it.');
         });
 
-        test('the plain lede mark is a felt highlight, unconditioned on any reveal state', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] .kp-lede mark').first();
-            await expect(mark).toBeVisible();
-            // Outside a data-kp-reveal="emphasis" container this is a plain
-            // highlight (the demo's own lede mark), never a redaction — the
-            // shared module still discovers it as a "loose" mark and may
-            // toggle .is-cleared on its own timer (js/effects.js), but the
-            // theme's styling does not key on that class at all, so the
-            // paint is identical either way.
-            const before = await mark.evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(before, 'the highlight, present immediately').not.toBe('rgba(0, 0, 0, 0)');
-            await settled(page);
-            await page.waitForTimeout(1700);
-            const after = await mark.evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(after, 'unchanged whether or not the module has cleared it').toBe(before);
-            // Read the one property, not the whole declaration: firefox
-            // hands a CSSStyleDeclaration back from evaluate() as an empty
-            // object, so `style.color` there is undefined.
-            const colour = await mark.evaluate((el) => getComputedStyle(el).color);
-            expect(colour).toBe(await paint(page, '--foreground'));
-        });
-
         test('the dossier redactions are covered while armed and clear on the trigger, staggered [TH120]', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -173,23 +147,6 @@ for (const [channel, url] of CHANNELS) {
             const after = await pseudo(rule, '::before', ['width', 'background-color']);
             expect(after.width).toBe('40px');
             expect(after['background-color']).toBe(await paint(page, '--primary'));
-        });
-
-        test('the razor-tear divider is torn paper, and the second divider is two concentric rings [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const tear = dividers.nth(0);
-            expect(await tear.evaluate((el) => getComputedStyle(el).clipPath), 'torn paper').toMatch(/^polygon\(/);
-            const box1 = await tear.boundingBox();
-            expect(box1?.height).toBeGreaterThan(0);
-            const rings = dividers.nth(1);
-            expect(await rings.evaluate((el) => getComputedStyle(el).clipPath), 'the alt divider is not clipped').toBe('none');
-            const before = await pseudo(rings, '::before', ['border-top-width', 'border-radius']);
-            const after = await pseudo(rings, '::after', ['border-top-width', 'border-radius']);
-            expect(before['border-top-width'], 'the outer ring').toBe('2px');
-            expect(after['border-top-width'], 'the inner ring is a hairline').toBe('1px');
-            expect(before['border-radius']).toMatch(/50%/);
         });
 
         test('the stamp reads the dossier’s own label, rotated, in the destructive ink', async ({ page }) => {

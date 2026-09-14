@@ -7,13 +7,13 @@
 // no dither, no per-word stagger — the one thing every other headline
 // routine does and this one does not); the lede's two marks sweeping in
 // with a highlighter's background-size, staggered by the module itself;
-// the rule reusing the base layer's own kp-rule-in; the two dividers as
-// hairline seams, the alt one tinted with the accent/signal pair; the
-// nav dropdown answered [KT14]; the two radius vocabularies (pill
+// the rule reusing the base layer's own kp-rule-in; the nav dropdown
+// answered [KT14]; the two radius vocabularies (pill
 // buttons, small-radius surfaces); elevation on every panel that floats
 // over a page where card and popover are both pure white (DI6); the
 // dossier's redactions clearing on the trigger, staggered; and the whole
-// approved inventory.
+// approved inventory. The two hairline-seam dividers are judged by eye on
+// the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -184,20 +184,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const transform = (await pseudo(rule, '::after', ['transform'])).transform;
             expect(transform, 'drawn to its full width at rest').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are hairline seams; the alt one tints its circle with the accent/signal pair [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => getComputedStyle(el).height);
-            expect(first, 'a hairline, not a block gap').toBe('1px');
-            const alt = await dividers.nth(1).evaluate((el) => {
-                const s = getComputedStyle(el, '::after');
-                return { bg: s.backgroundColor, border: s.borderColor };
-            });
-            expect(alt.bg).toBe(await paint(page, '--accent'));
-            expect(alt.border).toBe(await paint(page, '--fx-signal'));
         });
 
         test("the dossier's redactions clear on the trigger, staggered [S49, A11]", async ({ page }) => {

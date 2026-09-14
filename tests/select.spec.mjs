@@ -14,6 +14,8 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/select.html';
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
@@ -191,7 +193,9 @@ test('the React FormField’s select is drawn by default, and drawn={false} keep
 
 test('the catalogue’s textarea-and-select block shows only the drawn select [Kenny 2026-09-13]', async ({ page }) => {
     // Before: two selects, the native Severity beside the drawn one.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/field.html');
+    await waitForJudging(page);
     const selects = page.locator('#multiline select');
     await expect(selects).toHaveCount(1);
     await expect(page.locator('#multiline select + [data-kp-select-list]')).toHaveCount(1);

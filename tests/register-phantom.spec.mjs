@@ -7,14 +7,12 @@
 // another and end as its own text, the plate a <mark> is shoved under
 // (black ink on red once cleared, white while armed), the rail under a
 // heading sweeping from grey to red when it enters the viewport, the
-// torn-paper divider (three clipped plates, the second mirrored), the
 // skewed bar growing behind a hovered nav link and the key-cap button,
 // the censor plates of the dossier shearing off on the trigger, and the
-// whole approved inventory on the page.
+// whole approved inventory on the page. The torn-paper divider is judged
+// by eye on the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
-//   - the divider's clip-path removed from the register → the plates
-//     paint whole, red on "the divider is torn paper";
 //   - `--kp-arrival: card` removed → no overlay, red on "the page arrives";
 //   - the armed fold (`mark:not(.is-cleared)::before { transform: … scaleX(0) }`)
 //     removed → the plate never folds away, red on "the plate arrives".
@@ -190,19 +188,6 @@ for (const [channel, url] of CHANNELS) {
             await expect
                 .poll(async () => (await pseudo(rule, '::after', ['background-position']))['background-position'])
                 .toMatch(/^0(%|px) 0(%|px)$/);
-        });
-
-        test('the divider is torn paper: three clipped plates, the second one mirrored [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const paper = await pseudo(dividers.first(), '::before', ['clip-path', 'background-color']);
-            const red = await pseudo(dividers.first(), '::after', ['clip-path', 'background-color']);
-            expect(paper['clip-path']).toMatch(/polygon/);
-            expect(red['clip-path']).toMatch(/polygon/);
-            expect(paper['background-color']).not.toBe(red['background-color']);
-            expect(await dividers.first().evaluate((el) => getComputedStyle(el).height)).toBe('58px');
-            expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).transform), 'the second tear is mirrored').toMatch(/matrix\(-1,/);
         });
 
         test('the dossier stamp is a rotated red plate, and the censor plates shear off on the trigger', async ({ page }) => {

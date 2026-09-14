@@ -6,11 +6,11 @@
 // by word out of a blur, the mark's two readings (the lede's ignite,
 // scroll-bound and colour-only; the dossier's redact bar, staggered on
 // the trigger), the rule sweeping in under a heading (also scroll-bound),
-// the two night-seam dividers, the nav dropdown's own violet keyboard
-// ring, the starfield's own texture layers (the 102-point field at 0.35,
-// the ten shimmer stars masked to their own small window), and the whole
-// approved inventory on the page. There is no arrival: the demo has no
-// boot sequence.
+// the nav dropdown's own violet keyboard ring, the starfield's own texture
+// layers (the 102-point field at 0.35, the ten shimmer stars masked to
+// their own small window), and the whole approved inventory on the page.
+// There is no arrival: the demo has no boot sequence. The dividers are
+// judged by eye on the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - `--kp-reveal-headline: resolve` removed from the register → the
@@ -177,28 +177,6 @@ for (const [channel, url] of CHANNELS) {
             expect(band['transform-origin'], 'it grows from the leading edge').toMatch(/^0px/);
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['scale'])).scale.trim(), { timeout: 5000 }).toMatch(/^(1|none)$/);
-        });
-
-        test("the dividers are the instrument's own scale: a hairline, ticks, the oxide at centre [TH121, scope-16]", async ({ page }) => {
-            // The starfield seam is gone with the stars it was made of. What
-            // stands here is the edge of a ruler: a hairline that fades at
-            // both ends, ticks standing on it, and the film across the
-            // middle third.
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = dividers.first();
-            const hairline = await first.evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(hairline, 'a hairline that fades at both ends').toMatch(/linear-gradient/);
-            expect(await first.evaluate((el) => getComputedStyle(el).blockSize)).toBe('64px');
-            const ticks = await pseudo(first, '::before', ['background-image', 'height']);
-            expect(ticks['background-image'], 'the ticks, repeated').toMatch(/repeating-linear-gradient/);
-            expect(ticks.height, 'they stand on the line, not across it').toBe('7px');
-            const centre = await pseudo(first, '::after', ['background-image', 'opacity']);
-            expect(centre['background-image'], 'the oxide across the middle').toMatch(/conic-gradient/);
-            expect(Number(centre.opacity)).toBeCloseTo(0.75, 2);
-            const second = dividers.nth(1);
-            expect(await second.evaluate((el) => getComputedStyle(el).transform), 'the alt divider mirrors').not.toBe('none');
         });
 
         test('the dossier is a log: the redact bar covers the words until the trigger is pressed', async ({ page }) => {

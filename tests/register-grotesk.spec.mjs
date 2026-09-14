@@ -6,11 +6,11 @@
 // (.1s in, .15s out), the headline's optical blur+brightness resolve
 // ending as its own text, the dossier's marks as ink redaction bars that
 // cut away in three monotone steps on the trigger, the rule drawing itself
-// under a heading, the double rule with the signal hairline as divider, no
-// arrival at all, and the whole approved inventory. The navbar track, the
-// buttons, their hover, press and baseline, and the dropdown are judged by
-// eye on the catalogue since scope-73 (navigation#bar, navigation#dropdown,
-// button#variants, button#states).
+// under a heading, no arrival at all, and the whole approved inventory. The
+// navbar track, the buttons, their hover, press and baseline, the dropdown
+// and the double-rule divider are judged by eye on the catalogue since
+// scope-73 (navigation#bar, navigation#dropdown, button#variants,
+// button#states, page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the armed redaction cover (`[data-kp-effects] .kp-card[data-kp-reveal
@@ -19,10 +19,7 @@
 //     on "covered before the trigger";
 //   - the headline's armed blur (`.is-sharpening { filter: blur(...)
 //     brightness(...) }`) removed → the probe never reads a blur greater
-//     than 0, red on "the headline resolves from a blur";
-//   - the divider's signal hairline (`[data-kp-divider]::after`) removed →
-//     no second background layer, red on "the hairline is centred between
-//     the two rules".
+//     than 0, red on "the headline resolves from a blur".
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -165,22 +162,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const after = await pseudo(rule, '::after', ['transform']);
             expect(after.transform, 'drawn at rest').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the divider is the double rule: two black rules with a signal hairline exactly centred between them [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = dividers.first();
-            expect(await first.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
-            expect(await first.evaluate((el) => getComputedStyle(el).borderBottomWidth)).toBe('3px');
-            expect(await first.evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(await paint(page, '--foreground'));
-            const hairline = await pseudo(first, '::after', ['background-color', 'height']);
-            expect(hairline['background-color'], 'the hairline is the signal colour').toBe(await paint(page, '--primary'));
-            expect(hairline.height).toBe('1px');
-            // The second divider takes the one-column caesura.
-            const alt = dividers.nth(1);
-            expect(await alt.evaluate((el) => parseFloat(getComputedStyle(el).marginInlineStart))).toBeGreaterThan(0);
         });
 
         test('the dossier: the redaction bars cover the marks until the trigger, then cut away in three steps [TH120]', async ({ page }) => {

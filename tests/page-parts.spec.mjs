@@ -15,6 +15,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { measured } from './paint.mjs';
 
 const FIXTURE = '/tests/fixtures/page-parts.html';
@@ -67,7 +69,9 @@ test.describe('the last two pieces of the page', () => {
         // Before: the control written as documented — an empty button with
         // only a name — painted as an empty 30px box in all 22 themes.
         await page.emulateMedia({ reducedMotion: 'reduce' });
+        await useEmptyRegister(page.context());
         await page.goto('/catalogue/navigation.html');
+        await waitForJudging(page);
         await page.evaluate(async () => {
             const button = document.createElement('button');
             button.type = 'button';

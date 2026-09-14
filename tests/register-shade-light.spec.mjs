@@ -6,11 +6,12 @@
 // resolving out of a blur one after another, the lede's marks filling in
 // left to right with an accent tint (box-decoration-break: clone across a
 // wrapped line), the rule under a heading drawing itself once it scrolls
-// into view, the blurred section seam as divider (measured at DI9's
-// felt-not-seen opacity), the nav's brand dot and its dropdown's shadow,
-// the flat buttons with the one hover-darken the demo names, the dossier's
+// into view, the nav's brand dot and its dropdown's shadow, the flat
+// buttons with the one hover-darken the demo names, the dossier's
 // redaction bars clearing on the trigger, the dialog rising into place,
-// and the whole approved inventory on the page.
+// and the whole approved inventory on the page. The blurred section seam
+// as divider is judged by eye on the catalogue since scope-73
+// (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the armed mark rule (`[data-kp-effects] mark:not(.is-cleared)`)
@@ -153,18 +154,6 @@ for (const [channel, url] of CHANNELS) {
             expect(drawn['background-color']).toBe(await paint(page, '--primary'));
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are a blurred seam, felt rather than seen, at or under DI9’s ceiling [TH121, DI9]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await pseudo(dividers.first(), '::before', ['opacity', 'filter', 'background-image']);
-            expect(Number(first.opacity), 'DI9’s 6% ceiling, the demo’s own 5%').toBeLessThanOrEqual(0.06);
-            expect(first.filter, 'the seam is blurred, not a hard line').toMatch(/blur/);
-            expect(first['background-image']).toMatch(/linear-gradient/);
-            const alt = await pseudo(dividers.nth(1), '::before', ['opacity']);
-            expect(Number(alt.opacity), 'the accent band, at the ceiling and not over it').toBeLessThanOrEqual(0.06);
         });
 
         test('the dossier covers its marks before the trigger opens them, then clears the redaction bars in order', async ({ page }) => {

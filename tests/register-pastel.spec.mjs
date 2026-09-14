@@ -7,11 +7,12 @@
 // springing from a wide mis-registration into its 2px rest position once
 // and ending as its own text, the lede's marks filling in mint then
 // violet, the app heading's rule growing left to right once it enters the
-// viewport, the torn-tab divider as two different zig-zags, the navbar's
-// dropdown in the theme's own soft radius, the buttons' spring lift on
-// hover and settle on press, the dossier's rotated stamp swapping its
-// word when the file opens and its redactions fading and narrowing away
-// on the trigger, and the whole approved inventory on the page.
+// viewport, the navbar's dropdown in the theme's own soft radius, the
+// buttons' spring lift on hover and settle on press, the dossier's rotated
+// stamp swapping its word when the file opens and its redactions fading
+// and narrowing away on the trigger, and the whole approved inventory on
+// the page. The torn-tab dividers are judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -191,25 +192,6 @@ for (const [channel, url] of CHANNELS) {
             expect(drawn['background-color']).toBe(await paint(page, '--primary'));
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['width'])).width).not.toBe('0px');
-        });
-
-        test('the two dividers are torn tabs: different zig-zags, plum then mint-ink', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => ({
-                clip: getComputedStyle(el).clipPath,
-                bg: getComputedStyle(el).backgroundColor,
-            }));
-            const second = await dividers.nth(1).evaluate((el) => ({
-                clip: getComputedStyle(el).clipPath,
-                bg: getComputedStyle(el).backgroundColor,
-            }));
-            expect(first.clip, 'a jagged cut, not a straight edge').toMatch(/polygon/);
-            expect(second.clip).toMatch(/polygon/);
-            expect(first.clip, 'the two tears are different cuts').not.toBe(second.clip);
-            expect(first.bg).toBe(await paint(page, '--primary'));
-            expect(second.bg).toBe(await paint(page, '--accent-foreground'));
         });
 
         test('the dossier: the rotated stamp swaps its word when the file opens, and the redactions cover the words until then', async ({ page }) => {

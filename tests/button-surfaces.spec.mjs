@@ -102,8 +102,8 @@ for (const [channel, url] of CHANNELS) {
 //
 // Drilled 2026-09-12 in firefox: `opacity: 0` removed from the readout in
 // css/components.css and the bundle regenerated -> red on it being
-// invisible until a theme asks; the hover rule removed from
-// css/dark-register.css -> red on the reveal.
+// invisible until a theme asks. The reveal on hover is judged by eye on
+// the catalogue since scope-73 (page-effects#button-readout).
 test('the readout is invisible until a theme asks, and never announced [scope-16, KT5]', async ({ page }) => {
     await page.goto('/tests/fixtures/readout.html');
     const readout = page.locator('.kp-button__readout');
@@ -128,15 +128,6 @@ test('the readout is invisible until a theme asks, and never announced [scope-16
     // same height as the button with one.
     const heights = await page.evaluate(() => [...document.querySelectorAll('.kp-button')].map((b) => Math.round(b.getBoundingClientRect().height)));
     expect(heights[0], 'a readout does not make its button taller').toBe(heights[1]);
-});
-
-test('a theme that styles the readout reveals it on hover [scope-16]', async ({ page }) => {
-    await page.goto('/tests/fixtures/readout.html');
-    const readout = page.locator('.kp-button__readout');
-    await page.locator('.kp-button--primary').hover();
-
-    // dark raises the opacity and paints the text with its oxide gradient.
-    await measured(readout, (el) => getComputedStyle(el).opacity, undefined, 'dark reveals the readout on hover').toBe('1');
 });
 
 // Drilled 2026-09-12 in firefox: `readout: c.readout || undefined`

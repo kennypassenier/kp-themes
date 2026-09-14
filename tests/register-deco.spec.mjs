@@ -5,12 +5,13 @@
 // What the demo showed and this suite holds: the headline framed by a
 // concentric gold cartouche (three inset steps, a chevron corner cut) that
 // scales in once, the rule under a heading fading toward transparent, the
-// double-rule divider with a lozenge at its centre, the dossier's jewel
-// (emerald) redactions covered until the "Open the file" trigger clears
-// them staggered, the focus ring answered by the base layer's own default
-// (no register override, since the derived tokens already equal
-// foreground/background), the nav dropdown styled (KT14), and the whole
-// approved inventory.
+// dossier's jewel (emerald) redactions covered until the "Open the file"
+// trigger clears them staggered, the focus ring answered by the base
+// layer's own default (no register override, since the derived tokens
+// already equal foreground/background), the nav dropdown styled (KT14),
+// and the whole approved inventory. The double-rule divider and the lede's
+// gold highlight are judged by eye on the catalogue since scope-73
+// (page-effects#dividers, page-effects#lede-marks).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -19,10 +20,7 @@
 //     no frame paints around the headline, red on "the cartouche frames";
 //   - the armed redaction rule (`[data-kp-effects] mark:not(.is-cleared)`)
 //     removed → the dossier's words are readable from the first paint, red
-//     on "the redactions are jewel plates";
-//   - the double-rule divider's `border-block: 3px double` removed →
-//     `border-style` no longer reports `double`, red on "the divider is a
-//     double rule".
+//     on "the redactions are jewel plates".
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -136,21 +134,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the divider is a double rule with a lozenge at its centre [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const hero = dividers.first();
-            expect(await hero.evaluate((el) => getComputedStyle(el).borderTopStyle), 'the double rule').toBe('double');
-            expect(await hero.evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(await paint(page, '--border-strong'));
-            const lozenge = await pseudo(hero, '::before', ['transform', 'border-color']);
-            expect(lozenge.transform, 'rotated to a diamond').toMatch(/rotate\(45deg\)|matrix\(0/);
-            expect(lozenge['border-color']).toBe(await paint(page, '--primary'));
-            const alt = dividers.nth(1);
-            const altLozenge = await pseudo(alt, '::before', ['border-color']);
-            expect(altLozenge['border-color'], 'the alt divider is emerald').toBe(await paint(page, '--accent'));
-        });
-
         test('the dossier: jewel redactions covered until the trigger clears them, staggered [TH120]', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -166,15 +149,6 @@ for (const [channel, url] of CHANNELS) {
             const cleared = await pseudo(mark, '', ['background-color', 'color']);
             expect(cleared['background-color'], 'transparent once cleared').toBe('rgba(0, 0, 0, 0)');
             expect(cleared.color).toBe(await paint(page, '--foreground'));
-        });
-
-        test('a plain mark in the lede is always a visible gold highlight, never covered [S49]', async ({ page }) => {
-            await open(page, url);
-            const lede = page.locator('.kp-lede mark').first();
-            await expect(lede).toBeVisible();
-            const style = await pseudo(lede, '', ['color', 'background-color']);
-            expect(style.color).toBe(await paint(page, '--primary'));
-            expect(style['background-color'], 'never covered, no reveal wait').toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

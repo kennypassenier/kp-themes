@@ -17,9 +17,11 @@
 //     style serialisation and letter case, and it is the thing that
 //     catches an adapter in showcase/examples.mjs drifting from the
 //     component it mirrors.
-//  3. The two shapes the chassis-rs report named are on the
-//     list-with-form page and behave: two fields with a button on one
-//     row, and a table cell holding a 70-character value.
+//
+// The two shapes the chassis-rs report named on the list-with-form page —
+// two fields with a button on one row, and a table cell holding a
+// 70-character value — are judged by eye since scope-73: the ten example
+// pages are in the catalogue navigation.
 //
 // AR20 says this out loud: it is documentation hygiene, not parity proof.
 // The behaviour suites are what prove the two channels agree.
@@ -32,14 +34,6 @@
 //   missing "span|kp-alert__body||" line in document order. Restored:
 //   green. This is the AR20 defect the decision itself names, injected on
 //   purpose.
-//
-//   two fields and a button on one row — `display: flex` removed from
-//   `.kp-row` in css/layout.css. Red in BOTH channels: the three tops
-//   spread 118px instead of under 40. Restored: green.
-//
-//   the 70-character cell is a content assertion about the descriptor,
-//   not about a rule the package applies, so there is nothing to remove.
-//   It exists so TH99 has the shape to measure.
 
 import { expect, test } from '@playwright/test';
 import { EXAMPLES, INLINE_STYLE_EXCEPTIONS } from '../showcase/examples.mjs';
@@ -140,38 +134,6 @@ test.describe('the ten example pages', () => {
             await page.goto(reactUrl(example.id));
             const react = await shape(page, '#react-mount');
             expect(react).toEqual(free);
-        });
-    }
-
-    // The two shapes the chassis-rs report named, on the page TH98 puts
-    // them on, so TH99 has something to measure.
-    for (const [channel, url] of [
-        ['framework-free', staticUrl('list-with-form')],
-        ['React', reactUrl('list-with-form')],
-    ]) {
-        test(`list-with-form: two fields and a button on one row, ${channel} [TH98]`, async ({ page }) => {
-            await page.setViewportSize({ width: 1280, height: 900 });
-            await page.goto(url);
-            const row = page.locator('[data-example="filter-row"]');
-            await expect(row.locator('.kp-field')).toHaveCount(2);
-            const tops = await row.evaluate((el) => {
-                const parts = [...el.querySelectorAll('.kp-field, button')];
-                return parts.map((p) => p.getBoundingClientRect().top);
-            });
-            expect(tops.length).toBe(3);
-            // One row means one row: the three tops sit within a line of
-            // each other. The button is aligned on the field's bottom
-            // edge by .kp-row--end, so the tops differ by less than the
-            // height of a field.
-            expect(Math.max(...tops) - Math.min(...tops)).toBeLessThan(40);
-        });
-
-        test(`list-with-form: a table cell holds a 70-character value, ${channel} [TH98]`, async ({ page }) => {
-            await page.setViewportSize({ width: 1280, height: 900 });
-            await page.goto(url);
-            const cell = page.locator('[data-example="long-cell"]');
-            const text = (await cell.textContent()) ?? '';
-            expect(text.trim().length).toBeGreaterThanOrEqual(70);
         });
     }
 

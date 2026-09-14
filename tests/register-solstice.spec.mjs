@@ -6,10 +6,11 @@
 // wipe (a three-band overlay in mix-blend-mode: difference, cleared once
 // — the package's own `clip-path` sweep standing in for the demo's three
 // staggered transforms, per anatomy.md's S49 finding), the rule drawing
-// itself under a heading, the horizon-seam dividers, the nav dropdown
-// (KT14) with its own caret glyph, the buttons' mirror highlight and
-// soft hover, the dossier's three redactions clearing on the trigger,
-// and the whole approved inventory (S46).
+// itself under a heading, the nav dropdown (KT14) with its own caret
+// glyph, the buttons' mirror highlight and soft hover, the dossier's three
+// redactions clearing on the trigger, and the whole approved inventory
+// (S46). The horizon-seam dividers are judged by eye on the catalogue
+// since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -163,18 +164,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const rest = await pseudo(rule, '::after', ['transform']);
             expect(rest.transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the two dividers are the horizon seam: a hairline with an accent peak, the alt one on the opposite side', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundImage);
-            const second = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(first, 'a conic peak over a hairline').toMatch(/conic-gradient/);
-            expect(first).toMatch(/linear-gradient/);
-            expect(second).toMatch(/conic-gradient/);
-            expect(first, 'the alt divider is not identical to the first').not.toBe(second);
         });
 
         test('the nav dropdown (KT14): a caret glyph, opens on hover/focus, its items read the warm popover', async ({ page }) => {

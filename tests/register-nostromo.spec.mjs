@@ -5,14 +5,15 @@
 // What the demo showed and this suite holds: the headline and the
 // dossier stamp popping down under a clip-path with the text always
 // whole (no glyph, word or character is ever touched — the one thing
-// that makes `popdown` a new headline routine), the mark as a highlight
-// outside a dossier and as ink over the phrase inside one, the section
-// rule as a growing underline, the dividers as a row of vent-texture
-// dots, the label-tape buttons (tracked uppercase mono), the dropdown
-// as a dark control-strip panel (KT14), the current-page LED dot, the
-// dossier's redactions clearing together on the trigger with a staggered
+// that makes `popdown` a new headline routine), the mark as ink over the
+// phrase inside a dossier, the section rule as a growing underline, the
+// label-tape buttons (tracked uppercase mono), the dropdown as a dark
+// control-strip panel (KT14), the current-page LED dot, the dossier's
+// redactions clearing together on the trigger with a staggered
 // transition, the stamp swapping its word when the file opens, and the
-// whole approved inventory.
+// whole approved inventory. The mark as a highlight outside a dossier and
+// the vent-dot dividers are judged by eye on the catalogue since scope-73
+// (page-effects#lede-marks, page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -149,19 +150,6 @@ for (const [channel, url] of CHANNELS) {
             for (let i = 0; i < count; i++) await expect(marks.nth(i)).toHaveClass(/is-cleared/);
         });
 
-        test('a mark outside the dossier is a highlight, ink on transparent with a signal underline [TH120]', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] mark, .kp-prose mark').first();
-            await expect(mark).toBeVisible();
-            const style = await mark.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { background: s.backgroundColor, color: s.color, shadow: s.boxShadow };
-            });
-            expect(style.background, 'never a redaction outside a dossier').toBe('rgba(0, 0, 0, 0)');
-            expect(style.color).toBe(await paint(page, '--foreground'));
-            expect(style.shadow, 'the signal-orange underline').toMatch(/inset/);
-        });
-
         test('the section rule grows from nothing to a full underline once its heading is in view [TH122]', async ({ page }) => {
             await open(page, url);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
@@ -172,20 +160,6 @@ for (const [channel, url] of CHANNELS) {
             expect(after['background-color']).toBe(await paint(page, '--selected'));
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are a row of vent-texture dots, the second darker for the footer seam', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const before = await pseudo(dividers.nth(i), '::before', ['background-image']);
-                expect(before['background-image'], 'a row of dots').toMatch(/radial-gradient/);
-            }
-            const plain = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundColor);
-            const alt = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(alt, 'the footer seam is the sidebar plate, not the plain seam').not.toBe(plain);
-            expect(alt).toBe(await paint(page, '--sidebar-accent'));
         });
 
         test('the dossier: the stamp swaps its word, and the redactions clear together on the trigger [S49, A11]', async ({ page }) => {

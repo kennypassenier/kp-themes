@@ -13,6 +13,8 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { contrast } from '../gates/colour.mjs';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
@@ -27,7 +29,12 @@ const wear = async (page, theme) => {
 /** @param {import('@playwright/test').Page} page @param {string} url */
 const open = async (page, url) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    // A catalogue page hides a block once it is judged: an empty register
+    // keeps every block on the page, and the reading is waited out.
+    const catalogue = url.startsWith('/catalogue/');
+    if (catalogue) await useEmptyRegister(page.context());
     await page.goto(url);
+    if (catalogue) await waitForJudging(page);
 };
 
 // ── Note 1: the data table's date filter is the package's date picker ─────

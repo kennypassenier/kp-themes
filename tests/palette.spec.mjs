@@ -3,7 +3,9 @@
 // What is worth testing here is not that a dialog opens — the browser
 // does that — but the three things a palette gets wrong: the keystroke on
 // the wrong platform, the match, and a `?` that steals the
-// question mark someone is typing into a field.
+// question mark someone is typing into a field. The sheet fitting a 360px
+// window [MR-R6-2] is judged by eye on the catalogue since scope-73
+// (page-effects#palette-narrow).
 
 import { test, expect } from '@playwright/test';
 
@@ -90,50 +92,4 @@ test('the shortcut sheet opens on ? and not while typing [TH49]', async ({ page 
     await field.press('?');
     await expect(sheet).toBeHidden();
     await expect(field).toHaveValue('?');
-});
-
-// The sheet fits a phone [MR-R6-2, DI11].
-//
-// It was content-box: `width` applied to the content and the 1.25rem
-// padding plus the border sat outside it, so at a 360px viewport the
-// dialog measured 373.19px and the page scrolled 13px sideways. Kenny
-// chose on 2026-09-07 to set border-box AND raise the default width by
-// exactly what used to sit outside it, so the sheet keeps its 490px on
-// a wide screen and only changes where it was broken.
-//
-// Drill: remove `box-sizing: border-box` from .kp-shortcuts in
-// css/components.css and the 360px case reads 373.19 against a 360px
-// viewport; remove the raised default instead and the 1280px case reads
-// 448 where it expects 490.
-test('the shortcut sheet fits a 360px viewport and is unchanged on a wide one [MR-R6-2]', async ({ page }) => {
-    await page.goto(URL);
-    const sheet = page.locator('[data-test="plain-shortcuts"]');
-
-    const widthAt = async (viewport) => {
-        await page.setViewportSize({ width: viewport, height: 900 });
-        return page.evaluate(() => {
-            const el = document.querySelector('[data-test="plain-shortcuts"]');
-            return {
-                sheet: el.getBoundingClientRect().width,
-                document: document.documentElement.scrollWidth,
-                viewport: document.documentElement.clientWidth,
-            };
-        });
-    };
-
-    await page.keyboard.press('?');
-    await expect(sheet).toBeVisible();
-
-    const narrow = await widthAt(360);
-    expect(narrow.sheet).toBeLessThanOrEqual(narrow.viewport);
-    expect(narrow.document).toBeLessThanOrEqual(narrow.viewport + 1);
-
-    // The wide case is the half of the choice that keeps the sheet
-    // looking exactly as it shipped: 490px, not the 448px a bare
-    // box-sizing change would have left.
-    for (const viewport of [768, 1280]) {
-        const wide = await widthAt(viewport);
-        expect(wide.sheet, `the sheet changed width at ${viewport}px`).toBeCloseTo(490, 0);
-        expect(wide.document).toBeLessThanOrEqual(wide.viewport + 1);
-    }
 });

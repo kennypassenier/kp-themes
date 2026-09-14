@@ -4,14 +4,14 @@
 //
 // What the demo showed and this suite holds: the striped sun on the hero
 // (a masked disc, static), the floor that drifts and never changes
-// luminance, the horizon as divider (a 2px line with its glow), the chrome
-// headline that goes through one tracking wipe and one shine and ends as
-// its own text, the neon tube a <mark> switches on (dark glass while
-// armed, a glow when on), the laser line under a heading, the stripe under
-// a hovered nav link, the sun cut on a hovered button, the OSD face on a
-// field label, the dossier's tracking noise that clears on its trigger,
-// the boot arrival with its Skip once per session, and the whole approved
-// inventory on the page.
+// luminance, the chrome headline that goes through one tracking wipe and
+// one shine and ends as its own text, the neon tube a <mark> switches on
+// (dark glass while armed, a glow when on), the laser line under a
+// heading, the stripe under a hovered nav link, the sun cut on a hovered
+// button, the OSD face on a field label, the dossier's tracking noise that
+// clears on its trigger, the boot arrival with its Skip once per session,
+// and the whole approved inventory on the page. The horizon divider is
+// judged by eye on the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the sun's mask-image removed from the register → the disc paints
@@ -102,17 +102,6 @@ for (const [channel, url] of CHANNELS) {
             expect(parseFloat(floor['animation-duration'])).toBeGreaterThanOrEqual(4);
             expect(floor.transform).toMatch(/matrix3d/);
             expect(floor['background-image']).toMatch(/conic-gradient/);
-        });
-
-        test('the divider is the horizon: a 2px line with its glow over a receding grid', async ({ page }) => {
-            await open(page, url);
-            const divider = page.locator('[data-kp-divider]').first();
-            const line = await pseudo(divider, '::before', ['height', 'box-shadow', 'background-color']);
-            expect(line.height).toBe('2px');
-            expect(line['box-shadow']).not.toBe('none');
-            const grid = await pseudo(divider, '::after', ['transform', 'background-image']);
-            expect(grid.transform).toMatch(/matrix3d/);
-            expect(grid['background-image']).toMatch(/repeating-linear-gradient/);
         });
 
         test('the headline is chrome, goes through one tracking wipe and one shine, and ends as its own text [SW2]', async ({ page }) => {

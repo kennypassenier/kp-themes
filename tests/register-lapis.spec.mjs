@@ -5,14 +5,13 @@
 // What the demo showed and this suite holds: the headline burnishing in
 // with one gold clip-path wipe and landing flat gold, the lede's marks
 // standing in ivory and then inscribed — ink to gold, an underline drawn
-// in — once and staggered, the rule drawing in under a heading, the two
-// ruled dividers (the wide one carrying the four-ring frame and the girih
-// dot, the narrow one a plain hatch), the girih tile confined to the hero
-// and app surfaces with the theme's old page-wide texture turned off, the
+// in — once and staggered, the rule drawing in under a heading, the
 // navbar's double-stroke ruling and its dropdown, the buttons (the plain
 // ring, the filled gold plate, the mirror gloss), the dossier's seal
 // covering its redactions until the trigger clears them on a stagger, and
-// the whole approved inventory on the page.
+// the whole approved inventory on the page. The two ruled dividers and the
+// girih tile on the hero and app surfaces are judged by eye on the
+// catalogue since scope-73 (page-effects#dividers, page-effects#surfaces).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -23,8 +22,7 @@
 //     burnish runs, and lands flat gold";
 //   - `--fx-texture-opacity: 0` removed from the root block → the old
 //     page-wide girih texture from css/_rules.css shows through again
-//     (0.05, not 0), red on both "the old page-wide texture stays off"
-//     and "the page-wide texture is turned off";
+//     (0.05, not 0), red on "the old page-wide texture stays off";
 //   - `background: var(--sidebar-background); color: transparent;`
 //     removed from `.kp-card[data-kp-reveal='emphasis'] mark` → the
 //     dossier's redacted phrases read transparent-background (the base
@@ -153,42 +151,6 @@ for (const [channel, url] of CHANNELS) {
             expect(ruling['background-color']).toBe(await paint(page, '--border-strong'));
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are ruled: the wide one carries the four-ring frame and the girih dot, the narrow one a plain hatch [TH121]', async ({
-            page,
-        }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => ({
-                h: getComputedStyle(el).height,
-                shadow: getComputedStyle(el).boxShadow,
-                bg: getComputedStyle(el).backgroundImage,
-            }));
-            expect(first.h).toBe('34px');
-            expect(first.shadow.match(/inset/g)?.length, 'the four-ring frame').toBe(3);
-            expect(first.bg, 'the hatch and the girih dot').toMatch(/repeating-linear-gradient/);
-            expect(first.bg, 'the girih dot').toMatch(/radial-gradient/);
-            const second = await dividers.nth(1).evaluate((el) => ({ h: getComputedStyle(el).height, shadow: getComputedStyle(el).boxShadow }));
-            expect(second.h).toBe('16px');
-            expect(second.shadow).toBe('none');
-        });
-
-        test('the girih tile is confined to the hero and app surfaces, and the page-wide texture is turned off [DI9]', async ({ page }) => {
-            await open(page, url);
-            const texture = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity').trim());
-            expect(texture, 'the old page-wide texture is turned off in this register').toBe('0');
-            const hero = await page
-                .locator('[data-kp-surface="hero"]')
-                .first()
-                .evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(hero, 'the girih tile paints the hero').toMatch(/conic-gradient/);
-            const outside = await page
-                .locator('.kp-footer')
-                .first()
-                .evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(outside, 'the tile does not reach the footer').not.toMatch(/conic-gradient/);
         });
 
         test('the navbar: the double-stroke ruling, the dropdown, and the call to action is a filled gold plate', async ({ page }) => {

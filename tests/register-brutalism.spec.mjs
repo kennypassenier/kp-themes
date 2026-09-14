@@ -6,15 +6,13 @@
 // onto their yellow offset one after another and ending as its own text,
 // the mark as a plate wiped in behind the word (on the paper while armed,
 // the yellow plate with the line once landed), the six-pixel bar ruling a
-// heading off, the marquee divider as a strip translated -50% that stands
-// still under reduced motion, the strip with the yellow hover and the cta
-// that lifts and drops, the plates with the line and the shadow, the
-// stamp with the pixel outline and the bars sliding off the dossier, no
-// arrival at all, and the whole approved inventory.
+// heading off, the strip with the yellow hover and the cta that lifts and
+// drops, the plates with the line and the shadow, the stamp with the pixel
+// outline and the bars sliding off the dossier, no arrival at all, and the
+// whole approved inventory. The marquee divider is judged by eye on the
+// catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
-//   - the marquee's `inline-size: 200%` strip removed → nothing to
-//     translate, red on "the divider is a marquee";
 //   - the armed plate (`[data-kp-effects] mark:not(.is-cleared)`) removed →
 //     the plate is there from the first paint, red on "the mark is a plate";
 //   - the cta's lift on hover removed → no translate, red on "the strip".
@@ -152,33 +150,6 @@ for (const [channel, url] of CHANNELS) {
             expect(bar['animation-name']).toBe('kp-rule-in');
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the divider is a marquee: a strip twice the band, translating, the second one the other way [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const d = dividers.nth(i);
-                expect(await d.evaluate((el) => getComputedStyle(el).height)).toBe('46px');
-                const strip = await pseudo(d, '::before', [
-                    'width',
-                    'animation-name',
-                    'animation-duration',
-                    'animation-iteration-count',
-                    'background-image',
-                ]);
-                const band = await d.evaluate((el) => el.getBoundingClientRect().width);
-                expect(parseFloat(strip.width), 'twice the band').toBeCloseTo(band * 2, -1);
-                expect(strip['animation-name']).toBe('kp-marquee');
-                expect(parseFloat(strip['animation-duration'])).toBe(42);
-                expect(strip['animation-iteration-count']).toBe('infinite');
-                expect(strip['background-image']).toMatch(/repeating-linear-gradient/);
-            }
-            expect((await pseudo(dividers.nth(1), '::before', ['animation-direction']))['animation-direction']).toBe('reverse');
-            expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor), 'the second band is the plate').toBe(
-                await paint(page, '--secondary'),
-            );
         });
 
         test('the strip: a hovered item is the yellow plate with the line, and the cta lifts away from its shadow', async ({ page }) => {

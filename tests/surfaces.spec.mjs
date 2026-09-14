@@ -7,12 +7,9 @@
 // rendered page, not on the token file, because the hero block remaps
 // what a component reads and a remap can point at the wrong thing.
 //
-// Drill [KT3]: with the generator's hero block removed (`heroes` left out
-// of build() in gates/generate-themes.mjs, `npm run generate`), the hero
-// and the app paint the same ground under cyberpunk and the first test
-// goes red on "the hero paints the app's ground"; the contrast test alone
-// would stay green, because the app's colours read fine on the hero too.
-// Performed 2026-09-07, both browsers, then restored.
+// That the hero and the app paint two different grounds is judged by eye
+// on the catalogue since scope-73 (page-effects#surfaces); the contrast
+// tests below stay.
 
 import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
@@ -128,37 +125,6 @@ const GROUND = `(el) => {
 }`;
 
 test.describe('two surfaces in one theme [TH116]', () => {
-    test('under cyberpunk the hero paints its own ground, and the app paints the theme background', async ({ page }) => {
-        await open(page, 'cyberpunk');
-        const hero = page.locator('[data-kp-surface="hero"]').first();
-        const app = page.locator('[data-kp-surface="app"]').first();
-        const [heroGround] = await hero.evaluate((el, src) => new Function(`return ${src}`)()(el), GROUND);
-        const [appGround] = await app.evaluate((el, src) => new Function(`return ${src}`)()(el), GROUND);
-        const expected = await page.evaluate(() => {
-            const style = getComputedStyle(document.documentElement);
-            return { hero: style.getPropertyValue('--surface-hero-bg').trim(), app: style.getPropertyValue('--background').trim() };
-        });
-        // The token is an hsl() literal; the paint is rgb(). Compare by
-        // painting the token on a probe element in the same document.
-        const paint = await page.evaluate(
-            ([hsl1, hsl2]) => {
-                const probe = document.createElement('div');
-                document.body.append(probe);
-                const out = [];
-                for (const value of [hsl1, hsl2]) {
-                    probe.style.backgroundColor = value;
-                    out.push(getComputedStyle(probe).backgroundColor);
-                }
-                probe.remove();
-                return out;
-            },
-            [expected.hero, expected.app],
-        );
-        expect(heroGround, "the hero paints the app's ground").not.toBe(appGround);
-        expect(heroGround).toBe(paint[0]);
-        expect(appGround).toBe(paint[1]);
-    });
-
     // A pair an approved demo puts under the floor is REPORTED, not lifted
     // [S49, S42]: the register carries the demo's own value, the shortfall
     // is measured here with the demo it came from, and Kenny decides at

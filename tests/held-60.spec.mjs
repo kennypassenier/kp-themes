@@ -13,11 +13,16 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8')));
 
 test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    // The catalogue pages hide a block once it is judged; these tests read
+    // the blocks, whatever the committed register says about them.
+    await useEmptyRegister(page.context());
 });
 
 // --- 1 · Reorder: a pointer drag crosses rows [scope-60] -----------------
@@ -82,6 +87,7 @@ test('reorder — catalogue: Time dragged to the bottom in one movement ends las
     // Before: in Firefox the drag left Time one row down — pressure, time, flow, note, signed — in all 22 themes.
     // A register lifts the held row with a shadow and a transform, so the drag is driven under every one of them.
     await page.goto('/catalogue/structure.html');
+    await waitForJudging(page);
     const list = page.locator('#reorder .kp-reorder');
     const order = () =>
         list.locator(':scope > [data-kp-item]').evaluateAll((items) => items.map((i) => /** @type {HTMLElement} */ (i).dataset.kpItem));
@@ -174,6 +180,7 @@ for (const channel of PALETTES) {
     test(`palette — ${channel.name}: "read" finds "Readings for line 2" and not "Report an incident" by default [scope-56]`, async ({ page }) => {
         // Before: the default matcher was subsequence, and "read" showed both — Report an incident (r·e·a·d in order) and Readings for line 2.
         await page.goto(channel.url);
+        if (channel.url.startsWith('/catalogue/')) await waitForJudging(page);
         const options = await shown(page, channel.byDefault, 'read');
         await expect(options).toHaveText(['Readings for line 2']);
     });

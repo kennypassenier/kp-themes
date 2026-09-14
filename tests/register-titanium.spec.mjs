@@ -11,8 +11,9 @@
 // What this suite holds is the handful of things that would make it a
 // different theme if they moved: the corner cut on the leading diagonal
 // with the tool's bright line along the top, the film catching rather
-// than sweeping, sixty milliseconds and linear, the carbon twill, and the
-// milled groove between sections.
+// than sweeping, sixty milliseconds and linear, and the carbon twill. The
+// milled groove between sections is judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-12 in firefox, each red on the test it
 // names and then green again — listed at the test that names them.
@@ -96,22 +97,6 @@ for (const [channel, url] of CHANNELS) {
             const ground = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
             expect(ground, 'the light under the hand').toMatch(/radial-gradient/);
             expect((ground.match(/repeating-linear-gradient/g) ?? []).length, 'two diagonals crossing, which is a twill').toBe(2);
-        });
-
-        test('the divider is a milled groove with the film lying in it [TH121, scope-17]', async ({ page }) => {
-            // Drilled: the `::before` box-shadow removed -> red on the lip;
-            // the `::after` background removed -> red on the film.
-            await open(page, url);
-            const divider = page.locator('[data-kp-divider]').first();
-            const groove = await divider.evaluate((el) => {
-                const s = getComputedStyle(el, '::before');
-                return { shadow: s.boxShadow, height: s.height };
-            });
-            expect(groove.shadow, 'a bright lip above and a bright lip below: that is a cut in metal').toMatch(/inset/);
-            expect(groove.height, 'three pixels deep').toBe('3px');
-            expect(await divider.evaluate((el) => getComputedStyle(el, '::after').backgroundImage), 'and the film lying in it').toMatch(
-                /linear-gradient/,
-            );
         });
 
         test('nothing moves for someone who asked for less motion [DI7]', async ({ page }) => {

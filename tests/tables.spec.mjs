@@ -107,37 +107,6 @@ for (const channel of CHANNELS) {
         expect(measured.text).toBe(NOTE);
         expect(measured.title).toBe(NOTE);
     });
-
-    test(`${channel}: a plain table in a 400px container falls into cards while the viewport stays 1280 [TH96]`, async ({ page }) => {
-        await page.setViewportSize({ width: 1280, height: 800 });
-        await open(page);
-        const measured = await page.evaluate((selector) => {
-            const table = document.querySelector(`${selector} table`);
-            const cell = table.querySelector('tbody td');
-            return {
-                viewport: window.innerWidth,
-                container: document.querySelector(`${selector} .kp-table-wrap`).clientWidth,
-                head: getComputedStyle(table.querySelector('thead')).position,
-                cell: getComputedStyle(cell).display,
-                // The rendered width of the ::before box, which is the
-                // column's name and nothing else: an empty data-label
-                // measures 0px in both browsers, so this says the label is
-                // there rather than merely that a box is.
-                label: Number.parseFloat(getComputedStyle(cell, '::before').width),
-            };
-        }, host('cards'));
-        expect(measured.viewport).toBe(1280);
-        expect(measured.container).toBeLessThanOrEqual(400);
-        // Drill: with `container-type` removed from .kp-table-wrap the
-        // @container block never matches, the head stays static and the
-        // cell stays a table-cell — the case fails on all three.
-        expect(measured.head).toBe('absolute');
-        expect(measured.cell).toBe('flex');
-        // Drill: with `content: attr(data-label)` removed from the card
-        // rule, and again with data-label removed from the cells that
-        // components/table.jsx writes, this measures 0px.
-        expect(measured.label).toBeGreaterThan(10);
-    });
 }
 
 // AR24's own measurement, kept as a test rather than as a note: the

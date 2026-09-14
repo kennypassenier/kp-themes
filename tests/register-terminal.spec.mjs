@@ -7,12 +7,13 @@
 // a block caret riding the last glyph and ending as its own text in the
 // bloom, the mark as inverse video (phosphor in a dim frame while armed,
 // void on phosphor once the line lands), the dashed rule typing itself
-// out under a heading, the two dividers of dashes with a plus at each
-// end, the shell line whose hovered item is inverse video and whose cta
-// is bracketed, the bracketed buttons and the plate, the block cursor
-// inside the focused field at the caret (R6-Q7), the bracketed stamp and
-// the cells clearing off the dossier's redactions, the sweep and the
-// bezel on the glass, and the whole approved inventory.
+// out under a heading, the shell line whose hovered item is inverse video
+// and whose cta is bracketed, the bracketed buttons and the plate, the
+// block cursor inside the focused field at the caret (R6-Q7), the
+// bracketed stamp and the cells clearing off the dossier's redactions, the
+// sweep and the bezel on the glass, and the whole approved inventory. The
+// two dash-and-plus dividers are judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - `--kp-caret: block` removed from the register → the module writes
@@ -201,24 +202,6 @@ for (const [channel, url] of CHANNELS) {
             expect(dashes['animation-timing-function']).toMatch(/steps\(12/);
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are dashes with a plus at each end; the second doubles the line [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const d = dividers.nth(i);
-                expect(await d.evaluate((el) => getComputedStyle(el).backgroundImage)).toMatch(/repeating-linear-gradient/);
-                // Firefox reports the raw content string; chromium the same.
-                expect((await pseudo(d, '::before', ['content'])).content).toMatch(/\+/);
-                expect((await pseudo(d, '::after', ['content'])).content).toMatch(/\+/);
-            }
-            expect(
-                (await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundImage)).match(/repeating-linear-gradient/g)?.length,
-                'two lines',
-            ).toBe(2);
-            expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).height)).toBe('48px');
         });
 
         test('the shell line: a hovered item is inverse video, the cta is bracketed, the buttons are brackets and a plate', async ({ page }) => {

@@ -9,6 +9,8 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -455,7 +457,9 @@ for (const channel of FEATURE_CHANNELS) {
     test.describe(`datatable review notes — ${channel.name}`, () => {
         test("the date filter's calendar button is the date picker's own: its classes, its glyph, its name [Kenny's note 1]", async ({ page }) => {
             // Before: class "kp-button kp-button--ghost", the text "Calendar", no title — the standalone picker has "kp-button", ▦ and a title.
+            await useEmptyRegister(page.context());
             await page.goto('/catalogue/datepicker.html');
+            await waitForJudging(page);
             /** @param {Element} opener */
             const markup = (opener) => ({
                 className: opener.className,

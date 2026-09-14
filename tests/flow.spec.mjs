@@ -3,6 +3,8 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -121,7 +123,9 @@ const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.
 test('the drop zone shows a focus ring when its hidden input has keyboard focus, in every theme [gap-11]', async ({ page }) => {
     // gap-11: the file input is visually hidden and the zone is its label, so Tab landed on the input and nothing on screen changed.
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/upload.html');
+    await waitForJudging(page);
     const zone = page.locator('#empty .kp-upload__zone');
     const ring = () =>
         zone.evaluate((el) => {

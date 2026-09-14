@@ -5,17 +5,16 @@
 //
 // What the demo showed and this suite holds: the headline's words arriving
 // out of a blur, the rule drawing itself in on scroll, the hero button and
-// the dossier card settling out of the same blur once on load, the loose
-// hero mark as a static signal plate (never covered), the dossier's marks
-// as ink plates that clear left to right on the trigger, the two-channel
-// focus ring, the divider's radial swell, and the whole approved inventory.
+// the dossier card settling out of the same blur once on load, the
+// dossier's marks as ink plates that clear left to right on the trigger,
+// the two-channel focus ring, and the whole approved inventory. The loose
+// hero mark's static signal plate and the divider's radial swell are
+// judged by eye on the catalogue since scope-73 (page-effects#lede-marks,
+// page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
 // in both browsers) [G13]:
-//   - the loose-mark rule (`[data-theme='shade-dark'] mark { background:
-//     var(--fx-signal); ... }`) removed → the hero mark painted no
-//     background at all, red on "the lede mark is a signal plate";
 //   - `[data-theme='shade-dark'][data-kp-effects] .kp-card[data-kp-reveal=
 //     'emphasis'] mark:not(.is-cleared) { color: transparent; }` removed →
 //     the redacted phrase read its own text before the trigger, red on
@@ -143,19 +142,6 @@ for (const [channel, url] of CHANNELS) {
             );
         });
 
-        test('the lede mark is a static signal plate, never covered or cleared away [S49]', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] mark').first();
-            await expect(mark).toBeVisible();
-            // Drilled: removing the loose-mark rule below leaves this
-            // `rgba(0, 0, 0, 0)` — the theme's default `mark` background.
-            expect(await mark.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--fx-signal'));
-            expect(await mark.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--fx-signal-foreground'));
-            // The text is always there and always coloured, whether or not
-            // the effects module has run yet.
-            expect((await mark.textContent())?.length).toBeGreaterThan(0);
-        });
-
         test('the rule draws itself in when its heading enters the viewport, and stands drawn without the script [TH122]', async ({ page }) => {
             await page.addInitScript(() => {
                 document.addEventListener('readystatechange', () => {
@@ -218,20 +204,6 @@ for (const [channel, url] of CHANNELS) {
             await style(marks.first(), 'color').toBe(await paint(page, '--card-foreground'));
             await trigger.click();
             await expect(marks.first()).not.toHaveClass(/is-cleared/);
-        });
-
-        test('the dividers swell in the next surface’s own tone, no literal blur() filter', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const d = dividers.nth(i);
-                const before = await pseudo(d, '::before', ['background-image', 'filter']);
-                expect(before['background-image']).toMatch(/radial-gradient/);
-                expect(before.filter).toBe('none');
-                const after = await pseudo(d, '::after', ['background-image', 'opacity']);
-                expect(after['background-image']).toMatch(/linear-gradient/);
-            }
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

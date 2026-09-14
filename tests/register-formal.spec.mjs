@@ -7,11 +7,11 @@
 // the demo's per-word underline recolour could not be carried into the
 // shared markup and is a finding recorded in themes/formal/anatomy.md,
 // not built here); the lede's two marks washing in, staggered; the
-// section heading's rule drawing in when it scrolls into view; the
-// divider as a hairline and a short navy tick (not a tear); the mirror
+// section heading's rule drawing in when it scrolls into view; the mirror
 // button's static letterpress offset shadow; the dossier's stamp and its
 // three redactions clearing left to right on the trigger; and the whole
-// approved inventory on the page.
+// approved inventory on the page. The divider is judged by eye on the
+// catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -178,20 +178,6 @@ for (const [channel, url] of CHANNELS) {
             await expect
                 .poll(async () => (await pseudo(rule, '::after', ['transform'])).transform, 'the rule draws to its full width')
                 .not.toMatch(/matrix\(0,/);
-        });
-
-        test('the divider is a hairline and a short navy tick, not a tear; the alt divider is dashed', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const before = await pseudo(dividers.first(), '::before', ['background-color', 'display']);
-            expect(before.display).toBe('block');
-            const after = await pseudo(dividers.first(), '::after', ['background-color', 'inline-size']);
-            expect(after['inline-size']).not.toBe('0px');
-            const altBefore = await pseudo(dividers.nth(1), '::before', ['border-top-style']);
-            expect(altBefore['border-top-style']).toBe('dashed');
-            const altAfter = await pseudo(dividers.nth(1), '::after', ['content']);
-            expect(altAfter.content === 'none' || altAfter.content === '').toBe(true);
         });
 
         test('the dossier stamp names its own word, static; the redactions cover, then clear left to right on the trigger', async ({ page }) => {

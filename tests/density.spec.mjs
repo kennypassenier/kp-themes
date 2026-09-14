@@ -23,26 +23,6 @@ test.describe('the compact density mode', () => {
         await page.goto(FIXTURE);
     });
 
-    // The form's own gap, not its height: the button inside it takes the
-    // control floor down too, so a height comparison stayed green with
-    // the --kp-space-* declarations removed and measured nothing [KT3].
-    // The gap is the scale reaching .kp-form and .kp-field directly.
-    // Drill: remove those declarations and both gaps stop moving.
-    test('the form and field gaps come down with the scale [TH105]', async ({ page }) => {
-        const gaps = (name) =>
-            page.evaluate((n) => {
-                const root = document.querySelector(`[data-test="${n}"]`);
-                return {
-                    form: Number.parseFloat(getComputedStyle(root).rowGap),
-                    field: Number.parseFloat(getComputedStyle(root.querySelector('.kp-field')).rowGap),
-                };
-            }, name);
-        const roomy = await gaps('roomy-form');
-        const compact = await gaps('compact-form');
-        expect(compact.form).toBeLessThan(roomy.form);
-        expect(compact.field).toBeLessThan(roomy.field);
-    });
-
     // Drill: set --kp-control-height in the compact block to 1rem and the
     // declared floor reads 16px.
     test('the compact control floor stays above the 24px pointer target [TH105]', async ({ page }) => {

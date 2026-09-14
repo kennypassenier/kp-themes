@@ -6,12 +6,12 @@
 // ellipse wipe (clip-path, no character scrambling, text intact
 // throughout), the rule drawing left to right under a heading, the
 // dossier's three redactions covered by a solid bar and lifting one after
-// another on 0/90/180ms delays once the trigger is pressed, the lede's
-// marks staying a plain accent plate with no cover-and-clear step, the
-// mirrored primary button dropping onto its own 3px offset when pressed,
-// the ghost button's bar rising from the bottom edge on hover and focus,
-// the two-tone razor-tear dividers, and the nav dropdown carrying its own
-// rule (KT14). Two findings this suite does not re-litigate (recorded in
+// another on 0/90/180ms delays once the trigger is pressed, the mirrored
+// primary button dropping onto its own 3px offset when pressed, the ghost
+// button's bar rising from the bottom edge on hover and focus, and the nav
+// dropdown carrying its own rule (KT14). The lede's accent plate and the
+// two-tone razor-tear dividers are judged by eye on the catalogue since
+// scope-73 (page-effects#lede-marks, page-effects#dividers). Two findings this suite does not re-litigate (recorded in
 // themes/high-contrast/anatomy.md and the lift report, S49): the headline
 // and rule reveals are plain CSS with no [data-kp-effects] gate and no
 // session memo — they replay on every load, unlike the other five
@@ -159,24 +159,6 @@ for (const [channel, url] of CHANNELS) {
             const cleared = await pseudo(marks.first(), '::after', ['transform']);
             expect(cleared.transform, 'the bar lifted off').toMatch(/matrix\(0/);
             await style(marks.first(), 'color', 'the word reads again').not.toBe('rgba(0, 0, 0, 0)');
-        });
-
-        test('the lede marks are a plain accent plate, with no cover-and-clear step [finding, S49]', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] .kp-lede mark').first();
-            await expect(mark).toBeVisible();
-            expect(await mark.evaluate((el) => getComputedStyle(el).backgroundColor), 'always the accent').toBe(await paint(page, '--accent'));
-            expect(await mark.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--accent-foreground'));
-        });
-
-        test('the razor-tear dividers swap their two tones', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(first, 'ink first').toBe(await paint(page, '--border-strong'));
-            const second = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(second, 'signal second').toBe(await paint(page, '--accent'));
         });
 
         test('nothing fades: a state change is a switch, and the hover inverts [scope-12]', async ({ page }) => {

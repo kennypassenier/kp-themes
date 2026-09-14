@@ -6,12 +6,13 @@
 // a faint ghost of the ink colour settling to the full one, once, the
 // whole line together, no per-word stagger; the two lede marks as a
 // wash that deepens on the same schedule; the drawn rule under a
-// heading, growing from nothing when it enters the viewport; the double
-// warm-brown divider, and the alt variant's diamond; the navbar's
+// heading, growing from nothing when it enters the viewport; the navbar's
 // dropdown (KT14); the quiet-plate buttons; the dossier's stamp and its
 // redactions, covered until the file opens and lifting in order; the
 // confirmation dialog, a real <dialog> with Cancel focused by default
-// (never Wipe); and the whole approved inventory.
+// (never Wipe); and the whole approved inventory. The double warm-brown
+// divider and its diamond are judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -191,16 +192,6 @@ for (const [channel, url] of CHANNELS) {
             const after = await pseudo(rule, '::after', ['transform', 'background-color']);
             expect(after.transform, 'drawn full width').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
             expect(after['background-color']).toBe(await paint(page, '--border-strong'));
-        });
-
-        test('the divider is a double warm-brown rule, and the second carries a diamond at its centre [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(first.match(/linear-gradient/g)?.length, 'two rules layered as backgrounds').toBe(2);
-            const mark = await pseudo(dividers.nth(1), '::after', ['content']);
-            expect(mark.content.replace(/"/g, '')).toContain('◆');
         });
 
         test('the dossier: a rotated stamp from data-kp-label, and redactions covered until the file opens, lifting in order [TH120]', async ({

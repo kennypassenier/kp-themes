@@ -12,6 +12,8 @@
 // replaces it with a div.
 
 import { test, expect } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const PAGE = '/tests/fixtures/components.html';
 const CHANNELS = [
@@ -81,7 +83,9 @@ for (const channel of CHANNELS) {
 
 test('an alert closes from its own close button, without a framework [gap-11]', async ({ page }) => {
     // gap-11: .kp-alert__close did nothing outside React; the framework-free channel left an alert's dismissal unwired.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/feedback.html');
+    await waitForJudging(page);
     const alert = page.locator('#alerts .kp-alert--success');
     await expect(alert).toBeVisible();
     await alert.locator('.kp-alert__close').click();
@@ -121,7 +125,9 @@ test('a dismissal can be refused, and detach unwires the close buttons [gap-11, 
 
 test('a toast closes from its own close button, without a framework [gap-11]', async ({ page }) => {
     // gap-11: .kp-toast__close did nothing outside React.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/feedback.html');
+    await waitForJudging(page);
     const toasts = page.locator('#toasts .kp-toast');
     await expect(toasts).toHaveCount(5);
     await page.locator('#toasts .kp-toast--warning .kp-toast__close').click();
@@ -131,7 +137,9 @@ test('a toast closes from its own close button, without a framework [gap-11]', a
 
 test('a tooltip opens on hover and on focus, closes on Escape, and describes its trigger — framework-free [gap-11]', async ({ page }) => {
     // gap-11: .kp-tooltip-anchor had no framework-free behaviour; only the React component opened a tooltip.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/overlays.html');
+    await waitForJudging(page);
     const trigger = page.locator('#ov-tt-live-trigger');
     const tip = page.locator('#ov-tt-live');
     await expect(tip).toBeHidden();
@@ -151,7 +159,9 @@ test('a tooltip opens on hover and on focus, closes on Escape, and describes its
 test('a tall dialog stops at the window and scrolls its body [gap-11]', async ({ page }) => {
     // gap-11: .kp-dialog had no maximum height, so sixty rows scrolled the whole dialog and took the title and the actions with them.
     await page.setViewportSize({ width: 1280, height: 720 });
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/overlays.html');
+    await waitForJudging(page);
     await page.locator('[data-kp-dialog="ov-long-live"]').click();
     const dialog = page.locator('#ov-long-live');
     await expect(dialog).toBeVisible();

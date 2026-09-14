@@ -6,6 +6,8 @@
 
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 // Driven in both channels [AR7]: the framework-free half attaches to a
@@ -263,7 +265,9 @@ test('the switch page shows the package switch, and it flips with Space [gap-11]
     // gap-11: there was no switch at all, so a toggle had to be a checkbox; the concept page Kenny approved now shows the package's .kp-switch.
     // The behaviour in both channels and every theme is tests/switch.spec.mjs; this holds the catalogue page on the package class.
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/switch.html');
+    await waitForJudging(page);
     const control = page.locator('#states .kp-switch__input').first();
     await expect(control).toHaveAttribute('role', 'switch');
     const paint = () =>

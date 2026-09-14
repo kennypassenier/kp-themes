@@ -11,6 +11,8 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -199,7 +201,9 @@ for (const channel of CHANNELS) {
 test('the tag input adds a tag from typed text, with Enter or a comma [scope-60]', async ({ page }) => {
     // scope-60: Kenny filtered and removed tags on the catalogue page, but typing a label and pressing Enter added nothing —
     // with no option highlighted Enter had nothing to take. Before the fix no tag appeared for "safety" + Enter.
+    await useEmptyRegister(page.context());
     await page.goto('/catalogue/combobox.html');
+    await waitForJudging(page);
     const box = page.locator('#tags .kp-combobox');
     const input = page.locator('#cb-tags');
     const tags = box.locator('.kp-tag > span');
