@@ -1476,3 +1476,17 @@ geen nieuwe drift veroorzaken in sizes van elementen." Written as a rule in
 `docs/RULES.md`: a new theme's type sizes, paddings and gaps stay as close as
 possible to the median theme's, and its size index is measured with
 `research/uniform-size/` and reported in its integration form.
+
+**scope-83 · The questions after the catalogue notes.** Kenny, 2026-09-14.
+fix-27 "Zoals voorgesteld": a bar menu that has no room on the right opens
+to the left, measured in all 22 themes by a test that fails first. fix-28
+"Klopt": the package gives its unset controls the theme's font, and
+`verdicts.mjs record` compares a recorded hash with the test browser's.
+retro-accelerator "Alleen het teken": the underline only, no working
+shortcut; buttons with an icon before the label get it too. terminal-primary-
+cursor "Tekstkleur van de knop": the cursor on terminal's primary takes the
+button's ink. e-scope "Met B": tabs, badges and navigation links wait for
+option B's round. artifacts "Bewaren, dan verwijderen": the 17 artifacts no
+file links are saved under `docs/archive/artifacts/`, then deleted.
+step-timing "Akkoord", with a wish for later: the timing item names what each
+agent worked on, beside its duration.
