@@ -1389,3 +1389,11 @@ an unformatted source edit the second run still rewrites a minified source
 map, because `generate:all` ends with prettier over the sources the first run
 had already read; two runs stay, or prettier on the changed sources first.
 
+**scope-75 · The commit level runs by hand, before every report.** Kenny,
+2026-09-14, form item commit-level: "Handmatig, voor elk verslag". The commit
+hook stays gates only; Claude or the checker agent runs
+`npm run test:tags -- --level commit` (measured: the 353 sweeps take 149 s in
+firefox) before every report to Kenny, and the status line names the result.
+step-timing "Akkoord": the status row is committed with the work it describes,
+never in a commit of its own.
+
