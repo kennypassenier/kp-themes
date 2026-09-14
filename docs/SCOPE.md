@@ -1377,3 +1377,15 @@ registers go, the 169 that loop all themes included, and
 catalogue navigation, and only then do the 68 go. step-timing: a catalogue
 test waits for the page's reading to finish by default.
 
+**scope-74 · After the test waves.** Kenny, 2026-09-14: filter-editor-title
+"Gewone tekst, zoals nu" — the add-filter editor's title stays a paragraph,
+the deviation from the mock is written in the user guide. density-compact
+"Compact overal krapper" — compact density must be measurably tighter in all
+22 themes, not only in formal, light, forest and high-contrast. step-timing
+"Akkoord" — the timing script counts time waiting on agents apart, work is
+split per file so agents run side by side, and whether one `generate:all`
+suffices is measured. Measured the same day: each run takes 8 s, and after
+an unformatted source edit the second run still rewrites a minified source
+map, because `generate:all` ends with prettier over the sources the first run
+had already read; two runs stay, or prettier on the changed sources first.
+

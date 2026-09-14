@@ -738,6 +738,12 @@ opens its own pill's editor rather than a second pill. Cancel and Escape
 leave everything as it was, an editor applied empty removes its filter, and
 the focus comes back to the pill or to the button.
 
+The editor's title ("Status", "Hours open") is a paragraph, not a heading.
+An editor that opens for a moment is not a section of the page, and a
+heading there would add an entry to the outline of every page that uses the
+table. The approved mock drew an `<h3>`; Kenny chose the paragraph on
+2026-09-14.
+
 The state is the panel's: `view().filters`, `filter(column, value)`,
 `clearFilters()`, `kp-datatable-view` and, in React, `filters` /
 `defaultFilters` / `onFiltersChange` hold the same shape in both modes, so
