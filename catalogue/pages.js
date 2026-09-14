@@ -64,6 +64,7 @@ export const PAGES = [
             { href: 'research/datatable/demo.html', label: 'Data tables' },
             { href: 'research/grotesk-hover/demo.html', label: 'Grotesk hover options' },
             { href: 'research/control-height/demo.html', label: 'Control heights' },
+            { href: 'research/uniform-size/demo.html', label: 'Uniform sizes' },
         ],
     },
 ];

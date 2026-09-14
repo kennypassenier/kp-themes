@@ -1,0 +1,62 @@
+/* research/uniform-size/option-e.css — MOCK, not part of the package.
+
+   Option E · only the line boxes are fixed.
+
+   What the package would own: the height of every one-line box — a control,
+   a tab, a navigation row, a table row, a badge — and one numeric
+   line-height, so a face's own ascent and descent stop deciding how tall a
+   line is. What a register keeps: font size, letter case and spacing,
+   padding along the line, borders, and every container's padding and gap.
+
+   Heights are border-box and on the min-height (DI11: enlarged text still
+   grows the box), with the block padding taken to zero so a register's
+   padding or border cannot add to it; the content is centred in the box.
+   Unlayered on purpose: unlayered CSS beats every @layer kp.* rule, which is
+   how a demo can stand in for a change to css/components.css. Scoped to
+   <html data-option="e">. */
+
+[data-option='e'] body {
+    line-height: 1.5;
+}
+
+[data-option='e'] :is(.kp-button, .kp-field__input, .kp-combobox__input) {
+    box-sizing: border-box;
+    min-height: var(--kp-control-height, 2.25rem);
+    padding-block: 0;
+    line-height: 1.25;
+}
+
+[data-option='e'] .kp-button.kp-button--sm {
+    min-height: max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)));
+}
+
+[data-option='e'] :is(.kp-tab, .kp-sidenav__link, .kp-nav__link) {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--kp-control-height, 2.25rem);
+    padding-block: 0;
+    line-height: 1.25;
+}
+
+[data-option='e'] .kp-sidenav__link {
+    display: flex;
+}
+
+[data-option='e'] .kp-badge {
+    box-sizing: border-box;
+    min-height: 1.5rem;
+    padding-block: 0;
+    line-height: 1.25;
+}
+
+[data-option='e'] .kp-table :is(th, td) {
+    box-sizing: border-box;
+    block-size: 2.5rem;
+    padding-block: 0;
+    line-height: 1.25;
+}
+
+[data-option='e'] :is(.kp-field__label, .kp-card__title, .kp-dialog__title, .kp-sidenav__title, .kp-nav__brand, .kp-pagination a) {
+    line-height: 1.25;
+}
