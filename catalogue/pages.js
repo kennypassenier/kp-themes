@@ -56,7 +56,10 @@ export const PAGES = [
         ],
     },
     {
-        group: 'Research demos',
+        // Every demo here has its decision taken. A new research demo goes in
+        // a 'Research to look at' group of its own, above this one, and moves
+        // down here once Kenny has decided on it [scope-81].
+        group: 'Archived research',
         pages: [
             { href: 'research/navbar/demo.html', label: 'Navigation alternatives' },
             { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },

@@ -1459,3 +1459,13 @@ the ground; terminal's cursor sits at the text's height and is red on the
 destructive button; phantom's primary gets a press animation like the others;
 retro's accelerator appears on every button; titanium's primary shows a
 visible hover. 156 verdicts recorded in `catalogue/verdicts.json`.
+
+**scope-81 · Decided research demos move to an archive group.** Kenny,
+2026-09-14: a research demo that has served its purpose stays reachable but
+moves to its own group in the catalogue navigation, so the navigation shows
+which demos he still has to look at. All seven demos of the day have their
+decision taken — navigation (`scope-48`), futuristic layouts (`scope-49`),
+loading (`scope-50`), data tables (built), grotesk hover (option B),
+control heights (superseded by uniform sizes) and uniform sizes (`scope-80`)
+— and sit under "Archived research". A new demo goes in a "Research to look
+at" group above it and moves down once he has decided.
