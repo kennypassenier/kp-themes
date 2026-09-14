@@ -93,7 +93,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the nostromo register, ${channel}`, () => {
+    test.describe(`the nostromo register, ${channel}`, { tag: ['@theme:nostromo', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline pops down under a clip-path, the text whole throughout [S48]', async ({ page }) => {
             await page.addInitScript(() => {
                 window.kpClips = [];

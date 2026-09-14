@@ -11,11 +11,15 @@ What to run, in this order, from the repository root:
 
 1. `npm run gates` — the code gates, seconds. Report its last line.
 2. The browser tests for what changed, firefox only, by tag:
-   `npx playwright test --grep "<tags>" --project=firefox`, where the tags
-   come from the prompt or from `tests/tags.json` (file → tag). Until the
-   tag map exists, run the single spec file the prompt names.
-3. NEVER `npm run test:browser`, `npm run test:firefox` or a bare
-   `npx playwright test`: the whole suite is Kenny's to authorise.
+   `npm run test:tags -- --level building` (or `--level commit` when the
+   prompt says a commit follows), with `--files <paths>` when the prompt
+   names them. It reads `tests/tags.json` and prints the selection per
+   file before it runs; `--dry-run` prints it and the count without
+   running. Where the prompt names tags instead, run
+   `npx playwright test --grep "<tags>" --project=firefox`.
+3. NEVER `npm run test:browser`, `npm run test:firefox`, a bare
+   `npx playwright test` or `npm run test:tags -- --level release`: the
+   whole suite is Kenny's to authorise.
 
 Report format, nothing else:
 

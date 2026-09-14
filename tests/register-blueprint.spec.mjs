@@ -88,7 +88,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the blueprint register, ${channel}`, () => {
+    test.describe(`the blueprint register, ${channel}`, { tag: ['@theme:blueprint', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion the headline stands, the measurement frame stands at its measured size, and every mark is cleared', async ({
             page,
         }) => {

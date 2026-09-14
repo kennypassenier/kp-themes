@@ -22,7 +22,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`overlays · ${channel.name}`, () => {
+    test.describe(`overlays · ${channel.name}`, { tag: ['@component:overlays', '@component:navigation'] }, () => {
         test.beforeEach(async ({ page }) => {
             await page.goto(PAGE);
             await page.waitForSelector(`${channel.root} [data-test="dialog-open"]`);
@@ -81,18 +81,22 @@ for (const channel of CHANNELS) {
 
 // ── gap-11, the overlay faults of catalogue batch 2 [2026-09-13] ──────────
 
-test('an alert closes from its own close button, without a framework [gap-11]', async ({ page }) => {
-    // gap-11: .kp-alert__close did nothing outside React; the framework-free channel left an alert's dismissal unwired.
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/feedback.html');
-    await waitForJudging(page);
-    const alert = page.locator('#alerts .kp-alert--success');
-    await expect(alert).toBeVisible();
-    await alert.locator('.kp-alert__close').click();
-    await expect(alert).toBeHidden();
-});
+test(
+    'an alert closes from its own close button, without a framework [gap-11]',
+    { tag: ['@component:feedback', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: .kp-alert__close did nothing outside React; the framework-free channel left an alert's dismissal unwired.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/feedback.html');
+        await waitForJudging(page);
+        const alert = page.locator('#alerts .kp-alert--success');
+        await expect(alert).toBeVisible();
+        await alert.locator('.kp-alert__close').click();
+        await expect(alert).toBeHidden();
+    },
+);
 
-test('a dismissal can be refused, and detach unwires the close buttons [gap-11, KT6]', async ({ page }) => {
+test('a dismissal can be refused, and detach unwires the close buttons [gap-11, KT6]', { tag: ['@component:feedback'] }, async ({ page }) => {
     // gap-11: the new close behaviour needs its ways out — a cancelable event, and a detach that takes the listener back.
     await page.goto('/tests/fixtures/components.html');
     const result = await page.evaluate(async () => {
@@ -123,58 +127,70 @@ test('a dismissal can be refused, and detach unwires the close buttons [gap-11, 
     expect(result).toEqual({ refused: false, owned: false, afterDetach: false });
 });
 
-test('a toast closes from its own close button, without a framework [gap-11]', async ({ page }) => {
-    // gap-11: .kp-toast__close did nothing outside React.
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/feedback.html');
-    await waitForJudging(page);
-    const toasts = page.locator('#toasts .kp-toast');
-    await expect(toasts).toHaveCount(5);
-    await page.locator('#toasts .kp-toast--warning .kp-toast__close').click();
-    await expect(toasts).toHaveCount(4);
-    await expect(page.locator('#toasts .kp-toast--warning')).toHaveCount(0);
-});
+test(
+    'a toast closes from its own close button, without a framework [gap-11]',
+    { tag: ['@component:feedback', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: .kp-toast__close did nothing outside React.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/feedback.html');
+        await waitForJudging(page);
+        const toasts = page.locator('#toasts .kp-toast');
+        await expect(toasts).toHaveCount(5);
+        await page.locator('#toasts .kp-toast--warning .kp-toast__close').click();
+        await expect(toasts).toHaveCount(4);
+        await expect(page.locator('#toasts .kp-toast--warning')).toHaveCount(0);
+    },
+);
 
-test('a tooltip opens on hover and on focus, closes on Escape, and describes its trigger — framework-free [gap-11]', async ({ page }) => {
-    // gap-11: .kp-tooltip-anchor had no framework-free behaviour; only the React component opened a tooltip.
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/overlays.html');
-    await waitForJudging(page);
-    const trigger = page.locator('#ov-tt-live-trigger');
-    const tip = page.locator('#ov-tt-live');
-    await expect(tip).toBeHidden();
-    await expect(trigger).toHaveAttribute('aria-describedby', /(^|\s)ov-tt-live(\s|$)/);
-    await trigger.hover();
-    await expect(tip).toBeVisible();
-    await page.mouse.move(0, 0);
-    await expect(tip).toBeHidden();
-    await trigger.focus();
-    await expect(tip).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(tip).toBeHidden();
-    // The frozen copies the catalogue owns stay open for the eye.
-    await expect(page.locator('#ov-tt1')).toBeVisible();
-});
+test(
+    'a tooltip opens on hover and on focus, closes on Escape, and describes its trigger — framework-free [gap-11]',
+    { tag: ['@component:overlays', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: .kp-tooltip-anchor had no framework-free behaviour; only the React component opened a tooltip.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/overlays.html');
+        await waitForJudging(page);
+        const trigger = page.locator('#ov-tt-live-trigger');
+        const tip = page.locator('#ov-tt-live');
+        await expect(tip).toBeHidden();
+        await expect(trigger).toHaveAttribute('aria-describedby', /(^|\s)ov-tt-live(\s|$)/);
+        await trigger.hover();
+        await expect(tip).toBeVisible();
+        await page.mouse.move(0, 0);
+        await expect(tip).toBeHidden();
+        await trigger.focus();
+        await expect(tip).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(tip).toBeHidden();
+        // The frozen copies the catalogue owns stay open for the eye.
+        await expect(page.locator('#ov-tt1')).toBeVisible();
+    },
+);
 
-test('a tall dialog stops at the window and scrolls its body [gap-11]', async ({ page }) => {
-    // gap-11: .kp-dialog had no maximum height, so sixty rows scrolled the whole dialog and took the title and the actions with them.
-    await page.setViewportSize({ width: 1280, height: 720 });
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/overlays.html');
-    await waitForJudging(page);
-    await page.locator('[data-kp-dialog="ov-long-live"]').click();
-    const dialog = page.locator('#ov-long-live');
-    await expect(dialog).toBeVisible();
-    const measure = await dialog.evaluate((el) => {
-        const body = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__body'));
-        const actions = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__actions'));
-        const box = el.getBoundingClientRect();
-        return {
-            fits: box.top >= 0 && box.bottom <= window.innerHeight,
-            bodyScrolls: body.scrollHeight > body.clientHeight + 1,
-            actionsShown: actions.getBoundingClientRect().bottom <= box.bottom + 1,
-            dialogScrolls: el.scrollHeight > el.clientHeight + 1,
-        };
-    });
-    expect(measure).toEqual({ fits: true, bodyScrolls: true, actionsShown: true, dialogScrolls: false });
-});
+test(
+    'a tall dialog stops at the window and scrolls its body [gap-11]',
+    { tag: ['@component:overlays', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: .kp-dialog had no maximum height, so sixty rows scrolled the whole dialog and took the title and the actions with them.
+        await page.setViewportSize({ width: 1280, height: 720 });
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/overlays.html');
+        await waitForJudging(page);
+        await page.locator('[data-kp-dialog="ov-long-live"]').click();
+        const dialog = page.locator('#ov-long-live');
+        await expect(dialog).toBeVisible();
+        const measure = await dialog.evaluate((el) => {
+            const body = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__body'));
+            const actions = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__actions'));
+            const box = el.getBoundingClientRect();
+            return {
+                fits: box.top >= 0 && box.bottom <= window.innerHeight,
+                bodyScrolls: body.scrollHeight > body.clientHeight + 1,
+                actionsShown: actions.getBoundingClientRect().bottom <= box.bottom + 1,
+                dialogScrolls: el.scrollHeight > el.clientHeight + 1,
+            };
+        });
+        expect(measure).toEqual({ fits: true, bodyScrolls: true, actionsShown: true, dialogScrolls: false });
+    },
+);

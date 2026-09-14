@@ -39,42 +39,46 @@ async function open(page) {
     });
 }
 
-test.describe('the cyberpunk register on the concept page [C2]', () => {
-    test('the navbar strip is clipped, and the clip mirrors under data-kp-nav-side="end" [TH117]', async ({ page }) => {
-        await open(page);
-        const read = () =>
-            page.evaluate(() => {
-                const links = document.querySelector('.kp-nav__links');
-                return getComputedStyle(links, '::before').clipPath;
-            });
-        const start = await read();
-        expect(start, 'the strip has no clip-path').toContain('polygon');
-        await page.evaluate(() => document.querySelector('.kp-nav')?.setAttribute('data-kp-nav-side', 'end'));
-        const end = await read();
-        expect(end).toContain('polygon');
-        expect(end, 'the notch did not move to the other side').not.toBe(start);
-        // The start shape cuts its first corner (x = notch at y = 0); the end
-        // shape starts at the origin and cuts its last corner instead.
-        expect(start.replace(/\s+/g, ' ')).toMatch(/^polygon\(1[0-9]px 0(px)?,/);
-        expect(end.replace(/\s+/g, ' ')).toMatch(/^polygon\(0(px)? 0(px)?,/);
-    });
-
-    test('the dropdown opens on hover and a hit test at its link lands on the link [TH117]', async ({ page }) => {
-        await open(page);
-        const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-        await trigger.hover();
-        const menuLink = page.locator('.kp-nav__menu a').first();
-        await expect(menuLink).toBeVisible();
-        const hit = await menuLink.evaluate((el) => {
-            const r = el.getBoundingClientRect();
-            const at = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-            return at === el || el.contains(at) ? 'link' : `${at?.tagName.toLowerCase()}.${at?.className}`;
+test.describe(
+    'the cyberpunk register on the concept page [C2]',
+    { tag: ['@theme:cyberpunk', '@component:page-effects', '@component:examples'] },
+    () => {
+        test('the navbar strip is clipped, and the clip mirrors under data-kp-nav-side="end" [TH117]', async ({ page }) => {
+            await open(page);
+            const read = () =>
+                page.evaluate(() => {
+                    const links = document.querySelector('.kp-nav__links');
+                    return getComputedStyle(links, '::before').clipPath;
+                });
+            const start = await read();
+            expect(start, 'the strip has no clip-path').toContain('polygon');
+            await page.evaluate(() => document.querySelector('.kp-nav')?.setAttribute('data-kp-nav-side', 'end'));
+            const end = await read();
+            expect(end).toContain('polygon');
+            expect(end, 'the notch did not move to the other side').not.toBe(start);
+            // The start shape cuts its first corner (x = notch at y = 0); the end
+            // shape starts at the origin and cuts its last corner instead.
+            expect(start.replace(/\s+/g, ' ')).toMatch(/^polygon\(1[0-9]px 0(px)?,/);
+            expect(end.replace(/\s+/g, ' ')).toMatch(/^polygon\(0(px)? 0(px)?,/);
         });
-        expect(hit, "the hit test at the menu link's centre").toBe('link');
-        // Keyboard: Tab from the trigger reaches the first item.
-        // Reached with the keyboard, not focus() [G15].
-        await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
-        await page.keyboard.press('Tab');
-        expect(await page.evaluate(() => document.activeElement?.closest('.kp-nav__menu') !== null)).toBe(true);
-    });
-});
+
+        test('the dropdown opens on hover and a hit test at its link lands on the link [TH117]', async ({ page }) => {
+            await open(page);
+            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
+            await trigger.hover();
+            const menuLink = page.locator('.kp-nav__menu a').first();
+            await expect(menuLink).toBeVisible();
+            const hit = await menuLink.evaluate((el) => {
+                const r = el.getBoundingClientRect();
+                const at = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                return at === el || el.contains(at) ? 'link' : `${at?.tagName.toLowerCase()}.${at?.className}`;
+            });
+            expect(hit, "the hit test at the menu link's centre").toBe('link');
+            // Keyboard: Tab from the trigger reaches the first item.
+            // Reached with the keyboard, not focus() [G15].
+            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
+            await page.keyboard.press('Tab');
+            expect(await page.evaluate(() => document.activeElement?.closest('.kp-nav__menu') !== null)).toBe(true);
+        });
+    },
+);

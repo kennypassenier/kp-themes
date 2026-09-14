@@ -93,7 +93,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the pastel register, ${channel}`, () => {
+    test.describe(`the pastel register, ${channel}`, { tag: ['@theme:pastel', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'a risograph page does not boot').toBe(0);

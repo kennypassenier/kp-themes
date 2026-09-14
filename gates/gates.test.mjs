@@ -1247,25 +1247,92 @@ test('the no-flash snippet cannot break out of the script element it lives in', 
     assert.equal(wrote, hostile, 'escaping changed the attribute the snippet writes');
 });
 
-test('a register edit runs the sweeps that read every register, not only its own spec [Phase 7]', async () => {
-    const { affected, themeSweeps } = await import('./affected.mjs');
+test('a register edit selects its theme, and the commit level adds every sweep [Phase 7, scope-33]', async () => {
+    const { grepFor, select } = await import('./tags.mjs');
+    // Phase 7 found a register edit running twenty tests while the every-theme
+    // press, alert, focus-ring and reflow sweeps never ran. Under tags the
+    // register selects its theme — its own spec and its slice of every sweep —
+    // plus the sweeps of the components its changed rules name; the commit
+    // level adds every @sweep test. Both halves are asserted here.
+    const before = "[data-theme='dark'] .kp-button {\n    color: red;\n}\n";
+    const after = "[data-theme='dark'] .kp-button {\n    color: blue;\n}\n";
+    const sel = select([{ file: 'css/dark-register.css', before, after, diff: '@@ -2 +2 @@' }]);
+    assert.equal(sel.all, false, 'a register edit should not fall back to everything');
+    const building = grepFor(sel, 'building');
+    assert.ok(typeof building === 'string' && building.length > 0);
+    const matches = (/** @type {string} */ title) => new RegExp(/** @type {string} */ (building)).test(title);
+    assert.ok(
+        matches('firefox register-dark.spec.mjs the dark register › x @theme:dark @component:page-effects'),
+        "the register's own spec is not selected",
+    );
+    assert.ok(
+        matches('firefox registers.spec.mjs .kp-button reacts to being pressed under dark @sweep @theme:dark @component:button'),
+        "dark's slice of the press sweep is not selected",
+    );
+    assert.ok(
+        matches('firefox button.spec.mjs the button › ring in every theme @component:button @sweep'),
+        'the button sweep the changed rule names is not selected',
+    );
+    assert.ok(
+        !matches('firefox button.spec.mjs the button › the size scale is configurable @component:button'),
+        'a non-sweep button test in the default theme was selected for a dark rule',
+    );
+    assert.ok(
+        !matches('firefox registers.spec.mjs the destructive alert can be read under light @sweep @theme:light @component:feedback'),
+        "another theme's sweep slice was selected at building level",
+    );
+    // …and the commit level runs that slice after all.
+    const commit = new RegExp(/** @type {string} */ (grepFor(sel, 'commit')));
+    assert.ok(
+        commit.test('firefox registers.spec.mjs the destructive alert can be read under light @sweep @theme:light @component:feedback'),
+        'the commit level skips a sweep',
+    );
+    // A tag is matched whole: @theme:shade-dark is not @theme:dark.
+    assert.ok(!matches('firefox register-shade-dark.spec.mjs x @theme:shade-dark'), 'a theme tag matched as a prefix');
 
-    // The sweeps are found by reading the specs, so this asserts the
-    // finding works at all — an empty list would make the widening a
-    // no-op and leave the map exactly as narrow as it was.
-    const sweeps = themeSweeps();
-    assert.ok(sweeps.length >= 12, `only ${sweeps.length} specs sweep every theme, which cannot be right`);
-    assert.ok(sweeps.includes('tests/registers.spec.mjs'), 'the every-theme press and alert sweeps are not in the list');
-    assert.ok(sweeps.includes('tests/dashboard.spec.mjs'), 'the every-theme focus-ring sweeps are not in the list');
+    // An anatomy edit is the same coupling by another route; a comment is none.
+    assert.equal(
+        grepFor(select([{ file: 'themes/dark/anatomy.md', before: 'a', after: 'b', diff: '@@ -1 +1 @@' }]), 'building'),
+        '(?:^|\\s)@theme:dark(?=\\s|$)',
+    );
+    const comment = select([{ file: 'css/dark-register.css', before, after: `/* note */\n${before}`, diff: '@@ -0,0 +1 @@' }]);
+    assert.equal(grepFor(comment, 'building'), '', 'a comment-only register edit selected tests');
+    assert.equal(grepFor(comment, 'release'), null, 'the release level is not every test');
+});
 
-    const forRegister = affected([{ file: 'css/dark-register.css', commentOnly: false }]);
-    assert.ok(Array.isArray(forRegister), 'a register edit should resolve to specs, not to "all" or "none"');
-    assert.ok(forRegister.includes('tests/register-dark.spec.mjs'), "the register's own spec is missing");
-    for (const sweep of sweeps) assert.ok(forRegister.includes(sweep), `${sweep} reads every register and is not run`);
-
-    // An anatomy edit is the same coupling by another route.
-    const forAnatomy = affected([{ file: 'themes/dark/anatomy.md', commentOnly: false }]);
-    assert.ok(Array.isArray(forAnatomy) && forAnatomy.includes('tests/registers.spec.mjs'), 'an anatomy edit skips the sweeps');
+test('the tag gate refuses an untagged test, an unknown tag, a theme walk without @sweep and an unmapped file [scope-33]', async () => {
+    const { audit } = await import('./check-tags.mjs');
+    const { loadMap } = await import('./tags.mjs');
+    const map = loadMap();
+    const clean =
+        "import { test } from '@playwright/test';\ntest.describe('d', { tag: ['@component:button'] }, () => {\n    test('t', async () => {});\n});\n";
+    assert.deepEqual(
+        (await audit([{ file: 'tests/x.spec.mjs', source: clean }], ['css/components.css'], { ...map, components: { button: '' } })).problems,
+        [],
+    );
+    /** @type {[string, RegExp][]} */
+    const cases = [
+        ["test('t', async () => {});", /carries no tag/],
+        ["test('t', { tag: ['@component:nope'] }, async () => {});", /names no component/],
+        ["test('t', { tag: ['@theme:nope'] }, async () => {});", /names no theme/],
+        ["test('t', { tag: ['@button'] }, async () => {});", /is not @sweep/],
+        ["test('t', { tag: ['@component:button'] }, async () => { for (const t of THEMES) {} });", /walks every theme/],
+    ];
+    for (const [source, expected] of cases) {
+        const { problems } = await audit([{ file: 'tests/x.spec.mjs', source }], [], { ...map, components: { button: '' } });
+        assert.ok(
+            problems.some((p) => expected.test(p)),
+            `${source} passed: ${problems.join('; ')}`,
+        );
+    }
+    // test.skip(condition, reason) is not a declaration and needs no tag.
+    const skip = "test.describe('d', { tag: ['@sweep'] }, () => { test('t', async () => { test.skip(true, 'why'); }); });";
+    assert.deepEqual((await audit([{ file: 'tests/x.spec.mjs', source: skip }], [], { ...map, components: {} })).problems, []);
+    const { problems } = await audit([{ file: 'tests/x.spec.mjs', source: clean }], ['nowhere/unmapped.bin'], { ...map, components: { button: '' } });
+    assert.ok(
+        problems.some((p) => /matches no rule/.test(p)),
+        'an unmapped file passed',
+    );
 });
 
 test("every showcase page carries its own theme's register [Phase 7]", () => {
@@ -1376,6 +1443,7 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
         'thirty-five': 35,
         'thirty-six': 36,
         'thirty-seven': 37,
+        'thirty-eight': 38,
         forty: 40,
     };
     const stated = /\b([A-Za-z-]+) gates run in seconds\b/.exec(readme);

@@ -86,7 +86,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the deco register, ${channel}`, () => {
+    test.describe(`the deco register, ${channel}`, { tag: ['@theme:deco', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'the cartouche is not a boot overlay').toBe(0);

@@ -138,7 +138,7 @@ async function measure(page, region, kind) {
 }
 
 for (const region of REGIONS) {
-    test(`${region.label}: an absolutely positioned child is clipped [TH114]`, async ({ page }) => {
+    test(`${region.label}: an absolutely positioned child is clipped [TH114]`, { tag: ['@component:table', '@component:data'] }, async ({ page }) => {
         await page.goto(URL);
         const probe = await measure(page, region.name, 'absolute');
 
@@ -153,7 +153,7 @@ for (const region of REGIONS) {
         expect(probe.escapes, `hit at the probe's own centre: ${probe.hit}`).toBe(false);
     });
 
-    test(`${region.label}: a popover is not clipped [TH114, AR33]`, async ({ page }) => {
+    test(`${region.label}: a popover is not clipped [TH114, AR33]`, { tag: ['@component:table', '@component:data'] }, async ({ page }) => {
         await page.goto(URL);
         const probe = await measure(page, region.name, 'popover');
 

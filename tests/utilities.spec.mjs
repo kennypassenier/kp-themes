@@ -66,7 +66,7 @@ const px = (page, expr) =>
         return w;
     }, expr);
 
-test.describe('the utility API', () => {
+test.describe('the utility API', { tag: ['@component:utilities'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);
@@ -170,7 +170,7 @@ test.describe('the utility API', () => {
     // TH94's second half, and it was already true before this round: the
     // browser's own defaults give a descending ladder. The test exists so
     // that a theme cannot quietly flatten it.
-    test('h1 to h6 descend strictly in every theme [TH94]', async ({ page }) => {
+    test('h1 to h6 descend strictly in every theme [TH94]', { tag: ['@sweep'] }, async ({ page }) => {
         await page.evaluate(() => {
             const box = document.createElement('div');
             box.dataset.test = 'headings';

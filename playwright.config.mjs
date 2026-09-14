@@ -2,7 +2,7 @@
 //
 // Phase 5 decision H1, as Kenny rewrote it on 2026-09-09: the fast gates
 // block a commit and the browser tests run when he runs them. There is no
-// CI to block a merge with — `npm run test:affected` covers a change,
+// CI to block a merge with — `npm run test:tags` covers a change by tag,
 // `npm run verify` covers a release, and both are commands he gives.
 //
 // AR7: one behaviour suite, run twice in the same browser — once against

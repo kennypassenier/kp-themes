@@ -35,7 +35,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`date picker — ${channel.name}`, () => {
+    test.describe(`date picker — ${channel.name}`, { tag: ['@component:datepicker'] }, () => {
         test('typing a date is enough — the calendar never has to open [TH43]', async ({ page }) => {
             await page.goto(URL);
             const input = page.locator(channel.input);
@@ -138,30 +138,34 @@ const headingPerDay = (panel) =>
     });
 
 for (const first of [0, 1, 2, 3, 4, 5, 6]) {
-    test(`heading i names the weekday of column i when the week starts on ${first} — framework-free [gap-11]`, async ({ page }) => {
-        // gap-11: js/datepicker.js indexed the Monday-first strings.weekdays with a Sunday-zero first day, so every heading sat one column off.
-        await page.goto(URL);
-        await page.evaluate(async (weekStart) => {
-            const { attachDatePickers } = await import('/js/datepicker.js');
-            const host = document.createElement('div');
-            host.lang = 'en-GB';
-            host.innerHTML =
-                `<div class="kp-datepicker" data-kp-datepicker data-kp-week-starts-on="${weekStart}" data-test="weekstart">` +
-                '<input class="kp-field__input" id="weekstart" type="text" data-kp-date-input value="13/09/2026" />' +
-                '<button type="button" data-kp-date-open>open</button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>';
-            document.body.prepend(host);
-            attachDatePickers(host).handles[0]?.open();
-        }, first);
-        const pairs = await headingPerDay(page.locator('[data-test="weekstart"] [data-kp-date-panel]'));
-        expect(pairs).toHaveLength(30);
-        for (const { iso, heading } of pairs) {
-            const weekday = new Date(`${iso}T00:00:00`).getDay();
-            expect(heading, `${iso} sits under ${heading}`).toBe(S.weekdays[(weekday + 6) % 7]);
-        }
-    });
+    test(
+        `heading i names the weekday of column i when the week starts on ${first} — framework-free [gap-11]`,
+        { tag: ['@component:datepicker'] },
+        async ({ page }) => {
+            // gap-11: js/datepicker.js indexed the Monday-first strings.weekdays with a Sunday-zero first day, so every heading sat one column off.
+            await page.goto(URL);
+            await page.evaluate(async (weekStart) => {
+                const { attachDatePickers } = await import('/js/datepicker.js');
+                const host = document.createElement('div');
+                host.lang = 'en-GB';
+                host.innerHTML =
+                    `<div class="kp-datepicker" data-kp-datepicker data-kp-week-starts-on="${weekStart}" data-test="weekstart">` +
+                    '<input class="kp-field__input" id="weekstart" type="text" data-kp-date-input value="13/09/2026" />' +
+                    '<button type="button" data-kp-date-open>open</button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>';
+                document.body.prepend(host);
+                attachDatePickers(host).handles[0]?.open();
+            }, first);
+            const pairs = await headingPerDay(page.locator('[data-test="weekstart"] [data-kp-date-panel]'));
+            expect(pairs).toHaveLength(30);
+            for (const { iso, heading } of pairs) {
+                const weekday = new Date(`${iso}T00:00:00`).getDay();
+                expect(heading, `${iso} sits under ${heading}`).toBe(S.weekdays[(weekday + 6) % 7]);
+            }
+        },
+    );
 }
 
-test('heading i names the weekday of column i under a Dutch page — React [gap-11]', async ({ page }) => {
+test('heading i names the weekday of column i under a Dutch page — React [gap-11]', { tag: ['@component:datepicker'] }, async ({ page }) => {
     // gap-11: components/flow.jsx rotated the Monday-first dictionary by a Sunday-zero first day, the same fault as the framework-free grid.
     await page.goto(URL);
     await page.locator('[data-test="react-date"] .kp-field__input').fill('13-09-2026');
@@ -178,7 +182,7 @@ test('heading i names the weekday of column i under a Dutch page — React [gap-
 });
 
 for (const channel of CHANNELS) {
-    test(`month and weekday names follow the picker's locale — ${channel.name} [gap-11]`, async ({ page }) => {
+    test(`month and weekday names follow the picker's locale — ${channel.name} [gap-11]`, { tag: ['@component:datepicker'] }, async ({ page }) => {
         // gap-11: the names came from the English dictionary whatever the lang, so a Dutch page read "September" over a Dutch date.
         await page.goto(URL);
         await page.locator(channel.input).fill('13-09-2026');
@@ -195,7 +199,7 @@ for (const channel of CHANNELS) {
     });
 }
 
-test("a consumer's own month names still win over the locale's [gap-11, KT6]", async ({ page }) => {
+test("a consumer's own month names still win over the locale's [gap-11, KT6]", { tag: ['@component:datepicker'] }, async ({ page }) => {
     // gap-11: following the locale must not take away setStrings — the dictionary a consumer set is the way out.
     await page.goto(URL);
     const months = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'Negen', 'M10', 'M11', 'M12'];
@@ -208,42 +212,46 @@ test("a consumer's own month names still win over the locale's [gap-11, KT6]", a
     await expect(page.locator('[data-test="plain-date-panel"] .kp-datepicker__title')).toHaveText(S.monthTitle('Negen', 2026));
 });
 
-test('a disabled day keeps aria-disabled and looks unavailable, in every theme [gap-11]', async ({ page }) => {
-    // gap-11: a disabled day carried aria-disabled and nothing else, so it painted exactly like a day that can be chosen.
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/datepicker.html');
-    await waitForJudging(page);
-    const off = page.locator('#limits [data-kp-day="2026-09-05"]');
-    const on = page.locator('#limits [data-kp-day="2026-09-08"]');
-    await expect(off).toHaveAttribute('aria-disabled', 'true');
-    await expect(on).not.toHaveAttribute('aria-disabled', /.*/);
-    const paint = (locator) =>
-        locator.evaluate((el) => {
-            const s = getComputedStyle(el);
-            return ['color', 'opacity', 'text-decoration-line', 'background-color', 'background-image', 'border-top-color']
-                .map((p) => s.getPropertyValue(p))
-                .join(' | ');
+test(
+    'a disabled day keeps aria-disabled and looks unavailable, in every theme [gap-11]',
+    { tag: ['@component:datepicker', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: a disabled day carried aria-disabled and nothing else, so it painted exactly like a day that can be chosen.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/datepicker.html');
+        await waitForJudging(page);
+        const off = page.locator('#limits [data-kp-day="2026-09-05"]');
+        const on = page.locator('#limits [data-kp-day="2026-09-08"]');
+        await expect(off).toHaveAttribute('aria-disabled', 'true');
+        await expect(on).not.toHaveAttribute('aria-disabled', /.*/);
+        const paint = (locator) =>
+            locator.evaluate((el) => {
+                const s = getComputedStyle(el);
+                return ['color', 'opacity', 'text-decoration-line', 'background-color', 'background-image', 'border-top-color']
+                    .map((p) => s.getPropertyValue(p))
+                    .join(' | ');
+            });
+        for (const theme of THEME_NAMES) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+            await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+            expect(await paint(off), `${theme}: the disabled 5th paints like the enabled 8th`).not.toBe(await paint(on));
+        }
+        // And the live module writes the same attribute it is styled by.
+        await page.goto(URL);
+        await page.evaluate(async () => {
+            const { attachDatePickers } = await import('/js/datepicker.js');
+            const host = document.createElement('div');
+            host.lang = 'en-GB';
+            host.innerHTML =
+                '<div class="kp-datepicker" data-kp-datepicker data-kp-min="2026-09-07" data-test="limits">' +
+                '<input class="kp-field__input" id="limits" type="text" data-kp-date-input value="13/09/2026" />' +
+                '<button type="button" data-kp-date-open>open</button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>';
+            document.body.prepend(host);
+            attachDatePickers(host).handles[0]?.open();
         });
-    for (const theme of THEME_NAMES) {
-        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
-        expect(await paint(off), `${theme}: the disabled 5th paints like the enabled 8th`).not.toBe(await paint(on));
-    }
-    // And the live module writes the same attribute it is styled by.
-    await page.goto(URL);
-    await page.evaluate(async () => {
-        const { attachDatePickers } = await import('/js/datepicker.js');
-        const host = document.createElement('div');
-        host.lang = 'en-GB';
-        host.innerHTML =
-            '<div class="kp-datepicker" data-kp-datepicker data-kp-min="2026-09-07" data-test="limits">' +
-            '<input class="kp-field__input" id="limits" type="text" data-kp-date-input value="13/09/2026" />' +
-            '<button type="button" data-kp-date-open>open</button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div>';
-        document.body.prepend(host);
-        attachDatePickers(host).handles[0]?.open();
-    });
-    await expect(page.locator('[data-test="limits"] [data-kp-day="2026-09-05"]')).toHaveAttribute('aria-disabled', 'true');
-});
+        await expect(page.locator('[data-test="limits"] [data-kp-day="2026-09-05"]')).toHaveAttribute('aria-disabled', 'true');
+    },
+);
 
 // Kenny's review note of 2026-09-13: the data table's date filter opened its
 // calendar past the right edge of the window. The fix is the picker's own,
@@ -251,53 +259,59 @@ test('a disabled day keeps aria-disabled and looks unavailable, in every theme [
 // writing directions.
 for (const channel of CHANNELS) {
     for (const dir of ['ltr', 'rtl']) {
-        test(`a picker at the ${dir === 'ltr' ? 'right' : 'left'} edge opens its calendar toward the inline start, inside the window — ${channel.name}, ${dir} [Kenny's note 1]`, async ({
-            page,
-        }) => {
-            // Before, both channels: ltr, the panel ran to x=1374 of the page in a 1280px window (the page grew a sideways scroll); rtl, it started at x=-94.
-            await page.setViewportSize({ width: 1280, height: 800 });
-            await page.goto(URL);
-            const picker = page.locator(channel.open).locator('xpath=ancestor::*[contains(concat(" ", @class, " "), " kp-datepicker ")][1]');
-            await picker.evaluate((el, direction) => {
-                const node = /** @type {HTMLElement} */ (el);
-                node.dir = direction;
-                // Ten rem wide, narrower than its calendar, and pushed to the inline end of its section.
-                node.style.inlineSize = '10rem';
-                node.style.marginInlineStart = 'auto';
-                node.scrollIntoView({ block: 'center', inline: 'nearest' });
-            }, dir);
-            await page.locator(channel.open).click();
-            const panel = page.locator(channel.panel);
-            await expect(panel).toBeVisible();
-            await expect
-                .poll(() =>
-                    panel.evaluate((el) => {
-                        // In page coordinates, so a window that scrolled sideways to show the panel does not hide the overflow.
-                        const box = el.getBoundingClientRect();
-                        const page = document.documentElement;
-                        return {
-                            left: Math.round(box.left + scrollX) >= 0,
-                            right: Math.round(box.right + scrollX) <= page.clientWidth,
-                        };
-                    }),
-                )
-                .toEqual({ left: true, right: true });
-        });
+        test(
+            `a picker at the ${dir === 'ltr' ? 'right' : 'left'} edge opens its calendar toward the inline start, inside the window — ${channel.name}, ${dir} [Kenny's note 1]`,
+            { tag: ['@component:datepicker'] },
+            async ({ page }) => {
+                // Before, both channels: ltr, the panel ran to x=1374 of the page in a 1280px window (the page grew a sideways scroll); rtl, it started at x=-94.
+                await page.setViewportSize({ width: 1280, height: 800 });
+                await page.goto(URL);
+                const picker = page.locator(channel.open).locator('xpath=ancestor::*[contains(concat(" ", @class, " "), " kp-datepicker ")][1]');
+                await picker.evaluate((el, direction) => {
+                    const node = /** @type {HTMLElement} */ (el);
+                    node.dir = direction;
+                    // Ten rem wide, narrower than its calendar, and pushed to the inline end of its section.
+                    node.style.inlineSize = '10rem';
+                    node.style.marginInlineStart = 'auto';
+                    node.scrollIntoView({ block: 'center', inline: 'nearest' });
+                }, dir);
+                await page.locator(channel.open).click();
+                const panel = page.locator(channel.panel);
+                await expect(panel).toBeVisible();
+                await expect
+                    .poll(() =>
+                        panel.evaluate((el) => {
+                            // In page coordinates, so a window that scrolled sideways to show the panel does not hide the overflow.
+                            const box = el.getBoundingClientRect();
+                            const page = document.documentElement;
+                            return {
+                                left: Math.round(box.left + scrollX) >= 0,
+                                right: Math.round(box.right + scrollX) <= page.clientWidth,
+                            };
+                        }),
+                    )
+                    .toEqual({ left: true, right: true });
+            },
+        );
     }
 }
 
 for (const channel of CHANNELS) {
-    test(`opening the calendar puts focus on a day, and Escape closes it back to its button — ${channel.name}`, async ({ page }) => {
-        // Before (React): focus stayed on the trigger when the calendar opened,
-        // so the arrows moved nothing and Escape did nothing; the framework-free
-        // channel already focused a day and closed on Escape.
-        await page.goto(URL);
-        await page.locator(channel.input).fill('4-9-2026');
-        await page.locator(channel.open).click();
-        await expect(page.locator(channel.panel)).toBeVisible();
-        await expect(page.locator(`${channel.panel} [data-kp-day="2026-09-04"]`)).toBeFocused();
-        await page.keyboard.press('Escape');
-        await expect(page.locator(channel.panel)).toBeHidden();
-        await expect(page.locator(channel.open)).toBeFocused();
-    });
+    test(
+        `opening the calendar puts focus on a day, and Escape closes it back to its button — ${channel.name}`,
+        { tag: ['@component:datepicker'] },
+        async ({ page }) => {
+            // Before (React): focus stayed on the trigger when the calendar opened,
+            // so the arrows moved nothing and Escape did nothing; the framework-free
+            // channel already focused a day and closed on Escape.
+            await page.goto(URL);
+            await page.locator(channel.input).fill('4-9-2026');
+            await page.locator(channel.open).click();
+            await expect(page.locator(channel.panel)).toBeVisible();
+            await expect(page.locator(`${channel.panel} [data-kp-day="2026-09-04"]`)).toBeFocused();
+            await page.keyboard.press('Escape');
+            await expect(page.locator(channel.panel)).toBeHidden();
+            await expect(page.locator(channel.open)).toBeFocused();
+        },
+    );
 }

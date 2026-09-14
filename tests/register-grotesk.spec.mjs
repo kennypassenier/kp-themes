@@ -86,7 +86,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the grotesk register, ${channel}`, () => {
+    test.describe(`the grotesk register, ${channel}`, { tag: ['@theme:grotesk', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'grotesk builds no boot overlay').toBe(0);
@@ -204,7 +204,7 @@ for (const [channel, url] of CHANNELS) {
 // label is --foreground on the grey press ground. Before: the label stayed
 // --primary-foreground/--destructive-foreground, white rgb(255, 255, 255) on
 // rgb(201, 201, 201) = 1.66:1; red on this test.
-test.describe('grotesk press label [grotesk-hover decision]', () => {
+test.describe('grotesk press label [grotesk-hover decision]', { tag: ['@theme:grotesk', '@component:button'] }, () => {
     /** @param {string} text */
     const rgb = (text) => (text.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
     /** @param {number[]} c */

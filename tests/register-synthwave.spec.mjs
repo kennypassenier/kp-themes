@@ -62,7 +62,7 @@ const pseudo = (locator, pseudo, props) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the synthwave register, ${channel}`, () => {
+    test.describe(`the synthwave register, ${channel}`, { tag: ['@theme:synthwave', '@component:page-effects', '@component:examples'] }, () => {
         test('the page boots once per session, and Skip ends it at once [SW2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');

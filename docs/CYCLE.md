@@ -95,16 +95,25 @@ proactively" description the harness delegates on.
 
 ## Tests: three gradations
 
-1. **While building:** the tests tagged with what is being touched, firefox
-   only — `npx playwright test --grep "@theme:terminal|@sweep"
-   --project=firefox`. Until the tag map (`tests/tags.json`, file → tag)
-   exists, the single spec file being worked on.
-2. **Before a commit:** the tags of every touched file, firefox only, once.
-3. **Before Uitrol:** the whole suite, both engines — Kenny's to authorise,
-   asked in a form; Claude runs it with his go.
+1. **Building:** the tests tagged with what is being touched, firefox
+   only — `npm run test:tags -- --level building`. The tag map
+   (`tests/tags.json`) turns each changed file into tags: a register into
+   `@theme:<theme>`, a changed rule in `css/components.css` into the
+   component its selector names, a module into its components, a changed
+   spec into that file.
+2. **Commit:** building plus every `@sweep` test, firefox only, once —
+   `npm run test:tags -- --level commit`. About two to three minutes;
+   run by hand or by the `checker` agent, not by the commit hook.
+3. **Release (before Uitrol):** the whole suite, both engines —
+   `npm run test:browser` — Kenny's to authorise, asked in a form; Claude
+   runs it with his go.
 
-The tag map is measured once against what it skips before it is trusted
-(standing rule 7i), and the count is written beside it.
+Every test carries `@component:<name>`, `@theme:<name>` or `@sweep`;
+`npm run check:tags` (in the gates) refuses one that does not, and a file
+no rule in the map covers. `--dry-run` prints the selection and the count
+without starting a browser. The map was measured once against what it
+skips (standing rule 7i) on 2026-09-14; the numbers are under `measured`
+in `tests/tags.json` and in `docs/TEST_PLAN.md`.
 
 ## What a test is for, from round eight on
 

@@ -34,7 +34,7 @@ const parts = (page, channel) => ({
     links: channel === 'free' ? page.locator('[data-test="free-links"]') : page.locator('.react-links'),
 });
 
-test.describe('the nav toggle', () => {
+test.describe('the nav toggle', { tag: ['@component:navigation'] }, () => {
     for (const channel of CHANNELS) {
         test(`${channel}: the links are not painted until the toggle is pressed [stage 1.3]`, async ({ page }) => {
             await page.goto(FIXTURE);

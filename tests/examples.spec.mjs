@@ -76,7 +76,7 @@ const shape = (page, root) =>
             });
     }, root);
 
-test.describe('the ten example pages', () => {
+test.describe('the ten example pages', { tag: ['@component:examples'] }, () => {
     test('the descriptor list holds the ten pages TH98 names and the concept demo', () => {
         expect(EXAMPLES.map((e) => e.id)).toEqual([
             'app-shell',

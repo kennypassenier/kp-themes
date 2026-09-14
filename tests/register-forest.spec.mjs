@@ -89,7 +89,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the forest register, ${channel}`, () => {
+    test.describe(`the forest register, ${channel}`, { tag: ['@theme:forest', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline settles at rest, no boot overlay and no reveal routine armed', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'forest declares no --kp-arrival').toBe(0);

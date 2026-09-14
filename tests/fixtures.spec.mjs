@@ -21,7 +21,7 @@ p { margin-bottom: 2em !important; }`;
 const NARROW = { width: 320, height: 800 };
 
 for (const theme of THEMES) {
-    test.describe(`${theme.name} fixture`, () => {
+    test.describe(`${theme.name} fixture`, { tag: ['@sweep', '@component:showcase', `@theme:${theme.name}`] }, () => {
         const url = `/showcase/themes/${theme.name}.html`;
 
         test('declares its colour scheme, and declares the right one [DI6]', async ({ page }) => {
@@ -129,61 +129,65 @@ const ALLOWED = [
 ];
 
 for (const theme of THEMES) {
-    test(`${theme.name} paints no colour that is not its own [KT8]`, async ({ page }) => {
-        await page.goto(`/showcase/themes/${theme.name}.html`);
-        // Let every finite animation and transition finish first: a theme
-        // whose register settles a colour on load (sepia's mark) is
-        // MID-TRANSITION for a moment, and a sample taken then reads a
-        // blend of two of the theme's own colours as a foreign one —
-        // measured at rgb(63, 41, 22) between the accent's ink and the
-        // page's, 2026-09-08, which is neither token and is nobody's fault.
-        await page.evaluate(() =>
-            Promise.all(
-                document
-                    .getAnimations()
-                    .filter((a) => a.effect?.getTiming().iterations !== Infinity)
-                    .map((a) => a.finished.catch(() => {})),
-            ),
-        );
-        const palette = paletteOf(theme.name);
-        const near = (c) => palette.some((p) => Math.abs(p[0] - c[0]) <= 3 && Math.abs(p[1] - c[1]) <= 3 && Math.abs(p[2] - c[2]) <= 3);
-        const painted = await page.evaluate(
-            (allowed) => {
-                const out = [];
-                const seen = new Set();
-                for (const el of document.querySelectorAll('body *')) {
-                    if (allowed.some((a) => el.matches(a))) continue;
-                    const box = el.getBoundingClientRect();
-                    if (box.width === 0 || box.height === 0) continue;
-                    const s = getComputedStyle(el);
-                    for (const prop of ['backgroundColor', 'color', 'borderTopColor', 'accentColor']) {
-                        const value = s[prop];
-                        if (!value || value === 'rgba(0, 0, 0, 0)' || value === 'auto') continue;
-                        if (prop === 'borderTopColor' && s.borderTopWidth === '0px') continue;
-                        const key = `${prop} ${value}`;
-                        if (seen.has(key)) continue;
-                        seen.add(key);
-                        const where = `${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''} in #${el.closest('.sc-specimen')?.id ?? 'page'}`;
-                        out.push({ prop, value, where });
+    test(
+        `${theme.name} paints no colour that is not its own [KT8]`,
+        { tag: ['@sweep', '@component:showcase', `@theme:${theme.name}`] },
+        async ({ page }) => {
+            await page.goto(`/showcase/themes/${theme.name}.html`);
+            // Let every finite animation and transition finish first: a theme
+            // whose register settles a colour on load (sepia's mark) is
+            // MID-TRANSITION for a moment, and a sample taken then reads a
+            // blend of two of the theme's own colours as a foreign one —
+            // measured at rgb(63, 41, 22) between the accent's ink and the
+            // page's, 2026-09-08, which is neither token and is nobody's fault.
+            await page.evaluate(() =>
+                Promise.all(
+                    document
+                        .getAnimations()
+                        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+                        .map((a) => a.finished.catch(() => {})),
+                ),
+            );
+            const palette = paletteOf(theme.name);
+            const near = (c) => palette.some((p) => Math.abs(p[0] - c[0]) <= 3 && Math.abs(p[1] - c[1]) <= 3 && Math.abs(p[2] - c[2]) <= 3);
+            const painted = await page.evaluate(
+                (allowed) => {
+                    const out = [];
+                    const seen = new Set();
+                    for (const el of document.querySelectorAll('body *')) {
+                        if (allowed.some((a) => el.matches(a))) continue;
+                        const box = el.getBoundingClientRect();
+                        if (box.width === 0 || box.height === 0) continue;
+                        const s = getComputedStyle(el);
+                        for (const prop of ['backgroundColor', 'color', 'borderTopColor', 'accentColor']) {
+                            const value = s[prop];
+                            if (!value || value === 'rgba(0, 0, 0, 0)' || value === 'auto') continue;
+                            if (prop === 'borderTopColor' && s.borderTopWidth === '0px') continue;
+                            const key = `${prop} ${value}`;
+                            if (seen.has(key)) continue;
+                            seen.add(key);
+                            const where = `${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''} in #${el.closest('.sc-specimen')?.id ?? 'page'}`;
+                            out.push({ prop, value, where });
+                        }
                     }
+                    return out;
+                },
+                ALLOWED.map((a) => a.selector),
+            );
+            const foreign = [];
+            for (const { prop, value, where } of painted) {
+                const m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(value);
+                if (!m) {
+                    // color(srgb …) is how Chromium reports hsl(from …): a wash, by construction.
+                    if (!/^color\(srgb /.test(value)) foreign.push(`${prop} ${value} on ${where}`);
+                    continue;
                 }
-                return out;
-            },
-            ALLOWED.map((a) => a.selector),
-        );
-        const foreign = [];
-        for (const { prop, value, where } of painted) {
-            const m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(value);
-            if (!m) {
-                // color(srgb …) is how Chromium reports hsl(from …): a wash, by construction.
-                if (!/^color\(srgb /.test(value)) foreign.push(`${prop} ${value} on ${where}`);
-                continue;
+                if (m[4] !== undefined && Number(m[4]) < 1) continue;
+                if (!near([Number(m[1]), Number(m[2]), Number(m[3])])) foreign.push(`${prop} ${value} on ${where}`);
             }
-            if (m[4] !== undefined && Number(m[4]) < 1) continue;
-            if (!near([Number(m[1]), Number(m[2]), Number(m[3])])) foreign.push(`${prop} ${value} on ${where}`);
-        }
-        // Drill: remove the `hr` rule from css/_rules.css and every theme
-        // reports "color rgb(128, 128, 128) on hr in #<theme>-typography".
-        expect(foreign).toEqual([]);
-    });
+            // Drill: remove the `hr` rule from css/_rules.css and every theme
+            // reports "color rgb(128, 128, 128) on hr in #<theme>-typography".
+            expect(foreign).toEqual([]);
+        },
+    );
 }

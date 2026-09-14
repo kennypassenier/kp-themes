@@ -181,26 +181,24 @@ Measured for the round-six correction record: 3.6 seconds against 3.5
 minutes for the whole suite. Firefox alone, because Kenny's own browser
 is a Firefox derivative and Firefox has been the odd engine here fourteen
 times against Chromium's six — the reasoning is in the header of
-`gates/run-affected.mjs`.
+`gates/run-tags.mjs`.
 
-### Step 5 — `npm run test:affected`, once before a report or a commit
+### Step 5 — `npm run test:tags`, once before a report or a commit
 
 ```bash
-npm run test:affected
+npm run test:tags -- --level commit
 ```
 
-It asks `gates/affected.mjs` what a change needs and prints one of three
-answers before it runs anything:
-
-- `Nothing a browser can see has changed — no browser test to run.`
-- `Affected: tests/register-grotesk.spec.mjs, …`
-- `Everything: the change reaches shared code.`
+It reads `tests/tags.json`, prints one line per changed file with the tags
+that file selects and why, then the `--grep` it hands Playwright. The
+building level runs those tags; the commit level adds every `@sweep` test.
 
 You can ask the same question without running a browser at all:
 
 ```bash
-node gates/affected.mjs          # prints: none | all | a list of spec files
-node gates/affected.mjs main     # what has changed since a ref
+npm run test:tags -- --dry-run                                  # since `git merge-base HEAD main`, with the test count
+npm run test:tags -- --files css/grotesk-register.css --dry-run  # what one file reaches
+npm run test:tags -- --commit <sha> --dry-run                   # what one commit selected
 ```
 
 **Know its blind spot, because it cost fifteen red tests.** Until

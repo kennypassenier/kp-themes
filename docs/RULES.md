@@ -133,7 +133,7 @@ keyboard work need not be — see correction fix-2 below):
 | Command                 | What                                                             | When                                                                                                                          |
 | ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `npm run gates`         | the blocking checks, seconds                                     | every commit, by the hook                                                                                                     |
-| `npm run test:affected` | the specs a change touches, Firefox only                         | once before each report or commit — during the building itself it is the single spec file, see the 2026-09-11 amendment below |
+| `npm run test:tags`     | the tests tagged with what a change touches, Firefox only        | `--level building` while building, `--level commit` once before each report or commit — scope-33, replacing `test:affected` |
 | `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks               |
 | `npm run advice`        | contrast, invariants, motion, texture                            | when Kenny wants the reading                                                                                                  |
 | `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                                   |
@@ -188,7 +188,7 @@ zelf die test laten draaien."_ The decision stays where it was; the
 typing moves. Outside that moment nothing changes — the whole suite is
 still his to ask for, and it does not widen to other projects.
 
-During work the command is `npm run test:affected` and nothing else: it
+During work the command was `test:affected` (retired at scope-33) and nothing else: it
 runs the specs a change touches, in firefox alone, because Kenny's own
 browser is a firefox derivative and firefox has been the odd engine here
 fourteen times against chromium's six. Where a check wants the second
@@ -207,7 +207,7 @@ was needed.
 The answer is the RHYTHM, not the count. While building, Claude runs the
 one spec file being worked on (`npx playwright test tests/<file>.spec.mjs
 --project=firefox`, measured at 3.6 seconds against 3.5 minutes), and
-runs `npm run test:affected` once before each report or commit. The bar
+runs `test:affected` (now `npm run test:tags -- --level commit`) once before each report or commit. The bar
 on the tests themselves does not move: rule 7e still drives every
 assertion red, rule 8 still turns every live-found fault into a test
 first, and the milestone gate still carries its coverage item.
@@ -218,8 +218,9 @@ the desktop unusable while a run goes. `KP_TEST_WORKERS` overrides it.
 
 Discipline-enforced. If it recurs, `test:browser` gains a guard that
 refuses unless an environment variable only Kenny sets is present.
-**Round eight replaces `test:affected` with tags** (decision `scope-33`):
-see `docs/CYCLE.md` for the three gradations once the tag map exists.
+**Round eight replaced `test:affected` with tags** (decision `scope-33`,
+2026-09-14): `tests/tags.json`, `npm run test:tags`, and the three
+gradations in `docs/CYCLE.md`.
 
 ## Correction fix-1 (2026-09-10) — a value that settles, a value that passes
 

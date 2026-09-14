@@ -86,72 +86,73 @@ async function openCompare(page, component, a = 'formal', b = 'cyberpunk') {
     return { a: page.frameLocator('iframe.cat-compare__frame >> nth=0'), b: page.frameLocator('iframe.cat-compare__frame >> nth=1') };
 }
 
-test('the same block in the same theme hashes the same on the review page, its component page and in a compare column', async ({
-    browser,
-    browserName,
-}) => {
-    const engine = engineOf(browserName);
-    const blocks = [
-        ['button', 'button--variants'],
-        ['table', 'table--datatable'],
-    ];
-    const review = await browser.newContext();
-    await useEmptyRegister(review);
-    const reviewPage = await review.newPage();
-    await openReview(reviewPage);
-    const expected = {};
-    for (const [, id] of blocks) {
-        for (const theme of ['formal', 'cyberpunk']) expected[`${id}|${theme}`] = await approveOnReview(reviewPage, id, theme);
-    }
-    await review.close();
-    for (const value of Object.values(expected)) expect(value).toMatch(/^[0-9a-f]{64}$/);
-
-    // A fresh browser: nothing judged, so the column measures on its own.
-    const compare = await browser.newContext();
-    await useEmptyRegister(compare);
-    const page = await compare.newPage();
-    for (const [component, id] of blocks) {
-        const columns = await openCompare(page, component);
-        for (const [side, theme] of [
-            ['a', 'formal'],
-            ['b', 'cyberpunk'],
-        ]) {
-            const approve = columns[side].locator(`[data-cat-block="${id}"] [data-cat-verdict="approved"]`);
-            await expect(approve).toBeEnabled({ timeout: 60_000 });
-            await approve.click();
+test(
+    'the same block in the same theme hashes the same on the review page, its component page and in a compare column',
+    { tag: ['@component:catalogue'] },
+    async ({ browser, browserName }) => {
+        const engine = engineOf(browserName);
+        const blocks = [
+            ['button', 'button--variants'],
+            ['table', 'table--datatable'],
+        ];
+        const review = await browser.newContext();
+        await useEmptyRegister(review);
+        const reviewPage = await review.newPage();
+        await openReview(reviewPage);
+        const expected = {};
+        for (const [, id] of blocks) {
+            for (const theme of ['formal', 'cyberpunk']) expected[`${id}|${theme}`] = await approveOnReview(reviewPage, id, theme);
         }
-        const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-        expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal`).toBe(expected[`${id}|formal`]);
-        expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk`).toBe(expected[`${id}|cyberpunk`]);
-    }
-    await compare.close();
+        await review.close();
+        for (const value of Object.values(expected)) expect(value).toMatch(/^[0-9a-f]{64}$/);
 
-    // And on the component page itself, a third fresh browser.
-    const own = await browser.newContext();
-    await useEmptyRegister(own);
-    const ownPage = await own.newPage();
-    await ownPage.setViewportSize({ width: 1400, height: 900 });
-    for (const [component, id] of blocks) {
-        await ownPage.goto(`/catalogue/${component}.html`);
-        const block = id.slice(component.length + 2);
-        for (const theme of ['formal', 'cyberpunk']) {
-            await setTheme(ownPage, theme);
-            await waitForJudging(ownPage);
-            const panel = ownPage.locator(`#${block} .cat-judge`);
-            await expect(panel.locator('[data-cat-approval-state]')).toContainText(
-                `Not yet judged · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'} · ${ENGINE_LABEL[engine]}`,
-            );
-            await panel.locator('[data-cat-verdict="approved"]').click();
-            await ownPage.locator('[data-cat-show-judged]').check();
+        // A fresh browser: nothing judged, so the column measures on its own.
+        const compare = await browser.newContext();
+        await useEmptyRegister(compare);
+        const page = await compare.newPage();
+        for (const [component, id] of blocks) {
+            const columns = await openCompare(page, component);
+            for (const [side, theme] of [
+                ['a', 'formal'],
+                ['b', 'cyberpunk'],
+            ]) {
+                const approve = columns[side].locator(`[data-cat-block="${id}"] [data-cat-verdict="approved"]`);
+                await expect(approve).toBeEnabled({ timeout: 60_000 });
+                await approve.click();
+            }
+            const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
+            expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal`).toBe(expected[`${id}|formal`]);
+            expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk`).toBe(expected[`${id}|cyberpunk`]);
         }
-        const stored = await ownPage.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-        expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal on its own page`).toBe(expected[`${id}|formal`]);
-        expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk on its own page`).toBe(expected[`${id}|cyberpunk`]);
-    }
-    await own.close();
-});
+        await compare.close();
 
-test('changing the top theme on the compare page leaves both columns in their own themes', async ({ page }) => {
+        // And on the component page itself, a third fresh browser.
+        const own = await browser.newContext();
+        await useEmptyRegister(own);
+        const ownPage = await own.newPage();
+        await ownPage.setViewportSize({ width: 1400, height: 900 });
+        for (const [component, id] of blocks) {
+            await ownPage.goto(`/catalogue/${component}.html`);
+            const block = id.slice(component.length + 2);
+            for (const theme of ['formal', 'cyberpunk']) {
+                await setTheme(ownPage, theme);
+                await waitForJudging(ownPage);
+                const panel = ownPage.locator(`#${block} .cat-judge`);
+                await expect(panel.locator('[data-cat-approval-state]')).toContainText(
+                    `Not yet judged · ${theme === 'formal' ? 'Formal' : 'Cyberpunk'} · ${ENGINE_LABEL[engine]}`,
+                );
+                await panel.locator('[data-cat-verdict="approved"]').click();
+                await ownPage.locator('[data-cat-show-judged]').check();
+            }
+            const stored = await ownPage.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
+            expect.soft(stored[id]?.formal?.[engine]?.hash, `${id} in formal on its own page`).toBe(expected[`${id}|formal`]);
+            expect.soft(stored[id]?.cyberpunk?.[engine]?.hash, `${id} in cyberpunk on its own page`).toBe(expected[`${id}|cyberpunk`]);
+        }
+        await own.close();
+    },
+);
+
+test('changing the top theme on the compare page leaves both columns in their own themes', { tag: ['@component:catalogue'] }, async ({ page }) => {
     await openCompare(page, 'button');
     const frames = page.locator('iframe.cat-compare__frame');
     const themeOf = (i) => frames.nth(i).evaluate((f) => f.contentDocument?.documentElement.dataset.theme);
@@ -165,177 +166,201 @@ test('changing the top theme on the compare page leaves both columns in their ow
     expect(await themeOf(1)).toBe('cyberpunk');
 });
 
-test('a note on one page and a verdict on the review page share one prompt on a third page, and Clear prompt empties it', async ({ page }) => {
-    page.on('dialog', (dialog) => dialog.accept());
-    await page.setViewportSize({ width: 1400, height: 900 });
-    await page.goto('/catalogue/button.html');
-    const note = 'the ghost button needs a visible edge';
-    await page.locator('#cat-feedback-variants').fill(note);
+test(
+    'a note on one page and a verdict on the review page share one prompt on a third page, and Clear prompt empties it',
+    { tag: ['@component:catalogue'] },
+    async ({ page }) => {
+        page.on('dialog', (dialog) => dialog.accept());
+        await page.setViewportSize({ width: 1400, height: 900 });
+        await page.goto('/catalogue/button.html');
+        const note = 'the ghost button needs a visible edge';
+        await page.locator('#cat-feedback-variants').fill(note);
 
-    await openReview(page);
-    await approveOnReview(page, 'switch--states', 'formal');
+        await openReview(page);
+        await approveOnReview(page, 'switch--states', 'formal');
 
-    await page.goto('/research/grotesk-hover/demo.html');
-    const top = page.locator('[data-cat-prompt-bar]');
-    await expect(top).toBeVisible();
-    // A component page's note lives under the review page's key, so both are one page.
-    await expect(top.locator('[data-cat-prompt-count]')).toContainText('2 new item(s) for the prompt, from 1 page(s)');
-    await top.locator('[data-cat-prompt-show]').click();
-    const text = top.locator('[data-cat-prompt]');
-    await expect(text).toContainText(note);
-    await expect(text).toContainText('Buttons › Variants (#button--variants)');
-    await expect(text).toContainText('(catalogue/index.html)');
-    await expect(text).toContainText('Approved (1): Switch › States');
-    // The same prompt at the foot of the page.
-    await expect(page.locator('.cat-feedback [data-cat-prompt]')).toHaveText((await text.textContent()) ?? '');
+        await page.goto('/research/grotesk-hover/demo.html');
+        const top = page.locator('[data-cat-prompt-bar]');
+        await expect(top).toBeVisible();
+        // A component page's note lives under the review page's key, so both are one page.
+        await expect(top.locator('[data-cat-prompt-count]')).toContainText('2 new item(s) for the prompt, from 1 page(s)');
+        await top.locator('[data-cat-prompt-show]').click();
+        const text = top.locator('[data-cat-prompt]');
+        await expect(text).toContainText(note);
+        await expect(text).toContainText('Buttons › Variants (#button--variants)');
+        await expect(text).toContainText('(catalogue/index.html)');
+        await expect(text).toContainText('Approved (1): Switch › States');
+        // The same prompt at the foot of the page.
+        await expect(page.locator('.cat-feedback [data-cat-prompt]')).toHaveText((await text.textContent()) ?? '');
 
-    await top.locator('[data-cat-prompt-clear]').click();
-    await expect(top.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
-    await expect(text).not.toContainText(note);
-    expect(await page.evaluate((key) => localStorage.getItem(key), FEEDBACK)).toBe('{}');
-    // The verdict stays; only its place in a prompt is used up.
-    const judgements = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-    expect(Object.keys(judgements).length).toBe(1);
-    await page.locator('.cat-feedback [data-cat-include-copied]').check();
-    await expect(page.locator('.cat-feedback [data-cat-prompt]')).toContainText('Approved (1)');
-});
+        await top.locator('[data-cat-prompt-clear]').click();
+        await expect(top.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
+        await expect(text).not.toContainText(note);
+        expect(await page.evaluate((key) => localStorage.getItem(key), FEEDBACK)).toBe('{}');
+        // The verdict stays; only its place in a prompt is used up.
+        const judgements = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
+        expect(Object.keys(judgements).length).toBe(1);
+        await page.locator('.cat-feedback [data-cat-include-copied]').check();
+        await expect(page.locator('.cat-feedback [data-cat-prompt]')).toContainText('Approved (1)');
+    },
+);
 
-test('a verdict made in a compare column shows as that verdict on the review page', async ({ page, browserName }) => {
-    const label = ENGINE_LABEL[engineOf(browserName)];
-    const columns = await openCompare(page, 'button', 'formal', 'cyberpunk');
-    const reject = columns.b.locator('[data-cat-block="button--variants"] [data-cat-verdict="rejected"]');
-    await expect(reject).toBeEnabled({ timeout: 60_000 });
-    await reject.click();
-    await expect(columns.b.locator('[data-cat-block="button--variants"] [data-cat-approval-state]')).toHaveText(
-        `Not approved · Cyberpunk · ${label}`,
-    );
-    const note = columns.a.locator('[data-cat-block="button--variants"] textarea');
-    await note.fill('formal variants: fine');
-
-    await page.evaluate(() => localStorage.setItem('theme', 'cyberpunk'));
-    await openReview(page);
-    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('cyberpunk');
-    await expect(page.locator('#button--variants')).toHaveAttribute('data-cat-state', 'rejected');
-    await page.locator('[data-cat-show-judged]').check();
-    await expect(page.locator('#button--variants [data-cat-approval-state]')).toHaveText(`Not approved · Cyberpunk · ${label}`);
-    // The note from the formal column is the review page's note for that block in formal.
-    await setTheme(page, 'formal');
-    await expect(page.locator('[id="cat-feedback-button--variants"]')).toHaveValue('formal variants: fine');
-});
-
-test('a note stored under a component page moves to the review page key, and a note already there is kept', async ({ page }) => {
-    await page.goto('/catalogue/switch.html');
-    await page.evaluate((key) => {
-        localStorage.setItem(
-            key,
-            JSON.stringify({
-                'catalogue/button.html': { variants: { formal: 'old page note' }, sizes: { formal: 'second' } },
-                'catalogue/index.html': { 'button--variants': { formal: 'review page note' } },
-            }),
+test(
+    'a verdict made in a compare column shows as that verdict on the review page',
+    { tag: ['@component:catalogue'] },
+    async ({ page, browserName }) => {
+        const label = ENGINE_LABEL[engineOf(browserName)];
+        const columns = await openCompare(page, 'button', 'formal', 'cyberpunk');
+        const reject = columns.b.locator('[data-cat-block="button--variants"] [data-cat-verdict="rejected"]');
+        await expect(reject).toBeEnabled({ timeout: 60_000 });
+        await reject.click();
+        await expect(columns.b.locator('[data-cat-block="button--variants"] [data-cat-approval-state]')).toHaveText(
+            `Not approved · Cyberpunk · ${label}`,
         );
-    }, FEEDBACK);
-    await page.goto('/catalogue/button.html');
-    await expect(page.locator('#cat-feedback-sizes')).toHaveValue('second');
-    // Neither note carries a time, so neither is thrown away.
-    await expect(page.locator('#cat-feedback-variants')).toHaveValue('review page note\nold page note');
-    const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), FEEDBACK);
-    expect(Object.keys(stored)).toEqual(['catalogue/index.html']);
-    expect(stored['catalogue/index.html']['button--sizes'].formal).toBe('second');
-});
+        const note = columns.a.locator('[data-cat-block="button--variants"] textarea');
+        await note.fill('formal variants: fine');
+
+        await page.evaluate(() => localStorage.setItem('theme', 'cyberpunk'));
+        await openReview(page);
+        await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('cyberpunk');
+        await expect(page.locator('#button--variants')).toHaveAttribute('data-cat-state', 'rejected');
+        await page.locator('[data-cat-show-judged]').check();
+        await expect(page.locator('#button--variants [data-cat-approval-state]')).toHaveText(`Not approved · Cyberpunk · ${label}`);
+        // The note from the formal column is the review page's note for that block in formal.
+        await setTheme(page, 'formal');
+        await expect(page.locator('[id="cat-feedback-button--variants"]')).toHaveValue('formal variants: fine');
+    },
+);
+
+test(
+    'a note stored under a component page moves to the review page key, and a note already there is kept',
+    { tag: ['@component:catalogue'] },
+    async ({ page }) => {
+        await page.goto('/catalogue/switch.html');
+        await page.evaluate((key) => {
+            localStorage.setItem(
+                key,
+                JSON.stringify({
+                    'catalogue/button.html': { variants: { formal: 'old page note' }, sizes: { formal: 'second' } },
+                    'catalogue/index.html': { 'button--variants': { formal: 'review page note' } },
+                }),
+            );
+        }, FEEDBACK);
+        await page.goto('/catalogue/button.html');
+        await expect(page.locator('#cat-feedback-sizes')).toHaveValue('second');
+        // Neither note carries a time, so neither is thrown away.
+        await expect(page.locator('#cat-feedback-variants')).toHaveValue('review page note\nold page note');
+        const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), FEEDBACK);
+        expect(Object.keys(stored)).toEqual(['catalogue/index.html']);
+        expect(stored['catalogue/index.html']['button--sizes'].formal).toBe('second');
+    },
+);
 
 /* ------------------------------------------------------ the verdict register */
 
-test('the page detects its own browser engine, without being told', async ({ page, browserName }) => {
+test('the page detects its own browser engine, without being told', { tag: ['@component:catalogue'] }, async ({ page, browserName }) => {
     await page.goto('/catalogue/switch.html');
     expect(await page.evaluate(() => import('/catalogue/engine.js').then((m) => m.ENGINE))).toBe(engineOf(browserName));
     await expect(page.locator('#states [data-cat-approval-state]')).toContainText(`· ${ENGINE_LABEL[engineOf(browserName)]}`, { timeout: 60_000 });
 });
 
-test('a verdict in the register shows as judged in a fresh browser, only in its own engine', async ({ browser, browserName }) => {
-    const engine = engineOf(browserName);
-    const other = engine === 'firefox' ? 'chromium' : 'firefox';
-    // The hashes this engine reads for two blocks, taken in a browser of its own.
-    const first = await browser.newContext();
-    await useEmptyRegister(first);
-    const measuring = await first.newPage();
-    await measuring.setViewportSize({ width: 1400, height: 900 });
-    await measuring.goto('/catalogue/switch.html');
-    await waitForJudging(measuring);
-    const hashes = {};
-    for (const block of ['states', 'invalid']) {
-        const approve = measuring.locator(`#${block} [data-cat-verdict="approved"]`);
-        await expect(approve).toBeEnabled();
-        await approve.click();
-        hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
-        expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
-    }
-    await first.close();
+test(
+    'a verdict in the register shows as judged in a fresh browser, only in its own engine',
+    { tag: ['@component:catalogue'] },
+    async ({ browser, browserName }) => {
+        const engine = engineOf(browserName);
+        const other = engine === 'firefox' ? 'chromium' : 'firefox';
+        // The hashes this engine reads for two blocks, taken in a browser of its own.
+        const first = await browser.newContext();
+        await useEmptyRegister(first);
+        const measuring = await first.newPage();
+        await measuring.setViewportSize({ width: 1400, height: 900 });
+        await measuring.goto('/catalogue/switch.html');
+        await waitForJudging(measuring);
+        const hashes = {};
+        for (const block of ['states', 'invalid']) {
+            const approve = measuring.locator(`#${block} [data-cat-verdict="approved"]`);
+            await expect(approve).toBeEnabled();
+            await approve.click();
+            hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
+            expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
+        }
+        await first.close();
 
-    // A fresh browser, nothing in storage; the register holds one verdict in
-    // this engine and one given in the other engine.
-    const entry = (hash, verdict) => ({ verdict, hash, commit: '2a32791', given: '2026-09-13' });
-    const fresh = await browser.newContext();
-    await useRegister(fresh, {
-        'switch--states': { formal: { [engine]: entry(hashes.states, 'approved') } },
-        'switch--invalid': { formal: { [other]: entry(hashes.invalid, 'approved') } },
-    });
-    const page = await fresh.newPage();
-    await page.setViewportSize({ width: 1400, height: 900 });
-    await page.goto('/catalogue/switch.html');
-    expect(await page.evaluate((key) => localStorage.getItem(key), JUDGEMENTS)).toBeNull();
-    await waitForJudging(page);
-    await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'approved');
-    // Judged, so it leaves the page like a block judged in this browser.
-    await expect(page.locator('#states')).toBeHidden();
-    await page.locator('[data-cat-show-judged]').check();
-    await expect(page.locator('#states [data-cat-approval-state]')).toHaveText(`Approved · Formal · ${ENGINE_LABEL[engine]}`);
-    await expect(page.locator('#states [data-cat-verdict-source]')).toHaveText('In the register');
-    // The other engine's verdict is a separate test: here the block is not judged.
-    await expect(page.locator('#invalid')).toHaveAttribute('data-cat-state', 'new');
-    await expect(page.locator('#invalid [data-cat-approval-state]')).toHaveText(`Not yet judged · Formal · ${ENGINE_LABEL[engine]}`);
-    // A recorded verdict is not passed on again.
-    await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing');
-    await fresh.close();
-});
+        // A fresh browser, nothing in storage; the register holds one verdict in
+        // this engine and one given in the other engine.
+        const entry = (hash, verdict) => ({ verdict, hash, commit: '2a32791', given: '2026-09-13' });
+        const fresh = await browser.newContext();
+        await useRegister(fresh, {
+            'switch--states': { formal: { [engine]: entry(hashes.states, 'approved') } },
+            'switch--invalid': { formal: { [other]: entry(hashes.invalid, 'approved') } },
+        });
+        const page = await fresh.newPage();
+        await page.setViewportSize({ width: 1400, height: 900 });
+        await page.goto('/catalogue/switch.html');
+        expect(await page.evaluate((key) => localStorage.getItem(key), JUDGEMENTS)).toBeNull();
+        await waitForJudging(page);
+        await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'approved');
+        // Judged, so it leaves the page like a block judged in this browser.
+        await expect(page.locator('#states')).toBeHidden();
+        await page.locator('[data-cat-show-judged]').check();
+        await expect(page.locator('#states [data-cat-approval-state]')).toHaveText(`Approved · Formal · ${ENGINE_LABEL[engine]}`);
+        await expect(page.locator('#states [data-cat-verdict-source]')).toHaveText('In the register');
+        // The other engine's verdict is a separate test: here the block is not judged.
+        await expect(page.locator('#invalid')).toHaveAttribute('data-cat-state', 'new');
+        await expect(page.locator('#invalid [data-cat-approval-state]')).toHaveText(`Not yet judged · Formal · ${ENGINE_LABEL[engine]}`);
+        // A recorded verdict is not passed on again.
+        await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing');
+        await fresh.close();
+    },
+);
 
-test('a new verdict in this browser carries a verdict line in the prompt that record can read', async ({ page, browserName }) => {
-    const engine = engineOf(browserName);
-    await page.setViewportSize({ width: 1400, height: 900 });
-    await page.goto('/catalogue/button.html');
-    await waitForJudging(page);
-    const reject = page.locator('#sizes [data-cat-verdict="rejected"]');
-    await expect(reject).toBeEnabled();
-    await reject.click();
-    const hash = await storedHash(page, 'button--sizes', 'formal', engine);
-    await expect(page.locator('#sizes [data-cat-verdict-source]')).toHaveText('In this browser, not yet recorded');
-    const prompt = page.locator('.cat-feedback [data-cat-prompt]');
-    await expect(prompt).toContainText(`In ${ENGINE_LABEL[engine]}:`);
-    await expect(prompt).toContainText('Not approved (1): Buttons › Sizes');
-    await expect(prompt).toContainText(`Verdict lines (hash version ${HASH_VERSION}):\nbutton--sizes · formal · ${engine} · rejected · ${hash}`);
+test(
+    'a new verdict in this browser carries a verdict line in the prompt that record can read',
+    { tag: ['@component:catalogue'] },
+    async ({ page, browserName }) => {
+        const engine = engineOf(browserName);
+        await page.setViewportSize({ width: 1400, height: 900 });
+        await page.goto('/catalogue/button.html');
+        await waitForJudging(page);
+        const reject = page.locator('#sizes [data-cat-verdict="rejected"]');
+        await expect(reject).toBeEnabled();
+        await reject.click();
+        const hash = await storedHash(page, 'button--sizes', 'formal', engine);
+        await expect(page.locator('#sizes [data-cat-verdict-source]')).toHaveText('In this browser, not yet recorded');
+        const prompt = page.locator('.cat-feedback [data-cat-prompt]');
+        await expect(prompt).toContainText(`In ${ENGINE_LABEL[engine]}:`);
+        await expect(prompt).toContainText('Not approved (1): Buttons › Sizes');
+        await expect(prompt).toContainText(`Verdict lines (hash version ${HASH_VERSION}):\nbutton--sizes · formal · ${engine} · rejected · ${hash}`);
 
-    // The record tool reads exactly that text.
-    const { parseVerdictLines } = await import('../gates/verdicts.mjs');
-    const parsed = parseVerdictLines((await prompt.textContent()) ?? '');
-    expect(parsed.faults).toEqual([]);
-    expect(parsed.version).toBe(HASH_VERSION);
-    expect(parsed.lines).toEqual([expect.objectContaining({ key: 'button--sizes', theme: 'formal', engine, verdict: 'rejected', hash })]);
-});
+        // The record tool reads exactly that text.
+        const { parseVerdictLines } = await import('../gates/verdicts.mjs');
+        const parsed = parseVerdictLines((await prompt.textContent()) ?? '');
+        expect(parsed.faults).toEqual([]);
+        expect(parsed.version).toBe(HASH_VERSION);
+        expect(parsed.lines).toEqual([expect.objectContaining({ key: 'button--sizes', theme: 'formal', engine, verdict: 'rejected', hash })]);
+    },
+);
 
-test('a verdict stored before engines counts for this browser’s engine, and is not passed on twice', async ({ page, browserName }) => {
-    const engine = engineOf(browserName);
-    const old = 'f'.repeat(64);
-    await page.goto('/catalogue/switch.html');
-    await page.evaluate((hash) => {
-        localStorage.clear();
-        localStorage.setItem('kp-catalogue-judgements:v2', JSON.stringify({ 'switch--states': { cyberpunk: { verdict: 'approved', hash } } }));
-        localStorage.setItem('kp-catalogue-copied:v2', JSON.stringify([`verdict|switch--states|cyberpunk|approved|${hash}`]));
-    }, old);
-    await page.goto('/catalogue/switch.html');
-    await waitForJudging(page);
-    const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-    expect(stored['switch--states'].cyberpunk[engine]).toEqual({ verdict: 'approved', hash: old });
-    await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
-});
+test(
+    'a verdict stored before engines counts for this browser’s engine, and is not passed on twice',
+    { tag: ['@component:catalogue'] },
+    async ({ page, browserName }) => {
+        const engine = engineOf(browserName);
+        const old = 'f'.repeat(64);
+        await page.goto('/catalogue/switch.html');
+        await page.evaluate((hash) => {
+            localStorage.clear();
+            localStorage.setItem('kp-catalogue-judgements:v2', JSON.stringify({ 'switch--states': { cyberpunk: { verdict: 'approved', hash } } }));
+            localStorage.setItem('kp-catalogue-copied:v2', JSON.stringify([`verdict|switch--states|cyberpunk|approved|${hash}`]));
+        }, old);
+        await page.goto('/catalogue/switch.html');
+        await waitForJudging(page);
+        const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
+        expect(stored['switch--states'].cyberpunk[engine]).toEqual({ verdict: 'approved', hash: old });
+        await expect(page.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
+    },
+);
 
 /* ------------------------------------- the register as the review page reads it */
 
@@ -379,60 +404,65 @@ for (const theme of ['nostromo', 'formal']) {
         [1400, 900],
         [1920, 1000],
     ]) {
-        test(`every register block in ${theme} shows as judged on the review page at ${width}, after a fresh load and after a theme switch`, async ({
-            browser,
-            browserName,
-        }) => {
-            const verdicts = registerVerdicts(theme, engineOf(browserName));
-            test.skip(Object.keys(verdicts).length === 0, `the register holds no ${theme} verdicts in ${browserName}`);
-            // The register as committed: a context of its own, without the empty one beforeEach serves.
-            const context = await browser.newContext({ viewport: { width, height } });
-            const page = await context.newPage();
+        test(
+            `every register block in ${theme} shows as judged on the review page at ${width}, after a fresh load and after a theme switch`,
+            { tag: ['@component:catalogue', `@theme:${theme}`] },
+            async ({ browser, browserName }) => {
+                const verdicts = registerVerdicts(theme, engineOf(browserName));
+                test.skip(Object.keys(verdicts).length === 0, `the register holds no ${theme} verdicts in ${browserName}`);
+                // The register as committed: a context of its own, without the empty one beforeEach serves.
+                const context = await browser.newContext({ viewport: { width, height } });
+                const page = await context.newPage();
 
-            await page.goto('/catalogue/switch.html');
-            await page.evaluate((name) => localStorage.setItem('theme', name), theme);
-            await page.goto('/catalogue/index.html');
-            expect.soft(await reviewMismatches(page, theme, verdicts), 'fresh load').toEqual([]);
+                await page.goto('/catalogue/switch.html');
+                await page.evaluate((name) => localStorage.setItem('theme', name), theme);
+                await page.goto('/catalogue/index.html');
+                expect.soft(await reviewMismatches(page, theme, verdicts), 'fresh load').toEqual([]);
 
-            const other = theme === 'formal' ? 'nostromo' : 'formal';
-            await page.evaluate((name) => localStorage.setItem('theme', name), other);
-            await page.goto('/catalogue/index.html');
-            await reviewMismatches(page, other, {});
-            await setTheme(page, theme);
-            expect.soft(await reviewMismatches(page, theme, verdicts), `after switching from ${other}`).toEqual([]);
+                const other = theme === 'formal' ? 'nostromo' : 'formal';
+                await page.evaluate((name) => localStorage.setItem('theme', name), other);
+                await page.goto('/catalogue/index.html');
+                await reviewMismatches(page, other, {});
+                await setTheme(page, theme);
+                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching from ${other}`).toEqual([]);
 
-            // And back again, with the blocks hidden in the meantime: a component
-            // that measures itself (a tab row's overflow) must not be read with
-            // what it measured while hidden.
-            await setTheme(page, other);
-            await reviewMismatches(page, other, {});
-            await setTheme(page, theme);
-            expect.soft(await reviewMismatches(page, theme, verdicts), `after switching to ${other} and back`).toEqual([]);
-            await context.close();
-        });
+                // And back again, with the blocks hidden in the meantime: a component
+                // that measures itself (a tab row's overflow) must not be read with
+                // what it measured while hidden.
+                await setTheme(page, other);
+                await reviewMismatches(page, other, {});
+                await setTheme(page, theme);
+                expect.soft(await reviewMismatches(page, theme, verdicts), `after switching to ${other} and back`).toEqual([]);
+                await context.close();
+            },
+        );
     }
 }
 
-test('a block hashes the same in a short window and a tall one, a narrow one and a wide one', async ({ browser }) => {
-    // The palette's `margin: 10vh` and the footer's `clamp(…4vw…)` padding
-    // moved these hashes with the window before version 2 (measured 2026-09-13).
-    const read = async (width, height) => {
-        const context = await browser.newContext({ viewport: { width, height } });
-        await useEmptyRegister(context);
-        const page = await context.newPage();
-        await page.goto('/catalogue/page.html');
-        await waitForJudging(page);
-        const hashes = await page.evaluate(async () => {
-            const { readBlocks } = await import('/catalogue/block-hash.js');
-            const raw = new DOMParser().parseFromString(await (await fetch(location.href)).text(), 'text/html');
-            const ids = ['palette', 'palette-empty', 'footer'];
-            const read = await readBlocks(ids.map((id) => ({ root: document.getElementById(id), source: raw.getElementById(id).outerHTML })));
-            return Object.fromEntries(ids.map((id, i) => [id, read[i].hash]));
-        });
-        await context.close();
-        return hashes;
-    };
-    const tall = await read(1920, 1000);
-    expect(await read(1920, 700)).toEqual(tall);
-    expect(await read(1100, 900)).toEqual(tall);
-});
+test(
+    'a block hashes the same in a short window and a tall one, a narrow one and a wide one',
+    { tag: ['@component:catalogue'] },
+    async ({ browser }) => {
+        // The palette's `margin: 10vh` and the footer's `clamp(…4vw…)` padding
+        // moved these hashes with the window before version 2 (measured 2026-09-13).
+        const read = async (width, height) => {
+            const context = await browser.newContext({ viewport: { width, height } });
+            await useEmptyRegister(context);
+            const page = await context.newPage();
+            await page.goto('/catalogue/page.html');
+            await waitForJudging(page);
+            const hashes = await page.evaluate(async () => {
+                const { readBlocks } = await import('/catalogue/block-hash.js');
+                const raw = new DOMParser().parseFromString(await (await fetch(location.href)).text(), 'text/html');
+                const ids = ['palette', 'palette-empty', 'footer'];
+                const read = await readBlocks(ids.map((id) => ({ root: document.getElementById(id), source: raw.getElementById(id).outerHTML })));
+                return Object.fromEntries(ids.map((id, i) => [id, read[i].hash]));
+            });
+            await context.close();
+            return hashes;
+        };
+        const tall = await read(1920, 1000);
+        expect(await read(1920, 700)).toEqual(tall);
+        expect(await read(1100, 900)).toEqual(tall);
+    },
+);

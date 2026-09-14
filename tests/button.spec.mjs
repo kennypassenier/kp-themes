@@ -44,7 +44,7 @@ const metrics = (page, testId) =>
         };
     }, testId);
 
-test.describe('the button', () => {
+test.describe('the button', { tag: ['@component:button'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);
@@ -63,7 +63,7 @@ test.describe('the button', () => {
         ['framework-free', 'plain-md'],
         ['React', 'react-md'],
     ]) {
-        test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, async ({ page }) => {
+        test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, { tag: ['@sweep'] }, async ({ page }) => {
             await tabTo(page, id);
             /** @type {string[]} */
             const broken = [];
@@ -98,7 +98,7 @@ test.describe('the button', () => {
         ['framework-free', 'plain'],
         ['React', 'react'],
     ]) {
-        test(`no size renders under the 24px pointer target in any theme, ${channel} [TH111]`, async ({ page }) => {
+        test(`no size renders under the 24px pointer target in any theme, ${channel} [TH111]`, { tag: ['@sweep'] }, async ({ page }) => {
             /** @type {string[]} */
             const tooSmall = [];
             for (const theme of THEMES) {

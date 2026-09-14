@@ -27,7 +27,7 @@ async function open(page) {
 for (const channel of CHANNELS) {
     const host = (name) => `[data-test="${channel}-${name}"]`;
 
-    test(`${channel}: the scroll region is a named region in the tab order [TH95]`, async ({ page }) => {
+    test(`${channel}: the scroll region is a named region in the tab order [TH95]`, { tag: ['@component:table'] }, async ({ page }) => {
         await open(page);
         const wrap = page.locator(`${host('region')} .kp-table-wrap`);
         // Drill: with `wrap.setAttribute('tabindex', '0')` removed from
@@ -55,7 +55,7 @@ for (const channel of CHANNELS) {
         expect(reached).toBe(true);
     });
 
-    test(`${channel}: the scroll region scrolls with the arrow keys [TH95]`, async ({ page }) => {
+    test(`${channel}: the scroll region scrolls with the arrow keys [TH95]`, { tag: ['@component:table'] }, async ({ page }) => {
         await open(page);
         const selector = `${host('region')} .kp-table-wrap`;
         const overflows = await page.evaluate((s) => {
@@ -75,38 +75,42 @@ for (const channel of CHANNELS) {
         await expect.poll(async () => page.evaluate((s) => document.querySelector(s).scrollLeft, selector)).toBeGreaterThan(0);
     });
 
-    test(`${channel}: a .kp-cell-truncate cell shows an ellipsis and keeps the full value [TH96]`, async ({ page }) => {
-        await page.setViewportSize({ width: 320, height: 800 });
-        await open(page);
-        const measured = await page.evaluate(
-            (selector) => {
-                const cell = document.querySelector(selector);
-                const style = getComputedStyle(cell);
-                return {
-                    overflow: style.textOverflow,
-                    wrapping: style.whiteSpace,
-                    clipped: cell.scrollWidth > cell.clientWidth,
-                    text: cell.textContent.trim(),
-                    title: cell.getAttribute('title'),
-                    lines: Math.round(cell.getBoundingClientRect().height),
-                };
-            },
-            `${host('truncate')} td.kp-cell-truncate`,
-        );
-        // Drill: with `text-overflow: ellipsis` removed from
-        // .kp-cell-truncate this reads "clip" and the case fails. Drilled
-        // a second time on `max-inline-size`: without it the nowrap cell
-        // makes its column as wide as the whole sentence, nothing is ever
-        // clipped, and `clipped` reads false.
-        expect(measured.overflow).toBe('ellipsis');
-        expect(measured.wrapping).toBe('nowrap');
-        expect(measured.clipped).toBe(true);
-        // Reachable: the whole value is still in the cell — a reader with a
-        // screen reader hears it, find-in-page finds it, a copy takes it —
-        // and the pointer gets it from the title both channels carry.
-        expect(measured.text).toBe(NOTE);
-        expect(measured.title).toBe(NOTE);
-    });
+    test(
+        `${channel}: a .kp-cell-truncate cell shows an ellipsis and keeps the full value [TH96]`,
+        { tag: ['@component:table'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 320, height: 800 });
+            await open(page);
+            const measured = await page.evaluate(
+                (selector) => {
+                    const cell = document.querySelector(selector);
+                    const style = getComputedStyle(cell);
+                    return {
+                        overflow: style.textOverflow,
+                        wrapping: style.whiteSpace,
+                        clipped: cell.scrollWidth > cell.clientWidth,
+                        text: cell.textContent.trim(),
+                        title: cell.getAttribute('title'),
+                        lines: Math.round(cell.getBoundingClientRect().height),
+                    };
+                },
+                `${host('truncate')} td.kp-cell-truncate`,
+            );
+            // Drill: with `text-overflow: ellipsis` removed from
+            // .kp-cell-truncate this reads "clip" and the case fails. Drilled
+            // a second time on `max-inline-size`: without it the nowrap cell
+            // makes its column as wide as the whole sentence, nothing is ever
+            // clipped, and `clipped` reads false.
+            expect(measured.overflow).toBe('ellipsis');
+            expect(measured.wrapping).toBe('nowrap');
+            expect(measured.clipped).toBe(true);
+            // Reachable: the whole value is still in the cell — a reader with a
+            // screen reader hears it, find-in-page finds it, a copy takes it —
+            // and the pointer gets it from the title both channels carry.
+            expect(measured.text).toBe(NOTE);
+            expect(measured.title).toBe(NOTE);
+        },
+    );
 }
 
 // AR24's own measurement, kept as a test rather than as a note: the
@@ -115,7 +119,7 @@ for (const channel of CHANNELS) {
 // true. Measured at the build of R3, both browsers: 500 -> 500 in normal
 // flow and inside .kp-datatable; a wrap in a shrink-to-fit box (a flex
 // row, an inline-block) does change, which is why the user guide says so.
-test('container-type does not change how .kp-table-wrap sizes in normal flow [TH96, AR24]', async ({ page }) => {
+test('container-type does not change how .kp-table-wrap sizes in normal flow [TH96, AR24]', { tag: ['@component:table'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await open(page);
     const measured = await page.evaluate(() => {
@@ -147,7 +151,7 @@ test('container-type does not change how .kp-table-wrap sizes in normal flow [TH
 // Drill: remove `min-inline-size` from .kp-table-wrap in
 // css/components.css and the knob does nothing, so the second width
 // reads 0 like the first.
-test('a consumer can set a floor under the collapsed wrapper [R3-CQ]', async ({ page }) => {
+test('a consumer can set a floor under the collapsed wrapper [R3-CQ]', { tag: ['@component:table'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/components.html');
     const widths = await page.evaluate(() => {
         const host = document.createElement('div');

@@ -36,7 +36,7 @@ const FIXTURE = '/tests/fixtures/attach-api.html';
 /** @param {import('@playwright/test').Page} page */
 const heard = (page) => page.evaluate(() => window.kpHeard);
 
-test.describe('what attach returns, and what it announces', () => {
+test.describe('what attach returns, and what it announces', { tag: ['@component:navigation'] }, () => {
     test('the nav toggle says out loud that it opened, and that it closed [feat-nav-1]', async ({ page }) => {
         await page.goto(FIXTURE);
         const toggle = page.locator('[data-test="nav-toggle"]');
@@ -90,7 +90,7 @@ test.describe('what attach returns, and what it announces', () => {
 // Drilled 2026-09-12 in firefox: `attachSkipLinks`' cleanup loop emptied
 // -> red on the skip link; `attachConfirmations`' cleanup emptied -> red
 // on the confirmation. Each restored green.
-test('the skip link lets go when it is detached [gap-8, KT6]', async ({ page }) => {
+test('the skip link lets go when it is detached [gap-8, KT6]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/attach-api.html');
     const link = page.locator('[data-test="skip"]');
     const target = page.locator('[data-test="target"]');
@@ -116,7 +116,7 @@ test('the skip link lets go when it is detached [gap-8, KT6]', async ({ page }) 
     await expect.poll(() => new URL(page.url()).hash, 'the navigation is the browser’s again').toBe('#target');
 });
 
-test('the confirmation lets go when it is detached [gap-8, KT6]', async ({ page }) => {
+test('the confirmation lets go when it is detached [gap-8, KT6]', { tag: ['@component:overlays', '@component:button'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/attach-api.html');
     const wipe = page.locator('[data-test="wipe"]');
 

@@ -88,8 +88,8 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the terminal register, ${channel}`, () => {
-        test('the page boots once per session through the POST, and Skip ends it at once [TM2]', async ({ page }) => {
+    test.describe(`the terminal register, ${channel}`, { tag: ['@theme:terminal', '@component:page-effects', '@component:examples'] }, () => {
+        test('the page boots once per session through the POST, and Skip ends it at once [TM2]', { tag: ['@sweep'] }, async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');
             await expect(boot).toBeVisible();

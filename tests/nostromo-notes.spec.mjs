@@ -86,38 +86,46 @@ const installPaint = (page) =>
         /** @type {any} */ (window).kpPaint = paint;
     });
 
-test('the progress label reads at 4.5:1 on what is behind it, in every theme [scope-60]', async ({ page }) => {
-    // Before: 20 registers painted .kp-progress__value as a plate in --primary
-    // under the muted label — formal 1.53, dark 2.12, nostromo 2.20.
-    await open(page, '/catalogue/feedback.html');
-    await installPaint(page);
-    const faint = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const p = await page.locator('#progress .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
-        const ratio = contrast(p.ink, p.ground);
-        // shade-light's muted ink is 3.99:1 on its ground by choice, recorded as
-        // advice that never refuses (Kenny, 2026-09-09; gates/compliance.mjs).
-        // The label may not fall below that recorded reading.
-        const floor = theme === 'shade-light' ? 3.99 : 4.5;
-        if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
-    }
-    expect(faint).toEqual([]);
-});
-
-test('every word on a severity toast reads at 4.5:1, its buttons included, in every theme [scope-60]', async ({ page }) => {
-    await open(page, '/catalogue/feedback.html');
-    await installPaint(page);
-    const faint = [];
-    for (const theme of THEME_NAMES) {
-        await wear(page, theme);
-        const reads = await page
-            .locator('#toasts [class*="kp-toast--"], #toasts [class*="kp-toast--"] button')
-            .evaluateAll((els) => els.map((el) => ({ what: el.className, .../** @type {any} */ (window).kpPaint(el) })));
-        for (const r of reads) {
-            const ratio = contrast(r.ink, r.ground);
-            if (ratio < 4.5) faint.push(`${theme} ${r.what}: ${ratio.toFixed(2)}`);
+test(
+    'the progress label reads at 4.5:1 on what is behind it, in every theme [scope-60]',
+    { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        // Before: 20 registers painted .kp-progress__value as a plate in --primary
+        // under the muted label — formal 1.53, dark 2.12, nostromo 2.20.
+        await open(page, '/catalogue/feedback.html');
+        await installPaint(page);
+        const faint = [];
+        for (const theme of THEME_NAMES) {
+            await wear(page, theme);
+            const p = await page.locator('#progress .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
+            const ratio = contrast(p.ink, p.ground);
+            // shade-light's muted ink is 3.99:1 on its ground by choice, recorded as
+            // advice that never refuses (Kenny, 2026-09-09; gates/compliance.mjs).
+            // The label may not fall below that recorded reading.
+            const floor = theme === 'shade-light' ? 3.99 : 4.5;
+            if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
         }
-    }
-    expect(faint).toEqual([]);
-});
+        expect(faint).toEqual([]);
+    },
+);
+
+test(
+    'every word on a severity toast reads at 4.5:1, its buttons included, in every theme [scope-60]',
+    { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        await open(page, '/catalogue/feedback.html');
+        await installPaint(page);
+        const faint = [];
+        for (const theme of THEME_NAMES) {
+            await wear(page, theme);
+            const reads = await page
+                .locator('#toasts [class*="kp-toast--"], #toasts [class*="kp-toast--"] button')
+                .evaluateAll((els) => els.map((el) => ({ what: el.className, .../** @type {any} */ (window).kpPaint(el) })));
+            for (const r of reads) {
+                const ratio = contrast(r.ink, r.ground);
+                if (ratio < 4.5) faint.push(`${theme} ${r.what}: ${ratio.toFixed(2)}`);
+            }
+        }
+        expect(faint).toEqual([]);
+    },
+);

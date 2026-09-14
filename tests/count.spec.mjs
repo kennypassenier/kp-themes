@@ -33,7 +33,7 @@ const texts = (page) =>
 
 // The frozen bar. Drill: the `reduced()` branch removed from countUp() in
 // js/effects.js -> red, the numbers caught mid-count. Restored: green.
-test('at the reduced-motion setting the number is simply there [feat-count-1]', async ({ page }) => {
+test('at the reduced-motion setting the number is simply there [feat-count-1]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(PAGE);
     await page.waitForSelector('[data-attached]');
@@ -58,7 +58,7 @@ test('at the reduced-motion setting the number is simply there [feat-count-1]', 
 
 // Drill: `render(target)` in rest() replaced with `render(from)` -> red on
 // every number. Restored: green.
-test('every number ends on exactly what the page authored [feat-count-1]', async ({ page }) => {
+test('every number ends on exactly what the page authored [feat-count-1]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     await settled(page);
     expect(await texts(page)).toEqual({
@@ -75,7 +75,7 @@ test('every number ends on exactly what the page authored [feat-count-1]', async
 // Drill: the `Intl.NumberFormat` lookup replaced with a fixed `.`/`,`
 // pair -> red on the Dutch numbers, which then count through English
 // separators. Restored: green.
-test('the page says which separator is which, not the module [feat-count-1]', async ({ page }) => {
+test('the page says which separator is which, not the module [feat-count-1]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     await page.waitForSelector('[data-attached]');
 
@@ -96,7 +96,7 @@ test('the page says which separator is which, not the module [feat-count-1]', as
 
 // Drill: the `asked === ''` guard replaced with `|| 900` -> red on
 // `instant`, which then counts for 900ms. Restored: green.
-test('a theme that asks for no counting gets none [feat-count-1, KT6]', async ({ page }) => {
+test('a theme that asks for no counting gets none [feat-count-1, KT6]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     await page.waitForSelector('[data-attached]');
     // `--kp-count: 0` is a choice, not an absent value. Read at once.
@@ -106,7 +106,7 @@ test('a theme that asks for no counting gets none [feat-count-1, KT6]', async ({
 
 // Drill: the `cleanups.push` in countUp() removed -> red, the number left
 // wherever the count had reached. Restored: green.
-test('detaching leaves the real number, not the one it had reached [feat-count-1, KT6]', async ({ page }) => {
+test('detaching leaves the real number, not the one it had reached [feat-count-1, KT6]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     await page.waitForSelector('[data-attached]');
     // Mid-count, deliberately: the point is that letting go does not
@@ -119,7 +119,7 @@ test('detaching leaves the real number, not the one it had reached [feat-count-1
 
 // Drill: the `started.has(el)` guard removed from the count branch of
 // scan() -> red, the number restarting from nought. Restored: green.
-test('attaching a second time does not send the number back to nought [feat-count-1]', async ({ page }) => {
+test('attaching a second time does not send the number back to nought [feat-count-1]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     await settled(page);
     await page.evaluate(async () => {
@@ -131,7 +131,7 @@ test('attaching a second time does not send the number back to nought [feat-coun
 });
 
 // Drill: the `el.dispatchEvent` in rest() removed -> red. Restored: green.
-test('a consumer is told when a number has landed [feat-count-1, KT6]', async ({ page }) => {
+test('a consumer is told when a number has landed [feat-count-1, KT6]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto(PAGE);
     const landed = await page.evaluate(
         () =>

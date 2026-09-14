@@ -191,7 +191,7 @@ no theme declares. That is why the drill is not optional.
 Playwright, Chromium and Firefox, against a small static server
 (`tests/global-setup.mjs`). 2,594 tests over 76 spec files — counted by `npx playwright test --list`
 on 2026-09-12, not by hand — run when
-Kenny runs them — `npm run test:affected` for what a change touches,
+Kenny runs them — `npm run test:tags` for what a change touches, selected by tag (`tests/tags.json`),
 `npm run test:browser` for all of it.
 They cover what Node cannot see: whether the browser received a
 `color-scheme`, whether a page reflows at 320 px, whether forced text

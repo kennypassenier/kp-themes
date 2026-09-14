@@ -51,7 +51,7 @@ async function open(page, url, { reduced = false, theme = 'cyberpunk' } = {}) {
 }
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the effects module, ${channel}`, () => {
+    test.describe(`the effects module, ${channel}`, { tag: ['@component:page-effects', '@component:examples'] }, () => {
         test('the headline deciphers to exactly its source text, once per session [TH119, AR44]', async ({ page }) => {
             // Every reveal event from the first script on, so the first load
             // can be shown to have gone through the motion.
@@ -186,7 +186,7 @@ for (const [channel, url] of CHANNELS) {
     });
 }
 
-test.describe('the effects module, the page', () => {
+test.describe('the effects module, the page', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('the root is armed before first paint, so the start state never flashes from rest [AR34]', async ({ page }) => {
         // Recorded at the first moment scripts can run, before any module.
         await page.addInitScript(() => {

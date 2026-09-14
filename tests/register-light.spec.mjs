@@ -96,7 +96,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the light register, ${channel}`, () => {
+    test.describe(`the light register, ${channel}`, { tag: ['@theme:light', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion every reveal is at rest, and the page carries no boot at all', async ({ page }) => {
             await open(page, url, { reduced: true });
             expect(await page.locator('.kp-boot').count(), 'this theme is quiet on arrival').toBe(0);

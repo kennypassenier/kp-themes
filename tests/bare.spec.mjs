@@ -35,86 +35,90 @@ const ratio = (a, b) => {
 };
 
 for (const theme of ['cyberpunk', 'formal']) {
-    test(`bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`, async ({ page }) => {
-        const blocked = [];
-        // Phase 7: this called page.route() with one argument. The
-        // signature is route(urlPattern, handler), so the handler was
-        // taken as the PATTERN and the handler slot was empty — every run
-        // died on "route.request is not a function" before the page ever
-        // loaded. The test had been red on the branch, unseen, which is
-        // why nobody noticed that the thing it exists to prove — that the
-        // page reads with the register, the fonts and the module all
-        // refused — had not actually been proven since the call broke.
-        const REFUSED = /-register\.css$|\/fonts\/|\/js\/auto\.js$|\/js\/effects\.js$/;
-        await page.route(REFUSED, (route) => {
-            blocked.push(route.request().url());
-            return route.abort();
-        });
-        await page.addInitScript((name) => localStorage.setItem('theme', name), theme);
-        await page.setViewportSize({ width: 1280, height: 900 });
-        await page.goto('/examples/concept.html');
-        await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
-        expect(blocked.length, 'the blocks took: registers, fonts and the module were requested and refused').toBeGreaterThanOrEqual(3);
-        // Readable: the headline is its text, the marks show their words.
-        const h1 = page.locator('[data-kp-reveal="headline"]').first();
-        await expect(h1).toBeVisible();
-        expect(await h1.locator('[data-glyph]').count()).toBe(0);
-        for (const mark of await page.locator('mark').all()) {
-            await expect(mark).toBeVisible();
-            expect((await mark.textContent())?.trim().length).toBeGreaterThan(0);
-        }
-        // Functional: the form's reset works without the module, the
-        // dropdown opens on focus, the buttons are enabled.
-        const handle = page.locator('#concept-handle');
-        await handle.fill('v.night');
-        await page.locator('button[type="reset"]').click();
-        await expect(handle).toHaveValue('');
-        await page.locator('.kp-nav__link[aria-haspopup]').first().focus();
-        await expect(page.locator('.kp-nav__menu a').first()).toBeVisible();
-        expect(await page.locator('button:disabled').count()).toBe(0);
-        // Holding: nothing scrolls sideways.
-        expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
-        // Contrast on both surfaces, measured on the rendered page.
-        const bad = await page.evaluate(() => {
-            // The nearest OPAQUE background: a translucent highlight (a ghost
-            // button under the pointer paints its ink at 7%, which chromium
-            // reports as oklab(… / 0.078)) is a veil over the real ground,
-            // not the ground.
-            const alphaOf = (bg) => {
-                const m = bg.match(/\/\s*([\d.]+)\s*\)$/) ?? bg.match(/^rgba\([^)]*,\s*([\d.]+)\)$/);
-                return m ? Number(m[1]) : bg === 'transparent' ? 0 : 1;
-            };
-            const ground = (el) => {
-                let node = el;
-                while (node) {
-                    const bg = getComputedStyle(node).backgroundColor;
-                    if (bg && alphaOf(bg) >= 0.9) return bg;
-                    node = node.parentElement;
-                }
-                return getComputedStyle(document.documentElement).backgroundColor;
-            };
-            const out = [];
-            for (const el of document.querySelectorAll(
-                '[data-kp-surface] h1, [data-kp-surface] h2, [data-kp-surface] p, [data-kp-surface] label, [data-kp-surface] mark, [data-kp-surface] button',
-            )) {
-                if (!el.textContent?.trim()) continue;
-                const s = getComputedStyle(el);
-                const size = parseFloat(s.fontSize);
-                const large = size >= 24 || (size >= 18.66 && Number(s.fontWeight) >= 700);
-                out.push({
-                    tag: el.tagName.toLowerCase(),
-                    text: el.textContent.trim().slice(0, 24),
-                    fg: s.color,
-                    bg: ground(el),
-                    floor: large ? 3 : 4.5,
-                });
+    test(
+        `bare chassis-rs under ${theme}: no register, no effects, no webfonts — the page reads and works [T9, S45]`,
+        { tag: ['@component:examples', `@theme:${theme}`] },
+        async ({ page }) => {
+            const blocked = [];
+            // Phase 7: this called page.route() with one argument. The
+            // signature is route(urlPattern, handler), so the handler was
+            // taken as the PATTERN and the handler slot was empty — every run
+            // died on "route.request is not a function" before the page ever
+            // loaded. The test had been red on the branch, unseen, which is
+            // why nobody noticed that the thing it exists to prove — that the
+            // page reads with the register, the fonts and the module all
+            // refused — had not actually been proven since the call broke.
+            const REFUSED = /-register\.css$|\/fonts\/|\/js\/auto\.js$|\/js\/effects\.js$/;
+            await page.route(REFUSED, (route) => {
+                blocked.push(route.request().url());
+                return route.abort();
+            });
+            await page.addInitScript((name) => localStorage.setItem('theme', name), theme);
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto('/examples/concept.html');
+            await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
+            expect(blocked.length, 'the blocks took: registers, fonts and the module were requested and refused').toBeGreaterThanOrEqual(3);
+            // Readable: the headline is its text, the marks show their words.
+            const h1 = page.locator('[data-kp-reveal="headline"]').first();
+            await expect(h1).toBeVisible();
+            expect(await h1.locator('[data-glyph]').count()).toBe(0);
+            for (const mark of await page.locator('mark').all()) {
+                await expect(mark).toBeVisible();
+                expect((await mark.textContent())?.trim().length).toBeGreaterThan(0);
             }
-            return out;
-        });
-        const failures = bad
-            .filter((f) => ratio(f.fg, f.bg) < f.floor)
-            .map((f) => `${f.tag} "${f.text}": ${f.fg} on ${f.bg} = ${ratio(f.fg, f.bg).toFixed(2)}`);
-        expect(bad.length).toBeGreaterThan(8);
-        expect(failures).toEqual([]);
-    });
+            // Functional: the form's reset works without the module, the
+            // dropdown opens on focus, the buttons are enabled.
+            const handle = page.locator('#concept-handle');
+            await handle.fill('v.night');
+            await page.locator('button[type="reset"]').click();
+            await expect(handle).toHaveValue('');
+            await page.locator('.kp-nav__link[aria-haspopup]').first().focus();
+            await expect(page.locator('.kp-nav__menu a').first()).toBeVisible();
+            expect(await page.locator('button:disabled').count()).toBe(0);
+            // Holding: nothing scrolls sideways.
+            expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+            // Contrast on both surfaces, measured on the rendered page.
+            const bad = await page.evaluate(() => {
+                // The nearest OPAQUE background: a translucent highlight (a ghost
+                // button under the pointer paints its ink at 7%, which chromium
+                // reports as oklab(… / 0.078)) is a veil over the real ground,
+                // not the ground.
+                const alphaOf = (bg) => {
+                    const m = bg.match(/\/\s*([\d.]+)\s*\)$/) ?? bg.match(/^rgba\([^)]*,\s*([\d.]+)\)$/);
+                    return m ? Number(m[1]) : bg === 'transparent' ? 0 : 1;
+                };
+                const ground = (el) => {
+                    let node = el;
+                    while (node) {
+                        const bg = getComputedStyle(node).backgroundColor;
+                        if (bg && alphaOf(bg) >= 0.9) return bg;
+                        node = node.parentElement;
+                    }
+                    return getComputedStyle(document.documentElement).backgroundColor;
+                };
+                const out = [];
+                for (const el of document.querySelectorAll(
+                    '[data-kp-surface] h1, [data-kp-surface] h2, [data-kp-surface] p, [data-kp-surface] label, [data-kp-surface] mark, [data-kp-surface] button',
+                )) {
+                    if (!el.textContent?.trim()) continue;
+                    const s = getComputedStyle(el);
+                    const size = parseFloat(s.fontSize);
+                    const large = size >= 24 || (size >= 18.66 && Number(s.fontWeight) >= 700);
+                    out.push({
+                        tag: el.tagName.toLowerCase(),
+                        text: el.textContent.trim().slice(0, 24),
+                        fg: s.color,
+                        bg: ground(el),
+                        floor: large ? 3 : 4.5,
+                    });
+                }
+                return out;
+            });
+            const failures = bad
+                .filter((f) => ratio(f.fg, f.bg) < f.floor)
+                .map((f) => `${f.tag} "${f.text}": ${f.fg} on ${f.bg} = ${ratio(f.fg, f.bg).toFixed(2)}`);
+            expect(bad.length).toBeGreaterThan(8);
+            expect(failures).toEqual([]);
+        },
+    );
 }

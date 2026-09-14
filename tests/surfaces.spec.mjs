@@ -124,7 +124,7 @@ const GROUND = `(el) => {
     return [getComputedStyle(document.documentElement).backgroundColor];
 }`;
 
-test.describe('two surfaces in one theme [TH116]', () => {
+test.describe('two surfaces in one theme [TH116]', { tag: ['@sweep', '@component:examples'] }, () => {
     // A pair an approved demo puts under the floor is REPORTED, not lifted
     // [S49, S42]: the register carries the demo's own value, the shortfall
     // is measured here with the demo it came from, and Kenny decides at
@@ -179,7 +179,7 @@ test.describe('two surfaces in one theme [TH116]', () => {
     };
 
     for (const theme of THEMES) {
-        test(`every text on both surfaces clears its contrast floor under ${theme.name}`, async ({ page }) => {
+        test(`every text on both surfaces clears its contrast floor under ${theme.name}`, { tag: [`@theme:${theme.name}`] }, async ({ page }) => {
             await open(page, theme.name);
             await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
             const failures = await page.evaluate((groundSource) => {

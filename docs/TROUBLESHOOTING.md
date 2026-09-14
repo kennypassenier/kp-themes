@@ -171,7 +171,7 @@ npm run generate:all      # every generator, in order, then prettier — the one
                           # the gates then fail one at a time (2026-09-08)
 npm run generate          # only the token stylesheets, when that is all you touched
 npm run gates             # everything that blocks a commit, in seconds
-npm run test:affected     # only the specs your change touches, Firefox
+npm run test:tags         # the tests tagged with what your change touches, Firefox
 npm run test:browser      # Chromium and Firefox, all of it — when you ask for it
 npm run advice            # contrast, invariants, motion, texture: a reading
 npm run verify            # gates, then the whole suite, then the advice

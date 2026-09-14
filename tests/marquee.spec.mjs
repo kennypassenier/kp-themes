@@ -44,7 +44,7 @@ const BAND = `
     </div>
 `;
 
-test.describe('the marquee [M1]', () => {
+test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
     test('the module builds the track, doubles the row and hides the copy', async ({ page }) => {
         await open(page, BAND);
         await page.evaluate(async () => {
@@ -137,7 +137,7 @@ test.describe('the marquee [M1]', () => {
     });
 });
 
-test.describe('the band on a page [M1, G14]', () => {
+test.describe('the band on a page [M1, G14]', { tag: ['@component:media', '@component:examples'] }, () => {
     // Until 2026-09-08 `components/marquee.jsx` was imported by no fixture
     // and `data-kp-marquee` appeared on no page under examples/ or
     // showcase/: five props that had never been executed, and a band no

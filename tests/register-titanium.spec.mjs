@@ -51,7 +51,7 @@ async function open(page, url, { reduced = false } = {}) {
 }
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the titanium register, ${channel}`, () => {
+    test.describe(`the titanium register, ${channel}`, { tag: ['@theme:titanium', '@component:page-effects', '@component:examples'] }, () => {
         test('the film catches rather than sweeps, and turns with the pointer [scope-17, scope-16]', async ({ page }) => {
             // Drilled: the hover's `opacity: 0.26` removed -> red on the
             // film appearing; `mix-blend-mode: screen` removed -> red on it

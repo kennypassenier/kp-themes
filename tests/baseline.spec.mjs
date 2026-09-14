@@ -13,7 +13,7 @@
 
 import { test, expect } from '@playwright/test';
 
-test('the four platform features this package leans on are present', async ({ page }) => {
+test('the four platform features this package leans on are present', { tag: ['@sweep', '@component:overlays'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/picker.html');
     const support = await page.evaluate(() => ({
         dialog: typeof HTMLDialogElement !== 'undefined',
@@ -25,7 +25,7 @@ test('the four platform features this package leans on are present', async ({ pa
     expect(support).toEqual({ dialog: true, popover: true, anchorName: true, positionArea: true, relativeColour: true });
 });
 
-test('an anchored menu lands under its trigger, not at the top of the page', async ({ page }) => {
+test('an anchored menu lands under its trigger, not at the top of the page', { tag: ['@sweep', '@component:overlays'] }, async ({ page }) => {
     // Feature detection says the property parses. This says the layout
     // actually happened: without anchor positioning the popover falls back
     // to the top-left of its containing block, which parses just as well.

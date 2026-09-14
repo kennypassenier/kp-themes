@@ -97,98 +97,102 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the high-contrast register, ${channel}`, () => {
-        test('the headline wipes in from the left, once, on load, with no character scrambling', async ({ page }) => {
-            // Armed before the page exists: the wipe runs once and stops,
-            // so a read one moment later is a race and a poll for a value
-            // that has already left never finds it [fix-1].
-            await recordAnimations(page);
-            await open(page, url);
-            const h1 = page.locator('[data-kp-reveal="headline"]').first();
-            const text = await h1.textContent();
-            // The demo's own idiom: no data-glyph spans, no is-deciphered
-            // gate on the visible text — the words are on the page from
-            // the first paint, only the clip-path narrows in.
-            expect(text?.trim().length, 'the words are already the headline, never scrambled').toBeGreaterThan(0);
-            await animationsSeen(page, 'the wipe is this register’s own keyframe').toContain('kp-hc-headline-wipe');
-            await settled(page);
-            expect(await h1.evaluate((el) => getComputedStyle(el).clipPath), 'settled at the full ellipse').toMatch(/ellipse/);
-            expect(await h1.textContent()).toBe(text);
-        });
+    test.describe(
+        `the high-contrast register, ${channel}`,
+        { tag: ['@theme:high-contrast', '@component:page-effects', '@component:examples'] },
+        () => {
+            test('the headline wipes in from the left, once, on load, with no character scrambling', async ({ page }) => {
+                // Armed before the page exists: the wipe runs once and stops,
+                // so a read one moment later is a race and a poll for a value
+                // that has already left never finds it [fix-1].
+                await recordAnimations(page);
+                await open(page, url);
+                const h1 = page.locator('[data-kp-reveal="headline"]').first();
+                const text = await h1.textContent();
+                // The demo's own idiom: no data-glyph spans, no is-deciphered
+                // gate on the visible text — the words are on the page from
+                // the first paint, only the clip-path narrows in.
+                expect(text?.trim().length, 'the words are already the headline, never scrambled').toBeGreaterThan(0);
+                await animationsSeen(page, 'the wipe is this register’s own keyframe').toContain('kp-hc-headline-wipe');
+                await settled(page);
+                expect(await h1.evaluate((el) => getComputedStyle(el).clipPath), 'settled at the full ellipse').toMatch(/ellipse/);
+                expect(await h1.textContent()).toBe(text);
+            });
 
-        test('under reduced motion there is no animation at all, and every reveal is already at rest', async ({ page }) => {
-            await open(page, url, { reduced: true });
-            const h1 = page.locator('[data-kp-reveal="headline"]').first();
-            expect(await h1.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
-            expect(await h1.evaluate((el) => getComputedStyle(el).clipPath), 'the ellipse is already full').toMatch(/ellipse/);
-            const rule = page.locator('[data-kp-reveal="rule"]').first();
-            const after = await pseudo(rule, '::after', ['animation-name', 'transform']);
-            expect(after['animation-name']).toBe('none');
-            expect(after.transform, 'the rule is already drawn').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
+            test('under reduced motion there is no animation at all, and every reveal is already at rest', async ({ page }) => {
+                await open(page, url, { reduced: true });
+                const h1 = page.locator('[data-kp-reveal="headline"]').first();
+                expect(await h1.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+                expect(await h1.evaluate((el) => getComputedStyle(el).clipPath), 'the ellipse is already full').toMatch(/ellipse/);
+                const rule = page.locator('[data-kp-reveal="rule"]').first();
+                const after = await pseudo(rule, '::after', ['animation-name', 'transform']);
+                expect(after['animation-name']).toBe('none');
+                expect(after.transform, 'the rule is already drawn').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            });
 
-        test('the rule under a heading draws left to right, once, on load [TH122]', async ({ page }) => {
-            await open(page, url);
-            const rule = page.locator('[data-kp-reveal="rule"]').first();
-            const before = await pseudo(rule, '::after', ['animation-name', 'height', 'background-color']);
-            expect(before['animation-name']).toBe('kp-hc-rule-wipe');
-            expect(before.height).toBe('3px');
-            expect(before['background-color'], 'the rule is ink, not the accent').toBe(await paint(page, '--foreground'));
-            await settled(page);
-            const after = await pseudo(rule, '::after', ['transform']);
-            expect(after.transform, 'settled at the full width').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
+            test('the rule under a heading draws left to right, once, on load [TH122]', async ({ page }) => {
+                await open(page, url);
+                const rule = page.locator('[data-kp-reveal="rule"]').first();
+                const before = await pseudo(rule, '::after', ['animation-name', 'height', 'background-color']);
+                expect(before['animation-name']).toBe('kp-hc-rule-wipe');
+                expect(before.height).toBe('3px');
+                expect(before['background-color'], 'the rule is ink, not the accent').toBe(await paint(page, '--foreground'));
+                await settled(page);
+                const after = await pseudo(rule, '::after', ['transform']);
+                expect(after.transform, 'settled at the full width').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            });
 
-        test('the dossier redactions are covered until the trigger lifts them, staggered by 90ms', async ({ page }) => {
-            await open(page, url);
-            const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
-            const marks = dossier.locator('mark');
-            expect(await marks.count(), 'the three redacted phrases').toBe(3);
-            const first = await pseudo(marks.first(), '::after', ['transform']);
-            expect(first.transform, 'the bar covers the word at rest (scaleX(1), the identity matrix)').toMatch(
-                /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/,
-            );
-            expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word is hidden under the bar').toBe('rgba(0, 0, 0, 0)');
-            const delay2 = await pseudo(marks.nth(1), '::after', ['transition-delay']);
-            const delay3 = await pseudo(marks.nth(2), '::after', ['transition-delay']);
-            expect(delay2['transition-delay']).toBe('0.09s');
-            expect(delay3['transition-delay']).toBe('0.18s');
-            await dossier.locator('[data-kp-reveal-trigger]').click();
-            await expect(marks.first()).toHaveClass(/is-cleared/);
-            await settled(page);
-            const cleared = await pseudo(marks.first(), '::after', ['transform']);
-            expect(cleared.transform, 'the bar lifted off').toMatch(/matrix\(0/);
-            await style(marks.first(), 'color', 'the word reads again').not.toBe('rgba(0, 0, 0, 0)');
-        });
+            test('the dossier redactions are covered until the trigger lifts them, staggered by 90ms', async ({ page }) => {
+                await open(page, url);
+                const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
+                const marks = dossier.locator('mark');
+                expect(await marks.count(), 'the three redacted phrases').toBe(3);
+                const first = await pseudo(marks.first(), '::after', ['transform']);
+                expect(first.transform, 'the bar covers the word at rest (scaleX(1), the identity matrix)').toMatch(
+                    /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/,
+                );
+                expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word is hidden under the bar').toBe('rgba(0, 0, 0, 0)');
+                const delay2 = await pseudo(marks.nth(1), '::after', ['transition-delay']);
+                const delay3 = await pseudo(marks.nth(2), '::after', ['transition-delay']);
+                expect(delay2['transition-delay']).toBe('0.09s');
+                expect(delay3['transition-delay']).toBe('0.18s');
+                await dossier.locator('[data-kp-reveal-trigger]').click();
+                await expect(marks.first()).toHaveClass(/is-cleared/);
+                await settled(page);
+                const cleared = await pseudo(marks.first(), '::after', ['transform']);
+                expect(cleared.transform, 'the bar lifted off').toMatch(/matrix\(0/);
+                await style(marks.first(), 'color', 'the word reads again').not.toBe('rgba(0, 0, 0, 0)');
+            });
 
-        test('nothing fades: a state change is a switch, and the hover inverts [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the four-selector
-            // `transition: none` rule removed -> red on the duration; the
-            // hover's `background: var(--foreground)` removed -> red on the
-            // inversion. The first attempt measured the hero's `--mirror`
-            // variant, which cancels its own transition for other reasons,
-            // and so stayed green over a removed rule [KT3].
-            await open(page, url);
-            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
-            // reaches the hero's `--mirror` variant, which carries its own
-            // later rules — so this test passed with the rule under it
-            // removed, until the drill of 2026-09-12 said so [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            await style(btn, 'transition-duration', 'the switch has no run-up').toBe('0s');
-            await btn.hover();
-            const fg = await paint(page, '--foreground');
-            const bg = await paint(page, '--background');
-            await style(btn, 'background-color', 'the touched control takes the text colour').toBe(fg);
-            await style(btn, 'color', 'and prints in the ground colour').toBe(bg);
-        });
+            test('nothing fades: a state change is a switch, and the hover inverts [scope-12]', async ({ page }) => {
+                // Drilled 2026-09-12 in firefox: the four-selector
+                // `transition: none` rule removed -> red on the duration; the
+                // hover's `background: var(--foreground)` removed -> red on the
+                // inversion. The first attempt measured the hero's `--mirror`
+                // variant, which cancels its own transition for other reasons,
+                // and so stayed green over a removed rule [KT3].
+                await open(page, url);
+                // The PLAIN button, named explicitly. `.kp-button` with `.first()`
+                // reaches the hero's `--mirror` variant, which carries its own
+                // later rules — so this test passed with the rule under it
+                // removed, until the drill of 2026-09-12 said so [KT3].
+                const btn = page.locator('[class="kp-button"]').first();
+                await style(btn, 'transition-duration', 'the switch has no run-up').toBe('0s');
+                await btn.hover();
+                const fg = await paint(page, '--foreground');
+                const bg = await paint(page, '--background');
+                await style(btn, 'background-color', 'the touched control takes the text colour').toBe(fg);
+                await style(btn, 'color', 'and prints in the ground colour').toBe(bg);
+            });
 
-        test('the approved inventory is whole on the page [S46]', async ({ page }) => {
-            await open(page, url);
-            const html = (await page.content()).replace(/=""/g, '');
-            for (const { what, marker } of INVENTORY) {
-                if (channel === 'React' && /theme-picker|theme-status/.test(marker)) continue;
-                expect(html, `the page lacks ${what}`).toContain(marker);
-            }
-        });
-    });
+            test('the approved inventory is whole on the page [S46]', async ({ page }) => {
+                await open(page, url);
+                const html = (await page.content()).replace(/=""/g, '');
+                for (const { what, marker } of INVENTORY) {
+                    if (channel === 'React' && /theme-picker|theme-status/.test(marker)) continue;
+                    expect(html, `the page lacks ${what}`).toContain(marker);
+                }
+            });
+        },
+    );
 }

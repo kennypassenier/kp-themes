@@ -44,7 +44,7 @@ const part = (page, name) => page.locator(`[data-test="${name}"]`);
 /** @param {import('@playwright/test').Locator} locator @param {string} message */
 const left = (locator, message) => measured(locator, (el) => el.getBoundingClientRect().left, undefined, message);
 
-test.describe('the side navigation', () => {
+test.describe('the side navigation', { tag: ['@component:navigation'] }, () => {
     test('over: away until the toggler is pressed, and it brings a backdrop [feat-nav-3]', async ({ page }) => {
         await page.goto(FIXTURE);
         const box = await part(page, 'over-box').boundingBox();

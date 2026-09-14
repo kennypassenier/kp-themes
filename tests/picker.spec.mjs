@@ -73,7 +73,7 @@ async function ready(page) {
 }
 
 for (const [name, channel] of Object.entries(CHANNELS)) {
-    test.describe(`picker · ${name}`, () => {
+    test.describe(`picker · ${name}`, { tag: ['@component:picker'] }, () => {
         test.beforeEach(async ({ page }) => {
             await page.goto(PAGE);
             await page.evaluate(() => localStorage.clear());
@@ -96,7 +96,7 @@ for (const [name, channel] of Object.entries(CHANNELS)) {
             await expect(page.locator('html')).toHaveAttribute('data-theme', 'pastel');
         });
 
-        test('derives which themes are dark from the data, not from a list', async ({ page }) => {
+        test('derives which themes are dark from the data, not from a list', { tag: ['@sweep'] }, async ({ page }) => {
             // The named failure: kyu's picker carried a hand-written list
             // of four dark themes where the stylesheet declares three.
             for (const theme of REGISTRY) {
@@ -123,7 +123,7 @@ for (const [name, channel] of Object.entries(CHANNELS)) {
     });
 }
 
-test('the picker is operable by keyboard end to end with every theme in it [R5]', async ({ page }) => {
+test('the picker is operable by keyboard end to end with every theme in it [R5]', { tag: ['@component:picker', '@sweep'] }, async ({ page }) => {
     // Twenty-four options in a menu: the last one must be reachable and
     // visible — scrolled into view inside the popover, not clipped under
     // its edge. The React menu is a roving tabindex: Tab enters the list
@@ -190,7 +190,7 @@ test('the picker is operable by keyboard end to end with every theme in it [R5]'
     await expect(page.locator('html')).toHaveAttribute('data-theme', last);
 });
 
-test('two pickers on one page stay in step', async ({ page }) => {
+test('two pickers on one page stay in step', { tag: ['@component:picker'] }, async ({ page }) => {
     await page.goto(PAGE);
     await page.evaluate(() => localStorage.clear());
     await page.reload();

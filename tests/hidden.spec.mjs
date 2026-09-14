@@ -14,7 +14,7 @@ import { expect, test } from '@playwright/test';
 
 const CLASSES = ['kp-stack', 'kp-row', 'kp-autogrid', 'kp-button', 'kp-card', 'kp-nav'];
 
-test('an element with hidden and a package display class does not paint', async ({ page }) => {
+test('an element with hidden and a package display class does not paint', { tag: ['@sweep', '@component:examples'] }, async ({ page }) => {
     await page.goto('/examples/concept.html?theme=formal');
     await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
     const painted = await page.evaluate((classes) => {

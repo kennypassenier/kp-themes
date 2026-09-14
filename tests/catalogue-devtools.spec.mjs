@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 
-test('after opening the overlay again, one click picks only the first element for the ruler', async ({ page }) => {
+test('after opening the overlay again, one click picks only the first element for the ruler', { tag: ['@component:catalogue'] }, async ({ page }) => {
     // An empty register, so no block is hidden as already judged.
     await useEmptyRegister(page.context());
     await page.goto('/catalogue/button.html');

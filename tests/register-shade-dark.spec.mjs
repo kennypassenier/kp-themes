@@ -87,7 +87,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the shade-dark register, ${channel}`, () => {
+    test.describe(`the shade-dark register, ${channel}`, { tag: ['@theme:shade-dark', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline arrives word by word out of a blur, and ends as its own text [TH119]', async ({ page }) => {
             // Recorded before navigation. At rest the headline is simply
             // its own text with no wrappers — which is also exactly what a

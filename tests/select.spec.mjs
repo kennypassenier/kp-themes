@@ -50,7 +50,7 @@ const ready = async (page) => {
 };
 
 for (const channel of CHANNELS) {
-    test.describe(`drawn select — ${channel.name}`, () => {
+    test.describe(`drawn select — ${channel.name}`, { tag: ['@component:field'] }, () => {
         test('a click opens the drawn list, not the browser’s, and a click on an option takes it [scope-54]', async ({ page }) => {
             await ready(page);
             const select = page.locator(channel.select);
@@ -164,45 +164,57 @@ for (const channel of CHANNELS) {
     });
 }
 
-test('the data table’s own selects are drawn, in both channels [Kenny 2026-09-13]', async ({ page }) => {
-    // Before: the search scope, density, sort-by and page-size selects were the browser's in both channels.
-    await page.goto('/tests/fixtures/datatable.html');
-    for (const table of ['[data-test="plain-datatable"]', '[data-test="react-datatable"] .kp-datatable']) {
-        await expect(page.locator(`${table} [data-kp-datatable-page-size]`)).toHaveCount(1);
-        const bare = await page
-            .locator(`${table} select.kp-field__input`)
-            .evaluateAll((selects) =>
-                selects.filter((s) => !s.nextElementSibling?.matches('[data-kp-select-list]')).map((s) => s.outerHTML.slice(0, 80)),
-            );
-        expect(bare, table).toEqual([]);
-    }
-    const size = page.locator('[data-test="plain-datatable"] [data-kp-datatable-page-size]');
-    await size.click();
-    await listOf(page, '[data-test="plain-datatable"] [data-kp-datatable-page-size]').locator('[role="option"]', { hasText: /^10$/ }).click();
-    await expect(page.locator('[data-test="plain-datatable"] tbody tr:visible')).toHaveCount(10);
-});
+test(
+    'the data table’s own selects are drawn, in both channels [Kenny 2026-09-13]',
+    { tag: ['@component:field', '@component:datatable'] },
+    async ({ page }) => {
+        // Before: the search scope, density, sort-by and page-size selects were the browser's in both channels.
+        await page.goto('/tests/fixtures/datatable.html');
+        for (const table of ['[data-test="plain-datatable"]', '[data-test="react-datatable"] .kp-datatable']) {
+            await expect(page.locator(`${table} [data-kp-datatable-page-size]`)).toHaveCount(1);
+            const bare = await page
+                .locator(`${table} select.kp-field__input`)
+                .evaluateAll((selects) =>
+                    selects.filter((s) => !s.nextElementSibling?.matches('[data-kp-select-list]')).map((s) => s.outerHTML.slice(0, 80)),
+                );
+            expect(bare, table).toEqual([]);
+        }
+        const size = page.locator('[data-test="plain-datatable"] [data-kp-datatable-page-size]');
+        await size.click();
+        await listOf(page, '[data-test="plain-datatable"] [data-kp-datatable-page-size]').locator('[role="option"]', { hasText: /^10$/ }).click();
+        await expect(page.locator('[data-test="plain-datatable"] tbody tr:visible')).toHaveCount(10);
+    },
+);
 
-test('the React FormField’s select is drawn by default, and drawn={false} keeps it native [Kenny 2026-09-13]', async ({ page }) => {
-    // Before: FormField type="select" had no drawn list at all.
-    await page.goto('/tests/fixtures/components.html');
-    const land = page.locator('[data-test="react-rich-form"] select[name="land"]');
-    await expect(land).toHaveCount(1);
-    await expect(page.locator('[data-test="react-rich-form"] select[name="land"] + [data-kp-select-list]')).toHaveCount(1);
-    await expect(page.locator('[data-test="plain-rich-land"] + [data-kp-select-list]')).toHaveCount(1);
-});
+test(
+    'the React FormField’s select is drawn by default, and drawn={false} keeps it native [Kenny 2026-09-13]',
+    { tag: ['@component:field'] },
+    async ({ page }) => {
+        // Before: FormField type="select" had no drawn list at all.
+        await page.goto('/tests/fixtures/components.html');
+        const land = page.locator('[data-test="react-rich-form"] select[name="land"]');
+        await expect(land).toHaveCount(1);
+        await expect(page.locator('[data-test="react-rich-form"] select[name="land"] + [data-kp-select-list]')).toHaveCount(1);
+        await expect(page.locator('[data-test="plain-rich-land"] + [data-kp-select-list]')).toHaveCount(1);
+    },
+);
 
-test('the catalogue’s textarea-and-select block shows only the drawn select [Kenny 2026-09-13]', async ({ page }) => {
-    // Before: two selects, the native Severity beside the drawn one.
-    await useEmptyRegister(page.context());
-    await page.goto('/catalogue/field.html');
-    await waitForJudging(page);
-    const selects = page.locator('#multiline select');
-    await expect(selects).toHaveCount(1);
-    await expect(page.locator('#multiline select + [data-kp-select-list]')).toHaveCount(1);
-    await expect(page.locator('#multiline .cat-look')).toContainText('data-kp-select="native"');
-});
+test(
+    'the catalogue’s textarea-and-select block shows only the drawn select [Kenny 2026-09-13]',
+    { tag: ['@component:field', '@component:catalogue'] },
+    async ({ page }) => {
+        // Before: two selects, the native Severity beside the drawn one.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/field.html');
+        await waitForJudging(page);
+        const selects = page.locator('#multiline select');
+        await expect(selects).toHaveCount(1);
+        await expect(page.locator('#multiline select + [data-kp-select-list]')).toHaveCount(1);
+        await expect(page.locator('#multiline .cat-look')).toContainText('data-kp-select="native"');
+    },
+);
 
-test('detach takes the drawn list away and leaves the native select as it was [scope-54]', async ({ page }) => {
+test('detach takes the drawn list away and leaves the native select as it was [scope-54]', { tag: ['@component:field'] }, async ({ page }) => {
     await ready(page);
     const detached = await page.evaluate(async () => {
         const { attachSelects } = await import('/js/combobox.js');
@@ -224,95 +236,100 @@ test('detach takes the drawn list away and leaves the native select as it was [s
     expect(detached).toEqual({ attached: true, list: false, expanded: false, controls: false, value: 'One' });
 });
 
-test('every register answers the drawn list the way it answers the combobox list, and the list opens under its select [scope-54]', async ({
-    page,
-}) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await ready(page);
-    const select = page.locator('[data-test="plain-select"]');
-    const list = listOf(page, '[data-test="plain-select"]');
-    /** @param {import('@playwright/test').Locator} locator */
-    const look = (locator) =>
-        locator.evaluate((el) => {
-            const s = getComputedStyle(el);
-            return [
-                'background-color',
-                'background-image',
-                'border-top-color',
-                'border-top-width',
-                'border-top-style',
-                'border-top-left-radius',
-                'box-shadow',
-                'color',
-            ]
-                .map((p) => `${p}: ${s.getPropertyValue(p)}`)
-                .join('; ');
-        });
-    const apart = [];
-    const far = [];
-    for (const theme of THEME_NAMES) {
-        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-        await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
-        // Opened again in each theme: the list is placed when it opens.
-        await select.press('Escape');
-        await expect(list).toBeHidden();
-        await select.click();
-        await expect(list).toBeVisible();
-        const drawn = await look(list);
-        const reference = await look(page.locator('[data-test="reference-list"]'));
-        if (drawn !== reference) apart.push(`${theme}: ${drawn} ≠ ${reference}`);
-        const gap = await page.evaluate(() => {
-            const s = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"]'));
-            const l = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"] + [data-kp-select-list]'));
-            const a = s.getBoundingClientRect();
-            const b = l.getBoundingClientRect();
-            return { top: Math.round(b.top - a.bottom), left: Math.round(b.left - a.left), width: Math.round(b.width - a.width) };
-        });
-        if (gap.top < 0 || gap.top > 8 || Math.abs(gap.left) > 1 || Math.abs(gap.width) > 1) far.push(`${theme}: ${JSON.stringify(gap)}`);
-    }
-    expect(apart).toEqual([]);
-    expect(far).toEqual([]);
-});
-
-for (const channel of CHANNELS) {
-    test(`inside a card that clips its corners the drawn list is whole, takes its clicks and opens under its select, in every theme — ${channel.name} [2026-09-13]`, async ({
-        page,
-    }) => {
-        // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach.
+test(
+    'every register answers the drawn list the way it answers the combobox list, and the list opens under its select [scope-54]',
+    { tag: ['@component:field', '@component:combobox', '@sweep'] },
+    async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await ready(page);
-        const select = page.locator(channel.select);
-        const list = listOf(page, channel.select);
-        // The card ends where the field ends, so the open list hangs outside it.
-        await select.evaluate((el) => /** @type {HTMLElement} */ (el.parentElement).classList.add('kp-card'));
-        const lost = [];
+        const select = page.locator('[data-test="plain-select"]');
+        const list = listOf(page, '[data-test="plain-select"]');
+        /** @param {import('@playwright/test').Locator} locator */
+        const look = (locator) =>
+            locator.evaluate((el) => {
+                const s = getComputedStyle(el);
+                return [
+                    'background-color',
+                    'background-image',
+                    'border-top-color',
+                    'border-top-width',
+                    'border-top-style',
+                    'border-top-left-radius',
+                    'box-shadow',
+                    'color',
+                ]
+                    .map((p) => `${p}: ${s.getPropertyValue(p)}`)
+                    .join('; ');
+            });
+        const apart = [];
+        const far = [];
         for (const theme of THEME_NAMES) {
             await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
             await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
-            await select.click();
-            await expect(list).toBeVisible();
-            const m = await select.evaluate((el) => {
-                const drawn = /** @type {HTMLElement} */ (el.nextElementSibling);
-                const options = [...drawn.querySelectorAll('[role="option"]')];
-                const missed = options.filter((option) => {
-                    const r = option.getBoundingClientRect();
-                    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-                    return hit !== option && !option.contains(hit);
-                }).length;
-                const a = el.getBoundingClientRect();
-                const b = drawn.getBoundingClientRect();
-                return {
-                    missed,
-                    of: options.length,
-                    top: Math.round(b.top - a.bottom),
-                    left: Math.round(b.left - a.left),
-                    width: Math.round(b.width - a.width),
-                };
-            });
-            if (m.missed > 0 || m.top < 0 || m.top > 8 || Math.abs(m.left) > 1 || Math.abs(m.width) > 1) lost.push(`${theme}: ${JSON.stringify(m)}`);
+            // Opened again in each theme: the list is placed when it opens.
             await select.press('Escape');
             await expect(list).toBeHidden();
+            await select.click();
+            await expect(list).toBeVisible();
+            const drawn = await look(list);
+            const reference = await look(page.locator('[data-test="reference-list"]'));
+            if (drawn !== reference) apart.push(`${theme}: ${drawn} ≠ ${reference}`);
+            const gap = await page.evaluate(() => {
+                const s = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"]'));
+                const l = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"] + [data-kp-select-list]'));
+                const a = s.getBoundingClientRect();
+                const b = l.getBoundingClientRect();
+                return { top: Math.round(b.top - a.bottom), left: Math.round(b.left - a.left), width: Math.round(b.width - a.width) };
+            });
+            if (gap.top < 0 || gap.top > 8 || Math.abs(gap.left) > 1 || Math.abs(gap.width) > 1) far.push(`${theme}: ${JSON.stringify(gap)}`);
         }
-        expect(lost).toEqual([]);
-    });
+        expect(apart).toEqual([]);
+        expect(far).toEqual([]);
+    },
+);
+
+for (const channel of CHANNELS) {
+    test(
+        `inside a card that clips its corners the drawn list is whole, takes its clicks and opens under its select, in every theme — ${channel.name} [2026-09-13]`,
+        { tag: ['@component:field', '@sweep'] },
+        async ({ page }) => {
+            // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach.
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await ready(page);
+            const select = page.locator(channel.select);
+            const list = listOf(page, channel.select);
+            // The card ends where the field ends, so the open list hangs outside it.
+            await select.evaluate((el) => /** @type {HTMLElement} */ (el.parentElement).classList.add('kp-card'));
+            const lost = [];
+            for (const theme of THEME_NAMES) {
+                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+                await select.click();
+                await expect(list).toBeVisible();
+                const m = await select.evaluate((el) => {
+                    const drawn = /** @type {HTMLElement} */ (el.nextElementSibling);
+                    const options = [...drawn.querySelectorAll('[role="option"]')];
+                    const missed = options.filter((option) => {
+                        const r = option.getBoundingClientRect();
+                        const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                        return hit !== option && !option.contains(hit);
+                    }).length;
+                    const a = el.getBoundingClientRect();
+                    const b = drawn.getBoundingClientRect();
+                    return {
+                        missed,
+                        of: options.length,
+                        top: Math.round(b.top - a.bottom),
+                        left: Math.round(b.left - a.left),
+                        width: Math.round(b.width - a.width),
+                    };
+                });
+                if (m.missed > 0 || m.top < 0 || m.top > 8 || Math.abs(m.left) > 1 || Math.abs(m.width) > 1)
+                    lost.push(`${theme}: ${JSON.stringify(m)}`);
+                await select.press('Escape');
+                await expect(list).toBeHidden();
+            }
+            expect(lost).toEqual([]);
+        },
+    );
 }

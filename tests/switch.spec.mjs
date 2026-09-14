@@ -58,7 +58,7 @@ const word = (page, id) =>
         .evaluate((el) => /** @type {HTMLElement} */ (el.closest('.kp-switch')?.querySelector('.kp-switch__state'))?.innerText.trim() ?? '');
 
 for (const channel of CHANNELS) {
-    test.describe(`switch — ${channel.name}`, () => {
+    test.describe(`switch — ${channel.name}`, { tag: ['@component:switch'] }, () => {
         test.beforeEach(async ({ page }) => {
             await page.emulateMedia({ reducedMotion: 'reduce' });
             await page.goto(FIXTURE);
@@ -107,7 +107,7 @@ for (const channel of CHANNELS) {
             expect(opacity).toBeLessThan(1);
         });
 
-        test(`focus on a switch is visible, in every theme, ${channel.name} [gap-11]`, async ({ page }) => {
+        test(`focus on a switch is visible, in every theme, ${channel.name} [gap-11]`, { tag: ['@sweep'] }, async ({ page }) => {
             await tabToSelector(page, at(channel.off));
             const unseen = [];
             for (const theme of THEMES) {
@@ -132,7 +132,7 @@ for (const channel of CHANNELS) {
     });
 }
 
-test('a consumer replaces the words, React through the strings prop [KT5]', async ({ page }) => {
+test('a consumer replaces the words, React through the strings prop [KT5]', { tag: ['@component:switch'] }, async ({ page }) => {
     await page.goto(FIXTURE);
     await page.waitForSelector(at('react-strings'));
     await expect.poll(() => word(page, 'react-strings')).toBe('Uit');
@@ -141,7 +141,7 @@ test('a consumer replaces the words, React through the strings prop [KT5]', asyn
     await expect.poll(() => word(page, 'react-strings')).toBe('Aan');
 });
 
-test('a consumer replaces the words, framework-free through setStrings [KT5]', async ({ page }) => {
+test('a consumer replaces the words, framework-free through setStrings [KT5]', { tag: ['@component:switch'] }, async ({ page }) => {
     await page.goto(FIXTURE);
     await page.waitForSelector(at('react-off'));
     await page.evaluate(async () => {
@@ -164,15 +164,19 @@ test('a consumer replaces the words, framework-free through setStrings [KT5]', a
     await expect.poll(() => word(page, 'plain-off')).toBe(S.switchOff);
 });
 
-test('the thumb travels without a transition under reduced motion, and with one otherwise [gap-11, DI5]', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto(FIXTURE);
-    const durations = () =>
-        page
-            .locator(at('plain-off'))
-            .evaluate((el) => [getComputedStyle(el).transitionDuration, getComputedStyle(el, '::before').transitionDuration]);
-    const still = await durations();
-    expect(still.every((d) => d.split(',').every((part) => Number.parseFloat(part) === 0))).toBe(true);
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await expect.poll(async () => (await durations()).every((d) => d.split(',').some((part) => Number.parseFloat(part) > 0))).toBe(true);
-});
+test(
+    'the thumb travels without a transition under reduced motion, and with one otherwise [gap-11, DI5]',
+    { tag: ['@component:switch'] },
+    async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto(FIXTURE);
+        const durations = () =>
+            page
+                .locator(at('plain-off'))
+                .evaluate((el) => [getComputedStyle(el).transitionDuration, getComputedStyle(el, '::before').transitionDuration]);
+        const still = await durations();
+        expect(still.every((d) => d.split(',').every((part) => Number.parseFloat(part) === 0))).toBe(true);
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await expect.poll(async () => (await durations()).every((d) => d.split(',').some((part) => Number.parseFloat(part) > 0))).toBe(true);
+    },
+);

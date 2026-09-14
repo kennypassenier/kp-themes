@@ -20,7 +20,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`datatable — ${channel.name}`, () => {
+    test.describe(`datatable — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('a number column sorts as numbers, not as text [TH37]', async ({ page }) => {
             await page.goto(URL);
             const table = page.locator(channel.table);
@@ -158,7 +158,7 @@ const ready = async (page, table) => {
 };
 
 for (const channel of FEATURE_CHANNELS) {
-    test.describe(`datatable features — ${channel.name}`, () => {
+    test.describe(`datatable features — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('select-all ticks the rows on this page and no others, and its name says so [gap-13]', async ({ page }) => {
             // Before: the framework-free header box ticked all 30 filtered rows, page two included, and had no name of its own.
             const table = page.locator(channel.table);
@@ -400,7 +400,7 @@ for (const channel of FEATURE_CHANNELS) {
     });
 }
 
-test.describe('datatable features — React sort header', () => {
+test.describe('datatable features — React sort header', { tag: ['@component:datatable'] }, () => {
     test("the sort button keeps the arrow on the header's line, the header's case and spacing, and the cell knob [gap-13]", async ({ page }) => {
         // Before: the sortable header stood two lines tall in nostromo, the button dropped the uppercase, and --kp-table-cell-inline did not reach it.
         const table = page.locator('[data-test="react-datatable"] .kp-datatable');
@@ -454,68 +454,74 @@ const wearSettled = async (page, theme) => {
 };
 
 for (const channel of FEATURE_CHANNELS) {
-    test.describe(`datatable review notes — ${channel.name}`, () => {
-        test("the date filter's calendar button is the date picker's own: its classes, its glyph, its name [Kenny's note 1]", async ({ page }) => {
-            // Before: class "kp-button kp-button--ghost", the text "Calendar", no title — the standalone picker has "kp-button", ▦ and a title.
-            await useEmptyRegister(page.context());
-            await page.goto('/catalogue/datepicker.html');
-            await waitForJudging(page);
-            /** @param {Element} opener */
-            const markup = (opener) => ({
-                className: opener.className,
-                glyph: opener.querySelector('[aria-hidden="true"]')?.textContent?.trim() ?? null,
-                text: opener.textContent?.trim(),
-                name: opener.getAttribute('aria-label'),
-                title: opener.getAttribute('title'),
-            });
-            const standalone = await page.locator('#closed [data-kp-date-open]').first().evaluate(markup);
-            const table = page.locator(channel.table);
-            await ready(page, table);
-            await table.locator('[data-kp-datatable-filter-toggle]').click();
-            const openers = table.getByRole('group', { name: 'Opened' }).locator('[data-kp-date-open]');
-            await expect(openers).toHaveCount(2);
-            for (const opener of await openers.all()) expect(await opener.evaluate(markup)).toEqual(standalone);
-        });
+    test.describe(`datatable review notes — ${channel.name}`, { tag: ['@component:datatable', '@component:datepicker'] }, () => {
+        test(
+            "the date filter's calendar button is the date picker's own: its classes, its glyph, its name [Kenny's note 1]",
+            { tag: ['@component:catalogue'] },
+            async ({ page }) => {
+                // Before: class "kp-button kp-button--ghost", the text "Calendar", no title — the standalone picker has "kp-button", ▦ and a title.
+                await useEmptyRegister(page.context());
+                await page.goto('/catalogue/datepicker.html');
+                await waitForJudging(page);
+                /** @param {Element} opener */
+                const markup = (opener) => ({
+                    className: opener.className,
+                    glyph: opener.querySelector('[aria-hidden="true"]')?.textContent?.trim() ?? null,
+                    text: opener.textContent?.trim(),
+                    name: opener.getAttribute('aria-label'),
+                    title: opener.getAttribute('title'),
+                });
+                const standalone = await page.locator('#closed [data-kp-date-open]').first().evaluate(markup);
+                const table = page.locator(channel.table);
+                await ready(page, table);
+                await table.locator('[data-kp-datatable-filter-toggle]').click();
+                const openers = table.getByRole('group', { name: 'Opened' }).locator('[data-kp-date-open]');
+                await expect(openers).toHaveCount(2);
+                for (const opener of await openers.all()) expect(await opener.evaluate(markup)).toEqual(standalone);
+            },
+        );
 
-        test('a calendar opened inside a card or an alert that clips its corners is whole and takes its clicks, in every theme [coordinator finding]', async ({
-            page,
-        }) => {
-            // Before: 31 of 31 days out of reach in dark, cyberpunk, phantom and titanium (the container clip-path cut the panel away), 23 in terminal.
-            const table = page.locator(channel.table);
-            await page.emulateMedia({ reducedMotion: 'reduce' });
-            await ready(page, table);
-            await table.locator('[data-kp-datatable-filter-toggle]').click();
-            const opened = table.getByRole('group', { name: 'Opened' });
-            const picker = opened.locator('.kp-datepicker').nth(1);
-            await table.getByLabel(S.tableFilterTo('Opened'), { exact: true }).fill('2026-08-01');
-            const lost = [];
-            for (const container of ['kp-card', 'kp-alert']) {
-                // The filter's own fieldset wears the container: its box ends under the field, so the calendar hangs outside it.
-                await opened.evaluate((el, name) => {
-                    el.classList.remove('kp-card', 'kp-alert');
-                    el.classList.add(name);
-                }, container);
-                for (const theme of THEME_NAMES) {
-                    await wearSettled(page, theme);
-                    await picker.locator('[data-kp-date-open]').click();
-                    const panel = picker.locator('.kp-datepicker__panel');
-                    await expect(panel).toBeVisible();
-                    const missed = await panel.evaluate((el) => {
-                        const days = [...el.querySelectorAll('[data-kp-day]')];
-                        return days.filter((day) => {
-                            const box = day.getBoundingClientRect();
-                            const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-                            return hit !== day && !day.contains(hit);
-                        }).length;
-                    });
-                    if (missed > 0) lost.push(`${theme} in .${container}: ${missed} days out of reach`);
-                    // The trigger toggles it shut in both channels (the React picker's Escape lives on the days, not on the trigger).
-                    await picker.locator('[data-kp-date-open]').click();
-                    await expect(panel).toBeHidden();
+        test(
+            'a calendar opened inside a card or an alert that clips its corners is whole and takes its clicks, in every theme [coordinator finding]',
+            { tag: ['@sweep'] },
+            async ({ page }) => {
+                // Before: 31 of 31 days out of reach in dark, cyberpunk, phantom and titanium (the container clip-path cut the panel away), 23 in terminal.
+                const table = page.locator(channel.table);
+                await page.emulateMedia({ reducedMotion: 'reduce' });
+                await ready(page, table);
+                await table.locator('[data-kp-datatable-filter-toggle]').click();
+                const opened = table.getByRole('group', { name: 'Opened' });
+                const picker = opened.locator('.kp-datepicker').nth(1);
+                await table.getByLabel(S.tableFilterTo('Opened'), { exact: true }).fill('2026-08-01');
+                const lost = [];
+                for (const container of ['kp-card', 'kp-alert']) {
+                    // The filter's own fieldset wears the container: its box ends under the field, so the calendar hangs outside it.
+                    await opened.evaluate((el, name) => {
+                        el.classList.remove('kp-card', 'kp-alert');
+                        el.classList.add(name);
+                    }, container);
+                    for (const theme of THEME_NAMES) {
+                        await wearSettled(page, theme);
+                        await picker.locator('[data-kp-date-open]').click();
+                        const panel = picker.locator('.kp-datepicker__panel');
+                        await expect(panel).toBeVisible();
+                        const missed = await panel.evaluate((el) => {
+                            const days = [...el.querySelectorAll('[data-kp-day]')];
+                            return days.filter((day) => {
+                                const box = day.getBoundingClientRect();
+                                const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+                                return hit !== day && !day.contains(hit);
+                            }).length;
+                        });
+                        if (missed > 0) lost.push(`${theme} in .${container}: ${missed} days out of reach`);
+                        // The trigger toggles it shut in both channels (the React picker's Escape lives on the days, not on the trigger).
+                        await picker.locator('[data-kp-date-open]').click();
+                        await expect(panel).toBeHidden();
+                    }
                 }
-            }
-            expect(lost).toEqual([]);
-        });
+                expect(lost).toEqual([]);
+            },
+        );
 
         test("both bars are inset by default, and the inset is two knobs [Kenny's note 4]", async ({ page }) => {
             // Before: one shorthand knob; setting --kp-datatable-bar-padding-inline and -block left 12px and 8px in place.

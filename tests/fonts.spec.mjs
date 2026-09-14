@@ -22,7 +22,7 @@ import { expect, test } from '@playwright/test';
 
 const PAGE = '/examples/concept.html?theme=cyberpunk';
 
-test.describe('the shipped fonts', () => {
+test.describe('the shipped fonts', { tag: ['@component:fonts', '@component:examples'] }, () => {
     test('the theme faces arrive: every woff2 the page asks for is served and the families load [T19]', async ({ page }) => {
         const failed = [];
         page.on('response', (r) => {

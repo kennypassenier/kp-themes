@@ -1237,7 +1237,7 @@ is deleted and `main` requires no status check. There is no run to read a
 conclusion from, so KT12's measure has nothing left to do and is retired
 rather than kept as a rule nobody can follow. What replaces it is not
 another automatic check but Kenny's own: `npm run gates` still refuses a
-commit, `npm run test:affected` runs what a change touches, and `npm run
+commit, `test:affected` (retired at scope-33) runs what a change touches, and `npm run
 verify` runs everything on the command he gives before a release. The
 fault KT12 recorded — reading an exit code instead of a verdict — cannot
 recur in that shape, because nothing reads an exit code any more; the
@@ -1495,14 +1495,14 @@ suite, both engines, 2528 tests, 6.0 minutes — and the no-CI table in
 run the no-CI table assigns to Kenny", and this session was counted rather
 than guessed: seven playwright runs. One was the whole suite. The other
 six ran the specs a change touches — which is the right scope — but in
-chromium and firefox together, where `npm run test:affected` runs
+chromium and firefox together, where `test:affected` (retired at scope-33) runs
 `--project=firefox` and nothing else, for a reason its own comment gives:
 Kenny's browser is a firefox derivative and firefox has been the odd
 engine here fourteen times against chromium's six. Seven of seven
 deviated; one of them was the plain violation.
 
 **4 · How we prevent recurrence.** Two things. During work Claude runs
-`npm run test:affected` and never playwright directly; where a drill wants
+`test:affected` (retired at scope-33) and never playwright directly; where a drill wants
 the second engine, that is a question rather than a decision. And Kenny's
 new agreement, which changes the rule rather than only the habit — see
 below.
@@ -2333,7 +2333,7 @@ handler)`, so the handler was taken as the pattern and every run died on
 whole framework-free channel's proof: the page readable with its register,
 its fonts and its module all refused. It had not actually run.
 
-**2 · Why nobody saw it.** `npm run test:affected` resolved a change to
+**2 · Why nobody saw it.** `test:affected` (retired at scope-33) resolved a change to
 `css/<theme>-register.css` to `tests/register-<theme>.spec.mjs` and
 nothing else. Every quirk and every hover gesture of round seven is a
 register edit, so the inner loop ran twenty tests and printed green while

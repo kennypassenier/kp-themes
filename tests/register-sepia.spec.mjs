@@ -94,7 +94,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the sepia register, ${channel}`, () => {
+    test.describe(`the sepia register, ${channel}`, { tag: ['@theme:sepia', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion the headline, the marks and the rule are already at rest, and the dialog does not fade [DI7]', async ({
             page,
         }) => {

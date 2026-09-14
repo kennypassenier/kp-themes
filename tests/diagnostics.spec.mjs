@@ -54,7 +54,7 @@ async function redraw(page, pretend = {}) {
     }, pretend);
 }
 
-test('the page names both versions and both theme lists [TH97]', async ({ page }) => {
+test('the page names both versions and both theme lists [TH97]', { tag: ['@component:picker', '@component:showcase'] }, async ({ page }) => {
     await page.goto(PAGE);
     const seen = await redraw(page);
 
@@ -81,30 +81,38 @@ test('the page names both versions and both theme lists [TH97]', async ({ page }
     expect(seen.detail).toEqual([]);
 });
 
-test('a stylesheet older than the JavaScript is named as the one behind [TH97, AR25]', async ({ page }) => {
-    await page.goto(PAGE);
-    // The shape almanac actually had: an old stylesheet knowing a subset.
-    const seen = await redraw(page, { version: '1.0.0', names: 'formal light dark' });
+test(
+    'a stylesheet older than the JavaScript is named as the one behind [TH97, AR25]',
+    { tag: ['@component:picker', '@component:showcase'] },
+    async ({ page }) => {
+        await page.goto(PAGE);
+        // The shape almanac actually had: an old stylesheet knowing a subset.
+        const seen = await redraw(page, { version: '1.0.0', names: 'formal light dark' });
 
-    expect(seen.status).toBe('stylesheet-behind');
-    expect(seen.verdict).toContain('1.0.0');
-    expect(seen.verdict).toContain(VERSION);
-    expect(seen.verdict.toLowerCase()).toContain('stylesheet');
-    // And it says which themes the mismatch costs.
-    expect(seen.detail.join(' ')).toContain('cyberpunk');
-});
+        expect(seen.status).toBe('stylesheet-behind');
+        expect(seen.verdict).toContain('1.0.0');
+        expect(seen.verdict).toContain(VERSION);
+        expect(seen.verdict.toLowerCase()).toContain('stylesheet');
+        // And it says which themes the mismatch costs.
+        expect(seen.detail.join(' ')).toContain('cyberpunk');
+    },
+);
 
-test('a JavaScript older than the stylesheet is named as the one behind [TH97, AR25]', async ({ page }) => {
-    await page.goto(PAGE);
-    const seen = await redraw(page, { version: '99.0.0', names: `${NAMES} lavender` });
+test(
+    'a JavaScript older than the stylesheet is named as the one behind [TH97, AR25]',
+    { tag: ['@component:picker', '@component:showcase'] },
+    async ({ page }) => {
+        await page.goto(PAGE);
+        const seen = await redraw(page, { version: '99.0.0', names: `${NAMES} lavender` });
 
-    expect(seen.status).toBe('script-behind');
-    expect(seen.verdict).toContain('99.0.0');
-    expect(seen.verdict).toContain(VERSION);
-    expect(seen.detail.join(' ')).toContain('lavender');
-});
+        expect(seen.status).toBe('script-behind');
+        expect(seen.verdict).toContain('99.0.0');
+        expect(seen.verdict).toContain(VERSION);
+        expect(seen.detail.join(' ')).toContain('lavender');
+    },
+);
 
-test('one version, two theme lists, is a hand-edited file [TH97]', async ({ page }) => {
+test('one version, two theme lists, is a hand-edited file [TH97]', { tag: ['@component:picker', '@component:showcase'] }, async ({ page }) => {
     await page.goto(PAGE);
     const seen = await redraw(page, { version: VERSION, names: 'formal light dark' });
 
@@ -113,18 +121,22 @@ test('one version, two theme lists, is a hand-edited file [TH97]', async ({ page
     expect(seen.detail.join(' ')).toContain('cyberpunk');
 });
 
-test('the page speaks the consumer’s dictionary, not its own words [TH97, KT5]', async ({ page }) => {
-    await page.goto(PAGE);
-    const drawn = await page.evaluate(async () => {
-        const strings = await import('/js/strings.js');
-        strings.setStrings({ diagnosticsVersion: 'Versie', diagnosticsMatch: 'Alles klopt.' });
-        const module = await import('/js/diagnostics.js');
-        module.renderDiagnostics(document.getElementById('kp-diagnostics'));
-        return {
-            label: document.querySelector('[data-kp-diagnostic="version"] th')?.textContent ?? '',
-            verdict: document.querySelector('[data-kp-diagnostic="verdict"]')?.textContent ?? '',
-        };
-    });
-    expect(drawn.label).toBe('Versie');
-    expect(drawn.verdict).toBe('Alles klopt.');
-});
+test(
+    'the page speaks the consumer’s dictionary, not its own words [TH97, KT5]',
+    { tag: ['@component:picker', '@component:showcase'] },
+    async ({ page }) => {
+        await page.goto(PAGE);
+        const drawn = await page.evaluate(async () => {
+            const strings = await import('/js/strings.js');
+            strings.setStrings({ diagnosticsVersion: 'Versie', diagnosticsMatch: 'Alles klopt.' });
+            const module = await import('/js/diagnostics.js');
+            module.renderDiagnostics(document.getElementById('kp-diagnostics'));
+            return {
+                label: document.querySelector('[data-kp-diagnostic="version"] th')?.textContent ?? '',
+                verdict: document.querySelector('[data-kp-diagnostic="verdict"]')?.textContent ?? '',
+            };
+        });
+        expect(drawn.label).toBe('Versie');
+        expect(drawn.verdict).toBe('Alles klopt.');
+    },
+);

@@ -94,7 +94,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the solstice register, ${channel}`, () => {
+    test.describe(`the solstice register, ${channel}`, { tag: ['@theme:solstice', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline calibrates once: a mix-blend-mode overlay covers it, then clears to its own text [S49, A1]', async ({ page }) => {
             // Recorded before navigation. The resting reads below are
             // exactly what a theme declaring NO headline routine also

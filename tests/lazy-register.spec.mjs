@@ -125,7 +125,7 @@ const stylesheetsFetched = (page) =>
             .filter((p) => p.endsWith('.css')),
     );
 
-test.describe('lazy register', () => {
+test.describe('lazy register', { tag: ['@component:picker'] }, () => {
     test.skip(({ browserName }) => browserName !== 'firefox', 'firefox only [scope-50]');
 
     // Red first: registerLink() made to return null, so the module did not adopt the snippet's link — a second formal register in the document.

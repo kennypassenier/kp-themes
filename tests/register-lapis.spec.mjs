@@ -95,7 +95,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the lapis register, ${channel}`, () => {
+    test.describe(`the lapis register, ${channel}`, { tag: ['@theme:lapis', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion there is no wipe, no page-wide texture, and every reveal is at rest', async ({ page }) => {
             await open(page, url, { reduced: true });
             await expect(page.locator('[data-kp-reveal="headline"]').first()).toHaveClass(/is-deciphered/);

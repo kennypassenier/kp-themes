@@ -39,30 +39,34 @@ const paint = (page) =>
     );
 
 for (const theme of ['cyberpunk', 'formal', 'ticker']) {
-    test(`the minified stylesheets paint what the authored ones paint, ${theme}`, async ({ page }) => {
-        await page.emulateMedia({ reducedMotion: 'reduce' });
-        // concept.html carries the theme in its query; the per-theme
-        // pages differ only in their copy, and cyberpunk has no page of
-        // its own because it is the copy every other page varies from.
-        await page.goto(`/examples/concept.html?theme=${theme}`);
-        await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
-        const authored = await paint(page);
+    test(
+        `the minified stylesheets paint what the authored ones paint, ${theme}`,
+        { tag: ['@component:bundle', '@component:examples', '@sweep'] },
+        async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            // concept.html carries the theme in its query; the per-theme
+            // pages differ only in their copy, and cyberpunk has no page of
+            // its own because it is the copy every other page varies from.
+            await page.goto(`/examples/concept.html?theme=${theme}`);
+            await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
+            const authored = await paint(page);
 
-        // The same page, with every authored stylesheet swapped for its
-        // minified twin. The swap is done in the page rather than by a
-        // second fixture, so the markup is provably identical.
-        await page.evaluate(() => {
-            for (const link of document.querySelectorAll('link[rel="stylesheet"]')) {
-                const href = link.getAttribute('href') ?? '';
-                const file = href.split('/').pop() ?? '';
-                if (!href.includes('/css/') || !file.endsWith('.css')) continue;
-                link.setAttribute('href', `/dist/css/${file.replace(/\.css$/, '.min.css')}`);
-            }
-        });
-        await page.waitForFunction(() => [...document.styleSheets].every((s) => !s.href || s.href.includes('.min.css') || s.cssRules.length > 0));
-        await page.waitForTimeout(300);
-        const minified = await paint(page);
+            // The same page, with every authored stylesheet swapped for its
+            // minified twin. The swap is done in the page rather than by a
+            // second fixture, so the markup is provably identical.
+            await page.evaluate(() => {
+                for (const link of document.querySelectorAll('link[rel="stylesheet"]')) {
+                    const href = link.getAttribute('href') ?? '';
+                    const file = href.split('/').pop() ?? '';
+                    if (!href.includes('/css/') || !file.endsWith('.css')) continue;
+                    link.setAttribute('href', `/dist/css/${file.replace(/\.css$/, '.min.css')}`);
+                }
+            });
+            await page.waitForFunction(() => [...document.styleSheets].every((s) => !s.href || s.href.includes('.min.css') || s.cssRules.length > 0));
+            await page.waitForTimeout(300);
+            const minified = await paint(page);
 
-        expect(minified).toEqual(authored);
-    });
+            expect(minified).toEqual(authored);
+        },
+    );
 }

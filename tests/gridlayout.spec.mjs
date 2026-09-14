@@ -28,7 +28,7 @@ const saysWhereItIs = async (tile, words) => {
 };
 
 for (const channel of CHANNELS) {
-    test.describe(`grid — ${channel.name}`, () => {
+    test.describe(`grid — ${channel.name}`, { tag: ['@component:media'] }, () => {
         test('the arrow keys move a tile [TH56]', async ({ page }) => {
             await page.goto(URL);
             const tile = page.locator(channel.tile);

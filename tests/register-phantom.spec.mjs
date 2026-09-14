@@ -71,7 +71,7 @@ const settled = (page) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the phantom register, ${channel}`, () => {
+    test.describe(`the phantom register, ${channel}`, { tag: ['@theme:phantom', '@component:page-effects', '@component:examples'] }, () => {
         test('the page arrives as a calling card once per session, and Skip ends it at once [PH2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');

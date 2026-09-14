@@ -27,29 +27,33 @@ const parse = (rgb) => {
 };
 
 for (const control of ['.kp-button', '.kp-field__input']) {
-    test(`the retro register keeps DI1 on ${control} [TH87]`, async ({ page }) => {
-        await page.goto('/showcase/themes/retro.html');
-        await page.waitForSelector(control);
-        const painted = await page.evaluate((selector) => {
-            const el = document.querySelector(selector);
-            const style = getComputedStyle(el);
-            const ground = getComputedStyle(el.parentElement);
-            return {
-                border: style.borderTopColor,
-                shadows: style.boxShadow,
-                ground: ground.backgroundColor === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.body).backgroundColor : ground.backgroundColor,
-            };
-        }, control);
-        // The register is on: a bevel is painted.
-        expect(painted.shadows).toContain('inset');
-        // And the boundary is still the gated one. Drill [KT3]: with
-        // `border-color: transparent` added to the register's control
-        // rule, the border reads rgba(0, 0, 0, 0) and parse() throws —
-        // the first version of parse() read that as black and stayed
-        // green, so the drill earned its keep on the test itself.
-        const ratio = contrast(parse(painted.border), parse(painted.ground));
-        expect(ratio, `${control} border ${painted.border} on ${painted.ground}`).toBeGreaterThanOrEqual(3);
-    });
+    test(
+        `the retro register keeps DI1 on ${control} [TH87]`,
+        { tag: ['@theme:retro', '@component:button', '@component:field', '@component:showcase'] },
+        async ({ page }) => {
+            await page.goto('/showcase/themes/retro.html');
+            await page.waitForSelector(control);
+            const painted = await page.evaluate((selector) => {
+                const el = document.querySelector(selector);
+                const style = getComputedStyle(el);
+                const ground = getComputedStyle(el.parentElement);
+                return {
+                    border: style.borderTopColor,
+                    shadows: style.boxShadow,
+                    ground: ground.backgroundColor === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.body).backgroundColor : ground.backgroundColor,
+                };
+            }, control);
+            // The register is on: a bevel is painted.
+            expect(painted.shadows).toContain('inset');
+            // And the boundary is still the gated one. Drill [KT3]: with
+            // `border-color: transparent` added to the register's control
+            // rule, the border reads rgba(0, 0, 0, 0) and parse() throws —
+            // the first version of parse() read that as black and stayed
+            // green, so the drill earned its keep on the test itself.
+            const ratio = contrast(parse(painted.border), parse(painted.ground));
+            expect(ratio, `${control} border ${painted.border} on ${painted.ground}`).toBeGreaterThanOrEqual(3);
+        },
+    );
 }
 
 // fix-12 — pressing a button changes what it paints, in every theme.
@@ -84,56 +88,32 @@ const PRESSED = ['.kp-button--primary', '.kp-button', '.kp-button--destructive']
 
 for (const theme of THEMES) {
     for (const selector of PRESSED) {
-        test(`${selector} reacts to being pressed under ${theme} [fix-12]`, async ({ page }) => {
-            await page.goto(`/showcase/themes/${theme}.html`);
-            // The plain selector matches the variants too, so take one that
-            // carries no variant class — that is the control Kenny pressed.
-            const button =
-                selector === '.kp-button' ? page.locator('.kp-button:not([class*="kp-button--"])').first() : page.locator(selector).first();
-            if ((await button.count()) === 0) test.skip(true, `${theme}'s showcase page carries no ${selector}`);
-            await button.scrollIntoViewIfNeeded();
-            // Everything a press is allowed to change, in one vector. Reading
-            // only `background-color` called retro red on 2026-09-12: that theme
-            // presses by inverting its bevel and shifting its padding, which is
-            // a reaction the narrower question could not see.
-            const paint = () =>
-                button.evaluate((el) => {
-                    const s = getComputedStyle(el);
-                    // `transform` and `translate` are different properties
-                    // and a theme may press with either; a press may also
-                    // land on a pseudo-element or on the label rather than
-                    // on the control (nostromo lights a lamp, grotesk
-                    // thickens the baseline). Reading only `translate` on
-                    // the element called five themes red in Phase 7 that
-                    // press perfectly well — the absence of a value read as
-                    // the value, a fourth time in this round.
-                    const before = getComputedStyle(el, '::before');
-                    const label = el.querySelector('.kp-button__label');
-                    return [
-                        s.backgroundColor,
-                        s.boxShadow,
-                        s.translate,
-                        s.transform,
-                        s.paddingBlockStart,
-                        s.paddingInlineStart,
-                        s.borderColor,
-                        s.color,
-                        `${before.opacity} ${before.backgroundColor} ${before.transform}`,
-                        label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
-                    ].join(' | ');
-                });
-            await button.hover();
-            // Let the hover settle before taking the baseline: read too early and
-            // the baseline is the RESTING paint, which the press then differs
-            // from for the wrong reason [fix-1].
-            await page.waitForTimeout(260);
-            const hovered = await paint();
-            await page.mouse.down();
-            try {
-                await measured(
-                    button,
-                    (el) => {
+        test(
+            `${selector} reacts to being pressed under ${theme} [fix-12]`,
+            { tag: ['@sweep', `@theme:${theme}`, '@component:button', '@component:showcase'] },
+            async ({ page }) => {
+                await page.goto(`/showcase/themes/${theme}.html`);
+                // The plain selector matches the variants too, so take one that
+                // carries no variant class — that is the control Kenny pressed.
+                const button =
+                    selector === '.kp-button' ? page.locator('.kp-button:not([class*="kp-button--"])').first() : page.locator(selector).first();
+                if ((await button.count()) === 0) test.skip(true, `${theme}'s showcase page carries no ${selector}`);
+                await button.scrollIntoViewIfNeeded();
+                // Everything a press is allowed to change, in one vector. Reading
+                // only `background-color` called retro red on 2026-09-12: that theme
+                // presses by inverting its bevel and shifting its padding, which is
+                // a reaction the narrower question could not see.
+                const paint = () =>
+                    button.evaluate((el) => {
                         const s = getComputedStyle(el);
+                        // `transform` and `translate` are different properties
+                        // and a theme may press with either; a press may also
+                        // land on a pseudo-element or on the label rather than
+                        // on the control (nostromo lights a lamp, grotesk
+                        // thickens the baseline). Reading only `translate` on
+                        // the element called five themes red in Phase 7 that
+                        // press perfectly well — the absence of a value read as
+                        // the value, a fourth time in this round.
                         const before = getComputedStyle(el, '::before');
                         const label = el.querySelector('.kp-button__label');
                         return [
@@ -148,14 +128,42 @@ for (const theme of THEMES) {
                             `${before.opacity} ${before.backgroundColor} ${before.transform}`,
                             label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
                         ].join(' | ');
-                    },
-                    undefined,
-                    `${theme}: held down, the button paints exactly as it did hovered`,
-                ).not.toBe(hovered);
-            } finally {
-                await page.mouse.up();
-            }
-        });
+                    });
+                await button.hover();
+                // Let the hover settle before taking the baseline: read too early and
+                // the baseline is the RESTING paint, which the press then differs
+                // from for the wrong reason [fix-1].
+                await page.waitForTimeout(260);
+                const hovered = await paint();
+                await page.mouse.down();
+                try {
+                    await measured(
+                        button,
+                        (el) => {
+                            const s = getComputedStyle(el);
+                            const before = getComputedStyle(el, '::before');
+                            const label = el.querySelector('.kp-button__label');
+                            return [
+                                s.backgroundColor,
+                                s.boxShadow,
+                                s.translate,
+                                s.transform,
+                                s.paddingBlockStart,
+                                s.paddingInlineStart,
+                                s.borderColor,
+                                s.color,
+                                `${before.opacity} ${before.backgroundColor} ${before.transform}`,
+                                label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
+                            ].join(' | ');
+                        },
+                        undefined,
+                        `${theme}: held down, the button paints exactly as it did hovered`,
+                    ).not.toBe(hovered);
+                } finally {
+                    await page.mouse.up();
+                }
+            },
+        );
     }
 }
 
@@ -176,24 +184,28 @@ for (const theme of THEMES) {
 // from css/grotesk-register.css and the bundle regenerated → red on
 // grotesk alone, at 1.00. Restored green.
 for (const theme of THEMES) {
-    test(`the destructive alert can be read under ${theme} [gap-1]`, async ({ page }) => {
-        await page.goto(`/showcase/themes/${theme}.html`);
-        const alert = page.locator('.kp-alert--destructive').first();
-        await alert.scrollIntoViewIfNeeded();
-        const painted = await alert.evaluate((el) => {
-            const s = getComputedStyle(el);
-            // The ground the words actually stand on, not the one the
-            // element declares: a transparent alert shows what is behind it.
-            let node = /** @type {HTMLElement} */ (el);
-            let bg = s.backgroundColor;
-            while (bg === 'rgba(0, 0, 0, 0)' && node.parentElement) {
-                node = node.parentElement;
-                bg = getComputedStyle(node).backgroundColor;
-            }
-            return { fg: s.color, bg };
-        });
-        expect(contrast(parse(painted.fg), parse(painted.bg)), `${painted.fg} on ${painted.bg}`).toBeGreaterThanOrEqual(4.5);
-    });
+    test(
+        `the destructive alert can be read under ${theme} [gap-1]`,
+        { tag: ['@sweep', `@theme:${theme}`, '@component:feedback', '@component:showcase'] },
+        async ({ page }) => {
+            await page.goto(`/showcase/themes/${theme}.html`);
+            const alert = page.locator('.kp-alert--destructive').first();
+            await alert.scrollIntoViewIfNeeded();
+            const painted = await alert.evaluate((el) => {
+                const s = getComputedStyle(el);
+                // The ground the words actually stand on, not the one the
+                // element declares: a transparent alert shows what is behind it.
+                let node = /** @type {HTMLElement} */ (el);
+                let bg = s.backgroundColor;
+                while (bg === 'rgba(0, 0, 0, 0)' && node.parentElement) {
+                    node = node.parentElement;
+                    bg = getComputedStyle(node).backgroundColor;
+                }
+                return { fg: s.color, bg };
+            });
+            expect(contrast(parse(painted.fg), parse(painted.bg)), `${painted.fg} on ${painted.bg}`).toBeGreaterThanOrEqual(4.5);
+        },
+    );
 }
 
 // CP1 — the arrival answers a click anywhere, not only on Skip.
@@ -210,28 +222,32 @@ for (const theme of THEMES) {
 // js/effects.js → red on all four, because the click lands and the
 // overlay stays. Restored green.
 for (const theme of ['phantom', 'retro', 'terminal', 'synthwave']) {
-    test(`the arrival lets go of a click anywhere under ${theme} [CP1]`, async ({ page }) => {
-        await page.emulateMedia({ reducedMotion: 'no-preference' });
-        // The showcase page, which exists for every theme — synthwave has no
-        // concept page, and pointing at one that 404s made this test measure
-        // an empty document and call it a pass for three of four.
-        await page.goto(`/showcase/themes/${theme}.html`);
-        const overlay = page.locator('.kp-boot');
-        await expect(overlay).toHaveCount(1);
+    test(
+        `the arrival lets go of a click anywhere under ${theme} [CP1]`,
+        { tag: ['@sweep', `@theme:${theme}`, '@component:page-effects', '@component:showcase'] },
+        async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'no-preference' });
+            // The showcase page, which exists for every theme — synthwave has no
+            // concept page, and pointing at one that 404s made this test measure
+            // an empty document and call it a pass for three of four.
+            await page.goto(`/showcase/themes/${theme}.html`);
+            const overlay = page.locator('.kp-boot');
+            await expect(overlay).toHaveCount(1);
 
-        // What is measured is that the CLICK arrives, not that the overlay
-        // eventually goes: every arrival ends on its own inside a second, so
-        // waiting for it to vanish passed with the listener removed. `end()`
-        // marks the overlay on the spot, and that mark is the click landing.
-        const marked = await overlay.evaluate((el) => {
-            const wasOff = el.classList.contains('is-off');
-            // Anywhere that is not Skip: the overlay's own top-left corner.
-            el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-            return { wasOff, isOff: el.classList.contains('is-off') };
-        });
-        expect(marked.wasOff, 'the arrival is still running when the click lands').toBe(false);
-        expect(marked.isOff, 'and a click that is not on Skip ends it').toBe(true);
-    });
+            // What is measured is that the CLICK arrives, not that the overlay
+            // eventually goes: every arrival ends on its own inside a second, so
+            // waiting for it to vanish passed with the listener removed. `end()`
+            // marks the overlay on the spot, and that mark is the click landing.
+            const marked = await overlay.evaluate((el) => {
+                const wasOff = el.classList.contains('is-off');
+                // Anywhere that is not Skip: the overlay's own top-left corner.
+                el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                return { wasOff, isOff: el.classList.contains('is-off') };
+            });
+            expect(marked.wasOff, 'the arrival is still running when the click lands').toBe(false);
+            expect(marked.isOff, 'and a click that is not on Skip ends it').toBe(true);
+        },
+    );
 }
 
 // gap-2 — the theme picker sits in the same place in every theme.
@@ -250,60 +266,64 @@ for (const theme of ['phantom', 'retro', 'terminal', 'synthwave']) {
 //
 // Drilled 2026-09-12: `block-size: 4rem` removed from `.sc-header h1` →
 // the spread goes back to 18px and this test is red.
-test('the theme picker rests in the same place in every theme [gap-2]', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    /** @type {Array<[string, number, number]>} */
-    const seen = [];
-    for (const theme of THEMES) {
-        await page.addInitScript((name) => {
-            try {
-                localStorage.setItem('theme', name);
-            } catch {
-                // no storage: the page keeps its served theme, and the
-                // assertion below reports it as an outlier rather than
-                // passing quietly
-            }
-        }, theme);
-        await page.goto('/showcase/index.html');
-        await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
-        const box = await page.locator('.kp-theme-menu').first().boundingBox();
-        expect(box, `${theme}: the picker is on the page`).not.toBeNull();
-        seen.push([theme, Math.round(box.y), Math.round(box.x)]);
-    }
-    // One theme is inset on purpose, and it is not drift.
-    //
-    // terminal draws a CRT bezel — a frame up to 18px wide, fixed against
-    // the viewport — and since 2026-09-13 the theme reserves that space so
-    // nothing sits behind it. Kenny's words at the release gate: "links
-    // moeten compleet en klikbaar zijn". Before that, the site's first
-    // navigation link started at 8px and lost 9.8 of them behind the frame,
-    // and the approved demo hid its own skip link the same way.
-    //
-    // So terminal's picker really does rest further in than the others, by
-    // exactly the frame it draws. That is a theme having a frame, not a
-    // control wandering. It is named here with its measurement rather than
-    // widened away, so the day terminal stops framing the page this line
-    // fails and someone reads it.
-    const FRAMED = { terminal: 18 };
-    const INSET_REASON = 'terminal reserves the width of its own CRT bezel, measured 18px at 1600px and 18px at this width';
+test(
+    'the theme picker rests in the same place in every theme [gap-2]',
+    { tag: ['@sweep', '@component:picker', '@component:showcase'] },
+    async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 900 });
+        /** @type {Array<[string, number, number]>} */
+        const seen = [];
+        for (const theme of THEMES) {
+            await page.addInitScript((name) => {
+                try {
+                    localStorage.setItem('theme', name);
+                } catch {
+                    // no storage: the page keeps its served theme, and the
+                    // assertion below reports it as an outlier rather than
+                    // passing quietly
+                }
+            }, theme);
+            await page.goto('/showcase/index.html');
+            await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
+            const box = await page.locator('.kp-theme-menu').first().boundingBox();
+            expect(box, `${theme}: the picker is on the page`).not.toBeNull();
+            seen.push([theme, Math.round(box.y), Math.round(box.x)]);
+        }
+        // One theme is inset on purpose, and it is not drift.
+        //
+        // terminal draws a CRT bezel — a frame up to 18px wide, fixed against
+        // the viewport — and since 2026-09-13 the theme reserves that space so
+        // nothing sits behind it. Kenny's words at the release gate: "links
+        // moeten compleet en klikbaar zijn". Before that, the site's first
+        // navigation link started at 8px and lost 9.8 of them behind the frame,
+        // and the approved demo hid its own skip link the same way.
+        //
+        // So terminal's picker really does rest further in than the others, by
+        // exactly the frame it draws. That is a theme having a frame, not a
+        // control wandering. It is named here with its measurement rather than
+        // widened away, so the day terminal stops framing the page this line
+        // fails and someone reads it.
+        const FRAMED = { terminal: 18 };
+        const INSET_REASON = 'terminal reserves the width of its own CRT bezel, measured 18px at 1600px and 18px at this width';
 
-    const straight = seen.filter(([name]) => !(name in FRAMED));
-    const ys = straight.map(([, y]) => y);
-    const xs = straight.map(([, , x]) => x);
-    const drift = Math.max(...ys) - Math.min(...ys);
-    // Five pixels: retro's own type metrics put it four out, and a control
-    // four pixels from where it was is a control you still hit.
-    expect(drift, `vertical drift across ${straight.length} themes: ${JSON.stringify(straight)}`).toBeLessThanOrEqual(5);
-    expect(Math.max(...xs) - Math.min(...xs), 'and sideways').toBeLessThanOrEqual(5);
+        const straight = seen.filter(([name]) => !(name in FRAMED));
+        const ys = straight.map(([, y]) => y);
+        const xs = straight.map(([, , x]) => x);
+        const drift = Math.max(...ys) - Math.min(...ys);
+        // Five pixels: retro's own type metrics put it four out, and a control
+        // four pixels from where it was is a control you still hit.
+        expect(drift, `vertical drift across ${straight.length} themes: ${JSON.stringify(straight)}`).toBeLessThanOrEqual(5);
+        expect(Math.max(...xs) - Math.min(...xs), 'and sideways').toBeLessThanOrEqual(5);
 
-    // And the framed one is inset by what it frames, no more and no less.
-    const floor = Math.min(...ys);
-    for (const [name, inset] of Object.entries(FRAMED)) {
-        const row = seen.find(([theme]) => theme === name);
-        expect(row, `${name} is in the sweep`).toBeTruthy();
-        expect(row[1] - floor, `${name}: ${INSET_REASON}, so it should sit ${inset}px lower than the unframed themes`).toBeGreaterThanOrEqual(
-            inset - 3,
-        );
-        expect(row[1] - floor, `${name} is inset by more than the frame it draws — something else moved it`).toBeLessThanOrEqual(inset + 3);
-    }
-});
+        // And the framed one is inset by what it frames, no more and no less.
+        const floor = Math.min(...ys);
+        for (const [name, inset] of Object.entries(FRAMED)) {
+            const row = seen.find(([theme]) => theme === name);
+            expect(row, `${name} is in the sweep`).toBeTruthy();
+            expect(row[1] - floor, `${name}: ${INSET_REASON}, so it should sit ${inset}px lower than the unframed themes`).toBeGreaterThanOrEqual(
+                inset - 3,
+            );
+            expect(row[1] - floor, `${name} is inset by more than the frame it draws — something else moved it`).toBeLessThanOrEqual(inset + 3);
+        }
+    },
+);

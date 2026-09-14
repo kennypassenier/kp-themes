@@ -37,7 +37,7 @@ for (const channel of CHANNELS) {
     const { key } = channel;
 
     // ── 1. Sorting on more than one column (#multi-sort) ──────────────────
-    test.describe(`datatable multi-sort — ${channel.name}`, () => {
+    test.describe(`datatable multi-sort — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('Shift + click adds a key, numbered in the header, said in words, and readable from the table [feature 1]', async ({ page }) => {
             // Before: Shift + click replaced the sort (Hours alone, aria-sort none on Severity); no order numbers and no summary existed.
             await open(page, key);
@@ -99,7 +99,7 @@ for (const channel of CHANNELS) {
     });
 
     // ── 2. Choosing which columns show (#columns) ─────────────────────────
-    test.describe(`datatable column choice — ${channel.name}`, () => {
+    test.describe(`datatable column choice — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('the Columns menu hides a column, header and cells together, keeps the key column, and says how many show [feature 2]', async ({
             page,
         }) => {
@@ -135,92 +135,95 @@ for (const channel of CHANNELS) {
             await expect(count).toHaveText(S.tableColumnsShown(5, 5));
         });
 
-        test('the Columns and "+ Add filter" menus, opened at the bottom of a 720px window, open upwards beside their button, whole in the window, in every theme', async ({
-            page,
-        }) => {
-            // Before: the Columns menu hung under its button and ran past the bottom of the window in all 22 themes, both channels (top 714-724, bottom 924-1000).
-            await page.setViewportSize({ width: 1280, height: 720 });
-            await page.emulateMedia({ reducedMotion: 'reduce' });
-            await open(page, key);
-            // Room to scroll a button to the bottom edge, wherever the fixture ends.
-            await page.evaluate(() => {
-                const spacer = document.createElement('div');
-                spacer.style.blockSize = '100vh';
-                document.body.append(spacer);
-            });
-            /** @type {[string, import('@playwright/test').Locator, import('@playwright/test').Locator][]} */
-            const menus = [
-                [
-                    'Columns',
-                    page.locator(tableOf(key, 'columns')).getByRole('button', { name: S.tableColumns }),
-                    page.locator('[data-kp-datatable-columns]:popover-open'),
-                ],
-                [
-                    '+ Add filter',
-                    page.locator(tableOf(key, 'addfilter')).locator('[data-kp-datatable-add-filter]'),
-                    page.locator('[data-kp-datatable-add-menu]:popover-open'),
-                ],
-            ];
-            const faults = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                for (const [name, button, menu] of menus) {
-                    const before = await button.evaluate((el) => {
-                        el.scrollIntoView({ block: 'end' });
-                        return Math.round(el.getBoundingClientRect().bottom);
-                    });
-                    await button.click();
-                    await expect(menu).toBeVisible();
-                    const m = await menu.evaluate(
-                        async (el, toggle) => {
-                            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                            const box = el.getBoundingClientRect();
-                            const at = /** @type {Element} */ (toggle).getBoundingClientRect();
-                            return {
-                                top: Math.round(box.top),
-                                bottom: Math.round(box.bottom),
-                                window: innerHeight,
-                                buttonTop: Math.round(at.top),
-                                buttonBottom: Math.round(at.bottom),
-                            };
-                        },
-                        await button.elementHandle(),
-                    );
-                    const read = `${theme} ${name}: menu ${m.top}-${m.bottom} in a ${m.window}px window, button ${m.buttonTop}-${m.buttonBottom}`;
-                    if (m.top < 0 || m.bottom > m.window) faults.push(`${read}, outside the window`);
-                    // A menu that opens into the window leaves the page where it was; one that
-                    // opened below it pulled the page up to its focused item.
-                    else if (Math.abs(m.buttonBottom - before) > 2)
-                        faults.push(`${read}, the page moved: button bottom ${before} -> ${m.buttonBottom}`);
-                    // Still its button's menu: an edge within 24px of the button's.
-                    else if (Math.min(Math.abs(m.bottom - m.buttonTop), Math.abs(m.top - m.buttonBottom)) > 24)
-                        faults.push(`${read}, away from its button`);
-                    // And it travels with its button when the page scrolls under it.
-                    await page.mouse.wheel(0, -120);
-                    const moved = await menu.evaluate(
-                        async (el, toggle) => {
-                            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                            const box = el.getBoundingClientRect();
-                            const at = /** @type {Element} */ (toggle).getBoundingClientRect();
-                            return {
-                                gap: Math.round(Math.min(Math.abs(box.bottom - at.top), Math.abs(box.top - at.bottom))),
-                                buttonTop: Math.round(at.top),
-                            };
-                        },
-                        await button.elementHandle(),
-                    );
-                    if (moved.buttonTop === m.buttonTop) faults.push(`${theme} ${name}: the page did not scroll, so the menu's travel was not read`);
-                    else if (moved.gap > 24) faults.push(`${theme} ${name}: ${moved.gap}px from its button after a scroll`);
-                    await page.keyboard.press('Escape');
-                    await expect(menu).toHaveCount(0);
+        test(
+            'the Columns and "+ Add filter" menus, opened at the bottom of a 720px window, open upwards beside their button, whole in the window, in every theme',
+            { tag: ['@sweep'] },
+            async ({ page }) => {
+                // Before: the Columns menu hung under its button and ran past the bottom of the window in all 22 themes, both channels (top 714-724, bottom 924-1000).
+                await page.setViewportSize({ width: 1280, height: 720 });
+                await page.emulateMedia({ reducedMotion: 'reduce' });
+                await open(page, key);
+                // Room to scroll a button to the bottom edge, wherever the fixture ends.
+                await page.evaluate(() => {
+                    const spacer = document.createElement('div');
+                    spacer.style.blockSize = '100vh';
+                    document.body.append(spacer);
+                });
+                /** @type {[string, import('@playwright/test').Locator, import('@playwright/test').Locator][]} */
+                const menus = [
+                    [
+                        'Columns',
+                        page.locator(tableOf(key, 'columns')).getByRole('button', { name: S.tableColumns }),
+                        page.locator('[data-kp-datatable-columns]:popover-open'),
+                    ],
+                    [
+                        '+ Add filter',
+                        page.locator(tableOf(key, 'addfilter')).locator('[data-kp-datatable-add-filter]'),
+                        page.locator('[data-kp-datatable-add-menu]:popover-open'),
+                    ],
+                ];
+                const faults = [];
+                for (const theme of THEME_NAMES) {
+                    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                    for (const [name, button, menu] of menus) {
+                        const before = await button.evaluate((el) => {
+                            el.scrollIntoView({ block: 'end' });
+                            return Math.round(el.getBoundingClientRect().bottom);
+                        });
+                        await button.click();
+                        await expect(menu).toBeVisible();
+                        const m = await menu.evaluate(
+                            async (el, toggle) => {
+                                await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                                const box = el.getBoundingClientRect();
+                                const at = /** @type {Element} */ (toggle).getBoundingClientRect();
+                                return {
+                                    top: Math.round(box.top),
+                                    bottom: Math.round(box.bottom),
+                                    window: innerHeight,
+                                    buttonTop: Math.round(at.top),
+                                    buttonBottom: Math.round(at.bottom),
+                                };
+                            },
+                            await button.elementHandle(),
+                        );
+                        const read = `${theme} ${name}: menu ${m.top}-${m.bottom} in a ${m.window}px window, button ${m.buttonTop}-${m.buttonBottom}`;
+                        if (m.top < 0 || m.bottom > m.window) faults.push(`${read}, outside the window`);
+                        // A menu that opens into the window leaves the page where it was; one that
+                        // opened below it pulled the page up to its focused item.
+                        else if (Math.abs(m.buttonBottom - before) > 2)
+                            faults.push(`${read}, the page moved: button bottom ${before} -> ${m.buttonBottom}`);
+                        // Still its button's menu: an edge within 24px of the button's.
+                        else if (Math.min(Math.abs(m.bottom - m.buttonTop), Math.abs(m.top - m.buttonBottom)) > 24)
+                            faults.push(`${read}, away from its button`);
+                        // And it travels with its button when the page scrolls under it.
+                        await page.mouse.wheel(0, -120);
+                        const moved = await menu.evaluate(
+                            async (el, toggle) => {
+                                await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                                const box = el.getBoundingClientRect();
+                                const at = /** @type {Element} */ (toggle).getBoundingClientRect();
+                                return {
+                                    gap: Math.round(Math.min(Math.abs(box.bottom - at.top), Math.abs(box.top - at.bottom))),
+                                    buttonTop: Math.round(at.top),
+                                };
+                            },
+                            await button.elementHandle(),
+                        );
+                        if (moved.buttonTop === m.buttonTop)
+                            faults.push(`${theme} ${name}: the page did not scroll, so the menu's travel was not read`);
+                        else if (moved.gap > 24) faults.push(`${theme} ${name}: ${moved.gap}px from its button after a scroll`);
+                        await page.keyboard.press('Escape');
+                        await expect(menu).toHaveCount(0);
+                    }
                 }
-            }
-            expect(faults).toEqual([]);
-        });
+                expect(faults).toEqual([]);
+            },
+        );
     });
 
     // ── 3. Rows that open to show more (#expansion) ───────────────────────
-    test.describe(`datatable row expansion — ${channel.name}`, () => {
+    test.describe(`datatable row expansion — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('a button opens a detail row under its row, from the pointer and the keyboard, and the open row travels with a sort [feature 3]', async ({
             page,
         }) => {
@@ -271,7 +274,7 @@ for (const channel of CHANNELS) {
     });
 
     // ── 5. Rows that come from a server (#async) ──────────────────────────
-    test.describe(`datatable server rows — ${channel.name}`, () => {
+    test.describe(`datatable server rows — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         /** @param {import('@playwright/test').Page} page */
         const serverLog = (page) =>
             page.evaluate((k) => /** @type {any} */ (window).kpFixture[k === 'plain' ? 'server' : 'reactServer'].log.map((e) => ({ ...e })), key);
@@ -348,7 +351,7 @@ for (const channel of CHANNELS) {
     });
 
     // ── 6. Editing a value in its cell (#inline-edit) ─────────────────────
-    test.describe(`datatable inline edit — ${channel.name}`, () => {
+    test.describe(`datatable inline edit — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         /** @param {import('@playwright/test').Page} page */
         const edits = (page) => page.evaluate((k) => /** @type {any} */ (window).kpFixture.editLog[k].map((e) => ({ ...e })), key);
 
@@ -440,7 +443,7 @@ for (const channel of CHANNELS) {
     });
 
     // ── 7. Moving through cells with the arrow keys (#keyboard) ───────────
-    test.describe(`datatable keyboard grid — ${channel.name}`, () => {
+    test.describe(`datatable keyboard grid — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('Tab enters the grid once; arrows, Home, End, Ctrl + Home/End and Page Up/Down move a cell at a time, and the line says where [feature 7]', async ({
             page,
         }) => {
@@ -487,47 +490,49 @@ for (const channel of CHANNELS) {
             expect(await at()).toEqual([5, 0]);
         });
 
-        test('Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focus ring shows inside the cell in every theme [feature 7]', async ({
-            page,
-        }) => {
-            // Before: no grid and no edit button to reach in either channel.
-            // Drilled [KT3]: the `.kp-table[role='grid'] :is(th, td):focus-visible` rule taken out of css/components.css — 20 themes
-            // read inside:false in both channels (the two registers with their own answer held); restored, green.
-            await open(page, key);
-            const table = page.locator(tableOf(key, 'grid'));
-            await page.locator(`[data-test="${key}-before-grid"]`).focus();
-            await page.keyboard.press('Tab');
-            await page.keyboard.press('ArrowRight');
-            await page.keyboard.press('ArrowRight');
-            const editButton = table.getByRole('button', { name: S.tableEdit('Status', 'INC-4400', 'Open') });
-            await expect(editButton).toBeFocused();
-            await page.keyboard.press('Enter');
-            const editor = table.locator('select[data-kp-datatable-editor]');
-            await expect(editor).toBeFocused();
-            await page.keyboard.press('Escape');
-            await expect(editor).toHaveCount(0);
-            await expect(editButton).toBeFocused();
-            await page.keyboard.press('ArrowLeft');
-            const missing = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                const ring = await page.evaluate(() => {
-                    const el = /** @type {HTMLElement} */ (document.activeElement);
-                    const s = getComputedStyle(el);
-                    const width = parseFloat(s.outlineWidth);
-                    const outline = s.outlineStyle !== 'none' && width > 0;
-                    return {
-                        tag: el.tagName,
-                        visible: el.matches(':focus-visible'),
-                        outline,
-                        // Inside the cell, so a neighbour's ground or the scroll box cannot cut it away: an outline
-                        // drawn inward, or a ring drawn as an inset shadow where the theme draws no outline.
-                        inside: outline ? parseFloat(s.outlineOffset) <= -width : s.boxShadow.includes('inset'),
-                    };
-                });
-                if (ring.tag !== 'TD' || !ring.visible || !ring.inside) missing.push(`${theme}: ${JSON.stringify(ring)}`);
-            }
-            expect(missing).toEqual([]);
-        });
+        test(
+            'Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focus ring shows inside the cell in every theme [feature 7]',
+            { tag: ['@sweep'] },
+            async ({ page }) => {
+                // Before: no grid and no edit button to reach in either channel.
+                // Drilled [KT3]: the `.kp-table[role='grid'] :is(th, td):focus-visible` rule taken out of css/components.css — 20 themes
+                // read inside:false in both channels (the two registers with their own answer held); restored, green.
+                await open(page, key);
+                const table = page.locator(tableOf(key, 'grid'));
+                await page.locator(`[data-test="${key}-before-grid"]`).focus();
+                await page.keyboard.press('Tab');
+                await page.keyboard.press('ArrowRight');
+                await page.keyboard.press('ArrowRight');
+                const editButton = table.getByRole('button', { name: S.tableEdit('Status', 'INC-4400', 'Open') });
+                await expect(editButton).toBeFocused();
+                await page.keyboard.press('Enter');
+                const editor = table.locator('select[data-kp-datatable-editor]');
+                await expect(editor).toBeFocused();
+                await page.keyboard.press('Escape');
+                await expect(editor).toHaveCount(0);
+                await expect(editButton).toBeFocused();
+                await page.keyboard.press('ArrowLeft');
+                const missing = [];
+                for (const theme of THEME_NAMES) {
+                    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                    const ring = await page.evaluate(() => {
+                        const el = /** @type {HTMLElement} */ (document.activeElement);
+                        const s = getComputedStyle(el);
+                        const width = parseFloat(s.outlineWidth);
+                        const outline = s.outlineStyle !== 'none' && width > 0;
+                        return {
+                            tag: el.tagName,
+                            visible: el.matches(':focus-visible'),
+                            outline,
+                            // Inside the cell, so a neighbour's ground or the scroll box cannot cut it away: an outline
+                            // drawn inward, or a ring drawn as an inset shadow where the theme draws no outline.
+                            inside: outline ? parseFloat(s.outlineOffset) <= -width : s.boxShadow.includes('inset'),
+                        };
+                    });
+                    if (ring.tag !== 'TD' || !ring.visible || !ring.inside) missing.push(`${theme}: ${JSON.stringify(ring)}`);
+                }
+                expect(missing).toEqual([]);
+            },
+        );
     });
 }

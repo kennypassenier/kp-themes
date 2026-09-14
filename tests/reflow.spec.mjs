@@ -138,11 +138,11 @@ const urls = (theme) => ({
     React: `/tests/fixtures/examples.html?example=concept&copy=${theme}`,
 });
 
-test.describe('every theme at a phone width [G12]', () => {
+test.describe('every theme at a phone width [G12]', { tag: ['@sweep', '@component:examples'] }, () => {
     test('the sweep covers every theme at both narrow widths [AR26]', () => {
         // Phase 7: this was a hand-written 25, stale since the four
         // themes of scope-11 were removed, and it had been red on the
-        // branch without anyone seeing it — the narrow test:affected map
+        // branch without anyone seeing it — the narrow test:affected map (retired at scope-33)
         // never ran this spec. The package's own list is the count.
         const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
         const names = Array.isArray(order) ? order : Object.keys(order);
@@ -165,7 +165,7 @@ test.describe('every theme at a phone width [G12]', () => {
     });
 
     for (const theme of THEMES) {
-        test(`${theme.name} holds at 320 and 768, both channels [G12, TH99]`, async ({ page }) => {
+        test(`${theme.name} holds at 320 and 768, both channels [G12, TH99]`, { tag: [`@theme:${theme.name}`] }, async ({ page }) => {
             // A storage this refuses leaves the page in the default theme,
             // and the assertion below then says so rather than passing.
             await page.addInitScript((name) => {

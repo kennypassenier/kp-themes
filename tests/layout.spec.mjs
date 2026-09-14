@@ -48,7 +48,7 @@ const token = (page, name) =>
         return v;
     }, name);
 
-test.describe('the layout layer', () => {
+test.describe('the layout layer', { tag: ['@component:layout'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);

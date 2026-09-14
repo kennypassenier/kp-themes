@@ -76,42 +76,44 @@ const served = async (page, iframe) => {
     return response.text();
 };
 
-test.describe('the compare pages', () => {
-    test('cyberpunk: the statement names the rewritten register, the demo is whole on both sides, and the marks name the touched pieces', async ({
-        page,
-    }) => {
-        const pair = await open(page, 'cyberpunk');
-        const lines = await page.locator('[data-compare-lines] li').allTextContents();
-        expect(lines.join(' ')).toMatch(/register is rewritten/);
-        expect(lines.join(' ')).toMatch(/Two surfaces/);
-        const old = pair.frameLocator('iframe[data-compare-side="old"]');
-        const current = pair.frameLocator('iframe[data-compare-side="new"]');
-        for (const side of ['old', 'new']) {
-            const html = await served(page, pair.locator(`iframe[data-compare-side="${side}"]`));
-            for (const { what, marker } of INVENTORY) expect(html, `the ${side} frame lacks ${what}`).toContain(marker);
-        }
-        const found = await marks(current);
-        const labels = new Set(found.map((m) => m.label));
-        expect([...labels], 'the marks name the touched pieces').toEqual(
-            expect.arrayContaining(['Navigation', 'Buttons', 'Fields', 'Dossier', 'Tear', 'Two surfaces', 'Typography', 'Palette']),
-        );
-        expect(
-            found.filter((m) => !m.visible),
-            'every mark is painted',
-        ).toEqual([]);
-        // The same marks on the left, so the eye finds the same piece on both sides.
-        expect(new Set((await marks(old)).map((m) => m.label))).toEqual(labels);
-        expect((await identity(old)).theme).toBe('cyberpunk');
-        expect((await identity(current)).theme).toBe('cyberpunk');
-        expect((await identity(old)).heroSource, 'the left is 4.0.0').toBe('');
-        expect((await identity(current)).heroSource, 'the right is the current build').not.toBe('');
-    });
+test.describe('the compare pages', { tag: ['@component:examples'] }, () => {
+    test(
+        'cyberpunk: the statement names the rewritten register, the demo is whole on both sides, and the marks name the touched pieces',
+        { tag: ['@theme:cyberpunk'] },
+        async ({ page }) => {
+            const pair = await open(page, 'cyberpunk');
+            const lines = await page.locator('[data-compare-lines] li').allTextContents();
+            expect(lines.join(' ')).toMatch(/register is rewritten/);
+            expect(lines.join(' ')).toMatch(/Two surfaces/);
+            const old = pair.frameLocator('iframe[data-compare-side="old"]');
+            const current = pair.frameLocator('iframe[data-compare-side="new"]');
+            for (const side of ['old', 'new']) {
+                const html = await served(page, pair.locator(`iframe[data-compare-side="${side}"]`));
+                for (const { what, marker } of INVENTORY) expect(html, `the ${side} frame lacks ${what}`).toContain(marker);
+            }
+            const found = await marks(current);
+            const labels = new Set(found.map((m) => m.label));
+            expect([...labels], 'the marks name the touched pieces').toEqual(
+                expect.arrayContaining(['Navigation', 'Buttons', 'Fields', 'Dossier', 'Tear', 'Two surfaces', 'Typography', 'Palette']),
+            );
+            expect(
+                found.filter((m) => !m.visible),
+                'every mark is painted',
+            ).toEqual([]);
+            // The same marks on the left, so the eye finds the same piece on both sides.
+            expect(new Set((await marks(old)).map((m) => m.label))).toEqual(labels);
+            expect((await identity(old)).theme).toBe('cyberpunk');
+            expect((await identity(current)).theme).toBe('cyberpunk');
+            expect((await identity(old)).heroSource, 'the left is 4.0.0').toBe('');
+            expect((await identity(current)).heroSource, 'the right is the current build').not.toBe('');
+        },
+    );
 
     // pastel: the type is the headline of its 5.0.0 change, and its
     // palette is marked too since the lift, because the demo's own lift
     // distance moved (--fx-lift 3px → 2px). The measurement, not the
     // test, decides which categories are marked.
-    test('pastel: the statement is about typography, the demo is whole, and the type is marked', async ({ page }) => {
+    test('pastel: the statement is about typography, the demo is whole, and the type is marked', { tag: ['@theme:pastel'] }, async ({ page }) => {
         const pair = await open(page, 'pastel');
         const lines = await page.locator('[data-compare-lines] li').allTextContents();
         expect(lines.join(' ')).toMatch(/Typography: Instrument Sans/);
@@ -143,7 +145,7 @@ test.describe('the compare pages', () => {
     // is no per-theme ceiling to name: DI9 is advice, the reading simply
     // says the paint is over the number, and the proposal pair is gone
     // either way — there is nothing left to propose.
-    test('dark: the texture is gone, and the compare page says so [Kenny, 2026-09-11]', async ({ page }) => {
+    test('dark: the texture is gone, and the compare page says so [Kenny, 2026-09-11]', { tag: ['@theme:dark'] }, async ({ page }) => {
         // This test used to assert the opposite: a layer painting at 0.238,
         // over DI9's ceiling, as the approved demo measured it. Kenny took
         // dark's stars out on 2026-09-11 — "dark mag zijn sterren weer
@@ -196,7 +198,7 @@ test.describe('the compare pages', () => {
             .toBeGreaterThan(200);
     });
 
-    test('one theme per page: the index links all 24, each page marks its own and shows no other', async ({ page }) => {
+    test('one theme per page: the index links all 24, each page marks its own and shows no other', { tag: ['@sweep'] }, async ({ page }) => {
         await page.goto('/examples/compare.html');
         expect(await page.locator('[data-theme-link]').count()).toBe(THEMES.length);
         await open(page, 'nostromo');

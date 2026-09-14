@@ -92,7 +92,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the retro register, ${channel}`, () => {
+    test.describe(`the retro register, ${channel}`, { tag: ['@theme:retro', '@component:page-effects', '@component:examples'] }, () => {
         test('the page boots once per session through the POST, and Skip ends it at once [RT2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');

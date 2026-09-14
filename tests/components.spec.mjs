@@ -49,7 +49,7 @@ async function ready(page) {
 }
 
 for (const channel of CHANNELS) {
-    test.describe(`contracts · ${channel.name}`, () => {
+    test.describe(`contracts · ${channel.name}`, { tag: ['@component:button', '@component:overlays', '@component:feedback'] }, () => {
         test('a destructive button without undo or confirmation is refused [DI10]', async ({ page }) => {
             const errors = [];
             page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -225,7 +225,7 @@ const SKIP = [
     { name: 'React', link: '[data-test="react-router-nav"] a.kp-skip-link' },
 ];
 for (const channel of SKIP) {
-    test(`the skip link moves focus to the content, not only the scroll — ${channel.name} [KT6]`, async ({ page }) => {
+    test(`the skip link moves focus to the content, not only the scroll — ${channel.name} [KT6]`, { tag: ['@component:page'] }, async ({ page }) => {
         await page.goto('/tests/fixtures/components.html');
         const link = page.locator(channel.link);
         await link.focus();
@@ -248,7 +248,7 @@ for (const channel of SKIP) {
 //
 // Drill: delete the `.kp-badge[data-status='offer']` rule from
 // css/components.css and both channels read the muted plate.
-test.describe('a status badge colours itself from its class [R5-BADGE]', () => {
+test.describe('a status badge colours itself from its class [R5-BADGE]', { tag: ['@component:feedback'] }, () => {
     const plate = (page, selector) =>
         page.evaluate((s) => {
             const el = document.querySelector(s);

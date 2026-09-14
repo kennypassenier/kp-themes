@@ -90,7 +90,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the shade-light register, ${channel}`, () => {
+    test.describe(`the shade-light register, ${channel}`, { tag: ['@theme:shade-light', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline’s words resolve out of a blur, one after another, and end as their own text [TH119, SL2]', async ({ page }) => {
             // Armed before the page exists, because the keyframe that
             // proves this register is its own runs and then stops: reading

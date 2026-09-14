@@ -79,7 +79,7 @@ const OPENED_10_20 = INCIDENTS.filter((row) => row.opened >= '2026-08-10' && row
 for (const channel of CHANNELS) {
     const { key } = channel;
 
-    test.describe(`datatable add-filter mode — ${channel.name}`, () => {
+    test.describe(`datatable add-filter mode — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('"+ Add filter" opens a menu of the filterable columns, and no panel is drawn', async ({ page }) => {
             // Before: no [data-kp-datatable-add-filter] existed; the table drew the "Filters" toggle and panel instead.
             const table = await open(page, key);
@@ -294,65 +294,69 @@ for (const channel of CHANNELS) {
             await expect(pill, 'Escape from a reopened pill returns to that pill').toBeFocused();
         });
 
-        test('every theme draws the menu, the editor and its calendar where they can be reached, inside the table', async ({ page }) => {
-            // Before: no add-filter mode to draw. Measured per theme, 2026-09-14.
-            const table = await open(page, key);
-            /** @type {string[]} */
-            const faults = [];
-            for (const theme of THEME_NAMES) {
-                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                // The theme changes the page's height; the button goes to the top of the window, so the menu and the editor below it are in it.
-                await addButton(table).evaluate((el) => el.scrollIntoView({ block: 'start' }));
-                await addButton(table).click();
-                await expect(menu(table)).toBeVisible();
-                const items = menu(table).locator('.kp-menu__item');
-                for (let i = 0; i < 4; i++) if (!(await settles(items.nth(i)))) faults.push(`${theme}: menu item ${i} cannot be reached`);
-                const menuBox = await menu(table).evaluate((el) => {
-                    const r = el.getBoundingClientRect();
-                    return { width: r.width, scrollWidth: el.scrollWidth, clientWidth: el.clientWidth };
-                });
-                if (menuBox.scrollWidth > menuBox.clientWidth + 1)
-                    faults.push(`${theme}: the menu scrolls sideways (${menuBox.scrollWidth} > ${menuBox.clientWidth})`);
-                await items.nth(3).click();
-                await expect(editor(table)).toBeVisible();
-                const controls = editor(table).locator('[data-kp-filter-bound], [data-kp-date-open], button[type="submit"]');
-                for (let i = 0; i < (await controls.count()); i++)
-                    if (!(await settles(controls.nth(i)))) faults.push(`${theme}: editor control ${i} cannot be reached`);
-                const fit = await table.evaluate((el) => {
-                    const form = /** @type {HTMLElement} */ (el.querySelector('[data-kp-datatable-filter-editor]'));
-                    const wrap = el.getBoundingClientRect();
-                    const r = form.getBoundingClientRect();
-                    const out = [...form.querySelectorAll('[data-kp-filter-bound], [data-kp-date-open], button')].filter(
-                        (node) => node.getBoundingClientRect().right > r.right + 0.5,
-                    ).length;
-                    return { inside: r.left >= wrap.left - 0.5 && r.right <= wrap.right + 0.5, out };
-                });
-                if (!fit.inside) faults.push(`${theme}: the editor leaves the table`);
-                if (fit.out > 0) faults.push(`${theme}: ${fit.out} editor controls stick out of the editor`);
-                await editor(table).locator('[data-kp-date-open]').first().click();
-                const panel = editor(table).locator('[data-kp-date-panel]').first();
-                await expect(panel).toBeVisible();
-                const allDays = async () =>
-                    panel.evaluate((el) => {
-                        const all = [...el.querySelectorAll('[data-kp-day]')];
-                        return (
-                            all.filter((day) => {
-                                const b = day.getBoundingClientRect();
-                                const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
-                                return hit === day || day.contains(hit);
-                            }).length / Math.max(1, all.length)
-                        );
+        test(
+            'every theme draws the menu, the editor and its calendar where they can be reached, inside the table',
+            { tag: ['@sweep'] },
+            async ({ page }) => {
+                // Before: no add-filter mode to draw. Measured per theme, 2026-09-14.
+                const table = await open(page, key);
+                /** @type {string[]} */
+                const faults = [];
+                for (const theme of THEME_NAMES) {
+                    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                    // The theme changes the page's height; the button goes to the top of the window, so the menu and the editor below it are in it.
+                    await addButton(table).evaluate((el) => el.scrollIntoView({ block: 'start' }));
+                    await addButton(table).click();
+                    await expect(menu(table)).toBeVisible();
+                    const items = menu(table).locator('.kp-menu__item');
+                    for (let i = 0; i < 4; i++) if (!(await settles(items.nth(i)))) faults.push(`${theme}: menu item ${i} cannot be reached`);
+                    const menuBox = await menu(table).evaluate((el) => {
+                        const r = el.getBoundingClientRect();
+                        return { width: r.width, scrollWidth: el.scrollWidth, clientWidth: el.clientWidth };
                     });
-                try {
-                    await expect.poll(allDays, { timeout: 3000 }).toBe(1);
-                } catch {
-                    faults.push(`${theme}: ${Math.round((await allDays()) * 100)}% of the calendar's days can be reached`);
+                    if (menuBox.scrollWidth > menuBox.clientWidth + 1)
+                        faults.push(`${theme}: the menu scrolls sideways (${menuBox.scrollWidth} > ${menuBox.clientWidth})`);
+                    await items.nth(3).click();
+                    await expect(editor(table)).toBeVisible();
+                    const controls = editor(table).locator('[data-kp-filter-bound], [data-kp-date-open], button[type="submit"]');
+                    for (let i = 0; i < (await controls.count()); i++)
+                        if (!(await settles(controls.nth(i)))) faults.push(`${theme}: editor control ${i} cannot be reached`);
+                    const fit = await table.evaluate((el) => {
+                        const form = /** @type {HTMLElement} */ (el.querySelector('[data-kp-datatable-filter-editor]'));
+                        const wrap = el.getBoundingClientRect();
+                        const r = form.getBoundingClientRect();
+                        const out = [...form.querySelectorAll('[data-kp-filter-bound], [data-kp-date-open], button')].filter(
+                            (node) => node.getBoundingClientRect().right > r.right + 0.5,
+                        ).length;
+                        return { inside: r.left >= wrap.left - 0.5 && r.right <= wrap.right + 0.5, out };
+                    });
+                    if (!fit.inside) faults.push(`${theme}: the editor leaves the table`);
+                    if (fit.out > 0) faults.push(`${theme}: ${fit.out} editor controls stick out of the editor`);
+                    await editor(table).locator('[data-kp-date-open]').first().click();
+                    const panel = editor(table).locator('[data-kp-date-panel]').first();
+                    await expect(panel).toBeVisible();
+                    const allDays = async () =>
+                        panel.evaluate((el) => {
+                            const all = [...el.querySelectorAll('[data-kp-day]')];
+                            return (
+                                all.filter((day) => {
+                                    const b = day.getBoundingClientRect();
+                                    const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+                                    return hit === day || day.contains(hit);
+                                }).length / Math.max(1, all.length)
+                            );
+                        });
+                    try {
+                        await expect.poll(allDays, { timeout: 3000 }).toBe(1);
+                    } catch {
+                        faults.push(`${theme}: ${Math.round((await allDays()) * 100)}% of the calendar's days can be reached`);
+                    }
+                    await page.keyboard.press('Escape');
+                    await editor(table).getByRole('button', { name: S.tableFilterCancel }).click();
+                    await expect(editor(table)).toBeHidden();
                 }
-                await page.keyboard.press('Escape');
-                await editor(table).getByRole('button', { name: S.tableFilterCancel }).click();
-                await expect(editor(table)).toBeHidden();
-            }
-            expect(faults).toEqual([]);
-        });
+                expect(faults).toEqual([]);
+            },
+        );
     });
 }

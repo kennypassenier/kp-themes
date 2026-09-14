@@ -75,7 +75,7 @@ with its amendments of 2026-09-10 and 2026-09-11. They are recorded in
 | Command                 | What it runs                                                                  | When, and whose                                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `npm run gates`         | 33 `check:` scripts, then the unit tests, then `prettier --check .` — 35 steps | every commit, by the hook. Seconds                                     |
-| `npm run test:affected` | the specs the change touches, Firefox only                                    | once before each report and each commit                                |
+| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit |
 | `npm run test:browser`  | `playwright test` — the whole suite, both engines                             | **Kenny's to authorise.** Before a release Claude asks in a form       |
 | `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants                     | when Kenny wants the reading                                           |
 | `npm run verify`        | gates, then the whole suite, then the advice, with a banner per phase         | before a release, on his go                                            |
@@ -94,14 +94,16 @@ Three things about that table are not style, they are code:
   next one; and `gates/verify.mjs` marks the advice phase
   `blocking: false`. Its closing line is
   `verify green. The advice above is a reading, not a verdict [Kenny, 2026-09-09].`
-- **`test:affected` usually means everything.** `gates/affected.mjs`
-  answers `none` for a change no browser can load, a list for a
-  register or a spec, and `all` for anything else — including any
-  stylesheet or module. While building one thing, run its single spec
-  instead:
+- **Tags decide what runs** [scope-33]. `gates/tags.mjs` reads `tests/tags.json`:
+  a register selects its theme, a changed rule in `css/components.css`
+  selects the component its selector names, a module selects its
+  components, a changed spec runs whole, and `js/strings.js`,
+  `package.json` or the test server still select everything.
+  `npm run check:tags` (in the gates) refuses an untagged test and a
+  file no rule covers. See what a change selects without a browser:
 
     ```sh
-    npx playwright test tests/<file>.spec.mjs --project=firefox
+    npm run test:tags -- --dry-run
     ```
 
 ### Procedure 1.1 — before every commit
@@ -121,14 +123,15 @@ Three things about that table are not style, they are code:
     Hooks: 22 themes answer 6 hooks (118 answers checked, quiet or scoped).
     ```
 
-2. Run the browser specs the change reaches:
+2. Run the browser tests the change reaches, with the sweeps:
 
     ```sh
-    npm run test:affected
+    npm run test:tags -- --level commit
     ```
 
-    Correct: `Nothing a browser can see has changed — no browser test to
-    run.` for a documentation-only change, or a Playwright run that ends
+    Correct: `level commit: nothing to run` never appears at this level
+    (the sweeps always run); a documentation-only change shows
+    `none: documentation` for each file, and the run ends
     with no failures. `retries` is 0 and stays 0 — a spec that needed a
     retry is a red spec.
 
@@ -313,7 +316,7 @@ themes author their own states rather than take the derived ones.
     3 pair(s) short of the floor. This is advice: it is measured and printed, never refused [Kenny, 2026-09-09].
     ```
 
-5. `npm run test:affected`, then commit.
+5. `npm run test:tags -- --level commit`, then commit.
 
 If the value came from an approved concept demo, S49 applies: a gate or a
 test that says the demo must change produces a **finding** put to Kenny,
@@ -458,7 +461,7 @@ eleven chances to forget one.
     `.kp-nav__menu` — open the dropdown before you publish.
 
 6. `npm run generate:all`, then `npm run gates`, then
-   `npm run test:affected`.
+   `npm run test:tags -- --level commit`.
 
 **Abort:** `gates/wire-register.mjs` writes only when run without
 `--check`. If step 3 went wrong, `git checkout -- .` undoes all eleven

@@ -17,8 +17,8 @@
 #
 # There is no longer a CI to catch what this chain does not. Kenny
 # removed it on 2026-09-09 — 254 runs in five days, 35.9 hours of
-# waiting, for a verdict he gives himself. `npm run test:affected` runs
-# what a change touches, in Firefox; `npm run verify` runs everything,
+# waiting, for a verdict he gives himself. `npm run test:tags` runs
+# what a change touches, by tag, in Firefox; `npm run verify` runs everything,
 # and he gives that command before a release.
 set -euo pipefail
 
@@ -99,6 +99,9 @@ node gates/check-hooks.mjs
 echo "→ the register answers every component root (TH124, AR37)"
 node gates/check-register-coverage.mjs
 
+echo "→ every browser test carries a tag, and every file is under a rule of the tag map [scope-33]"
+node gates/check-tags.mjs
+
 echo "→ the shipped fonts: licence, reserved names, budget (T19, AR39)"
 node gates/check-fonts.mjs
 node gates/generate-fonts-css.mjs --check
@@ -152,7 +155,7 @@ node --test gates/ 2>&1 | tail -3
 
 # Gates added by later milestones land here:
 #   L5  the browser checks — but by hand, not here (decision H1):
-#       `npm run test:affected` for a change, `npm run verify` for a
+#       `npm run test:tags` for a change, `npm run verify` for a
 #       release [Kenny, 2026-09-09]
 
 gate_tree_after=$(gate_tree_fingerprint)

@@ -17,7 +17,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`command palette — ${channel.name}`, () => {
+    test.describe(`command palette — ${channel.name}`, { tag: ['@component:page'] }, () => {
         /** Open this channel's palette directly: the global key belongs to
          * the first palette in the document, which is what the shared test
          * at the bottom of this file covers. */
@@ -57,7 +57,7 @@ for (const channel of CHANNELS) {
     });
 }
 
-test('Ctrl+K opens the palette and focus lands in the input [TH40]', async ({ page }) => {
+test('Ctrl+K opens the palette and focus lands in the input [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     const palette = page.locator('[data-test="plain-palette"]');
     await expect(palette).toBeHidden();
@@ -68,7 +68,7 @@ test('Ctrl+K opens the palette and focus lands in the input [TH40]', async ({ pa
     await expect(palette.locator('.kp-palette__input')).toBeFocused();
 });
 
-test('a second palette on the page does not also open [TH40]', async ({ page }) => {
+test('a second palette on the page does not also open [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     await page.keyboard.press('Control+k');
     // Two open modal dialogs is what happened before the key was given to
@@ -77,7 +77,7 @@ test('a second palette on the page does not also open [TH40]', async ({ page }) 
     await expect(page.locator('dialog[open].kp-palette')).toHaveCount(1);
 });
 
-test('the shortcut sheet opens on ? and not while typing [TH49]', async ({ page }) => {
+test('the shortcut sheet opens on ? and not while typing [TH49]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     const sheet = page.locator('[data-test="plain-shortcuts"]');
     await page.keyboard.press('?');

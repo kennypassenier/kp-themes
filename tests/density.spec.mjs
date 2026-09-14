@@ -17,7 +17,7 @@ const THEMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.me
 
 const heightOf = (page, name) => page.evaluate((n) => document.querySelector(`[data-test="${n}"]`).getBoundingClientRect().height, name);
 
-test.describe('the compact density mode', () => {
+test.describe('the compact density mode', { tag: ['@component:button', '@component:field', '@sweep'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);

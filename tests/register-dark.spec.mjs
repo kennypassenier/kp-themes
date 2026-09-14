@@ -92,7 +92,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the dark register, ${channel}`, () => {
+    test.describe(`the dark register, ${channel}`, { tag: ['@theme:dark', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival, and under reduced motion every reveal is at rest', async ({ page }) => {
             await open(page, url, { reduced: true });
             expect(await page.locator('.kp-boot').count(), 'the demo has no boot sequence').toBe(0);

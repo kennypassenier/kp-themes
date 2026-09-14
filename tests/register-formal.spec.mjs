@@ -70,7 +70,7 @@ const pseudo = (locator, pseudo, props) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the formal register, ${channel}`, () => {
+    test.describe(`the formal register, ${channel}`, { tag: ['@theme:formal', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline fades and rises once, untouched — no glitch, no glyph', async ({ page }) => {
             // `arrive` leaves no state class of its own and no keyframe:
             // its whole mechanism is that the module HOLDS the headline in

@@ -13,33 +13,37 @@ import { SPECIMENS } from '../showcase/specimens.mjs';
 
 const SHOWN = SPECIMENS.filter((s) => !s.fixturesOnly).length;
 
-test('the showcase renders every specimen on both halves, with nothing failing on load [TH88]', async ({ page }) => {
-    const errors = [];
-    page.on('pageerror', (e) => errors.push(String(e)));
-    page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+test(
+    'the showcase renders every specimen on both halves, with nothing failing on load [TH88]',
+    { tag: ['@component:showcase', '@sweep'] },
+    async ({ page }) => {
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(String(e)));
+        page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 
-    await page.goto('/showcase/index.html');
-    await page.waitForSelector('.kp-icon-button');
+        await page.goto('/showcase/index.html');
+        await page.waitForSelector('.kp-icon-button');
 
-    for (const side of ['left', 'right']) {
-        await expect(page.locator(`#pane-${side} .sc-specimen`)).toHaveCount(SHOWN);
-        // A picker per half, with every theme in it.
-        expect(await page.locator(`[data-sc-picker="${side}"] [data-kp-theme]`).count()).toBe(THEMES.length);
-    }
-    // The halves start on two different themes, or there is nothing to compare.
-    const left = await page.getAttribute('#pane-left', 'data-theme');
-    const right = await page.getAttribute('#pane-right', 'data-theme');
-    expect(left).not.toBe(right);
-    // The package's own picker is not on this page: it would set the
-    // document theme, and here each half has its own.
-    expect(await page.locator('[data-kp-theme-picker]').count()).toBe(0);
+        for (const side of ['left', 'right']) {
+            await expect(page.locator(`#pane-${side} .sc-specimen`)).toHaveCount(SHOWN);
+            // A picker per half, with every theme in it.
+            expect(await page.locator(`[data-sc-picker="${side}"] [data-kp-theme]`).count()).toBe(THEMES.length);
+        }
+        // The halves start on two different themes, or there is nothing to compare.
+        const left = await page.getAttribute('#pane-left', 'data-theme');
+        const right = await page.getAttribute('#pane-right', 'data-theme');
+        expect(left).not.toBe(right);
+        // The package's own picker is not on this page: it would set the
+        // document theme, and here each half has its own.
+        expect(await page.locator('[data-kp-theme-picker]').count()).toBe(0);
 
-    expect(errors, 'the showcase logged errors while loading').toEqual([]);
-});
+        expect(errors, 'the showcase logged errors while loading').toEqual([]);
+    },
+);
 
 for (const side of ['left', 'right']) {
     const other = side === 'left' ? 'right' : 'left';
-    test(`the ${side} picker changes the ${side} half and nothing else [TH88]`, async ({ page }) => {
+    test(`the ${side} picker changes the ${side} half and nothing else [TH88]`, { tag: ['@component:showcase'] }, async ({ page }) => {
         await page.goto('/showcase/index.html');
         await page.waitForSelector('.kp-icon-button');
         // Past the header, so the sticky side bars are engaged and the menu
@@ -76,7 +80,7 @@ for (const side of ['left', 'right']) {
     });
 }
 
-test('the two halves scroll as one and stay aligned specimen by specimen [TH88]', async ({ page }) => {
+test('the two halves scroll as one and stay aligned specimen by specimen [TH88]', { tag: ['@component:showcase'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/showcase/index.html');
     await page.waitForSelector('.kp-icon-button');
@@ -122,7 +126,7 @@ test('the two halves scroll as one and stay aligned specimen by specimen [TH88]'
     expect(Math.abs(before[0] - after[0] - moved)).toBeLessThanOrEqual(1);
 });
 
-test('the picker remembers each half across a reload [TH88]', async ({ page }) => {
+test('the picker remembers each half across a reload [TH88]', { tag: ['@component:showcase'] }, async ({ page }) => {
     await page.goto('/showcase/index.html');
     await page.waitForSelector('.kp-icon-button');
     await page.evaluate(() => window.scrollTo(0, 400));
@@ -133,31 +137,35 @@ test('the picker remembers each half across a reload [TH88]', async ({ page }) =
     await expect(page.locator('#pane-left')).toHaveAttribute('data-theme', 'sepia');
 });
 
-test('the showcase and every fixture load the faces their tokens name [R0]', async ({ page }) => {
-    // Nothing in the package loads a webfont (S19); the showcase does, from
-    // the same token values, so Kenny judges a theme in its own letter.
-    // Drill [KT3]: with fontLinks() returning '' in the generator, no page
-    // carries the link and the first expectation reads 0.
-    //
-    // This test asserts the LINK the generator wrote and the family the
-    // stylesheet computes -- both of which are in the markup. It never
-    // needed the font itself, and yet it fetched one from Google for each
-    // of 24 pages and then failed on the 30s budget whenever the network
-    // was slow, which is a red test about somebody else's CDN. Standing
-    // rule 8a: the name is "a test that reaches the public internet for
-    // data it does not assert on", and rule 35 says the same fault waits
-    // on a CI runner with different egress. The requests are refused here,
-    // and the budget scales with the number of themes.
-    test.setTimeout(10_000 + THEMES.length * 1_000);
-    await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
-    await page.goto('/showcase/index.html');
-    const href = await page.getAttribute('link[data-sc-fonts]', 'href');
-    expect(href).toContain('fonts.googleapis.com/css2?');
-    for (const theme of THEMES) {
-        await page.goto(`/showcase/themes/${theme.name}.html`);
-        const own = await page.getAttribute('link[data-sc-fonts]', 'href');
-        const body = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
-        const first = /^'([^']+)'/.exec(body)?.[1] ?? /^"([^"]+)"/.exec(body)?.[1];
-        expect(own, `${theme.name} names no face`).toContain(encodeURIComponent(first ?? '').replace(/%20/g, '+'));
-    }
-});
+test(
+    'the showcase and every fixture load the faces their tokens name [R0]',
+    { tag: ['@component:showcase', '@component:fonts', '@sweep'] },
+    async ({ page }) => {
+        // Nothing in the package loads a webfont (S19); the showcase does, from
+        // the same token values, so Kenny judges a theme in its own letter.
+        // Drill [KT3]: with fontLinks() returning '' in the generator, no page
+        // carries the link and the first expectation reads 0.
+        //
+        // This test asserts the LINK the generator wrote and the family the
+        // stylesheet computes -- both of which are in the markup. It never
+        // needed the font itself, and yet it fetched one from Google for each
+        // of 24 pages and then failed on the 30s budget whenever the network
+        // was slow, which is a red test about somebody else's CDN. Standing
+        // rule 8a: the name is "a test that reaches the public internet for
+        // data it does not assert on", and rule 35 says the same fault waits
+        // on a CI runner with different egress. The requests are refused here,
+        // and the budget scales with the number of themes.
+        test.setTimeout(10_000 + THEMES.length * 1_000);
+        await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
+        await page.goto('/showcase/index.html');
+        const href = await page.getAttribute('link[data-sc-fonts]', 'href');
+        expect(href).toContain('fonts.googleapis.com/css2?');
+        for (const theme of THEMES) {
+            await page.goto(`/showcase/themes/${theme.name}.html`);
+            const own = await page.getAttribute('link[data-sc-fonts]', 'href');
+            const body = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
+            const first = /^'([^']+)'/.exec(body)?.[1] ?? /^"([^"]+)"/.exec(body)?.[1];
+            expect(own, `${theme.name} names no face`).toContain(encodeURIComponent(first ?? '').replace(/%20/g, '+'));
+        }
+    },
+);

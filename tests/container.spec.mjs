@@ -15,7 +15,7 @@ const URL = '/tests/fixtures/container.html';
 // The way out of the wrapper, both halves of KT6: a page that already
 // establishes a container of its own turns the component's off, and the
 // query still finds the outer one.
-test('the React components hand the wrapper back [TH104, KT6]', async ({ page }) => {
+test('the React components hand the wrapper back [TH104, KT6]', { tag: ['@component:table', '@component:navigation'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(URL);
     await page.waitForSelector('[data-test="react-grid-wide"] .kp-grid__tile');

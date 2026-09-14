@@ -28,13 +28,13 @@ release zelf. Lees in deze volgorde:
 `.github/workflows/ci.yml` is verwijderd en `main` vereist geen status
 check. Vijf commando's vervangen het:
 
-| Commando                | Wat                                     | Wanneer                         |
-| ----------------------- | --------------------------------------- | ------------------------------- |
-| `npm run gates`         | de dertig blokkerende checks, seconden  | elke commit, door de hook       |
-| `npm run test:affected` | alleen de specs die een wijziging raakt | tijdens het werk                |
-| `npm run test:browser`  | de hele suite, Chromium én Firefox      | als Kenny erom vraagt           |
-| `npm run advice`        | contrast, invarianten, motion, textuur  | als Kenny de lezing wil         |
-| `npm run verify`        | alle drie op volgorde                   | vóór een release, op zijn woord |
+| Commando                                | Wat                                                       | Wanneer                         |
+| --------------------------------------- | --------------------------------------------------------- | ------------------------------- |
+| `npm run gates`                         | de dertig blokkerende checks, seconden                    | elke commit, door de hook       |
+| `npm run test:tags -- --level building` | de tests met de tags van wat een wijziging raakt, Firefox | tijdens het werk                |
+| `npm run test:browser`                  | de hele suite, Chromium én Firefox                        | als Kenny erom vraagt           |
+| `npm run advice`                        | contrast, invarianten, motion, textuur                    | als Kenny de lezing wil         |
+| `npm run verify`                        | alle drie op volgorde                                     | vóór een release, op zijn woord |
 
 De toegankelijkheidsvloeren zijn advies, geen gates: ze worden gemeten en
 geprint, nooit geweigerd, en er wordt geen lijst met uitzonderingen meer

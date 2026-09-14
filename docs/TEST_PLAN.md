@@ -43,7 +43,7 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 | Command | What it runs | When |
 | --- | --- | --- |
 | `npm run gates` | the thirty blocking checks, seconds | every commit, by the hook |
-| `npm run test:affected` | the specs a change actually touches, Firefox only | during work, when there is something to see |
+| `npm run test:tags` | the tests tagged with what a change touches (building), plus every `@sweep` test (commit), Firefox only | during work, and once before a commit |
 | `npm run test:browser` | the whole suite, Chromium and Firefox | when Kenny asks for it |
 | `npm run advice` | contrast, invariants, motion, texture — a reading, never a verdict | when Kenny wants the reading |
 | `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
@@ -66,11 +66,60 @@ less rather than the reason it is faster:
    test, and is fixed as one — not tolerated with a wider assertion.
 2. **`forbidOnly` is always on.** With no CI behind it, a stray `.only`
    would quietly reduce the suite to a single test and still print green.
-3. **What a change touches is computed, not guessed.**
-   `gates/affected.mjs` reads `git diff` and answers `none`, `all`, or a
-   list. It says `all` for anything it cannot prove narrow — a change to
-   `js/effects.js` reaches 71% of the suite, and a map clever enough to
-   split that would be wrong exactly where nobody looks.
+3. **What a change touches is computed from tags, and the map is
+   measured.** See "Tags decide what runs" below.
+
+## Tags decide what runs [scope-33, 2026-09-14]
+
+Every browser test carries at least one tag through Playwright's own
+mechanism (`test('…', { tag: [...] }, …)` or a tagged `test.describe`):
+
+- `@component:<name>` — the component or area it exercises; the
+  vocabulary is `components` in `tests/tags.json` (the catalogue pages,
+  plus `picker`, `layout`, `utilities`, `fonts`, `examples`, `showcase`,
+  `site`, `bundle`, `catalogue`);
+- `@theme:<name>` — a register spec, a theme-specific test, or one
+  theme's instance of a per-theme loop (`@theme:${theme}`);
+- `@sweep` — a cross-theme or cross-component invariant. A test whose own
+  body walks every theme must carry it.
+
+`tests/tags.json` maps changed files to tags, first rule wins: a register
+selects `@theme:<theme>` plus `@sweep`-and-component for the rules it
+changed (formal, the default theme, selects the components themselves);
+a changed rule in `css/components.css` selects the component its selector
+names, and a rule naming none selects `@sweep` and every component in the
+file; a module selects its components; a changed spec runs whole; a helper
+or fixture runs the specs that name it; `js/strings.js`, `js/auto.js`,
+`hooks/**`, `package.json` and the test server select everything; a
+comment-only stylesheet change and documentation select nothing.
+`npm run check:tags`, part of `npm run gates`, reads the sources without a
+browser and refuses an untagged test, a tag outside the vocabulary, a
+theme walk without `@sweep`, and a file no rule covers.
+
+| Level    | Command                                   | Runs                                   |
+| -------- | ----------------------------------------- | -------------------------------------- |
+| building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox |
+| commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  |
+| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go |
+
+`--dry-run` prints the selection per file, the `--grep` and the count from
+`playwright test --list`; `--files <paths>` and `--commit <sha>` change
+what counts as the change (default: everything since
+`git merge-base HEAD main`, plus uncommitted and untracked files).
+
+**Measured once against what it skips** (standing rule 7i). The old
+affected map (gates/affected.mjs, removed at scope-33) answered `all` for each of the last 20 commits that
+touched `css/`, `js/`, `components/` or `catalogue/` — 25,020 test runs.
+The building level selected 9,156 and the commit level 13,599. Every test
+the old selection ran and the building level skips is one the map holds
+uncoupled: a catalogue-shell commit (47 tests) skips every test that never
+opens a catalogue page; a register commit skips the other themes' sweep
+slices, which the commit level runs. What no tag can see: a module that
+fails to load breaks every page that bundles it, and a keyframe name
+declared in several registers is decided by load order. The commit
+level's sweeps catch the first on every sweep page; only the release level
+catches everything. The full numbers are under `measured` in
+`tests/tags.json`.
 
 ## What a gate must be able to do
 
@@ -167,7 +216,7 @@ rather than before it.
 
 What that costs is measurable from this package's own record. The reflow
 spec states that brutalism overflows in firefox only, and sepia and
-solstice in chromium only; `gates/run-affected.mjs` records firefox as the
+solstice in chromium only; `gates/run-tags.mjs` records firefox as the
 odd engine fourteen times against chromium's six. The properties this
 round measures are the engine-divergent kind: computed `clip-path` polygon
 serialisation, `scale` shorthand strings, pseudo-element `background-size`,

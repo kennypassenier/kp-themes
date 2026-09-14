@@ -25,29 +25,33 @@ const PAGES = readdirSync(new URL('../examples/', import.meta.url))
     .map((n) => n.slice('concept-'.length, -'.html'.length));
 
 for (const theme of PAGES) {
-    test(`the wipe button opens a real confirmation under ${theme} [gap-5]`, async ({ page }) => {
-        await page.goto(`/examples/concept-${theme}.html`);
-        // The arrival covers the page in four themes and answers a click
-        // anywhere since CP1; getting it out of the way is not what this
-        // test measures.
-        const boot = page.locator('.kp-boot');
-        if ((await boot.count()) > 0) {
-            await boot.click();
-            await expect(boot).toHaveCount(0, { timeout: 4000 });
-        }
+    test(
+        `the wipe button opens a real confirmation under ${theme} [gap-5]`,
+        { tag: ['@component:examples', '@component:overlays', '@sweep', `@theme:${theme}`] },
+        async ({ page }) => {
+            await page.goto(`/examples/concept-${theme}.html`);
+            // The arrival covers the page in four themes and answers a click
+            // anywhere since CP1; getting it out of the way is not what this
+            // test measures.
+            const boot = page.locator('.kp-boot');
+            if ((await boot.count()) > 0) {
+                await boot.click();
+                await expect(boot).toHaveCount(0, { timeout: 4000 });
+            }
 
-        const wipe = page.locator('[data-kp-confirm]').first();
-        await expect(wipe, 'the page carries the destructive wipe').toHaveCount(1);
-        await wipe.scrollIntoViewIfNeeded();
-        await wipe.click();
+            const wipe = page.locator('[data-kp-confirm]').first();
+            await expect(wipe, 'the page carries the destructive wipe').toHaveCount(1);
+            await wipe.scrollIntoViewIfNeeded();
+            await wipe.click();
 
-        const dialog = page.locator('dialog.kp-confirm');
-        await expect(dialog, 'a real dialog, not an armed button').toHaveCount(1);
-        await expect(dialog).toBeVisible();
-        // What makes it a confirmation rather than a box: it says what it
-        // is, it says what happens, and it offers both ways out.
-        expect(await dialog.evaluate((el) => el.hasAttribute('open')), 'it is open').toBe(true);
-        expect(await dialog.locator('button').count(), 'two actions: go on, and do not').toBeGreaterThanOrEqual(2);
-        expect((await dialog.innerText()).trim().length, 'and it explains itself').toBeGreaterThan(10);
-    });
+            const dialog = page.locator('dialog.kp-confirm');
+            await expect(dialog, 'a real dialog, not an armed button').toHaveCount(1);
+            await expect(dialog).toBeVisible();
+            // What makes it a confirmation rather than a box: it says what it
+            // is, it says what happens, and it offers both ways out.
+            expect(await dialog.evaluate((el) => el.hasAttribute('open')), 'it is open').toBe(true);
+            expect(await dialog.locator('button').count(), 'two actions: go on, and do not').toBeGreaterThanOrEqual(2);
+            expect((await dialog.innerText()).trim().length, 'and it explains itself').toBeGreaterThan(10);
+        },
+    );
 }
