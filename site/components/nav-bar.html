@@ -179,6 +179,44 @@
     &lt;/<span class="kp-code__keyword">nav</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A mega menu</figcaption>
+                        <p class="kp-text-muted">Press Equipment: a panel of grouped links opens under the bar and spans its width, in up to four columns. It is a disclosure — a button with `aria-expanded` — rather than a dropdown that opens on hover, so a touch or keyboard reader opens it on purpose; Escape closes it and puts the focus back on the button, a click outside closes it, and only one panel is open at a time. The groups are plain lists under headings, not a menu, because these are places to go. In React, a link with `groups` renders the same.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main, with a mega menu">
+        <a class="kp-nav__brand" href="#nav-bar">kp</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#nav-bar">Overview</a></li>
+            <li>
+                <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                <div class="kp-nav__menu kp-nav__menu--wide">
+                    <div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Pumps</h3><ul><li><a href="#example">Main line pumps</a></li><li><a href="#example">Booster sets</a></li></ul></div>
+                    <div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Valves</h3><ul><li><a href="#example">Gate valves</a></li><li><a href="#example">Check valves</a></li></ul></div>
+                    <div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Sensors</h3><ul><li><a href="#example">Flow meters</a></li></ul></div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Main, with a mega menu&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link kp-nav__disclosure&quot;</span> <span class="kp-code__keyword">data-kp-nav-disclosure</span>&gt;Equipment&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu kp-nav__menu--wide&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Pumps&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">ul</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Main line pumps&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Booster sets&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Valves&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">ul</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Gate valves&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Check valves&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Sensors&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">ul</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Flow meters&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -186,6 +224,9 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-nav-compact</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-nav-disclosure</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-nav-menu-end</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-nav-menus-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-open</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-nav-side</code></td><td>written</td></tr>
@@ -224,6 +265,7 @@
                             <tr><td><code>sticky</code></td><td><code>boolean</code></td><td>optional</td><td>The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.</td></tr>
                             <tr><td><code>stickyAfter</code></td><td><code>number</code></td><td>optional</td><td>How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.</td></tr>
                             <tr><td><code>search</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].</td></tr>
+                            <tr><td><code>headingLevel</code></td><td><code>2 | 3 | 4 | 5 | 6</code></td><td>optional</td><td>The level of a mega menu's group headings. Default 2.</td></tr>
                             <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; toggle?: string; search?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
@@ -241,6 +283,10 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-mono</code></td><td><code>monospace</code></td></tr>
+                            <tr><td><code>--kp-nav-mega-end</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-nav-mega-gap</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-nav-mega-min</code></td><td><code>11rem</code></td></tr>
+                            <tr><td><code>--kp-nav-mega-start</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-nav-menu-indent</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-block</code></td><td><code>0.625rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline</code></td><td><code>1.5rem</code></td></tr>
@@ -252,6 +298,7 @@
                             <tr><td><code>--kp-nav-toggle-size</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-nav-wrap-min</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-scroll-offset</code></td><td><code>var(--kp-nav-sticky-height, 0px)</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
@@ -266,6 +313,8 @@
                         <li>Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.</li>
                         <li>Built in — the bar wraps at narrow widths rather than pushing the page sideways.</li>
                         <li>Built in — a sticky bar hands its height to the scrolling box’s scroll padding, so a skip link, an anchor or a Tab never lands underneath it.</li>
+                        <li>Built in — a dropdown near the window’s end opens towards the other side rather than past the edge.</li>
+                        <li>Built in — a mega menu opens on a press, not on hover; Escape closes it and returns the focus to its button, and the focus leaving it or a click outside closes it too.</li>
                         <li>Yours — give the nav element a name; a page with two of them is otherwise “navigation” twice.</li>
                         <li>Yours — use links, and give the reader a skip link past the bar.</li>
                         <li>Yours — keep the list short. A bar that wraps to three rows on a laptop is a menu.</li>
@@ -281,6 +330,9 @@
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
                             <tr><td><code>.kp-nav__search</code></td><td>The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.</td></tr>
                             <tr><td><code>data-kp-nav-menu-open</code></td><td>On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.</td></tr>
+                            <tr><td><code>data-kp-nav-menu-end</code></td><td>Written by the module on a dropdown whose item has no room for it towards the window’s end: the panel hangs from the item’s end edge instead, so it stays inside the window. Measured as it opens and when the window changes size; nothing to write by hand.</td></tr>
+                            <tr><td><code>.kp-nav__menu--wide</code></td><td>The mega menu’s panel: a `.kp-nav__menu` that spans the bar in up to four columns of `.kp-nav__group`, each a `.kp-nav__menu-heading` over a plain list. Shown while its button says it is expanded; the minimum column width and the gap are knobs.</td></tr>
+                            <tr><td><code>data-kp-nav-disclosure</code></td><td>The button that opens a mega menu’s panel, beside it in the same item; give it `kp-nav__link kp-nav__disclosure` so it reads as one of the bar’s links with a caret that turns while open. The module writes `aria-expanded` and `aria-controls`.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

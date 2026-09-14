@@ -797,7 +797,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='light'] .kp-nav__menu--wide .kp-nav__menu-heading {
         text-transform: none;
         letter-spacing: 0;
         border-block-end: 0;

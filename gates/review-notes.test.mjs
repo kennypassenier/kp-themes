@@ -95,6 +95,17 @@ test('a refused prompt records nothing and clears no note', () => {
     }
 });
 
+test('record prints the command that compares what it recorded with the test browser [fix-28]', () => {
+    const f = files({});
+    try {
+        const result = recordPrompt(prompt(`button--variants · formal · firefox · approved · ${HASH}`), { ...context, ...f });
+        const line = 'Whether the test browser reads the same hashes [fix-28]: node gates/verdicts.mjs compare --against-browser --commit abc1234';
+        assert.ok(result.out.includes(line), result.out.join('\n'));
+    } finally {
+        rmSync(f.dir, { recursive: true, force: true });
+    }
+});
+
 test('clearApprovedNotes drops an emptied block', () => {
     const notes = { 'button--variants': { formal: note() } };
     assert.deepEqual(clearApprovedNotes(notes, [{ key: 'button--variants', theme: 'formal', verdict: 'approved' }]), ['button--variants · formal']);

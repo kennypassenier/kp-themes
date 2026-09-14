@@ -42,8 +42,8 @@
         },
         "terminal": {
             "rejected": "De cursor moet op gelijke hoogte als de tekst komen, en rood zijn in de destructive button",
-            "change": "The cursor is one line tall and centred on the label: its top sat 5.9px above the text, now within 0.8px in every size. On the destructive button it is red instead of green.",
-            "commit": "ec3d3b9",
+            "change": "The cursor is one line tall and centred on the label: its top sat 5.9px above the text, now within 0.8px in every size. On the destructive button it is red instead of green. On the primary it now takes the button's own ink, the colour of its label, instead of green on the green plate. Hover the primary to see it.",
+            "commit": "15f391e6",
             "given": "2026-09-14"
         },
         "titanium": {

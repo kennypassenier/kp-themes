@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { blockIds, knownBlocks, registerFaults } from './check-verdicts.mjs';
-import { applyVerdictLines, parseVerdictLines, sortedRegister } from './verdicts.mjs';
+import { againstReadings, applyVerdictLines, compareCommand, entriesAt, parseVerdictLines, sortedRegister } from './verdicts.mjs';
 
 const HASH = 'a'.repeat(64);
 const context = (overrides = {}) => ({
@@ -117,4 +117,38 @@ test('the register is written in a fixed order', () => {
     });
     assert.deepEqual(Object.keys(sorted.verdicts), ['a', 'b']);
     assert.deepEqual(Object.keys(sorted.verdicts.b.nostromo.firefox), ['verdict', 'hash', 'commit', 'given']);
+});
+
+test('compare --against-browser: the entries of one commit, and which the test browser read too [fix-28]', () => {
+    /** @type {any} */
+    const register = {
+        hashVersion: 2,
+        verdicts: {
+            'button--icons': {
+                formal: { firefox: entry({ commit: '001af2f3aaaa' }) },
+                nostromo: { firefox: entry({ commit: '001af2f3aaaa', verdict: 'rejected' }) },
+            },
+            'button--gone': { formal: { chromium: entry({ commit: '001af2f3aaaa' }) } },
+            'button--variants': { formal: { firefox: entry() } },
+        },
+    };
+    const at = entriesAt(register, '001af2f3');
+    assert.deepEqual(
+        at.map((e) => `${e.key}|${e.theme}|${e.engine}`),
+        ['button--icons|formal|firefox', 'button--icons|nostromo|firefox', 'button--gone|formal|chromium'],
+    );
+    assert.equal(entriesAt(register, null).length, 4);
+    const readings = new Map([
+        ['button--icons|formal|firefox', { hash: HASH }],
+        ['button--icons|nostromo|firefox', { hash: 'b'.repeat(64) }],
+    ]);
+    const result = againstReadings(at, readings, new Set(['button--icons']));
+    assert.deepEqual(result.equal, ['button--icons · formal · firefox · approved']);
+    assert.equal(result.differ.length, 1);
+    assert.match(
+        result.differ[0],
+        /^button--icons · nostromo · firefox · rejected \(recorded aaaaaaaaaaaa…, the test browser reads bbbbbbbbbbbb…\)$/,
+    );
+    assert.deepEqual(result.gone, ['button--gone · formal · chromium · approved']);
+    assert.equal(compareCommand('001af2f3aaaabbbbcccc'), 'node gates/verdicts.mjs compare --against-browser --commit 001af2f3aaaa');
 });

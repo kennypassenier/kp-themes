@@ -729,6 +729,218 @@ export function stickyNav(wrap, after) {
     };
 }
 
+/** What a bar item's dropdown is, as opposed to its mega menu's panel. */
+const DROPDOWN = ':scope > .kp-nav__menu:not(.kp-nav__menu--wide)';
+
+/**
+ * How far a box lies outside the window's width, in pixels; 0 when inside.
+ *
+ * @param {DOMRect} box
+ */
+const overflowOf = (box) => Math.max(0, -box.left) + Math.max(0, box.right - document.documentElement.clientWidth);
+
+/**
+ * Hang a bar item's open dropdown from whichever edge keeps it in the
+ * window [fix-27].
+ *
+ * The panel hangs from its item's start edge. Under the last item of a bar
+ * whose links sit at the window's end, that ran it past the window's right
+ * edge in all 22 themes (grotesk's catalogue bar, Kenny's note of
+ * 2026-09-14). A stylesheet cannot see where the window ends, so this
+ * measures the open panel on both edges and keeps the one that lies less
+ * outside — the start edge when both fit — writing
+ * `data-kp-nav-menu-end` on the panel for the other. Both channels call it:
+ * the module on hover and focus, the React NavBar from its item.
+ *
+ * @param {Element} item the `.kp-nav__links > li` that holds the dropdown
+ * @param {boolean} [retry] measure once more on the next frame when the panel is not open yet; default true
+ * @returns {boolean} whether the panel now hangs from the end edge
+ */
+export function placeNavMenu(item, retry = true) {
+    const menu = item.querySelector(DROPDOWN);
+    if (!menu) return false;
+    menu.removeAttribute('data-kp-nav-menu-end');
+    const start = menu.getBoundingClientRect();
+    // Not open yet: a pointer that has just entered the item is not
+    // `:hover` in the style until the next frame (measured in firefox), so
+    // the panel is measured once more then. Still closed, nothing is written.
+    if (start.width === 0) {
+        if (retry) requestAnimationFrame(() => placeNavMenu(item, false));
+        return false;
+    }
+    const fromStart = overflowOf(start);
+    if (fromStart === 0) return false;
+    menu.setAttribute('data-kp-nav-menu-end', '');
+    if (overflowOf(menu.getBoundingClientRect()) < fromStart) return true;
+    menu.removeAttribute('data-kp-nav-menu-end');
+    return false;
+}
+
+/**
+ * Line an open mega menu's panel up with its bar's edges [scope-48].
+ *
+ * The panel is placed in whatever box contains it, and the registers
+ * disagree about which box that is: the `.kp-nav-wrap` in the base, the
+ * bar itself in eight registers, and cyberpunk's strip of links, which
+ * must stay positioned because its cut-corner plate hangs from it. So the
+ * bar is measured against that box, and the two offsets are written as
+ * `--kp-nav-mega-start` and `--kp-nav-mega-end` on the panel.
+ *
+ * @param {Element} panel the `.kp-nav__menu--wide`, open
+ */
+export function placeNavPanel(panel) {
+    const element = /** @type {HTMLElement} */ (panel);
+    const bar = element.closest('.kp-nav');
+    const box = element.offsetParent;
+    if (!bar || !box || element.getBoundingClientRect().width === 0) return;
+    const b = bar.getBoundingClientRect();
+    const c = box.getBoundingClientRect();
+    // Offsets are taken from the padding box, inside the border.
+    const left = b.left - (c.left + box.clientLeft);
+    const right = c.left + box.clientLeft + box.clientWidth - b.right;
+    const rtl = getComputedStyle(element).direction === 'rtl';
+    element.style.setProperty('--kp-nav-mega-start', `${rtl ? right : left}px`);
+    element.style.setProperty('--kp-nav-mega-end', `${rtl ? left : right}px`);
+}
+
+/**
+ * Wire every bar's dropdowns and mega menus [fix-27, scope-48].
+ *
+ * Dropdowns open on hover and on focus within, in CSS; this only places an
+ * open one so it stays in the window (`placeNavMenu`), when it opens and
+ * again when the window changes size.
+ *
+ * A mega menu is a `data-kp-nav-disclosure` button beside a
+ * `.kp-nav__menu--wide` panel. The button gets `aria-expanded` and an
+ * `aria-controls` naming the panel (an id is given when the panel has
+ * none), and the panel shows while it says `true`. Every open state has a
+ * way out [KT6]: the button again, Escape while the focus is in the bar
+ * (the focus goes back to the button), a click outside the item, and the
+ * focus leaving it. One panel is open at a time: opening one closes the
+ * others. A button with no words of its own is named from the dictionary
+ * (`navDisclosure`). The React NavBar wires its own bar and marks it
+ * `data-kp-nav-owner`, so this module leaves that bar alone [AR29].
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string }} [options]
+ * @returns {() => void} detach
+ */
+export function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+    const navs = [...(root instanceof Element && root.matches('.kp-nav') ? [root] : []), ...root.querySelectorAll('.kp-nav')];
+
+    for (const el of navs) {
+        const nav = /** @type {HTMLElement} */ (el);
+        if (ownedBy !== '' && nav.matches(ownedBy)) continue;
+        if (nav.dataset.kpNavMenusAttached !== undefined) continue;
+        nav.dataset.kpNavMenusAttached = '';
+
+        /** @param {EventTarget | null} target */
+        const itemOf = (target) => (target instanceof Element ? target.closest('.kp-nav__links > li') : null);
+
+        /** @param {Event} event */
+        const onEnter = (event) => {
+            const item = itemOf(event.target);
+            if (item && nav.contains(item) && item.querySelector(DROPDOWN)) placeNavMenu(item);
+        };
+        const placeOpen = () => {
+            for (const item of nav.querySelectorAll('.kp-nav__links > li')) if (item.querySelector(DROPDOWN)) placeNavMenu(item, false);
+            for (const panel of nav.querySelectorAll('.kp-nav__links > li > .kp-nav__menu--wide')) placeNavPanel(panel);
+        };
+
+        const buttons = /** @type {HTMLElement[]} */ ([...nav.querySelectorAll('[data-kp-nav-disclosure]')]);
+        /** @type {Map<HTMLElement, { panel: Element | null, stamped: string[] }>} */
+        const wired = new Map();
+        for (const button of buttons) {
+            const panel = button.parentElement?.querySelector(':scope > .kp-nav__menu--wide') ?? null;
+            /** @type {string[]} */
+            const stamped = ['aria-expanded'];
+            if (panel && !panel.id) panel.id = `kp-nav-panel-${Math.random().toString(36).slice(2, 10)}`;
+            if (panel && !button.hasAttribute('aria-controls')) {
+                button.setAttribute('aria-controls', panel.id);
+                stamped.push('aria-controls');
+            }
+            if (!(button.textContent ?? '').trim() && !button.hasAttribute('aria-label') && !button.hasAttribute('aria-labelledby')) {
+                button.setAttribute('aria-label', { ...getStrings(), ...strings }.navDisclosure);
+                stamped.push('aria-label');
+            }
+            button.setAttribute('aria-expanded', 'false');
+            wired.set(button, { panel, stamped });
+        }
+
+        const openButton = () => buttons.find((b) => b.getAttribute('aria-expanded') === 'true') ?? null;
+        /** @param {HTMLElement} button @param {boolean} open */
+        const set = (button, open) => {
+            if (open) for (const other of buttons) if (other !== button) other.setAttribute('aria-expanded', 'false');
+            button.setAttribute('aria-expanded', String(open));
+            const panel = wired.get(button)?.panel;
+            if (open && panel) placeNavPanel(panel);
+        };
+
+        /** @param {Event} event */
+        const onClick = (event) => {
+            const button = /** @type {HTMLElement} */ (event.currentTarget);
+            set(button, button.getAttribute('aria-expanded') !== 'true');
+        };
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            const button = openButton();
+            if (event.key !== 'Escape' || !button) return;
+            set(button, false);
+            button.focus();
+        };
+        /** @param {Event} event */
+        const onOutside = (event) => {
+            const button = openButton();
+            if (!button) return;
+            if (button.parentElement?.contains(/** @type {Node} */ (event.target))) return;
+            set(button, false);
+        };
+        /** @param {FocusEvent} event */
+        const onFocusOut = (event) => {
+            const button = openButton();
+            const to = event.relatedTarget;
+            // A press on the panel's ground moves the focus nowhere; that is not leaving.
+            if (!button || !(to instanceof Node)) return;
+            if (button.parentElement?.contains(to)) return;
+            set(button, false);
+        };
+
+        nav.addEventListener('pointerover', onEnter);
+        nav.addEventListener('focusin', onEnter);
+        nav.addEventListener('keydown', /** @type {EventListener} */ (onKey));
+        nav.addEventListener('focusout', /** @type {EventListener} */ (onFocusOut));
+        for (const button of buttons) button.addEventListener('click', onClick);
+        document.addEventListener('click', onOutside, true);
+        window.addEventListener('resize', placeOpen);
+        placeOpen();
+
+        cleanups.push(() => {
+            nav.removeEventListener('pointerover', onEnter);
+            nav.removeEventListener('focusin', onEnter);
+            nav.removeEventListener('keydown', /** @type {EventListener} */ (onKey));
+            nav.removeEventListener('focusout', /** @type {EventListener} */ (onFocusOut));
+            document.removeEventListener('click', onOutside, true);
+            window.removeEventListener('resize', placeOpen);
+            for (const [button, { stamped }] of wired) {
+                button.removeEventListener('click', onClick);
+                for (const name of stamped) button.removeAttribute(name);
+            }
+            for (const menu of nav.querySelectorAll('[data-kp-nav-menu-end]')) menu.removeAttribute('data-kp-nav-menu-end');
+            for (const panel of nav.querySelectorAll('.kp-nav__menu--wide')) {
+                /** @type {HTMLElement} */ (panel).style.removeProperty('--kp-nav-mega-start');
+                /** @type {HTMLElement} */ (panel).style.removeProperty('--kp-nav-mega-end');
+            }
+            delete nav.dataset.kpNavMenusAttached;
+        });
+    }
+
+    return () => {
+        for (const c of cleanups) c();
+    };
+}
+
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

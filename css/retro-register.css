@@ -1832,7 +1832,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='retro'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='retro'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='retro'] .kp-nav__menu--wide .kp-nav__menu-heading {
         background: var(--secondary);
         font-family: var(--theme-font-mono);
         text-transform: none;
@@ -1955,7 +1957,15 @@
        inside it: an icon beside the text would be the "first letter"
        otherwise, so a button that carries an icon and marks nothing still
        shows none. The component's own `.kp-button__label` is answered the
-       same way. */
+       same way.
+
+       …and beside an icon [scope-83]: Kenny, retro-accelerator "Alleen het
+       teken" — the mark only, still no shortcut, and a button with an icon
+       gets it too. CSS cannot tell a text node from the icon beside it, so
+       such a label puts its text in `.kp-button__text`. In a flex row that
+       element is an item, which is a block container, so `::first-letter`
+       reaches it with no change of display; it has no rule in any other
+       theme, where it lays out exactly as the bare text did. */
     [data-theme='retro'] .kp-button:not(:has(> *)),
     [data-theme='retro'] .kp-button__label:not(:has(> *)) {
         display: inline-block;
@@ -1964,12 +1974,15 @@
     }
 
     [data-theme='retro'] .kp-button:not(:has(> *))::first-letter,
-    [data-theme='retro'] .kp-button__label:not(:has(> *))::first-letter {
+    [data-theme='retro'] .kp-button__label:not(:has(> *))::first-letter,
+    [data-theme='retro'] :is(.kp-button, .kp-button__label) > .kp-button__text:not(:has(> *))::first-letter {
         border-block-end: 1px solid transparent;
     }
 
     [data-theme='retro'] .kp-button:not(:has(> *)):is(:hover:not(:disabled), :focus-visible)::first-letter,
-    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label:not(:has(> *))::first-letter {
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__text:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label > .kp-button__text:not(:has(> *))::first-letter {
         border-block-end-color: currentcolor;
     }
 

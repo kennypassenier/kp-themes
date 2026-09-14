@@ -9,6 +9,11 @@ export type NavLink = {
     rel?: string;
     links?: NavLink[];
     menuLabel?: string;
+    groups?: NavGroup[];
+};
+export type NavGroup = {
+    label: import('react').ReactNode;
+    links: NavLink[];
 };
 export type NavBarProps = {
     brand?: import('react').ReactNode;
@@ -72,6 +77,10 @@ export type NavBarProps = {
      * The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
      */
     search?: import('react').ReactNode;
+    /**
+     * The level of a mega menu's group headings. Default 2.
+     */
+    headingLevel?: 2 | 3 | 4 | 5 | 6;
     classNames?: {
         brand?: string;
         list?: string;

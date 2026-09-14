@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Children, forwardRef, isValidElement, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { CONFIRM_WINDOW_MS, openConfirmation } from '../js/components.js';
 import { UNDO_MS } from '../js/patterns.js';
 import { useStrings } from '../hooks/use-strings.jsx';
@@ -48,6 +48,45 @@ import { useControllable } from '../hooks/use-controllable.js';
  * @property {import('react').ReactNode} [readout]  A small reading a theme may print beside the control [scope-16, scope-17]. The consumer's own text; nothing is written for it.
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  */
+
+/**
+ * The text of a label that also holds an element (an icon), in its own
+ * `.kp-button__text` [scope-83]: retro underlines the label's first letter,
+ * and CSS cannot tell a bare text node from the icon beside it. A run of
+ * text between elements becomes one span; a label of text alone, of
+ * elements alone, or one that marks its own letter with `data-kp-key` is
+ * returned as it was. In a flex row the span lays out as the bare text did.
+ * @param {import('react').ReactNode} children
+ * @returns {import('react').ReactNode}
+ */
+function textBesideElements(children) {
+    const list = Children.toArray(children);
+    const elements = list.filter(isValidElement);
+    if (elements.length === 0 || elements.length === list.length) return children;
+    if (elements.some((el) => /** @type {Record<string, unknown>} */ (el.props)['data-kp-key'] !== undefined)) return children;
+    /** @type {import('react').ReactNode[]} */
+    const out = [];
+    /** @type {string[]} */
+    let run = [];
+    const flush = () => {
+        const text = run.join('').trim();
+        if (text)
+            out.push(
+                <span className="kp-button__text" key={`kp-text-${out.length}`}>
+                    {text}
+                </span>,
+            );
+        run = [];
+    };
+    for (const child of list) {
+        if (isValidElement(child)) {
+            flush();
+            out.push(child);
+        } else run.push(String(child));
+    }
+    flush();
+    return out;
+}
 
 /**
  * @param {ButtonProps & import('react').ButtonHTMLAttributes<HTMLButtonElement>} props
@@ -213,8 +252,9 @@ function ButtonInner(
                 {/* The label in its own element [S49, A7]: phantom's approved
                     demo skews the button itself and skews the label back,
                     which needs something around the words to skew. Inert
-                    in every other theme. */}
-                <span className="kp-button__label">{armed && confirmMode === 'inline' ? confirm : children}</span>
+                    in every other theme. Text beside an icon gets its own
+                    element too [scope-83]. */}
+                <span className="kp-button__label">{armed && confirmMode === 'inline' ? confirm : textBesideElements(children)}</span>
             </As>
             {undoOpen && (
                 <span className="kp-button__undo" role="status" data-kp-undo-offer>

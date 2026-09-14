@@ -98,7 +98,10 @@ scope-48; finding 3 at scope-48 (`--kp-z-nav` on `.kp-nav-wrap` in the
 base). Finding 2 at scope-48 wave two: twelve registers, not three, set the
 bar's block padding directly, and all of them now read `--kp-nav-pad-block`
 (`tests/nav-sticky.spec.mjs`), which the shrinking header
-(`.kp-nav-wrap--sticky`, `NavBar` `sticky`) lowers. Finding 5 is open.
+(`.kp-nav-wrap--sticky`, `NavBar` `sticky`) lowers. Finding 5 is open. The
+mega menu (recommendation 3) was built in scope-48's second wave as
+`.kp-nav__menu--wide` with a `data-kp-nav-disclosure` button, in both
+channels (`tests/nav-menu.spec.mjs`).
 
 ## Recommendation
 

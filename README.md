@@ -800,7 +800,7 @@ setStrings({
 });
 ```
 
-`js/strings.js` is the full list — 185 keys on 2026-09-14, each with its English default
+`js/strings.js` is the full list — 186 keys on 2026-09-14, each with its English default
 beside it.
 
 ### Theme names

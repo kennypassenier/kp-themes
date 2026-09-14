@@ -1,6 +1,6 @@
-import { forwardRef, Fragment, useEffect, useId, useRef, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
-import { skipTo as jumpTo, stickyNav } from '../js/components.js';
+import { placeNavMenu, placeNavPanel, skipTo as jumpTo, stickyNav } from '../js/components.js';
 // Navigation bar [TH7, TH36].
 //
 // The skip link rides on this: it is the first focusable thing on the
@@ -16,7 +16,13 @@ import { skipTo as jumpTo, stickyNav } from '../js/components.js';
 // so); every part is a prop; and a ref is forwarded.
 
 /**
- * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string, links?: NavLink[], menuLabel?: string }} NavLink
+ * @typedef {{ href: string, label: import('react').ReactNode, current?: boolean | 'page' | 'location' | 'step' | 'true', icon?: import('react').ReactNode, disabled?: boolean, className?: string, target?: string, rel?: string, links?: NavLink[], menuLabel?: string, groups?: NavGroup[] }} NavLink
+ */
+
+/**
+ * A column of a mega menu [scope-48]: a heading and its links.
+ *
+ * @typedef {{ label: import('react').ReactNode, links: NavLink[] }} NavGroup
  */
 
 /**
@@ -52,6 +58,7 @@ import { skipTo as jumpTo, stickyNav } from '../js/components.js';
  * @property {boolean} [sticky]    The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.
  * @property {number} [stickyAfter]  How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.
  * @property {import('react').ReactNode} [search]  The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
+ * @property {2 | 3 | 4 | 5 | 6} [headingLevel]  The level of a mega menu's group headings. Default 2.
  * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string, search?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
@@ -83,6 +90,7 @@ function NavBarInner(
         search,
         sticky = false,
         stickyAfter,
+        headingLevel = 2,
         strings,
         className = '',
         children,
@@ -92,7 +100,38 @@ function NavBarInner(
 ) {
     const s = useStrings(strings);
     const [open, setOpen] = useState(false);
+    // The mega menu that is open, by its link's href: one at a time [scope-48].
+    const [panel, setPanel] = useState(/** @type {string | null} */ (null));
+    /** @type {import('react').RefObject<Map<string, HTMLElement>>} */
+    const items = useRef(new Map());
+    /** @type {import('react').RefObject<Map<string, HTMLElement>>} */
+    const disclosures = useRef(new Map());
     const listId = useId();
+    const Heading = /** @type {'h2' | 'h3' | 'h4' | 'h5' | 'h6'} */ (`h${headingLevel}`);
+    // The open panel lines up with the bar's edges, before it is painted and
+    // again when the window changes size, as in the framework-free channel.
+    useLayoutEffect(() => {
+        if (panel === null) return undefined;
+        const place = () => {
+            const open = items.current.get(panel)?.querySelector(':scope > .kp-nav__menu--wide');
+            if (open) placeNavPanel(open);
+        };
+        place();
+        window.addEventListener('resize', place);
+        return () => window.removeEventListener('resize', place);
+    }, [panel]);
+    // A click outside the open panel's item closes it, as it does in the
+    // framework-free channel.
+    useEffect(() => {
+        if (panel === null) return undefined;
+        /** @param {MouseEvent} event */
+        const onOutside = (event) => {
+            if (items.current.get(panel)?.contains(/** @type {Node} */ (event.target))) return;
+            setPanel(null);
+        };
+        document.addEventListener('click', onOutside, true);
+        return () => document.removeEventListener('click', onOutside, true);
+    }, [panel]);
     const Brand = brandComponent ?? Link;
     const Item = List === 'ul' ? 'li' : 'div';
     // The wrapper is what the narrow rule reads [TH104, AR24]: a container
@@ -143,10 +182,21 @@ function NavBarInner(
                     className={`kp-nav ${className}`.trim()}
                     aria-label={label ?? s.mainNavigation}
                     data-kp-nav-open={collapsible && open ? '' : undefined}
+                    // AR29: this channel wires its dropdowns and mega menus
+                    // itself, so the framework-free module leaves the bar alone.
+                    data-kp-nav-owner
                     onKeyDown={(event) => {
+                        if (event.key !== 'Escape') return;
+                        // An open mega menu closes first, and the focus goes
+                        // back to its button [scope-48].
+                        if (panel !== null) {
+                            disclosures.current.get(panel)?.focus();
+                            setPanel(null);
+                            return;
+                        }
                         // Escape closes it and gives the focus back, which is
                         // the way out every state this component sets has [KT6].
-                        if (event.key !== 'Escape' || !open) return;
+                        if (!open) return;
                         setOpen(false);
                     }}
                     {...rest}
@@ -176,9 +226,10 @@ function NavBarInner(
                         </button>
                     )}
                     <List id={collapsible ? listId : undefined} className={`kp-nav__links ${classNames.list ?? ''}`.trim()}>
-                        {links.map((l) => {
+                        {links.map((l, index) => {
                             const current = l.current === true ? 'page' : l.current === false || l.current === undefined ? undefined : l.current;
-                            const sub = Array.isArray(l.links) && l.links.length > 0 ? l.links : null;
+                            const groups = Array.isArray(l.groups) && l.groups.length > 0 ? l.groups : null;
+                            const sub = !groups && Array.isArray(l.links) && l.links.length > 0 ? l.links : null;
                             const props = {
                                 className: `kp-nav__link ${classNames.link ?? ''} ${l.className ?? ''}`.trim(),
                                 href: l.href,
@@ -188,8 +239,69 @@ function NavBarInner(
                                 'data-kp-text': typeof l.label === 'string' ? l.label : undefined,
                                 'aria-haspopup': sub ? 'true' : undefined,
                             };
+                            if (groups) {
+                                const panelId = `${listId}-panel-${index}`;
+                                const expanded = panel === l.href;
+                                return (
+                                    <Item
+                                        key={l.href}
+                                        className={classNames.item}
+                                        ref={(/** @type {HTMLElement | null} */ el) => {
+                                            if (el) items.current.set(l.href, el);
+                                            else items.current.delete(l.href);
+                                        }}
+                                        onBlur={(event) => {
+                                            // The focus leaving the item closes its panel; a
+                                            // press on the panel's ground moves it nowhere.
+                                            const to = event.relatedTarget;
+                                            if (expanded && to instanceof Node && !event.currentTarget.contains(to)) setPanel(null);
+                                        }}
+                                    >
+                                        <button
+                                            type="button"
+                                            ref={(el) => {
+                                                if (el) disclosures.current.set(l.href, el);
+                                                else disclosures.current.delete(l.href);
+                                            }}
+                                            className={`kp-nav__link kp-nav__disclosure ${classNames.link ?? ''} ${l.className ?? ''}`.trim()}
+                                            data-kp-nav-disclosure
+                                            data-kp-text={typeof l.label === 'string' ? l.label : undefined}
+                                            aria-expanded={expanded ? 'true' : 'false'}
+                                            aria-controls={panelId}
+                                            aria-label={l.label === undefined || l.label === '' ? s.navDisclosure : undefined}
+                                            onClick={() => setPanel(expanded ? null : l.href)}
+                                        >
+                                            {l.icon}
+                                            {l.label}
+                                        </button>
+                                        <div id={panelId} className={`kp-nav__menu kp-nav__menu--wide ${classNames.menu ?? ''}`.trim()}>
+                                            {groups.map((group, g) => (
+                                                <div key={g} className="kp-nav__group">
+                                                    <Heading className="kp-nav__menu-heading">{group.label}</Heading>
+                                                    <ul>
+                                                        {group.links.map((child) => (
+                                                            <li key={child.href}>
+                                                                <Link className={classNames.menuLink} href={child.href}>
+                                                                    {child.label}
+                                                                </Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </Item>
+                                );
+                            }
                             return (
-                                <Item key={l.href} className={classNames.item}>
+                                <Item
+                                    key={l.href}
+                                    className={classNames.item}
+                                    // A dropdown hangs from whichever edge keeps it in the
+                                    // window, measured as it opens [fix-27].
+                                    onPointerEnter={sub ? (event) => placeNavMenu(event.currentTarget) : undefined}
+                                    onFocus={sub ? (event) => placeNavMenu(event.currentTarget) : undefined}
+                                >
                                     {renderLink ? (
                                         renderLink(l, props)
                                     ) : (

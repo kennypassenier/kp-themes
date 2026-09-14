@@ -14,7 +14,15 @@
 import { applyStoredTheme } from './no-flash.js';
 import { applyTheme } from './theme-core.js';
 import { THEMES } from './theme-registry.js';
-import { attachConfirmations, attachNavToggles, attachSkipLinks, attachStickyNavs, attachToTop, enforceContracts } from './components.js';
+import {
+    attachConfirmations,
+    attachNavMenus,
+    attachNavToggles,
+    attachSkipLinks,
+    attachStickyNavs,
+    attachToTop,
+    enforceContracts,
+} from './components.js';
 import { attachDialogs, attachDismissals, attachTabs, attachTooltips } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes, attachSelects } from './combobox.js';
@@ -46,6 +54,7 @@ export function attachAll(root = document) {
         attachToTop(root),
         attachNavToggles(root),
         attachStickyNavs(root),
+        attachNavMenus(root),
         attachSidenavs(root),
         attachDialogs(root),
         attachDismissals(root),

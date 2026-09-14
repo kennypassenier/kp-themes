@@ -3052,3 +3052,118 @@ form.
 
 **9 · When we review the measure.** At the end of round eight.
 
+
+## fix-27 · A bar's dropdown ran past the window's right edge (2026-09-14)
+
+Approved 2026-09-14, "Zoals voorgesteld" [scope-83].
+
+**1 · What went wrong.** Kenny's catalogue note on grotesk: the dropdown under
+the last bar item ran past the window's right edge. `.kp-nav__menu` hung from
+its item's start edge (`inset-inline-start: 0`) whatever lay beyond it, so an
+item near the window's end sent its panel off screen.
+
+**2 · Which gate let it through.** None measured where a dropdown lies against
+the window. The catalogue's dropdown blocks put the item near the bar's start,
+and the overflow tests read the page's scroll width, which an absolutely
+placed panel does not widen on every page.
+
+**3 · Where the same fault sits.** Every theme and both channels: measured on
+`tests/fixtures/nav-menu.html`, a bar whose links sit at the window's end, in
+firefox before the change, the dropdown under the last item lay 36 to 106px
+past the right edge at 1400px in 21 themes — all but retro, whose window
+buttons hold the bar's last stretch — and 84 to 118px past it at 420px in 16
+(formal, light, dark, pastel, forest, high-contrast, sepia — React only —,
+blueprint, solstice, shade-light, shade-dark, retro, grotesk, lapis, nostromo,
+titanium); the six whose narrow bar wraps the item to the row's start
+(cyberpunk, synthwave, terminal, brutalism, deco, phantom) fitted there by
+chance. The mega menu built beside it
+[scope-48] shares the bar and is measured by the same test.
+
+**4 · How we prevent recurrence.** A dropdown is measured as it opens — on
+hover, on focus, and again when the window changes size — and hangs from its
+item's end edge (`data-kp-nav-menu-end`) when the start edge leaves it outside
+the window and the end edge does not: `placeNavMenu` in `js/components.js`,
+wired by `attachNavMenus` (through `js/auto.js`) and called by the React
+NavBar from its items. The @sweep test `tests/nav-menu.spec.mjs` holds it in
+all 22 themes, at 1400px and 420px, both channels.
+
+**5 · What the remedy costs.** A small script on the bar; without it a
+dropdown keeps its start edge. Pointer entry is not `:hover` in the style
+until the next frame in firefox, so a panel opening that way is measured one
+frame late, and may show that frame on its start edge.
+
+**6 · Who enforces it.** The sweep test, code, at the commit level of
+`npm run test:tags` and in every full run.
+
+**7 · How we measure it works, and when.** When built (2026-09-14):
+`tests/nav-menu.spec.mjs` "the dropdown under a bar's last item … [fix-27]"
+red before the change with 75 findings (21 themes at 1400px and 16 at 420px,
+per channel, listed in field 3), green after it in firefox and chromium, with
+the mega menu's panel inside the window and on the bar's edges in all 22 too.
+At the end of round eight: 0 notes of a bar menu past the window's edge on the
+catalogue.
+
+**8 · If the measurement fails.** The panel is placed in the top layer and in
+window coordinates, as `js/top-layer.js` does for the combobox list.
+
+**9 · When we review the measure.** At the end of round eight.
+
+## fix-28 · Kenny's browser gave unset controls his desktop font (2026-09-14)
+
+**1 · What went wrong.** 39 of the 158 verdict hashes Kenny recorded on
+2026-09-14 (commit `001af2f3`) differed from the hashes Playwright's Firefox
+reads for the same blocks at the same commit. An earlier agent's measurement
+found why: FireDragon 155 gives a button, a checkbox or a switch the package
+leaves without a font his desktop font, Fira Sans (GTK), where Playwright's
+Firefox 153 reads the generic `sans-serif`. With Fira Sans on those controls
+his hashes were reproduced for `button--icons` in formal, nostromo, grotesk,
+light, dark, deco, blueprint and titanium, and for dark's
+`navigation--bar-collapsed`, `bar-long` and `bar-search`. FireDragon 155
+rounding a line height to another half pixel than Firefox 153 explained five
+of synthwave's button blocks and deco's sizes. Nine stay unexplained:
+brutalism's seven button blocks, synthwave's groups and dark's app shell.
+Kenny's answer to the question (scope-83, fix-28): "Klopt".
+
+**2 · Which gate let it through.** None could: `record` wrote Kenny's hashes
+without comparing them to what the tools read, and no test ran a browser
+whose default font differed from the page's.
+
+**3 · Where the same fault sits.** Every control the package styles without
+a font, found by forcing a distinctive default (`DejaVu Serif`, as the lowest
+author layer) on every review page in all 22 themes: `.kp-icon-button`
+(with `.kp-alert__close`, `.kp-toast__close`, `.kp-dialog__close`),
+`.kp-nav__toggle`, `.kp-sidenav__toggle`, `.kp-field__check` (checkbox and
+radio), `.kp-switch__input`, the colour picker's range inputs and the
+upload's hidden file input. The same set in every theme; no register sets a
+font on any of them. The research navbar demo's own mock radios are the
+demo's, not the package's.
+
+**4 · How we prevent recurrence.** `css/components.css` gives those controls
+`font-family: inherit` — the family only, so no size and no box moves.
+`tests/control-font.spec.mjs` forces the distinctive default and fails on
+any control of a review page that shows it, and on a moved `button--icons`
+hash in formal and nostromo. `node gates/verdicts.mjs record` prints
+`node gates/verdicts.mjs compare --against-browser --commit <HEAD>`, which
+hashes every entry recorded at that commit again in Playwright's browser of
+the entry's engine and lists the ones that differ; `--at-recorded` measures
+each at the commit it was recorded on instead of the working tree.
+
+**5 · What the remedy costs.** Every block with one of those controls reads
+a new hash in every theme (the family changed from the generic to the
+theme's), so those blocks return to Kenny's review once. A compare run takes
+about 17 s for 158 entries.
+
+**6 · Who enforces it.** The browser test, code; the compare step, a command
+Claude runs after every `record`.
+
+**7 · How we measure it works, and when.** When built: the compare step on
+Kenny's 158 entries at their own commit (`--at-recorded`) reports 39 differ,
+119 equal, in 16.8 s — the earlier count, reproduced by the tool. At Kenny's
+next catalogue prompt: the mismatches `compare --against-browser` reports
+for it, expected at most 9 (the unexplained ones).
+
+**8 · If the measurement fails.** The differing blocks are compared line by
+line with `node gates/verdicts.mjs compare --browser /usr/bin/firedragon`,
+and what they share becomes a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next catalogue prompt.

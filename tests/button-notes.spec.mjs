@@ -142,6 +142,23 @@ test.describe('terminal: the cursor on a button [scope-80]', { tag: ['@theme:ter
         });
         expect(read.caret).toEqual(read.destructive);
     });
+
+    test("the primary's cursor takes the button's own ink [scope-83]", async ({ page }) => {
+        // Kenny, terminal-primary-cursor "Tekstkleur van de knop": a green
+        // block on the green primary read as nothing. Before: the cursor was
+        // --primary on a --kp-hot-plate face.
+        await open(page, 'terminal');
+        await installRgba(page);
+        const button = page.locator('#variants .cat-stage .kp-button--primary');
+        await button.hover();
+        const read = await button.evaluate((el) => {
+            const rgba = /** @type {any} */ (window).kpRgba;
+            const stops = getComputedStyle(el, '::after').backgroundImage.match(/(?:rgba?|color)\([^()]*\)/g) ?? [];
+            return { caret: rgba(stops[0] ?? 'transparent'), ink: rgba(getComputedStyle(el).color) };
+        });
+        await page.mouse.move(0, 0);
+        expect(read.caret).toEqual(read.ink);
+    });
 });
 
 test.describe('phantom: the primary is pressed like the others [scope-80]', { tag: ['@theme:phantom', '@component:button'] }, () => {
@@ -180,19 +197,42 @@ test.describe('retro: the accelerator on every button [scope-80]', { tag: ['@the
                     parseFloat(cs.borderBottomWidth) >= 1 && !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.borderBottomColor);
                 const key = el.querySelector('[data-kp-key]');
                 if (key) return { label, marked: drawn(getComputedStyle(key)), icon: false };
-                // ::first-letter reaches only into a block container.
-                const carrier = el.querySelector(':scope > .kp-button__label') ?? el;
+                // ::first-letter reaches only into a block container. Beside an
+                // icon the label's text is its own element, .kp-button__text
+                // [scope-83], so the icon is not the "first letter".
+                const carrier =
+                    el.querySelector(':scope > .kp-button__text, :scope > .kp-button__label > .kp-button__text') ??
+                    el.querySelector(':scope > .kp-button__label') ??
+                    el;
                 const block = /^(inline-block|block|flow-root)$/.test(getComputedStyle(carrier).display);
-                const icon = el.querySelector(':scope > [aria-hidden="true"]') !== null;
-                return { label, marked: block && drawn(getComputedStyle(carrier, '::first-letter')), icon };
+                return { label, marked: block && drawn(getComputedStyle(carrier, '::first-letter')) };
             });
             if (!read.label) continue;
-            // An icon beside an unmarked label is the open question of scope-80:
-            // CSS cannot tell the icon from the first letter. Named, so a new one shows.
-            if (!read.marked) unmarked.push(read.icon ? `icon: ${read.label.replace(/\s+/g, ' ')}` : read.label);
+            if (!read.marked) unmarked.push(read.label.replace(/\s+/g, ' '));
         }
         await page.mouse.move(0, 0);
-        expect(unmarked).toEqual(['icon: ↻ Retry', 'icon: Export ↓']);
+        // Before scope-83: ['↻ Retry', 'Export ↓'] — an icon beside an
+        // unmarked label drew no mark (Kenny, retro-accelerator "Alleen het teken").
+        expect(unmarked).toEqual([]);
+    });
+
+    test('the mark beside an icon is the first letter of the label, not the icon [scope-83]', async ({ page }) => {
+        await open(page, 'retro');
+        const read = await page.locator('#icons .cat-stage .kp-button').evaluateAll((buttons) =>
+            buttons.map((el) => {
+                const text = el.querySelector('.kp-button__text');
+                const icon = el.querySelector(':scope > [aria-hidden="true"]');
+                return {
+                    text: text?.textContent?.trim(),
+                    // The icon keeps its own font and draws no border of its own.
+                    iconBorder: icon ? getComputedStyle(icon).borderBottomWidth : null,
+                };
+            }),
+        );
+        expect(read).toEqual([
+            { text: 'Retry', iconBorder: '0px' },
+            { text: 'Export', iconBorder: '0px' },
+        ]);
     });
 
     test('no shortcut is promised: the derived mark writes no aria-keyshortcuts', async ({ page }) => {

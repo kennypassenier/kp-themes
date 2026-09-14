@@ -46,6 +46,7 @@
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
  * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} navDisclosure  The accessible name of a mega-menu button in the bar that holds no words of its own [scope-48]
  * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
  * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} collapseRail  The accessible name of an empty slim-rail toggle while the rail is expanded
@@ -246,6 +247,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     // press goes rather than what the control is.
     menu: 'Open the navigation',
     closeMenu: 'Close the navigation',
+    // A mega menu's button whose content is only a glyph [scope-48]: its
+    // `aria-expanded` already says open or closed, so the name says what
+    // the panel holds rather than which way the press goes.
+    navDisclosure: 'More places',
     // Distinct from the two above on purpose: a page can carry both, and
     // "Open the navigation" twice would leave a screen reader with two
     // controls whose names do not tell them apart.

@@ -252,6 +252,17 @@ Framework-free, the same markup by hand:
 <span class="kp-badge" data-kp-semantic data-status="offer">Aanbod</span>
 ```
 
+**A label beside an icon.** Put the words in their own
+`.kp-button__text`; the icon stays a hidden sibling. Retro underlines the
+first letter of a label when the button is pointed at, and CSS cannot tell
+bare text from the icon beside it. No other theme styles the element, so it
+lays out as the bare text did. `<Button>` writes it for you around text it
+is given beside an element [scope-83].
+
+```html
+<button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+```
+
 **A badge that only ever holds a label.** Five components share one rule
 that lets an unbroken value break rather than push the page sideways:
 `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable` all
@@ -1031,6 +1042,88 @@ rendering to your router the way NavBar's does:
 ```jsx
 <NavBar brand="Your app" links={links} search={<PaletteTrigger palette="places" />} />
 <CommandPalette id="places" commands={[{ value: 'reports', label: 'Reports', href: '/reports' }]} />
+```
+
+### A dropdown at the bar's end [fix-27]
+
+A `.kp-nav__menu` hangs from its item's start edge. Under an item near the
+window's end that ran it past the edge, so `js/auto.js` (through
+`attachNavMenus`) measures a dropdown as it opens — on hover and on focus —
+and again when the window changes size, and when the start edge leaves it
+outside the window and the end edge does not, it writes
+`data-kp-nav-menu-end` on the panel, which hangs it from the item's end edge
+instead. Nothing to add to your markup. The React NavBar calls the same
+`placeNavMenu(item)` from its items; a page that opens a dropdown some other
+way can call it too. Without script the panel keeps its start edge.
+
+### A mega menu [scope-48]
+
+One bar item can open a wide panel of grouped links, for a site with more
+places than a dropdown holds. It is a disclosure, not a hover dropdown: a
+button opens it, never the pointer alone, so a touch or keyboard reader
+opens it on purpose.
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <ul class="kp-nav__links">
+            <li>
+                <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                <div class="kp-nav__menu kp-nav__menu--wide">
+                    <div class="kp-nav__group">
+                        <h2 class="kp-nav__menu-heading">Pumps</h2>
+                        <ul>
+                            <li><a href="/pumps/main">Main line pumps</a></li>
+                            <li><a href="/pumps/boosters">Booster sets</a></li>
+                        </ul>
+                    </div>
+                    <div class="kp-nav__group">…</div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
+```
+
+`js/auto.js` (through `attachNavMenus`) wires it. The button gets
+`aria-expanded` and an `aria-controls` naming the panel (the panel gets an
+id if it has none), and the panel is shown while the button says `true`.
+Every open state has a way out: the button again, Escape while the focus is
+in the bar — the focus goes back to the button — a click outside the item,
+and the focus leaving it. Tab walks from the button through the panel's
+links in order. One panel is open at a time: opening one closes the others.
+A button with no words of its own, a glyph only, is named from the
+dictionary (`navDisclosure`).
+
+The panel is plain lists under headings — site navigation, so not
+`role="menu"` — and the heading level is yours: pick the one that fits your
+page's outline. It spans the bar's width in a grid of at most four columns,
+each at least `--kp-nav-mega-min` (11rem) wide, `--kp-nav-mega-gap` (1.5rem)
+apart. The panel is a `.kp-nav__menu` too, so every register's dropdown
+voice dresses it, and its headings speak in the voice of the register's menu
+caption. Behind a collapsed bar's toggle the panel is a nested list in one
+column, and still opens only when its button is pressed.
+`data-kp-nav-menu-open` on the item shows it open without a press, the way
+it does for a dropdown.
+
+In React, give a link `groups` instead of `links`, and NavBar renders the
+button and the panel and wires them itself; `headingLevel` (2) sets the
+headings' level. That channel marks its bar `data-kp-nav-owner`, so
+`attachNavMenus` leaves it alone; pass `ownedBy: ''` if you want the module
+over a React bar anyway.
+
+```jsx
+<NavBar
+    brand="Your app"
+    links={[
+        {
+            href: '#equipment',
+            label: 'Equipment',
+            groups: [{ label: 'Pumps', links: [{ href: '/pumps/main', label: 'Main line pumps' }] }],
+        },
+    ]}
+/>
 ```
 
 ### The bar's layer [scope-48]

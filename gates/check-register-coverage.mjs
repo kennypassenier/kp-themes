@@ -85,6 +85,11 @@ export const HELPERS = {
  */
 export const REQUIRED_PARTS = {
     nav__menu: 'the dropdown: a theme that styles the bar and not the menu loses the reader the moment it opens (Kenny, 2026-09-08)',
+    // The mega menu's wide panel [scope-48]: a `.kp-nav__menu` too, so the
+    // dropdown's voice dresses it already, but its group headings are new
+    // and a register that answers only the dropdown leaves them neutral.
+    'nav__menu--wide':
+        'the mega menu: a panel of grouped links opened from the bar, whose headings have to speak in the theme the dropdown speaks in [scope-48]',
     // The command palette's trigger in the bar's end slot [scope-48]: a part
     // of the nav root, so the root audit alone would let a register style
     // the bar and leave its one control in the package's neutral voice.

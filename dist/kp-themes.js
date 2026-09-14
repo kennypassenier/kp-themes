@@ -160,6 +160,10 @@ var DEFAULT_STRINGS = Object.freeze({
   // press goes rather than what the control is.
   menu: "Open the navigation",
   closeMenu: "Close the navigation",
+  // A mega menu's button whose content is only a glyph [scope-48]: its
+  // `aria-expanded` already says open or closed, so the name says what
+  // the panel holds rather than which way the press goes.
+  navDisclosure: "More places",
   // Distinct from the two above on purpose: a page can carry both, and
   // "Open the navigation" twice would leave a screen reader with two
   // controls whose names do not tell them apart.
@@ -577,6 +581,7 @@ __export(components_exports, {
   TO_TOP_EVENT: () => TO_TOP_EVENT,
   VIOLATION_EVENT: () => VIOLATION_EVENT,
   attachConfirmations: () => attachConfirmations,
+  attachNavMenus: () => attachNavMenus,
   attachNavToggles: () => attachNavToggles,
   attachSkipLinks: () => attachSkipLinks,
   attachStickyNavs: () => attachStickyNavs,
@@ -584,6 +589,8 @@ __export(components_exports, {
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
   openConfirmation: () => openConfirmation,
+  placeNavMenu: () => placeNavMenu,
+  placeNavPanel: () => placeNavPanel,
   skipTo: () => skipTo,
   stickyNav: () => stickyNav
 });
@@ -997,6 +1004,165 @@ function stickyNav(wrap, after) {
     scroller.removeAttribute("data-kp-nav-sticky-root");
     scroller.style.removeProperty("--kp-nav-sticky-height");
     delete wrap.dataset.kpNavStickyAttached;
+  };
+}
+var DROPDOWN = ":scope > .kp-nav__menu:not(.kp-nav__menu--wide)";
+var overflowOf = (box) => Math.max(0, -box.left) + Math.max(0, box.right - document.documentElement.clientWidth);
+function placeNavMenu(item, retry = true) {
+  const menu = item.querySelector(DROPDOWN);
+  if (!menu) return false;
+  menu.removeAttribute("data-kp-nav-menu-end");
+  const start = menu.getBoundingClientRect();
+  if (start.width === 0) {
+    if (retry) requestAnimationFrame(() => placeNavMenu(item, false));
+    return false;
+  }
+  const fromStart = overflowOf(start);
+  if (fromStart === 0) return false;
+  menu.setAttribute("data-kp-nav-menu-end", "");
+  if (overflowOf(menu.getBoundingClientRect()) < fromStart) return true;
+  menu.removeAttribute("data-kp-nav-menu-end");
+  return false;
+}
+function placeNavPanel(panel) {
+  const element = (
+    /** @type {HTMLElement} */
+    panel
+  );
+  const bar = element.closest(".kp-nav");
+  const box = element.offsetParent;
+  if (!bar || !box || element.getBoundingClientRect().width === 0) return;
+  const b = bar.getBoundingClientRect();
+  const c = box.getBoundingClientRect();
+  const left = b.left - (c.left + box.clientLeft);
+  const right = c.left + box.clientLeft + box.clientWidth - b.right;
+  const rtl = getComputedStyle(element).direction === "rtl";
+  element.style.setProperty("--kp-nav-mega-start", `${rtl ? right : left}px`);
+  element.style.setProperty("--kp-nav-mega-end", `${rtl ? left : right}px`);
+}
+function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
+  const cleanups = [];
+  const navs = [...root instanceof Element && root.matches(".kp-nav") ? [root] : [], ...root.querySelectorAll(".kp-nav")];
+  for (const el of navs) {
+    const nav = (
+      /** @type {HTMLElement} */
+      el
+    );
+    if (ownedBy !== "" && nav.matches(ownedBy)) continue;
+    if (nav.dataset.kpNavMenusAttached !== void 0) continue;
+    nav.dataset.kpNavMenusAttached = "";
+    const itemOf = (target) => target instanceof Element ? target.closest(".kp-nav__links > li") : null;
+    const onEnter = (event) => {
+      const item = itemOf(event.target);
+      if (item && nav.contains(item) && item.querySelector(DROPDOWN)) placeNavMenu(item);
+    };
+    const placeOpen = () => {
+      for (const item of nav.querySelectorAll(".kp-nav__links > li")) if (item.querySelector(DROPDOWN)) placeNavMenu(item, false);
+      for (const panel of nav.querySelectorAll(".kp-nav__links > li > .kp-nav__menu--wide")) placeNavPanel(panel);
+    };
+    const buttons = (
+      /** @type {HTMLElement[]} */
+      [...nav.querySelectorAll("[data-kp-nav-disclosure]")]
+    );
+    const wired = /* @__PURE__ */ new Map();
+    for (const button of buttons) {
+      const panel = button.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
+      const stamped = ["aria-expanded"];
+      if (panel && !panel.id) panel.id = `kp-nav-panel-${Math.random().toString(36).slice(2, 10)}`;
+      if (panel && !button.hasAttribute("aria-controls")) {
+        button.setAttribute("aria-controls", panel.id);
+        stamped.push("aria-controls");
+      }
+      if (!(button.textContent ?? "").trim() && !button.hasAttribute("aria-label") && !button.hasAttribute("aria-labelledby")) {
+        button.setAttribute("aria-label", { ...getStrings(), ...strings }.navDisclosure);
+        stamped.push("aria-label");
+      }
+      button.setAttribute("aria-expanded", "false");
+      wired.set(button, { panel, stamped });
+    }
+    const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
+    const set = (button, open) => {
+      if (open) {
+        for (const other of buttons) if (other !== button) other.setAttribute("aria-expanded", "false");
+      }
+      button.setAttribute("aria-expanded", String(open));
+      const panel = wired.get(button)?.panel;
+      if (open && panel) placeNavPanel(panel);
+    };
+    const onClick = (event) => {
+      const button = (
+        /** @type {HTMLElement} */
+        event.currentTarget
+      );
+      set(button, button.getAttribute("aria-expanded") !== "true");
+    };
+    const onKey = (event) => {
+      const button = openButton();
+      if (event.key !== "Escape" || !button) return;
+      set(button, false);
+      button.focus();
+    };
+    const onOutside = (event) => {
+      const button = openButton();
+      if (!button) return;
+      if (button.parentElement?.contains(
+        /** @type {Node} */
+        event.target
+      )) return;
+      set(button, false);
+    };
+    const onFocusOut = (event) => {
+      const button = openButton();
+      const to = event.relatedTarget;
+      if (!button || !(to instanceof Node)) return;
+      if (button.parentElement?.contains(to)) return;
+      set(button, false);
+    };
+    nav.addEventListener("pointerover", onEnter);
+    nav.addEventListener("focusin", onEnter);
+    nav.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onKey
+    );
+    nav.addEventListener(
+      "focusout",
+      /** @type {EventListener} */
+      onFocusOut
+    );
+    for (const button of buttons) button.addEventListener("click", onClick);
+    document.addEventListener("click", onOutside, true);
+    window.addEventListener("resize", placeOpen);
+    placeOpen();
+    cleanups.push(() => {
+      nav.removeEventListener("pointerover", onEnter);
+      nav.removeEventListener("focusin", onEnter);
+      nav.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onKey
+      );
+      nav.removeEventListener(
+        "focusout",
+        /** @type {EventListener} */
+        onFocusOut
+      );
+      document.removeEventListener("click", onOutside, true);
+      window.removeEventListener("resize", placeOpen);
+      for (const [button, { stamped }] of wired) {
+        button.removeEventListener("click", onClick);
+        for (const name of stamped) button.removeAttribute(name);
+      }
+      for (const menu of nav.querySelectorAll("[data-kp-nav-menu-end]")) menu.removeAttribute("data-kp-nav-menu-end");
+      for (const panel of nav.querySelectorAll(".kp-nav__menu--wide")) {
+        panel.style.removeProperty("--kp-nav-mega-start");
+        panel.style.removeProperty("--kp-nav-mega-end");
+      }
+      delete nav.dataset.kpNavMenusAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
   };
 }
 function attachSkipLinks(root = document) {
@@ -2658,6 +2824,7 @@ function attachPalettes(root = document, {
     };
     document.addEventListener("click", onOpener);
     sheet.addEventListener("close", onClose);
+    const releaseOutside = closeOnOutsidePress(sheet);
     const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {
     } };
     handles3.set(sheet, handle);
@@ -2666,6 +2833,7 @@ function attachPalettes(root = document, {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("click", onOpener);
       sheet.removeEventListener("close", onClose);
+      releaseOutside();
       if (sheet.open) sheet.close();
       handles3.delete(sheet);
       delete sheet.dataset.kpShortcutsAttached;
@@ -9315,6 +9483,7 @@ function attachAll(root = document) {
     attachToTop(root),
     attachNavToggles(root),
     attachStickyNavs(root),
+    attachNavMenus(root),
     attachSidenavs(root),
     attachDialogs(root),
     attachDismissals(root),
@@ -9797,6 +9966,7 @@ export {
   attachGrid,
   attachGrids,
   attachLazyRegisters,
+  attachNavMenus,
   attachNavToggles,
   attachPalettes,
   attachPatterns,
@@ -9879,6 +10049,8 @@ export {
   patterns_exports as patternsExports,
   pendingTheme,
   placeDatePanel,
+  placeNavMenu,
+  placeNavPanel,
   raiseDatePanel,
   readFilterBounds,
   registerHref,

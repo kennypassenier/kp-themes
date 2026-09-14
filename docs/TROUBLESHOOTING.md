@@ -97,6 +97,15 @@ It carries a semantic colour and no words. Put the status in the badge as
 text, or add an element with an accessible name — an `aria-hidden` icon
 carries nothing.
 
+### A mega menu's button does nothing
+
+The panel shows only while its `data-kp-nav-disclosure` button says
+`aria-expanded="true"`, and that attribute is written by `attachNavMenus`
+(js/components.js, attached by js/auto.js). A page that renders the bar
+after `js/auto.js` ran calls `attachNavMenus(bar)` itself. If the button has
+`aria-expanded` and the panel still does not appear, the button and the
+`.kp-nav__menu--wide` must be siblings in the same bar item.
+
 ### A menu appears at the top-left instead of under its trigger
 
 Anchor positioning did not apply. The trigger needs `anchor-name` and the

@@ -26,6 +26,7 @@ export default async function globalSetup() {
         'react-held-60',
         'react-palette-nav',
         'react-nav-sticky',
+        'react-nav-menu',
     ]) {
         await build({
             entryPoints: [new URL(`fixtures/${name}.jsx`, import.meta.url).pathname],

@@ -14,6 +14,10 @@ export type Strings = {
      */
     closeMenu: string;
     /**
+     * The accessible name of a mega-menu button in the bar that holds no words of its own [scope-48]
+     */
+    navDisclosure: string;
+    /**
      * The accessible name of a hidden side navigation's toggle
      */
     sidebar: string;
@@ -390,6 +394,7 @@ export type Strings = {
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
  * @property {string} closeMenu     The same toggle once the navigation is open
+ * @property {string} navDisclosure  The accessible name of a mega-menu button in the bar that holds no words of its own [scope-48]
  * @property {string} sidebar       The accessible name of a hidden side navigation's toggle
  * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} collapseRail  The accessible name of an empty slim-rail toggle while the rail is expanded

@@ -143,4 +143,38 @@ test.describe('the button', { tag: ['@component:button'] }, () => {
         expect(after.height).toBeGreaterThan(before.height);
         expect(after.minHeight).toBeCloseTo(96, 0);
     });
+
+    // scope-83, retro-accelerator "Alleen het teken": a label beside an icon
+    // shows retro's mark too. CSS cannot tell a text node from the icon
+    // beside it, so the text is its own element, `.kp-button__text`: written
+    // in the markup by a framework-free consumer, and by the React Button
+    // itself around the text it is given beside an element. Before: the React
+    // button rendered " Retry" as a bare text node and drew no mark.
+    for (const [channel, id] of [
+        ['framework-free', 'plain-icon'],
+        ['React', 'react-icon'],
+    ]) {
+        test(`retro underlines the first letter of a label beside an icon, and not the icon, ${channel} [scope-83]`, async ({ page }) => {
+            await page.waitForSelector(`[data-test="${id}"]`);
+            await wearTheme(page, 'retro');
+            const button = page.locator(`[data-test="${id}"]`);
+            await button.hover();
+            const read = await button.evaluate((el) => {
+                const text = el.querySelector('.kp-button__text');
+                const letter = text ? getComputedStyle(text, '::first-letter') : null;
+                return {
+                    text: text?.textContent,
+                    drawn:
+                        letter !== null &&
+                        Number.parseFloat(letter.borderBottomWidth) >= 1 &&
+                        letter.borderBottomColor === getComputedStyle(text).color,
+                    shortcut: el.getAttribute('aria-keyshortcuts'),
+                };
+            });
+            await page.mouse.move(0, 0);
+            expect(read).toEqual({ text: 'Retry', drawn: true, shortcut: null });
+            // No shortcut and no other name: the icon stays hidden, the name is the word.
+            await expect(button).toHaveAccessibleName('Retry');
+        });
+    }
 });

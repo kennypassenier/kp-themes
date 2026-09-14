@@ -15,10 +15,12 @@ export {
     EXEMPT as CONTRACT_EXEMPT,
     VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT,
     attachConfirmations,
+    attachNavMenus,
     attachSkipLinks,
     enforceContracts,
     findViolations,
     openConfirmation,
+    placeNavMenu,
     skipTo,
 } from './js/components.js';
 export {

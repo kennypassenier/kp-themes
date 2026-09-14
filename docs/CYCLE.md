@@ -45,7 +45,14 @@ block's hash, the commit it was recorded on and the date.
 3. Claude saves the pasted text and runs
    `node gates/verdicts.mjs record < prompt.txt`. The tool refuses a block
    no page shows, a theme that does not exist, and lines taken with another hash version, and prints what it
-   added and changed. Claude commits the register and pushes `round-six`.
+   added and changed. Claude then runs the command it prints last,
+   `node gates/verdicts.mjs compare --against-browser --commit <HEAD>`: every
+   entry recorded at that commit hashed again in Playwright's browser of its
+   engine, with the ones whose hash the test browser does not read listed
+   (about 17 s for 158 entries). A mismatch means Kenny's browser saw
+   something the tools do not — his desktop font on a control the package
+   left without one was the cause of 39 of 158 on 2026-09-14 [fix-28] — and
+   goes into the report. Claude commits the register and pushes `round-six`.
 4. From the published register on, the block counts as judged in every
    browser of that engine ("In the register"). A verdict made later in a
    browser, and different from the register's, wins until it is recorded in

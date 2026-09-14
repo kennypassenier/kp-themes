@@ -93,3 +93,26 @@ test('the shortcut sheet opens on ? and not while typing [TH49]', { tag: ['@comp
     await expect(sheet).toBeHidden();
     await expect(field).toHaveValue('?');
 });
+
+// Kenny's note on the palette (scope-80) was answered for the palette in
+// ec3d3b9; the shortcut sheet is the same dialog machinery and kept the old
+// behaviour. Before: a press on the sheet's backdrop left it open, in both
+// channels.
+for (const channel of CHANNELS) {
+    test(
+        `the shortcut sheet closes on a press outside it and stays open on a press inside, ${channel.name} [scope-80]`,
+        { tag: ['@component:page'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(URL);
+            const sheet = page.locator(channel.sheet);
+            await sheet.evaluate((dialog) => /** @type {HTMLDialogElement} */ (dialog).showModal());
+            await expect(sheet).toBeVisible();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await sheet.boundingBox());
+            await page.mouse.click(box.x + box.width / 2, box.y + Math.min(20, box.height / 2));
+            await expect(sheet, 'a press inside the box keeps the sheet open').toBeVisible();
+            await page.mouse.click(box.x + box.width / 2, Math.min(890, box.y + box.height + 40));
+            await expect(sheet, 'a press on the backdrop closes it').toBeHidden();
+        },
+    );
+}

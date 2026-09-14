@@ -187,7 +187,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-nav-sticky-duration), the bar's measured height the module writes
     // (--kp-nav-sticky-height), and the page's own --kp-scroll-offset, which
     // the sticky root's scroll padding reads first: 173 + 4.
-    assert.equal(result.expected, 177, 'AR21 counted 177 --kp-* properties in css/components.css');
+    // The mega menu (scope-48, wave 2) added four more: the panel's minimum
+    // column width and column gap, and the two offsets js/components.js
+    // writes to line the panel up with the bar's edges
+    // (--kp-nav-mega-start, --kp-nav-mega-end): 177 + 4.
+    // Both additions together, as measured after the merge: 173 + 4 + 4 = 181.
+    assert.equal(result.expected, 181, 'AR21 counted 181 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -220,7 +225,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 177);
+    assert.equal(result.readCount, 181);
     assert.deepEqual(result.unread, []);
 });
 

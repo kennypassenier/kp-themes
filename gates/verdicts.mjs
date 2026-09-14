@@ -29,6 +29,11 @@
 //       Whether a reviewer's own browser reads the hashes the tools read,
 //       block by block (see compare below).
 //
+//   node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded]
+//       Whether the hashes recorded at a commit (default HEAD) are the ones
+//       Playwright's browser of the same engine reads on the working tree
+//       now [fix-28]. `record` prints this command with its own commit.
+//
 // The register's gate is gates/check-verdicts.mjs.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
@@ -257,6 +262,7 @@ export function recordPrompt(input, { registerFile = registerPath, notesFile = n
     list('Changed', report.changed);
     list('Already recorded', report.unchanged);
     out.push(`${REGISTER}: ${report.added.length} added, ${report.changed.length} changed, ${report.unchanged.length} already there.`);
+    out.push(`Whether the test browser reads the same hashes [fix-28]: ${compareCommand(context.commit)}`);
     const notes = readNotes(notesFile);
     const cleared = clearApprovedNotes(notes, parsed.lines);
     if (cleared.length) {
@@ -265,6 +271,9 @@ export function recordPrompt(input, { registerFile = registerPath, notesFile = n
     }
     return { ok: true, out, err: [] };
 }
+
+/** The command that checks the entries recorded at `commit` against the test browser. @param {string} commit */
+export const compareCommand = (commit) => `node gates/verdicts.mjs compare --against-browser --commit ${commit.slice(0, 12)}`;
 
 async function record() {
     const { THEMES } = await import('../js/theme-registry.js');
@@ -477,17 +486,106 @@ async function compare(args) {
     }
 }
 
+/* ------------------------------------------ recorded against the test browser */
+
+/**
+ * The register's entries recorded at one commit (a prefix of its id), or all
+ * of them when `commit` is null, as requests for hashAt.
+ * @param {Register} register
+ * @param {string | null} commit
+ * @returns {{ key: string, theme: string, engine: string, entry: Entry }[]}
+ */
+export function entriesAt(register, commit) {
+    const out = [];
+    for (const [key, themes] of Object.entries(register.verdicts))
+        for (const [theme, engines] of Object.entries(themes))
+            for (const [engine, entry] of Object.entries(engines))
+                if (commit === null || entry.commit.startsWith(commit) || commit.startsWith(entry.commit)) out.push({ key, theme, engine, entry });
+    return out;
+}
+
+/**
+ * Which recorded hashes the test browser read too.
+ * @param {{ key: string, theme: string, engine: string, entry: Entry }[]} entries
+ * @param {Map<string, { hash: string }>} readings `key|theme|engine` -> the test browser's reading
+ * @param {Set<string> | Map<string, unknown>} known the blocks the review pages show now
+ * @returns {{ equal: string[], differ: string[], gone: string[] }}
+ */
+export function againstReadings(entries, readings, known) {
+    /** @type {{ equal: string[], differ: string[], gone: string[] }} */
+    const out = { equal: [], differ: [], gone: [] };
+    for (const { key, theme, engine, entry } of entries) {
+        const at = `${key} · ${theme} · ${engine} · ${entry.verdict}`;
+        const reading = readings.get(`${key}|${theme}|${engine}`);
+        if (!known.has(key) || !reading) out.gone.push(at);
+        else if (reading.hash === entry.hash) out.equal.push(at);
+        else out.differ.push(`${at} (recorded ${entry.hash.slice(0, 12)}…, the test browser reads ${reading.hash.slice(0, 12)}…)`);
+    }
+    return out;
+}
+
+/**
+ * `compare --against-browser` [fix-28, scope-83]: every entry recorded at a
+ * commit (default HEAD; `--all` for the whole register), hashed again in
+ * Playwright's browser of the engine it was given in, on the working tree as
+ * it stands. An entry whose hash the test browser does not read was judged
+ * on something the tools do not see — a desktop font on an unset control was
+ * the cause of 39 of 158 on 2026-09-14. Blocks changed since that commit
+ * differ for that reason too, so it is meant to run straight after `record`.
+ * @param {string[]} args
+ */
+async function compareAgainstBrowser(args) {
+    const started = performance.now();
+    const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
+    const head = git('rev-parse', 'HEAD');
+    const commit = args.includes('--all') ? null : (option('--commit') ?? head);
+    const width = Number(option('--width') ?? 1920);
+    // --at-recorded: each entry at the commit it was recorded on (a temporary
+    // worktree), which separates "the browser read it differently" from
+    // "the block changed since".
+    const atRecorded = args.includes('--at-recorded');
+    const entries = entriesAt(readRegister(), commit);
+    const known = await knownBlocks(ROOT);
+    /** @type {Map<string, { hash: string }>} */
+    const readings = new Map();
+    const engines = [...new Set(entries.map((e) => e.engine))];
+    const commits = atRecorded ? [...new Set(entries.map((e) => e.entry.commit))] : [null];
+    for (const engine of engines) {
+        for (const at of commits) {
+            const requests = entries
+                .filter((e) => e.engine === engine && (at === null ? known.has(e.key) : e.entry.commit === at))
+                .map(({ key, theme }) => ({ key, theme }));
+            if (!requests.length) continue;
+            const read = await hashAt(at === null ? { root: ROOT, engine, requests, width } : { commit: at, engine, requests, width });
+            for (const [id, reading] of read) readings.set(`${id}|${engine}`, reading);
+        }
+    }
+    const result = againstReadings(entries, readings, atRecorded ? new Set(entries.map((e) => e.key)) : known);
+    const dirty = git('status', '--porcelain').length > 0;
+    console.log(
+        `${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} recorded ${commit === null ? 'in the register' : `at ${commit.slice(0, 12)}`}, ` +
+            `hashed in Playwright's ${engines.join(' and ') || 'browser'} ${atRecorded ? 'at the commit each was recorded on' : `on the working tree at ${head.slice(0, 12)}${dirty ? ' (with uncommitted changes)' : ''}`}:`,
+    );
+    for (const line of result.differ) console.log(`  differs: ${line}`);
+    for (const line of result.gone) console.log(`  no longer a block: ${line}`);
+    console.log(
+        `${result.equal.length} equal, ${result.differ.length} differ, ${result.gone.length} gone — ${((performance.now() - started) / 1000).toFixed(1)} s.`,
+    );
+}
+
 async function main() {
     const [command, ...args] = process.argv.slice(2);
     if (command === 'record') return record();
     if (command === 'note') return note(args);
     if (command === 'rehash') return rehash(args);
+    if (command === 'compare' && args.includes('--against-browser')) return compareAgainstBrowser(args);
     if (command === 'compare') return compare(args);
     console.error(
         'usage: node gates/verdicts.mjs record < prompt.txt\n' +
             '       node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]\n' +
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
-            '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]',
+            '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
+            '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]',
     );
     process.exit(2);
 }

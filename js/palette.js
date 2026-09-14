@@ -456,6 +456,8 @@ export function attachPalettes(
         };
         document.addEventListener('click', onOpener);
         sheet.addEventListener('close', onClose);
+        // A press outside the sheet closes it, as it does the palette [scope-80].
+        const releaseOutside = closeOnOutsidePress(sheet);
         /** @type {PaletteHandle} */
         const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {} };
         handles.set(sheet, handle);
@@ -464,6 +466,7 @@ export function attachPalettes(
             document.removeEventListener('keydown', onKey);
             document.removeEventListener('click', onOpener);
             sheet.removeEventListener('close', onClose);
+            releaseOutside();
             if (sheet.open) sheet.close();
             handles.delete(sheet);
             delete sheet.dataset.kpShortcutsAttached;

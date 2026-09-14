@@ -18,14 +18,15 @@
             <h1>Navigation</h1>
             <p class="cat-intro">
                 Every way the package takes a reader somewhere else: the bar <code>.kp-nav</code> in its <code>.kp-nav-wrap</code> with a dropdown
-                <code>.kp-nav__menu</code>, <code>.kp-breadcrumb</code>, <code>.kp-pagination</code>, <code>.kp-tabs</code>, the side navigation
-                <code>.kp-sidenav</code> in its three shapes, the command palette's trigger <code>.kp-nav__search</code>, and the back-to-top control
-                <code>.kp-to-top</code>. Whatever opens is shown open, and the two extremes a bar meets in real life are here too: fourteen items, and
-                one label sixty characters long.
+                <code>.kp-nav__menu</code> and a mega menu <code>.kp-nav__menu--wide</code>, <code>.kp-breadcrumb</code>, <code>.kp-pagination</code>,
+                <code>.kp-tabs</code>, the side navigation <code>.kp-sidenav</code> in its three shapes, the command palette's trigger
+                <code>.kp-nav__search</code>, and the back-to-top control <code>.kp-to-top</code>. Whatever opens is shown open, and the two extremes
+                a bar meets in real life are here too: fourteen items, and one label sixty characters long.
             </p>
             <ul class="cat-toc">
                 <li><a href="#bar">Bar</a></li>
                 <li><a href="#dropdown">Dropdown</a></li>
+                <li><a href="#mega-menu">Mega menu</a></li>
                 <li><a href="#bar-collapsed">Collapsed bar</a></li>
                 <li><a href="#bar-long">Fourteen items</a></li>
                 <li><a href="#bar-search">Search in the bar</a></li>
@@ -113,6 +114,83 @@
                                     </ul>
                                 </li>
                                 <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="mega-menu">
+                <h2>Mega menu</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the links sit at the bar's far end. Press <b>Equipment</b>: a wide panel opens under the bar and spans its whole
+                    width, with three groups side by side, each under a heading in the voice of that theme's dropdown caption, and the links under
+                    each heading in the voice of that theme's dropdown links. It opens on a press only — hovering <b>Equipment</b> must not open it —
+                    and its caret turns while it is open. Press <b>Equipment</b> again, press Escape (the focus must land back on the button), or
+                    click anywhere outside the bar: each closes it. Tab from the open button: the focus walks the panel's links in order. Open
+                    <b>Sites</b> while <b>Equipment</b> is open: only one panel is ever open. Then hover <b>Account</b>, the last item: its dropdown
+                    must open towards the left, inside the window, instead of running past its right edge (fix-27). Narrow the window until the bar
+                    wraps and hover it again: still inside the window.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 18rem">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Site operations, with a mega menu">
+                            <a class="kp-nav__brand" href="#mega-menu">Pump house 4</a>
+                            <ul class="kp-nav__links" style="margin-inline-start: auto">
+                                <li><a class="kp-nav__link" href="#mega-menu">Overview</a></li>
+                                <li>
+                                    <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                                    <div class="kp-nav__menu kp-nav__menu--wide">
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Pumps</h3>
+                                            <ul>
+                                                <li><a href="#mega-menu">Main line pumps</a></li>
+                                                <li><a href="#mega-menu">Booster sets</a></li>
+                                                <li><a href="#mega-menu">Spare parts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Valves</h3>
+                                            <ul>
+                                                <li><a href="#mega-menu">Gate valves</a></li>
+                                                <li><a href="#mega-menu">Check valves</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Sensors</h3>
+                                            <ul>
+                                                <li><a href="#mega-menu">Pressure transducers</a></li>
+                                                <li><a href="#mega-menu">Flow meters</a></li>
+                                                <li><a href="#mega-menu">Calibration log</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Sites</button>
+                                    <div class="kp-nav__menu kp-nav__menu--wide">
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">North</h3>
+                                            <ul>
+                                                <li><a href="#mega-menu">Pump house 4</a></li>
+                                                <li><a href="#mega-menu">Reservoir 2</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">South</h3>
+                                            <ul>
+                                                <li><a href="#mega-menu">Treatment works</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="kp-nav__link" href="#mega-menu" aria-haspopup="true">Account</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Signed in as J. Okafor">
+                                        <li><a href="#mega-menu">Profile and preferences</a></li>
+                                        <li><a href="#mega-menu">Signed-in devices</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </nav>
                     </div>

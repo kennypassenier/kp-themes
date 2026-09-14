@@ -59,6 +59,36 @@ function flatten(children) {
 /** @param {...(string | false | undefined | null)} parts */
 const cx = (...parts) => parts.filter(Boolean).join(' ');
 
+/**
+ * components/button.jsx's textBesideElements, for the framework-free
+ * channel: a run of text between elements in its own `.kp-button__text`,
+ * unless the label is text alone, elements alone, or marks a letter.
+ * @param {Child[]} kids
+ * @returns {Child[]}
+ */
+function textBesideElements(kids) {
+    const elements = kids.filter((kid) => typeof kid === 'object');
+    if (elements.length === 0 || elements.length === kids.length) return kids;
+    if (elements.some((kid) => /** @type {any} */ (kid).props?.['data-kp-key'] !== undefined)) return kids;
+    /** @type {Child[]} */
+    const out = [];
+    /** @type {string[]} */
+    let run = [];
+    const flush = () => {
+        const text = run.join('').trim();
+        if (text) out.push(el('span', { class: 'kp-button__text' }, text));
+        run = [];
+    };
+    for (const kid of kids) {
+        if (typeof kid === 'object') {
+            flush();
+            out.push(kid);
+        } else run.push(String(kid));
+    }
+    flush();
+    return out;
+}
+
 const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'source', 'wbr']);
 
 /** A tag that starts with a capital is a component, not an element. */
@@ -239,8 +269,9 @@ const TO_MARKUP = {
             el('span', { class: 'kp-button__edge', 'aria-hidden': 'true' }, []),
             p.readout === undefined ? '' : el('span', { class: 'kp-button__readout', 'aria-hidden': 'true' }, [p.readout]),
             // The label in its own element, as components/button.jsx
-            // writes it [S49, A7].
-            el('span', { class: 'kp-button__label' }, kids),
+            // writes it [S49, A7], its text beside an element in its own
+            // span as textBesideElements writes it [scope-83].
+            el('span', { class: 'kp-button__label' }, textBesideElements(kids)),
         ),
 
     // components/badge.jsx. No `status`: a coloured plate is written as an

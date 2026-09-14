@@ -34,7 +34,7 @@ js/lazy-register.js  the active theme's register, fetched at runtime (opt-in)
 js/strings.js        every user-visible string, English by default [KT5]
 js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one
-js/components.js     contracts; nav bar, sticky │ attaches nothing. Only
+js/components.js     contracts; sticky, menus   │ attaches nothing. Only
 js/overlays.js       dialogs, tabs, toasts      │ js/auto.js has a side
 js/effects.js        the hooks, the marquee,    │ effect, by design
                      the pointer bus, the count │

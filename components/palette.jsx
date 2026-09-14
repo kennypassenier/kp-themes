@@ -421,6 +421,12 @@ function ShortcutSheetInner(
         if (!open && element.open) element.close();
     }, [open]);
 
+    // A press outside the sheet closes it, as it does the palette [scope-80].
+    useEffect(() => {
+        const element = dialog.current;
+        return element === null ? undefined : closeOnOutsidePress(element);
+    }, []);
+
     useEffect(() => {
         if (hotkey === null) return;
         /** @param {KeyboardEvent} event */

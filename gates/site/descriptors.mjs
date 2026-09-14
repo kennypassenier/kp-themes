@@ -1710,6 +1710,47 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A mega menu',
+                why: 'Press Equipment: a panel of grouped links opens under the bar and spans its width, in up to four columns. It is a disclosure — a button with `aria-expanded` — rather than a dropdown that opens on hover, so a touch or keyboard reader opens it on purpose; Escape closes it and puts the focus back on the button, a click outside closes it, and only one panel is open at a time. The groups are plain lists under headings, not a menu, because these are places to go. In React, a link with `groups` renders the same.',
+                markup: `
+<div class="kp-nav-wrap">
+<nav class="kp-nav" aria-label="Main, with a mega menu">
+<a class="kp-nav__brand" href="#nav-bar">kp</a>
+<ul class="kp-nav__links">
+<li><a class="kp-nav__link" href="#nav-bar">Overview</a></li>
+<li>
+<button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+<div class="kp-nav__menu kp-nav__menu--wide">
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Pumps</h3><ul><li><a href="#example">Main line pumps</a></li><li><a href="#example">Booster sets</a></li></ul></div>
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Valves</h3><ul><li><a href="#example">Gate valves</a></li><li><a href="#example">Check valves</a></li></ul></div>
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Sensors</h3><ul><li><a href="#example">Flow meters</a></li></ul></div>
+</div>
+</li>
+</ul>
+</nav>
+</div>
+`,
+                react: `
+<NavBar
+    brand="kp"
+    label="Main, with a mega menu"
+    links={[
+        { href: '#nav-bar', label: 'Overview' },
+        {
+            href: '#equipment',
+            label: 'Equipment',
+            groups: [
+                { label: 'Pumps', links: [{ href: '#example', label: 'Main line pumps' }, { href: '#example', label: 'Booster sets' }] },
+                { label: 'Valves', links: [{ href: '#example', label: 'Gate valves' }, { href: '#example', label: 'Check valves' }] },
+                { label: 'Sensors', links: [{ href: '#example', label: 'Flow meters' }] },
+            ],
+        },
+    ]}
+    headingLevel={3}
+/>
+`,
+            },
         ],
         variants: [
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
@@ -1719,11 +1760,16 @@ export const DESCRIPTORS = [
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
             { name: '.kp-nav__search', what: 'The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.' },
             { name: 'data-kp-nav-menu-open', what: 'On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.' },
+            { name: 'data-kp-nav-menu-end', what: 'Written by the module on a dropdown whose item has no room for it towards the window’s end: the panel hangs from the item’s end edge instead, so it stays inside the window. Measured as it opens and when the window changes size; nothing to write by hand.' },
+            { name: '.kp-nav__menu--wide', what: 'The mega menu’s panel: a `.kp-nav__menu` that spans the bar in up to four columns of `.kp-nav__group`, each a `.kp-nav__menu-heading` over a plain list. Shown while its button says it is expanded; the minimum column width and the gap are knobs.' },
+            { name: 'data-kp-nav-disclosure', what: 'The button that opens a mega menu’s panel, beside it in the same item; give it `kp-nav__link kp-nav__disclosure` so it reads as one of the bar’s links with a caret that turns while open. The module writes `aria-expanded` and `aria-controls`.' },
         ],
         accessibility: [
             'Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.',
             'Built in — the bar wraps at narrow widths rather than pushing the page sideways.',
             'Built in — a sticky bar hands its height to the scrolling box’s scroll padding, so a skip link, an anchor or a Tab never lands underneath it.',
+            'Built in — a dropdown near the window’s end opens towards the other side rather than past the edge.',
+            'Built in — a mega menu opens on a press, not on hover; Escape closes it and returns the focus to its button, and the focus leaving it or a click outside closes it too.',
             'Yours — give the nav element a name; a page with two of them is otherwise “navigation” twice.',
             'Yours — use links, and give the reader a skip link past the bar.',
             'Yours — keep the list short. A bar that wraps to three rows on a laptop is a menu.',
