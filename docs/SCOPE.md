@@ -1502,3 +1502,16 @@ and retro `boot`, phantom `card`. Retro and terminal carry their own lines in
 performs an arrival gets words of its own world, proposed by Claude and
 judged by Kenny on the new page; a theme without its own words shows none of
 another theme's.
+
+**scope-85 · After the intro inspector.** Kenny, 2026-09-15, the review-and-
+intros form. fix-29 "Klopt". mega-headings "Via de review-site": judged per
+theme in his next catalogue prompt. sticky-shrink "De helft": a compact bar
+keeps half of its own block padding. control-font "Alleen de familie": as
+built. button-text "Beschrijven": `.kp-button__text` is documented public
+API. hc-scrolled "Aansluiten": high-contrast's scrolled-bar rule answers
+`data-kp-nav-compact`. step-timing "Akkoord". intro-words, his questions:
+what "Words now" and "On screen" mean; whether these are all the intros
+(cyberpunk seemed to have one); and whether an intro can make sure every
+resource (.css, .js) has loaded, or whether those load too fast to matter —
+measured by a researcher before anything changes. intro-verdict-theme, his
+question: what a block is here — asked again in plain words.
