@@ -59,12 +59,6 @@ export const PAGES = [
         ],
     },
     {
-        // New research demos wait here for Kenny's decision, then move down
-        // to 'Archived research' [scope-81].
-        group: 'Research to look at',
-        pages: [{ href: 'research/intro-loading/demo.html', label: 'Intros and loading' }],
-    },
-    {
         // Every demo here has its decision taken. A new research demo goes in
         // a 'Research to look at' group of its own, above this one, and moves
         // down here once Kenny has decided on it [scope-81].
@@ -77,6 +71,7 @@ export const PAGES = [
             { href: 'research/grotesk-hover/demo.html', label: 'Grotesk hover options' },
             { href: 'research/control-height/demo.html', label: 'Control heights' },
             { href: 'research/uniform-size/demo.html', label: 'Uniform sizes' },
+            { href: 'research/intro-loading/demo.html', label: 'Intros and loading' },
         ],
     },
 ];

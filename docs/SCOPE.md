@@ -1515,3 +1515,16 @@ what "Words now" and "On screen" mean; whether these are all the intros
 resource (.css, .js) has loaded, or whether those load too fast to matter —
 measured by a researcher before anything changes. intro-verdict-theme, his
 question: what a block is here — asked again in plain words.
+
+**scope-86 · Intros stay on their timers; the headline reveal waits for the
+intro.** Kenny, 2026-09-15, the intros-and-loading form, on
+`research/intro-loading/` (192 loads). intro-loading "A": an intro does not
+wait for stylesheets, scripts or fonts; on a fast or warm load everything is
+ready within 0.32 s, and the slow cold case stays as measured. The research
+demo moves to "Archived research" (`scope-81`). reveal-under-intro "Na de
+intro": in synthwave, terminal, retro and phantom the headline reveal starts
+once the arrival has gone, so a first visit sees it. intro-verdict-theme "Het
+thema van de intro": on `catalogue/intros.html` each block records its verdict
+under its own theme, whatever the page wears, and shows that theme beside its
+buttons. bar-sticky-look "Nog niet gekeken": asked again. step-timing
+"Akkoord".
