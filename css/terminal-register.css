@@ -1607,16 +1607,29 @@
        one the motion rules have anything to say about. One blink a second
        is far under the three-per-second threshold, and `kp-caret` is
        already in the table at that rate. */
+    /* One text line tall and centred on the button, as the label is
+       [scope-80]. The box used to run from 0.55rem below the top to 0.55rem
+       above the bottom, and the blink paints 1.15em from the box's top: on
+       catalogue/button.html the cursor started 8.8px down while the text
+       started 14.7px down (15.2px small, 13.2px large), so it rode above the
+       label in every size. Now the box is the blink's own 1.15em, centred,
+       and the destructive button blinks in its alarm colour
+       (`--kp-button-caret-colour`). */
     [data-theme='terminal'] .kp-button::after {
         content: '';
         position: absolute;
-        inset-block: var(--kp-button-caret-inset, 0.55rem);
+        inset-block-start: calc(50% - 0.575em);
+        block-size: 1.15em;
         inset-inline-end: var(--kp-button-caret-gap, 0.5rem);
         inline-size: 1ch;
-        background-image: linear-gradient(var(--primary), var(--primary));
+        background-image: linear-gradient(var(--kp-button-caret-colour, var(--primary)), var(--kp-button-caret-colour, var(--primary)));
         background-repeat: no-repeat;
         background-size: 0 0;
         pointer-events: none;
+    }
+
+    [data-theme='terminal'] .kp-button--destructive {
+        --kp-button-caret-colour: var(--destructive);
     }
 
     [data-theme='terminal'] .kp-button:hover:not(:disabled)::after,

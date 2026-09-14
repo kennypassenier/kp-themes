@@ -288,8 +288,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "bbede9c3ddafe1fac7772d8bbb883acf34df0472aab0a5537a54f13840cecf30",
-            "doc": "171c9365fe7e4d65eebe436d5e392c2d81a3aa21c305bc51a23940da3adac96e",
+            "hash": "46ba9ca5db76f1faa3f73fa36d53e37f8011e3a772bbfe5aeab0a75ec75d7dd0",
+            "doc": "719306bd76d79b3f150dc418c1ae6d40cfcf9abd40afa0a4376a225e3d7173f3",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -306,7 +306,7 @@
                 "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
                 "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
                 "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
-                "components/sidenav.d.ts": "03cf2d2caa4a78c5dc9bef3edaf87433f531f611406ba78a125ec7a8e0827ddd",
+                "components/sidenav.d.ts": "9370f05ab0111b5e38601e040a5aff64c5f12774940e0920951a52592e46b125",
                 "components/structure.d.ts": "cb15de5af7c7b758e9c6e732fd23c89a197b4025a1e2d56fa1a6dff87ca26d87",
                 "components/switch.d.ts": "f1ae0185c1a08dae513dafa95f801ce672b68d27c7c99a7cad7714d30c743403",
                 "components/table.d.ts": "b6a5495a0f1fe6e650310fee839f5c7a0b83cba69ef1d6ffd4e46682a157ea47",
@@ -321,7 +321,7 @@
                 "hooks/use-controllable.d.ts": "48cde66acba1f270554f5e47a44339a06d838affdf82e6be80e966978c785dd6",
                 "hooks/use-strings.d.ts": "50f2c91a944f6c795ff3b273c8da70d7889aa36ed6527508cca47875368f51a5",
                 "hooks/use-theme.d.ts": "0c3273b2c70b8397f33dd7e6ee501bf7bcda1ac781138b3cc89cdf6f57cdf647",
-                "index.d.ts": "77e9545d7a6c3ab899eefcdc5610db47a7ab4b0e2e8c6634dd9777bbbc500153",
+                "index.d.ts": "9e5af9b9063a3d2b813007467a7b96ee5610ecab663ab4eeb25d56f2e4d28dc0",
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
@@ -415,11 +415,11 @@
                 "components/nav-bar.d.ts",
                 "components/sidenav.d.ts"
             ],
-            "hash": "04a89099297134a66f6ad0c899bbd80bfddb95d720afee957af00a539884bd33",
-            "doc": "e08adc87df911d9255b7521c9a99ca65d746e652fa38d68c86ad19eb246bcaa5",
+            "hash": "5651d8228c3af0eb790cd0fa54169526e1d8bbfe3fd1fd27de2b50ab4b011122",
+            "doc": "9672f43e3b87c2aa18335d88286e5142728d6d7e132595338a9598fcf405b18d",
             "files": {
                 "components/nav-bar.d.ts": "c4dccf23a4a9976c6f2f8525dd62bcfbf723d3a596cc1d1cb121463b008ff619",
-                "components/sidenav.d.ts": "03cf2d2caa4a78c5dc9bef3edaf87433f531f611406ba78a125ec7a8e0827ddd",
+                "components/sidenav.d.ts": "9370f05ab0111b5e38601e040a5aff64c5f12774940e0920951a52592e46b125",
                 "js/sidenav.d.ts": "a4e771044fb7a5c6980b85ce59d2b5969300611549dc7f3132a66d66dbe1a227"
             }
         }

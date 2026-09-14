@@ -19,7 +19,7 @@ the selectors and their order are identical, which is what
 | `css/blueprint-register.css` | 50.1 kB | 23.1 kB | 54% |
 | `css/brutalism-register.css` | 56.7 kB | 30.8 kB | 46% |
 | `css/components.css` | 165.0 kB | 65.0 kB | 61% |
-| `css/cyberpunk-register.css` | 63.1 kB | 35.5 kB | 44% |
+| `css/cyberpunk-register.css` | 64.2 kB | 35.8 kB | 44% |
 | `css/dark-register.css` | 52.2 kB | 24.7 kB | 53% |
 | `css/deco-register.css` | 47.2 kB | 23.0 kB | 51% |
 | `css/fonts.css` | 27.0 kB | 20.2 kB | 25% |
@@ -32,22 +32,22 @@ the selectors and their order are identical, which is what
 | `css/light-register.css` | 35.0 kB | 14.6 kB | 58% |
 | `css/nostromo-register.css` | 46.3 kB | 24.3 kB | 47% |
 | `css/pastel-register.css` | 43.9 kB | 20.5 kB | 53% |
-| `css/phantom-register.css` | 60.1 kB | 32.3 kB | 46% |
-| `css/retro-register.css` | 69.8 kB | 35.1 kB | 50% |
+| `css/phantom-register.css` | 60.7 kB | 32.4 kB | 47% |
+| `css/retro-register.css` | 71.7 kB | 35.6 kB | 50% |
 | `css/sepia-register.css` | 46.7 kB | 22.1 kB | 53% |
 | `css/shade-dark-register.css` | 43.6 kB | 20.4 kB | 53% |
 | `css/shade-light-register.css` | 46.6 kB | 22.4 kB | 52% |
 | `css/solstice-register.css` | 38.2 kB | 18.5 kB | 52% |
 | `css/synthwave-register.css` | 62.2 kB | 34.3 kB | 45% |
-| `css/terminal-register.css` | 56.1 kB | 28.9 kB | 49% |
+| `css/terminal-register.css` | 56.9 kB | 29.0 kB | 49% |
 | `css/themes.css` | 175.2 kB | 117.0 kB | 33% |
-| `css/titanium-register.css` | 52.1 kB | 24.4 kB | 53% |
+| `css/titanium-register.css` | 52.8 kB | 24.4 kB | 54% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 1443.7 kB | 724.8 kB | 50% |
+| `dist/kp-themes.css` | 1448.8 kB | 726.0 kB | 50% |
 | `dist/kp-themes.js` | 367.4 kB | 192.8 kB | 48% |
 
-The loose stylesheets together weigh **1497.5 kB** authored and
-**757.0 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **1502.5 kB** authored and
+**758.1 kB** minified, 50% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

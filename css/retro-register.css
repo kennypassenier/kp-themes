@@ -1927,6 +1927,42 @@
         border-block-end-color: currentcolor;
     }
 
+    /* ── …on every button [scope-80] ───────────────────────────────────
+       Kenny approved the accelerator and asked for it on every button in
+       this theme, not only on the ones whose consumer marked a letter. A
+       label that marks nothing shows its first letter instead.
+
+       Visual only. No key is bound and no `aria-keyshortcuts` is written:
+       an underline that promised a shortcut which does nothing would be a
+       lie to a keyboard user, and which letter is unique in a group, and
+       whether Alt+letter may be taken from the browser, are open.
+
+       `::first-letter` only reaches into a block container, and a button is
+       an inline flex row whose text is an anonymous item, so a label of
+       plain text is laid out as one line of text instead — the bargain
+       components.css already makes for a marked label, and it looks the
+       same: one line box, centred both ways. Only a label with no element
+       inside it: an icon beside the text would be the "first letter"
+       otherwise, so a button that carries an icon and marks nothing still
+       shows none. The component's own `.kp-button__label` is answered the
+       same way. */
+    [data-theme='retro'] .kp-button:not(:has(> *)),
+    [data-theme='retro'] .kp-button__label:not(:has(> *)) {
+        display: inline-block;
+        align-content: center;
+        text-align: center;
+    }
+
+    [data-theme='retro'] .kp-button:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button__label:not(:has(> *))::first-letter {
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='retro'] .kp-button:not(:has(> *)):is(:hover:not(:disabled), :focus-visible)::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label:not(:has(> *))::first-letter {
+        border-block-end-color: currentcolor;
+    }
+
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */
 
     /* A read-only field is a value on a record, not a box to type in. This

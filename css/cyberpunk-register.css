@@ -457,15 +457,37 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch)), calc(100% - var(--kp-button-notch)) 100%, 0 100%);
     }
 
+    /* The charge sweep, in a colour that stands off the face it crosses
+       [scope-80]. It used to be white at half strength in `overlay`, and
+       overlay leaves a near-black or a saturated face almost where it was:
+       measured on catalogue/button.html, the band read 1.00:1 against the
+       primary's yellow, 1.03:1 on the bare button's black and 1.28:1 on the
+       destructive red — only the ghost, whose face is nearly transparent,
+       showed it (1.16:1 blended, but over the page it read white), which is
+       Kenny's "the Cancel button has the animation, the others don't
+       quite". Now it is painted normally in `--kp-btn-charge`: the cyan
+       accent over the dark faces and the face's own ink over the filled
+       ones, each at least 3:1 against the face it runs on. */
     [data-theme='cyberpunk'] .kp-button::after {
         content: '';
         position: absolute;
         inset: -1rem -2rem;
         z-index: -1;
-        background: linear-gradient(105deg, transparent 0 40%, hsl(from var(--primary) h 0% 100% / 0.5) 45% 55%, transparent 60% 100%);
+        background: linear-gradient(105deg, transparent 0 40%, var(--kp-btn-charge) 45% 55%, transparent 60% 100%);
         transform: translateX(-120%);
-        mix-blend-mode: overlay;
         pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-btn-charge: hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary {
+        --kp-btn-charge: hsl(from var(--primary-foreground) h s l / 0.6);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive {
+        --kp-btn-charge: hsl(from var(--destructive-foreground) h s l / 0.6);
     }
 
     [data-theme='cyberpunk'] .kp-button:hover:not(:disabled) {

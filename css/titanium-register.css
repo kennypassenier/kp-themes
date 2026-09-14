@@ -544,9 +544,16 @@
         color: var(--primary-foreground);
     }
 
+    /* A step down, not up [scope-80]. The primary is a pale metal on a
+       dark ground, and six points lighter took it to a near-white nobody
+       could tell from the rest: measured on catalogue/button.html, rest to
+       hover was 4.9 in OKLab distance where roughly 10 is "tells them
+       apart", and the bare button's hover is 8.9. Fourteen points darker is
+       11.4, and the pressed state below goes a further thirteen, so pressed
+       stays 11.0 from hover (DI3's floor of 10). */
     [data-theme='titanium'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6));
-        border-color: hsl(from var(--primary) h s calc(l + 6));
+        background: hsl(from var(--primary) h s calc(l - 14));
+        border-color: hsl(from var(--primary) h s calc(l - 14));
     }
 
     [data-theme='titanium'] .kp-button--ghost {
@@ -1372,9 +1379,12 @@
         background: var(--secondary-active);
     }
 
+    /* Not `--primary-active` any more: that token is 74%, three points
+       from the darker hover above, so the press would vanish into it
+       [scope-80]. */
     [data-theme='titanium'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
+        background: hsl(from var(--primary) h s calc(l - 27));
+        border-color: hsl(from var(--primary) h s calc(l - 27));
     }
 
     [data-theme='titanium'] .kp-button--destructive:active:not(:disabled) {
