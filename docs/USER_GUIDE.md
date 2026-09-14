@@ -917,6 +917,53 @@ the button. That channel wires its own button and marks it
 `data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
 `ownedBy: ''` if you want the module over a React nav anyway.
 
+### A header that stays and shrinks [scope-48]
+
+On a long page the bar can stay at the top and give some of its height
+back once the reader has scrolled. It is opt-in by a modifier on the
+wrapper, so a bar without it behaves exactly as it did:
+
+```html
+<a class="kp-skip-link" href="#main">Skip to content</a>
+<div class="kp-nav-wrap kp-nav-wrap--sticky">
+    <nav class="kp-nav" aria-label="Main">…</nav>
+</div>
+```
+
+The stylesheet makes the wrapper `position: sticky` at the top of the box
+that scrolls it, on the bar's own layer (`--kp-z-nav`, 30). `js/auto.js`
+(or `attachStickyNavs(root)` from `js/components.js`) does two things:
+
+- once that box has scrolled further than the bar is tall, it sets
+  `data-kp-nav-compact` on the wrapper, and the bar's block padding drops
+  to `--kp-nav-sticky-shrink` (0.125rem). Back within that distance less
+  the bar's height, the attribute goes again — the gap stops the bar
+  flipping between its two heights when the browser's scroll anchoring
+  moves the page. `data-kp-nav-sticky-after="200"` starts it later; a
+  value below the bar's height is raised to it. Each change fires
+  `kp-nav-compact` on the wrapper with `{ compact }`.
+- it writes the bar's current height to `--kp-nav-sticky-height` on the
+  scrolling box (the page's root, or the nearest ancestor that scrolls)
+  and marks that box `data-kp-nav-sticky-root`. Its
+  `scroll-padding-block-start` reads `--kp-scroll-offset` first and that
+  height second, so an anchor, the skip link's target and an element
+  reached with Tab land below the bar. Set `--kp-scroll-offset` yourself
+  and yours wins.
+
+The padding glides over `--kp-nav-sticky-duration` (the theme's
+`--fx-duration`) only under `prefers-reduced-motion: no-preference`;
+otherwise it changes at once. Every register reads `--kp-nav-pad-block`,
+so the bar shrinks in all 22 themes. Keep the skip link before the
+wrapper: it stays the first thing Tab reaches.
+
+A sticky box sticks inside its parent, so the wrapper's parent has to be
+the page or the column that scrolls — not a mount point exactly as tall
+as the bar.
+
+In React it is the `sticky` prop, with `stickyAfter` for the distance.
+That channel wires its own wrapper and marks it
+`data-kp-nav-sticky-owner`, so `attachStickyNavs` leaves it alone.
+
 ### The command palette as navigation [scope-48]
 
 A palette that only opens on a key is a secret, so the bar keeps a

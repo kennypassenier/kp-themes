@@ -185,9 +185,14 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-nav-compact</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-open</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-nav-side</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-nav-sticky-after</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-nav-sticky-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-nav-sticky-owner</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-nav-sticky-root</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-nav-toggle</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-nav-toggle-attached</code></td><td>read, written</td></tr>
                     </tbody></table></div>
@@ -216,6 +221,8 @@
                             <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The nav's accessible name. Default: the dictionary's.</td></tr>
                             <tr><td><code>collapsible</code></td><td><code>boolean</code></td><td>optional</td><td>Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.</td></tr>
                             <tr><td><code>toggleIcon</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>What goes in that button. Empty draws three bars; this package ships type, not icons.</td></tr>
+                            <tr><td><code>sticky</code></td><td><code>boolean</code></td><td>optional</td><td>The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.</td></tr>
+                            <tr><td><code>stickyAfter</code></td><td><code>number</code></td><td>optional</td><td>How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.</td></tr>
                             <tr><td><code>search</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td>The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].</td></tr>
                             <tr><td><code>classNames</code></td><td><code>{ brand?: string; list?: string; item?: string; link?: string; skip?: string; menu?: string; menuLink?: string; toggle?: string; search?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
@@ -227,6 +234,7 @@
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-nav-toggle</code></td><td>Fired on the nav when its toggle opens or closes it: `{ open }`.</td></tr>
+                            <tr><td><code>kp-nav-compact</code></td><td>Fired on the wrapper when a sticky bar turns compact or back: `{ compact }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -238,8 +246,12 @@
                             <tr><td><code>--kp-nav-pad-inline</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-nav-pad-inline-narrow</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-nav-search-min</code></td><td><code>10rem</code></td></tr>
+                            <tr><td><code>--kp-nav-sticky-duration</code></td><td><code>var(--fx-duration, 220ms)</code></td></tr>
+                            <tr><td><code>--kp-nav-sticky-height</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-nav-sticky-shrink</code></td><td><code>0.125rem</code></td></tr>
                             <tr><td><code>--kp-nav-toggle-size</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-nav-wrap-min</code></td><td><code>auto</code></td></tr>
+                            <tr><td><code>--kp-scroll-offset</code></td><td><code>var(--kp-nav-sticky-height, 0px)</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
@@ -253,6 +265,7 @@
                     <ul class="kp-stack">
                         <li>Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.</li>
                         <li>Built in — the bar wraps at narrow widths rather than pushing the page sideways.</li>
+                        <li>Built in — a sticky bar hands its height to the scrolling box’s scroll padding, so a skip link, an anchor or a Tab never lands underneath it.</li>
                         <li>Yours — give the nav element a name; a page with two of them is otherwise “navigation” twice.</li>
                         <li>Yours — use links, and give the reader a skip link past the bar.</li>
                         <li>Yours — keep the list short. A bar that wraps to three rows on a laptop is a menu.</li>
@@ -264,6 +277,7 @@
                             <tr><td><code>.kp-nav__brand</code></td><td>The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.</td></tr>
                             <tr><td><code>.kp-nav__links</code></td><td>The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.</td></tr>
                             <tr><td><code>.kp-nav-wrap</code></td><td>The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.</td></tr>
+                            <tr><td><code>.kp-nav-wrap--sticky</code></td><td>The shrinking header: the bar sticks to the top of the box that scrolls it, and once that box has scrolled further than the bar is tall (or `data-kp-nav-sticky-after` pixels, if more) js/auto.js sets `data-kp-nav-compact` and the bar lowers its block padding (the knobs table names how far), gliding only when the reader has not asked for less motion. The module hands the bar’s height to the scrolling box’s scroll padding, so anchors and focused elements land below the bar; a scroll offset the page sets itself still wins. In React it is the `sticky` prop, with `stickyAfter`.</td></tr>
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
                             <tr><td><code>.kp-nav__search</code></td><td>The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.</td></tr>
                             <tr><td><code>data-kp-nav-menu-open</code></td><td>On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.</td></tr>

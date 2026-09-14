@@ -182,7 +182,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // heights in the package and added four: the one-line boxes' line
     // height, the running text's (read by the multi-line field), the table
     // row's height and the button's block padding: 169 + 4.
-    assert.equal(result.expected, 173, 'AR21 counted 173 --kp-* properties in css/components.css');
+    // The shrinking header (scope-48 wave 2) added four: the compact bar's
+    // block padding and how long it glides (--kp-nav-sticky-shrink,
+    // --kp-nav-sticky-duration), the bar's measured height the module writes
+    // (--kp-nav-sticky-height), and the page's own --kp-scroll-offset, which
+    // the sticky root's scroll padding reads first: 173 + 4.
+    assert.equal(result.expected, 177, 'AR21 counted 177 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -215,7 +220,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 173);
+    assert.equal(result.readCount, 177);
     assert.deepEqual(result.unread, []);
 });
 

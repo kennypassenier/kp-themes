@@ -1,6 +1,6 @@
-import { forwardRef, Fragment, useId, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useId, useRef, useState } from 'react';
 import { useStrings } from '../hooks/use-strings.jsx';
-import { skipTo as jumpTo } from '../js/components.js';
+import { skipTo as jumpTo, stickyNav } from '../js/components.js';
 // Navigation bar [TH7, TH36].
 //
 // The skip link rides on this: it is the first focusable thing on the
@@ -49,6 +49,8 @@ import { skipTo as jumpTo } from '../js/components.js';
  * @property {string} [label]       The nav's accessible name. Default: the dictionary's.
  * @property {boolean} [collapsible]  Render the toggle a narrow bar collapses into. Default false, so an existing nav is unchanged.
  * @property {import('react').ReactNode} [toggleIcon]  What goes in that button. Empty draws three bars; this package ships type, not icons.
+ * @property {boolean} [sticky]    The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.
+ * @property {number} [stickyAfter]  How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.
  * @property {import('react').ReactNode} [search]  The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
  * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string, search?: string }} [classNames]
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
@@ -79,6 +81,8 @@ function NavBarInner(
         collapsible = false,
         toggleIcon,
         search,
+        sticky = false,
+        stickyAfter,
         strings,
         className = '',
         children,
@@ -101,7 +105,22 @@ function NavBarInner(
     // the first focusable thing on the page and belongs to the page, not
     // to the bar.
     const Wrap = wrap ? 'div' : Fragment;
-    const wrapProps = wrap ? { className: `kp-nav-wrap ${wrapClassName}`.trim() } : {};
+    // The sticky wrapper is wired here, through the same function the
+    // framework-free module uses, and marked so js/auto.js leaves it alone
+    // [AR29]: one bar, one owner.
+    const wrapRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+    const stuck = wrap && sticky;
+    useEffect(() => {
+        if (!stuck || wrapRef.current === null) return undefined;
+        return stickyNav(wrapRef.current, stickyAfter);
+    }, [stuck, stickyAfter]);
+    const wrapProps = wrap
+        ? {
+              className: `kp-nav-wrap ${stuck ? 'kp-nav-wrap--sticky' : ''} ${wrapClassName}`.replace(/\s+/g, ' ').trim(),
+              ref: wrapRef,
+              'data-kp-nav-sticky-owner': stuck ? '' : undefined,
+          }
+        : {};
     return (
         <>
             {skipLink && (

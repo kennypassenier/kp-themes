@@ -210,7 +210,7 @@
 
     [data-theme='brutalism'] .kp-nav {
         background: var(--background);
-        padding-block: 1.1rem;
+        padding-block: var(--kp-nav-pad-block, 1.1rem);
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */

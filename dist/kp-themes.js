@@ -569,7 +569,9 @@ __export(components_exports, {
   CONFIRM_OWNED: () => CONFIRM_OWNED,
   CONFIRM_WINDOW_MS: () => CONFIRM_WINDOW_MS,
   EXEMPT: () => EXEMPT,
+  NAV_COMPACT_EVENT: () => NAV_COMPACT_EVENT,
   NAV_OWNED: () => NAV_OWNED,
+  NAV_STICKY_OWNED: () => NAV_STICKY_OWNED,
   NAV_TOGGLE_EVENT: () => NAV_TOGGLE_EVENT,
   TO_TOP: () => TO_TOP,
   TO_TOP_EVENT: () => TO_TOP_EVENT,
@@ -577,11 +579,13 @@ __export(components_exports, {
   attachConfirmations: () => attachConfirmations,
   attachNavToggles: () => attachNavToggles,
   attachSkipLinks: () => attachSkipLinks,
+  attachStickyNavs: () => attachStickyNavs,
   attachToTop: () => attachToTop,
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
   openConfirmation: () => openConfirmation,
-  skipTo: () => skipTo
+  skipTo: () => skipTo,
+  stickyNav: () => stickyNav
 });
 var VIOLATION_EVENT = "kp-contract-violation";
 var CONFIRM_WINDOW_MS = 4e3;
@@ -912,6 +916,87 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
   }
   return () => {
     for (const c of cleanups) c();
+  };
+}
+var NAV_COMPACT_EVENT = "kp-nav-compact";
+var NAV_STICKY_OWNED = "[data-kp-nav-sticky-owner]";
+function scrollerOf(el) {
+  const doc = el.ownerDocument;
+  for (let at = el.parentElement; at !== null && at !== doc.body && at !== doc.documentElement; at = at.parentElement) {
+    const overflow = getComputedStyle(at).overflowY;
+    if (overflow === "auto" || overflow === "scroll" || overflow === "overlay") return at;
+  }
+  return (
+    /** @type {HTMLElement} */
+    doc.scrollingElement ?? doc.documentElement
+  );
+}
+function attachStickyNavs(root = document, { ownedBy = NAV_STICKY_OWNED, after } = {}) {
+  const cleanups = [];
+  const found = [];
+  if (root instanceof HTMLElement && root.matches(".kp-nav-wrap--sticky")) found.push(root);
+  for (const el of root.querySelectorAll(".kp-nav-wrap--sticky")) found.push(
+    /** @type {HTMLElement} */
+    el
+  );
+  for (const wrap of found) {
+    if (ownedBy !== "" && wrap.matches(ownedBy)) continue;
+    cleanups.push(stickyNav(wrap, after));
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+function stickyNav(wrap, after) {
+  if (wrap.dataset.kpNavStickyAttached !== void 0) return () => {
+  };
+  const doc = wrap.ownerDocument;
+  const view = doc.defaultView;
+  if (!view) return () => {
+  };
+  wrap.dataset.kpNavStickyAttached = "";
+  const scroller = scrollerOf(wrap);
+  const isDocument = scroller === doc.scrollingElement || scroller === doc.documentElement;
+  const target = isDocument ? view : scroller;
+  const offset = () => isDocument ? view.scrollY : scroller.scrollTop;
+  scroller.setAttribute("data-kp-nav-sticky-root", "");
+  let compact = wrap.hasAttribute("data-kp-nav-compact");
+  let restHeight = wrap.getBoundingClientRect().height;
+  let queued = false;
+  const measure = () => {
+    const height = wrap.getBoundingClientRect().height;
+    if (!compact) restHeight = height;
+    scroller.style.setProperty("--kp-nav-sticky-height", `${height}px`);
+  };
+  const decide = () => {
+    queued = false;
+    const attribute = wrap.getAttribute("data-kp-nav-sticky-after");
+    const asked = after ?? (attribute !== null && attribute !== "" ? Number(attribute) : 0);
+    const threshold = Math.max(restHeight, Number.isFinite(asked) ? asked : 0);
+    const at = offset();
+    const next = compact ? at > Math.max(0, threshold - restHeight) : at > threshold;
+    if (next === compact) return;
+    compact = next;
+    wrap.toggleAttribute("data-kp-nav-compact", next);
+    wrap.dispatchEvent(new CustomEvent(NAV_COMPACT_EVENT, { bubbles: true, detail: { compact: next } }));
+  };
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    view.requestAnimationFrame(decide);
+  };
+  const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+  resize?.observe(wrap);
+  measure();
+  decide();
+  target.addEventListener("scroll", onScroll, { passive: true });
+  return () => {
+    target.removeEventListener("scroll", onScroll);
+    resize?.disconnect();
+    wrap.removeAttribute("data-kp-nav-compact");
+    scroller.removeAttribute("data-kp-nav-sticky-root");
+    scroller.style.removeProperty("--kp-nav-sticky-height");
+    delete wrap.dataset.kpNavStickyAttached;
   };
 }
 function attachSkipLinks(root = document) {
@@ -9229,6 +9314,7 @@ function attachAll(root = document) {
     attachSkipLinks(root),
     attachToTop(root),
     attachNavToggles(root),
+    attachStickyNavs(root),
     attachSidenavs(root),
     attachDialogs(root),
     attachDismissals(root),
@@ -9624,7 +9710,9 @@ export {
   MEMO_PREFIX,
   MONTH_EVENT,
   NAMES_PROPERTY,
+  NAV_COMPACT_EVENT,
   NAV_OWNED,
+  NAV_STICKY_OWNED,
   NAV_TOGGLE_EVENT,
   NO_FLASH_SNIPPET,
   OPENER,
@@ -9716,6 +9804,7 @@ export {
   attachSelects,
   attachSidenavs,
   attachSkipLinks,
+  attachStickyNavs,
   attachStructure,
   attachSwitches,
   attachTableRegions,
@@ -9810,6 +9899,7 @@ export {
   sidenav_exports as sidenavExports,
   sidenavOf,
   skipTo,
+  stickyNav,
   storeTheme,
   storedTheme,
   strings_exports as stringsExports,

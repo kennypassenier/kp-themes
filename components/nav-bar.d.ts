@@ -61,6 +61,14 @@ export type NavBarProps = {
      */
     toggleIcon?: import('react').ReactNode;
     /**
+     * The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.
+     */
+    sticky?: boolean;
+    /**
+     * How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.
+     */
+    stickyAfter?: number;
+    /**
      * The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
      */
     search?: import('react').ReactNode;

@@ -1386,6 +1386,42 @@
         }
     }
 
+    /* The shrinking header [scope-48 wave 2, research/navbar].
+ *
+ * Opt-in by the modifier on the wrapper: the bar sticks to the top of the
+ * box that scrolls it, on the bar's one layer (--kp-z-nav, above). Once the
+ * page has scrolled past a threshold, attachStickyNavs (js/components.js)
+ * or NavBar's `sticky` sets `data-kp-nav-compact`, and the compact state
+ * lowers --kp-nav-pad-block — the knob every register reads since research
+ * finding 2 was closed, so the bar gets shorter in all 22 themes. Knobs:
+ * --kp-nav-sticky-shrink (0.125rem), the block padding of the compact bar;
+ * --kp-nav-sticky-duration (the theme's --fx-duration), how long it glides.
+ * It is set on the nav itself so it wins over an at-rest value a consumer
+ * put on the nav. The same module measures the bar and writes its height to
+ * --kp-nav-sticky-height on the scrolling box, which scroll-padding reads
+ * when --kp-scroll-offset is not set: an anchor or a focused element lands
+ * below the bar instead of under it. */
+    .kp-nav-wrap--sticky {
+        position: sticky;
+        inset-block-start: 0;
+    }
+
+    .kp-nav-wrap--sticky[data-kp-nav-compact] > .kp-nav {
+        --kp-nav-pad-block: var(--kp-nav-sticky-shrink, 0.125rem);
+    }
+
+    [data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky) {
+        scroll-padding-block-start: var(--kp-scroll-offset, var(--kp-nav-sticky-height, 0px));
+    }
+
+    /* The shrink moves; a reader who asked for less motion gets the end state
+ * at once [DI7]. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav-wrap--sticky > .kp-nav {
+            transition: padding-block var(--kp-nav-sticky-duration, var(--fx-duration, 220ms)) var(--fx-ease, ease);
+        }
+    }
+
     .kp-nav__brand {
         font-weight: 700;
     }

@@ -303,7 +303,7 @@
     [data-theme='terminal'] .kp-nav {
         background: var(--background);
         border-bottom: 1px solid var(--border);
-        padding-block: 1rem 0.6rem;
+        padding-block: var(--kp-nav-pad-block, 1rem) var(--kp-nav-pad-block, 0.6rem);
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the
          * wrapper's, from the base [scope-48]. */

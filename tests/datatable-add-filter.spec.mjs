@@ -298,6 +298,9 @@ for (const channel of CHANNELS) {
             'every theme draws the menu, the editor and its calendar where they can be reached, inside the table',
             { tag: ['@sweep'] },
             async ({ page }) => {
+                // Twenty-two themes take about 15 s a channel alone and ran past the
+                // default 30 s on a busy machine; the other sweeps get 120 s too.
+                test.setTimeout(120_000);
                 // Before: no add-filter mode to draw. Measured per theme, 2026-09-14.
                 const table = await open(page, key);
                 /** @type {string[]} */

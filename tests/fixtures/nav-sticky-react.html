@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The shrinking header, React</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- The React half of tests/fixtures/nav-sticky.html [AR7, rule 7g]:
+             the same page, with the bar and its skip link rendered by NavBar
+             with `sticky`. js/auto.js is loaded too, so the test also proves
+             the two channels do not wire the same bar twice [AR29].
+
+             The mount point is `display: contents`: a sticky box sticks
+             inside its parent, and a mount point exactly as tall as the bar
+             leaves it nowhere to stick. An application's root element holds
+             the whole page, which is what this stands in for. -->
+        <div id="react-nav" style="display: contents"></div>
+
+        <div style="block-size: 150vh"></div>
+
+        <h2 id="target" data-test="target">The target of the link</h2>
+
+        <div style="block-size: 150vh"></div>
+
+        <p><a href="#end" data-test="before-late">A link just above</a></p>
+        <p><a href="#end" data-test="late-link">A link far down the page</a></p>
+
+        <div id="end" style="block-size: 150vh"></div>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-nav-sticky.js"></script>
+    </body>
+</html>

@@ -29,6 +29,7 @@
                 <li><a href="#bar-collapsed">Collapsed bar</a></li>
                 <li><a href="#bar-long">Fourteen items</a></li>
                 <li><a href="#bar-search">Search in the bar</a></li>
+                <li><a href="#bar-sticky">Shrinking header</a></li>
                 <li><a href="#breadcrumb">Breadcrumb</a></li>
                 <li><a href="#pagination">Pagination</a></li>
                 <li><a href="#tabs">Tabs</a></li>
@@ -314,6 +315,63 @@
                         </ul>
                         <p class="kp-palette__status" role="status" aria-live="polite"></p>
                     </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="bar-sticky">
+                <h2>Shrinking header</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the box below scrolls on its own, and its bar is <code>.kp-nav-wrap--sticky</code>. Scroll inside the box: the bar
+                    must stay at the box's top and cover the text passing under it completely — no text showing through its ground or beside its rule.
+                    Once you have scrolled further than the bar is tall it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by
+                    lowering its block padding only, so the brand, the links and the current page's mark keep their size, their baseline and their
+                    look — only the room above and below them goes. The change must glide, not jump, unless your system asks for less motion; then it
+                    must happen at once. Scroll back to the top: it returns to its full height. In the compact bar the links must not touch the rule
+                    under the bar or the box's top edge. Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div style="block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)">
+                        <div class="kp-nav-wrap kp-nav-wrap--sticky">
+                            <nav class="kp-nav" aria-label="Site operations, sticky">
+                                <a class="kp-nav__brand" href="#bar-sticky">Pump house 4</a>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar-sticky-1">Section 1</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-sticky-2" aria-current="page">Section 2</a></li>
+                                    <li><a class="kp-nav__link" href="#bar-sticky-3">Section 3</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div style="padding: 1rem">
+                            <h3 id="bar-sticky-1">Section 1</h3>
+                            <p>
+                                The morning round starts at the intake screens. Each screen is lifted, rinsed and logged before the first pump comes
+                                up to speed, and the reading beside it is written down by hand as well as on the panel.
+                            </p>
+                            <p>
+                                Flow at the first gauge is compared with yesterday's; a drop of more than a tenth goes on the incident board before
+                                anything else happens.
+                            </p>
+                            <h3 id="bar-sticky-2">Section 2</h3>
+                            <p>
+                                The second pump runs on the night tariff. Its bearings are checked by ear and by the vibration sensor, and the two
+                                answers are expected to agree.
+                            </p>
+                            <p>
+                                When they do not, the sensor is trusted for the log and the ear for the call to the fitter, who is on the rota pinned
+                                beside the door.
+                            </p>
+                            <h3 id="bar-sticky-3">Section 3</h3>
+                            <p>
+                                The outflow is sampled every two hours. The bottles are labelled with the time and the operator's initials and go in
+                                the cold box by the stairs.
+                            </p>
+                            <p>
+                                At the end of the shift the round is written up, the board is cleared of whatever was closed, and the keys go back on
+                                their hook.
+                            </p>
+                            <p>Anything left open is handed over in person. A note on the board is not a handover; a name and a conversation are.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 

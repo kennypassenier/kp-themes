@@ -19,7 +19,7 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "a4ab6eef48871a3bbc4260be0f54c60a6527e682b30faec5aaccad3177816bb5",
+            "hash": "846c5a1fea2a0aa2a0a4269f7195d721a5ea2fd83358f7310b1d6d067eb569c3",
             "doc": "060f576e14985c3dc23b514201a7aa3206983b60094a1245bc5940b2ded895cc",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
@@ -34,7 +34,7 @@
                 "components/flow.d.ts": "9a4e0a95aed63628f7e2dce1e1e2a510d951a1816eedddd9b9b071497e097b95",
                 "components/form.d.ts": "1158c6783dfc42b6336a19aaeacda7e05bf036bedc2b392e81d9f84781d67752",
                 "components/marquee.d.ts": "b0a19c959054ac63fa7a35a23b467cb014aa0f25665a6a2e8014cc5091870cb2",
-                "components/nav-bar.d.ts": "c4dccf23a4a9976c6f2f8525dd62bcfbf723d3a596cc1d1cb121463b008ff619",
+                "components/nav-bar.d.ts": "509f9e1ea2e63427f077fd1d644785cd010725216e5264388ef042646249cb13",
                 "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
                 "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
                 "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
@@ -80,8 +80,8 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "e6c23e3f9a2bc7df50c5295f5afa5688520e1475af46fc9a8eec5c4c105149e1",
-            "doc": "5da7917a1493b3940dd2ef9921ddf93c75135a2175321ae873f35ba2af7b6fc1",
+            "hash": "7a10d28ae819434b632f22b302f8afc03664be0d07bdfb156eb52f6ab38bdfdf",
+            "doc": "2457407918b5a0cac84766c248925655210ff043438389a9989bceee0e64f5fa",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
@@ -92,7 +92,7 @@
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
-                "js/components.d.ts": "db8616f7e4b16067ef049ea833fcc0f93dd859b8f1c90bf05d472059f38cfbca",
+                "js/components.d.ts": "a430e7ce6bdb17df2af3e6c754f01f879165fee802c517fe62706eeec06cee40",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
                 "js/datatable.d.ts": "b0fa72af74e8cc179a117fd1476e7cdce0b8b7726145a853f51514da96626b16",
                 "js/datepicker.d.ts": "590a86d26dd36ffd2b65aafb8bb62bddee73ace0af9790eca5a6641ef724e467",
@@ -129,8 +129,8 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "7b6ca7ada70c69b768a0359f462512647d6b2d431c48bf9ed8fd2081e5d16e1b",
-            "doc": "26f12060f5fa229cc5343a5d90dbee0b695a3d9d0a89614ac764806cb12e5619",
+            "hash": "232f69733b46e307235aae170d3ddc1564b8fad4df0ebef4b566012ad1e21718",
+            "doc": "ea971945ac03da90d9f49e9a51097b356f9a409b0291c19b832a121fa14b695c",
             "files": {
                 ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
@@ -138,7 +138,7 @@
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "c6fda743914d129aa9ae35079c616fd01ee6d4facbecbad25d5b4d1236b51ec4",
                 "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
-                "gates/verdicts.mjs": "3548efff9a94e6709978ca8f774669113a803cc6626a7da46a7b2a32207067d9"
+                "gates/verdicts.mjs": "0347beb17fe6023706a473bd7fbbbce680b1f417a7232d6a463daabe32686106"
             }
         },
         "docs/DEBUGGING_GUIDE.md": {
@@ -261,14 +261,14 @@
                 "fx/use-reduced-motion.d.ts",
                 "js/auto.d.ts"
             ],
-            "hash": "51d157020fcfafe02d352c6959fc64b2ab1ec84a4281f783235a446411832702",
-            "doc": "69988b448533362fb3aae0527e18f033c31ad4031feac21fa8249b418617656d",
+            "hash": "9dd168797651e16b7308ff99117d49c66eaf2a4ad90230537467d79955da4b24",
+            "doc": "aef83d2baa2c56b32edd9b35c01cc6fb9bd2a6cced02bbda9b6786a112094b6f",
             "files": {
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
                 "components/button.d.ts": "e5538fa698caf55f220dd3ee719541272e0e5b73019c9eb768429f5470046cb5",
                 "fx/use-reduced-motion.d.ts": "833e78bfe22635132e38cb508761aad76f130361f26773a971ea7a3d691808df",
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
-                "js/components.d.ts": "db8616f7e4b16067ef049ea833fcc0f93dd859b8f1c90bf05d472059f38cfbca",
+                "js/components.d.ts": "a430e7ce6bdb17df2af3e6c754f01f879165fee802c517fe62706eeec06cee40",
                 "js/effects.d.ts": "833abf62bb20484b40f609b382f92ae4a0ae1de073e466c9517ed678bfb848a8",
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
                 "js/overlays.d.ts": "3ecb5714a0c132367b6096428ce1e2f818655b5582825a3369ce6c55efc7f770",
@@ -288,8 +288,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "46ba9ca5db76f1faa3f73fa36d53e37f8011e3a772bbfe5aeab0a75ec75d7dd0",
-            "doc": "719306bd76d79b3f150dc418c1ae6d40cfcf9abd40afa0a4376a225e3d7173f3",
+            "hash": "1279f3531d6d1a803401494582e2327c6cbd083f0d5592a1df5a2fb98c96fee1",
+            "doc": "ac45d5c12eb0bae84dac12ba082e7989c06111fdf7573cab66b315e8f9b5320c",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -302,11 +302,11 @@
                 "components/flow.d.ts": "9a4e0a95aed63628f7e2dce1e1e2a510d951a1816eedddd9b9b071497e097b95",
                 "components/form.d.ts": "1158c6783dfc42b6336a19aaeacda7e05bf036bedc2b392e81d9f84781d67752",
                 "components/marquee.d.ts": "b0a19c959054ac63fa7a35a23b467cb014aa0f25665a6a2e8014cc5091870cb2",
-                "components/nav-bar.d.ts": "c4dccf23a4a9976c6f2f8525dd62bcfbf723d3a596cc1d1cb121463b008ff619",
+                "components/nav-bar.d.ts": "509f9e1ea2e63427f077fd1d644785cd010725216e5264388ef042646249cb13",
                 "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
                 "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
                 "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
-                "components/sidenav.d.ts": "9370f05ab0111b5e38601e040a5aff64c5f12774940e0920951a52592e46b125",
+                "components/sidenav.d.ts": "a1957051f455bcf67c8aa1926ccd0403a726698c5787710514b847aa015fe140",
                 "components/structure.d.ts": "cb15de5af7c7b758e9c6e732fd23c89a197b4025a1e2d56fa1a6dff87ca26d87",
                 "components/switch.d.ts": "f1ae0185c1a08dae513dafa95f801ce672b68d27c7c99a7cad7714d30c743403",
                 "components/table.d.ts": "b6a5495a0f1fe6e650310fee839f5c7a0b83cba69ef1d6ffd4e46682a157ea47",
@@ -325,7 +325,7 @@
                 "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
-                "js/components.d.ts": "db8616f7e4b16067ef049ea833fcc0f93dd859b8f1c90bf05d472059f38cfbca",
+                "js/components.d.ts": "a430e7ce6bdb17df2af3e6c754f01f879165fee802c517fe62706eeec06cee40",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
                 "js/datatable.d.ts": "b0fa72af74e8cc179a117fd1476e7cdce0b8b7726145a853f51514da96626b16",
                 "js/datepicker.d.ts": "590a86d26dd36ffd2b65aafb8bb62bddee73ace0af9790eca5a6641ef724e467",
@@ -338,9 +338,9 @@
                 "js/locale.d.ts": "f1ad46a4afb65c848fb497707d4a3d5f62938bf6a4a05157ad45d40fe123efd2",
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
                 "js/overlays.d.ts": "3ecb5714a0c132367b6096428ce1e2f818655b5582825a3369ce6c55efc7f770",
-                "js/palette.d.ts": "d68cfe2194b06c86ca24a49c326c7b3fe6b5a7f9144dab313fefa4156aa80d33",
+                "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",
                 "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
-                "js/sidenav.d.ts": "a4e771044fb7a5c6980b85ce59d2b5969300611549dc7f3132a66d66dbe1a227",
+                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd",
                 "js/strings.d.ts": "0122ad6e065ffdec2fedebfa93691c57160e82f48b4aae2386d5c41388215617",
                 "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
@@ -383,10 +383,10 @@
             "sources": [
                 "css/layout.css"
             ],
-            "hash": "54ffbf6ebd4b9ee40a21c96d3f68154c0e556dc5898c795982f1e879f5631f39",
+            "hash": "aa763c339588f2b1b10091b686a25fbe519cca5cd1e01c6c12b67cbbc4179ca7",
             "doc": "6a7fc0fb0795bb116d9df29beab4fba9cd036de67e7828fc547ea1074db4e0f8",
             "files": {
-                "css/layout.css": "b65e005080a102c0c1539de8c1d829a94ffe5806996faa81ad2254d879a96635"
+                "css/layout.css": "0d2526baae50fb680e4ddade99500c310e72871298a3599c44cc12a0a6246b4e"
             }
         },
         "research/loading/README.md": {
@@ -415,10 +415,10 @@
                 "components/nav-bar.d.ts",
                 "components/sidenav.d.ts"
             ],
-            "hash": "2fcae5e579933d81f6d3ad1762afc28c429673a2f72edc13d24e329400ec7e84",
-            "doc": "9672f43e3b87c2aa18335d88286e5142728d6d7e132595338a9598fcf405b18d",
+            "hash": "0aea85293466f6486527470cd0cc7af0d85a5326ccec1388b3bfd3c26f6101b5",
+            "doc": "6e7d071e81104860c43b0b4b80e778390ddf10acc6e25fad8bfb9ea4715e843e",
             "files": {
-                "components/nav-bar.d.ts": "c4dccf23a4a9976c6f2f8525dd62bcfbf723d3a596cc1d1cb121463b008ff619",
+                "components/nav-bar.d.ts": "509f9e1ea2e63427f077fd1d644785cd010725216e5264388ef042646249cb13",
                 "components/sidenav.d.ts": "a1957051f455bcf67c8aa1926ccd0403a726698c5787710514b847aa015fe140",
                 "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd"
             }

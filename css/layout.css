@@ -246,7 +246,9 @@
        skip link every page in this package carries. Someone using that link
        cannot see that its target went under the bar. */
     html {
-        scroll-padding-block-start: var(--kp-scroll-offset, 0px);
+        /* A sticky nav bar (`.kp-nav-wrap--sticky`) writes its own height to
+           --kp-nav-sticky-height here; a page's --kp-scroll-offset still wins. */
+        scroll-padding-block-start: var(--kp-scroll-offset, var(--kp-nav-sticky-height, 0px));
     }
 
     /* DI7: a page that asks for smooth scrolling still does not get it when

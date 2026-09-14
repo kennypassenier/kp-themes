@@ -127,7 +127,13 @@ const TO_REACT = {
     // `brand` may be a string or descriptor children (the brand tag,
     // S49/A3), so it goes through the same conversion the children do.
     NavBar: (p, children, key) => (
-        <NavBar key={key} brand={typeof p.brand === 'string' ? p.brand : kids(p.brand)} links={p.links ?? []} skipTo={p.skipTo}>
+        <NavBar
+            key={key}
+            brand={typeof p.brand === 'string' ? p.brand : kids(p.brand)}
+            links={p.links ?? []}
+            skipTo={p.skipTo}
+            sticky={p.sticky === true}
+        >
             {kids(children)}
         </NavBar>
     ),

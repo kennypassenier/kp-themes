@@ -88,7 +88,7 @@ const TO_MARKUP = {
         el('a', { class: 'kp-skip-link', href: p.skipTo ?? '#main' }, s.skipToContent),
         el(
             'div',
-            { class: 'kp-nav-wrap' },
+            { class: cx('kp-nav-wrap', p.sticky ? 'kp-nav-wrap--sticky' : undefined) },
             el(
                 'nav',
                 { class: 'kp-nav', 'aria-label': s.mainNavigation },
@@ -869,6 +869,9 @@ export const EXAMPLES = [
                     'NavBar',
                     {
                         brand: 'Northwind',
+                        // The shrinking header [scope-48 wave 2]: the bar stays at the top of a long
+                        // invoice list and gives some of its height back once the page has scrolled.
+                        sticky: true,
                         links: [
                             { href: '#overview', label: 'Overview' },
                             { href: '#invoices', label: 'Invoices', current: true },

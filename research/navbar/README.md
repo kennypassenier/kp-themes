@@ -95,7 +95,10 @@ scope-45 (labels in a collapsed rail are visually hidden, not removed);
 finding 4 at gap-12 (`data-kp-sidenav-slim-toggle`), with the React
 `SidenavSlimToggle` and a glyph-only toggle named from the strings added at
 scope-48; finding 3 at scope-48 (`--kp-z-nav` on `.kp-nav-wrap` in the
-base). Findings 2 and 5 are open.
+base). Finding 2 at scope-48 wave two: twelve registers, not three, set the
+bar's block padding directly, and all of them now read `--kp-nav-pad-block`
+(`tests/nav-sticky.spec.mjs`), which the shrinking header
+(`.kp-nav-wrap--sticky`, `NavBar` `sticky`) lowers. Finding 5 is open.
 
 ## Recommendation
 

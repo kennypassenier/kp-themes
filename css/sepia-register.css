@@ -329,7 +329,7 @@
 
     [data-theme='sepia'] .kp-nav {
         background: var(--background);
-        padding-block: 1.1rem;
+        padding-block: var(--kp-nav-pad-block, 1.1rem);
     }
 
     [data-theme='sepia'] .kp-nav__brand {

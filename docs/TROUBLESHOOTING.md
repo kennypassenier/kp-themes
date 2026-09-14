@@ -105,6 +105,18 @@ popover needs a matching `position-anchor`; both are set by the React
 they are set and it still happens, the browser is older than the baseline
 — `tests/baseline.spec.mjs` names the four features this package needs.
 
+### A sticky bar does not stick, or never turns compact
+
+`.kp-nav-wrap--sticky` sticks inside its parent, so a parent exactly as
+tall as the bar — a React mount point, a `<header>` around the wrapper —
+leaves it nowhere to go. Put the wrapper directly in the page or the
+column that scrolls, or make that parent `display: contents`. The compact
+state is set by `js/components.js` (`attachStickyNavs`, which `js/auto.js`
+calls): without the module the bar still sticks but keeps its height, and
+anchors land under it because nothing wrote `--kp-nav-sticky-height`. It
+turns compact only once the scrolling box has moved further than the bar
+is tall; `data-kp-nav-sticky-after` can make that later, never earlier.
+
 ### The tokens change but the page does not
 
 Not a defect in the package, and the reason is worth knowing before you go

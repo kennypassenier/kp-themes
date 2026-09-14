@@ -329,7 +329,7 @@
 
     [data-theme='retro'] .kp-nav {
         background: var(--background);
-        padding-block: 3px;
+        padding-block: var(--kp-nav-pad-block, 3px);
         gap: 0.5rem;
         position: relative;
         /* Its own stacking context for the bar's decorations; the layer is the

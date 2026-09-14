@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The shrinking header, framework-free</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+    </head>
+    <body>
+        <!-- The shrinking header [scope-48 wave 2], written the way the user
+             guide documents it: the modifier class on the wrapper and nothing
+             else. Everything under test comes out of css/components.css,
+             css/layout.css and js/components.js (rule 7e, KT3): no offset is
+             set here, because the offset is what the module has to supply.
+             The React half, tests/fixtures/nav-sticky-react.html, renders the
+             same bar with `sticky`; tests/nav-sticky.spec.mjs drives both. -->
+        <a class="kp-skip-link" href="#target" data-test="skip">Skip to the content</a>
+
+        <div class="kp-nav-wrap kp-nav-wrap--sticky" data-test="wrap">
+            <nav class="kp-nav" aria-label="Main navigation" data-test="nav">
+                <span class="kp-nav__brand">kp-themes</span>
+                <ul class="kp-nav__links">
+                    <li><a class="kp-nav__link" href="#target" data-test="to-target">Target</a></li>
+                    <li><a class="kp-nav__link" href="#b">Two</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div style="block-size: 150vh"></div>
+
+        <h2 id="target" data-test="target">The target of the link</h2>
+
+        <div style="block-size: 150vh"></div>
+
+        <p><a href="#end" data-test="before-late">A link just above</a></p>
+        <p><a href="#end" data-test="late-link">A link far down the page</a></p>
+
+        <div id="end" style="block-size: 150vh"></div>
+
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>
