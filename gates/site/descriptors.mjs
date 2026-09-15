@@ -886,6 +886,8 @@ export const DESCRIPTORS = [
             'cell-class',
             'server',
             'total',
+            // scope-90: the state that draws the sticky header's reach.
+            'scrolled',
         ],
         intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead.',
         whenToUse:

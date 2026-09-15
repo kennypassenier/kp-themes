@@ -1260,8 +1260,9 @@
         font-weight: 600;
     }
 
-    /* A sticky header keeps its raised edge and the reach above it [fix-32]. */
-    [data-theme='retro'] .kp-datatable[data-kp-max-height] .kp-table thead th {
+    /* A sticky header keeps its raised edge and, while its box is scrolled,
+ * the reach above it [fix-32, scope-90]; at rest the raised edge alone. */
+    [data-theme='retro'] .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
         box-shadow: var(--kp-raised), var(--kp-datatable-head-reach);
     }
 

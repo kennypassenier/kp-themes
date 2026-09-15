@@ -671,6 +671,16 @@ last fixed column draws a hairline, `--kp-datatable-fixed-rule` and
 `--kp-datatable-fixed-rule-width`. In the card layout nothing is fixed.
 React: `fixedColumns` (`true`, or a count).
 
+A header that stays (any `data-kp-max-height`, or React's `maxHeight`)
+stands on `--kp-datatable-head-ground` (the page's `--background` by
+default). While its box is scrolled away from the top, the script sets
+`data-kp-scrolled` on the data table (`watchScrolled(element, box)` does it
+for a table of your own) and the header's ground then reaches 2px above
+the header, `--kp-datatable-head-reach`, so no sliver of a row shows over
+it mid-scroll. At the top the attribute goes and so does the reach, which
+leaves a caption right above the header untouched; without script there
+is no reach at all.
+
 ### Rows that come from a server
 
 ```html

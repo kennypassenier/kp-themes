@@ -2929,7 +2929,8 @@ __export(datatable_exports, {
   matchesFilter: () => matchesFilter,
   nextSorts: () => nextSorts,
   readFilterBounds: () => readFilterBounds,
-  syncFixedColumns: () => syncFixedColumns
+  syncFixedColumns: () => syncFixedColumns,
+  watchScrolled: () => watchScrolled
 });
 
 // js/locale.js
@@ -3862,6 +3863,24 @@ function syncFixedColumns(table, count) {
     }
   }
 }
+function watchScrolled(element, box) {
+  const view = box.ownerDocument.defaultView;
+  let frame = 0;
+  const decide = () => {
+    frame = 0;
+    element.toggleAttribute("data-kp-scrolled", box.scrollTop > 0);
+  };
+  const onScroll = () => {
+    if (frame === 0 && view !== null) frame = view.requestAnimationFrame(decide);
+  };
+  decide();
+  box.addEventListener("scroll", onScroll, { passive: true });
+  return () => {
+    box.removeEventListener("scroll", onScroll);
+    if (frame !== 0) view?.cancelAnimationFrame(frame);
+    element.removeAttribute("data-kp-scrolled");
+  };
+}
 function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove } = {}) {
   const roleWas = table.getAttribute("role");
   table.setAttribute("role", "grid");
@@ -4276,6 +4295,11 @@ function attachDataTables(root = document, {
       wrap.style.setProperty("--kp-datatable-max-height", maxHeight);
       undo.push(() => wrap.style.removeProperty("--kp-datatable-max-height"));
     }
+    const scrollBox = (
+      /** @type {HTMLElement | null} */
+      wrap.querySelector(":scope > .kp-table-wrap")
+    );
+    if (scrollBox !== null) undo.push(watchScrolled(wrap, scrollBox));
     let tableBlock = (
       /** @type {Element} */
       table
@@ -10422,6 +10446,7 @@ export {
   upload,
   upload_exports as uploadExports,
   visibleItems,
+  watchScrolled,
   watchTabOverflow,
   wizard,
   wizard_exports as wizardExports,

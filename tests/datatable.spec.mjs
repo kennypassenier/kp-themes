@@ -583,38 +583,116 @@ const shadowsOf = (value) => {
     });
 };
 
-test.describe('datatable sticky header reach [fix-32]', { tag: ['@component:datatable'] }, () => {
+test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@component:datatable'] }, () => {
     /** @type {[string, string][]} */
     const TABLES = [
         ['/tests/fixtures/datatable.html', '.kp-datatable[data-test="plain-sticky"]'],
+        ['/tests/fixtures/datatable.html', '.kp-datatable[data-test="react-sticky"]'],
         ['/tests/fixtures/datatable-more.html', '.kp-datatable[data-test="plain-fixed"]'],
         ['/tests/fixtures/datatable-more.html', '.kp-datatable[data-test="react-fixed"]'],
     ];
+
+    /**
+     * Scroll the table's box to `top` and wait until the module has heard it:
+     * the scroll event, then two frames for its one decision per frame.
+     * @param {import('@playwright/test').Locator} table @param {number} top
+     */
+    const scrollBoxTo = (table, top) =>
+        table.evaluate(
+            (el, to) =>
+                new Promise((done) => {
+                    const box = /** @type {HTMLElement} */ (el.querySelector(':scope > .kp-table-wrap'));
+                    const frames = () => requestAnimationFrame(() => requestAnimationFrame(() => done(box.scrollTop)));
+                    if (box.scrollTop === to) frames();
+                    else {
+                        box.addEventListener('scroll', frames, { once: true });
+                        box.scrollTop = to;
+                    }
+                }),
+            top,
+        );
+
+    /** Every header cell's shadow, ground, position and box, and the caption's box. @param {import('@playwright/test').Locator} table */
+    const readHead = (table) =>
+        table.evaluate((el) => {
+            const box = (/** @type {Element} */ node) => {
+                const r = node.getBoundingClientRect();
+                return { top: r.top, right: r.right, bottom: r.bottom, left: r.left };
+            };
+            const caption = el.querySelector('caption');
+            const captionShown = caption !== null && getComputedStyle(caption).visibility !== 'hidden' && caption.getBoundingClientRect().height > 0;
+            return {
+                scrolled: el.hasAttribute('data-kp-scrolled'),
+                caption: captionShown && caption !== null ? box(caption) : null,
+                cells: [...el.querySelectorAll('thead th')].map((th) => {
+                    const s = getComputedStyle(th);
+                    return {
+                        fixed: th.getAttribute('data-kp-fixed'),
+                        shadow: s.boxShadow,
+                        ground: s.backgroundColor,
+                        position: s.position,
+                        rect: box(th),
+                    };
+                }),
+            };
+        });
+
+    /** The reach: an unblurred outer shadow in the cell's ground, at least 2px above it. @param {{ shadow: string, ground: string }} cell */
+    const reachOf = (cell) =>
+        shadowsOf(cell.shadow).find((sh) => !sh.inset && sh.x === 0 && sh.blur === 0 && sh.spread - sh.y >= 2 && sh.colour === cell.ground);
+
     for (const [url, selector] of TABLES) {
         test(
-            `the sticky header's ground reaches 2px above it in its own colour, in every theme: ${selector} [fix-32]`,
+            `the sticky header's ground reaches 2px above it only while its box is scrolled, in every theme: ${selector} [fix-32, scope-90]`,
             { tag: ['@sweep'] },
             async ({ page }) => {
                 // Before (a051db4d): no shadow reaching above a sticky header cell, in any theme.
+                // Before (6fd84fe0): the reach was drawn at rest too, over the caption's bottom 2px.
                 await page.goto(url);
                 const table = page.locator(selector);
                 await expect(table.locator('thead th').first()).toBeVisible();
                 const faults = [];
                 for (const theme of THEME_NAMES) {
                     await wearSettled(page, theme);
-                    const cells = await table.locator('thead th').evaluateAll((ths) =>
-                        ths.map((th) => {
-                            const s = getComputedStyle(th);
-                            return { fixed: th.getAttribute('data-kp-fixed'), shadow: s.boxShadow, ground: s.backgroundColor, position: s.position };
-                        }),
-                    );
-                    cells.forEach((cell, i) => {
-                        const reach = shadowsOf(cell.shadow).find(
-                            (sh) => !sh.inset && sh.x === 0 && sh.blur === 0 && sh.spread - sh.y >= 2 && sh.colour === cell.ground,
-                        );
-                        const name = `${theme} th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
+
+                    await scrollBoxTo(table, 0);
+                    const rest = await readHead(table);
+                    if (rest.scrolled) faults.push(`${theme} at rest: data-kp-scrolled is set`);
+                    rest.cells.forEach((cell, i) => {
+                        const name = `${theme} at rest, th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
                         if (cell.position !== 'sticky') faults.push(`${name}: position ${cell.position}`);
-                        else if (!reach) faults.push(`${name}: shadow "${cell.shadow}", ground ${cell.ground}`);
+                        if (reachOf(cell)) faults.push(`${name}: reach drawn, shadow "${cell.shadow}"`);
+                        // No outer shadow of the cell may reach into the caption's box.
+                        const caption = rest.caption;
+                        if (caption === null) return;
+                        for (const sh of shadowsOf(cell.shadow)) {
+                            if (sh.inset) continue;
+                            const grow = sh.spread + sh.blur;
+                            const top = cell.rect.top + sh.y - grow;
+                            const bottom = cell.rect.bottom + sh.y + grow;
+                            const left = cell.rect.left + sh.x - grow;
+                            const right = cell.rect.right + sh.x + grow;
+                            const overlap = Math.min(bottom, caption.bottom) - Math.max(top, caption.top);
+                            const across = Math.min(right, caption.right) - Math.max(left, caption.left);
+                            if (overlap > 0.01 && across > 0.01)
+                                faults.push(`${name}: shadow "${cell.shadow}" covers ${overlap.toFixed(2)}px of the caption`);
+                        }
+                    });
+
+                    const moved = await scrollBoxTo(table, 40);
+                    const scrolled = await readHead(table);
+                    if (moved <= 0) faults.push(`${theme}: the box did not scroll`);
+                    else if (!scrolled.scrolled) faults.push(`${theme} scrolled: data-kp-scrolled is not set`);
+                    scrolled.cells.forEach((cell, i) => {
+                        const name = `${theme} scrolled, th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
+                        if (!reachOf(cell)) faults.push(`${name}: shadow "${cell.shadow}", ground ${cell.ground}`);
+                    });
+
+                    await scrollBoxTo(table, 0);
+                    const back = await readHead(table);
+                    if (back.scrolled) faults.push(`${theme} back at the top: data-kp-scrolled is still set`);
+                    back.cells.forEach((cell, i) => {
+                        if (reachOf(cell)) faults.push(`${theme} back at the top, th ${i + 1}: reach still drawn, shadow "${cell.shadow}"`);
                     });
                 }
                 expect(faults).toEqual([]);

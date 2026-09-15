@@ -8005,13 +8005,23 @@
     /* The header's ground reaches 2px above the header [fix-32]: Kenny saw
  * slivers of row text just above it while wheel-scrolling in FireDragon,
  * the box starting on a half pixel. An unblurred shadow in the header's
- * own ground, clipped by the scroll box, so at rest nothing shows. The
- * shadow is a knob: a register that paints its header in another colour
- * names that colour in `--kp-datatable-head-ground` on the cell, and one
- * that draws its own shadow on the cell adds `var(--kp-datatable-head-reach)`
- * to its list. */
+ * own ground, clipped by the scroll box. The shadow is a knob: a register
+ * that paints its header in another colour names that colour in
+ * `--kp-datatable-head-ground` on the cell, and one that draws its own
+ * shadow on the cell adds `var(--kp-datatable-head-reach)` to its list,
+ * under `[data-kp-scrolled]` only.
+ *
+ * The reach is drawn only while the box is scrolled away from the top
+ * [scope-90]: at rest it painted the bottom 2px of a caption standing
+ * directly above the header. js/datatable.js (both channels) sets
+ * `data-kp-scrolled` on the data table while its scroll box is scrolled;
+ * without script the attribute never comes, and there is no reach at all,
+ * which is accepted: the slivers it covers only appear while scrolling. */
     .kp-datatable[data-kp-max-height] .kp-table thead th {
         --kp-datatable-head-reach: 0 -2px 0 0 var(--kp-datatable-head-ground, var(--background));
+    }
+
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
         box-shadow: var(--kp-datatable-head-reach);
     }
 
@@ -8111,9 +8121,10 @@
         z-index: 2;
     }
 
-    /* The last fixed header cell keeps its hairline and the reach above the
- * sticky header [fix-32]. */
-    .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th[data-kp-fixed='last'] {
+    /* The last fixed header cell keeps its hairline and, while the box is
+ * scrolled, the reach above the sticky header [fix-32, scope-90]. At rest
+ * the hairline rule above draws it alone. */
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height][data-kp-scrolled] .kp-table thead th[data-kp-fixed='last'] {
         box-shadow:
             inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong)),
             var(--kp-datatable-head-reach);
@@ -12284,8 +12295,9 @@
         font-weight: 600;
     }
 
-    /* A sticky header keeps its raised edge and the reach above it [fix-32]. */
-    [data-theme='retro'] .kp-datatable[data-kp-max-height] .kp-table thead th {
+    /* A sticky header keeps its raised edge and, while its box is scrolled,
+ * the reach above it [fix-32, scope-90]; at rest the raised edge alone. */
+    [data-theme='retro'] .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
         box-shadow: var(--kp-raised), var(--kp-datatable-head-reach);
     }
 

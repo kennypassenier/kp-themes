@@ -250,6 +250,19 @@ export declare function filterPills(kind: FilterKind, column: string, value: Fil
  * @param {number} count how many leading columns stay; 0 takes the marks away
  */
 export declare function syncFixedColumns(table: HTMLTableElement, count: number): void;
+/**
+ * Mark a data table while its scroll box is scrolled away from the top
+ * [scope-90]: `data-kp-scrolled` on `element` while `box.scrollTop` is
+ * above 0, removed at the top. The stylesheet draws the sticky header's
+ * reach (`fix-32`) only under it, so a caption right above the header is
+ * not painted over at rest. One decision per frame, on a passive listener.
+ * Both channels use this one.
+ *
+ * @param {HTMLElement} element the `.kp-datatable`
+ * @param {HTMLElement} box its `.kp-table-wrap`, the box that scrolls
+ * @returns {() => void} detach, which removes the attribute
+ */
+export declare function watchScrolled(element: HTMLElement, box: HTMLElement): () => void;
 export type GridHandle = {
     /**
      * re-read the rows and cells after they changed; keeps one cell in the tab order

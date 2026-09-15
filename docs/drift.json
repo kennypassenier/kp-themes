@@ -80,7 +80,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "20d53e03051a4504db34b93efa2dfb1ee435b561833b8f441e2ce1ca21bc67e9",
+            "hash": "76bbf185f3796a59557fbf0c65432f0fd03aba46d54a8a72475ac93911f1ab9d",
             "doc": "e98633657db6437f9efd94c0683f0fa671cc582294505a8c053ee1f59e46ff12",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
@@ -94,7 +94,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "b0fa72af74e8cc179a117fd1476e7cdce0b8b7726145a853f51514da96626b16",
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
@@ -288,8 +288,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "e10ffa7333259dcc7e6c64a3b0f57fb2eee59a5d6f919ab8ff7a67655011b1bd",
-            "doc": "6cfae2cd027fd1753326bd089a1877c3b9751e3777ed2ab982c75332a607acba",
+            "hash": "f13f2aa399535cdce5eec76bd5d29a39d8b04522770d5fdf181814341ad646f4",
+            "doc": "2d8aee012d49e6695fe6ad2f31a92aacb080c3cff663f1e007866c617e826650",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -327,7 +327,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "b0fa72af74e8cc179a117fd1476e7cdce0b8b7726145a853f51514da96626b16",
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
@@ -371,11 +371,11 @@
                 "js/datatable.d.ts",
                 "components/datatable.d.ts"
             ],
-            "hash": "155813efa657270683f5c9ba95f6a8828a457bd0a424e9d31800b940c4b9a54f",
+            "hash": "5e46b7938fca78a96e8cace2655bc8b62e316bb23cfce2c9ae154f4b50008305",
             "doc": "3e93afddd788e97d5caf807987969652594b6e170551b8a3c1b8881202cd235f",
             "files": {
                 "components/datatable.d.ts": "7e20346157cc88a72b07e75add20f03dc0362e2676f53e5f50b81b1da1545165",
-                "js/datatable.d.ts": "b0fa72af74e8cc179a117fd1476e7cdce0b8b7726145a853f51514da96626b16"
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c"
             }
         },
         "research/futuristic/README.md": {

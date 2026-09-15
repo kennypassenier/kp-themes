@@ -447,6 +447,37 @@ export function syncFixedColumns(table, count) {
 }
 
 /**
+ * Mark a data table while its scroll box is scrolled away from the top
+ * [scope-90]: `data-kp-scrolled` on `element` while `box.scrollTop` is
+ * above 0, removed at the top. The stylesheet draws the sticky header's
+ * reach (`fix-32`) only under it, so a caption right above the header is
+ * not painted over at rest. One decision per frame, on a passive listener.
+ * Both channels use this one.
+ *
+ * @param {HTMLElement} element the `.kp-datatable`
+ * @param {HTMLElement} box its `.kp-table-wrap`, the box that scrolls
+ * @returns {() => void} detach, which removes the attribute
+ */
+export function watchScrolled(element, box) {
+    const view = box.ownerDocument.defaultView;
+    let frame = 0;
+    const decide = () => {
+        frame = 0;
+        element.toggleAttribute('data-kp-scrolled', box.scrollTop > 0);
+    };
+    const onScroll = () => {
+        if (frame === 0 && view !== null) frame = view.requestAnimationFrame(decide);
+    };
+    decide();
+    box.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+        box.removeEventListener('scroll', onScroll);
+        if (frame !== 0) view?.cancelAnimationFrame(frame);
+        element.removeAttribute('data-kp-scrolled');
+    };
+}
+
+/**
  * @typedef {object} GridHandle
  * @property {() => void} sync  re-read the rows and cells after they changed; keeps one cell in the tab order
  * @property {(row: number, column: number) => void} focus  move to a cell, by row index in the table and column
@@ -885,6 +916,9 @@ export function attachDataTables(
             wrap.style.setProperty('--kp-datatable-max-height', maxHeight);
             undo.push(() => wrap.style.removeProperty('--kp-datatable-max-height'));
         }
+        // The header's reach shows only while the box is scrolled [scope-90].
+        const scrollBox = /** @type {HTMLElement | null} */ (wrap.querySelector(':scope > .kp-table-wrap'));
+        if (scrollBox !== null) undo.push(watchScrolled(wrap, scrollBox));
 
         /** The direct child of the wrapper that holds the table: generated parts go before it. */
         let tableBlock = /** @type {Element} */ (table);

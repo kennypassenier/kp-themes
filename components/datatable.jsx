@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { compare as compareCells, compareByOrder, filterActive, filterPills, matchesFilter, nextSorts } from '../js/datatable.js';
 import { filterPillLabel, readFilterBounds } from '../js/datatable.js';
-import { attachGrid, syncFixedColumns, EDIT_EVENT, PAGE_SIZES, RETRY_EVENT, SERVER_DEBOUNCE_MS, VIEW_EVENT } from '../js/datatable.js';
+import { attachGrid, syncFixedColumns, watchScrolled, EDIT_EVENT, PAGE_SIZES, RETRY_EVENT, SERVER_DEBOUNCE_MS, VIEW_EVENT } from '../js/datatable.js';
 import { collator, formatDate, resolveLocale } from '../js/locale.js';
 import { DatePicker } from './flow.jsx';
 import { useDrawnSelect } from './field.jsx';
@@ -443,6 +443,16 @@ function DataTableInner(
     const inner = useRef(null);
     /** @type {import('react').RefObject<HTMLTableElement | null>} */
     const tableRef = useRef(null);
+    /** @type {import('react').RefObject<HTMLDivElement | null>} */
+    const scrollBoxRef = useRef(null);
+    // The header's reach shows only while the box is scrolled [scope-90]:
+    // the same module as the framework-free channel writes the attribute.
+    useEffect(() => {
+        const element = inner.current;
+        const box = scrollBoxRef.current;
+        if (element === null || box === null) return undefined;
+        return watchScrolled(element, box);
+    }, []);
     useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
     const baseId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
     const panelId = `${baseId}-filters`;
@@ -1619,6 +1629,7 @@ function DataTableInner(
                 order of names and the same dictionary fallback as
                 js/tables.js gives the framework-free channel. */}
             <div
+                ref={scrollBoxRef}
                 className="kp-table-wrap"
                 tabIndex={region ? 0 : undefined}
                 role={region ? 'region' : undefined}
