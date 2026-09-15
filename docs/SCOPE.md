@@ -1582,3 +1582,8 @@ frozen-calendars "Bijwerken": the still calendars in `#open`, `#limits` and
 `#locale` take the markup the module builds now. six-rows "Laten zoals nu":
 no change. caption-reach "Alleen bij scrollen": the header's 2px reach
 (`fix-32`) shows only while the scroll box is scrolled. step-timing "Akkoord".
+
+**scope-91 · The review dialog stays on the review pages.** Kenny,
+2026-09-15, the form after `scope-90` (commit `a2c30166`). dialog-research
+"Alleen review-site en componentpagina's": research demos, the intro page and
+the compare columns get no review dialog. step-timing "Akkoord".
