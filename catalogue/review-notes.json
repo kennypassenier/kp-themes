@@ -1,18 +1,1 @@
-{
-    "button--variants": {
-        "titanium": {
-            "rejected": "De primary knop toont bijna geen effect als ik erover hover",
-            "change": "Hover now darkens the primary instead of lightening it: rest to hover went from 4.9 to 11.4 in OKLab distance (about 10 is visible), and pressed sits 11.0 further. Hover and press it to see both steps.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
-    "table--datatable-sticky": {
-        "solstice": {
-            "rejected": "Kenny: when scrolling, slivers of row text show just above the header row, sometimes also after stopping; in several themes.",
-            "change": "fix-32: the header's ground reaches 2px above the header (an unblurred shadow in its own colour), so a half pixel or a late frame no longer shows a row. Check by scrolling with the mouse in FireDragon.",
-            "commit": "1b9c72bd",
-            "given": "2026-09-15"
-        }
-    }
-}
+{}
