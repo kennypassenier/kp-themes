@@ -129,6 +129,18 @@ const OUT_OF_SCOPE = {
     // The shared marquee [M1, 2026-09-08]: one transform across a doubled
     // row, at whatever speed the theme names. No luminance change of its
     // own, and it rests while it is off screen unless a theme says never.
+    // The alarm [scope-94]: the split copies of the headline, the letter
+    // cells' decode, the hazard stripes and the sweeping band. Every opacity
+    // step of the alarm is measured by the pass above; the rendered frames
+    // of the whole alarm are measured in tests/alarm.spec.mjs.
+    'kp-alarm-slice-in':
+        'a clip-path showing thin bands of two copies of the headline, four positions once; the copies keep their colours and a band is under 341x256 px',
+    'kp-alarm-slice': 'the same bands for 200 ms once every five seconds; a clip-path, under 341x256 px',
+    'kp-alarm-decode-letter':
+        'a letter cell turning from transparent to its ink once, stepped; one change per cell, ever, and a cell is far under 341x256 px',
+    'kp-alarm-march':
+        'a background-position slide of the hazard stripes by one period every 1.6 seconds, on a bar 0.9rem tall; the stripes keep their colours, only their position moves',
+    'kp-alarm-sweep': 'a band of a faint tint translating down the plate once per six seconds; a transform, and the tint is under the 10% change',
     'kp-marquee-pass':
         'a row of items translated -50% and back to its start, seamlessly; a transform only, no opacity or colour stop, and paused whenever the band is outside the viewport',
 };

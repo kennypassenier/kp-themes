@@ -80,6 +80,10 @@
             "types": "./js/overlays.d.ts",
             "default": "./js/overlays.js"
         },
+        "./js/alarm": {
+            "types": "./js/alarm.d.ts",
+            "default": "./js/alarm.js"
+        },
         "./js/listbox": {
             "types": "./js/listbox.d.ts",
             "default": "./js/listbox.js"

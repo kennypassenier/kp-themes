@@ -30,6 +30,18 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sweep` | transform | 10000 ms | loops | — | 0.00/s | under |
 | `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-caret` | background-size | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
+| `kp-alarm-ground-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-alarm-pulse` | opacity | 1400 ms | loops | 0.4 → 1 | 0.71/s | under |
+| `kp-alarm-flicker-in` | opacity | 600 ms | 1× | 0 → 1 → 0.3 → 1 → 1 | 3.00/s | under |
+| `kp-alarm-jitter` | opacity | 5000 ms | loops | 1 → 1 → 0.6 → 1 | 0.40/s | under |
+| `kp-alarm-slice-in` | clip-path | 600 ms | 1× | — | 0.00/s | under |
+| `kp-alarm-slice` | clip-path | 5000 ms | loops | — | 0.00/s | under |
+| `kp-alarm-decode-letter` | color | 180 ms | 1× | — | 0.00/s | under |
+| `kp-alarm-decode-noise` | opacity | 90 ms | 1× | 1 → 0 | 1.00/s | under |
+| `kp-alarm-detail-in` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-alarm-caret` | opacity | 1000 ms | loops | 1 → 1 → 0 → 0 | 1.00/s | under |
+| `kp-alarm-march` | background-position | 1600 ms | loops | — | 0.00/s | under |
+| `kp-alarm-sweep` | translate | 6000 ms | loops | — | 0.00/s | under |
 | `kp-focus` | opacity | 600 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-focus-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-dialog-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |

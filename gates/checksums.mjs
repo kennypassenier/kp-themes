@@ -137,6 +137,7 @@ export const FILES = [
     'js/locale.js',
     'js/no-flash.js',
     'js/overlays.js',
+    'js/alarm.js',
     'js/palette.js',
     'js/patterns.js',
     'js/sidenav.js',

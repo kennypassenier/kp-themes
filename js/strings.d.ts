@@ -349,6 +349,34 @@ export type Strings = {
     confirmAccept: string;
     confirmCancel: string;
     confirmDescription: string;
+    /**
+     * The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
+     */
+    alarmAction: string;
+    /**
+     * The button that stops an alarm's countdown and keeps it open [scope-94]
+     */
+    alarmKeepOpen: string;
+    /**
+     * The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
+     */
+    alarmHint: string;
+    /**
+     * The whole seconds left under the countdown bar; hidden from a screen reader [scope-94]
+     */
+    alarmCountdown: (seconds: number) => string;
+    /**
+     * Said once when an alarm that closes by itself opens [scope-94]
+     */
+    alarmClosesBy: (seconds: number) => string;
+    /**
+     * Said when an alarm that must be acknowledged opens [scope-94]
+     */
+    alarmPressTo: (action: string) => string;
+    /**
+     * Said when Keep open stopped the countdown [scope-94]
+     */
+    alarmKeptOpen: (action: string) => string;
     save: string;
     mainNavigation: string;
     skipToContent: string;
@@ -586,6 +614,13 @@ export type Strings = {
  * @property {string} confirmAccept
  * @property {string} confirmCancel
  * @property {string} confirmDescription
+ * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
+ * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
+ * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
+ * @property {(seconds: number) => string} alarmCountdown  The whole seconds left under the countdown bar; hidden from a screen reader [scope-94]
+ * @property {(seconds: number) => string} alarmClosesBy  Said once when an alarm that closes by itself opens [scope-94]
+ * @property {(action: string) => string} alarmPressTo  Said when an alarm that must be acknowledged opens [scope-94]
+ * @property {(action: string) => string} alarmKeptOpen  Said when Keep open stopped the countdown [scope-94]
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent

@@ -100,6 +100,13 @@ export const REQUIRED_PARTS = {
     // answer the row with a knob and leave the part that changes when it
     // is flipped in the package's neutral voice [gap-11].
     switch__input: 'the switch track and thumb: the part that changes when it is flipped, so the theme has to be there when it does [gap-11]',
+    // The alarm's one way out [scope-94]. It is a `.kp-button`, so it keeps
+    // the register's button shape, and every register repaints its buttons
+    // in the later layer: a register that answered `.kp-alarm` and not its
+    // button left the theme's own button paint on the alarm's plate, as the
+    // first build of the alarm showed in every theme.
+    alarm__ack:
+        'the alarm’s button: the one way out of a screen that blocks everything else, painted by this register’s own button rules unless it answers it [scope-94]',
     // `.kp-accordion` itself carries no rule in css/components.css, so it is
     // not a root the audit above could ask for; its summary is the control
     // a reader presses and the place the open-and-closed marker lives.

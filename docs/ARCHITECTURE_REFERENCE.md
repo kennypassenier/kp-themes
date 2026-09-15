@@ -37,6 +37,7 @@ js/theme-picker.js   framework-free picker    ─┐ pure: importing one
 js/components.js     contracts; sticky, menus   │ attaches nothing. Only
 js/overlays.js       dialogs, tabs, toasts,     │ js/auto.js has a side
                      whether an overlay scrolls │
+js/alarm.js          the full-screen alarm      │
 js/effects.js        the hooks, the marquee,    │ effect, by design
                      the pointer bus, the count │
 js/sidenav.js        the side navigation        │
@@ -61,8 +62,9 @@ js/contrast.js       the reading, for a consumer ┘
 hooks/use-theme.js   React, sitting on theme-core
 hooks/use-strings.jsx  React, the strings provider
 components/*.jsx     React, rendering the same classes as the CSS above
-                     — twenty of them, including the side navigation,
-                     which has both channels since 2026-09-12
+                     — twenty-one of them, including the side navigation,
+                     which has both channels since 2026-09-12, and the
+                     alarm since 2026-09-15
 fx/*.jsx             cyberpunk effects
 ```
 

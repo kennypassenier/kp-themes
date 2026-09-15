@@ -623,8 +623,11 @@ clip-path; `fx-rgb-split`: drop-shadow offsets; `fx-cellflash`: one cell's
 text colour for 200ms), and one in neither category is reported by name
 rather than passing silently, so the next effect someone adds cannot slip
 through the hole. Reported, not refused, and over far more than six
-animations: the reading covers the seventy effects in `TIMINGS` plus every
-register keyframe, and it runs in `npm run advice`.
+animations: the reading covers the eighty-three effects in `TIMINGS` plus every
+register keyframe, and it runs in `npm run advice`. The alarm (scope-94),
+whose flicker, decode and glow run together over the whole window, is also
+measured from rendered frames in `tests/alarm.spec.mjs`, in seven themes, and
+held at two flashes a second.
 
 ## What changed on 2026-09-04, and what it cost
 

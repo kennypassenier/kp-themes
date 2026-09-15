@@ -6,7 +6,7 @@ brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
 cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
 shade-dark, lapis, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
-form fields, print), twenty components, a theme picker, and a register
+form fields, print), twenty-one components, a theme picker, and a register
 for every one of the twenty-two themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and razor tear
 to titanium's oxide film.
@@ -340,6 +340,7 @@ for.
 | `@kp-soft/themes/js/picker`              | the framework-free picker                                |
 | `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                               |
 | `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                    |
+| `@kp-soft/themes/js/alarm`               | the full-screen alarm, `showAlarm()` and its triggers    |
 | `@kp-soft/themes/js/registry`            | the generated theme list                                 |
 | `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                  |
 | `@kp-soft/themes/js/lazy-register`       | the active theme's register, fetched at runtime          |

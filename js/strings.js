@@ -196,6 +196,13 @@
  * @property {string} confirmAccept
  * @property {string} confirmCancel
  * @property {string} confirmDescription
+ * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
+ * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
+ * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
+ * @property {(seconds: number) => string} alarmCountdown  The whole seconds left under the countdown bar; hidden from a screen reader [scope-94]
+ * @property {(seconds: number) => string} alarmClosesBy  Said once when an alarm that closes by itself opens [scope-94]
+ * @property {(action: string) => string} alarmPressTo  Said when an alarm that must be acknowledged opens [scope-94]
+ * @property {(action: string) => string} alarmKeptOpen  Said when Keep open stopped the countdown [scope-94]
  * @property {string} save
  * @property {string} mainNavigation
  * @property {string} skipToContent
@@ -476,6 +483,17 @@ export const DEFAULT_STRINGS = Object.freeze({
     confirmAccept: 'Yes, do it',
     confirmCancel: 'Cancel',
     confirmDescription: 'This cannot be undone. Cancel leaves everything as it is.',
+    // The alarm [scope-94]. The headline, the detail and the code line are
+    // the caller's words; these are the ones the component adds itself. The
+    // countdown and the key hint are hidden from a screen reader, which hears
+    // the sentence below them once instead of a number every second.
+    alarmAction: 'Acknowledge',
+    alarmKeepOpen: 'Keep open',
+    alarmHint: 'Press Enter',
+    alarmCountdown: (seconds) => `Closes in ${seconds} s`,
+    alarmClosesBy: (seconds) => `Closes by itself in ${seconds} seconds.`,
+    alarmPressTo: (action) => `Press ${action} to continue.`,
+    alarmKeptOpen: (action) => `Kept open. Press ${action} to continue.`,
     save: 'Save',
     mainNavigation: 'Main navigation',
     skipToContent: 'Skip to the content',

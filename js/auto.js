@@ -24,6 +24,7 @@ import {
     enforceContracts,
 } from './components.js';
 import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTooltips } from './overlays.js';
+import { attachAlarms } from './alarm.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes, attachSelects } from './combobox.js';
 import { attachPalettes } from './palette.js';
@@ -57,6 +58,7 @@ export function attachAll(root = document) {
         attachNavMenus(root),
         attachSidenavs(root),
         attachDialogs(root),
+        attachAlarms(root),
         attachDismissals(root),
         attachTooltips(root),
         attachScrollbars(root),

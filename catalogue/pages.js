@@ -26,6 +26,7 @@ export const PAGES = [
             { href: 'catalogue/upload.html', label: 'Upload', component: true },
             { href: 'catalogue/colorpicker.html', label: 'Colour picker', component: true },
             { href: 'catalogue/feedback.html', label: 'Alerts, toasts, badges, progress', component: true },
+            { href: 'catalogue/alarm.html', label: 'Alarm', component: true },
             { href: 'catalogue/overlays.html', label: 'Dialogs, popovers, menus, tooltips', component: true },
             { href: 'catalogue/navigation.html', label: 'Navigation', component: true },
             { href: 'catalogue/structure.html', label: 'Accordion, tree, timeline, split, reorder, wizard', component: true },
@@ -60,10 +61,7 @@ export const PAGES = [
     },
     {
         group: 'Research to look at',
-        pages: [
-            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
-            { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
-        ],
+        pages: [{ href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' }],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -81,6 +79,7 @@ export const PAGES = [
             { href: 'research/intro-loading/demo.html', label: 'Intros and loading' },
             { href: 'research/review-dialog/demo.html', label: 'Review dialog' },
             { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
+            { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
         ],
     },
 ];

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Alarm · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Alarm</h1>
+            <p class="cat-intro">
+                A full-screen dramatic alert, bigger than a toast: a code line, one huge word, the reason under it and one way out, over a plate that
+                takes the whole window and blocks the page behind it. It is the package's <code>.kp-alarm</code> since your decision on 2026-09-15
+                (scope-94, "Overal vol drama" and "Blokkerend, zoals de demo"), built from the prototype in <code>research/alarm/</code>: the full
+                drama in all twenty-two themes, each in its own colours and faces, and both ways out. <code>showAlarm()</code> raises it from a
+                script, a <code>data-kp-alarm</code> button raises it from markup, and <code>&lt;Alarm&gt;</code> or <code>useAlarm()</code> raise it
+                in React. Each block shows one alarm held open in a frame, and a button that raises the real one.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#ack">Must be acknowledged</a></li>
+                <li><a href="#auto">Closes by itself</a></li>
+            </ul>
+
+            <section class="cat-block" id="ack">
+                <h2>Must be acknowledged</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the frame first. It is the alarm held open and still, as a reader who asked for reduced motion sees it: the plate,
+                    the frame, the hazard bars, the code line in the theme's mono face, the headline in its display face, the reason under it and one
+                    button. It must read as this theme's alarm, in its own colours, and still as an alarm rather than a dialog. The headline must read
+                    at a glance and the button must be the only thing that looks pressable. Then press <b>Raise the alarm</b>: the plate fades in, the
+                    headline flickers in and each letter decodes through two noise glyphs, a split copy slices through it, the glow breathes and the
+                    bars march. Only the button closes it: a click, Enter or Space. Escape does nothing, a click on the plate does nothing, and
+                    waiting does nothing. The page behind cannot be clicked and Tab stays inside. When it closes, focus is back on the button you
+                    pressed. <b>Raise it, Escape allowed</b> is the same alarm with <code>escape</code> on.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Security protocol 7 · lockout</p>
+                            <div class="kp-alarm__title" role="heading" aria-level="2">
+                                <span class="kp-alarm__glyphs" data-text="Access denied">Access denied</span>
+                            </div>
+                            <p class="kp-alarm__detail">Three failed attempts on terminal 4. This console is locked for ten minutes.</p>
+                            <div class="kp-alarm__actions">
+                                <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+                                <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kp-row" style="margin-block-start: 1rem">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--destructive"
+                            data-kp-alarm="Access denied"
+                            data-kp-alarm-code="Security protocol 7 · lockout"
+                            data-kp-alarm-detail="Three failed attempts on terminal 4. This console is locked for ten minutes."
+                        >
+                            Raise the alarm
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button"
+                            data-kp-alarm="Clearance required"
+                            data-kp-alarm-code="Override refused"
+                            data-kp-alarm-detail="Coolant valves stay under supervisor control. Ask the shift lead for a level 3 key."
+                            data-kp-alarm-action="Understood"
+                            data-kp-alarm-escape
+                        >
+                            Raise it, Escape allowed
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="auto">
+                <h2>Closes by itself</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the frame holds the countdown at five of eight seconds left. The bar shrinks towards the start and must read as
+                    time running out, not as progress; the words under it count whole seconds. <b>Keep open</b> is a quiet button, because the point
+                    of this mode is that nobody has to touch it. Then press <b>Raise it for 6 seconds</b>: it blocks the page exactly like the
+                    acknowledged one, the bar empties and the alarm goes away by itself, with focus back on the button. Raise it again and press
+                    Escape: it closes. Raise it a third time and press Tab once: focus lands on Keep open, and pressing it stops the clock, brings the
+                    Acknowledge button back and gives it focus; from then on only that button closes it. With reduced motion asked for, the bar steps
+                    a whole second at a time instead of sliding.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div
+                        class="kp-alarm"
+                        data-kp-alarm-inline
+                        data-kp-alarm-mode="auto"
+                        data-kp-alarm-motion="still"
+                        style="--kp-alarm-left: 0.625; --kp-alarm-left-step: 0.625"
+                        inert
+                    >
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Perimeter · east wing</p>
+                            <div class="kp-alarm__title" role="heading" aria-level="2">
+                                <span class="kp-alarm__glyphs" data-text="Intrusion detected">Intrusion detected</span>
+                            </div>
+                            <p class="kp-alarm__detail">Unrecognised key presented at the east service door. Security has been notified.</p>
+                            <div class="kp-alarm__countdown">
+                                <span class="kp-alarm__track" aria-hidden="true"><span class="kp-alarm__fill"></span></span>
+                                <span class="kp-alarm__left" aria-hidden="true">Closes in 5 s</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm kp-alarm__keep">Keep open</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kp-row" style="margin-block-start: 1rem">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--destructive"
+                            data-kp-alarm="Intrusion detected"
+                            data-kp-alarm-code="Perimeter · east wing"
+                            data-kp-alarm-detail="Unrecognised key presented at the east service door. Security has been notified."
+                            data-kp-alarm-mode="auto"
+                            data-kp-alarm-seconds="6"
+                        >
+                            Raise it for 6 seconds
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

@@ -22,6 +22,7 @@ export default async function globalSetup() {
         'react-nav-toggle',
         'react-sidenav',
         'react-switch',
+        'react-alarm',
         'react-select',
         'react-held-60',
         'react-palette-nav',

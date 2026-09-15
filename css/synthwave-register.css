@@ -1844,4 +1844,50 @@
             transition: transform var(--fx-duration) var(--fx-ease);
         }
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A neon sign in the night: a violet plate from its background, the red headline haloed in the pink of its primary, pink stripes and a pink frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='synthwave'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 4% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 4%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.45);
+        --kp-alarm-halo: hsl(from var(--primary) h s l / 0.6);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }

@@ -383,6 +383,100 @@ retro does, the 1995 bar disabled until the box scrolls — and declares
 `--kp-scrollbar-size`, `--kp-scrollbar-inset` and `--kp-scrollbar-button`
 so a press on the drawn arrows, track and thumb scrolls the box.
 
+## The alarm [scope-94]
+
+Bigger than a toast: a full-screen dramatic alert with a code line, one huge
+word, the reason under it and one way out, over a plate that takes the whole
+window. It opens as a modal `<dialog role="alertdialog">`, so the page behind
+it cannot be clicked or tabbed to until it is dealt with, and focus goes back
+to the trigger when it closes. Every theme draws it in its own colours and
+faces: the plate, the ink, the frame and the bars come from each theme's
+tokens, and each register adds its voice (retro's 1995 error window,
+terminal's reversed phosphor, brutalism's slammed stamp, grotesk's red
+poster).
+
+From a script, `showAlarm()` resolves with why it closed — `'ack'`,
+`'timeout'` or `'escape'`:
+
+```js
+import { showAlarm } from '@kp-soft/themes/js/alarm';
+
+const reason = await showAlarm({
+    title: 'Access denied',
+    code: 'Security protocol 7 · lockout',
+    detail: 'Three failed attempts on terminal 4. This console is locked for ten minutes.',
+    mode: 'ack', // 'ack': only its button closes it · 'auto': closes after `seconds`
+    seconds: 8, // auto only
+    escape: false, // ack only: may Escape close it too
+    action: 'Acknowledge', // the button's label; the dictionary's alarmAction by default
+});
+```
+
+- **`mode: 'ack'`** — only the button closes it: a click, Enter or Space.
+  Escape does nothing unless `escape: true`, and a click on the plate never
+  closes it.
+- **`mode: 'auto'`** — it closes by itself after `seconds`, with a bar that
+  shrinks towards the start. Escape closes it. The alarm focuses itself, so
+  an Enter meant for the page presses nothing; the first Tab reaches **Keep
+  open**, which stops the clock and turns it into an acknowledged alarm.
+
+From markup, `attachAlarms()` (in `attachAll`, so `js/auto.js` does it)
+wires a button whose attributes describe the alarm. The close event,
+`kp-alarm-close` with `{ reason }`, is dispatched on the button:
+
+```html
+<button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-alarm="Connection lost"
+    data-kp-alarm-code="Telemetry"
+    data-kp-alarm-detail="The link to pump house 4 dropped."
+    data-kp-alarm-mode="auto"
+    data-kp-alarm-seconds="6"
+>
+    Test the timed alarm
+</button>
+```
+
+In React, `<Alarm open title=… onClose={(reason) => …} />` when the state
+lives in the component, or `useAlarm()` when the alarm is a question with an
+answer:
+
+```jsx
+import { useAlarm } from '@kp-soft/themes';
+
+function Console() {
+    const [showAlarm, alarm] = useAlarm();
+    const lock = async () => {
+        const reason = await showAlarm({ title: 'Access denied', mode: 'auto', seconds: 6 });
+        console.log(reason);
+    };
+    return (
+        <>
+            <button type="button" className="kp-button" onClick={lock}>
+                Lock
+            </button>
+            {alarm}
+        </>
+    );
+}
+```
+
+The words the alarm adds itself — the button's default label, Keep open,
+the key hint, the countdown and the sentence a screen reader hears once —
+come from `js/strings.js` (`alarmAction`, `alarmKeepOpen`, `alarmHint`,
+`alarmCountdown`, `alarmClosesBy`, `alarmPressTo`, `alarmKeptOpen`), per
+alarm through `strings` in both channels.
+
+Motion runs only when the reader has not asked for less: the plate fades in,
+the headline flickers in and decodes letter by letter, a split copy slices
+through it, the glow breathes and the bars march, all under two flashes a
+second, measured from rendered frames in `tests/alarm.spec.mjs`. Under
+reduced motion nothing moves, and the bar steps a whole second at a time.
+`data-kp-alarm-inline` holds a frame open in the flow of a page for a style
+guide; the knobs (`--kp-alarm-ground`, `--kp-alarm-ink` and the rest) are
+listed on the alarm's documentation page.
+
 ## The date picker's month and year grids [scope-89]
 
 The calendar's title is a button in both channels. Pressing it (a click,

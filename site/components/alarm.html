@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Alarm — kp-themes</title>
+        <meta name="description" content="A full-screen dramatic alert: a code line, one huge word, the reason under it and one way out, over a plate that takes the whole window. It opens as a modal dialog in the top layer, so the page behind it cannot be clicked or tabbed to until it is dealt with. Either only its button closes it, or it closes by itself after a number of seconds. Every theme draws it in its own colours and faces." />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html" aria-current="page">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Alarm</h1>
+                    <p class="kp-prose">A full-screen dramatic alert: a code line, one huge word, the reason under it and one way out, over a plate that takes the whole window. It opens as a modal dialog in the top layer, so the page behind it cannot be clicked or tabbed to until it is dealt with. Either only its button closes it, or it closes by itself after a number of seconds. Every theme draws it in its own colours and faces.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For the rare event that must stop everything: access refused, a lockout, a connection to something critical lost. Not for an error beside a field, which is a field message; not for a result the reader may ignore, which is a toast; and not for a question with two answers, which is a dialog. An alarm that fires often teaches people to press through it.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A button that raises an alarm</figcaption>
+                        <p class="kp-text-muted">The trigger describes the alarm in its attributes and the module raises it on a press: the value of the first attribute is the headline, the others the code line, the reason and the mode. When it closes, the close event is dispatched on the button with the reason, and focus is back on it. The same alarm from a script is one call to showAlarm() with the same words, which resolves with the reason.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<button type="button" class="kp-button kp-button--destructive" data-kp-alarm="Access denied" data-kp-alarm-code="Security protocol 7 · lockout" data-kp-alarm-detail="Three failed attempts on terminal 4. This console is locked for ten minutes.">Test the lockout</button>
+<button type="button" class="kp-button" data-kp-alarm="Connection lost" data-kp-alarm-code="Telemetry" data-kp-alarm-detail="The link to pump house 4 dropped. Readings shown are the last known values." data-kp-alarm-mode="auto" data-kp-alarm-seconds="6">Test the timed alarm</button>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-alarm</span><span class="kp-code__string">=&quot;Access denied&quot;</span> <span class="kp-code__keyword">data-kp-alarm-code</span><span class="kp-code__string">=&quot;Security protocol 7 · lockout&quot;</span> <span class="kp-code__keyword">data-kp-alarm-detail</span><span class="kp-code__string">=&quot;Three failed attempts on terminal 4. This console is locked for ten minutes.&quot;</span>&gt;Test the lockout&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-alarm</span><span class="kp-code__string">=&quot;Connection lost&quot;</span> <span class="kp-code__keyword">data-kp-alarm-code</span><span class="kp-code__string">=&quot;Telemetry&quot;</span> <span class="kp-code__keyword">data-kp-alarm-detail</span><span class="kp-code__string">=&quot;The link to pump house 4 dropped. Readings shown are the last known values.&quot;</span> <span class="kp-code__keyword">data-kp-alarm-mode</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">data-kp-alarm-seconds</span><span class="kp-code__string">=&quot;6&quot;</span>&gt;Test the timed alarm&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The parts, held open in the page</figcaption>
+                        <p class="kp-text-muted">Printed in the flow of the page so the pieces can be seen at rest, the way a style guide shows it: the plate, the frame and the hazard bars, the code line, the headline, the reason and the one button. A held-open frame is inert, because its button is a picture.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+    <div class="kp-alarm__scan" aria-hidden="true"></div>
+    <div class="kp-alarm__bars" aria-hidden="true"></div>
+    <div class="kp-alarm__panel">
+        <p class="kp-alarm__code">Special order 937</p>
+        <div class="kp-alarm__title" role="heading" aria-level="2"><span class="kp-alarm__glyphs" data-text="Request denied">Request denied</span></div>
+        <p class="kp-alarm__detail">Crew override is not accepted at this level of clearance.</p>
+        <div class="kp-alarm__actions">
+            <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+            <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+        </div>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm&quot;</span> <span class="kp-code__keyword">data-kp-alarm-inline</span> <span class="kp-code__keyword">data-kp-alarm-mode</span><span class="kp-code__string">=&quot;ack&quot;</span> <span class="kp-code__keyword">data-kp-alarm-motion</span><span class="kp-code__string">=&quot;still&quot;</span> <span class="kp-code__keyword">inert</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__scan&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__bars&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__panel&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__code&quot;</span>&gt;Special order 937&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__title&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;heading&quot;</span> <span class="kp-code__keyword">aria-level</span><span class="kp-code__string">=&quot;2&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__glyphs&quot;</span> <span class="kp-code__keyword">data-text</span><span class="kp-code__string">=&quot;Request denied&quot;</span>&gt;Request denied&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__detail&quot;</span>&gt;Crew override is not accepted at this level of clearance.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-alarm__ack&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__hint&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Press Enter&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-alarm</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-alarm-action</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-alarm-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-alarm-code</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-alarm-detail</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-alarm-escape</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-alarm-mode</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-alarm-seconds</code></td><td>prose</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <pre class="kp-code-block"><code><span class="kp-code__keyword">import</span> { Alarm, useAlarm } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes'</span>;</code></pre>
+                    <p class="kp-text-muted">Declared in <code>components/alarm.jsx</code>, <code>components/alarm.jsx</code>; the package re-exports every component from its root.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <h3 class="kp-fw-semibold"><code>Alarm</code></h3>
+                    <div class="kp-table-wrap" data-kp-region-label="Alarm props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>open</code></td><td><code>boolean</code></td><td>optional</td><td>Raises the alarm while true. Default false.</td></tr>
+                            <tr><td><code>title</code></td><td><code>string</code></td><td>required</td><td>The huge word(s), and the alarm's accessible name.</td></tr>
+                            <tr><td><code>detail</code></td><td><code>string</code></td><td>optional</td><td>The line under the headline.</td></tr>
+                            <tr><td><code>code</code></td><td><code>string</code></td><td>optional</td><td>The small line above the headline.</td></tr>
+                            <tr><td><code>mode</code></td><td><code>'ack' | 'auto'</code></td><td>optional</td><td>'ack': only its button closes it. 'auto': closes after `seconds`. Default 'ack'.</td></tr>
+                            <tr><td><code>seconds</code></td><td><code>number</code></td><td>optional</td><td>Auto only. Eight when left out (ALARM_SECONDS).</td></tr>
+                            <tr><td><code>escape</code></td><td><code>boolean</code></td><td>optional</td><td>Ack only: Escape closes it as well. Default false.</td></tr>
+                            <tr><td><code>action</code></td><td><code>string</code></td><td>optional</td><td>The button's label. Default: the dictionary's `alarmAction`.</td></tr>
+                            <tr><td><code>onClose</code></td><td><code>(reason: AlarmReason) =&gt; void</code></td><td>optional</td><td>Called once when it closed, with why; set `open` back to false here.</td></tr>
+                            <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
+                            <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
+                    </tbody></table></div>
+                    <h3 class="kp-fw-semibold"><code>useAlarm</code></h3>
+                    <p class="kp-text-muted">This component declares no props of its own.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-alarm-close</code></td><td>Dispatched when an alarm closes, bubbling, on its trigger (or the document): `{ reason, id }`.</td></tr>
+                            <tr><td><code>kp-alarm-open</code></td><td>Dispatched on the alarm, bubbling, once it is open: `{ id, mode }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-alarm-bar</code></td><td><code>0.9rem</code></td></tr>
+                            <tr><td><code>--kp-alarm-frame</code></td><td><code>2px solid</code></td></tr>
+                            <tr><td><code>--kp-alarm-glow</code></td><td><code>hsl(from var(--destructive) h s max(l, 45) / 0.5)</code></td></tr>
+                            <tr><td><code>--kp-alarm-ground</code></td><td><code>hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95)</code></td></tr>
+                            <tr><td><code>--kp-alarm-halo</code></td><td><code>hsl(from var(--destructive) h s max(l, 50) / 0.55)</code></td></tr>
+                            <tr><td><code>--kp-alarm-ink</code></td><td><code>hsl(from var(--destructive) h s max(l, 60))</code></td></tr>
+                            <tr><td><code>--kp-alarm-left</code></td><td><code>1</code></td></tr>
+                            <tr><td><code>--kp-alarm-left-step</code></td><td><code>1</code></td></tr>
+                            <tr><td><code>--kp-alarm-on-ink</code></td><td><code>hsl(from var(--destructive) h s 6%)</code></td></tr>
+                            <tr><td><code>--kp-alarm-panel-border</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-alarm-panel-ground</code></td><td><code>transparent</code></td></tr>
+                            <tr><td><code>--kp-alarm-panel-padding</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-alarm-panel-radius</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-alarm-panel-shadow</code></td><td><code>none</code></td></tr>
+                            <tr><td><code>--kp-alarm-scan</code></td><td><code>hsl(from var(--destructive) h s max(l, 50) / 0.09)</code></td></tr>
+                            <tr><td><code>--kp-alarm-soft</code></td><td><code>hsl(from var(--destructive) h calc(s * 0.4) 86)</code></td></tr>
+                            <tr><td><code>--kp-alarm-split</code></td><td><code>hsl(from var(--primary) h s max(l, 60))</code></td></tr>
+                            <tr><td><code>--kp-alarm-stripe</code></td><td><code>currentColor</code></td></tr>
+                            <tr><td><code>--kp-alarm-title-case</code></td><td><code>uppercase</code></td></tr>
+                            <tr><td><code>--kp-alarm-title-font</code></td><td><code>var(--theme-font-display, var(--theme-font-body))</code></td></tr>
+                            <tr><td><code>--kp-alarm-title-size</code></td><td><code>clamp(2.5rem, 12cqi, 10rem)</code></td></tr>
+                            <tr><td><code>--kp-alarm-title-tracking</code></td><td><code>0.04em</code></td></tr>
+                            <tr><td><code>--kp-alarm-vignette</code></td><td><code>hsl(from var(--destructive) h s 2% / 0.7)</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — an alertdialog opened as a modal: the page behind is inert, focus stays inside, and it returns to the trigger when the alarm closes.</li>
+                        <li>Built in — the headline is its accessible name and the reason its description; a sentence read once says how it goes away, instead of a number every second.</li>
+                        <li>Built in — the acknowledged alarm focuses its button; the timed one focuses itself, so an Enter meant for the page presses nothing.</li>
+                        <li>Built in — with reduced motion asked for, nothing moves: the words are there at once and the bar steps a whole second at a time.</li>
+                        <li>Built in — the flicker, the decode and the glow stay under two flashes a second, measured from rendered frames; WCAG allows three.</li>
+                        <li>Yours — keep the headline to a few words and put what happens next in the reason.</li>
+                        <li>Yours — give a timed alarm enough seconds to read the reason twice, and repeat what matters somewhere that stays.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>ack</code></td><td>The default: only the button closes it, with a click, Enter or Space. Escape and a click on the plate do nothing, and so does time.</td></tr>
+                            <tr><td><code>ack with escape</code></td><td>The same, and Escape closes it too, with the reason escape.</td></tr>
+                            <tr><td><code>auto</code></td><td>Closes by itself after its seconds, with a bar that shrinks towards the start and the whole seconds under it. Escape closes it. Keep open stops the clock and turns it into ack.</td></tr>
+                            <tr><td><code>.kp-alarm__code / __title / __detail</code></td><td>The small line above, the headline in the display face, and the reason in the mono face.</td></tr>
+                            <tr><td><code>.kp-alarm__ack / __keep</code></td><td>The one way out, in the theme’s button shape and the alarm’s paint; and the quiet button that keeps a timed alarm open.</td></tr>
+                            <tr><td><code>data-kp-alarm-inline</code></td><td>A frame held open in the flow of a page instead of raised over it, for a style guide.</td></tr>
+                            <tr><td><code>data-kp-alarm-motion=&quot;still&quot;</code></td><td>A frame that shows what a reader who asked for reduced motion sees, whatever the reader asked for.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

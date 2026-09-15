@@ -359,6 +359,26 @@ export const TIMINGS = Object.freeze({
     'kp-tube-off': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
     'kp-caret': { durationMs: 1000, cycles: Infinity, property: 'background-size', luminanceSteps: [1, 1, 0, 0] },
+    // The alarm [scope-94]: the plate fading in, the frame's glow breathing
+    // (one half-cycle per 1.4 s), the panel flickering in once (0, 1, 0.3, 1:
+    // three changes in the first second, the whole budget of that second and
+    // no more), each letter cell's two noise glyphs and its letter (once per
+    // cell), the split copies slicing through once and then every 5 s, the
+    // headline's short dip every 5 s, the detail line fading in, the caret,
+    // the hazard stripes marching and the faint band sweeping down. Measured
+    // from rendered frames in tests/alarm.spec.mjs as well.
+    'kp-alarm-ground-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-pulse': { durationMs: 1400, cycles: Infinity, property: 'opacity', luminanceSteps: [0.4, 1] },
+    'kp-alarm-flicker-in': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 0.3, 1, 1] },
+    'kp-alarm-jitter': { durationMs: 5000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0.6, 1] },
+    'kp-alarm-slice-in': { durationMs: 600, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-alarm-slice': { durationMs: 5000, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
+    'kp-alarm-decode-letter': { durationMs: 180, cycles: 1, property: 'color', luminanceSteps: [] },
+    'kp-alarm-decode-noise': { durationMs: 90, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
+    'kp-alarm-detail-in': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-caret': { durationMs: 1000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
+    'kp-alarm-march': { durationMs: 1600, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-alarm-sweep': { durationMs: 6000, cycles: Infinity, property: 'translate', luminanceSteps: [] },
     // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
     // arriving out of a blur, the hero button and the dossier card settling
     // out of the same blur once on load, and the confirmation dialog's

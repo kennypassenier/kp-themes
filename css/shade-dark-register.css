@@ -1189,4 +1189,49 @@
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The same correction at night: a deep teal plate from its background, the headline in its red serif, a blue split. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='shade-dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
+        --kp-alarm-soft: hsl(from var(--foreground) h s 85);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }

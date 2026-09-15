@@ -9315,6 +9315,547 @@
     [data-kp-surface] {
         padding-inline: var(--kp-surface-padding-inline, max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2)));
     }
+
+    /* --- Alarm [scope-94] -------------------------------------------------
+ * A full-screen dramatic alert: a code line, one huge word, the reason
+ * under it and one way out, over a plate that takes the whole window. The
+ * prototype Kenny approved on 2026-09-15 (research/alarm/demo.html), with
+ * the full drama in every theme: nothing here names a theme, every paint is
+ * a token or a relative colour of one, so each theme's own --destructive,
+ * --primary and faces make it that theme's alarm, and each register adds its
+ * own voice on the knobs below. js/alarm.js builds it and opens it with
+ * showModal(), which puts it in the top layer and makes the page inert.
+ *
+ * The knobs [KT6], the colours defaulting to the prototype's dark plate:
+ * --kp-alarm-ground (the plate), --kp-alarm-ink (the headline, the frame,
+ * the bars), --kp-alarm-soft (the detail line), --kp-alarm-split (the second
+ * colour of the glitch split), --kp-alarm-on-ink (words on the ink: the
+ * button), --kp-alarm-glow (the frame's breathing inner glow),
+ * --kp-alarm-halo (the glow around the headline), --kp-alarm-scan (the
+ * scanlines), --kp-alarm-vignette (the darkened edges), --kp-alarm-stripe
+ * (the hazard bars), --kp-alarm-bar (their height), --kp-alarm-frame (the
+ * frame's border), the
+ * headline's --kp-alarm-title-font, --kp-alarm-title-size,
+ * --kp-alarm-title-case and --kp-alarm-title-tracking, and the panel's
+ * --kp-alarm-panel-ground, --kp-alarm-panel-border, --kp-alarm-panel-shadow,
+ * --kp-alarm-panel-padding and --kp-alarm-panel-radius, for a theme whose
+ * alarm is a box (a 1995 error window, a slammed stamp). --kp-alarm-left and
+ * --kp-alarm-left-step are written by the script: the share of the time
+ * left, continuous and in whole seconds. */
+    .kp-alarm {
+        container-type: inline-size;
+        position: fixed;
+        inset: 0;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        max-inline-size: none;
+        max-block-size: none;
+        margin: 0;
+        padding: calc(var(--kp-alarm-bar, 0.9rem) + 2.5rem) 1.5rem;
+        border: 0;
+        border-radius: 0;
+        overflow: hidden auto;
+        background: var(--kp-alarm-ground, hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95));
+        color: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        font-family: var(--theme-font-body);
+        text-align: center;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .kp-alarm::backdrop {
+        background: transparent;
+    }
+
+    .kp-alarm:is([open], [data-kp-alarm-inline]) {
+        display: grid;
+        place-items: center;
+    }
+
+    /* A held-open frame for a page that shows the alarm without raising it
+     * (the catalogue, a style guide): the same markup in the flow of the
+     * page, not in the top layer, as tall as its words need and at least a
+     * small screen's worth. Mark it inert: its button is a picture. */
+    .kp-alarm[data-kp-alarm-inline] {
+        position: relative;
+        inset: auto;
+        block-size: auto;
+        min-block-size: 22rem;
+        padding: calc(var(--kp-alarm-bar, 0.9rem) + 1.75rem) 1.75rem;
+    }
+
+    /* The frame: a hairline box inside the bars. */
+    .kp-alarm::before {
+        content: '';
+        position: absolute;
+        inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem) 0.75rem;
+        border: var(--kp-alarm-frame, 2px solid);
+        pointer-events: none;
+    }
+
+    /* The glow the frame breathes with. */
+    .kp-alarm::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 7rem var(--kp-alarm-glow, hsl(from var(--destructive) h s max(l, 45) / 0.5));
+        pointer-events: none;
+    }
+
+    .kp-alarm__scan,
+    .kp-alarm__bars {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .kp-alarm__scan {
+        background:
+            repeating-linear-gradient(to bottom, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)) 0 1px, transparent 1px 3px),
+            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
+    }
+
+    /* A faint band that sweeps down the plate. */
+    .kp-alarm__scan::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: 18%;
+        inset-block-start: -18%;
+        background: linear-gradient(to bottom, transparent, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)), transparent);
+    }
+
+    /* The hazard bars, top and bottom. */
+    .kp-alarm__bars::before,
+    .kp-alarm__bars::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: var(--kp-alarm-bar, 0.9rem);
+        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, currentColor) 0 1rem, transparent 1rem 2rem);
+        background-size: 2.8284rem 100%;
+    }
+
+    .kp-alarm__bars::before {
+        inset-block-start: 0;
+    }
+
+    .kp-alarm__bars::after {
+        inset-block-end: 0;
+    }
+
+    .kp-alarm__panel {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        justify-items: center;
+        gap: clamp(0.5rem, 1.6cqi, 1.25rem);
+        box-sizing: border-box;
+        inline-size: min(100%, 72rem);
+        padding: var(--kp-alarm-panel-padding, 0);
+        border: var(--kp-alarm-panel-border, 0);
+        border-radius: var(--kp-alarm-panel-radius, 0);
+        background: var(--kp-alarm-panel-ground, transparent);
+        box-shadow: var(--kp-alarm-panel-shadow, none);
+    }
+
+    .kp-alarm__code {
+        margin: 0;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: clamp(0.7rem, 1.3cqi, 0.95rem);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__title {
+        margin: 0;
+        font-family: var(--kp-alarm-title-font, var(--theme-font-display, var(--theme-font-body)));
+        font-size: var(--kp-alarm-title-size, clamp(2.5rem, 12cqi, 10rem));
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: var(--kp-alarm-title-tracking, 0.04em);
+        text-transform: var(--kp-alarm-title-case, uppercase);
+        overflow-wrap: anywhere;
+        text-wrap: balance;
+        text-shadow: 0 0 0.3em var(--kp-alarm-halo, hsl(from var(--destructive) h s max(l, 50) / 0.55));
+    }
+
+    .kp-alarm__glyphs {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* The chromatic split: two copies of the words, clipped to nothing at
+     * rest and to thin bands during a burst. */
+    .kp-alarm__glyphs::before,
+    .kp-alarm__glyphs::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        clip-path: inset(50% 0 50% 0);
+        text-shadow: none;
+        pointer-events: none;
+    }
+
+    .kp-alarm__glyphs::before {
+        color: var(--kp-alarm-split, hsl(from var(--primary) h s max(l, 60)));
+        translate: -0.04em 0;
+    }
+
+    .kp-alarm__glyphs::after {
+        color: var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        translate: 0.04em 0;
+    }
+
+    .kp-alarm__word {
+        white-space: nowrap;
+    }
+
+    .kp-alarm__char {
+        position: relative;
+    }
+
+    /* The two noise glyphs of a letter cell, drawn over the letter, so the
+     * layout never changes while it decodes. */
+    .kp-alarm__char::before,
+    .kp-alarm__char::after {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .kp-alarm__char::before {
+        content: attr(data-n1);
+    }
+
+    .kp-alarm__char::after {
+        content: attr(data-n2);
+    }
+
+    .kp-alarm__detail {
+        max-inline-size: 60ch;
+        margin: 0;
+        color: var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        font-family: var(--theme-font-mono, monospace);
+        font-size: clamp(0.85rem, 1.9cqi, 1.35rem);
+        line-height: 1.45;
+        text-wrap: pretty;
+    }
+
+    /* A caret at the end of the line: one character cell. */
+    .kp-alarm__detail::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 1.05em;
+        margin-inline-start: 0.2em;
+        vertical-align: text-bottom;
+        background: currentColor;
+    }
+
+    .kp-alarm__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem 1rem;
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-size: 0.8rem;
+    }
+
+    .kp-alarm__hint {
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.08em;
+    }
+
+    /* The one way out: a .kp-button, so the register keeps its button's
+     * shape (a notch, a radius, a bevel); the paint is the alarm's, and every
+     * register restates it, because each repaints its buttons in the later
+     * layer. */
+    .kp-alarm__ack {
+        min-inline-size: 14rem;
+        border: 2px solid var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        background: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        color: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__ack:is(:hover, :focus-visible) {
+        background: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        color: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+    }
+
+    .kp-alarm :is(.kp-alarm__ack, .kp-alarm__keep):focus-visible {
+        outline: 3px solid var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        outline-offset: 4px;
+    }
+
+    .kp-alarm__countdown {
+        display: grid;
+        gap: 0.5rem;
+        justify-items: center;
+        inline-size: min(100%, 36rem);
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__track {
+        display: block;
+        inline-size: 100%;
+        block-size: 0.375rem;
+        background: color-mix(in srgb, currentColor 22%, transparent);
+    }
+
+    /* The bar reads as time running out: it shrinks towards the start. Under
+     * reduced motion it steps a whole second at a time. */
+    .kp-alarm__fill {
+        display: block;
+        block-size: 100%;
+        background: currentColor;
+        transform: scaleX(var(--kp-alarm-left-step, 1));
+        transform-origin: left center;
+    }
+
+    .kp-alarm__keep {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+    }
+
+    .kp-alarm:not([data-kp-alarm-mode='auto']) .kp-alarm__countdown,
+    .kp-alarm[data-kp-alarm-mode='auto'] .kp-alarm__actions {
+        display: none;
+    }
+
+    /* Motion, only when the reader has not asked for less, and never on a
+     * held-open frame marked still. The budget per one-second window (WCAG
+     * 2.3.1 allows three flashes; each keyframe has its row in TIMINGS in
+     * js/effects.js):
+     *   kp-alarm-flicker-in   0 -> 1 -> 0.3 -> 1, once
+     *   kp-alarm-decode-*     a letter cell: blank, noise, noise, letter, once
+     *   kp-alarm-jitter       1 -> 0.6 -> 1, once every 5 s
+     *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
+     *   kp-alarm-caret        one character cell on and off once a second
+     *   kp-alarm-march        the stripes move one period per 1.6 s
+     *   kp-alarm-sweep        a band of a faint tint, once per 6 s
+     * Under reduced motion nothing runs: the words are there at once, and the
+     * drama is the plate, the glow at full strength, the frame, the bars and
+     * the size. The rendered frames are measured in tests/alarm.spec.mjs. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-alarm-ground-in 180ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still'])::after {
+            animation: kp-alarm-pulse 1400ms ease-in-out infinite alternate;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
+            animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+            animation:
+                kp-alarm-slice-in 600ms steps(1, end) both,
+                kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
+            animation:
+                kp-alarm-slice-in 600ms 90ms steps(1, end) both,
+                kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
+        }
+
+        /* The decode: each letter cell shows one noise glyph for 90 ms, a
+         * second for 90 ms, then its letter, 35 ms after the cell before
+         * it. A cell changes three times, ever. */
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char {
+            animation: kp-alarm-decode-letter calc(var(--i, 0) * 35ms + 180ms) steps(1, end) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms) steps(1, end) forwards;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms + 90ms) steps(1, end) forwards;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            animation: kp-alarm-detail-in 300ms 600ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
+            animation: kp-alarm-caret 1000ms steps(1, end) infinite;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
+            animation: kp-alarm-march 1600ms linear infinite;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            animation: kp-alarm-sweep 6000ms linear infinite;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
+            transform: scaleX(var(--kp-alarm-left, 1));
+            transition: transform 100ms linear;
+        }
+    }
+
+    @keyframes kp-alarm-ground-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-pulse {
+        0% {
+            opacity: 0.4;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-flicker-in {
+        0% {
+            opacity: 0;
+        }
+        18% {
+            opacity: 1;
+            translate: -0.6% 0;
+        }
+        30% {
+            opacity: 0.3;
+            translate: 0.8% 0;
+        }
+        42% {
+            opacity: 1;
+            translate: 0 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-jitter {
+        0%,
+        94% {
+            opacity: 1;
+            translate: 0 0;
+        }
+        95% {
+            opacity: 0.6;
+            translate: -0.03em 0;
+        }
+        97% {
+            opacity: 1;
+            translate: 0.02em 0;
+        }
+        99% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-alarm-slice-in {
+        0% {
+            clip-path: inset(10% 0 72% 0);
+        }
+        20% {
+            clip-path: inset(62% 0 22% 0);
+        }
+        40% {
+            clip-path: inset(34% 0 52% 0);
+        }
+        60% {
+            clip-path: inset(80% 0 6% 0);
+        }
+        80%,
+        100% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+
+    @keyframes kp-alarm-slice {
+        0%,
+        94% {
+            clip-path: inset(50% 0 50% 0);
+        }
+        95% {
+            clip-path: inset(20% 0 66% 0);
+        }
+        97% {
+            clip-path: inset(58% 0 28% 0);
+        }
+        99% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+
+    @keyframes kp-alarm-decode-letter {
+        0% {
+            color: transparent;
+            text-shadow: none;
+        }
+    }
+
+    @keyframes kp-alarm-decode-noise {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-detail-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-caret {
+        0%,
+        49.9% {
+            opacity: 1;
+        }
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-march {
+        100% {
+            background-position-x: 2.8284rem;
+        }
+    }
+
+    @keyframes kp-alarm-sweep {
+        100% {
+            translate: 0 680%;
+        }
+    }
 }
 
 @layer kp.register {
@@ -11109,6 +11650,52 @@
     [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:hover::before,
     [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger:focus-visible::before {
         background: linear-gradient(hsl(from var(--primary) h s l / 0.12), hsl(from var(--primary) h s l / 0.12)), var(--background);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The prototype as approved: blood red on the void, split and hazard bars in signal yellow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='cyberpunk'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--destructive) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s max(l, 45) / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s max(l, 50) / 0.55);
+        --kp-alarm-scan: hsl(from var(--destructive) h s max(l, 50) / 0.09);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s 2% / 0.7);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -13536,6 +14123,74 @@
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A 1995 error box: the desktop turns its teal, yellow hazard stripes top and bottom, and the words sit in a silver bevelled window whose title bar is the code line. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='retro'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--accent) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--warning);
+        --kp-alarm-frame: 2px solid var(--background);
+        --kp-alarm-panel-ground: var(--background);
+        --kp-alarm-panel-border: 2px solid var(--foreground);
+        --kp-alarm-panel-shadow:
+            inset -2px -2px 0 hsl(from var(--foreground) h s l / 0.55), inset 2px 2px 0 hsl(from var(--background) h s 100),
+            6px 6px 0 var(--foreground);
+        --kp-alarm-panel-padding: 0 clamp(1rem, 3cqi, 2rem) clamp(1rem, 3cqi, 2rem);
+        --kp-alarm-title-size: clamp(2rem, 8cqi, 6rem);
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='retro'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='retro'] .kp-alarm__panel {
+        inline-size: min(100%, 48rem);
+    }
+
+    [data-theme='retro'] .kp-alarm__code {
+        justify-self: stretch;
+        margin-inline: calc(-1 * clamp(1rem, 3cqi, 2rem));
+        padding: 0.3rem 0.6rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        letter-spacing: 0.04em;
+        text-align: start;
+    }
 }
 
 @layer kp.register {
@@ -15383,6 +16038,52 @@
         [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
             transition: transform var(--fx-duration) var(--fx-ease);
         }
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A neon sign in the night: a violet plate from its background, the red headline haloed in the pink of its primary, pink stripes and a pink frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='synthwave'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 4% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 4%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.45);
+        --kp-alarm-halo: hsl(from var(--primary) h s l / 0.6);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -17236,6 +17937,66 @@
             transition: width var(--fx-duration) var(--kp-cut);
         }
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A calling card: red, black and white only, the headline tilted, white bars and a white frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 3% / 0.96);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--background);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 1% / 0.8);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 3px solid var(--foreground);
+        --kp-alarm-title-tracking: 0;
+    }
+
+    [data-theme='phantom'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm__title {
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        border-color: var(--kp-alarm-soft);
+        background: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::after {
+        background: var(--kp-alarm-soft);
+    }
 }
 
 @layer kp.register {
@@ -18914,6 +19675,61 @@
         color: var(--primary-foreground);
         text-shadow: none;
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The phosphor reversed: green on black becomes red on black, the headline in the mono face, a dashed frame, the green of its primary only in the split, and a prompt before the code line. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='terminal'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 2% / 0.97);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: hsl(from var(--destructive) h s 80);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 2%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.7);
+        --kp-alarm-scan: hsl(from var(--destructive) h s 50 / 0.12);
+        --kp-alarm-vignette: hsl(from var(--background) h s 1% / 0.85);
+        --kp-alarm-frame: 2px dashed;
+        --kp-alarm-title-font: var(--theme-font-mono, monospace);
+        --kp-alarm-title-tracking: 0;
+    }
+
+    [data-theme='terminal'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='terminal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-alarm__code::before {
+        content: '> ';
+    }
+
+    [data-theme='terminal'] .kp-alarm .kp-alarm__ack {
+        --kp-button-caret-colour: currentColor;
+    }
 }
 
 @layer kp.register {
@@ -20527,6 +21343,62 @@
         color: var(--secondary-foreground);
         border-color: var(--border-strong);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A stamp slammed onto the page: a red slab with a thick black border and a hard offset shadow, set at an angle, black hazard bars on the cream ground. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='brutalism'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive-foreground);
+        --kp-alarm-soft: var(--destructive-foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 6px solid var(--foreground);
+        --kp-alarm-panel-ground: var(--destructive);
+        --kp-alarm-panel-border: 6px solid var(--foreground);
+        --kp-alarm-panel-shadow: 14px 14px 0 var(--foreground);
+        --kp-alarm-panel-padding: clamp(1.25rem, 4cqi, 3rem);
+        --kp-alarm-title-tracking: -0.02em;
+    }
+
+    [data-theme='brutalism'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm__panel {
+        inline-size: min(100%, 56rem);
+        rotate: -2deg;
+    }
 }
 
 @layer kp.register {
@@ -22042,6 +22914,52 @@
         background: var(--accent);
         color: var(--foreground);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       An instrument fault: a graphite plate, the headline in its signal orange-red, a hairline frame and brushed silver bars. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='titanium'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 6% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: hsl(from var(--primary) h s l / 0.5);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='titanium'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }
 
 /* The redaction plate's alpha, registered so it can be transitioned: an
@@ -23324,6 +24242,53 @@
         background: var(--muted);
         color: var(--foreground);
         box-shadow: none;
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       Soft but unmistakable: its own pale ground, the headline in its red, a dotted frame and rounded panel and stripes at a third of the red. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='pastel'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.16);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: hsl(from var(--destructive) h s l / 0.35);
+        --kp-alarm-frame: 3px dotted;
+        --kp-alarm-panel-radius: var(--radius, 1rem);
+    }
+
+    [data-theme='pastel'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -24683,6 +25648,51 @@
         color: var(--primary);
         border-bottom-color: var(--primary);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A correction in the margin: its cream ground, the headline in its red serif, a hairline frame and a blue glow at the edges. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='shade-light'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='shade-light'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }
 
 @layer kp.register {
@@ -25909,6 +26919,51 @@
     [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         border-bottom-color: var(--primary);
         color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A warning posted at the trailhead: its paper ground, the headline in its red, a green split and a green glow at the edges. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='forest'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-frame: 2px solid;
+    }
+
+    [data-theme='forest'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -27295,6 +28350,57 @@
         color: var(--primary);
         border-bottom-color: var(--border-strong);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A marquee gone dark: the headline in its red with wide spacing, a gold double frame, gold bars and a gold glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='deco'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 3px double var(--primary);
+        --kp-alarm-title-tracking: 0.12em;
+    }
+
+    [data-theme='deco'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        content: none;
+    }
 }
 
 @layer kp.register {
@@ -28300,6 +29406,50 @@
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The alarm in daylight: the page stays white and the headline, the frame and the bars are its own red, with a pale red glow breathing at the edges instead of a dark plate. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='light'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.22);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+    }
+
+    [data-theme='light'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -29763,6 +30913,59 @@
             transition: scale var(--fx-duration, 220ms) var(--fx-ease, ease);
         }
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A poster, not a screen: the whole window is its red, the headline enormous in white with tight spacing, set flush left, with no frame and no bars. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='grotesk'] .kp-alarm {
+        --kp-alarm-ground: var(--destructive);
+        --kp-alarm-ink: var(--destructive-foreground);
+        --kp-alarm-soft: var(--destructive-foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-bar: 0rem;
+        --kp-alarm-frame: 0 solid;
+        --kp-alarm-title-size: clamp(3rem, 15cqi, 12rem);
+        --kp-alarm-title-tracking: -0.04em;
+    }
+
+    [data-theme='grotesk'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='grotesk'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='grotesk'] .kp-alarm__panel {
+        justify-items: start;
+        text-align: start;
+    }
 }
 
 @layer kp.register {
@@ -31145,6 +32348,58 @@
         color: var(--foreground);
         border-block-end-color: var(--border-strong);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A red line on the drawing: the plate is its deep blue, the frame a cyan dashed construction line, and a drafting grid replaces the scanlines. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='blueprint'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 8% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 8%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 3% / 0.7);
+        --kp-alarm-frame: 1px dashed var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm__scan {
+        background:
+            linear-gradient(to right, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
+            linear-gradient(to bottom, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
+            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
+    }
 }
 
 @layer kp.register {
@@ -32496,6 +33751,52 @@
     [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         background: var(--sidebar-accent);
         color: var(--sidebar-foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The ship computer: the beige console goes to a dark CRT from its ink, red phosphor with a beige split, scanlines, and the wide display face at a size it fits. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='nostromo'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--foreground) h s 5% / 0.97);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: var(--background);
+        --kp-alarm-split: var(--background);
+        --kp-alarm-on-ink: hsl(from var(--foreground) h s 5%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 45 / 0.45);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.5);
+        --kp-alarm-scan: hsl(from var(--background) h s l / 0.06);
+        --kp-alarm-vignette: hsl(from var(--foreground) h s 2% / 0.8);
+        --kp-alarm-title-size: clamp(2rem, 9cqi, 7rem);
+        --kp-alarm-title-tracking: 0.08em;
+    }
+
+    [data-theme='nostromo'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -34078,6 +35379,52 @@
         background: var(--accent);
         color: var(--foreground);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The dark plate of the prototype, split in the near-white of its primary, with a hairline frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--destructive) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s max(l, 45) / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s max(l, 50) / 0.55);
+        --kp-alarm-scan: hsl(from var(--destructive) h s max(l, 50) / 0.09);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s 2% / 0.7);
+        --kp-alarm-frame: 1px solid;
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }
 
 @layer kp.register {
@@ -35076,6 +36423,53 @@
     [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--primary);
         border-bottom-color: currentcolor;
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A notice served on the house paper: the page goes to the navy of its primary, the headline is set in its display serif with engraved spacing, the frame is a double rule and the bars are narrow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='formal'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--primary) h s 9% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
+        --kp-alarm-soft: var(--background);
+        --kp-alarm-split: var(--background);
+        --kp-alarm-on-ink: hsl(from var(--primary) h s 9%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.3);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--primary) h s 3% / 0.7);
+        --kp-alarm-bar: 0.5rem;
+        --kp-alarm-frame: 6px double;
+        --kp-alarm-title-tracking: 0.08em;
+    }
+
+    [data-theme='formal'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -36416,6 +37810,51 @@
         color: var(--primary);
         box-shadow: none;
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A telegram on old paper: its ground, the headline in its oxblood, a double frame and a brown glow at the edges. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='sepia'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-frame: 4px double;
+    }
+
+    [data-theme='sepia'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='sepia'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }
 
 @layer kp.register {
@@ -37510,6 +38949,52 @@
     [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The last light: a warm near-black plate, the headline in its red, amber bars and an amber glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='solstice'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.45);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='solstice'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -38677,6 +40162,53 @@
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         border-bottom-color: var(--foreground);
         color: var(--link);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       Nothing half-transparent: an opaque white page, the headline in its red, black hazard bars and a four-pixel black frame, no glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='high-contrast'] .kp-alarm {
+        --kp-alarm-ground: var(--background);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 4px solid var(--foreground);
+        --kp-alarm-bar: 1.25rem;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 
@@ -39900,6 +41432,52 @@
         color: var(--primary);
         border-block-end-color: var(--primary);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       An illuminated warning: a deep lapis plate, the headline in its coral red, a gold frame, gold bars and a gold glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='lapis'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 8% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 68));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 8%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 3% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }
 
 @layer kp.register {
@@ -41092,6 +42670,51 @@
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The same correction at night: a deep teal plate from its background, the headline in its red serif, a blue split. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='shade-dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
+        --kp-alarm-soft: hsl(from var(--foreground) h s 85);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='shade-dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }
 

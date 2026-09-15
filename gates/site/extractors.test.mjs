@@ -211,7 +211,13 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-surface-padding-inline, the room between a surface's ground and
     // its content; the alignment beside it is an attribute
     // (data-kp-surface-align), not a property: 203 + 1.
-    assert.equal(result.expected, 204, 'AR21 counted 204 --kp-* properties in css/components.css');
+    // The alarm (scope-94) added twenty-three: the plate, the ink, the soft
+    // line, the split, the ink's own words, the glow, the halo, the scanlines,
+    // the vignette, the stripes and the bars' height, the frame; the
+    // headline's font, size, case and tracking; the panel's ground, border,
+    // shadow, padding and radius; and the two shares of the time left that
+    // js/alarm.js writes (--kp-alarm-left, --kp-alarm-left-step): 204 + 23.
+    assert.equal(result.expected, 227, 'AR21 counted 227 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -245,7 +251,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
     // Option B's eighteen (scope-87), scope-88's two, fix-32's one and the surface's one are read through var() too.
-    assert.equal(result.readCount, 204);
+    // So are the alarm's twenty-three (scope-94).
+    assert.equal(result.readCount, 227);
     assert.deepEqual(result.unread, []);
 });
 

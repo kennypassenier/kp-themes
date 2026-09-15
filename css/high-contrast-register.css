@@ -1163,4 +1163,51 @@
         border-bottom-color: var(--foreground);
         color: var(--link);
     }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       Nothing half-transparent: an opaque white page, the headline in its red, black hazard bars and a four-pixel black frame, no glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='high-contrast'] .kp-alarm {
+        --kp-alarm-ground: var(--background);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 4px solid var(--foreground);
+        --kp-alarm-bar: 1.25rem;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
 }

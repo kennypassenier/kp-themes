@@ -26,6 +26,7 @@
         "datatable": "the data table: catalogue/table.html, .kp-datatable, js/datatable.js",
         "feedback": "alerts, toasts, badges, progress: catalogue/feedback.html",
         "overlays": "dialogs, popovers, menus, tooltips, confirmations: catalogue/overlays.html",
+        "alarm": "the full-screen alarm: catalogue/alarm.html, .kp-alarm, js/alarm.js",
         "navigation": "nav bar, side navigation, tabs, breadcrumb, back to top: catalogue/navigation.html",
         "structure": "accordion, tree, timeline, split, reorder, wizard: catalogue/structure.html",
         "data": "showing data and the small patterns: catalogue/data.html",
@@ -122,6 +123,7 @@
         { "path": "js/colorpicker.js", "tags": ["@component:colorpicker"] },
         { "path": "js/contrast.js", "tags": ["@component:colorpicker"] },
         { "path": "js/sidenav.js", "tags": ["@component:navigation"] },
+        { "path": "js/alarm.js", "tags": ["@component:alarm"] },
         { "path": "js/overlays.js", "tags": ["@component:overlays", "@component:feedback", "@component:navigation", "@component:data"] },
         {
             "path": "js/components.js",
@@ -138,6 +140,7 @@
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },
 
+        { "path": "components/alarm.jsx", "tags": ["@component:alarm"] },
         { "path": "components/alert.jsx", "tags": ["@component:feedback"] },
         { "path": "components/badge.jsx", "tags": ["@component:feedback"] },
         { "path": "components/button.jsx", "tags": ["@component:button"] },
@@ -240,6 +243,8 @@
         "kp-grid": ["@component:media"],
         "kp-marquee": ["@component:media"],
         "data-kp-marquee": ["@component:media"],
+        "kp-alarm": ["@component:alarm"],
+        "data-kp-alarm": ["@component:alarm"],
         "kp-dialog": ["@component:overlays"],
         "kp-menu": ["@component:overlays"],
         "kp-popover": ["@component:overlays"],
