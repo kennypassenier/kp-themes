@@ -766,6 +766,12 @@
         border-radius: 50%;
     }
 
+    /* A month or a year is wider than it is tall, so the day's 50% drew it
+     * as a stretched ellipse; it is a pill, and the day stays a circle [scope-90]. */
+    [data-theme='formal'] .kp-datepicker__grid:is([data-kp-view='months'], [data-kp-view='years']) .kp-datepicker__day[aria-selected='true'] {
+        border-radius: 999px;
+    }
+
     [data-theme='formal'] .kp-colorpicker__swatch {
         border: 1px solid var(--border);
         border-radius: 4px;
