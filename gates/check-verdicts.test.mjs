@@ -12,8 +12,12 @@ import {
     compareCommand,
     entriesAt,
     geckoRatio,
+    keysFromCompare,
     parseVerdictLines,
+    reanchorEntries,
+    reanchorRatios,
     sortedRegister,
+    unmatchedEntries,
 } from './verdicts.mjs';
 
 const HASH = 'a'.repeat(64);
@@ -272,4 +276,58 @@ test('annotate-ratio gives an entry the ratio a reading matches, never a hash or
     assert.equal(geckoRatio('1.1'), 1.091);
     assert.equal(geckoRatio('1.3333333'), 1.333);
     assert.equal(geckoRatio(1.25), 1.25);
+});
+
+test('reanchor replaces the hash of an entry no ratio matches with a reading at rest, keeping its verdict [scope-94]', () => {
+    const rest = 'c'.repeat(64);
+    const at = { commit: 'd499b6b2aaaa' };
+    /** @type {any} */
+    const register = {
+        hashVersion: 2,
+        verdicts: {
+            'button--variants': {
+                formal: { firefox: entry({ ...at }) }, // equal at 1
+                nostromo: { firefox: entry({ ...at, ratio: 1.25 }) }, // annotated
+            },
+            'button--icons': {
+                formal: { firefox: entry({ ...at, verdict: 'rejected' }) }, // matches nothing, formal has no annotated entry
+                nostromo: { firefox: entry({ ...at }) }, // matches nothing
+            },
+            'button--sizes': { nostromo: { firefox: entry({ ...at, ratio: 1.5 }) }, formal: { firefox: entry() } }, // formal: another commit
+        },
+    };
+    const untouched = JSON.stringify([register.verdicts['button--variants'], register.verdicts['button--sizes']]);
+    const other = 'b'.repeat(64);
+    const atOne = new Map([
+        ['button--variants|formal', { hash: HASH }],
+        ['button--icons|formal', { hash: other }],
+        ['button--icons|nostromo', { hash: other }],
+    ]);
+    const found = unmatchedEntries(register, atOne, { commit: 'd499b6b2' });
+    assert.deepEqual(
+        found.map((e) => `${e.key}|${e.theme}`),
+        ['button--icons|formal', 'button--icons|nostromo'],
+    );
+    // nostromo: 1.25 and 1.5 once each; the tie goes to the lower.
+    const ratios = reanchorRatios(register, { commit: 'd499b6b2' });
+    assert.deepEqual([...ratios], [['nostromo', 1.25]]);
+    const targets = found.map(({ key, theme, engine }) => ({ key, theme, engine, ratio: ratios.get(theme) ?? 1 }));
+    const readings = new Map([
+        ['button--icons|formal|firefox|1', { hash: rest }],
+        ['button--icons|nostromo|firefox|1.25', { hash: rest }],
+    ]);
+    const result = reanchorEntries(register, targets, readings);
+    assert.deepEqual(result.unread, []);
+    assert.equal(result.reanchored.length, 2);
+    assert.deepEqual(register.verdicts['button--icons'].formal.firefox, entry({ ...at, verdict: 'rejected', hash: rest }));
+    assert.deepEqual(register.verdicts['button--icons'].nostromo.firefox, entry({ ...at, hash: rest, ratio: 1.25 }));
+    assert.equal(JSON.stringify([register.verdicts['button--variants'], register.verdicts['button--sizes']]), untouched);
+    // A reading that is not there leaves the entry as it was.
+    assert.deepEqual(reanchorEntries(register, [{ key: 'button--variants', theme: 'formal', engine: 'firefox', ratio: 1.5 }], new Map()).unread, [
+        'button--variants · formal · firefox @1.5',
+    ]);
+    assert.equal(register.verdicts['button--variants'].formal.firefox.hash, HASH);
+    assert.deepEqual(keysFromCompare('  differs: table--datatable · grotesk · firefox · approved (recorded 1…)\n1 equal, 1 differ'), [
+        { key: 'table--datatable', theme: 'grotesk', engine: 'firefox' },
+    ]);
 });

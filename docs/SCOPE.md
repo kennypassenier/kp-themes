@@ -1631,3 +1631,13 @@ registered custom property. light-breadcrumb "Ook weg". synthwave-reach
 retry button. laurels-badges "Met pictogram en Available on": the catalogue's
 platform badges carry a glyph and an "Available on" line. step-timing
 "Akkoord".
+
+**scope-95 · The divider shapes go; a Look-at text no longer brings a block
+back.** Kenny, 2026-09-15, the dividers form, after asking why the dividers
+returned in every theme when he only wanted pastel changed. dividers-carry
+"Overzetten, en de tekst uit de hash": the block hash stops reading the
+block's Look-at text, and existing verdicts carry over wherever the block
+itself did not change, so `#dividers` returns in pastel only.
+divider-shapes-block "Blok en optie weg": the `data-kp-divider-shape` knob, its
+gate and the `#divider-shapes` block are removed; pastel draws its pearls in its
+own register. step-timing "Akkoord".

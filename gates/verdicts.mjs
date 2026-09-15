@@ -41,6 +41,11 @@
 //       Never changes a hash or a verdict; lists the entries no reading
 //       matches. The readings: { "readings": { "<devPixelsPerPx>": { "<key>|<theme>": "<hash>" } } }.
 //
+//   node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--register <file>]
+//       One-off [scope-94]: the entries recorded at a commit that match no
+//       ratio keep their verdict and take the hash of the block at rest at
+//       that commit, at the ratio most of the theme's annotated entries have.
+//
 // Pixel ratio [fix-34]: Gecko resolves a border width to whole device
 // pixels, so a block's hash follows the zoom it was read at. Kenny reviews
 // at a zoom other than 100% by default (2026-09-15), so a verdict keeps the
@@ -723,8 +728,141 @@ async function annotateRatio(args) {
     for (const row of byTheme(result.unread)) console.log(`  not read: ${row}`);
 }
 
+/* ---------------------------------------------------------------- reanchor */
+
+/**
+ * The ratio each theme's entries at a commit are re-anchored at [scope-94]:
+ * the ratio most of that theme's annotated entries (a ratio other than 1)
+ * have; on a tie the one most annotated entries of the commit have, then the
+ * lowest; 1 for a theme with none.
+ * @param {Register} register
+ * @param {{ commit: string, engine?: string }} options
+ * @returns {Map<string, number>} theme -> ratio, for the themes with an annotated entry
+ */
+export function reanchorRatios(register, { commit, engine = 'firefox' }) {
+    const entries = entriesAt(register, commit).filter((e) => e.engine === engine && ratioOf(e.entry) !== 1);
+    /** @type {Map<number, number>} */
+    const overall = new Map();
+    /** @type {Map<string, Map<number, number>>} */
+    const perTheme = new Map();
+    for (const { theme, entry } of entries) {
+        const ratio = ratioOf(entry);
+        overall.set(ratio, (overall.get(ratio) ?? 0) + 1);
+        const counts = perTheme.get(theme) ?? new Map();
+        counts.set(ratio, (counts.get(ratio) ?? 0) + 1);
+        perTheme.set(theme, counts);
+    }
+    return new Map(
+        [...perTheme].map(([theme, counts]) => [
+            theme,
+            [...counts].sort(([a, n], [b, m]) => m - n || (overall.get(b) ?? 0) - (overall.get(a) ?? 0) || a - b)[0][0],
+        ]),
+    );
+}
+
+/**
+ * The entries at a commit without a ratio whose hash a ratio-1 reading at
+ * rest of that commit does not read: the ones no ratio matched [fix-34].
+ * @param {Register} register
+ * @param {Map<string, { hash: string }>} readings `key|theme` -> the reading at ratio 1 at the commit
+ * @param {{ commit: string, engine?: string }} options
+ */
+export function unmatchedEntries(register, readings, { commit, engine = 'firefox' }) {
+    return entriesAt(register, commit).filter(
+        (e) => e.engine === engine && e.entry.ratio === undefined && readings.get(`${e.key}|${e.theme}`)?.hash !== e.entry.hash,
+    );
+}
+
+/**
+ * The `key · theme · engine` of every "differs:" line of a saved
+ * `compare --against-browser` output.
+ * @param {string} text
+ * @returns {{ key: string, theme: string, engine: string }[]}
+ */
+export function keysFromCompare(text) {
+    return [...text.matchAll(/^\s*differs: (\S+) · ([a-z0-9-]+) · ([a-z0-9]+) · /gm)].map(([, key, theme, engine]) => ({ key, theme, engine }));
+}
+
+/**
+ * Re-anchor entries [scope-94]: each target's hash is replaced by the reading
+ * at rest of the commit it was recorded at, at the target's ratio, which the
+ * entry now keeps. Its verdict, commit and date stay; no other entry is touched.
+ * @param {Register} register changed in place
+ * @param {{ key: string, theme: string, engine: string, ratio: number }[]} targets
+ * @param {Map<string, { hash: string }>} readings `key|theme|engine|ratio` -> reading
+ * @returns {{ reanchored: string[], unread: string[] }}
+ */
+export function reanchorEntries(register, targets, readings) {
+    /** @type {{ reanchored: string[], unread: string[] }} */
+    const out = { reanchored: [], unread: [] };
+    for (const { key, theme, engine, ratio } of targets) {
+        const at = `${key} · ${theme} · ${engine} @${ratio}`;
+        const entry = register.verdicts[key]?.[theme]?.[engine];
+        const reading = readings.get(`${key}|${theme}|${engine}|${ratio}`);
+        if (!entry || !reading) {
+            out.unread.push(at);
+            continue;
+        }
+        entry.hash = reading.hash;
+        if (ratio === 1) delete entry.ratio;
+        else entry.ratio = ratio;
+        out.reanchored.push(at);
+    }
+    return out;
+}
+
+/**
+ * `reanchor --commit <hash> [--keys-from-compare <file>] [--register <file>]`,
+ * one-off [scope-94]: the entries recorded at a commit that match no ratio
+ * keep their verdict and take the hash of the block at rest at that commit.
+ * Without --keys-from-compare the entries are found by reading every entry
+ * without a ratio at ratio 1 at the commit; with it, they are the "differs:"
+ * lines of a saved `compare --against-browser --at-recorded` output.
+ * @param {string[]} args
+ */
+async function reanchor(args) {
+    const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
+    const commit = option('--commit');
+    if (!commit) throw new Error('reanchor needs --commit <hash>');
+    const engine = option('--engine') ?? 'firefox';
+    const file = option('--register') ?? registerPath;
+    const register = readRegister(file);
+    const full = git('rev-parse', `${commit}^{commit}`);
+    const fromCompare = option('--keys-from-compare');
+    /** @type {{ key: string, theme: string, engine: string, entry: Entry }[]} */
+    let found;
+    if (fromCompare) {
+        const wanted = new Set(keysFromCompare(readFileSync(fromCompare, 'utf8')).map((k) => `${k.key}|${k.theme}|${k.engine}`));
+        found = entriesAt(register, commit).filter((e) => wanted.has(`${e.key}|${e.theme}|${e.engine}`));
+    } else {
+        const plain = entriesAt(register, commit).filter((e) => e.engine === engine && e.entry.ratio === undefined);
+        const atOne = await hashAt({ commit: full, engine, requests: plain.map(({ key, theme }) => ({ key, theme })), ratio: 1 });
+        found = unmatchedEntries(register, atOne, { commit, engine });
+    }
+    const ratios = reanchorRatios(register, { commit, engine });
+    const targets = found.map(({ key, theme, engine: own }) => ({ key, theme, engine: own, ratio: ratios.get(theme) ?? 1 }));
+    /** @type {Map<string, { hash: string }>} */
+    const readings = new Map();
+    for (const ratio of new Set(targets.map((t) => t.ratio))) {
+        const group = targets.filter((t) => t.ratio === ratio);
+        console.log(`${full.slice(0, 12)} in ${engine} at ratio ${ratio}: ${group.length} entr${group.length === 1 ? 'y' : 'ies'}…`);
+        const read = await hashAt({ commit: full, engine, requests: group.map(({ key, theme }) => ({ key, theme })), ratio });
+        for (const t of group) {
+            const reading = read.get(`${t.key}|${t.theme}`);
+            if (reading) readings.set(`${t.key}|${t.theme}|${t.engine}|${ratio}`, reading);
+        }
+    }
+    const result = reanchorEntries(register, targets, readings);
+    writeRegister(register, file);
+    console.log(`${file}: ${result.reanchored.length} entr${result.reanchored.length === 1 ? 'y' : 'ies'} re-anchored, ${result.unread.length} not read.`);
+    for (const row of result.reanchored) console.log(`  re-anchored: ${row}`);
+    for (const row of result.unread) console.log(`  not read: ${row}`);
+    console.log(`Check: ${compareCommand(full)} --at-recorded`);
+}
+
 async function main() {
     const [command, ...args] = process.argv.slice(2);
+    if (command === 'reanchor') return reanchor(args);
     if (command === 'record') return record();
     if (command === 'note') return note(args);
     if (command === 'rehash') return rehash(args);
@@ -737,7 +875,8 @@ async function main() {
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
-            '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]',
+            '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]\n' +
+            '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>]',
     );
     process.exit(2);
 }

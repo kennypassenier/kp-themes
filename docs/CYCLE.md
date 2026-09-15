@@ -106,7 +106,14 @@ The entries recorded before verdicts kept a ratio (the light-theme review of
 several ratios: `node gates/verdicts.mjs annotate-ratio --from <readings.json>
 --commit d499b6b2` gives an entry the ratio whose reading matches its hash,
 never changes a hash or a verdict, and lists the entries no ratio matches
-[fix-34].
+[fix-34]. Those 110 kept their verdict and were re-anchored on 2026-09-15
+with `node gates/verdicts.mjs reanchor --commit d499b6b2` [scope-94]: each
+took the hash of its block at rest at d499b6b2 (a fresh page load, nothing
+scrolled or opened), read at the ratio most of its theme's annotated entries
+have (brutalism, forest, light, nostromo, retro and sepia 1.25; formal,
+pastel and shade-light 1.333; grotesk and high-contrast 1.5), and that ratio.
+The register's entries hold no provenance field, so this paragraph is the
+record of which entries were re-anchored rather than judged on that hash.
 4. The register and the recipe are committed together.
 
 The recipe reads past what differs between two browsers of one engine or

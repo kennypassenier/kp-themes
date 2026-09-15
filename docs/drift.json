@@ -129,8 +129,8 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "63c5b511bfc3a562d8efbd34b579a6b22d9aab23342fe27de69c0adcf6961871",
-            "doc": "aee60d62030e623c4f91cf56adf83ad5d94c58c9cfdef2e2d5bf80664d1cf130",
+            "hash": "668ddd18b0e48d81729708ce75cbda9be875ee226110c1d6822d727923554c58",
+            "doc": "e30ad33e4a7f7321f42fcb527a56e2a5afa8461c748e3e6ce6a50b9a972ec252",
             "files": {
                 ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
@@ -138,7 +138,7 @@
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "bb68756e29738b7d588e54c382e8f51207b6d11a9c56b0d3a754fd26f6a05fb9",
                 "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
-                "gates/verdicts.mjs": "38f7997453d118a5e5c22ec2537c92ea5f9db70cb3bcd9edd2bf4ea11842d9d7"
+                "gates/verdicts.mjs": "8e50bfb9aa1bccdae24284e0bb21aba00add6624d700b393638fc8de5d1fb2f5"
             }
         },
         "docs/DEBUGGING_GUIDE.md": {
