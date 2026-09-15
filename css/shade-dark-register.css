@@ -33,6 +33,16 @@
         --kp-reveal-headline: focus;
         --kp-reveal-emphasis: plate;
         --kp-reveal-rule: draw;
+        /* The pointer is the light [scope-25, built at scope-101], the
+       dark half of it: what the light reaches is lifted OUT of the shade.
+       Two declarations, neither of them new machinery — `--kp-pointer:
+       track` is the bus dark and titanium already arm, and `--kp-light:
+       pointer` names which surfaces that bus lights. Every rule below
+       falls back to scope-12's fixed top-left light (x 1, y 1, lift 1,
+       near 0), so without a pointer, without the module or under reduced
+       motion this register paints exactly what it shipped. */
+        --kp-pointer: track;
+        --kp-light: pointer;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -1113,7 +1123,20 @@
 
        Scoped off the button variants for the same reason shade-light is:
        the approved round-six demo draws them flat and its own test pins
-       that. A finding for Kenny, not a decision taken here [S49]. */
+       that. A finding for Kenny, not a decision taken here [S49].
+
+       The source MOVES from scope-101 [scope-25, "the pointer is the
+       light, and the light half throws its shade away from it while the
+       dark half is LIFTED OUT of shade by it"]. Two things happen here
+       that do not happen on the light half: the shadow's length is scaled
+       by `--kp-light-lift` (0.6 at a distance, up to 1.6 under the
+       pointer), and the surface nearest the pointer takes a pale wash of
+       the ink centred on where the pointer sits inside its own box. The
+       wash is the lifting; the shadow under it is the ground, darkened,
+       because a shadow in --background on --background is invisible.
+       Implemented as research/scope25-gestures/demo.html draws it, patch
+       sizes included — 8% on a button, 6% on a card and the hero, where a
+       9% card patch measured 4.37 against the card text and was cut. */
     /* Phase 7, `focus-ring`. The rule below paints this theme's own
        elevation on a button, and it is a later layer than kp.components,
        so it swallowed the ring that layer draws on `:focus-visible` — a
@@ -1125,7 +1148,13 @@
        it. Third face of the same fault as `fix-12` and `gap-1`: a later
        layer beating a state the earlier layer defines. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']) {
-        box-shadow: 2px 3px 5px hsl(from var(--background) h s l / 0.9);
+        box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+            hsl(from var(--background) h s l / 0.9);
+        background-image: radial-gradient(
+            circle 8rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.08)),
+            transparent
+        );
     }
 
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):focus-visible {
@@ -1135,7 +1164,8 @@
         outline-color: var(--focus-ring-contrast);
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            2px 3px 5px hsl(from var(--background) h s l / 0.9);
+            calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+                hsl(from var(--background) h s l / 0.9);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -1147,8 +1177,8 @@
     }
 
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
-        translate: -1px -1px;
-        box-shadow: 4px 6px 10px hsl(from var(--background) h s l / 0.95);
+        translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+        box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 6px) 10px hsl(from var(--background) h s l / 0.95);
     }
 
     /* Instant on the way in. A click is shorter than a transition, so a
@@ -1157,8 +1187,34 @@
        other half was fix-12. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
         transition-duration: 0s;
-        translate: 1px 1px;
-        box-shadow: inset 2px 3px 5px hsl(from var(--background) h s l / 0.95);
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 3px) 5px hsl(from var(--background) h s l / 0.95);
+    }
+
+    /* The card is lifted out of the shade [scope-101, scope25-build]. The
+       "no shadow" of the tone-ladder section above is Kenny's own change
+       of 2026-09-16: the shade comes back, scaled by the lift, and the
+       side of the card the pointer is on takes the wash. A 9% patch
+       measured 4.37 against the card's body text in the research demo and
+       was cut to 6%, which measures 4.64 against a 5.12 at rest. */
+    [data-theme='shade-dark'] .kp-card {
+        box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 4px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 6px) 14px -4px
+            hsl(from var(--background) h s calc(l - 7) / 0.9);
+        background-image: radial-gradient(
+            circle 16rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+            transparent
+        );
+    }
+
+    /* The hero is the widest surface the light crosses, so it takes the
+       widest patch — the same 6%, over 22rem. */
+    [data-theme='shade-dark'] [data-kp-surface='hero'] {
+        background-image: radial-gradient(
+            circle 22rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+            transparent
+        );
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */

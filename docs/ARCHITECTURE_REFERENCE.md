@@ -39,7 +39,8 @@ js/overlays.js       dialogs, tabs, toasts,     │ js/auto.js has a side
                      whether an overlay scrolls │
 js/alarm.js          the full-screen alarm      │
 js/effects.js        the hooks, the marquee,    │ effect, by design
-                     the pointer bus, the count │
+                     the pointer bus and its    │
+                     light, the count           │
 js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │

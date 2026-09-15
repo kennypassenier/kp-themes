@@ -156,6 +156,41 @@ export declare const POINTER: Readonly<{
     x: "--kp-px";
     y: "--kp-py";
 }>;
+/**
+ * The knob a theme sets on the surfaces the pointer LIGHTS [scope-101,
+ * from scope-25]: `--kp-light: pointer`.
+ *
+ * Kenny's sentence for the shade pair, verbatim: "the pointer is the
+ * light, and the light half throws its shade away from it while the dark
+ * half is lifted out of shade by it". A shadow's direction depends on
+ * where its element is, which the two root numbers `POINTER_KNOB` writes
+ * cannot say — so this is written per element instead of per page. It
+ * rides on that same bus: the same `--kp-pointer: track` arms it, the
+ * same `pointermove` listener feeds it, the same animation frame writes
+ * both. Off wherever the bus is off, which includes reduced motion.
+ */
+export declare const LIGHT_KNOB = "--kp-light";
+/**
+ * The six properties `LIGHT_KNOB` drives on each lit element: the
+ * direction away from the pointer (`x`, `y`), how near it is (`near`,
+ * `lift`) and where the pointer sits inside the element's own box
+ * (`atX`, `atY`). A register declares its fallback for every one of them,
+ * so a page with no pointer paints the fixed light it painted before.
+ */
+export declare const LIGHT: Readonly<{
+    x: "--kp-light-x";
+    y: "--kp-light-y";
+    near: "--kp-light-near";
+    lift: "--kp-light-lift";
+    atX: "--kp-light-at-x";
+    atY: "--kp-light-at-y";
+}>;
+/** What the light can fall on, the approved demo's own list. */
+export declare const LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+/** Past this many pixels the shade is at full length; under it, shorter. */
+export declare const LIGHT_REACH = 240;
+/** Past this many pixels the light no longer reaches the surface at all. */
+export declare const LIGHT_FAR = 560;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

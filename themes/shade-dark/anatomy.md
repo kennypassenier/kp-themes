@@ -40,7 +40,13 @@ vanish.
    surface: since scope-12 the plain button (not the variants) and the
    back-to-top control lie under one light from the top left, and the
    side navigation's current row and a media frame are set into the page
-   with an inset one.
+   with an inset one. **Since `scope-101` that light is the pointer**
+   (scope-25, "the dark half is lifted out of shade by it"): the plain
+   button, the card and the hero take the direction away from the pointer
+   and a pale radial patch of the foreground where it stands — 8% on a
+   button, 6% on a card and the hero. Without a pointer, under reduced
+   motion, on a touch screen, while tabbing or without `js/effects.js`
+   the fixed top-left light is what paints, unchanged from scope-12.
 5. **No texture.** `--fx-texture` stays unset. No starfield, no grain —
    the register adds nothing to the ground.
 
@@ -206,9 +212,12 @@ flourish, no colour outside `var(--token)` or a relative colour of one.
 - **No starfield, no grain.** Dark owns the first; this half owns
   nothing but its contrast.
 - **No elevation shadow on a surface.** The tone ladder carries depth; a
-  `box-shadow` on a card or popover would contradict the anatomy's own
-  measured finding (`--fx-lift: 0px`, `--fx-shadow-offset: 0px`). The
-  plain button's and back-to-top's light (scope-12) is a control's, not
-  a surface's.
+  `box-shadow` on a popover would contradict the anatomy's own measured
+  finding (`--fx-lift: 0px`, `--fx-shadow-offset: 0px`). The plain
+  button's and back-to-top's light (scope-12) is a control's, not a
+  surface's. **The card is the one exception, since `scope-101`** (Kenny,
+  2026-09-16, scope25-build): it carries a shade at rest, scaled by the
+  light's own lift. The approved concept demo left it flat and this line
+  said so; the change is his, not the register's.
 - **No flicker.** Every theme keyframe in `reports/di5.md` plays once;
   the only loop is the band's luminance-free transform.

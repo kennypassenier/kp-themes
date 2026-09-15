@@ -1944,7 +1944,7 @@
     --secondary: hsl(46, 42%, 88%);
     --secondary-foreground: hsl(194, 25%, 22%);
     --muted: hsl(46, 40%, 90%);
-    --muted-foreground: hsl(194, 14%, 46%);
+    --muted-foreground: hsl(194, 14%, 39%);
     --accent: hsl(175, 60%, 36%);
     --accent-foreground: hsl(44, 87%, 96%);
     --destructive: hsl(1, 71%, 42%);
@@ -24749,6 +24749,17 @@
        color-mix(in srgb, var(--primary) 88%, black)), as a lightness
        step on the token instead of a mix toward a named colour. */
         --kp-primary-pressed: hsl(from var(--primary) h s calc(l - 9));
+        /* The pointer is the light [scope-25, built at scope-101]. Two
+       declarations, and neither is a mechanism of this register's own:
+       `--kp-pointer: track` is the bus dark and titanium already arm, and
+       `--kp-light: pointer` names which surfaces that bus lights. The
+       module writes six numbers per lit element; every rule below carries
+       the fallback the register painted before this (x 1, y 1, lift 1,
+       near 0 — scope-12's fixed light at the top left), so a page with no
+       pointer, no script or reduced motion is pixel for pixel what
+       shipped. */
+        --kp-pointer: track;
+        --kp-light: pointer;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -25931,7 +25942,19 @@
 
        On pale paper the shadow falls short and sharp — 1px against the
        dark twin's 2, blurred 3 against 5. Same law, different material,
-       and that is what makes the two read as a pair. */
+       and that is what makes the two read as a pair.
+
+       The source MOVES from scope-101 [scope-25, "the pointer is the
+       light, and the light half throws its shade away from it while the
+       dark half is lifted out of shade by it"]. Every offset below is the
+       value it always was, multiplied by the direction away from the
+       pointer that js/effects.js writes on this element — so the shade
+       swings around a control as the hand passes it, full length at
+       240px and further, shrinking to nothing directly under the pointer.
+       The fallbacks (x 1, y 1) are the fixed top-left light, which is
+       what a touch screen, a keyboard, reduced motion or a page without
+       the module gets: exactly the pixels this register painted before.
+       Implemented as research/scope25-gestures/demo.html draws it. */
     /* The plain control only. The approved demo (round six) draws the
        primary, ghost and destructive variants FLAT, and its own test pins
        that — so the light stops at the variants until Kenny rules on the
@@ -25947,7 +25970,7 @@
        it. Third face of the same fault as `fix-12` and `gap-1`: a later
        layer beating a state the earlier layer defines. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
-        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+        box-shadow: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):focus-visible {
@@ -25957,7 +25980,7 @@
         outline-color: var(--focus-ring-contrast);
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+            calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -25969,8 +25992,8 @@
     }
 
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
-        translate: -1px -1px;
-        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+        translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+        box-shadow: calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 4px) 6px hsl(from var(--foreground) h s l / 0.22);
     }
 
     /* The press is instant on the way in. A click is shorter than a
@@ -25978,8 +26001,24 @@
        finger leaves — Kenny pressed the demo and saw nothing. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
         transition-duration: 0s;
-        translate: 1px 1px;
-        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The card lies on the paper and throws a short shade too [scope-101,
+       scope25-build]. The approved concept demo left every flat surface
+       flat and this register's own "Cards and flat containers: border
+       only" section says so [S49]; Kenny chose the shadow on 2026-09-16,
+       so the border stays and the shade is added on top of it. The
+       demo's own values, its own direction. */
+    [data-theme='shade-light'] .kp-card {
+        box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 5px) 12px -3px hsl(from var(--foreground) h s l / 0.26);
+    }
+
+    /* The headline sits ON the page: a faint, hard-edged shade on the
+       paper beside each letter, turning with the same light. */
+    [data-theme='shade-light'] [data-kp-surface='hero'] h1 {
+        text-shadow: calc(var(--kp-light-x, 1) * 1.5px) calc(var(--kp-light-y, 1) * 2px) 2px hsl(from var(--foreground) h s l / 0.16);
     }
 
     /* ── The pressed state the register had been cancelling [fix-12] ───
@@ -42236,6 +42275,16 @@
         --kp-reveal-headline: focus;
         --kp-reveal-emphasis: plate;
         --kp-reveal-rule: draw;
+        /* The pointer is the light [scope-25, built at scope-101], the
+       dark half of it: what the light reaches is lifted OUT of the shade.
+       Two declarations, neither of them new machinery — `--kp-pointer:
+       track` is the bus dark and titanium already arm, and `--kp-light:
+       pointer` names which surfaces that bus lights. Every rule below
+       falls back to scope-12's fixed top-left light (x 1, y 1, lift 1,
+       near 0), so without a pointer, without the module or under reduced
+       motion this register paints exactly what it shipped. */
+        --kp-pointer: track;
+        --kp-light: pointer;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -43316,7 +43365,20 @@
 
        Scoped off the button variants for the same reason shade-light is:
        the approved round-six demo draws them flat and its own test pins
-       that. A finding for Kenny, not a decision taken here [S49]. */
+       that. A finding for Kenny, not a decision taken here [S49].
+
+       The source MOVES from scope-101 [scope-25, "the pointer is the
+       light, and the light half throws its shade away from it while the
+       dark half is LIFTED OUT of shade by it"]. Two things happen here
+       that do not happen on the light half: the shadow's length is scaled
+       by `--kp-light-lift` (0.6 at a distance, up to 1.6 under the
+       pointer), and the surface nearest the pointer takes a pale wash of
+       the ink centred on where the pointer sits inside its own box. The
+       wash is the lifting; the shadow under it is the ground, darkened,
+       because a shadow in --background on --background is invisible.
+       Implemented as research/scope25-gestures/demo.html draws it, patch
+       sizes included — 8% on a button, 6% on a card and the hero, where a
+       9% card patch measured 4.37 against the card text and was cut. */
     /* Phase 7, `focus-ring`. The rule below paints this theme's own
        elevation on a button, and it is a later layer than kp.components,
        so it swallowed the ring that layer draws on `:focus-visible` — a
@@ -43328,7 +43390,13 @@
        it. Third face of the same fault as `fix-12` and `gap-1`: a later
        layer beating a state the earlier layer defines. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']) {
-        box-shadow: 2px 3px 5px hsl(from var(--background) h s l / 0.9);
+        box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+            hsl(from var(--background) h s l / 0.9);
+        background-image: radial-gradient(
+            circle 8rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.08)),
+            transparent
+        );
     }
 
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):focus-visible {
@@ -43338,7 +43406,8 @@
         outline-color: var(--focus-ring-contrast);
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            2px 3px 5px hsl(from var(--background) h s l / 0.9);
+            calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+                hsl(from var(--background) h s l / 0.9);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -43350,8 +43419,8 @@
     }
 
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
-        translate: -1px -1px;
-        box-shadow: 4px 6px 10px hsl(from var(--background) h s l / 0.95);
+        translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+        box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 6px) 10px hsl(from var(--background) h s l / 0.95);
     }
 
     /* Instant on the way in. A click is shorter than a transition, so a
@@ -43360,8 +43429,34 @@
        other half was fix-12. */
     [data-theme='shade-dark'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
         transition-duration: 0s;
-        translate: 1px 1px;
-        box-shadow: inset 2px 3px 5px hsl(from var(--background) h s l / 0.95);
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 3px) 5px hsl(from var(--background) h s l / 0.95);
+    }
+
+    /* The card is lifted out of the shade [scope-101, scope25-build]. The
+       "no shadow" of the tone-ladder section above is Kenny's own change
+       of 2026-09-16: the shade comes back, scaled by the lift, and the
+       side of the card the pointer is on takes the wash. A 9% patch
+       measured 4.37 against the card's body text in the research demo and
+       was cut to 6%, which measures 4.64 against a 5.12 at rest. */
+    [data-theme='shade-dark'] .kp-card {
+        box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 4px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 6px) 14px -4px
+            hsl(from var(--background) h s calc(l - 7) / 0.9);
+        background-image: radial-gradient(
+            circle 16rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+            transparent
+        );
+    }
+
+    /* The hero is the widest surface the light crosses, so it takes the
+       widest patch — the same 6%, over 22rem. */
+    [data-theme='shade-dark'] [data-kp-surface='hero'] {
+        background-image: radial-gradient(
+            circle 22rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+            hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+            transparent
+        );
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */

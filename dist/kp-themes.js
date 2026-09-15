@@ -39,6 +39,11 @@ __export(effects_exports, {
   HEADLINE_ROUTINES: () => HEADLINE_ROUTINES,
   HOOKS: () => HOOKS,
   KNOBS: () => KNOBS,
+  LIGHT: () => LIGHT,
+  LIGHT_FAR: () => LIGHT_FAR,
+  LIGHT_KNOB: () => LIGHT_KNOB,
+  LIGHT_REACH: () => LIGHT_REACH,
+  LIGHT_SELECTOR: () => LIGHT_SELECTOR,
   MARQUEE_KNOB: () => MARQUEE_KNOB,
   MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
   MEASURE_KNOB: () => MEASURE_KNOB,
@@ -525,6 +530,18 @@ var MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
 var MEASURE_KNOB = "--kp-measure";
 var POINTER_KNOB = "--kp-pointer";
 var POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
+var LIGHT_KNOB = "--kp-light";
+var LIGHT = Object.freeze({
+  x: "--kp-light-x",
+  y: "--kp-light-y",
+  near: "--kp-light-near",
+  lift: "--kp-light-lift",
+  atX: "--kp-light-at-x",
+  atY: "--kp-light-at-y"
+});
+var LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+var LIGHT_REACH = 240;
+var LIGHT_FAR = 560;
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var REVEAL_STATE = "data-kp-reveal-state";
@@ -1545,9 +1562,103 @@ function attachEffects(root = document, options = {}) {
     }
   };
   caret();
+  const pointerLight = () => {
+    if (!view) return null;
+    let lit = [];
+    let at = null;
+    let recollect = 0;
+    let queued = 0;
+    const clear = (el2) => {
+      for (const prop of Object.values(LIGHT)) el2.style.removeProperty(prop);
+    };
+    const collect = () => {
+      for (const el2 of lit) clear(el2);
+      lit = /** @type {HTMLElement[]} */
+      [...root.querySelectorAll(LIGHT_SELECTOR)].filter(
+        (el2) => view.getComputedStyle(el2).getPropertyValue(LIGHT_KNOB).trim() === "pointer"
+      );
+    };
+    const paint = () => {
+      const here = at;
+      if (!here || reduced()) {
+        for (const el2 of lit) clear(el2);
+        return;
+      }
+      for (const el2 of lit) {
+        const box = el2.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > view.innerHeight) {
+          clear(el2);
+          continue;
+        }
+        const dx = box.left + box.width / 2 - here.x;
+        const dy = box.top + box.height / 2 - here.y;
+        const distance = Math.hypot(dx, dy);
+        const k = 1.4 / Math.max(distance, LIGHT_REACH);
+        const near = 1 - Math.min(distance / LIGHT_FAR, 1);
+        el2.style.setProperty(LIGHT.x, (dx * k).toFixed(3));
+        el2.style.setProperty(LIGHT.y, (dy * k).toFixed(3));
+        el2.style.setProperty(LIGHT.near, near.toFixed(3));
+        el2.style.setProperty(LIGHT.lift, (0.6 + near).toFixed(3));
+        el2.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
+        el2.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
+      }
+    };
+    const schedule = () => {
+      if (queued) return;
+      queued = view.requestAnimationFrame(() => {
+        frames.delete(queued);
+        queued = 0;
+        paint();
+      });
+      frames.add(queued);
+    };
+    const away = () => {
+      at = null;
+      schedule();
+    };
+    const onDown = (event) => {
+      if (event.pointerType === "touch") away();
+    };
+    const onKey = (event) => {
+      if (event.key === "Tab") away();
+    };
+    const themes = new MutationObserver(() => {
+      if (recollect) return;
+      recollect = view.requestAnimationFrame(() => {
+        frames.delete(recollect);
+        recollect = 0;
+        collect();
+        paint();
+      });
+      frames.add(recollect);
+    });
+    themes.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+    doc.addEventListener("pointerdown", onDown, { passive: true });
+    doc.addEventListener("keydown", onKey, { passive: true });
+    html.addEventListener("pointerleave", away, { passive: true });
+    view.addEventListener("scroll", schedule, { passive: true });
+    cleanups.push(() => {
+      themes.disconnect();
+      doc.removeEventListener("pointerdown", onDown);
+      doc.removeEventListener("keydown", onKey);
+      html.removeEventListener("pointerleave", away);
+      view.removeEventListener("scroll", schedule);
+      for (const el2 of lit) clear(el2);
+      lit = [];
+    });
+    collect();
+    return {
+      /** @param {PointerEvent | MouseEvent} event */
+      put(event) {
+        at = "pointerType" in event && event.pointerType === "touch" ? null : { x: event.clientX, y: event.clientY };
+        paint();
+      }
+    };
+  };
   const pointerBus = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : "";
     if (routine !== "track" || !view || reduced()) return;
+    const light = pointerLight();
     let frame = 0;
     const onMove = (event) => {
       if (frame) return;
@@ -1558,6 +1669,7 @@ function attachEffects(root = document, options = {}) {
         const h = view.innerHeight || 1;
         html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
         html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+        light?.put(event);
       });
       frames.add(frame);
     };
@@ -10625,6 +10737,11 @@ export {
   KNOBS,
   LAYOUT_COMMIT_EVENT,
   LAYOUT_EVENT,
+  LIGHT,
+  LIGHT_FAR,
+  LIGHT_KNOB,
+  LIGHT_REACH,
+  LIGHT_SELECTOR,
   MARQUEE_KNOB,
   MARQUEE_PAUSE_KNOB,
   MEASURE_KNOB,

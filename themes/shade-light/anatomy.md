@@ -58,7 +58,17 @@ already carried to the whole desktop.
    Sans" at build, because its OFL carries a Reserved Font Name clause
    (`fonts/families.json`) and a subset is a Modified Version that may
    not keep the original name.
-5. **The shadow is one token, three depths.** `--kp-shadow-1/2/3` in
+5. **The light is the pointer, since `scope-101`** (scope-25, Kenny:
+   "the pointer is the light, and the light half throws its shade away
+   from it while the dark half is lifted out of shade by it"). The plain
+   button, the card and the hero headline multiply the offsets scope-12
+   fixed at the top left by the direction away from the pointer that
+   `js/effects.js` writes on each of them. It is the same
+   `--kp-pointer: track` bus dark and titanium already arm, with
+   `--kp-light: pointer` naming the lit surfaces; every rule falls back
+   to the old fixed light, so a touch screen, a keyboard, reduced motion
+   or a page without the module paints exactly what shipped before.
+6. **The shadow is one token, three depths.** `--kp-shadow-1/2/3` in
    `css/shade-light-register.css` are all `hsl(from var(--foreground) h s l / a)`
    at increasing blur and increasing alpha (0.1, 0.3, 0.35) — never a
    colour of the register's own, and never applied to a flat surface.
@@ -240,13 +250,25 @@ hazard in its own right, refused the same way its other hazards are.
   never a `color` on running text.
 - Glow or blink. No looping animation, no opacity flicker; every reveal
   in the register runs once.
-- Add a shadow to a flat surface (a card, an alert, a badge) or a border
-  to a floating one instead of the shadow — the two vocabularies do not
-  mix within one component.
+- Add a shadow to a flat surface (an alert, a badge) or a border to a
+  floating one instead of the shadow — the two vocabularies do not mix
+  within one component. **The card is the one exception, since
+  `scope-101`** (Kenny, 2026-09-16, scope25-build): it keeps its border
+  AND carries a shade at rest, turning with the pointer like every other
+  lit surface. The approved concept demo left it flat and this list said
+  so; the change is his, not the register's.
 - Add a second texture. The blurred seam is the one felt effect this
   theme carries; a grain, a halftone or a scanline would be the loud
   half's job, not this one's.
 - **No black.** The darkest text is 40% lightness; the darkest value
   anywhere is the sidebar, which wears the dark half's ground.
+  **Crossed at `scope-101`, and reported rather than worked around:**
+  `--muted-foreground` went to 39% so that its three pairs clear 4.5:1
+  (4.71 on muted, 5.21 on background, 5.39 on card, from 3.61 / 3.99 /
+  4.13). It is arithmetic, not taste — `--foreground` itself reaches only
+  4.52 on `--muted`, so no colour clears the floor on all three grounds
+  while staying lighter than the body ink. The cost is that the muted ink
+  is now 0.19 to 0.22 stronger than the body text instead of quieter; see
+  the `why` on the token in `tokens.json`.
 - **No warm accent.** The scheme's warmth is in the paper; every accent
   is cool or primary.

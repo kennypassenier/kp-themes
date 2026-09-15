@@ -234,21 +234,33 @@ supported. That test measured appearance only and went with scope-32 on
 firefox-only tests that remain are scoped to one engine by decision, not
 by a probe.
 
-**Two readings that stay under the floor, by decision.** Both were put to
-Kenny on 2026-09-12 and both are answered, so neither is an open finding
-any more — they are choices with their numbers written down.
+**Two readings that stayed under the floor, by decision, and one of them
+is now closed.** Both were put to Kenny on 2026-09-12 and both were
+answered, so neither was an open finding — they were choices with their
+numbers written down.
 
-`shade-light`'s muted colour is `hsl(194, 14%, 46%)`, measured at 3.99 on
-the page ground, 4.13 on a card and 3.61 on a muted panel, against a 4.5
-floor. It was identical to `--foreground` before Phase 7, which meant
-nothing in the theme was muted at all: captions, hints, timestamps and
-the text of an empty field all read as body text. There is no lighter
-colour that clears the floor, because shade-light's BODY text only
-reaches 5.01 itself — the choice was between a visible difference under
-the floor and no difference at all, and Kenny took the difference. The
-readings are quoted into `docs/DESIGN_INVARIANTS.md` by the compliance
-table and named in `tests/surfaces.spec.mjs`, which requires them to keep
-measuring what they claim.
+`shade-light`'s muted colour **was** `hsl(194, 14%, 46%)`, measured at
+3.99 on the page ground, 4.13 on a card and 3.61 on a muted panel,
+against a 4.5 floor. It was identical to `--foreground` before Phase 7,
+which meant nothing in the theme was muted at all: captions, hints,
+timestamps and the text of an empty field all read as body text. There
+was no LIGHTER colour that clears the floor, because shade-light's body
+text only reaches 5.01 itself, so the choice at the time was between a
+visible difference under the floor and no difference at all.
+
+**Closed at `scope-101`, 2026-09-16** (Kenny, shade-light-contrast
+"Donkerder maken"): the token went the other way, to `hsl(194, 14%, 39%)`,
+and the three pairs measure 4.71, 5.21 and 5.39. Its two entries in
+`tests/surfaces.spec.mjs` are gone — that list refuses an entry for a
+pair the package no longer paints under the floor, which is how the
+cleanup was found. What the change costs is recorded rather than hidden:
+`--foreground` itself reaches only 4.52 on `--muted`, so no colour clears
+4.5 on all three grounds while staying lighter than the body ink (the
+best that exists is 0.02:1 quieter). The muted ink is therefore 0.19 to
+0.22 STRONGER than the body text now instead of quieter, and 39% passes
+this theme's own "the darkest text is 40% lightness" line. Both are
+findings for Kenny, written into `themes/shade-light/tokens.json` and
+`themes/shade-light/anatomy.md`.
 
 `blueprint`'s witness lines moved inside the control rather than outside
 it, so the six pixels of scrollable overflow on every one of its buttons

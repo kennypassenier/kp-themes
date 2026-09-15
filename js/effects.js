@@ -251,6 +251,46 @@ export const POINTER_KNOB = '--kp-pointer';
 /** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
 export const POINTER = Object.freeze({ x: '--kp-px', y: '--kp-py' });
 
+/**
+ * The knob a theme sets on the surfaces the pointer LIGHTS [scope-101,
+ * from scope-25]: `--kp-light: pointer`.
+ *
+ * Kenny's sentence for the shade pair, verbatim: "the pointer is the
+ * light, and the light half throws its shade away from it while the dark
+ * half is lifted out of shade by it". A shadow's direction depends on
+ * where its element is, which the two root numbers `POINTER_KNOB` writes
+ * cannot say — so this is written per element instead of per page. It
+ * rides on that same bus: the same `--kp-pointer: track` arms it, the
+ * same `pointermove` listener feeds it, the same animation frame writes
+ * both. Off wherever the bus is off, which includes reduced motion.
+ */
+export const LIGHT_KNOB = '--kp-light';
+
+/**
+ * The six properties `LIGHT_KNOB` drives on each lit element: the
+ * direction away from the pointer (`x`, `y`), how near it is (`near`,
+ * `lift`) and where the pointer sits inside the element's own box
+ * (`atX`, `atY`). A register declares its fallback for every one of them,
+ * so a page with no pointer paints the fixed light it painted before.
+ */
+export const LIGHT = Object.freeze({
+    x: '--kp-light-x',
+    y: '--kp-light-y',
+    near: '--kp-light-near',
+    lift: '--kp-light-lift',
+    atX: '--kp-light-at-x',
+    atY: '--kp-light-at-y',
+});
+
+/** What the light can fall on, the approved demo's own list. */
+export const LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+
+/** Past this many pixels the shade is at full length; under it, shorter. */
+export const LIGHT_REACH = 240;
+
+/** Past this many pixels the light no longer reaches the surface at all. */
+export const LIGHT_FAR = 560;
+
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -1629,9 +1669,134 @@ export function attachEffects(root = document, options = {}) {
     // gradient is declared once on the theme and inherited: every surface
     // that paints the oxide reads the same two numbers, so they must be one
     // pair, not one pair per element.
+    // The pointer light [scope-101, built from scope-25]. The shade pair's
+    // half of the bus: where the two numbers above are one pair for the
+    // whole page, these are six per LIT ELEMENT, because a shade falls
+    // away from the pointer and "away" is a different direction for every
+    // box on the screen.
+    //
+    // Deliberately NOT a second bus. It is armed by the same
+    // `--kp-pointer: track` declaration, fed by the one `pointermove`
+    // listener below, and written inside the same animation frame; what it
+    // adds of its own are the four ways the light goes OUT — a touch, a
+    // Tab, the pointer leaving the window, and reduced motion — plus a
+    // scroll listener, because a box that moves under a still pointer has
+    // turned relative to it.
+    //
+    // Returns null when nothing is there to light. Every value is the
+    // research demo's own arithmetic, unchanged.
+    const pointerLight = () => {
+        if (!view) return null;
+        /** @type {HTMLElement[]} */
+        let lit = [];
+        /** @type {{ x: number, y: number } | null} */
+        let at = null;
+        let recollect = 0;
+        let queued = 0;
+        /** @param {HTMLElement} el */
+        const clear = (el) => {
+            for (const prop of Object.values(LIGHT)) el.style.removeProperty(prop);
+        };
+        // Which elements this theme lights is the theme's own answer, read
+        // from the cascade rather than hard-coded here: a register that
+        // never declares `--kp-light: pointer` gets an empty list and the
+        // frame below does nothing at all.
+        const collect = () => {
+            for (const el of lit) clear(el);
+            lit = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(LIGHT_SELECTOR)]).filter(
+                (el) => view.getComputedStyle(el).getPropertyValue(LIGHT_KNOB).trim() === 'pointer',
+            );
+        };
+        const paint = () => {
+            const here = at;
+            if (!here || reduced()) {
+                for (const el of lit) clear(el);
+                return;
+            }
+            for (const el of lit) {
+                const box = el.getBoundingClientRect();
+                // Off screen: nothing to light, and one getBoundingClientRect
+                // is cheaper than six style writes.
+                if (box.bottom < 0 || box.top > view.innerHeight) {
+                    clear(el);
+                    continue;
+                }
+                const dx = box.left + box.width / 2 - here.x;
+                const dy = box.top + box.height / 2 - here.y;
+                const distance = Math.hypot(dx, dy);
+                const k = 1.4 / Math.max(distance, LIGHT_REACH);
+                const near = 1 - Math.min(distance / LIGHT_FAR, 1);
+                el.style.setProperty(LIGHT.x, (dx * k).toFixed(3));
+                el.style.setProperty(LIGHT.y, (dy * k).toFixed(3));
+                el.style.setProperty(LIGHT.near, near.toFixed(3));
+                el.style.setProperty(LIGHT.lift, (0.6 + near).toFixed(3));
+                el.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
+                el.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
+            }
+        };
+        const schedule = () => {
+            if (queued) return;
+            queued = view.requestAnimationFrame(() => {
+                frames.delete(queued);
+                queued = 0;
+                paint();
+            });
+            frames.add(queued);
+        };
+        const away = () => {
+            at = null;
+            schedule();
+        };
+        /** @param {PointerEvent} event */
+        const onDown = (event) => {
+            if (event.pointerType === 'touch') away();
+        };
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            if (event.key === 'Tab') away();
+        };
+        // A theme change re-answers the knob: the list is built again one
+        // frame later, when the new register's cascade has settled.
+        const themes = new MutationObserver(() => {
+            if (recollect) return;
+            recollect = view.requestAnimationFrame(() => {
+                frames.delete(recollect);
+                recollect = 0;
+                collect();
+                paint();
+            });
+            frames.add(recollect);
+        });
+        themes.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+        doc.addEventListener('pointerdown', onDown, { passive: true });
+        doc.addEventListener('keydown', onKey, { passive: true });
+        html.addEventListener('pointerleave', away, { passive: true });
+        view.addEventListener('scroll', schedule, { passive: true });
+        cleanups.push(() => {
+            themes.disconnect();
+            doc.removeEventListener('pointerdown', onDown);
+            doc.removeEventListener('keydown', onKey);
+            html.removeEventListener('pointerleave', away);
+            view.removeEventListener('scroll', schedule);
+            // The way out [KT6]: what the module wrote, the module removes,
+            // and the register's own fallbacks take over again.
+            for (const el of lit) clear(el);
+            lit = [];
+        });
+        collect();
+        return {
+            /** @param {PointerEvent | MouseEvent} event */
+            put(event) {
+                at = 'pointerType' in event && event.pointerType === 'touch' ? null : { x: event.clientX, y: event.clientY };
+                paint();
+            },
+        };
+    };
+
     const pointerBus = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : '';
         if (routine !== 'track' || !view || reduced()) return;
+        const light = pointerLight();
         let frame = 0;
         /** @param {PointerEvent | MouseEvent} event */
         const onMove = (event) => {
@@ -1643,6 +1808,7 @@ export function attachEffects(root = document, options = {}) {
                 const h = view.innerHeight || 1;
                 html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
                 html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+                light?.put(event);
             });
             frames.add(frame);
         };

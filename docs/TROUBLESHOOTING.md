@@ -164,6 +164,21 @@ The effects read `prefers-reduced-motion` through a subscribing hook and
 stop within the same session. If yours does not, you are on a copy from
 before that fix — the components used to read the setting once at mount.
 
+### In shade-light or shade-dark the shadows do not follow the pointer
+
+They are not meant to everywhere. The light is the pointer [scope-101,
+from scope-25], and it goes out on purpose in five cases: a touch screen,
+the moment a reader presses Tab, the pointer leaving the window,
+`prefers-reduced-motion: reduce`, and a page that never attached
+`js/effects.js`. In each of those the register falls back to the fixed
+light at the top left — `var(--kp-light-x, 1)` — which is what these two
+themes painted before scope-101, so a shadow that stands still is a
+correct picture, not a broken one.
+
+If it does not follow with a mouse on an effects-enabled page, check that
+the root still carries `--kp-pointer: track`: that one declaration arms the
+bus, and `--kp-light: pointer` only says which surfaces it lights.
+
 ### The boot screen ignores the `arrivalLine` I set
 
 Since scope-84 (2026-09-15) a theme with words of its own reads them

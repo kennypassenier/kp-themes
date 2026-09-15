@@ -1743,13 +1743,35 @@ It is decoration over a control that already has a name, so it carries
 A theme that does not style it shows nothing, and a page that passes no
 `readout` renders no element at all.
 
-## The pointer, for a theme that wants it [scope-16]
+## The pointer, for a theme that wants it [scope-16, scope-101]
 
 A theme that declares `--kp-pointer: track` has `--kp-px` and `--kp-py`
 written to the root as the pointer moves, both 0 to 1. That is all: the
 theme decides what to do with them, and a theme that does not ask pays
 nothing. The bus writes once per animation frame, does not run under
 reduced motion, and removes what it wrote when the module is detached.
+
+The same bus also writes a per-ELEMENT light, for a theme that declares
+`--kp-light: pointer` as well [scope-101, from scope-25 — shade-light and
+shade-dark]. Two root numbers cannot say which way a shadow falls, because
+"away from the pointer" is a different direction for every box on the
+screen, so each card, plain button and hero surface gets six properties of
+its own:
+
+| Property | What it is |
+| --- | --- |
+| `--kp-light-x`, `--kp-light-y` | the direction away from the pointer: about 1 at 240px and beyond, shrinking to 0 directly under it |
+| `--kp-light-near` | 1 under the pointer, 0 at 560px and further |
+| `--kp-light-lift` | `0.6 + near`, for a theme that lengthens its shadow with the light |
+| `--kp-light-at-x`, `--kp-light-at-y` | where the pointer sits inside the element's own box, in px |
+
+Write every rule with the fallback it had before — `var(--kp-light-x, 1)`
+— because there is no pointer on a touch screen, none while a reader is
+tabbing, none under reduced motion and none without the module. shade-light
+multiplies its shadow offsets by `x` and `y`; shade-dark multiplies them by
+`x * lift` and paints a radial patch of the foreground at `at-x`/`at-y`,
+faded by `near`. The light goes out on a touch, on Tab, when the pointer
+leaves the window and when the module is detached.
 
 ## How a theme moves
 
