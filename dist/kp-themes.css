@@ -23480,32 +23480,74 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='shade-light'] .kp-laurels {
-        gap: 0.6rem;
-    }
-
-    [data-theme='shade-light'] .kp-side-note__index,
-    [data-theme='shade-light'] .kp-laurels li {
+    [data-theme='shade-light'] .kp-side-note__index {
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         background: var(--card);
     }
 
-    [data-theme='shade-light'] .kp-laurels li {
-        padding: 0.3em 0.7em;
+    /* The laurels are wreaths [scope-93]: each claim between two drawn laurel
+       branches in the accent, the value on one line over its label, the
+       whole centred. Replaces the pill and the dot, which went wrong once
+       the value was a block: the dot stood alone on the first line and the
+       pill's round ends crowded two lines of words. Every length is in em,
+       so the wreath scales with the font; the branch is one vector mask,
+       crisp at any zoom, mirrored at the inline end and turned round again
+       in a right-to-left list. */
+    [data-theme='shade-light'] .kp-laurels {
+        justify-content: center;
+        gap: 1.25em 1.75em;
+        font-size: var(--kp-text-xs);
     }
 
-    /* The laurel's dot: a plate, never a word — the accent as a small
-       filled circle, exactly the reading the demo's own marked phrase
-       states. */
-    [data-theme='shade-light'] .kp-laurels li::before {
+    [data-theme='shade-light'] .kp-laurels > li {
+        display: grid;
+        grid-template-columns: 1.85em minmax(min-content, 15em) 1.85em;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: 0.45em;
+        max-inline-size: 100%;
+        text-align: center;
+        line-height: 1.3;
+        text-wrap: balance;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::before,
+    [data-theme='shade-light'] .kp-laurels > li::after {
         content: '';
-        inline-size: 0.55em;
-        block-size: 0.55em;
-        border-radius: 999px;
+        grid-row: 1 / 3;
+        align-self: stretch;
+        min-block-size: 4.5em;
         background: var(--accent);
-        display: inline-block;
-        margin-inline-end: 0.4em;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 48'%3E%3Cpath d='M14 46Q3 34 8 4' fill='none' stroke='black' stroke-width='1.2'/%3E%3Cg fill='black'%3E%3Cellipse cx='8.4' cy='41.4' rx='1.5' ry='3.4' transform='rotate(-40 8.4 41.4)'/%3E%3Cellipse cx='13.6' cy='40.2' rx='1.5' ry='3.4' transform='rotate(40 13.6 40.2)'/%3E%3Cellipse cx='6' cy='36' rx='1.5' ry='3.4' transform='rotate(-30 6 36)'/%3E%3Cellipse cx='11.4' cy='35' rx='1.5' ry='3.4' transform='rotate(40 11.4 35)'/%3E%3Cellipse cx='4.6' cy='30.4' rx='1.5' ry='3.4' transform='rotate(-20 4.6 30.4)'/%3E%3Cellipse cx='9.8' cy='29.6' rx='1.5' ry='3.4' transform='rotate(35 9.8 29.6)'/%3E%3Cellipse cx='3.9' cy='24.2' rx='1.5' ry='3.4' transform='rotate(-12 3.9 24.2)'/%3E%3Cellipse cx='9.2' cy='23.4' rx='1.5' ry='3.4' transform='rotate(30 9.2 23.4)'/%3E%3Cellipse cx='4' cy='17.4' rx='1.5' ry='3.4' transform='rotate(-5 4 17.4)'/%3E%3Cellipse cx='9.2' cy='16.6' rx='1.5' ry='3.4' transform='rotate(28 9.2 16.6)'/%3E%3Cellipse cx='8.2' cy='3.6' rx='1.4' ry='3.2' transform='rotate(8 8.2 3.6)'/%3E%3C/g%3E%3C/svg%3E")
+            center / contain no-repeat;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::before {
+        grid-column: 1;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::after {
+        grid-column: 3;
+        transform: scaleX(-1);
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li:dir(rtl)::before {
+        transform: scaleX(-1);
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li:dir(rtl)::after {
+        transform: none;
+    }
+
+    [data-theme='shade-light'] .kp-laurels b {
+        grid-column: 2;
+        align-self: end;
+        font-family: var(--theme-font-display);
+        font-size: 1.65em;
+        font-weight: 700;
+        line-height: 1.1;
+        white-space: nowrap;
     }
 
     /* ── The navbar: the strip and its dropdown ─────────────────────── */
@@ -24182,12 +24224,50 @@
 
     /* ── The demo's own pieces: platforms line, spec sheet, footer ────── */
 
+    /* The platforms are store badges [scope-93]: a plate in the ink with
+       the paper as its words, in the mono voice. A glyph (`<svg>`) before
+       the name and a `<small>` line over it are optional. */
     [data-theme='shade-light'] .kp-platforms {
+        justify-content: center;
+        gap: 0.6em;
+        font-size: var(--kp-text-sm);
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span {
+        display: inline-grid;
+        align-items: center;
+        max-inline-size: 100%;
+        padding: 0.4em 0.95em 0.45em;
+        border-radius: var(--radius);
+        background: var(--foreground);
+        color: var(--background);
         font-family: var(--theme-font-mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.04em;
-        color: var(--muted-foreground);
-        border-block-start: 1px solid var(--border);
+        font-size: 1.15em;
+        font-weight: 600;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span:has(> svg) {
+        grid-template-columns: auto auto;
+        column-gap: 0.55em;
+        padding-inline-start: 0.75em;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span > svg {
+        grid-row: 1 / span 2;
+        inline-size: 1.5em;
+        block-size: 1.5em;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span:has(> svg) > small {
+        grid-column: 2;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span > small {
+        font-size: 0.62em;
+        font-weight: 400;
+        opacity: 0.85;
     }
 
     [data-theme='shade-light'] .kp-spec {
