@@ -19,8 +19,8 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "ffbb70d765e760647916ebec6bd8dbb09d709445deb2714c0606eb0da9c08efe",
-            "doc": "d961256384fb7a45b25b96711b3316512be1507acf967af98d8ae05ae4589415",
+            "hash": "a4be0a586690856079c9f9829a8a34cf64e4004751b82efd9fa10fb1488bb244",
+            "doc": "44b4be8986c52b84755de44ef1b6066f775a6e77b0c908b03f9546f75a013a2b",
             "files": {
                 ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
@@ -53,7 +53,7 @@
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
                 "js/strings.d.ts": "ba1496273c0c9a8a19cedfab1fbd2ae5e5510f30916529476c5207b23814bfe7",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "themes/hooks.json": "277d5f625b2b3d26ad1ef27e7d24dcbfb56fc730b1a598cb45883b85c96d0f8d",
+                "themes/hooks.json": "cc5f09a232b2c6514c29de54f0278d7e828775359938cf984507246cd3325f1e",
                 "themes/order.json": "a3c20eecfe3599891f0862cfb33fe7a6e2b7c3ce1375b46f8cf689759d216e95"
             }
         },
@@ -288,8 +288,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "6977632d71007d799e2c0ea881270a93847b0020b2971467b400584971a1447d",
-            "doc": "f83b519d5bb5ea12b4b2e10d30119fe4c222d0e4e11b47f83ab35c181d32b395",
+            "hash": "7bdd664aabd5c196ef23d27eb6302436d4d362e4c08f76eceb1700541b9ba975",
+            "doc": "7361647ae4207fab830fc1e906c088e0f13a89902bc4d244d8beb3a2d01391c8",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -350,7 +350,7 @@
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
-                "themes/hooks.json": "277d5f625b2b3d26ad1ef27e7d24dcbfb56fc730b1a598cb45883b85c96d0f8d",
+                "themes/hooks.json": "cc5f09a232b2c6514c29de54f0278d7e828775359938cf984507246cd3325f1e",
                 "themes/order.json": "a3c20eecfe3599891f0862cfb33fe7a6e2b7c3ce1375b46f8cf689759d216e95"
             }
         },
@@ -383,10 +383,10 @@
             "sources": [
                 "css/layout.css"
             ],
-            "hash": "aa763c339588f2b1b10091b686a25fbe519cca5cd1e01c6c12b67cbbc4179ca7",
+            "hash": "9e40f6ca8297efc2dd6612408b00cf4a78753611ceed3b2e37bc47297dceb99e",
             "doc": "963f389233558dd52e45ab8868bd53276d1ba30f0957f4cea055c8817d792113",
             "files": {
-                "css/layout.css": "0d2526baae50fb680e4ddade99500c310e72871298a3599c44cc12a0a6246b4e"
+                "css/layout.css": "c0452eea7ddf28df4f71e68fe6dc3da7484eab8ec37b69f0f714bb769ac0620f"
             }
         },
         "research/loading/README.md": {

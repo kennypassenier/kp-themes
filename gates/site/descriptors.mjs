@@ -173,6 +173,10 @@ export const DESCRIPTORS = [
             { name: 'data-kp-surface="hero"', what: 'The opening surface: the one place a theme may be loud.' },
             { name: 'data-kp-surface="app"', what: 'The working surface: forms, tables, cards. A theme keeps it readable before anything else.' },
             { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
+            {
+                name: 'data-kp-divider-shape',
+                what: 'The shape a page asks its dividers to draw, whatever the theme: zigzag, scallop, wave, cloud, pearls, line or none, and theme for the theme’s own drawing again. On the html element, on a section or on one divider; the nearest one wins. Without it every theme draws its own, and pastel’s own is pearls. It lives in the layout layer, whose page lists its knobs.',
+            },
             { name: 'data-kp-reveal', what: 'headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every="load" says otherwise.' },
             { name: 'data-kp-reveal-trigger', what: 'A control that replays the reveals of the surface it sits in.' },
             {

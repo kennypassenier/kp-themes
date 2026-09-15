@@ -1442,6 +1442,35 @@ reduced motion — a page without the script shows the rest states.
 `README.md` has the table of what each theme answers;
 `themes/hooks.json` is the matrix the gate reads.
 
+A page chooses the shape its dividers draw with `data-kp-divider-shape`
+[scope-93]: `zigzag`, `scallop`, `wave`, `cloud`, `pearls`, `line` (a
+soft rule with three beads) or `none` (room only). Put it on `<html>` for
+the whole page, on a section for the dividers inside it, or on one
+divider; the nearest element that names a shape wins, and `theme` brings
+the theme's own drawing back underneath a shape set further out. Without
+the attribute every theme draws what it always drew; pastel's own divider
+is `pearls`. The shapes live in `css/layout.css`, so a page that wants the
+knob loads the layout layer. Four knobs tune it, read on the divider
+itself: `--kp-divider-tile` (1.5rem, one repeat of the edge),
+`--kp-divider-height` (3rem), `--kp-divider-ink` (the theme's
+`--primary`) and `--kp-divider-ink-alt` for `data-kp-divider="alt"`, the
+seam above a footer (the theme's `--muted-foreground`; pastel sets its
+mint). The alt divider faces up. The edge repeats at a fixed size and
+rounds to fit, so a narrow page shows fewer teeth rather than stretched
+ones.
+
+```html
+<html data-theme="formal" data-kp-divider-shape="wave">
+    …
+    <div data-kp-divider></div>
+    <section data-kp-divider-shape="theme">
+        <div data-kp-divider></div>
+        <!-- formal's own hairline -->
+    </section>
+    <div data-kp-divider data-kp-divider-shape="pearls"></div>
+</html>
+```
+
 The arrival's words are the theme's own [scope-84]: synthwave's counting
 boot reads `arrivalWordsByTheme.synthwave` ("▶ Play", "Tracking",
 "Press start"), terminal's and retro's POST lines are

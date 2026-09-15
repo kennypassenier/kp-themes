@@ -22007,8 +22007,8 @@
    this file's later cascade layer wins for [data-theme='pastel']); the
    type; the hooks of S45 — the headline whose overprint duplicate springs
    into register, the mark as a fill (the lede's mint/violet pair, the
-   dossier's ink redaction), the rule that draws itself, the torn-tab
-   divider; the hero and dossier; the navbar with its dropdown; the
+   dossier's ink redaction), the rule that draws itself, the pearls
+   divider (a torn tab until scope-93); the hero and dossier; the navbar with its dropdown; the
    buttons with their hover lift and press settle; the fields; the dialog;
    and one answer per component root (TH124). The reveals have their rest
    state here and their motion in js/effects.js; without the script every
@@ -22187,62 +22187,36 @@
         }
     }
 
-    /* The divider: the torn-tab answer [B, measured, adapted %-based so it
-       holds its shape at 320px] — a jagged zig-zag cut through a filled
-       bar, plum-first and mint-ink-first for the two tears so they read
-       as two different sheets. */
+    /* The divider: pearls [scope-93]. Kenny, 2026-09-15, on the torn tab
+       this rule drew before: "The sawtooth isn't really fitting with
+       'Pastel' which is fluffier and rounder", and his answer to the form,
+       "ik wil pearls". Beads on a thread with no bar, spread evenly so no
+       bead is ever cut, the same drawing css/layout.css gives
+       data-kp-divider-shape='pearls', written out here because a register
+       loads without the layout layer. The plain divider in plum, the alt
+       divider in the mint ink, so the two seams still read as two sheets.
+       The two inks are the knobs the shape knob reads, so a page that names
+       another shape keeps pastel's mint on its footer seam. */
+    [data-theme='pastel'] {
+        --kp-divider-ink-alt: var(--accent-foreground);
+    }
+
     [data-theme='pastel'] [data-kp-divider] {
         display: block;
-        block-size: 3.2rem;
-        background: var(--primary);
-        clip-path: polygon(
-            0% 0%,
-            100% 0%,
-            100% 55%,
-            96% 100%,
-            90% 50%,
-            84% 100%,
-            78% 55%,
-            72% 100%,
-            66% 50%,
-            60% 100%,
-            54% 55%,
-            48% 100%,
-            42% 50%,
-            36% 100%,
-            30% 55%,
-            24% 100%,
-            18% 50%,
-            12% 100%,
-            6% 55%,
-            0% 100%
-        );
+        block-size: var(--kp-divider-height, 3rem);
+        background: var(--kp-divider-ink, var(--primary));
+        mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+        mask-size:
+            100% 2px,
+            var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+        mask-position: center;
+        mask-repeat:
+            no-repeat,
+            space no-repeat;
     }
 
     [data-theme='pastel'] [data-kp-divider='alt'] {
-        background: var(--accent-foreground);
-        clip-path: polygon(
-            0% 45%,
-            6% 0%,
-            12% 50%,
-            18% 0%,
-            24% 50%,
-            30% 0%,
-            36% 50%,
-            42% 0%,
-            48% 50%,
-            54% 0%,
-            60% 50%,
-            66% 0%,
-            72% 50%,
-            78% 0%,
-            84% 50%,
-            90% 0%,
-            96% 50%,
-            100% 0%,
-            100% 100%,
-            0% 100%
-        );
+        background: var(--kp-divider-ink-alt);
     }
 
     /* ── The hero: the rounded outer clip [B, measured] ───────────────── */
@@ -41230,6 +41204,215 @@
         position: sticky;
         inset-block-start: var(--kp-sticky-top, 0);
         z-index: var(--kp-sticky-layer, 30);
+    }
+
+    /* ── The divider's shape [scope-93] ─────────────────────────────── */
+
+    /* Kenny, 2026-09-15: a page chooses the shape its dividers draw. Every
+       rule below sits in an @scope whose root is the element that names a
+       shape, on html, on any ancestor or on one divider, and whose limit is
+       the next element that names another, so the nearest one wins at any
+       depth. The value theme is such a limit and nothing else: under it the
+       register's own drawing stands again. Without the attribute nothing
+       here matches, and every theme draws exactly what it drew before.
+       This is the one layer after kp.register, which is why a shape beats a
+       register's clip path and pseudo elements without a layer of its own.
+       The shared drawing: one ink through the shape's mask, the register's
+       drawing taken back. The alt divider, the seam above a footer, takes
+       the second ink and faces up, its shaped edge into the surface above
+       it. That ink defaults to --muted-foreground, never to
+       --accent-foreground, which in shade-light is a pale ink that vanishes
+       on the page ground (research/dividers); a theme names its own, and
+       pastel sets its mint. Knobs: --kp-divider-height (3rem),
+       --kp-divider-ink (the theme's --primary), --kp-divider-ink-alt
+       (--muted-foreground). */
+    @scope ([data-kp-divider-shape]:not([data-kp-divider-shape='theme'])) to ([data-kp-divider-shape='theme']) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            display: block;
+            position: relative;
+            block-size: var(--kp-divider-height, 3rem);
+            margin-block: 0;
+            padding: 0;
+            border: 0;
+            box-shadow: none;
+            filter: none;
+            opacity: 1;
+            transform: none;
+            animation: none;
+            clip-path: none;
+            background: var(--kp-divider-ink, var(--primary));
+            mask-position: top, bottom;
+            mask-repeat:
+                no-repeat,
+                round no-repeat;
+        }
+
+        :scope[data-kp-divider]::before,
+        :scope[data-kp-divider]::after,
+        [data-kp-divider]::before,
+        [data-kp-divider]::after {
+            content: none;
+        }
+
+        :scope[data-kp-divider='alt'],
+        [data-kp-divider='alt'] {
+            background: var(--kp-divider-ink-alt, var(--muted-foreground));
+            transform: scaleY(-1);
+        }
+    }
+
+    /* Every value, theme included, writes its name to --kp-divider-shape
+       on the element that names it, for a script or a register to read.
+       These eight rules are also what makes the nearest attribute win in
+       Firefox: Firefox 153 lets two elements with the same attributes share
+       one computed style when their parents compute alike, without asking
+       which @scope root either sits under, so seven sibling rows each
+       naming its own shape all drew the first row's (measured on
+       tests/fixtures/dividers.html). A value that computes differently
+       shares with nothing, and every element under it inherits that. */
+    [data-kp-divider-shape='zigzag'] {
+        --kp-divider-shape: zigzag;
+    }
+
+    /* The name scallop. */
+    [data-kp-divider-shape='scallop'] {
+        --kp-divider-shape: scallop;
+    }
+
+    /* The name wave. */
+    [data-kp-divider-shape='wave'] {
+        --kp-divider-shape: wave;
+    }
+
+    /* The name cloud. */
+    [data-kp-divider-shape='cloud'] {
+        --kp-divider-shape: cloud;
+    }
+
+    /* The name pearls. */
+    [data-kp-divider-shape='pearls'] {
+        --kp-divider-shape: pearls;
+    }
+
+    /* The name line. */
+    [data-kp-divider-shape='line'] {
+        --kp-divider-shape: line;
+    }
+
+    /* The name none. */
+    [data-kp-divider-shape='none'] {
+        --kp-divider-shape: none;
+    }
+
+    /* The name theme. */
+    [data-kp-divider-shape='theme'] {
+        --kp-divider-shape: theme;
+    }
+
+    /* The shape zigzag, a bar cut by teeth of a fixed size that repeat to
+       fit the width rather than stretch with it. Knob: --kp-divider-tile
+       (1.5rem, one tooth). */
+    @scope ([data-kp-divider-shape='zigzag']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='zigzag'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image: linear-gradient(black 0 0), conic-gradient(from -45deg at 50% 100%, black 90deg, transparent 0);
+            mask-size:
+                100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+        }
+    }
+
+    /* The shape scallop, half circles like a doily's edge. Knob:
+       --kp-divider-tile (1.5rem, one circle across). */
+    @scope ([data-kp-divider-shape='scallop']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='scallop'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image: linear-gradient(black 0 0), radial-gradient(circle farthest-side at 50% 0, black calc(100% - 0.6px), transparent 100%);
+            mask-size:
+                100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+        }
+    }
+
+    /* The shape wave, a smooth edge with no corners. Knob:
+       --kp-divider-tile (1.5rem, half of one wave). */
+    @scope ([data-kp-divider-shape='wave']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='wave'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image:
+                linear-gradient(black 0 0),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10' preserveAspectRatio='none'%3E%3Cpath d='M0 0H40V5Q30 15 20 5T0 5Z'/%3E%3C/svg%3E");
+            mask-size:
+                100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                calc(var(--kp-divider-tile, 1.5rem) * 2) calc(var(--kp-divider-tile, 1.5rem) / 2);
+        }
+    }
+
+    /* The shape cloud, bumps of two sizes, the fluffiest edge. Knob:
+       --kp-divider-tile (1.5rem, a third of one pair of bumps). */
+    @scope ([data-kp-divider-shape='cloud']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='cloud'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image:
+                linear-gradient(black 0 0),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 16' preserveAspectRatio='none'%3E%3Cpath d='M0 0H60V3A9 9 0 0 1 42 3A12 12 0 0 1 18 3A9 9 0 0 1 0 3Z'/%3E%3C/svg%3E");
+            mask-size:
+                100% calc(100% - var(--kp-divider-tile, 1.5rem) * 0.6 + 1px),
+                calc(var(--kp-divider-tile, 1.5rem) * 3) calc(var(--kp-divider-tile, 1.5rem) * 0.8);
+        }
+    }
+
+    /* The shape pearls, beads on a thread with no bar, spread evenly so no
+       bead is ever cut. Pastel draws the same beads as its own divider.
+       Knob: --kp-divider-tile (1.5rem, one bead and the room beside it). */
+    @scope ([data-kp-divider-shape='pearls']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='pearls'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+            mask-size:
+                100% 2px,
+                var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+            mask-position: center;
+            mask-repeat:
+                no-repeat,
+                space no-repeat;
+        }
+    }
+
+    /* The shape line, a soft rule that fades at both ends with three beads
+       at its centre. */
+    @scope ([data-kp-divider-shape='line']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='line'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            mask-image:
+                linear-gradient(90deg, transparent, black 18% 82%, transparent),
+                radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%),
+                radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%),
+                radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+            mask-size:
+                100% 2px,
+                0.5rem 0.5rem,
+                0.5rem 0.5rem,
+                0.5rem 0.5rem;
+            mask-position:
+                center,
+                calc(50% - 1rem) 50%,
+                50% 50%,
+                calc(50% + 1rem) 50%;
+            mask-repeat: no-repeat;
+        }
+    }
+
+    /* The shape none: room only, the one step of the spacing scale the base
+       rule leaves, and nothing drawn in it. */
+    @scope ([data-kp-divider-shape='none']) to ([data-kp-divider-shape]:not([data-kp-divider-shape='none'])) {
+        :scope[data-kp-divider],
+        [data-kp-divider] {
+            block-size: var(--kp-space-xl);
+            background: none;
+            mask-image: none;
+        }
     }
 
     /* ── State ──────────────────────────────────────────────────────── */

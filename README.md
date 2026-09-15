@@ -173,6 +173,13 @@ theme without an entry gets the neutral "Loading") and plays at
 [scope-84]. `catalogue/intros.html` plays every theme's arrival on demand. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
 refuses a theme that leaves a hook unanswered.
 
+A page may also choose the shape its dividers draw, whatever the theme:
+`data-kp-divider-shape="zigzag|scallop|wave|cloud|pearls|line|none"` on
+`<html>`, a section or one divider, the nearest winning, and `theme` for
+the theme's own drawing again [scope-93]. It lives in `css/layout.css`;
+without it every theme draws its own, and pastel's own is `pearls`.
+`docs/USER_GUIDE.md` has the knobs.
+
 ### `data-theme` and the `.dark` class
 
 A theme is active when `<html data-theme="…">` carries its name; without

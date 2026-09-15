@@ -33,6 +33,7 @@
                 <li><a href="#lede-marks">Lede marks</a></li>
                 <li><a href="#section-rule">Section rule</a></li>
                 <li><a href="#dividers">Dividers</a></li>
+                <li><a href="#divider-shapes">Divider shapes</a></li>
                 <li><a href="#dossier">Dossier</a></li>
                 <li><a href="#surfaces">Surfaces</a></li>
                 <li><a href="#nav-cta">Call to action and end side</a></li>
@@ -182,13 +183,14 @@
                     one on the darker sidebar plate for the footer seam; <b>synthwave</b> the horizon, a 2 px line with its glow over a receding grid;
                     <b>grotesk</b> two black rules with a signal hairline exactly centred between them; <b>high-contrast</b> a razor tear whose two
                     tones swap; <b>lapis</b> the four-ring frame with the girih dot, the alt one a plain hatch; <b>terminal</b> dashes with a plus at
-                    each end, the alt one doubled; <b>forest</b> torn paper, the alt one two concentric rings; <b>pastel</b> torn tabs, different
-                    zig-zags, plum then mint ink; <b>light</b> hairline seams, the alt one tinting its circle with the accent; <b>dark</b> the
-                    instrument's scale — hairline, ticks, the oxide at centre; <b>brutalism</b> a marquee strip, the second running the other way;
-                    <b>titanium</b> a milled groove with the film lying in it; <b>retro</b> a dithered band, then a plain two-line groove;
-                    <b>solstice</b> a hairline with an accent peak, the alt one on the opposite side; <b>phantom</b> torn paper of three clipped
-                    plates, the second mirrored; <b>deco</b> a double rule with a lozenge; <b>sepia</b> a double warm-brown rule, the second with a
-                    diamond; <b>shade-light</b> a blurred seam, felt rather than seen; <b>shade-dark</b> a swell in the next surface's own tone.
+                    each end, the alt one doubled; <b>forest</b> torn paper, the alt one two concentric rings; <b>pastel</b> pearls, round beads on a
+                    thread with no bar and no bead cut at either end, plum then mint ink; <b>light</b> hairline seams, the alt one tinting its circle
+                    with the accent; <b>dark</b> the instrument's scale — hairline, ticks, the oxide at centre; <b>brutalism</b> a marquee strip, the
+                    second running the other way; <b>titanium</b> a milled groove with the film lying in it; <b>retro</b> a dithered band, then a
+                    plain two-line groove; <b>solstice</b> a hairline with an accent peak, the alt one on the opposite side; <b>phantom</b> torn paper
+                    of three clipped plates, the second mirrored; <b>deco</b> a double rule with a lozenge; <b>sepia</b> a double warm-brown rule, the
+                    second with a diamond; <b>shade-light</b> a blurred seam, felt rather than seen; <b>shade-dark</b> a swell in the next surface's
+                    own tone.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <!-- One wrapper, so a compare column keeps the five as siblings: a register reads the surface before a divider. -->
@@ -206,6 +208,63 @@
                         <footer class="kp-footer">
                             <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
                         </footer>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="divider-shapes">
+                <h2>Divider shapes</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the shape knob (<code>data-kp-divider-shape</code>, scope-93), each row a plain divider and the alt divider under
+                    one value. In <b>every</b> theme: <b>zigzag</b> a bar cut by small teeth of one size, <b>scallop</b> a bar edged with half
+                    circles, <b>wave</b> a smooth wave with no corner, <b>cloud</b> bumps of two sizes, <b>pearls</b> round beads on a thin thread,
+                    <b>line</b> a thin rule fading at both ends with three beads at its centre, <b>none</b> an empty step of room. No tooth, circle or
+                    bead is cut in half at either end, the plain divider is in the theme's primary ink and the alt one in its muted ink (in
+                    <b>pastel</b> its mint), the alt one faces up, and nothing is blurred. The last row names <code>theme</code> inside a wave: it
+                    shows the theme's own dividers from the Dividers block above, not a wave.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div data-kp-divider-shape="zigzag">
+                        <p class="microlabel">data-kp-divider-shape="zigzag"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="scallop">
+                        <p class="microlabel">data-kp-divider-shape="scallop"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="wave">
+                        <p class="microlabel">data-kp-divider-shape="wave"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="cloud">
+                        <p class="microlabel">data-kp-divider-shape="cloud"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="pearls">
+                        <p class="microlabel">data-kp-divider-shape="pearls"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="line">
+                        <p class="microlabel">data-kp-divider-shape="line"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="none">
+                        <p class="microlabel">data-kp-divider-shape="none"</p>
+                        <div data-kp-divider></div>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="wave">
+                        <p class="microlabel">theme inside wave</p>
+                        <div data-kp-divider-shape="theme">
+                            <div data-kp-divider></div>
+                            <div data-kp-divider="alt"></div>
+                        </div>
                     </div>
                 </div>
             </section>

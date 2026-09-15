@@ -62,7 +62,6 @@ export const PAGES = [
         group: 'Research to look at',
         pages: [
             { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
-            { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
             { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
         ],
     },
@@ -81,6 +80,7 @@ export const PAGES = [
             { href: 'research/uniform-size/demo.html', label: 'Uniform sizes' },
             { href: 'research/intro-loading/demo.html', label: 'Intros and loading' },
             { href: 'research/review-dialog/demo.html', label: 'Review dialog' },
+            { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
         ],
     },
 ];

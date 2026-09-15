@@ -163,8 +163,10 @@ function layoutClasses() {
     /** @type {{selector: string, comment: string, knobs: string[]}[]} */
     const out = [];
     // Each rule is preceded by the comment that explains it, and every
-    // knob it reads is a `var(--kp-…, ` in its body.
-    const rule = /(?:\/\* ([^*]*?)\*\/\s*)?^ {4}([.[][^{\n]*?) \{\n([\s\S]*?)^ {4}\}/gm;
+    // knob it reads is a `var(--kp-…, ` in its body. An `@scope` block is
+    // one row, its prelude the selector: the divider shapes [scope-93] are
+    // rules scoped to the nearest element that names a shape.
+    const rule = /(?:\/\* ([^*]*?)\*\/\s*)?^ {4}((?:[.[]|@scope )[^{\n]*?) \{\n([\s\S]*?)^ {4}\}/gm;
     for (const match of css.matchAll(rule)) {
         const [, comment, selector, body] = match;
         const knobs = [...body.matchAll(/var\((--kp-[a-z0-9-]+)/g)].map((m) => m[1]);

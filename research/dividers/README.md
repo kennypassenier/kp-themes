@@ -1,5 +1,11 @@
 # Dividers: softer shapes for pastel, and a shape knob
 
+**Decided (scope-93, 2026-09-15):** Kenny chose **pearls** for pastel, not scallop ("ik wil pearls"; the form offered three of the
+five shapes). The knob is built in `css/layout.css` as proposed below, with two changes found while building it: each value is an
+`@scope` from the element that names it to the next element naming another, and the value `theme` is built (open question 4), a
+limit under which the register's drawing stands again. The demo stays as the record; the catalogue block is
+`catalogue/page-effects.html#divider-shapes`.
+
 Kenny, on `catalogue/page-effects.html#dividers` in pastel (2026-09-15): "The sawtooth isn't really fitting with 'Pastel' which is
 fluffier and rounder. And there should be an option." Demo: [`demo.html`](demo.html) (34972 bytes, `wc -c`), in the catalogue under
 "Research to look at". It opens in pastel; shade-light and dark are one click away.
