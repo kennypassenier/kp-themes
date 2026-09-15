@@ -1566,3 +1566,19 @@ rejection on every review surface, not only in the dialog. combobox-test
 took" (`fix-30`). retro-cta-press "Dezelfde uitzondering als de knop": retro's
 pressed call to action steps one pixel down again, with a `MAY_KEEP` entry and
 its reason. step-timing "Akkoord".
+
+**scope-90 · The review dialog, the month grid and the header's reach.**
+Kenny, 2026-09-15, the form after `scope-89` (commit `c3c48b50`).
+review-arrows "b · Alleen bij een leeg veld": the review dialog is built on
+the review page and the component pages; Left and Right move between blocks
+only while the note is empty, and move the caret once it holds text; Up
+approves, Down rejects with a note. review-approve-text "Wissen, zoals nu": an
+approval clears the note, as `fix-29` has it, in the dialog too. review-last
+"Open laten met melding": after the last block without a verdict the dialog
+stays open with a message. month-names "Korte namen": the month grid keeps
+short names, the full name for screen readers. month-ellipse "Een pil": in
+formal and sepia a chosen month or year is a pill, not a stretched circle.
+frozen-calendars "Bijwerken": the still calendars in `#open`, `#limits` and
+`#locale` take the markup the module builds now. six-rows "Laten zoals nu":
+no change. caption-reach "Alleen bij scrollen": the header's 2px reach
+(`fix-32`) shows only while the scroll box is scrolled. step-timing "Akkoord".
