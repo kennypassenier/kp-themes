@@ -1641,3 +1641,25 @@ itself did not change, so `#dividers` returns in pastel only.
 divider-shapes-block "Blok en optie weg": the `data-kp-divider-shape` knob, its
 gate and the `#divider-shapes` block are removed; pastel draws its pearls in its
 own register. step-timing "Akkoord".
+
+**scope-96 · After the 22-theme review: cyberpunk's data stream, alarms of
+each theme's own, and the rest of the hash.** Kenny, 2026-09-15, the form after
+his review of all 22 themes. cyberpunk-divider "Data stream": cyberpunk's razor
+tear is replaced in its own register by the data stream (three rows of muted
+yellow dashes with cyan packets under a scan hairline, two layers drifting at
+different speeds, the footer seam flowing the other way); the research demo is
+archived. hc-bar "De drie knoppen, en Undo in de neutrale toast zwart": the
+white rising bar stays on Cancel, Save changes and Delete account, and a ghost
+button on a light toast takes the dark bar again. light-blue, his own answer:
+"lijkt al opgelost, is goedgekeurd" — nothing changes. unmatched-218
+"Vastzetten zoals de 110": the 218 verdicts the test browser could not carry to
+hash version 3 are re-anchored at their commit, as scope-94 did. hash-labels
+"Ook uit de hash": a `.cat-note` label outside a stage leaves the hash, and
+verdicts carry over where nothing else changed. alarm-flicker, his own answer:
+"Die flicker moet enkel bij thema's waar het bij past. elk thema moet een
+aangepast alarm krijgen gebaseerd op wat het thema voorstelt, de unieke
+mannerismen van het thema en de kleuren" — each theme's alarm is redesigned from
+what the theme stands for, its mannerisms and its colours, and the flicker
+stays only where it belongs. alarm-button "Per register, zoals nu".
+dialog-scroll-reset "Bovenaan openen": a dialog's body opens at the top every
+time. fix-36 "Klopt". step-timing "Akkoord".
