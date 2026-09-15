@@ -169,6 +169,6 @@ register's colours are.
 
 | fix-30-M1 | Does a raised overlay open upward when the room below is too small? Measured at the commit of the fix: the six tests in `tests/overlay-flip.spec.mjs` red on `6dd76c6c` (list at y=486–604 under an input at 446 in a 520px window) and green after, `tests/nostromo-second-pass.spec.mjs:121` green, commit level 1362 passed, 3 skipped, 0 failed. | closed |
 
-| fix-31-M1 | Does the marquee run after the review page has judged? Measured at the commit of fix-31: the new test red on `1b9c72bd`, green after. | open |
+| fix-31-M1 | Does the marquee run after the review page has judged? Measured at the commit of fix-31: the new test in `tests/catalogue-review.spec.mjs` read `paused`, time 0, on `a051db4d` and runs after; `verdicts.mjs compare --against-browser --all` identical line for line before and after; commit level 1364 passed, 3 skipped, 0 failed. | closed |
 
 | fix-32-M1 | Does row text still show above the sticky data-table header? Measured at Kenny's next review of `#table--datatable-sticky` in FireDragon, wheel-scrolling in three themes. | open |

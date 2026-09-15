@@ -102,20 +102,30 @@ async function sha256(text) {
     return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-/** Hold every animation still while reading, so a glitch mid-frame is not a change. */
+/**
+ * Hold every animation still while reading, so a glitch mid-frame is not a
+ * change: a finite one is run to its end, an infinite one is set to its time 0.
+ * The returned function gives each infinite animation back the time it had.
+ *
+ * The time only, never the play state (fix-31, 2026-09-15): `pause()` and
+ * `play()` from a script outrank the CSS `animation-play-state` for good. A
+ * marquee band out of view was already still (`data-kp-paused`) when it was
+ * read, the old release restarted only what had been running, and the band
+ * never ran again once it came into view. Everything read between holding
+ * and releasing must be read synchronously, before the page renders a frame.
+ */
 export function stillAnimations() {
     const held = [];
     for (const animation of document.getAnimations()) {
         const timing = animation.effect?.getComputedTiming();
         if (timing && Number.isFinite(Number(timing.endTime))) animation.finish();
         else {
-            held.push([animation, animation.playState]);
-            animation.pause();
+            held.push([animation, animation.currentTime]);
             animation.currentTime = 0;
         }
     }
     return () => {
-        for (const [animation, state] of held) if (state === 'running') animation.play();
+        for (const [animation, time] of held) if (time !== null) animation.currentTime = time;
     };
 }
 
@@ -406,16 +416,21 @@ export async function readBlocks(items, { lines = false } = {}) {
     for (const started = performance.now(); items.some(busy) && performance.now() - started < 3000;) {
         await new Promise((resolve) => setTimeout(resolve, 50));
     }
+    // Every block is read while the animations are held, in one synchronous
+    // stretch; only then are they released and the readings hashed, since
+    // sha256 waits and a running animation would move on meanwhile (fix-31).
     const release = stillAnimations();
+    let readings;
     try {
-        const out = [];
         const viewport = viewportDependence();
-        for (const item of items) {
-            const read = blockLines(item.root, item.source, item.elements?.() ?? reviewedElements(item.root), viewport);
-            out.push(lines ? { hash: await sha256(read.join('\n')), lines: read } : { hash: await sha256(read.join('\n')) });
-        }
-        return out;
+        readings = items.map((item) => blockLines(item.root, item.source, item.elements?.() ?? reviewedElements(item.root), viewport));
     } finally {
         release();
     }
+    const out = [];
+    for (const read of readings) {
+        const hash = await sha256(read.join('\n'));
+        out.push(lines ? { hash, lines: read } : { hash });
+    }
+    return out;
 }

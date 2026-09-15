@@ -41,7 +41,9 @@ theme its window plays, whatever the page wears [scope-86].
 
 1. Kenny judges on the review site or a local server. Every Approve and Not
    approved is kept in that browser first, and the panel says so ("In this
-   browser, not yet recorded").
+   browser, not yet recorded"). Not approved records only when the block's
+   note holds text; with an empty note the panel refuses, marks the note and
+   says why, on every review surface [scope-89]. Approve needs no text.
 2. Kenny copies the prompt and pastes it into the conversation. Its last
    block, `Verdict lines (hash version N):`, carries one line per verdict not
    yet in the register: `block key · theme · engine · verdict · hash`.
@@ -80,7 +82,11 @@ The recipe reads past what differs between two browsers of one engine or
 two window sizes, as measured on 2026-09-13 (lengths to the half pixel,
 `attr()` in `content` resolved, no translation in `transform`, lengths in
 viewport units read as "a length", a block still loading given time to
-finish); why is at the head of `catalogue/block-hash.js`. A window narrow
+finish); why is at the head of `catalogue/block-hash.js`. Animations are
+held still for the reading by time alone: a finite one is run to its end, an
+infinite one is set to time 0 and given its own time back once every block is
+read, and its play state is never touched, so a marquee that was resting off
+screen runs again when it comes into view [fix-31]. A window narrow
 enough to switch a component to another layout (a data table's cards below
 a 40rem container) is a different look and hashes differently.
 

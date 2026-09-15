@@ -82,6 +82,15 @@ const STATES = {
     checking: { glyph: '…', words: 'Checking', tone: '' },
 };
 
+// Every rejection says why (scope-89, Kenny 2026-09-15: rejecting works only
+// when the input holds text, on every review surface). Not approved with an
+// empty note records nothing: the note field is marked, says what it needs
+// and takes the focus, so the reviewer can type the reason and press again.
+// An approval needs no text.
+
+/** What a refused rejection says, under the note. */
+export const REJECT_NEEDS_NOTE = 'Not recorded: a block is only not approved with a note. Write what is wrong, then press Not approved again.';
+
 function panelFor(entry) {
     const panel = document.createElement('div');
     panel.className = 'cat-judge';
@@ -114,10 +123,13 @@ function panelFor(entry) {
                 <span class="cat-judge__saved" role="status" aria-live="polite" data-cat-note-saved></span>
             </div>
             <textarea class="kp-field__input kp-field__input--multiline cat-feedback-input cat-judge__input" rows="3"></textarea>
+            <p class="kp-field__error cat-judge__refused" role="alert" data-cat-reject-refused hidden>${REJECT_NEEDS_NOTE}</p>
         </div>`;
     const area = panel.querySelector('textarea');
     area.id = entry.fieldId;
     panel.querySelector('label').htmlFor = entry.fieldId;
+    const refused = panel.querySelector('[data-cat-reject-refused]');
+    refused.id = `${entry.fieldId}-refused`;
     return panel;
 }
 
@@ -155,6 +167,8 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             label: panel.querySelector('label'),
             area: panel.querySelector('textarea'),
             saved: panel.querySelector('[data-cat-note-saved]'),
+            field: panel.querySelector('.cat-judge__note'),
+            refused: panel.querySelector('[data-cat-reject-refused]'),
             reviewNote: panel.querySelector('[data-cat-review-note]'),
             timer: 0,
         };
@@ -237,6 +251,19 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
         box.querySelector('[data-cat-review-note-meta]').textContent = `(${[note.given, note.commit].filter(Boolean).join(' · ')})`;
     }
 
+    /** Show or clear the refusal of a rejection without a note. */
+    function showRefusal(item, on) {
+        item.refused.hidden = !on;
+        item.field.classList.toggle('kp-field--invalid', on);
+        if (on) {
+            item.area.setAttribute('aria-invalid', 'true');
+            item.area.setAttribute('aria-describedby', item.refused.id);
+        } else {
+            item.area.removeAttribute('aria-invalid');
+            item.area.removeAttribute('aria-describedby');
+        }
+    }
+
     function renderNotes() {
         for (const item of items) {
             const theme = blockTheme(item.entry.root);
@@ -244,6 +271,8 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             // The one being typed in keeps its text; another document's write
             // to the same note must not move the caret.
             if (document.activeElement !== item.area) item.area.value = noteFor(item.entry.notePage, item.entry.noteBlock, theme);
+            // A note that arrived (another theme's, another document's) answers a refusal.
+            if (item.area.value.trim()) showRefusal(item, false);
         }
     }
 
@@ -295,6 +324,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
 
     for (const item of items) {
         item.area.addEventListener('input', () => {
+            if (item.area.value.trim()) showRefusal(item, false);
             const ok = setNote(item.entry.notePage, item.entry.noteBlock, blockTheme(item.entry.root), item.area.value);
             item.saved.textContent = '';
             clearTimeout(item.timer);
@@ -314,6 +344,13 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
                 if (!hash) return;
                 const theme = blockTheme(item.entry.root);
                 const verdict = button.getAttribute('data-cat-verdict');
+                // A rejection without a reason is refused (scope-89).
+                if (verdict === 'rejected' && !item.area.value.trim()) {
+                    showRefusal(item, true);
+                    item.area.focus();
+                    return;
+                }
+                showRefusal(item, false);
                 const previous = storeVerdict(item.entry.key, theme, verdict, hash);
                 // An approval answers the reviewer's note in this theme, so the
                 // note goes with it and no prompt carries it on (fix-29, Kenny

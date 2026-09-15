@@ -213,6 +213,8 @@ test(
         const columns = await openCompare(page, 'button', 'formal', 'cyberpunk');
         const reject = columns.b.locator('[data-cat-block="button--variants"] [data-cat-verdict="rejected"]');
         await expect(reject).toBeEnabled({ timeout: 60_000 });
+        // A rejection carries its reason (scope-89).
+        await columns.b.locator('[data-cat-block="button--variants"] textarea').fill('cyberpunk variants: the sheen is too strong');
         await reject.click();
         await expect(columns.b.locator('[data-cat-block="button--variants"] [data-cat-approval-state]')).toHaveText(
             `Not approved · Cyberpunk · ${label}`,
@@ -325,6 +327,7 @@ test(
         await waitForJudging(page);
         const reject = page.locator('#sizes [data-cat-verdict="rejected"]');
         await expect(reject).toBeEnabled();
+        await page.locator('#sizes textarea').fill('The small size is too tight');
         await reject.click();
         const hash = await storedHash(page, 'button--sizes', 'formal', engine);
         await expect(page.locator('#sizes [data-cat-verdict-source]')).toHaveText('In this browser, not yet recorded');
@@ -392,6 +395,7 @@ test(
         for (const block of ['states', 'invalid']) {
             const reject = measuring.locator(`#${block} [data-cat-verdict="rejected"]`);
             await expect(reject).toBeEnabled();
+            await measuring.locator(`#${block} textarea`).fill('Not like this');
             await reject.click();
             hashes[block] = await storedHash(measuring, `switch--${block}`, 'formal', engine);
             expect(hashes[block]).toMatch(/^[0-9a-f]{64}$/);
@@ -622,6 +626,7 @@ test(
         await page.evaluate(() => (location.hash = 'navigation--mega-menu'));
         const mega = page.locator('[id="navigation--mega-menu"]');
         await expect(mega).toBeVisible();
+        await page.locator('[id="navigation--mega-menu"] > .cat-judge textarea').fill('The panel covers the bar');
         await verdict('navigation--mega-menu', 'rejected').click();
         await expect(mega).toHaveAttribute('data-cat-state', 'rejected');
         await expect(mega).toBeHidden();
@@ -667,5 +672,102 @@ test(
         await expect(area('navigation--dropdown')).toHaveValue('The caret is too small');
         expect((await stored())['navigation--dropdown']?.dark).toBe('The caret is too small');
         await expect(prompt).toContainText('The caret is too small');
+    },
+);
+
+/* ------------------------------------- an infinite animation after judging */
+
+// Kenny, 2026-09-15, in solstice: "I don't see these running from side to
+// side?" The hash paused every infinite animation with `pause()` and let only
+// the running ones play again; a marquee band out of view was already still
+// (`data-kp-paused`), so the script pause outranked its CSS for good.
+//
+// Red run first, on a051db4d in firefox: the band's animation stayed `paused`
+// at time 0 over the second after it came into view.
+test('a marquee band runs once it is in view after the page has read its blocks [fix-31]', { tag: ['@component:catalogue'] }, async ({ page }) => {
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/catalogue/media.html');
+    await waitForJudging(page);
+    const band = page.locator('#marquee [data-kp-marquee]').first();
+    await band.scrollIntoViewIfNeeded();
+    await expect(band).not.toHaveAttribute('data-kp-paused', '');
+    const track = band.locator('[data-kp-marquee-track]');
+    const reading = () =>
+        track.evaluate((el) => {
+            const [animation] = el.getAnimations();
+            return { state: animation?.playState, time: Number(animation?.currentTime ?? 0), transform: getComputedStyle(el).transform };
+        });
+    const before = await reading();
+    await page.waitForTimeout(1000);
+    const after = await reading();
+    const seen = `before ${JSON.stringify(before)}, a second later ${JSON.stringify(after)}`;
+    expect(after.state, seen).toBe('running');
+    expect(after.time - before.time, seen).toBeGreaterThan(500);
+    expect(after.transform, seen).not.toBe(before.transform);
+});
+
+/* ------------------------------------------- a rejection carries its reason */
+
+// Kenny, 2026-09-15 (scope-89): rejecting works only when the note holds text,
+// on every review surface. judging.js is the one module behind the review
+// page, the component pages, the research demos and the compare columns, so a
+// component page and a compare column stand for all of them here.
+//
+// Red run first, on a051db4d in firefox: Not approved with an empty note
+// stored a rejection and showed no refusal.
+test(
+    'Not approved with an empty note records nothing and says why; with a note it records [scope-89]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, browserName }) => {
+        const engine = engineOf(browserName);
+        await page.setViewportSize({ width: 1400, height: 900 });
+        await page.goto('/catalogue/switch.html');
+        await waitForJudging(page);
+        const block = page.locator('#states');
+        const reject = block.locator('[data-cat-verdict="rejected"]');
+        const area = block.locator('.cat-judge textarea');
+        const refused = block.locator('[data-cat-reject-refused]');
+        await expect(refused).toBeHidden();
+
+        // Empty, then only whitespace: refused, nothing stored, the note asks for text.
+        for (const text of ['', '   \n  ']) {
+            await area.fill(text);
+            await expect(reject).toBeEnabled();
+            await reject.click();
+            await expect(refused).toBeVisible();
+            await expect(refused).toHaveText(/only not approved with a note/);
+            await expect(area).toBeFocused();
+            await expect(area).toHaveAttribute('aria-invalid', 'true');
+            await expect(block).toHaveAttribute('data-cat-state', 'new');
+            expect(await storedHash(page, 'switch--states', 'formal', engine)).toBeUndefined();
+        }
+
+        // Typing the reason clears the refusal; pressing again records.
+        await area.fill('The knob is off centre');
+        await expect(refused).toBeHidden();
+        await expect(area).not.toHaveAttribute('aria-invalid', 'true');
+        await reject.click();
+        await expect(block).toHaveAttribute('data-cat-state', 'rejected');
+        expect(await storedHash(page, 'switch--states', 'formal', engine)).toMatch(/^[0-9a-f]{64}$/);
+
+        // An approval needs no text.
+        const invalid = page.locator('#invalid');
+        await expect(invalid.locator('.cat-judge textarea')).toHaveValue('');
+        await invalid.locator('[data-cat-verdict="approved"]').click();
+        await expect(invalid).toHaveAttribute('data-cat-state', 'approved');
+        await expect(invalid.locator('[data-cat-reject-refused]')).toBeHidden();
+
+        // A compare column refuses the same way.
+        const columns = await openCompare(page, 'switch', 'formal', 'cyberpunk');
+        const panel = columns.b.locator('[data-cat-block="switch--states"]');
+        const columnReject = panel.locator('[data-cat-verdict="rejected"]');
+        await expect(columnReject).toBeEnabled({ timeout: 60_000 });
+        await columnReject.click();
+        await expect(panel.locator('[data-cat-reject-refused]')).toBeVisible();
+        await expect(panel.locator('[data-cat-approval-state]')).toContainText('Not yet judged');
+        await panel.locator('textarea').fill('Too faint in cyberpunk');
+        await columnReject.click();
+        await expect(panel.locator('[data-cat-approval-state]')).toContainText('Not approved');
+        await expect(panel.locator('[data-cat-reject-refused]')).toBeHidden();
     },
 );
