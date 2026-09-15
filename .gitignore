@@ -23,3 +23,6 @@ consumer.tar
 # script writes in seconds (research/loading/run.mjs). The measurements are in
 # that folder's README; the bytes themselves are 7.5 MB of nobody's source.
 research/loading/out/
+
+# Portrait screenshots are working aids, not kept [scope-99]
+research/theme-portraits/*.png

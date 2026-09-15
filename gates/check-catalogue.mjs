@@ -123,6 +123,28 @@ export function bareControls(html) {
     return found;
 }
 
+/**
+ * The research topics whose README says they are decided ("**Decided (scope-N)"
+ * near its top) but whose page the navigation still lists outside "Archived
+ * research". The laurels demo stayed under "Research to look at" after
+ * scope-93 decided it, until Kenny asked [fix-37].
+ * @param {string} shell the text of catalogue/pages.js
+ * @param {Record<string, string>} readmes topic → README text
+ * @returns {string[]}
+ */
+export function decidedOutsideArchive(shell, readmes) {
+    const groupOf = new Map();
+    for (const part of shell.split(/group:\s*'/).slice(1)) {
+        const group = part.slice(0, part.indexOf("'"));
+        for (const m of part.matchAll(/href:\s*'research\/([^/']+)\//g)) groupOf.set(m[1], group);
+    }
+    return Object.entries(readmes)
+        .filter(([, text]) => /^\*\*Decided \(/m.test(text.split('\n').slice(0, 12).join('\n')))
+        .filter(([topic]) => groupOf.has(topic) && groupOf.get(topic) !== 'Archived research')
+        .map(([topic]) => `research/${topic} (listed under "${groupOf.get(topic)}")`)
+        .sort();
+}
+
 function main() {
     const components = read('css/components.css');
     const dir = new URL('catalogue/', root);
@@ -181,6 +203,21 @@ function main() {
         for (const topic of readdirSync(research)) {
             if (existsSync(new URL(`research/${topic}/demo.html`, root))) reviewPages.push(`research/${topic}/demo.html`);
         }
+    }
+    /** @type {Record<string, string>} */
+    const readmes = {};
+    if (existsSync(research)) {
+        for (const topic of readdirSync(research)) {
+            const readme = new URL(`research/${topic}/README.md`, root);
+            if (existsSync(readme)) readmes[topic] = readFileSync(readme, 'utf8');
+        }
+    }
+    const undecided = decidedOutsideArchive(shell, readmes);
+    if (undecided.length) {
+        console.error(
+            `${undecided.length} decided research topic(s) are not under "Archived research" in catalogue/pages.js [fix-37]:\n  ` +
+                undecided.join('\n  '),
+        );
     }
     const unlisted = reviewPages.filter((page) => !listed.has(page)).sort();
     const phantom = [...listed].filter((page) => !existsSync(new URL(page, root))).sort();
@@ -312,6 +349,7 @@ function main() {
 
     if (
         blockable.length ||
+        undecided.length ||
         invisible.length ||
         stale.length ||
         gone.length ||

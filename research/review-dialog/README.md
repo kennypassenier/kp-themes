@@ -1,5 +1,7 @@
 # The review dialog: one block at a time, by keyboard
 
+**Decided (scope-90):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 Kenny, 2026-09-15 [scope-89]: a large dialog of fixed size that opens a
 block, the cursor in the note on every new item, Left/Right between
 blocks, Up approves, Down rejects, a rejection only with text, and the

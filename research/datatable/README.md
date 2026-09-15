@@ -1,5 +1,7 @@
 # Data table features: what to build, what to lose, which defaults
 
+**Decided (scope-58):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 Kenny, 2026-09-13: the data table should search in specific columns and
 offer filters; build a demo page to decide which features to implement or
 lose, and which defaults to use. Also: the footer needs room between the

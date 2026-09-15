@@ -1,5 +1,7 @@
 # The alarm: a full-screen dramatic alert (`kp-alarm`)
 
+**Decided (scope-94):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 Kenny asked (2026-09-15) for something bigger than a toast: a full-screen popup with animated red text, "ACCESS DENIED" as a film shows a
 hacking attempt. The words come from the caller. It either needs a real click or goes away by itself after a number of seconds. Demo:
 [`demo.html`](demo.html) (77989 bytes, `wc -c`). It is listed in the catalogue under "Research to look at", opens in cyberpunk, and links

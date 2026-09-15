@@ -173,3 +173,4 @@ register's colours are.
 
 | fix-32-M1 | Does row text still show above the sticky data-table header? Measured at Kenny's next review of `#table--datatable-sticky` in FireDragon, wheel-scrolling in three themes. | open |
 | fix-36-M1 | Does the long dialog open inside the window and scroll when opened from the review dialog? Measured at Kenny's next review of `overlays--dialog-long` in retro: it opens at 02:00 and the wheel reaches 02:59. | open |
+| fix-37-M1 | Does the catalogue gate refuse a decided research topic left outside "Archived research"? Measured when the three theme portraits are archived after Kenny's judgement. | open |

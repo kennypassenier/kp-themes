@@ -3700,3 +3700,23 @@ fault.
 **8 · If the measurement fails.** Kenny names the theme and the zoom; Claude reproduces it at that CSS viewport and the package's `.kp-dialog[open]` gets a cap that no inherited knob can remove, as a correction of its own.
 
 **9 · When we review the measure.** At that review.
+
+## fix-37 · A decided research demo stayed under "Research to look at" (2026-09-16)
+
+**1 · What went wrong.** `research/laurels` was decided at scope-93 (direction B, wreaths, shade-light only) and built in `f692812d`, but `catalogue/pages.js` still listed it under "Research to look at" until Kenny asked ("en waarom is die laurel pagina nog bij 'research to look at'? dat is toch al lang afgehandeld"); moved in `db797b69`.
+
+**2 · Which gate let it through.** None. `gates/check-catalogue.mjs` held only that every review page is in the navigation, not that a decided topic is archived; the move was a step Claude forgot at the merge.
+
+**3 · Where the same fault sits.** Nowhere else: of the 14 research topics, only `theme-portraits` is under "Research to look at", and it waits for Kenny's judgement. Searched with: `for d in research/*/; do n=$(basename $d); awk -v n="research/$n/" '/group:/{g=$0} index($0,n){print g; exit}' catalogue/pages.js; grep -il decided $d/README.md; done`.
+
+**4 · How we prevent recurrence.** A decided topic's README carries `**Decided (scope-N)` near its top, and `decidedOutsideArchive` in `gates/check-catalogue.mjs` refuses one listed outside "Archived research".
+
+**5 · What the remedy costs.** About thirty lines in the catalogue gate and its test; a one-line note per decided topic (seven archived READMEs received theirs now; `control-height` and `grotesk-hover` have no README).
+
+**6 · Who enforces it.** Code: `npm run gates` through `check:catalogue`, with a unit test in `gates/check-catalogue.test.mjs`; writing the "Decided" line at each decision is Claude's discipline.
+
+**7 · How we measure it works, and when.** When the three portraits are archived after Kenny's judgement: the gate must refuse while their README says "Decided" and pages.js still lists them under "Research to look at". Proven once already by moving laurels back: the gate refused with `research/laurels (listed under "Research to look at")`.
+
+**8 · If the measurement fails.** The gate reads the decision from `docs/SCOPE.md` instead of the README line.
+
+**9 · When we review the measure.** After three topics archived without a fault.

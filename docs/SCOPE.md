@@ -1703,3 +1703,21 @@ in de tekstkleur": a ghost button's side bars on a toast take the toast's ink.
 Kenny also asked why the laurels demo was still under "Research to look at"
 when it was decided at scope-93: it moves to "Archived research".
 step-timing "Akkoord".
+
+**scope-99 · The portraits stop at the three pilots.** Kenny, 2026-09-16, after
+asking whether the portraits are useful enough for the work they take ("denk
+is mee, ik weet niet of die portretten die we aan het maken zijn nuttig genoeg
+zijn om zoveel werk in te steken"), and Claude's reckoning: the pilots showed
+him the alarm's misplaced glitch and gave the advice check its gaps; nineteen
+more meant about six times the pilot's 4776 lines and 171 blocks to judge.
+portrait-scope "Stoppen bij de drie proeven": the four agents building the other
+nineteen portraits are stopped and their work discarded; cyberpunk, formal and
+pastel keep their portraits and signatures; each theme's alarm is designed from
+its register and anatomy, as before scope-97 (formal's and pastel's from their
+portraits). portrait-screenshots "Buiten de repository": the three PNGs leave
+the branch and `research/theme-portraits/*.png` is ignored. fix-37 "Klopt".
+step-timing "Akkoord". While writing signatures, the stopped agents reported
+possible register faults in dark, shade-dark, sepia, shade-light, lapis and
+solstice (a focus ring clipped by dark's chamfer, menus that close without their
+fade, disabled buttons that still react, scope-25 gestures never built); they
+are unverified and wait for Kenny's decision.

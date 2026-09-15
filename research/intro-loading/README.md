@@ -1,5 +1,7 @@
 # Intros and loading [scope-85]
 
+**Decided (scope-86):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 Kenny's question (2026-09-15): can the intros make sure every resource (.css, .js) has loaded, or do those load too fast to
 matter? And: are these all the intros — did cyberpunk not have one?
 

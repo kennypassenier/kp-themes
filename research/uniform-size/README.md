@@ -1,5 +1,7 @@
 # Uniform size across themes (scope-79)
 
+**Decided (scope-79):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 **Question** (Kenny): not one control's height, but can every element keep nearly the same size and layout when the theme changes?
 Compare the largest theme, the smallest, and a median one.
 

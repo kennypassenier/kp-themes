@@ -1,5 +1,7 @@
 # Navigation alternatives — research note
 
+**Decided (scope-41):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 What this is: a one-page survey of the navigation patterns that are common
 alternatives to a plain top bar, measured against what `@kp-soft/themes`
 already ships. The demo beside it (`demo.html`) shows the current `.kp-nav`

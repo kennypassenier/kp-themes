@@ -9,7 +9,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bareControls } from './check-catalogue.mjs';
+import { bareControls, decidedOutsideArchive } from './check-catalogue.mjs';
 
 /** @param {string} html */
 const faults = (html) => bareControls(html).map((f) => f.fault);
@@ -37,4 +37,13 @@ test('a checkbox or radio without the package’s class is bare [scope-58]', () 
     assert.deepEqual(faults('<input class="kp-field__check" type="checkbox"><input class="kp-switch__input" type="checkbox" role="switch">'), []);
     // Text and markup inside comments and scripts is not a control.
     assert.deepEqual(faults('<!-- <input type="checkbox"> --><script>const s = "<select>";</script>'), []);
+});
+
+test('a decided research topic listed outside "Archived research" is refused [fix-37]', () => {
+    const shell = `[{ group: 'Research to look at', pages: [{ href: 'research/laurels/demo.html' }] },
+        { group: 'Archived research', pages: [{ href: 'research/alarm/demo.html' }] }]`;
+    const decided = '# Laurels\n\n**Decided (scope-93): wreaths.**\n';
+    assert.deepEqual(decidedOutsideArchive(shell, { laurels: decided }), ['research/laurels (listed under "Research to look at")']);
+    assert.deepEqual(decidedOutsideArchive(shell, { alarm: decided }), []);
+    assert.deepEqual(decidedOutsideArchive(shell, { laurels: '# Laurels\n\nFour directions.\n' }), []);
 });

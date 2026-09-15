@@ -1,5 +1,7 @@
 # Futuristic interface layouts — FUI research
 
+**Decided (scope-87):** archived; the decision and what was built from it are in `docs/SCOPE.md`.
+
 > **Withdrawn 2026-09-15 (scope-87):** Kenny dropped the futuristic layouts; nothing of this finding is built. Kept as the record of what was considered.
 
 Researched 2026-09-13 for kp-themes. FUI ("fantasy" or "fictional user
