@@ -111,6 +111,48 @@ headers and rows are one height in all 22: 36, 28, 36, 36, 36, 40, 40 px (compac
 with its 3 px border, 30). The column misses the prediction by the tabs, nav and side nav that were not taken; the form card by a
 hundredth, its title and labels.
 
+## B implemented (2026-09-15)
+
+Kenny started option B's round on top of E (`scope-87`). What landed, and where it differs from `option-b.css`:
+
+- **Package-owned type and block sizes, at titanium's values** (the median theme, `scope-82`), as `var(--token, default)` knobs.
+  `css/_rules.css`: `h1`–`h6` `--kp-h1-size`…`--kp-h6-size` (2, 1.5, 1.17, 1, 0.83, 0.67em, the browser's steps) at
+  `--kp-heading-line-height` 1.1; `[data-kp-surface] h1` `--kp-text-display` at `--kp-display-line-height` 1.08.
+  `css/components.css`: `--kp-card-title-size` 1.5rem and `--kp-dialog-title-size` 1.25rem (heading line height),
+  `--kp-footer-heading-size` 0.9375rem; `--kp-field-label-size` 0.9rem and `--kp-field-help-size` 0.8rem; `--kp-badge-size`
+  (`--kp-text-sm`), `--kp-badge-line-height` 1.4, `--kp-badge-padding-block` 0.125rem; `--kp-tab-size` (`--kp-text-md`),
+  `--kp-tab-padding-block` (`--kp-space-sm`); `--kp-nav-link-size` 0.9375rem with `--kp-nav-link-padding-block` (`--kp-space-sm`),
+  shared by `.kp-nav__disclosure` and the search trigger, whose border-box floor is one line plus both paddings;
+  `--kp-nav-menu-link-size` 0.875rem with `--kp-nav-menu-link-padding-block` (0.9 × `--kp-space-sm`); `--kp-sidenav-link-size`
+  0.875rem with `--kp-sidenav-link-padding-block` (`--kp-space-sm`); `--kp-breadcrumb-size` and `--kp-pagination-size` 0.9rem.
+  Everything else reads `--kp-line-height`. Titanium's 0.94rem link, 0.92rem menu link, 1.2rem dialog title and 0.95rem footer
+  heading were taken to whole pixels: at 15.04px a bar's height fell between two layout units and the scroll offset written from
+  it no longer matched (`tests/nav-sticky.spec.mjs`). B's mock used 1rem titles, 36px tabs and links; this keeps titanium's.
+- **Registers.** The guard's 322 findings on the registers of `4783e3f` (265 declarations in all 22) are gone or
+  became `padding-inline` / `padding-left` + `padding-right`; eleven rules left empty were removed, and nine badge rules shared with
+  `.kp-tag` (and cyberpunk's `.kp-health`, high-contrast's `.kp-field__required`) now give the uncovered part its size in a rule of
+  its own. Cyberpunk's hover copy on a bar link reads `--kp-nav-link-padding-block` for its inset. Six declarations stay, each named
+  with its reason in `MAY_KEEP`: retro's h1 and dialog title bars, retro's surface headline that undoes the bar, deco's cartouche,
+  terminal's two-line floor for the typed headline, cyberpunk's bracket room above a surface h2.
+- **Guard.** `gates/box-metrics.test.mjs` adds `COVERED_TYPE`: font, font size, line height, block padding and heights on those
+  roots, type only on `.kp-nav__links`, `.kp-breadcrumb` and `.kp-pagination`; and the tokens above. 322 findings on `4783e3f`, 0 now.
+
+Measured with `node research/uniform-size/measure.mjs --options a --out measurements-b-implemented.json` and
+`node research/uniform-size/analyze.mjs --in measurements-b-implemented.json --detail` (firefox, the package as built). The "3"
+columns are the research's three, brutalism, titanium and blueprint:
+
+| max ÷ min            | form 22  | table 22 | column 22 | page 22  | tabs 22 | shell 22 | dialog 22 | form 3 | column 3 | page 3 |
+| -------------------- | -------- | -------- | --------- | -------- | ------- | -------- | --------- | ------ | -------- | ------ |
+| E, implemented       | 1.08     | 1.06     | 1.15      | 1.09     | 1.32    | 1.64     | 1.39      | 1.02   | 1.13     | 1.05   |
+| B, predicted         | 1.03     | 1.03     | 1.14      | 1.06     | 1.24    | 1.45     | 1.20      | 1.01   | 1.05     | 1.03   |
+| **B, implemented**   | **1.02** | **1.03** | **1.13**  | **1.06** | 1.26    | 1.63     | 1.23      | 1.01   | 1.09     | 1.03   |
+| implemented, compact | 1.03     | 1.04     | 1.14      | 1.06     | 1.28    | 1.65     | 1.24      | 1.03   | 1.10     | 1.04   |
+
+Card title and field label are one height in all 22 (26.4 and 21.6px); nav links 38.5–44.5 (brutalism's 3px border), side-nav
+rows 37–41, tabs 41–46, badges 22.2–26.2. What is left is cause 3 and cause 4: grotesk's bar stacks its links at ≤40rem, now three
+38.5px rows (nav 183.5px, shell 347.5 against nostromo's 213.5), and dialog titles that wrap in wide capitals (retro 28px). The column
+misses B's three-theme prediction for the same reason: the mock gave links 36px and no stacking cost.
+
 ## Recommendation
 
 Take **E now and B's type scale second**. E is small, lives in the base layer, and removes causes 1 and 2 for what users touch most:

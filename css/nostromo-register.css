@@ -60,15 +60,12 @@
     [data-theme='nostromo'] h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        line-height: 1.15;
         letter-spacing: 0.01em;
         text-transform: none;
         color: var(--foreground);
     }
 
     [data-theme='nostromo'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         max-width: 20ch;
     }
 
@@ -150,7 +147,6 @@
 
     [data-theme='nostromo'] .kp-nav__links {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -450,7 +446,6 @@
 
     [data-theme='nostromo'] .kp-field__label {
         font-family: var(--theme-font-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -533,10 +528,6 @@
         color: var(--card-foreground);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-    }
-
-    [data-theme='nostromo'] .kp-card__title {
-        font-size: 1.25rem;
     }
 
     [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] {
@@ -1047,7 +1038,6 @@
     }
 
     [data-theme='nostromo'] .kp-footer h4 {
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-foreground);
@@ -1197,9 +1187,9 @@
         font-family: var(--theme-font-mono);
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        font-size: 0.6875rem;
         border-radius: 0;
-        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        padding-left: 1.65rem;
+        padding-right: 0.75rem;
         border-block-end: 1px solid var(--border);
     }
 
@@ -1339,9 +1329,8 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0.4rem;
+        padding-inline: 0.4rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         border: 0;

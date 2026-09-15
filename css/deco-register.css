@@ -76,13 +76,10 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        line-height: 1.08;
         margin: 0;
     }
 
     [data-theme='deco'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         max-width: 18ch;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -245,10 +242,9 @@
 
     [data-theme='deco'] .kp-nav__link {
         display: inline-block;
-        padding: 0.5rem 0.7rem;
+        padding-inline: 0.7rem;
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.8rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border-bottom: 1px solid transparent;
@@ -314,10 +310,9 @@
 
     [data-theme='deco'] .kp-nav__menu a {
         display: block;
-        padding: 0.4rem 0.5rem;
+        padding-inline: 0.5rem;
         color: var(--popover-foreground);
         text-decoration: none;
-        font-size: 0.82rem;
         border-radius: 0;
     }
 
@@ -440,7 +435,6 @@
     /* ── Fields ────────────────────────────────────────────────────────── */
 
     [data-theme='deco'] .kp-field__label {
-        font-size: 0.78rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -485,7 +479,6 @@
     }
 
     [data-theme='deco'] .kp-field__help {
-        font-size: 0.72rem;
         color: var(--muted-foreground);
     }
 
@@ -530,7 +523,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        font-size: 1.3rem;
     }
 
     [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] {
@@ -602,7 +594,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        font-size: 1.2rem;
     }
 
     [data-theme='deco'] .kp-toast {
@@ -715,7 +706,6 @@
     [data-theme='deco'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -1376,8 +1366,7 @@
        than a link in it. The underline a plain link carries is not: it says
        "this is a link", and the trigger is not one. */
     [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.8rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border: 0;

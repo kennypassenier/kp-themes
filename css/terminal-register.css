@@ -170,15 +170,12 @@
         font-family: var(--theme-font-display);
         font-weight: 400;
         letter-spacing: 0.02em;
-        line-height: 1.15;
         color: var(--primary);
         text-shadow: var(--kp-bloom);
         -webkit-font-smoothing: none;
     }
 
     [data-theme='terminal'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         letter-spacing: 0.01em;
         margin-block: 0 0.35em;
         min-block-size: 2.2em;
@@ -330,8 +327,7 @@
 
     [data-theme='terminal'] .kp-nav__link {
         display: block;
-        padding: 0.35rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.06em;
         color: var(--foreground);
         border-radius: 0;
@@ -414,8 +410,7 @@
 
     [data-theme='terminal'] .kp-nav__menu a {
         display: block;
-        padding: 0.3rem 0.8rem;
-        font-size: 0.85rem;
+        padding-inline: 0.8rem;
         color: var(--foreground);
         text-decoration: none;
         border-radius: 0;
@@ -568,7 +563,6 @@
     /* ── Fields: wells, and the block cursor inside the box [R6-Q7] ───── */
 
     [data-theme='terminal'] .kp-field__label {
-        font-size: 0.85rem;
         letter-spacing: 0.08em;
         color: var(--muted-foreground);
     }
@@ -611,7 +605,6 @@
     }
 
     [data-theme='terminal'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -719,7 +712,6 @@
     }
 
     [data-theme='terminal'] .kp-card__title {
-        font-size: 1.15rem;
         letter-spacing: 0.06em;
     }
 
@@ -904,7 +896,6 @@
     [data-theme='terminal'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.85rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -1516,8 +1507,8 @@
 
     [data-theme='terminal'] .kp-sidenav__link,
     [data-theme='terminal'] .kp-sidenav__category-toggle {
-        padding: 0.35rem 0.7rem 0.35rem 1.4rem;
-        font-size: 0.9rem;
+        padding-left: 1.4rem;
+        padding-right: 0.7rem;
         letter-spacing: 0.06em;
         border-radius: 0;
     }
@@ -1668,8 +1659,7 @@
        rather than a link in it. The underline a plain link carries is not:
        it says "this is a link", and the trigger is not one. */
     [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.06em;
         white-space: nowrap;
         border: 0;

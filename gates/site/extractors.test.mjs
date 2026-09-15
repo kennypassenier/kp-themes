@@ -195,7 +195,14 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // sticky-shrink (scope-85) added one: --kp-nav-pad-scale, the factor
     // every bar multiplies its block padding by, which the compact state
     // sets from --kp-nav-sticky-shrink: 181 + 1.
-    assert.equal(result.expected, 182, 'AR21 counted 182 --kp-* properties in css/components.css');
+    // Option B of research/uniform-size/ (scope-87) put the type sizes of
+    // titles, labels, tabs, badges and navigation in the package and added
+    // eighteen: the heading line height; the card, dialog and footer title
+    // sizes; the help text's size; the badge's size, line height and block
+    // padding; the tab's size and block padding; the bar link's, the menu
+    // link's and the side-navigation link's size and block padding; the
+    // breadcrumb's and the pagination's size: 182 + 18.
+    assert.equal(result.expected, 200, 'AR21 counted 200 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -228,7 +235,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    assert.equal(result.readCount, 182);
+    // Option B's eighteen (scope-87) are read through var() too.
+    assert.equal(result.readCount, 200);
     assert.deepEqual(result.unread, []);
 });
 

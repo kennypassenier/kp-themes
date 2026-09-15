@@ -80,12 +80,9 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: -0.02em;
-        line-height: 1.05;
     }
 
     [data-theme='brutalism'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 0.98;
         letter-spacing: -0.025em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -235,9 +232,8 @@
 
     [data-theme='brutalism'] .kp-nav__link {
         display: block;
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -325,9 +321,8 @@
 
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 500;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -451,7 +446,6 @@
 
     [data-theme='brutalism'] .kp-field__label {
         font-weight: 700;
-        font-size: 0.78rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
     }
@@ -492,7 +486,6 @@
     }
 
     [data-theme='brutalism'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -583,10 +576,6 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-    }
-
-    [data-theme='brutalism'] .kp-card__title {
-        font-size: 1.5rem;
     }
 
     [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] {
@@ -719,10 +708,6 @@
         gap: 0.9rem;
     }
 
-    [data-theme='brutalism'] .kp-dialog__title {
-        font-size: 1.5rem;
-    }
-
     /* The menu keeps a ring's width of paper inside its frame: with the
        line directly against the items, an item's ink ring fell onto the
        ink line and painted nothing new (AR30's dashboard test). */
@@ -821,7 +806,6 @@
     [data-theme='brutalism'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -1433,9 +1417,8 @@
     [data-theme='brutalism'] .kp-sidenav__category-toggle {
         border: 2px solid var(--foreground);
         background: var(--background);
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         text-transform: uppercase;
         border-radius: 0;
         box-shadow: 3px 3px 0 var(--foreground);
@@ -1608,8 +1591,7 @@
        rather than a link in it. The underline a plain link carries is not:
        it says "this is a link", and the trigger is not one. */
     [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.82rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;

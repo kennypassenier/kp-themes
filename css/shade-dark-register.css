@@ -50,11 +50,9 @@
        the whole point of a reading theme is that a heading is just text. */
     [data-theme='shade-dark'] [data-kp-surface] h1 {
         display: block;
-        padding: 0;
+        padding-inline: 0;
         background: none;
         color: var(--foreground);
-        font-size: var(--kp-text-display);
-        line-height: 1.12;
         letter-spacing: -0.01em;
         margin-block: 0 1rem;
         text-wrap: balance;
@@ -1175,8 +1173,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: var(--radius);
         background: none;

@@ -285,8 +285,13 @@ the median theme's — titanium, index 1.008 on 2026-09-14 in
 `research/uniform-size/` — so no new drift in element sizes enters with it.
 Discipline-enforced for now: before a new theme is integrated, Claude runs
 `research/uniform-size/measure.mjs` and `analyze.mjs` over it and reports its
-size index beside the median's in the integration form. Option B's round turns
-the rest into tokens a register may not override.
+size index beside the median's in the integration form. Since option B
+(`scope-87`) headings, card, dialog and footer titles, form labels and help
+text, tabs, badges, bar, menu and side-navigation links, the breadcrumb and
+the pagination take their type size, line height and block padding from the
+package too, at titanium's values; the same gate refuses a register that sets
+them or restates their tokens. A register keeps colour, border, face, case,
+letter spacing and ornaments.
 
 ## Round six — the next cyberpunk (opened 2026-09-07)
 

@@ -301,7 +301,6 @@
     [data-theme='grotesk'] .kp-nav__link {
         color: var(--muted-foreground);
         font-weight: 600;
-        font-size: 0.9rem;
         letter-spacing: 0.01em;
         background: none;
         border-radius: 0;
@@ -366,7 +365,6 @@
 
     [data-theme='grotesk'] .kp-nav__menu a {
         color: var(--popover-foreground);
-        font-size: 0.88rem;
     }
 
     [data-theme='grotesk'] .kp-nav__menu a:hover,
@@ -519,7 +517,6 @@
 
     [data-theme='grotesk'] .kp-field__label {
         font-weight: 700;
-        font-size: 0.9rem;
     }
 
     [data-theme='grotesk'] .kp-field__input {
@@ -540,7 +537,6 @@
 
     [data-theme='grotesk'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         color: var(--muted-foreground);
     }
 
@@ -752,7 +748,6 @@
     [data-theme='grotesk'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 800;
-        font-size: 0.95rem;
     }
 
     [data-theme='grotesk'] .kp-footer a {
@@ -803,8 +798,12 @@
     [data-theme='grotesk'] .kp-tag {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.75rem;
         letter-spacing: 0.06em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='grotesk'] .kp-tag {
+        font-size: 0.75rem;
     }
 
     [data-theme='grotesk'] .kp-health__dot {
@@ -998,7 +997,6 @@
     [data-theme='grotesk'] .kp-breadcrumb,
     [data-theme='grotesk'] .kp-pagination {
         font-family: var(--kp-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='grotesk'] .kp-pagination a[aria-current],
@@ -1276,7 +1274,7 @@
     [data-theme='grotesk'] .kp-sidenav__category-toggle {
         border-radius: 0;
         border-block-end: 1px solid var(--border);
-        padding: 0.6rem 0.9rem;
+        padding-inline: 0.9rem;
     }
 
     [data-theme='grotesk'] .kp-sidenav__link[aria-current='page'] {
@@ -1428,8 +1426,7 @@
        one. */
     [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
-        padding: 0.25rem 0;
-        font-size: 0.9rem;
+        padding-inline: 0;
         font-weight: 600;
         letter-spacing: 0.01em;
         white-space: nowrap;

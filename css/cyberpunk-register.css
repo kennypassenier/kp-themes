@@ -73,7 +73,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.01em;
-        line-height: 0.95;
     }
 
     /* Microlabels: uppercase mono with the diegetic prefix. The mono face
@@ -101,9 +100,7 @@
        step of the scale (S47). The headline reveal (decipher and one slice
        burst) is C3's; the slice keyframes below are its rest-to-burst. */
     [data-theme='cyberpunk'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 0.88;
         letter-spacing: 0.005em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -317,9 +314,8 @@
 
     [data-theme='cyberpunk'] .kp-nav__link {
         display: block;
-        padding: 0.7rem 1.1rem 0.8rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.92rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         text-decoration: none;
@@ -356,7 +352,10 @@
     [data-theme='cyberpunk'] .kp-nav__link[data-kp-text]::before {
         content: attr(data-kp-text);
         position: absolute;
-        inset: 0.7rem 1.1rem 0.8rem;
+        /* The copy lies over the word: the link's block padding is the
+           package's [scope-87], so the inset reads it rather than restating
+           the 0.7rem and 0.8rem this register used to pad with. */
+        inset: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 1.1rem;
         opacity: 0;
         pointer-events: none;
         color: var(--accent);
@@ -397,8 +396,8 @@
 
     [data-theme='cyberpunk'] .kp-nav__menu a {
         display: block;
-        padding: 0.55rem 1rem 0.55rem 1.1rem;
-        font-size: 0.85rem;
+        padding-left: 1.1rem;
+        padding-right: 1rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         text-decoration: none;
@@ -626,7 +625,6 @@
 
     [data-theme='cyberpunk'] .kp-field__label {
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         font-weight: 400;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -671,7 +669,6 @@
 
     [data-theme='cyberpunk'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.7rem;
         letter-spacing: 0.06em;
     }
 
@@ -753,7 +750,6 @@
     [data-theme='cyberpunk'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 800;
-        font-size: 1.6rem;
         letter-spacing: 0.02em;
         text-transform: uppercase;
     }
@@ -915,9 +911,14 @@
     [data-theme='cyberpunk'] .kp-health {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag and the health keep this register's. */
+    [data-theme='cyberpunk'] .kp-tag,
+    [data-theme='cyberpunk'] .kp-health {
+        font-size: 0.72rem;
     }
 
     [data-theme='cyberpunk'] .kp-badge {
@@ -1088,7 +1089,6 @@
 
     [data-theme='cyberpunk'] .kp-breadcrumb {
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -1110,7 +1110,6 @@
     [data-theme='cyberpunk'] .kp-tab {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
     }
@@ -1341,7 +1340,6 @@
 
     [data-theme='cyberpunk'] .kp-footer h4 {
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--primary);
@@ -1712,9 +1710,8 @@
 
     [data-theme='cyberpunk'] .kp-sidenav__link,
     [data-theme='cyberpunk'] .kp-sidenav__category-toggle {
-        padding: 0.7rem 1.1rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.92rem;
         border-radius: 0;
     }
 
@@ -1766,8 +1763,7 @@
     [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
         isolation: isolate;
-        padding: 0.7rem 1.1rem 0.8rem;
-        font-size: 0.92rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
         letter-spacing: 0.12em;
         text-transform: uppercase;

@@ -109,7 +109,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        line-height: 1.1;
     }
 
     /* Microlabels: the OSD face, pink, with the tape prefix. */
@@ -133,9 +132,7 @@
        in chrome — the 50/51 break of the genre's title treatment, a
        stroke of near-white, an extrusion below. */
     [data-theme='synthwave'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 1;
         letter-spacing: 0.06em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -431,9 +428,8 @@
 
     [data-theme='synthwave'] .kp-nav__link {
         display: block;
-        padding: 0.7rem 1.1rem 1.2rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -533,8 +529,7 @@
 
     [data-theme='synthwave'] .kp-nav__menu a {
         display: block;
-        padding: 0.55rem 1rem;
-        font-size: 0.85rem;
+        padding-inline: 1rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -684,7 +679,6 @@
 
     [data-theme='synthwave'] .kp-field__label {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -718,7 +712,6 @@
 
     [data-theme='synthwave'] .kp-field__help {
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
     }
 
@@ -991,7 +984,6 @@
 
     [data-theme='synthwave'] .kp-footer h4 {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -1017,10 +1009,14 @@
         border-radius: var(--radius);
         border: 1px solid currentColor;
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='synthwave'] .kp-tag {
+        font-size: 0.95rem;
     }
 
     [data-theme='synthwave'] .kp-health__dot {
@@ -1239,7 +1235,6 @@
     [data-theme='synthwave'] .kp-breadcrumb,
     [data-theme='synthwave'] .kp-pagination {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -1723,9 +1718,8 @@
 
     [data-theme='synthwave'] .kp-sidenav__link,
     [data-theme='synthwave'] .kp-sidenav__category-toggle {
-        padding: 0.6rem 1.1rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         border-radius: 0;
     }
 
@@ -1797,8 +1791,7 @@
        the trigger is not one. */
     [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
-        padding: 0.7rem 1.1rem 1.2rem;
-        font-size: 0.9rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
         letter-spacing: 0.18em;
         text-transform: uppercase;

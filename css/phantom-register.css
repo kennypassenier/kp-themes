@@ -107,7 +107,6 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.02em;
-        line-height: 1.05;
     }
 
     /* Microlabels: mono, uppercase, a red tick. */
@@ -130,9 +129,7 @@
     /* The heading accent: the display step (S47), a hard black shadow and
        one red offset — the theme's whole character. */
     [data-theme='phantom'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 0.94;
         margin-block: 0 0.35em;
         text-wrap: balance;
         color: var(--foreground);
@@ -343,10 +340,9 @@
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1.02rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -449,10 +445,9 @@
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 1rem;
+        padding-inline: 1rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -642,7 +637,6 @@
     [data-theme='phantom'] .kp-field__label {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -676,7 +670,6 @@
 
     [data-theme='phantom'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.06em;
     }
 
@@ -753,7 +746,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 900;
-        font-size: 1.9rem;
         letter-spacing: 0.02em;
         text-transform: uppercase;
         text-shadow: 3px 3px 0 var(--background);
@@ -962,7 +954,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 800;
-        font-size: 1.15rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -1012,10 +1003,14 @@
         border-radius: 0;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.8rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         transform: skewX(var(--kp-skew));
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='phantom'] .kp-tag {
+        font-size: 0.8rem;
     }
 
     [data-theme='phantom'] .kp-health__dot {
@@ -1239,7 +1234,6 @@
     [data-theme='phantom'] .kp-pagination {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
@@ -1713,7 +1707,7 @@
     [data-theme='phantom'] .kp-sidenav__category-toggle {
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
     }
 
     [data-theme='phantom'] .kp-sidenav__link::before {
@@ -1814,9 +1808,8 @@
     [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
         font-family: var(--theme-font-display);
-        font-size: 1.02rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;

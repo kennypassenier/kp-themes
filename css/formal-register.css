@@ -63,17 +63,14 @@
     }
 
     [data-theme='formal'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-variation-settings: 'opsz' 144;
         letter-spacing: -0.03em;
-        line-height: 1.08;
         margin-block: 0 1.25rem;
     }
 
     [data-theme='formal'] [data-kp-surface='app'] h2 {
         font-variation-settings: 'opsz' 90;
         letter-spacing: -0.02em;
-        font-size: 1.5rem;
     }
 
     [data-theme='formal'] .microlabel {
@@ -211,7 +208,6 @@
 
     [data-theme='formal'] .kp-nav__link {
         font-family: var(--theme-font-body);
-        font-size: 0.9375rem;
         color: var(--foreground);
         border-radius: calc(var(--radius) / 2);
     }
@@ -530,7 +526,6 @@
     }
 
     [data-theme='formal'] .kp-footer h4 {
-        font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -974,9 +969,8 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
+        padding-inline: 0;
         font-family: var(--theme-font-body);
-        font-size: 0.9375rem;
         border: 0;
         border-bottom: 2px solid transparent;
         border-radius: calc(var(--radius) / 2);

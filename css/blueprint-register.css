@@ -98,12 +98,9 @@
     [data-theme='blueprint'] h2,
     [data-theme='blueprint'] h3 {
         font-family: var(--theme-font-display);
-        line-height: 1.15;
     }
 
     [data-theme='blueprint'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         max-width: 16ch;
         margin-block: 0;
     }
@@ -393,7 +390,6 @@
     [data-theme='blueprint'] .kp-nav__link {
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.9rem;
         border-block-end: 1px solid transparent;
         border-radius: 0;
         background: none;
@@ -488,10 +484,9 @@
         display: flex;
         align-items: baseline;
         gap: 0.5em;
-        padding: 0.42rem 0.6rem;
+        padding-inline: 0.6rem;
         color: var(--foreground);
         text-decoration: none;
-        font-size: 0.85rem;
         border-radius: 0;
     }
 
@@ -751,10 +746,6 @@
         border-radius: 0;
     }
 
-    [data-theme='blueprint'] .kp-dialog__title {
-        font-size: 1.05rem;
-    }
-
     [data-theme='blueprint'] .kp-menu__item:hover {
         background: var(--kp-menu-wash);
     }
@@ -797,7 +788,6 @@
     [data-theme='blueprint'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
         font-weight: 600;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
     }
 
@@ -818,8 +808,12 @@
         border-radius: 2px;
         border: 1px solid var(--border-strong);
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='blueprint'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     [data-theme='blueprint'] .kp-health__dot {
@@ -976,7 +970,6 @@
     [data-theme='blueprint'] .kp-breadcrumb,
     [data-theme='blueprint'] .kp-pagination {
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='blueprint'] .kp-pagination a[aria-current],
@@ -1198,7 +1191,6 @@
         border-radius: 0;
         padding-inline-start: 1.5rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
     }
 
     [data-theme='blueprint'] .kp-sidenav__link::before {
@@ -1358,8 +1350,7 @@
        it. The underline a plain link carries is not: it says "this is a
        link", and the trigger is not one. */
     [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger {
-        font-size: 0.9rem;
-        padding: 0.25rem 0;
+        padding-inline: 0;
         border: 0;
         border-block-end: 1px solid transparent;
         border-radius: 0;

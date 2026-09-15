@@ -229,13 +229,10 @@
     [data-theme='titanium'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
         color: var(--foreground);
     }
 
     [data-theme='titanium'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         letter-spacing: -0.02em;
         margin-block: 0 0.35em;
         text-wrap: balance;
@@ -433,10 +430,9 @@
     }
 
     [data-theme='titanium'] .kp-nav__link {
-        padding: 0.5rem 0.8rem;
+        padding-inline: 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
-        font-size: 0.94rem;
         color: var(--muted-foreground);
     }
 
@@ -500,10 +496,9 @@
 
     [data-theme='titanium'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
         color: var(--foreground);
-        font-size: 0.92rem;
     }
 
     [data-theme='titanium'] .kp-nav__menu a:hover {
@@ -585,7 +580,6 @@
 
     [data-theme='titanium'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.9rem;
         color: var(--foreground);
     }
 
@@ -620,7 +614,6 @@
     }
 
     [data-theme='titanium'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -694,7 +687,6 @@
 
     [data-theme='titanium'] .kp-card__title {
         font-weight: 700;
-        font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
@@ -818,7 +810,6 @@
 
     [data-theme='titanium'] .kp-dialog__title {
         font-weight: 700;
-        font-size: 1.2rem;
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -881,7 +872,6 @@
     }
 
     [data-theme='titanium'] .kp-footer h4 {
-        font-size: 0.95rem;
         color: var(--foreground);
     }
 
@@ -1111,7 +1101,6 @@
 
     [data-theme='titanium'] .kp-breadcrumb,
     [data-theme='titanium'] .kp-pagination {
-        font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
@@ -1454,8 +1443,7 @@
        it. The underline a plain link carries is not: it says "this is a
        link", and the trigger is not one. */
     [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.94rem;
+        padding-inline: 0.8rem;
         font-weight: 500;
         border: 0;
         border-radius: var(--radius);

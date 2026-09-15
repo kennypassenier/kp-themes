@@ -106,8 +106,6 @@
     /* The heading accent: the display step, balanced, on a surface. */
     [data-theme='pastel'] [data-kp-surface] h1 {
         position: relative;
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         letter-spacing: -0.01em;
         margin-block: 0 1.1rem;
         max-width: 22ch;
@@ -300,10 +298,9 @@
     }
 
     [data-theme='pastel'] .kp-nav__link {
-        padding: 0.5rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: 0.6rem;
         color: var(--foreground);
-        font-size: 0.9rem;
         background: none;
     }
 
@@ -364,10 +361,9 @@
     }
 
     [data-theme='pastel'] .kp-nav__menu a {
-        padding: 0.45rem 0.6rem;
+        padding-inline: 0.6rem;
         border-radius: 0.5rem;
         color: var(--foreground);
-        font-size: 0.86rem;
     }
 
     [data-theme='pastel'] .kp-nav__menu a:hover,
@@ -501,7 +497,6 @@
     /* ── Fields ───────────────────────────────────────────────────────── */
 
     [data-theme='pastel'] .kp-field__label {
-        font-size: 0.82rem;
         font-weight: 600;
         color: var(--foreground);
     }
@@ -522,7 +517,6 @@
 
     [data-theme='pastel'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.8rem;
     }
 
     [data-theme='pastel'] .kp-field--invalid .kp-field__input {
@@ -567,7 +561,6 @@
     }
 
     [data-theme='pastel'] .kp-card__title {
-        font-size: 1.3rem;
         font-weight: 700;
     }
 
@@ -798,7 +791,6 @@
     }
 
     [data-theme='pastel'] .kp-footer h4 {
-        font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--muted-foreground);
@@ -970,11 +962,12 @@
 
     [data-theme='pastel'] .kp-breadcrumb {
         color: var(--muted-foreground);
-        font-size: 0.85rem;
     }
 
+    /* The pagination's size is the package's [scope-87]; its numerals are
+       this register's: tabular, so the page numbers line up. */
     [data-theme='pastel'] .kp-pagination {
-        font-size: 0.85rem;
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='pastel'] .kp-pagination a[aria-current],
@@ -1187,8 +1180,7 @@
     [data-theme='pastel'] .kp-sidenav__link,
     [data-theme='pastel'] .kp-sidenav__category-toggle {
         border-radius: 0.9rem;
-        padding: 0.55rem 0.8rem;
-        font-size: 0.9rem;
+        padding-inline: 0.8rem;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -1280,8 +1272,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         border: 0;
         border-radius: 0.6rem;
         background: none;

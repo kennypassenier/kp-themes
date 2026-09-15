@@ -3660,6 +3660,53 @@
         font-family: var(--theme-font-display, var(--theme-font-body, ui-sans-serif, system-ui, sans-serif));
     }
 
+    /* A heading's size is the package's in every theme [scope-87, option B
+     * of research/uniform-size/]: the browser's own steps, in em as the
+     * browser writes them, at titanium's heading line height — the median
+     * theme's [scope-82]. A register keeps the face, weight, case, letter
+     * spacing and ornaments; gates/box-metrics.test.mjs refuses a register
+     * that sets a heading's font size, line height, block padding or
+     * height. */
+    h1 {
+        font-size: var(--kp-h1-size, 2em);
+    }
+
+    h2 {
+        font-size: var(--kp-h2-size, 1.5em);
+    }
+
+    h3 {
+        font-size: var(--kp-h3-size, 1.17em);
+    }
+
+    h4 {
+        font-size: var(--kp-h4-size, 1em);
+    }
+
+    h5 {
+        font-size: var(--kp-h5-size, 0.83em);
+    }
+
+    h6 {
+        font-size: var(--kp-h6-size, 0.67em);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
+    /* A surface's headline: the display size every theme already declared,
+     * at titanium's display line height. */
+    [data-kp-surface] h1 {
+        font-size: var(--kp-text-display, clamp(2rem, 4vw, 3rem));
+        line-height: var(--kp-display-line-height, 1.08);
+    }
+
     /* ── Theme flourishes ─────────────────────────────────────────────── */
 
     [data-theme='formal'] h1,
@@ -4553,6 +4600,13 @@
         font-size: var(--kp-footer-size, 0.875rem);
     }
 
+    /* A footer column's heading: its size is the package's [scope-87],
+     * titanium's 0.95rem taken to 15px. */
+    .kp-footer h4 {
+        font-size: var(--kp-footer-heading-size, 0.9375rem);
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
     /* An error page is a message, not a wall: the destructive colour names
  * the failure, the body text explains it on the ordinary surface. */
     .kp-error {
@@ -4890,10 +4944,15 @@
         display: inline-flex;
         align-items: center;
         gap: 0.3em;
-        padding: 0.125rem 0.5rem;
+        /* The badge's block metrics and type size are the package's in every
+     * theme [scope-87, option B of research/uniform-size/]: the values are
+     * titanium's, the median theme's [scope-82]. A register keeps its
+     * inline padding, colour, border, face, case and letter spacing;
+     * gates/box-metrics.test.mjs refuses the rest. */
+        padding: var(--kp-badge-padding-block, 0.125rem) 0.5rem;
         border-radius: var(--kp-radius-pill, 999px);
-        font-size: var(--kp-text-sm, 0.8125rem);
-        line-height: 1.4;
+        font-size: var(--kp-badge-size, var(--kp-text-sm, 0.8125rem));
+        line-height: var(--kp-badge-line-height, 1.4);
         background: var(--muted);
         color: var(--muted-foreground);
         /* The overflow floor above puts five components on `anywhere`, and
@@ -4924,7 +4983,10 @@
 
     .kp-card__title {
         margin: 0 0 0.25rem;
-        font-size: var(--kp-text-md, 1rem);
+        /* A title's size is the package's [scope-87]: titanium's 1.5rem at
+     * the heading line height. */
+        font-size: var(--kp-card-title-size, 1.5rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     .kp-card__body {
@@ -5107,7 +5169,10 @@
     }
 
     .kp-field__label {
-        font-size: var(--kp-field-label-size, 0.875rem);
+        /* The label's and the help text's size are the package's [scope-87]:
+     * titanium's, on the running line height. */
+        font-size: var(--kp-field-label-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
@@ -5177,7 +5242,8 @@
     }
 
     .kp-field__help {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--muted-foreground);
     }
 
@@ -5754,13 +5820,19 @@
         /* Never wider than the bar it sits in: a narrow bar gives the
      * row to the brand and the toggle rather than to an empty box. */
         min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
-        padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+        /* As tall as a bar link and in its type size [scope-87], whatever
+     * border the register draws: a border-box floor of one line and the
+     * link's two block paddings, the label centred in it. */
+        box-sizing: border-box;
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)));
+        padding: 0 0.5rem 0 0.75rem;
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         background: var(--background);
         color: var(--muted-foreground);
         font: inherit;
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
         /* One line: squeezed on grotesk's bar, the key hint broke into
      * "Ctrl" over "K" inside its own chip [scope-80]. */
         white-space: nowrap;
@@ -5781,6 +5853,22 @@
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */
+    /* A bar link's size is the package's in every theme [scope-87, option B
+ * of research/uniform-size/]: its type size, line height and block
+ * padding are titanium's, the median theme's [scope-82]. A register keeps
+ * its inline padding, colour, border, face, case, letter spacing and
+ * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
+ * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
+ * two layout units, and the bar's measured height and the scroll offset
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The links sit in
+ * a column item (below), so the padding holds its room even where a
+ * register leaves the link inline. */
+    .kp-nav__link {
+        padding-block: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
     .kp-nav__link[aria-current='page'] {
         font-weight: 600;
         text-decoration-thickness: 2px;
@@ -5931,9 +6019,13 @@
         }
     }
 
+    /* A dropdown's and a mega menu's links: their size is the package's
+     * [scope-87], titanium's padding and its 0.92rem taken to 14px. */
     .kp-nav__menu a {
         display: block;
-        padding: 0.375rem 0.875rem;
+        padding: var(--kp-nav-menu-link-padding-block, calc(var(--kp-space-sm, 0.5rem) * 0.9)) 0.875rem;
+        font-size: var(--kp-nav-menu-link-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
     }
 
     /* A dropdown with no room on its item's end side hangs from the other
@@ -5965,11 +6057,15 @@
      * too) with a caret after its word that turns while open. */
     .kp-nav__disclosure {
         margin: 0;
-        padding: 0;
+        /* The bar link's block padding and type size [scope-87], restated
+         * after `font: inherit`, which would reset them. */
+        padding: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0;
         border: 0;
         background: transparent;
         color: inherit;
         font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
         cursor: pointer;
     }
 
@@ -6388,9 +6484,13 @@
         box-sizing: border-box;
         inline-size: 100%;
         min-inline-size: 0;
-        padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
+        /* The row's block padding, type size and line height are the
+           package's in every theme [scope-87], titanium's values; a
+           register keeps its inline padding (gates/box-metrics.test.mjs). */
+        padding: var(--kp-sidenav-item-pad, var(--kp-sidenav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0.6rem);
         font: inherit;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: var(--kp-line-height, 1.5);
         text-align: start;
         text-decoration: none;
         color: inherit;
@@ -6606,6 +6706,10 @@
 
     .kp-dialog__title {
         margin: 0 0 0.5rem;
+        /* Titanium's 1.2rem, taken to 1.25rem so the line is a whole pixel
+     * count (22px) at the heading line height [scope-87]. */
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     /* The confirmation TH107 opens is a .kp-dialog with one question in
@@ -6916,12 +7020,17 @@
     }
 
     .kp-tab {
-        padding: 0.5rem 0.75rem;
+        /* The tab's block padding, type size and line height are the
+     * package's in every theme [scope-87], titanium's values; a register
+     * keeps its inline padding, border, face and case. */
+        padding: var(--kp-tab-padding-block, var(--kp-space-sm, 0.5rem)) 0.75rem;
         border: 0;
         border-bottom: 2px solid transparent;
         background: none;
         color: var(--muted-foreground);
         font: inherit;
+        font-size: var(--kp-tab-size, var(--kp-text-md, 1rem));
+        line-height: var(--kp-line-height, 1.5);
         cursor: pointer;
     }
 
@@ -6938,6 +7047,17 @@
     }
 
     /* --- Breadcrumb and pagination --------------------------------------- */
+
+    /* Both trails' type size is the package's [scope-87]: titanium's. */
+    .kp-breadcrumb {
+        font-size: var(--kp-breadcrumb-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-pagination {
+        font-size: var(--kp-pagination-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
 
     .kp-breadcrumb ol,
     .kp-pagination ul {
@@ -9118,7 +9238,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.01em;
-        line-height: 0.95;
     }
 
     /* Microlabels: uppercase mono with the diegetic prefix. The mono face
@@ -9146,9 +9265,7 @@
        step of the scale (S47). The headline reveal (decipher and one slice
        burst) is C3's; the slice keyframes below are its rest-to-burst. */
     [data-theme='cyberpunk'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 0.88;
         letter-spacing: 0.005em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -9362,9 +9479,8 @@
 
     [data-theme='cyberpunk'] .kp-nav__link {
         display: block;
-        padding: 0.7rem 1.1rem 0.8rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.92rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         text-decoration: none;
@@ -9401,7 +9517,10 @@
     [data-theme='cyberpunk'] .kp-nav__link[data-kp-text]::before {
         content: attr(data-kp-text);
         position: absolute;
-        inset: 0.7rem 1.1rem 0.8rem;
+        /* The copy lies over the word: the link's block padding is the
+           package's [scope-87], so the inset reads it rather than restating
+           the 0.7rem and 0.8rem this register used to pad with. */
+        inset: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 1.1rem;
         opacity: 0;
         pointer-events: none;
         color: var(--accent);
@@ -9442,8 +9561,8 @@
 
     [data-theme='cyberpunk'] .kp-nav__menu a {
         display: block;
-        padding: 0.55rem 1rem 0.55rem 1.1rem;
-        font-size: 0.85rem;
+        padding-left: 1.1rem;
+        padding-right: 1rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         text-decoration: none;
@@ -9671,7 +9790,6 @@
 
     [data-theme='cyberpunk'] .kp-field__label {
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         font-weight: 400;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -9716,7 +9834,6 @@
 
     [data-theme='cyberpunk'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.7rem;
         letter-spacing: 0.06em;
     }
 
@@ -9798,7 +9915,6 @@
     [data-theme='cyberpunk'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 800;
-        font-size: 1.6rem;
         letter-spacing: 0.02em;
         text-transform: uppercase;
     }
@@ -9960,9 +10076,14 @@
     [data-theme='cyberpunk'] .kp-health {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag and the health keep this register's. */
+    [data-theme='cyberpunk'] .kp-tag,
+    [data-theme='cyberpunk'] .kp-health {
+        font-size: 0.72rem;
     }
 
     [data-theme='cyberpunk'] .kp-badge {
@@ -10133,7 +10254,6 @@
 
     [data-theme='cyberpunk'] .kp-breadcrumb {
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -10155,7 +10275,6 @@
     [data-theme='cyberpunk'] .kp-tab {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
     }
@@ -10386,7 +10505,6 @@
 
     [data-theme='cyberpunk'] .kp-footer h4 {
         font-family: var(--kp-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--primary);
@@ -10757,9 +10875,8 @@
 
     [data-theme='cyberpunk'] .kp-sidenav__link,
     [data-theme='cyberpunk'] .kp-sidenav__category-toggle {
-        padding: 0.7rem 1.1rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.92rem;
         border-radius: 0;
     }
 
@@ -10811,8 +10928,7 @@
     [data-theme='cyberpunk'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
         isolation: isolate;
-        padding: 0.7rem 1.1rem 0.8rem;
-        font-size: 0.92rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -10975,7 +11091,6 @@
     [data-theme='retro'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
     }
 
     /* The base layer paints a title bar behind every h1 (the 3.x theme);
@@ -10987,8 +11102,6 @@
         padding: 0;
         background: none;
         color: var(--foreground);
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         margin-block: 0 0.35em;
         text-wrap: balance;
         text-shadow: 2px 2px 0 var(--popover);
@@ -11252,8 +11365,7 @@
        selection bar, instantly. */
     [data-theme='retro'] .kp-nav__link {
         display: block;
-        padding: 0.3rem 0.7rem;
-        font-size: 0.875rem;
+        padding-inline: 0.7rem;
         font-weight: 500;
         color: var(--foreground);
         border: 1px solid transparent;
@@ -11340,8 +11452,8 @@
     [data-theme='retro'] .kp-nav__menu a {
         display: block;
         position: relative;
-        padding: 0.25rem 1.4rem 0.25rem 1.6rem;
-        font-size: 0.85rem;
+        padding-left: 1.6rem;
+        padding-right: 1.4rem;
         color: var(--foreground);
         text-decoration: none;
         border-radius: 0;
@@ -11505,7 +11617,6 @@
     /* ── Fields: wells cut into the chrome ─────────────────────────────── */
 
     [data-theme='retro'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -11539,7 +11650,6 @@
 
     [data-theme='retro'] .kp-field__help {
         font-family: var(--kp-dos);
-        font-size: 1rem;
         color: var(--muted-foreground);
     }
 
@@ -11656,7 +11766,6 @@
     [data-theme='retro'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1.35rem;
     }
 
     /* The dossier: a Notepad window — the header is the title bar, the body
@@ -11679,8 +11788,6 @@
 
     [data-theme='retro'] .kp-card[data-kp-reveal='emphasis'] .kp-card__title {
         color: var(--primary-foreground);
-        font-size: 0.95rem;
-        line-height: 1.6;
     }
 
     [data-theme='retro'] .kp-card[data-kp-reveal='emphasis'] .kp-card__body {
@@ -11853,7 +11960,6 @@
     [data-theme='retro'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         background: var(--kp-ramp);
         color: var(--primary-foreground);
         padding: 3px 0.5rem;
@@ -11959,7 +12065,6 @@
     [data-theme='retro'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
     }
 
     [data-theme='retro'] .kp-footer a {
@@ -11998,8 +12103,12 @@
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-sunken);
         font-family: var(--kp-dos);
-        font-size: 0.95rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='retro'] .kp-tag {
+        font-size: 0.95rem;
     }
 
     [data-theme='retro'] .kp-health {
@@ -12201,8 +12310,7 @@
         box-shadow:
             inset 1px 1px 0 var(--popover),
             inset -1px 0 0 var(--border);
-        font-size: 0.85rem;
-        padding: 0.3rem 0.75rem;
+        padding-inline: 0.75rem;
     }
 
     [data-theme='retro'] .kp-tab[aria-selected='true'] {
@@ -12224,7 +12332,6 @@
     [data-theme='retro'] .kp-breadcrumb,
     [data-theme='retro'] .kp-pagination {
         font-family: var(--kp-dos);
-        font-size: 1.05rem;
     }
 
     [data-theme='retro'] .kp-pagination a[aria-current],
@@ -12714,8 +12821,7 @@
 
     [data-theme='retro'] .kp-sidenav__link,
     [data-theme='retro'] .kp-sidenav__category-toggle {
-        padding: 0.3rem 0.7rem;
-        font-size: 0.875rem;
+        padding-inline: 0.7rem;
         font-weight: 500;
         border-radius: 0;
     }
@@ -12853,8 +12959,7 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.3rem 0.7rem;
-        font-size: 0.875rem;
+        padding-inline: 0.7rem;
         font-weight: 500;
         white-space: nowrap;
         border: 1px solid transparent;
@@ -12981,7 +13086,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        line-height: 1.1;
     }
 
     /* Microlabels: the OSD face, pink, with the tape prefix. */
@@ -13005,9 +13109,7 @@
        in chrome — the 50/51 break of the genre's title treatment, a
        stroke of near-white, an extrusion below. */
     [data-theme='synthwave'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 1;
         letter-spacing: 0.06em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -13303,9 +13405,8 @@
 
     [data-theme='synthwave'] .kp-nav__link {
         display: block;
-        padding: 0.7rem 1.1rem 1.2rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -13405,8 +13506,7 @@
 
     [data-theme='synthwave'] .kp-nav__menu a {
         display: block;
-        padding: 0.55rem 1rem;
-        font-size: 0.85rem;
+        padding-inline: 1rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -13556,7 +13656,6 @@
 
     [data-theme='synthwave'] .kp-field__label {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -13590,7 +13689,6 @@
 
     [data-theme='synthwave'] .kp-field__help {
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
     }
 
@@ -13863,7 +13961,6 @@
 
     [data-theme='synthwave'] .kp-footer h4 {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -13889,10 +13986,14 @@
         border-radius: var(--radius);
         border: 1px solid currentColor;
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='synthwave'] .kp-tag {
+        font-size: 0.95rem;
     }
 
     [data-theme='synthwave'] .kp-health__dot {
@@ -14111,7 +14212,6 @@
     [data-theme='synthwave'] .kp-breadcrumb,
     [data-theme='synthwave'] .kp-pagination {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -14595,9 +14695,8 @@
 
     [data-theme='synthwave'] .kp-sidenav__link,
     [data-theme='synthwave'] .kp-sidenav__category-toggle {
-        padding: 0.6rem 1.1rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         border-radius: 0;
     }
 
@@ -14669,8 +14768,7 @@
        the trigger is not one. */
     [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
-        padding: 0.7rem 1.1rem 1.2rem;
-        font-size: 0.9rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
         letter-spacing: 0.18em;
         text-transform: uppercase;
@@ -14820,7 +14918,6 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.02em;
-        line-height: 1.05;
     }
 
     /* Microlabels: mono, uppercase, a red tick. */
@@ -14843,9 +14940,7 @@
     /* The heading accent: the display step (S47), a hard black shadow and
        one red offset — the theme's whole character. */
     [data-theme='phantom'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 0.94;
         margin-block: 0 0.35em;
         text-wrap: balance;
         color: var(--foreground);
@@ -15056,10 +15151,9 @@
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1.02rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -15162,10 +15256,9 @@
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 1rem;
+        padding-inline: 1rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -15355,7 +15448,6 @@
     [data-theme='phantom'] .kp-field__label {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -15389,7 +15481,6 @@
 
     [data-theme='phantom'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.06em;
     }
 
@@ -15466,7 +15557,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 900;
-        font-size: 1.9rem;
         letter-spacing: 0.02em;
         text-transform: uppercase;
         text-shadow: 3px 3px 0 var(--background);
@@ -15675,7 +15765,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 800;
-        font-size: 1.15rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -15725,10 +15814,14 @@
         border-radius: 0;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.8rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         transform: skewX(var(--kp-skew));
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='phantom'] .kp-tag {
+        font-size: 0.8rem;
     }
 
     [data-theme='phantom'] .kp-health__dot {
@@ -15952,7 +16045,6 @@
     [data-theme='phantom'] .kp-pagination {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
@@ -16426,7 +16518,7 @@
     [data-theme='phantom'] .kp-sidenav__category-toggle {
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
     }
 
     [data-theme='phantom'] .kp-sidenav__link::before {
@@ -16527,9 +16619,8 @@
     [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
         font-family: var(--theme-font-display);
-        font-size: 1.02rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -16742,15 +16833,12 @@
         font-family: var(--theme-font-display);
         font-weight: 400;
         letter-spacing: 0.02em;
-        line-height: 1.15;
         color: var(--primary);
         text-shadow: var(--kp-bloom);
         -webkit-font-smoothing: none;
     }
 
     [data-theme='terminal'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         letter-spacing: 0.01em;
         margin-block: 0 0.35em;
         min-block-size: 2.2em;
@@ -16902,8 +16990,7 @@
 
     [data-theme='terminal'] .kp-nav__link {
         display: block;
-        padding: 0.35rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.06em;
         color: var(--foreground);
         border-radius: 0;
@@ -16986,8 +17073,7 @@
 
     [data-theme='terminal'] .kp-nav__menu a {
         display: block;
-        padding: 0.3rem 0.8rem;
-        font-size: 0.85rem;
+        padding-inline: 0.8rem;
         color: var(--foreground);
         text-decoration: none;
         border-radius: 0;
@@ -17140,7 +17226,6 @@
     /* ── Fields: wells, and the block cursor inside the box [R6-Q7] ───── */
 
     [data-theme='terminal'] .kp-field__label {
-        font-size: 0.85rem;
         letter-spacing: 0.08em;
         color: var(--muted-foreground);
     }
@@ -17183,7 +17268,6 @@
     }
 
     [data-theme='terminal'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -17291,7 +17375,6 @@
     }
 
     [data-theme='terminal'] .kp-card__title {
-        font-size: 1.15rem;
         letter-spacing: 0.06em;
     }
 
@@ -17476,7 +17559,6 @@
     [data-theme='terminal'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.85rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -18088,8 +18170,8 @@
 
     [data-theme='terminal'] .kp-sidenav__link,
     [data-theme='terminal'] .kp-sidenav__category-toggle {
-        padding: 0.35rem 0.7rem 0.35rem 1.4rem;
-        font-size: 0.9rem;
+        padding-left: 1.4rem;
+        padding-right: 0.7rem;
         letter-spacing: 0.06em;
         border-radius: 0;
     }
@@ -18240,8 +18322,7 @@
        rather than a link in it. The underline a plain link carries is not:
        it says "this is a link", and the trigger is not one. */
     [data-theme='terminal'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.06em;
         white-space: nowrap;
         border: 0;
@@ -18340,12 +18421,9 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: -0.02em;
-        line-height: 1.05;
     }
 
     [data-theme='brutalism'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 0.98;
         letter-spacing: -0.025em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -18495,9 +18573,8 @@
 
     [data-theme='brutalism'] .kp-nav__link {
         display: block;
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -18585,9 +18662,8 @@
 
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 500;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -18711,7 +18787,6 @@
 
     [data-theme='brutalism'] .kp-field__label {
         font-weight: 700;
-        font-size: 0.78rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
     }
@@ -18752,7 +18827,6 @@
     }
 
     [data-theme='brutalism'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -18843,10 +18917,6 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-    }
-
-    [data-theme='brutalism'] .kp-card__title {
-        font-size: 1.5rem;
     }
 
     [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] {
@@ -18979,10 +19049,6 @@
         gap: 0.9rem;
     }
 
-    [data-theme='brutalism'] .kp-dialog__title {
-        font-size: 1.5rem;
-    }
-
     /* The menu keeps a ring's width of paper inside its frame: with the
        line directly against the items, an item's ink ring fell onto the
        ink line and painted nothing new (AR30's dashboard test). */
@@ -19081,7 +19147,6 @@
     [data-theme='brutalism'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -19693,9 +19758,8 @@
     [data-theme='brutalism'] .kp-sidenav__category-toggle {
         border: 2px solid var(--foreground);
         background: var(--background);
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         text-transform: uppercase;
         border-radius: 0;
         box-shadow: 3px 3px 0 var(--foreground);
@@ -19868,8 +19932,7 @@
        rather than a link in it. The underline a plain link carries is not:
        it says "this is a link", and the trigger is not one. */
     [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.82rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -20118,13 +20181,10 @@
     [data-theme='titanium'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
         color: var(--foreground);
     }
 
     [data-theme='titanium'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         letter-spacing: -0.02em;
         margin-block: 0 0.35em;
         text-wrap: balance;
@@ -20322,10 +20382,9 @@
     }
 
     [data-theme='titanium'] .kp-nav__link {
-        padding: 0.5rem 0.8rem;
+        padding-inline: 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
-        font-size: 0.94rem;
         color: var(--muted-foreground);
     }
 
@@ -20389,10 +20448,9 @@
 
     [data-theme='titanium'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
         color: var(--foreground);
-        font-size: 0.92rem;
     }
 
     [data-theme='titanium'] .kp-nav__menu a:hover {
@@ -20474,7 +20532,6 @@
 
     [data-theme='titanium'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.9rem;
         color: var(--foreground);
     }
 
@@ -20509,7 +20566,6 @@
     }
 
     [data-theme='titanium'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -20583,7 +20639,6 @@
 
     [data-theme='titanium'] .kp-card__title {
         font-weight: 700;
-        font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
@@ -20707,7 +20762,6 @@
 
     [data-theme='titanium'] .kp-dialog__title {
         font-weight: 700;
-        font-size: 1.2rem;
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -20770,7 +20824,6 @@
     }
 
     [data-theme='titanium'] .kp-footer h4 {
-        font-size: 0.95rem;
         color: var(--foreground);
     }
 
@@ -21000,7 +21053,6 @@
 
     [data-theme='titanium'] .kp-breadcrumb,
     [data-theme='titanium'] .kp-pagination {
-        font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
@@ -21343,8 +21395,7 @@
        it. The underline a plain link carries is not: it says "this is a
        link", and the trigger is not one. */
     [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.94rem;
+        padding-inline: 0.8rem;
         font-weight: 500;
         border: 0;
         border-radius: var(--radius);
@@ -21467,8 +21518,6 @@
     /* The heading accent: the display step, balanced, on a surface. */
     [data-theme='pastel'] [data-kp-surface] h1 {
         position: relative;
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         letter-spacing: -0.01em;
         margin-block: 0 1.1rem;
         max-width: 22ch;
@@ -21661,10 +21710,9 @@
     }
 
     [data-theme='pastel'] .kp-nav__link {
-        padding: 0.5rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: 0.6rem;
         color: var(--foreground);
-        font-size: 0.9rem;
         background: none;
     }
 
@@ -21725,10 +21773,9 @@
     }
 
     [data-theme='pastel'] .kp-nav__menu a {
-        padding: 0.45rem 0.6rem;
+        padding-inline: 0.6rem;
         border-radius: 0.5rem;
         color: var(--foreground);
-        font-size: 0.86rem;
     }
 
     [data-theme='pastel'] .kp-nav__menu a:hover,
@@ -21862,7 +21909,6 @@
     /* ── Fields ───────────────────────────────────────────────────────── */
 
     [data-theme='pastel'] .kp-field__label {
-        font-size: 0.82rem;
         font-weight: 600;
         color: var(--foreground);
     }
@@ -21883,7 +21929,6 @@
 
     [data-theme='pastel'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.8rem;
     }
 
     [data-theme='pastel'] .kp-field--invalid .kp-field__input {
@@ -21928,7 +21973,6 @@
     }
 
     [data-theme='pastel'] .kp-card__title {
-        font-size: 1.3rem;
         font-weight: 700;
     }
 
@@ -22159,7 +22203,6 @@
     }
 
     [data-theme='pastel'] .kp-footer h4 {
-        font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--muted-foreground);
@@ -22331,11 +22374,12 @@
 
     [data-theme='pastel'] .kp-breadcrumb {
         color: var(--muted-foreground);
-        font-size: 0.85rem;
     }
 
+    /* The pagination's size is the package's [scope-87]; its numerals are
+       this register's: tabular, so the page numbers line up. */
     [data-theme='pastel'] .kp-pagination {
-        font-size: 0.85rem;
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='pastel'] .kp-pagination a[aria-current],
@@ -22548,8 +22592,7 @@
     [data-theme='pastel'] .kp-sidenav__link,
     [data-theme='pastel'] .kp-sidenav__category-toggle {
         border-radius: 0.9rem;
-        padding: 0.55rem 0.8rem;
-        font-size: 0.9rem;
+        padding-inline: 0.8rem;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -22641,8 +22684,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.9rem;
+        padding-inline: 0.7rem;
         border: 0;
         border-radius: 0.6rem;
         background: none;
@@ -22732,7 +22774,6 @@
     [data-theme='shade-light'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        line-height: 1.1;
     }
 
     /* No accent beyond the serif face itself: the demo's headline and
@@ -22742,8 +22783,6 @@
        on purpose (anatomy.md records this as a considered choice, not an
        omission). */
     [data-theme='shade-light'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         letter-spacing: -0.015em;
         max-width: 20ch;
     }
@@ -23065,7 +23104,6 @@
     /* ── Fields: plain wells, the border carries the boundary [DI1] ──── */
 
     [data-theme='shade-light'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -23080,7 +23118,6 @@
 
     [data-theme='shade-light'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-field--invalid .kp-field__input {
@@ -23127,7 +23164,6 @@
     [data-theme='shade-light'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.3rem;
     }
 
     /* The dossier: the stamp, and the redaction bars that clear on the
@@ -23284,7 +23320,6 @@
     [data-theme='shade-light'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.15rem;
     }
 
     /* ── Badges, tags, status ──────────────────────────────────────── */
@@ -23294,8 +23329,12 @@
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='shade-light'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -23505,9 +23544,11 @@
         border-bottom: 1px solid var(--border);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='shade-light'] .kp-breadcrumb,
     [data-theme='shade-light'] .kp-pagination {
-        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='shade-light'] .kp-pagination a[aria-current],
@@ -23620,7 +23661,6 @@
 
     [data-theme='shade-light'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -23917,8 +23957,7 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-bottom: 1px solid transparent;
         border-radius: 0;
@@ -24400,7 +24439,6 @@
     /* ── Fields ──────────────────────────────────────────────────────── */
 
     [data-theme='forest'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
         color: var(--foreground);
     }
@@ -24434,7 +24472,6 @@
     }
 
     [data-theme='forest'] .kp-field__help {
-        font-size: 0.78rem;
         color: var(--muted-foreground);
     }
 
@@ -24628,7 +24665,6 @@
     [data-theme='forest'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         color: var(--sidebar-primary);
-        font-size: 0.95rem;
     }
 
     [data-theme='forest'] .kp-footer a {
@@ -24656,8 +24692,12 @@
     [data-theme='forest'] .kp-badge,
     [data-theme='forest'] .kp-tag {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='forest'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     [data-theme='forest'] .kp-health {
@@ -24829,7 +24869,6 @@
     [data-theme='forest'] .kp-breadcrumb,
     [data-theme='forest'] .kp-pagination {
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='forest'] .kp-pagination a[aria-current],
@@ -25140,8 +25179,7 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-bottom: 2px solid transparent;
         border-radius: 0;
@@ -25234,13 +25272,10 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        line-height: 1.08;
         margin: 0;
     }
 
     [data-theme='deco'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         max-width: 18ch;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -25403,10 +25438,9 @@
 
     [data-theme='deco'] .kp-nav__link {
         display: inline-block;
-        padding: 0.5rem 0.7rem;
+        padding-inline: 0.7rem;
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.8rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border-bottom: 1px solid transparent;
@@ -25472,10 +25506,9 @@
 
     [data-theme='deco'] .kp-nav__menu a {
         display: block;
-        padding: 0.4rem 0.5rem;
+        padding-inline: 0.5rem;
         color: var(--popover-foreground);
         text-decoration: none;
-        font-size: 0.82rem;
         border-radius: 0;
     }
 
@@ -25598,7 +25631,6 @@
     /* ── Fields ────────────────────────────────────────────────────────── */
 
     [data-theme='deco'] .kp-field__label {
-        font-size: 0.78rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -25643,7 +25675,6 @@
     }
 
     [data-theme='deco'] .kp-field__help {
-        font-size: 0.72rem;
         color: var(--muted-foreground);
     }
 
@@ -25688,7 +25719,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        font-size: 1.3rem;
     }
 
     [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] {
@@ -25760,7 +25790,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        font-size: 1.2rem;
     }
 
     [data-theme='deco'] .kp-toast {
@@ -25873,7 +25902,6 @@
     [data-theme='deco'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -26534,8 +26562,7 @@
        than a link in it. The underline a plain link carries is not: it says
        "this is a link", and the trigger is not one. */
     [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.8rem;
+        padding-inline: 0.7rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border: 0;
@@ -26901,10 +26928,6 @@
         box-shadow: var(--kp-shadow-sm);
     }
 
-    [data-theme='light'] .kp-card__title {
-        font-size: 1.1rem;
-    }
-
     /* ── Elevated panels: card and popover are both pure white (DI6), so
        elevation has to come from the border and the shadow — the anatomy
        names this as a real constraint, not an oversight. One answer for
@@ -26971,10 +26994,6 @@
        backdrop stays the base layer's (not a token, by design) ────────── */
     [data-theme='light'] .kp-dialog {
         box-shadow: var(--kp-shadow-lg);
-    }
-
-    [data-theme='light'] .kp-dialog__title {
-        font-size: 1.1rem;
     }
 
     /* ── Badges, tags, status ────────────────────────────────────────────── */
@@ -27131,9 +27150,11 @@
         border-bottom: 2px solid var(--primary);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='light'] .kp-breadcrumb,
     [data-theme='light'] .kp-pagination {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='light'] .kp-pagination [aria-current] {
@@ -27476,8 +27497,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: var(--radius, 0.5rem);
         background: none;
@@ -27793,7 +27813,6 @@
     [data-theme='grotesk'] .kp-nav__link {
         color: var(--muted-foreground);
         font-weight: 600;
-        font-size: 0.9rem;
         letter-spacing: 0.01em;
         background: none;
         border-radius: 0;
@@ -27858,7 +27877,6 @@
 
     [data-theme='grotesk'] .kp-nav__menu a {
         color: var(--popover-foreground);
-        font-size: 0.88rem;
     }
 
     [data-theme='grotesk'] .kp-nav__menu a:hover,
@@ -28011,7 +28029,6 @@
 
     [data-theme='grotesk'] .kp-field__label {
         font-weight: 700;
-        font-size: 0.9rem;
     }
 
     [data-theme='grotesk'] .kp-field__input {
@@ -28032,7 +28049,6 @@
 
     [data-theme='grotesk'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.78rem;
         color: var(--muted-foreground);
     }
 
@@ -28244,7 +28260,6 @@
     [data-theme='grotesk'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 800;
-        font-size: 0.95rem;
     }
 
     [data-theme='grotesk'] .kp-footer a {
@@ -28295,8 +28310,12 @@
     [data-theme='grotesk'] .kp-tag {
         border-radius: 0;
         font-family: var(--kp-mono);
-        font-size: 0.75rem;
         letter-spacing: 0.06em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='grotesk'] .kp-tag {
+        font-size: 0.75rem;
     }
 
     [data-theme='grotesk'] .kp-health__dot {
@@ -28490,7 +28509,6 @@
     [data-theme='grotesk'] .kp-breadcrumb,
     [data-theme='grotesk'] .kp-pagination {
         font-family: var(--kp-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='grotesk'] .kp-pagination a[aria-current],
@@ -28768,7 +28786,7 @@
     [data-theme='grotesk'] .kp-sidenav__category-toggle {
         border-radius: 0;
         border-block-end: 1px solid var(--border);
-        padding: 0.6rem 0.9rem;
+        padding-inline: 0.9rem;
     }
 
     [data-theme='grotesk'] .kp-sidenav__link[aria-current='page'] {
@@ -28920,8 +28938,7 @@
        one. */
     [data-theme='grotesk'] .kp-nav__search .kp-nav__search-trigger {
         position: relative;
-        padding: 0.25rem 0;
-        font-size: 0.9rem;
+        padding-inline: 0;
         font-weight: 600;
         letter-spacing: 0.01em;
         white-space: nowrap;
@@ -29060,12 +29077,9 @@
     [data-theme='blueprint'] h2,
     [data-theme='blueprint'] h3 {
         font-family: var(--theme-font-display);
-        line-height: 1.15;
     }
 
     [data-theme='blueprint'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         max-width: 16ch;
         margin-block: 0;
     }
@@ -29355,7 +29369,6 @@
     [data-theme='blueprint'] .kp-nav__link {
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.9rem;
         border-block-end: 1px solid transparent;
         border-radius: 0;
         background: none;
@@ -29450,10 +29463,9 @@
         display: flex;
         align-items: baseline;
         gap: 0.5em;
-        padding: 0.42rem 0.6rem;
+        padding-inline: 0.6rem;
         color: var(--foreground);
         text-decoration: none;
-        font-size: 0.85rem;
         border-radius: 0;
     }
 
@@ -29713,10 +29725,6 @@
         border-radius: 0;
     }
 
-    [data-theme='blueprint'] .kp-dialog__title {
-        font-size: 1.05rem;
-    }
-
     [data-theme='blueprint'] .kp-menu__item:hover {
         background: var(--kp-menu-wash);
     }
@@ -29759,7 +29767,6 @@
     [data-theme='blueprint'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
         font-weight: 600;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
     }
 
@@ -29780,8 +29787,12 @@
         border-radius: 2px;
         border: 1px solid var(--border-strong);
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='blueprint'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     [data-theme='blueprint'] .kp-health__dot {
@@ -29938,7 +29949,6 @@
     [data-theme='blueprint'] .kp-breadcrumb,
     [data-theme='blueprint'] .kp-pagination {
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='blueprint'] .kp-pagination a[aria-current],
@@ -30160,7 +30170,6 @@
         border-radius: 0;
         padding-inline-start: 1.5rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
     }
 
     [data-theme='blueprint'] .kp-sidenav__link::before {
@@ -30320,8 +30329,7 @@
        it. The underline a plain link carries is not: it says "this is a
        link", and the trigger is not one. */
     [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger {
-        font-size: 0.9rem;
-        padding: 0.25rem 0;
+        padding-inline: 0;
         border: 0;
         border-block-end: 1px solid transparent;
         border-radius: 0;
@@ -30398,15 +30406,12 @@
     [data-theme='nostromo'] h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        line-height: 1.15;
         letter-spacing: 0.01em;
         text-transform: none;
         color: var(--foreground);
     }
 
     [data-theme='nostromo'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         max-width: 20ch;
     }
 
@@ -30488,7 +30493,6 @@
 
     [data-theme='nostromo'] .kp-nav__links {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -30788,7 +30792,6 @@
 
     [data-theme='nostromo'] .kp-field__label {
         font-family: var(--theme-font-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -30871,10 +30874,6 @@
         color: var(--card-foreground);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-    }
-
-    [data-theme='nostromo'] .kp-card__title {
-        font-size: 1.25rem;
     }
 
     [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] {
@@ -31385,7 +31384,6 @@
     }
 
     [data-theme='nostromo'] .kp-footer h4 {
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-foreground);
@@ -31535,9 +31533,9 @@
         font-family: var(--theme-font-mono);
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        font-size: 0.6875rem;
         border-radius: 0;
-        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        padding-left: 1.65rem;
+        padding-right: 0.75rem;
         border-block-end: 1px solid var(--border);
     }
 
@@ -31677,9 +31675,8 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0.4rem;
+        padding-inline: 0.4rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         border: 0;
@@ -31980,13 +31977,10 @@
     [data-theme='dark'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
         color: var(--foreground);
     }
 
     [data-theme='dark'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         letter-spacing: -0.02em;
         margin-block: 0 0.35em;
         text-wrap: balance;
@@ -32184,10 +32178,9 @@
     }
 
     [data-theme='dark'] .kp-nav__link {
-        padding: 0.5rem 0.8rem;
+        padding-inline: 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
-        font-size: 0.94rem;
         color: var(--muted-foreground);
     }
 
@@ -32251,10 +32244,9 @@
 
     [data-theme='dark'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
         color: var(--foreground);
-        font-size: 0.92rem;
     }
 
     [data-theme='dark'] .kp-nav__menu a:hover {
@@ -32329,7 +32321,6 @@
 
     [data-theme='dark'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.9rem;
         color: var(--foreground);
     }
 
@@ -32364,7 +32355,6 @@
     }
 
     [data-theme='dark'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -32439,7 +32429,6 @@
 
     [data-theme='dark'] .kp-card__title {
         font-weight: 700;
-        font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
@@ -32563,7 +32552,6 @@
 
     [data-theme='dark'] .kp-dialog__title {
         font-weight: 700;
-        font-size: 1.2rem;
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -32626,7 +32614,6 @@
     }
 
     [data-theme='dark'] .kp-footer h4 {
-        font-size: 0.95rem;
         color: var(--foreground);
     }
 
@@ -32857,7 +32844,6 @@
 
     [data-theme='dark'] .kp-breadcrumb,
     [data-theme='dark'] .kp-pagination {
-        font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
@@ -33201,8 +33187,7 @@
        it. The underline a plain link carries is not: it says "this is a
        link", and the trigger is not one. */
     [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.94rem;
+        padding-inline: 0.8rem;
         font-weight: 500;
         border: 0;
         border-radius: var(--radius);
@@ -33282,17 +33267,14 @@
     }
 
     [data-theme='formal'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-variation-settings: 'opsz' 144;
         letter-spacing: -0.03em;
-        line-height: 1.08;
         margin-block: 0 1.25rem;
     }
 
     [data-theme='formal'] [data-kp-surface='app'] h2 {
         font-variation-settings: 'opsz' 90;
         letter-spacing: -0.02em;
-        font-size: 1.5rem;
     }
 
     [data-theme='formal'] .microlabel {
@@ -33430,7 +33412,6 @@
 
     [data-theme='formal'] .kp-nav__link {
         font-family: var(--theme-font-body);
-        font-size: 0.9375rem;
         color: var(--foreground);
         border-radius: calc(var(--radius) / 2);
     }
@@ -33749,7 +33730,6 @@
     }
 
     [data-theme='formal'] .kp-footer h4 {
-        font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -34193,9 +34173,8 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
+        padding-inline: 0;
         font-family: var(--theme-font-body);
-        font-size: 0.9375rem;
         border: 0;
         border-bottom: 2px solid transparent;
         border-radius: calc(var(--radius) / 2);
@@ -34312,7 +34291,6 @@
     [data-theme='sepia'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        line-height: 1.1;
     }
 
     [data-theme='sepia'] [data-kp-surface] h2,
@@ -34337,9 +34315,7 @@
        not a shadow or an offset (anatomy.md: nothing here glows or
        shouts). */
     [data-theme='sepia'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 400;
-        line-height: 1.08;
         margin-block: 0 0.35em;
         text-wrap: balance;
         color: var(--foreground);
@@ -34564,8 +34540,7 @@
     }
 
     [data-theme='sepia'] .kp-nav__link {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.92rem;
+        padding-inline: 0.7rem;
         color: var(--foreground);
         border-radius: 0.25rem;
     }
@@ -34629,8 +34604,7 @@
     }
 
     [data-theme='sepia'] .kp-nav__menu a {
-        padding: 0.4rem 0.9rem;
-        font-size: 0.86rem;
+        padding-inline: 0.9rem;
         color: var(--foreground);
         border-radius: 0;
     }
@@ -34711,7 +34685,6 @@
     /* ── Fields: wells on the palest surface ────────────────────────────── */
 
     [data-theme='sepia'] .kp-field__label {
-        font-size: 0.85rem;
         color: var(--muted-foreground);
     }
 
@@ -34736,7 +34709,6 @@
     }
 
     [data-theme='sepia'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -35028,8 +35000,12 @@
     [data-theme='sepia'] .kp-tag {
         border-radius: 999px;
         border: 1px solid var(--border);
-        font-size: 0.78rem;
         letter-spacing: 0.02em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='sepia'] .kp-tag {
+        font-size: 0.78rem;
     }
 
     [data-theme='sepia'] .kp-health {
@@ -35211,7 +35187,6 @@
 
     [data-theme='sepia'] .kp-breadcrumb,
     [data-theme='sepia'] .kp-pagination {
-        font-size: 0.88rem;
         color: var(--muted-foreground);
     }
 
@@ -35535,8 +35510,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.92rem;
+        padding-inline: 0.7rem;
         border: 0;
         border-radius: 0.25rem;
         background: none;
@@ -35711,8 +35685,6 @@
     }
 
     [data-theme='solstice'] [data-kp-surface='hero'] h1 {
-        font-size: clamp(2.5rem, 10vw, 10.5rem);
-        line-height: 0.91;
         letter-spacing: -0.04em;
     }
 
@@ -35790,7 +35762,7 @@
 
     [data-theme='solstice'] .kp-nav__menu a {
         border-radius: calc(var(--radius) - 3px);
-        padding: 0.5rem 0.6rem;
+        padding-inline: 0.6rem;
     }
 
     [data-theme='solstice'] .kp-nav__menu a:hover,
@@ -35878,7 +35850,6 @@
 
     [data-theme='solstice'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.8125rem;
     }
 
     [data-theme='solstice'] .kp-field__required {
@@ -35940,7 +35911,6 @@
     [data-theme='solstice'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     /* The dossier: the stamp rides a slight rotation the way a printed
@@ -36062,7 +36032,6 @@
     [data-theme='solstice'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     [data-theme='solstice'] .kp-menu__item:hover {
@@ -36102,7 +36071,6 @@
 
     [data-theme='solstice'] .kp-footer h4 {
         font-weight: 600;
-        font-size: 0.8125rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
@@ -36638,8 +36606,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: 0;
         background: none;
@@ -37051,8 +37018,12 @@
     [data-theme='high-contrast'] .kp-field__required,
     [data-theme='high-contrast'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.78rem;
         font-weight: 400;
+    }
+
+    /* The help text's type size is the package's [scope-87]; the required mark keeps this register's. */
+    [data-theme='high-contrast'] .kp-field__required {
+        font-size: 0.78rem;
     }
 
     [data-theme='high-contrast'] .kp-field__check {
@@ -37265,10 +37236,6 @@
 
     [data-theme='high-contrast'] .kp-footer {
         border-top: 3px solid var(--border-strong);
-    }
-
-    [data-theme='high-contrast'] .kp-footer h4 {
-        font-size: 0.9rem;
     }
 
     [data-theme='high-contrast'] .kp-footer a {
@@ -37713,8 +37680,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         font-weight: 700;
         border: 0;
         border-bottom: 2px solid transparent;
@@ -37834,13 +37800,10 @@
     [data-theme='lapis'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        line-height: 1.1;
         letter-spacing: 0.01em;
     }
 
     [data-theme='lapis'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.1;
         margin-block: 0 0.35em;
         text-wrap: balance;
     }
@@ -38279,10 +38242,6 @@
         background: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-ring-on-card);
-    }
-
-    [data-theme='lapis'] .kp-card__title {
-        font-size: 1.3rem;
     }
 
     /* The stamp: a vermilion plate — the boundary DI1 asks for stays
@@ -38940,8 +38899,7 @@
        beside the list rather than a link in it. The underline a plain link
        carries is not: it says "this is a link", and the trigger is not one. */
     [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-block-end: 1px solid transparent;
         border-radius: 0;
@@ -39008,11 +38966,9 @@
        the whole point of a reading theme is that a heading is just text. */
     [data-theme='shade-dark'] [data-kp-surface] h1 {
         display: block;
-        padding: 0;
+        padding-inline: 0;
         background: none;
         color: var(--foreground);
-        font-size: var(--kp-text-display);
-        line-height: 1.12;
         letter-spacing: -0.01em;
         margin-block: 0 1rem;
         text-wrap: balance;
@@ -40133,8 +40089,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='shade-dark'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: var(--radius);
         background: none;

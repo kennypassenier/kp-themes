@@ -158,8 +158,6 @@
     }
 
     [data-theme='solstice'] [data-kp-surface='hero'] h1 {
-        font-size: clamp(2.5rem, 10vw, 10.5rem);
-        line-height: 0.91;
         letter-spacing: -0.04em;
     }
 
@@ -237,7 +235,7 @@
 
     [data-theme='solstice'] .kp-nav__menu a {
         border-radius: calc(var(--radius) - 3px);
-        padding: 0.5rem 0.6rem;
+        padding-inline: 0.6rem;
     }
 
     [data-theme='solstice'] .kp-nav__menu a:hover,
@@ -325,7 +323,6 @@
 
     [data-theme='solstice'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.8125rem;
     }
 
     [data-theme='solstice'] .kp-field__required {
@@ -387,7 +384,6 @@
     [data-theme='solstice'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     /* The dossier: the stamp rides a slight rotation the way a printed
@@ -509,7 +505,6 @@
     [data-theme='solstice'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     [data-theme='solstice'] .kp-menu__item:hover {
@@ -549,7 +544,6 @@
 
     [data-theme='solstice'] .kp-footer h4 {
         font-weight: 600;
-        font-size: 0.8125rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
@@ -1085,8 +1079,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: 0;
         background: none;

@@ -465,7 +465,6 @@
     /* ── Fields ──────────────────────────────────────────────────────── */
 
     [data-theme='forest'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
         color: var(--foreground);
     }
@@ -499,7 +498,6 @@
     }
 
     [data-theme='forest'] .kp-field__help {
-        font-size: 0.78rem;
         color: var(--muted-foreground);
     }
 
@@ -693,7 +691,6 @@
     [data-theme='forest'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         color: var(--sidebar-primary);
-        font-size: 0.95rem;
     }
 
     [data-theme='forest'] .kp-footer a {
@@ -721,8 +718,12 @@
     [data-theme='forest'] .kp-badge,
     [data-theme='forest'] .kp-tag {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='forest'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     [data-theme='forest'] .kp-health {
@@ -894,7 +895,6 @@
     [data-theme='forest'] .kp-breadcrumb,
     [data-theme='forest'] .kp-pagination {
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='forest'] .kp-pagination a[aria-current],
@@ -1205,8 +1205,7 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='forest'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-bottom: 2px solid transparent;
         border-radius: 0;

@@ -1,0 +1,599 @@
+{
+    "a-comfortable": {
+        "index": [
+            ["grotesk", 1.056],
+            ["brutalism", 1.055],
+            ["deco", 1.029],
+            ["synthwave", 1.028],
+            ["high-contrast", 1.009],
+            ["sepia", 1.009],
+            ["shade-light", 1.009],
+            ["lapis", 1.004],
+            ["retro", 1.003],
+            ["formal", 1.002],
+            ["phantom", 1.001],
+            ["shade-dark", 1.001],
+            ["nostromo", 1],
+            ["pastel", 0.999],
+            ["forest", 0.999],
+            ["blueprint", 0.998],
+            ["light", 0.997],
+            ["terminal", 0.995],
+            ["solstice", 0.995],
+            ["titanium", 0.993],
+            ["cyberpunk", 0.988],
+            ["dark", 0.987]
+        ],
+        "elements": {
+            "button": {
+                "min": 36,
+                "minTheme": "formal",
+                "max": 36,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 36
+            },
+            "button-sm": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 28
+            },
+            "input": {
+                "min": 36,
+                "minTheme": "formal",
+                "max": 36,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 36
+            },
+            "select": {
+                "min": 36,
+                "minTheme": "formal",
+                "max": 36,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 36
+            },
+            "combobox": {
+                "min": 36,
+                "minTheme": "formal",
+                "max": 36,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 36
+            },
+            "checkbox": {
+                "min": 21.6,
+                "minTheme": "cyberpunk",
+                "max": 28.7,
+                "maxTheme": "deco",
+                "ratio": 1.33,
+                "median": 27.2
+            },
+            "switch": {
+                "min": 24,
+                "minTheme": "formal",
+                "max": 24,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 24
+            },
+            "tab": {
+                "min": 41,
+                "minTheme": "blueprint",
+                "max": 46,
+                "maxTheme": "brutalism",
+                "ratio": 1.12,
+                "median": 42
+            },
+            "badge": {
+                "min": 22.2,
+                "minTheme": "formal",
+                "max": 26.2,
+                "maxTheme": "high-contrast",
+                "ratio": 1.18,
+                "median": 24.2
+            },
+            "alert": {
+                "min": 50,
+                "minTheme": "cyberpunk",
+                "max": 76,
+                "maxTheme": "high-contrast",
+                "ratio": 1.52,
+                "median": 74
+            },
+            "table-head": {
+                "min": 40,
+                "minTheme": "formal",
+                "max": 40,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 40
+            },
+            "table-row": {
+                "min": 40,
+                "minTheme": "formal",
+                "max": 40,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 40
+            },
+            "nav": {
+                "min": 59.5,
+                "minTheme": "light",
+                "max": 183.5,
+                "maxTheme": "grotesk",
+                "ratio": 3.08,
+                "median": 63.5
+            },
+            "nav-link": {
+                "min": 38.5,
+                "minTheme": "formal",
+                "max": 44.5,
+                "maxTheme": "brutalism",
+                "ratio": 1.16,
+                "median": 38.5
+            },
+            "sidenav-item": {
+                "min": 37,
+                "minTheme": "formal",
+                "max": 41,
+                "maxTheme": "brutalism",
+                "ratio": 1.11,
+                "median": 37
+            },
+            "page-link": {
+                "min": 15,
+                "minTheme": "deco",
+                "max": 21,
+                "maxTheme": "shade-light",
+                "ratio": 1.4,
+                "median": 18
+            },
+            "dialog-title": {
+                "min": 22,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "retro",
+                "ratio": 1.27,
+                "median": 22
+            },
+            "card-title": {
+                "min": 26.4,
+                "minTheme": "formal",
+                "max": 26.4,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 26.4
+            },
+            "field-label": {
+                "min": 21.6,
+                "minTheme": "formal",
+                "max": 21.6,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 21.6
+            }
+        },
+        "composites": {
+            "form": {
+                "min": 421.5,
+                "minTheme": "cyberpunk",
+                "max": 431,
+                "maxTheme": "synthwave",
+                "ratio": 1.02,
+                "median": 425.25
+            },
+            "shell": {
+                "min": 213.5,
+                "minTheme": "nostromo",
+                "max": 347.5,
+                "maxTheme": "grotesk",
+                "ratio": 1.63,
+                "median": 240.8
+            },
+            "tabs": {
+                "min": 117,
+                "minTheme": "cyberpunk",
+                "max": 147,
+                "maxTheme": "brutalism",
+                "ratio": 1.26,
+                "median": 141
+            },
+            "table": {
+                "min": 181.6,
+                "minTheme": "light",
+                "max": 187.6,
+                "maxTheme": "brutalism",
+                "ratio": 1.03,
+                "median": 181.6
+            },
+            "dialog": {
+                "min": 143,
+                "minTheme": "phantom",
+                "max": 176,
+                "maxTheme": "retro",
+                "ratio": 1.23,
+                "median": 166
+            },
+            "total": {
+                "min": 1198,
+                "minTheme": "nostromo",
+                "max": 1354.7,
+                "maxTheme": "grotesk",
+                "ratio": 1.13,
+                "median": 1235.2
+            },
+            "page": {
+                "min": 562,
+                "minTheme": "pastel",
+                "max": 593.3,
+                "maxTheme": "terminal",
+                "ratio": 1.06,
+                "median": 572.7
+            }
+        },
+        "three": {
+            "form": {
+                "min": 421.5,
+                "minTheme": "phantom",
+                "max": 425.1,
+                "maxTheme": "grotesk",
+                "ratio": 1.01,
+                "median": 422.7
+            },
+            "shell": {
+                "min": 235.9,
+                "minTheme": "dark",
+                "max": 347.5,
+                "maxTheme": "grotesk",
+                "ratio": 1.47,
+                "median": 248.7
+            },
+            "tabs": {
+                "min": 141,
+                "minTheme": "dark",
+                "max": 143,
+                "maxTheme": "phantom",
+                "ratio": 1.01,
+                "median": 142.5
+            },
+            "table": {
+                "min": 181.6,
+                "minTheme": "grotesk",
+                "max": 181.6,
+                "maxTheme": "grotesk",
+                "ratio": 1,
+                "median": 181.6
+            },
+            "dialog": {
+                "min": 143,
+                "minTheme": "phantom",
+                "max": 170,
+                "maxTheme": "grotesk",
+                "ratio": 1.19,
+                "median": 166
+            },
+            "total": {
+                "min": 1225.8,
+                "minTheme": "phantom",
+                "max": 1354.7,
+                "maxTheme": "grotesk",
+                "ratio": 1.11,
+                "median": 1235.2
+            },
+            "page": {
+                "min": 565.4,
+                "minTheme": "phantom",
+                "max": 573,
+                "maxTheme": "grotesk",
+                "ratio": 1.01,
+                "median": 569.6
+            }
+        }
+    },
+    "a-compact": {
+        "index": [
+            ["brutalism", 1.07],
+            ["grotesk", 1.057],
+            ["deco", 1.033],
+            ["synthwave", 1.032],
+            ["sepia", 1.014],
+            ["high-contrast", 1.01],
+            ["shade-light", 1.009],
+            ["lapis", 1.006],
+            ["retro", 1.005],
+            ["formal", 1.003],
+            ["phantom", 1.002],
+            ["shade-dark", 1.001],
+            ["pastel", 1],
+            ["forest", 1],
+            ["nostromo", 1],
+            ["blueprint", 0.997],
+            ["light", 0.996],
+            ["solstice", 0.996],
+            ["terminal", 0.995],
+            ["titanium", 0.993],
+            ["cyberpunk", 0.991],
+            ["dark", 0.987]
+        ],
+        "elements": {
+            "button": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 28
+            },
+            "button-sm": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 28
+            },
+            "input": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 30,
+                "maxTheme": "brutalism",
+                "ratio": 1.07,
+                "median": 28
+            },
+            "select": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 28
+            },
+            "combobox": {
+                "min": 28,
+                "minTheme": "formal",
+                "max": 30,
+                "maxTheme": "brutalism",
+                "ratio": 1.07,
+                "median": 28
+            },
+            "checkbox": {
+                "min": 21.6,
+                "minTheme": "cyberpunk",
+                "max": 28.7,
+                "maxTheme": "deco",
+                "ratio": 1.33,
+                "median": 27.2
+            },
+            "switch": {
+                "min": 24,
+                "minTheme": "formal",
+                "max": 24,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 24
+            },
+            "tab": {
+                "min": 33,
+                "minTheme": "blueprint",
+                "max": 38,
+                "maxTheme": "brutalism",
+                "ratio": 1.15,
+                "median": 34
+            },
+            "badge": {
+                "min": 22.2,
+                "minTheme": "formal",
+                "max": 26.2,
+                "maxTheme": "high-contrast",
+                "ratio": 1.18,
+                "median": 24.2
+            },
+            "alert": {
+                "min": 50,
+                "minTheme": "cyberpunk",
+                "max": 76,
+                "maxTheme": "high-contrast",
+                "ratio": 1.52,
+                "median": 74
+            },
+            "table-head": {
+                "min": 32,
+                "minTheme": "formal",
+                "max": 32,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 32
+            },
+            "table-row": {
+                "min": 32,
+                "minTheme": "formal",
+                "max": 32,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 32
+            },
+            "nav": {
+                "min": 51.5,
+                "minTheme": "light",
+                "max": 159.5,
+                "maxTheme": "grotesk",
+                "ratio": 3.1,
+                "median": 55.55
+            },
+            "nav-link": {
+                "min": 30.5,
+                "minTheme": "formal",
+                "max": 36.5,
+                "maxTheme": "brutalism",
+                "ratio": 1.2,
+                "median": 30.5
+            },
+            "sidenav-item": {
+                "min": 29,
+                "minTheme": "formal",
+                "max": 33,
+                "maxTheme": "brutalism",
+                "ratio": 1.14,
+                "median": 29
+            },
+            "page-link": {
+                "min": 15,
+                "minTheme": "deco",
+                "max": 21,
+                "maxTheme": "shade-light",
+                "ratio": 1.4,
+                "median": 18
+            },
+            "dialog-title": {
+                "min": 22,
+                "minTheme": "formal",
+                "max": 28,
+                "maxTheme": "retro",
+                "ratio": 1.27,
+                "median": 22
+            },
+            "card-title": {
+                "min": 26.4,
+                "minTheme": "formal",
+                "max": 26.4,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 26.4
+            },
+            "field-label": {
+                "min": 21.6,
+                "minTheme": "formal",
+                "max": 21.6,
+                "maxTheme": "formal",
+                "ratio": 1,
+                "median": 21.6
+            }
+        },
+        "composites": {
+            "form": {
+                "min": 363.9,
+                "minTheme": "cyberpunk",
+                "max": 375.5,
+                "maxTheme": "brutalism",
+                "ratio": 1.03,
+                "median": 368.29999999999995
+            },
+            "shell": {
+                "min": 181.5,
+                "minTheme": "nostromo",
+                "max": 299.5,
+                "maxTheme": "grotesk",
+                "ratio": 1.65,
+                "median": 208.8
+            },
+            "tabs": {
+                "min": 109,
+                "minTheme": "cyberpunk",
+                "max": 139,
+                "maxTheme": "brutalism",
+                "ratio": 1.28,
+                "median": 133
+            },
+            "table": {
+                "min": 149.6,
+                "minTheme": "light",
+                "max": 155.6,
+                "maxTheme": "brutalism",
+                "ratio": 1.04,
+                "median": 149.6
+            },
+            "dialog": {
+                "min": 135,
+                "minTheme": "phantom",
+                "max": 168,
+                "maxTheme": "retro",
+                "ratio": 1.24,
+                "median": 158
+            },
+            "total": {
+                "min": 1060.4,
+                "minTheme": "nostromo",
+                "max": 1208.6,
+                "maxTheme": "brutalism",
+                "ratio": 1.14,
+                "median": 1098.4
+            },
+            "page": {
+                "min": 500.4,
+                "minTheme": "pastel",
+                "max": 532.5,
+                "maxTheme": "terminal",
+                "ratio": 1.06,
+                "median": 511.4
+            }
+        },
+        "three": {
+            "form": {
+                "min": 364.7,
+                "minTheme": "phantom",
+                "max": 367.5,
+                "maxTheme": "grotesk",
+                "ratio": 1.01,
+                "median": 365.9
+            },
+            "shell": {
+                "min": 203.9,
+                "minTheme": "dark",
+                "max": 299.5,
+                "maxTheme": "grotesk",
+                "ratio": 1.47,
+                "median": 216.7
+            },
+            "tabs": {
+                "min": 133,
+                "minTheme": "dark",
+                "max": 135,
+                "maxTheme": "phantom",
+                "ratio": 1.02,
+                "median": 134.5
+            },
+            "table": {
+                "min": 149.6,
+                "minTheme": "grotesk",
+                "max": 149.6,
+                "maxTheme": "grotesk",
+                "ratio": 1,
+                "median": 149.6
+            },
+            "dialog": {
+                "min": 135,
+                "minTheme": "phantom",
+                "max": 162,
+                "maxTheme": "grotesk",
+                "ratio": 1.2,
+                "median": 158
+            },
+            "total": {
+                "min": 1089,
+                "minTheme": "phantom",
+                "max": 1201.1,
+                "maxTheme": "grotesk",
+                "ratio": 1.1,
+                "median": 1098.4
+            },
+            "page": {
+                "min": 504.6,
+                "minTheme": "phantom",
+                "max": 511.4,
+                "maxTheme": "grotesk",
+                "ratio": 1.01,
+                "median": 508.8
+            }
+        }
+    },
+    "chosen": {
+        "largest": "grotesk",
+        "median": "phantom",
+        "smallest": "dark"
+    }
+}

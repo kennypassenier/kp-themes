@@ -397,8 +397,12 @@
     [data-theme='high-contrast'] .kp-field__required,
     [data-theme='high-contrast'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.78rem;
         font-weight: 400;
+    }
+
+    /* The help text's type size is the package's [scope-87]; the required mark keeps this register's. */
+    [data-theme='high-contrast'] .kp-field__required {
+        font-size: 0.78rem;
     }
 
     [data-theme='high-contrast'] .kp-field__check {
@@ -611,10 +615,6 @@
 
     [data-theme='high-contrast'] .kp-footer {
         border-top: 3px solid var(--border-strong);
-    }
-
-    [data-theme='high-contrast'] .kp-footer h4 {
-        font-size: 0.9rem;
     }
 
     [data-theme='high-contrast'] .kp-footer a {
@@ -1059,8 +1059,7 @@
        underline a plain link carries is not: it says "this is a link", and
        the trigger is not one. */
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         font-weight: 700;
         border: 0;
         border-bottom: 2px solid transparent;

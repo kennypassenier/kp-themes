@@ -100,7 +100,6 @@
     [data-theme='sepia'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        line-height: 1.1;
     }
 
     [data-theme='sepia'] [data-kp-surface] h2,
@@ -125,9 +124,7 @@
        not a shadow or an offset (anatomy.md: nothing here glows or
        shouts). */
     [data-theme='sepia'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 400;
-        line-height: 1.08;
         margin-block: 0 0.35em;
         text-wrap: balance;
         color: var(--foreground);
@@ -352,8 +349,7 @@
     }
 
     [data-theme='sepia'] .kp-nav__link {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.92rem;
+        padding-inline: 0.7rem;
         color: var(--foreground);
         border-radius: 0.25rem;
     }
@@ -417,8 +413,7 @@
     }
 
     [data-theme='sepia'] .kp-nav__menu a {
-        padding: 0.4rem 0.9rem;
-        font-size: 0.86rem;
+        padding-inline: 0.9rem;
         color: var(--foreground);
         border-radius: 0;
     }
@@ -499,7 +494,6 @@
     /* ── Fields: wells on the palest surface ────────────────────────────── */
 
     [data-theme='sepia'] .kp-field__label {
-        font-size: 0.85rem;
         color: var(--muted-foreground);
     }
 
@@ -524,7 +518,6 @@
     }
 
     [data-theme='sepia'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -816,8 +809,12 @@
     [data-theme='sepia'] .kp-tag {
         border-radius: 999px;
         border: 1px solid var(--border);
-        font-size: 0.78rem;
         letter-spacing: 0.02em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='sepia'] .kp-tag {
+        font-size: 0.78rem;
     }
 
     [data-theme='sepia'] .kp-health {
@@ -999,7 +996,6 @@
 
     [data-theme='sepia'] .kp-breadcrumb,
     [data-theme='sepia'] .kp-pagination {
-        font-size: 0.88rem;
         color: var(--muted-foreground);
     }
 
@@ -1323,8 +1319,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='sepia'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.92rem;
+        padding-inline: 0.7rem;
         border: 0;
         border-radius: 0.25rem;
         background: none;

@@ -73,7 +73,6 @@
     [data-theme='shade-light'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        line-height: 1.1;
     }
 
     /* No accent beyond the serif face itself: the demo's headline and
@@ -83,8 +82,6 @@
        on purpose (anatomy.md records this as a considered choice, not an
        omission). */
     [data-theme='shade-light'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         letter-spacing: -0.015em;
         max-width: 20ch;
     }
@@ -406,7 +403,6 @@
     /* ── Fields: plain wells, the border carries the boundary [DI1] ──── */
 
     [data-theme='shade-light'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -421,7 +417,6 @@
 
     [data-theme='shade-light'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-field--invalid .kp-field__input {
@@ -468,7 +463,6 @@
     [data-theme='shade-light'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.3rem;
     }
 
     /* The dossier: the stamp, and the redaction bars that clear on the
@@ -625,7 +619,6 @@
     [data-theme='shade-light'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.15rem;
     }
 
     /* ── Badges, tags, status ──────────────────────────────────────── */
@@ -635,8 +628,12 @@
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='shade-light'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -846,9 +843,11 @@
         border-bottom: 1px solid var(--border);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='shade-light'] .kp-breadcrumb,
     [data-theme='shade-light'] .kp-pagination {
-        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='shade-light'] .kp-pagination a[aria-current],
@@ -961,7 +960,6 @@
 
     [data-theme='shade-light'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -1258,8 +1256,7 @@
        list rather than a link in it. The underline a plain link carries is
        not: it says "this is a link", and the trigger is not one. */
     [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-bottom: 1px solid transparent;
         border-radius: 0;

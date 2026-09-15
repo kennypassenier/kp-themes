@@ -347,10 +347,6 @@
         box-shadow: var(--kp-shadow-sm);
     }
 
-    [data-theme='light'] .kp-card__title {
-        font-size: 1.1rem;
-    }
-
     /* ── Elevated panels: card and popover are both pure white (DI6), so
        elevation has to come from the border and the shadow — the anatomy
        names this as a real constraint, not an oversight. One answer for
@@ -417,10 +413,6 @@
        backdrop stays the base layer's (not a token, by design) ────────── */
     [data-theme='light'] .kp-dialog {
         box-shadow: var(--kp-shadow-lg);
-    }
-
-    [data-theme='light'] .kp-dialog__title {
-        font-size: 1.1rem;
     }
 
     /* ── Badges, tags, status ────────────────────────────────────────────── */
@@ -577,9 +569,11 @@
         border-bottom: 2px solid var(--primary);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='light'] .kp-breadcrumb,
     [data-theme='light'] .kp-pagination {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='light'] .kp-pagination [aria-current] {
@@ -922,8 +916,7 @@
        link in it. The underline a plain link carries is not: it says "this
        is a link", and the trigger is not one. */
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger {
-        padding: 0.25rem 0;
-        font-size: inherit;
+        padding-inline: 0;
         border: 0;
         border-radius: var(--radius, 0.5rem);
         background: none;

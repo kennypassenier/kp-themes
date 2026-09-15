@@ -391,6 +391,13 @@
         font-size: var(--kp-footer-size, 0.875rem);
     }
 
+    /* A footer column's heading: its size is the package's [scope-87],
+     * titanium's 0.95rem taken to 15px. */
+    .kp-footer h4 {
+        font-size: var(--kp-footer-heading-size, 0.9375rem);
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
     /* An error page is a message, not a wall: the destructive colour names
  * the failure, the body text explains it on the ordinary surface. */
     .kp-error {
@@ -728,10 +735,15 @@
         display: inline-flex;
         align-items: center;
         gap: 0.3em;
-        padding: 0.125rem 0.5rem;
+        /* The badge's block metrics and type size are the package's in every
+     * theme [scope-87, option B of research/uniform-size/]: the values are
+     * titanium's, the median theme's [scope-82]. A register keeps its
+     * inline padding, colour, border, face, case and letter spacing;
+     * gates/box-metrics.test.mjs refuses the rest. */
+        padding: var(--kp-badge-padding-block, 0.125rem) 0.5rem;
         border-radius: var(--kp-radius-pill, 999px);
-        font-size: var(--kp-text-sm, 0.8125rem);
-        line-height: 1.4;
+        font-size: var(--kp-badge-size, var(--kp-text-sm, 0.8125rem));
+        line-height: var(--kp-badge-line-height, 1.4);
         background: var(--muted);
         color: var(--muted-foreground);
         /* The overflow floor above puts five components on `anywhere`, and
@@ -762,7 +774,10 @@
 
     .kp-card__title {
         margin: 0 0 0.25rem;
-        font-size: var(--kp-text-md, 1rem);
+        /* A title's size is the package's [scope-87]: titanium's 1.5rem at
+     * the heading line height. */
+        font-size: var(--kp-card-title-size, 1.5rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     .kp-card__body {
@@ -945,7 +960,10 @@
     }
 
     .kp-field__label {
-        font-size: var(--kp-field-label-size, 0.875rem);
+        /* The label's and the help text's size are the package's [scope-87]:
+     * titanium's, on the running line height. */
+        font-size: var(--kp-field-label-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
@@ -1015,7 +1033,8 @@
     }
 
     .kp-field__help {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--muted-foreground);
     }
 
@@ -1592,13 +1611,19 @@
         /* Never wider than the bar it sits in: a narrow bar gives the
      * row to the brand and the toggle rather than to an empty box. */
         min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
-        padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+        /* As tall as a bar link and in its type size [scope-87], whatever
+     * border the register draws: a border-box floor of one line and the
+     * link's two block paddings, the label centred in it. */
+        box-sizing: border-box;
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)));
+        padding: 0 0.5rem 0 0.75rem;
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         background: var(--background);
         color: var(--muted-foreground);
         font: inherit;
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
         /* One line: squeezed on grotesk's bar, the key hint broke into
      * "Ctrl" over "K" inside its own chip [scope-80]. */
         white-space: nowrap;
@@ -1619,6 +1644,22 @@
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */
+    /* A bar link's size is the package's in every theme [scope-87, option B
+ * of research/uniform-size/]: its type size, line height and block
+ * padding are titanium's, the median theme's [scope-82]. A register keeps
+ * its inline padding, colour, border, face, case, letter spacing and
+ * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
+ * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
+ * two layout units, and the bar's measured height and the scroll offset
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The links sit in
+ * a column item (below), so the padding holds its room even where a
+ * register leaves the link inline. */
+    .kp-nav__link {
+        padding-block: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
     .kp-nav__link[aria-current='page'] {
         font-weight: 600;
         text-decoration-thickness: 2px;
@@ -1769,9 +1810,13 @@
         }
     }
 
+    /* A dropdown's and a mega menu's links: their size is the package's
+     * [scope-87], titanium's padding and its 0.92rem taken to 14px. */
     .kp-nav__menu a {
         display: block;
-        padding: 0.375rem 0.875rem;
+        padding: var(--kp-nav-menu-link-padding-block, calc(var(--kp-space-sm, 0.5rem) * 0.9)) 0.875rem;
+        font-size: var(--kp-nav-menu-link-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
     }
 
     /* A dropdown with no room on its item's end side hangs from the other
@@ -1803,11 +1848,15 @@
      * too) with a caret after its word that turns while open. */
     .kp-nav__disclosure {
         margin: 0;
-        padding: 0;
+        /* The bar link's block padding and type size [scope-87], restated
+         * after `font: inherit`, which would reset them. */
+        padding: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0;
         border: 0;
         background: transparent;
         color: inherit;
         font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
         cursor: pointer;
     }
 
@@ -2226,9 +2275,13 @@
         box-sizing: border-box;
         inline-size: 100%;
         min-inline-size: 0;
-        padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
+        /* The row's block padding, type size and line height are the
+           package's in every theme [scope-87], titanium's values; a
+           register keeps its inline padding (gates/box-metrics.test.mjs). */
+        padding: var(--kp-sidenav-item-pad, var(--kp-sidenav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0.6rem);
         font: inherit;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: var(--kp-line-height, 1.5);
         text-align: start;
         text-decoration: none;
         color: inherit;
@@ -2444,6 +2497,10 @@
 
     .kp-dialog__title {
         margin: 0 0 0.5rem;
+        /* Titanium's 1.2rem, taken to 1.25rem so the line is a whole pixel
+     * count (22px) at the heading line height [scope-87]. */
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     /* The confirmation TH107 opens is a .kp-dialog with one question in
@@ -2754,12 +2811,17 @@
     }
 
     .kp-tab {
-        padding: 0.5rem 0.75rem;
+        /* The tab's block padding, type size and line height are the
+     * package's in every theme [scope-87], titanium's values; a register
+     * keeps its inline padding, border, face and case. */
+        padding: var(--kp-tab-padding-block, var(--kp-space-sm, 0.5rem)) 0.75rem;
         border: 0;
         border-bottom: 2px solid transparent;
         background: none;
         color: var(--muted-foreground);
         font: inherit;
+        font-size: var(--kp-tab-size, var(--kp-text-md, 1rem));
+        line-height: var(--kp-line-height, 1.5);
         cursor: pointer;
     }
 
@@ -2776,6 +2838,17 @@
     }
 
     /* --- Breadcrumb and pagination --------------------------------------- */
+
+    /* Both trails' type size is the package's [scope-87]: titanium's. */
+    .kp-breadcrumb {
+        font-size: var(--kp-breadcrumb-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-pagination {
+        font-size: var(--kp-pagination-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
 
     .kp-breadcrumb ol,
     .kp-pagination ul {
