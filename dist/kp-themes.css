@@ -3914,6 +3914,26 @@
         color: var(--foreground);
     }
 
+    /* `data-kp-surface-align="center"` sets a surface's content on its
+       middle — a landing hero, an empty state — and is off unless a page
+       asks for it [Kenny, 2026-09-15]. The text centres; a narrower child (a
+       prose measure) takes auto margins, which centre it in a block surface
+       and in a flex column alike; a row keeps its full width and centres its
+       controls instead — auto margins would shrink a wrapping row to its
+       widest control in firefox and stack the buttons. A row modifier that
+       says otherwise (`.kp-row--between`) sits in a later layer and wins. */
+    [data-kp-surface][data-kp-surface-align='center'] {
+        text-align: center;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] > :not(.kp-row) {
+        margin-inline: auto;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] .kp-row {
+        justify-content: center;
+    }
+
     /* A divider between surfaces [S45, TH121]: the quiet answer is room —
        one step of the spacing scale — so a section and what follows never
        touch (the rhythm gate measured 0px under formal); a register may
@@ -9261,6 +9281,23 @@
          * tile's own. */
             grid-row: auto / span var(--kp-tile-h, 1);
         }
+    }
+
+    /* A surface keeps its content off its own edges [Kenny, 2026-09-15]. A
+     * surface paints a ground (css/_rules.css), and in every theme the
+     * heading, the prose and the first button stood on the ground's very
+     * edge: 0px between the text and the colour change, on the left where
+     * the eye starts a line. The room is the package's, in every theme, on
+     * the inline axis only — the block axis is the section rhythm's. The
+     * room gives way before the content does: a surface of 20rem or less (a
+     * 320px phone, where the concept page's 16rem grid already fills the
+     * surface to the pixel) keeps none, and from 22rem it keeps the whole lg
+     * step. Knob: --kp-surface-padding-inline (the lg step, from 22rem
+     * wide). Its companion,
+     * data-kp-surface-align="center", sits beside the ground in
+     * css/_rules.css, because it reaches the layout layer's row. */
+    [data-kp-surface] {
+        padding-inline: var(--kp-surface-padding-inline, max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2)));
     }
 }
 
@@ -22564,61 +22601,56 @@
     }
 
     /* The redactions: an ink bar over the word, the way the demo's own
-       .kp-redaction spans work — here painted on the mark's own ::after
-       so the mechanism reaches the package's real dossier markup (three
-       <mark> phrases inside the Card, not standalone spans). At rest, and
+       .kp-redaction spans work — here painted as the mark's own background,
+       cloned onto every line the phrase takes, so the mechanism reaches the
+       package's real dossier markup (three <mark> phrases inside the Card,
+       not standalone spans) and a phrase that wraps is covered line by line
+       [fix-33, scope-93]. The plate reaches 0.05em above and below the
+       words and 0.15em past each end as padding, room the words around it
+       make, so no plate reaches past the line it sits on. At rest, and
        on any page without the effects module attached, the words are
        plain: a permanently covered redaction with no way to open it would
        be a trap, not a reveal (the pattern every lifted theme's dossier
        already holds). */
     [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-        background: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
         color: inherit;
-        padding: 0;
-        position: relative;
-    }
-
-    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.15em;
-        background: var(--foreground);
+        padding: 0.05em 0.15em;
         border-radius: 0.25rem;
-        transform-origin: left center;
-        opacity: 0;
-        transform: scaleX(0);
-        pointer-events: none;
+        position: relative;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
+        background-size: 100% 100%;
     }
 
-    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        opacity: 1;
-        transform: scaleX(1);
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-fill), and that rule would reach these too. */
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% 100%;
+        animation: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition:
-                opacity 220ms ease,
-                transform 380ms var(--fx-ease);
-        }
-
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
-        }
-
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
-        }
-
-        /* The word switches colour after the plate has faded, in no time
-           at all: a size, not a colour, so KT8's mid-transition colour can
-           never be read. */
+        /* The plate narrows back toward the phrase's start, 380ms, staggered;
+           the word switches colour 220ms in, in no time at all — the plate
+           is the word's own ink, so it reads only where the plate has gone,
+           and KT8's mid-transition colour can never be read. */
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-            transition: color 0s linear 220ms;
+            transition:
+                background-size 380ms var(--fx-ease),
+                color 0s linear 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 220ms;
         }
     }
 
@@ -23783,34 +23815,38 @@
        line plainly. Armed (module attached, not yet opened): covered.
        Opened: uncovered again, through the same clip-path the demo uses,
        staggered 90ms per line — the mechanism the demo's own DI5 entry
-       names "kp-redact-clear". */
+       names "kp-redact-clear". The plate is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a plate on an absolutely
+       positioned ::after covered none of it. It stops 0.05em short of the
+       words' top and bottom and reaches 0.15em past each end as padding,
+       room the words around it make, so no plate reaches past the line it
+       sits on; it narrows
+       toward the phrase's start as the demo's clip did. */
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
         color: var(--popover-foreground);
-        background: none;
-        padding: 0;
-        font-weight: 400;
-    }
-
-    [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 0.05em -0.15em;
-        background: var(--foreground);
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% calc(100% - 0.1em) no-repeat;
+        padding: 0 0.15em;
         border-radius: 2px;
-        clip-path: inset(0 100% 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        font-weight: 400;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
+        background-size: 100% calc(100% - 0.1em);
+    }
+
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-mark-in), and that rule would reach these too. */
+    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 0.1em);
+        animation: none;
     }
 
     /* The stamp: a small pill, the way the demo's "Reviewer's copy"
@@ -24367,20 +24403,20 @@
         }
 
         /* The redaction bars: a plain transition on the covering plate's
-           clip-path, exactly the mechanism the demo's own CSS uses
-           (`transition: clip-path 260ms var(--fx-ease); transition-delay:
-           calc(var(--i, 0) * 90ms)`) — a discrete, user-triggered,
+           width — the demo's own timing (`transition: clip-path 260ms
+           var(--fx-ease); transition-delay: calc(var(--i, 0) * 90ms)`), on
+           a background-size since fix-33 — a discrete, user-triggered,
            one-shot change per bar, staggered by nth-of-type since the
            package's markup carries no --i custom property per mark. */
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 260ms var(--fx-ease);
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 
@@ -28360,29 +28396,26 @@
         padding: 0;
     }
 
+    /* The bar is the phrase's own background, cloned onto every line the
+       phrase takes, so a phrase that wraps is covered line by line [fix-33,
+       scope-93]; a bar on an absolutely positioned ::after covered none of
+       it. It reaches 0.05em above and below the words and 0.15em past each
+       end as padding, room the words around it make, so no bar reaches past
+       the line it sits on, and it is cut toward the phrase's end, as the scaled bar was. */
     [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         z-index: 0;
         color: var(--card-foreground);
         font-weight: 400;
-    }
-
-    [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.15em;
-        background: var(--foreground);
-        transform: scaleX(0);
-        transform-origin: right center;
-        pointer-events: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) right center / 0% 100% no-repeat;
+        padding: 0.05em 0.15em;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='grotesk'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='grotesk'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
+        background-size: 100% 100%;
     }
 
     /* The divider: the double rule as razor tear [PDR, cross-cutting]: two
@@ -29389,22 +29422,20 @@
         }
 
         /* (d) The redaction: a monotone three-step cut, staggered ~90ms. */
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform var(--kp-redact-cut) steps(3, end);
-        }
-
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
-        }
-
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
-        }
-
         /* The text switches from transparent to ink in no time, once the
            bar has finished cutting away (KT8: no mid-transition colour). */
         [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark {
-            transition: color 0s linear var(--kp-redact-cut);
+            transition:
+                background-size var(--kp-redact-cut) steps(3, end),
+                color 0s linear var(--kp-redact-cut);
+        }
+
+        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-cut);
+        }
+
+        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), var(--kp-redact-cut);
         }
 
         /* (b) The nav/footer link and (e) the button mirror-invert: colour
@@ -30320,7 +30351,13 @@
        node of its own — only `data-kp-label`); the redactions are solid
        ink blocks the same border colour as the sheet's own hairlines,
        cleared left to right on the trigger, staggered by 150ms apart
-       [S48, LIFT_PLAN row 6]. */
+       [S48, LIFT_PLAN row 6]. The block is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a block on an absolutely
+       positioned ::after covered none of it. The block reaches 0.05em above
+       and below and 0.1em past the mark's former padding at each end, all of
+       it padding the words make room for, so no block reaches past the line
+       it sits on. */
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -30344,28 +30381,17 @@
 
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--border), var(--border)) right center / 0% 100% no-repeat;
         color: inherit;
-        padding: 0 0.15em;
+        padding: 0.05em 0.25em;
         border-radius: 2px;
-    }
-
-    [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.1em;
-        background: var(--border);
-        border-radius: 2px;
-        clip-path: inset(0 0 0 100%);
-        pointer-events: none;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        background-size: 100% 100%;
     }
 
     [data-theme='blueprint'] .kp-dialog,
@@ -30797,18 +30823,36 @@
         }
 
         /* The redactions: the ink block narrows away from the left,
-           staggered 150ms apart — a clip-path, not a colour cross-fade, so
-           no mid-transition shade is ever legible [KT8]. */
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 400ms ease-out;
+           staggered 150ms apart — a size, not a colour cross-fade, so no
+           mid-transition shade is ever legible [KT8]. The words take their
+           ink in no time once their block is gone, because the block is a
+           different colour from the words it hides. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size 400ms ease-out,
+                color 0s linear;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
+        }
+
+        /* Opened, each phrase's words wait for its own block to go; covered
+           again, they go at once, before the block grows. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            transition-delay: 0s, 400ms;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), calc(400ms + var(--kp-redact-stagger));
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(400ms + 2 * var(--kp-redact-stagger));
         }
     }
 
@@ -34213,11 +34257,17 @@
         text-decoration: underline;
     }
 
+    /* The call to action: a primary plate with the radius. The words sit
+       one lg step in from either side of it [Kenny, 2026-09-15: "barely any
+       spacing between the letters and the blue box"]; the plate had 0px of
+       inline padding, so the first and last letter stood on its edge. The
+       height stays the package's (option B). */
     [data-theme='formal'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         font-weight: 600;
         border-radius: var(--radius);
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='formal'] .kp-nav__link--cta:hover {
@@ -34402,32 +34452,32 @@
         background: var(--muted);
     }
 
-    /* The redaction: a run of ink over the phrase, cleared left to right
-       — a scale transform on a full-cover bar, the way a redaction pen is
-       dragged off a page, not a fade. */
+    /* The redaction: a run of ink over the phrase, cleared toward its
+       start — the bar narrows away the way a redaction pen is dragged off a
+       page, not a fade. The bar is the phrase's own background, cloned onto
+       every line the phrase takes [fix-33, scope-93]: a bar on an absolutely
+       positioned ::after covered none of a phrase that wrapped. The ink
+       reaches 0.06em above and below the words and 0.1em past each end as
+       padding, room the words around it make, so no bar reaches past the
+       line it sits on. The
+       words keep their ink, the bar's own colour, so they are unreadable
+       under it and uncovered exactly where it has gone. */
     [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 100% 100% no-repeat;
         color: var(--card-foreground);
-        padding: 0;
+        padding: 0.06em 0.1em;
         border-radius: 0;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.06em -0.1em;
-        background: var(--foreground);
-        transform-origin: left center;
-        transform: scaleX(1);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        background-size: 100% 100%;
     }
 
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
-    }
-
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        transform: scaleX(0);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% 100%;
     }
 
     /* ── Panels: one hairline boundary, the card's own paper ─────────── */
@@ -34844,15 +34894,15 @@
             transition: transform 450ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform 260ms var(--fx-ease);
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger, 80ms);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
         }
     }
@@ -35585,37 +35635,30 @@
 
     /* The dossier's redactions: a mark inside a triggered emphasis
        container is a solid ink bar over the words until the file opens,
-       then the bar lifts — the demo's own mechanism (a scaled
-       pseudo-element, transform-origin left, matching the CSS the demo
-       actually ships, not only its prose). Without the script the bar is
+       then the bar lifts toward the phrase's start — the demo's own
+       motion (a bar scaled from the left), painted as the phrase's own
+       background and cloned onto every line it takes, so a phrase that
+       wraps is covered line by line [fix-33, scope-93]; the demo's scaled
+       pseudo-element covered none of a wrapped phrase. The ink reaches
+       0.04em above and below and 0.08em past each end as padding, which the
+       words around it make room for, so no bar reaches past the line it
+       sits on. Without the script the bar is
        retracted and the words read plainly (AR34: the rest state holds
        without the module). */
     [data-theme='sepia'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         color: var(--card-foreground);
-        background: none;
-        padding: 0;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
+        padding: 0.04em 0.08em;
         font-weight: 400;
         border-radius: 0.15em;
-    }
-
-    [data-theme='sepia'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.04em -0.08em;
-        background: var(--foreground);
-        border-radius: 0.15em;
-        transform-origin: left center;
-        transform: scaleX(0);
-        pointer-events: none;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
+        background-size: 100% 100%;
     }
 
     [data-theme='sepia'] .kp-dialog,
@@ -36099,16 +36142,18 @@
             transition: transform var(--kp-rule-duration) var(--kp-hand);
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform var(--kp-redact-duration) cubic-bezier(0.65, 0, 0.35, 1);
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size var(--kp-redact-duration) cubic-bezier(0.65, 0, 0.35, 1),
+                color var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
         }
 
         [data-theme='sepia'] .kp-footer a {
@@ -36741,34 +36786,27 @@
     /* The redactions: three marks inside the dossier, covered by a bar in
        the theme's own boundary colour until the trigger opens the file,
        then lifted one after another, right to left — the demo's own
-       clip-path direction. The ink underneath is present throughout
-       (color kept, never removed): the bar is what hides it, not the
-       text itself, which is how the demo's own `.kp-redaction` reads. */
+       clip-path direction. The bar is the phrase's own background, 1px
+       inside its padding and cloned onto every line the phrase takes, so a
+       phrase that wraps is covered line by line [fix-33, scope-93]; a bar
+       on an absolutely positioned ::after covered none of it. A background
+       paints under the words rather than over them, and the bar is not the
+       words' colour, so the words wear no ink while the bar is there and
+       take it back once their bar has gone. */
     [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
-        color: var(--card-foreground);
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 1px center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+        color: transparent;
         padding: 0.05em 0.15em;
         font-weight: 400;
         border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 1px;
-        background: var(--border-strong);
-        border-radius: 3px;
-        clip-path: inset(0 0 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='solstice'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
-    }
-
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        clip-path: inset(0 100% 0 0);
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 2px);
+        color: var(--card-foreground);
     }
 
     /* Windows: a plain popover panel with the demo's soft drop shadow —
@@ -37221,16 +37259,19 @@
             animation: kp-cal-rule var(--kp-rule-duration) var(--fx-ease) var(--kp-rule-delay) 1 both;
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
             animation: kp-cal-redact var(--kp-redact-duration) var(--fx-ease) 1 both;
+            transition: color 0s linear var(--kp-redact-duration);
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
             animation-delay: var(--kp-redact-stagger);
+            transition-delay: calc(var(--kp-redact-duration) + var(--kp-redact-stagger));
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
             animation-delay: calc(2 * var(--kp-redact-stagger));
+            transition-delay: calc(var(--kp-redact-duration) + 2 * var(--kp-redact-stagger));
         }
     }
 
@@ -37268,11 +37309,11 @@
        direction (`clip-path: inset(0 100% 0 0)` at rest-cleared). */
     @keyframes kp-cal-redact {
         from {
-            clip-path: inset(0 0 0 0);
+            background-size: calc(100% - 2px) calc(100% - 2px);
         }
 
         to {
-            clip-path: inset(0 100% 0 0);
+            background-size: 0% calc(100% - 2px);
         }
     }
     /* The band [M1, M4]: Kenny picked this theme's own version over the

@@ -41,7 +41,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-confirm-in` | opacity | 160 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-cal-slide` | clip-path | 740 ms | 1× | — | 0.00/s | under |
 | `kp-cal-rule` | transform | 480 ms | 1× | — | 0.00/s | under |
-| `kp-cal-redact` | clip-path | 320 ms | 1× | — | 0.00/s | under |
+| `kp-cal-redact` | background-size | 320 ms | 1× | — | 0.00/s | under |
 | `kp-wipe` | mask-position | 600 ms | 1× | — | 0.00/s | under |
 | `kp-burnish` | clip-path | 900 ms | 1× | — | 0.00/s | under |
 | `kp-hc-headline-wipe` | clip-path | 550 ms | 1× | — | 0.00/s | under |

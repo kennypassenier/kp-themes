@@ -21,7 +21,9 @@
 //   - the redaction's covering rule
 //     (`[data-kp-effects] .kp-card[...] mark:not(.is-cleared)::after`)
 //     removed → the redaction never covers the dossier's marks, red on
-//     "the dossier covers its marks before the trigger opens them";
+//     "the dossier covers its marks before the trigger opens them" (since
+//     fix-33, scope-93, the plate is the mark's own cloned background and
+//     that rule sets its background-size, which the test reads);
 //   - `[data-kp-reveal='headline'].is-words [data-word]`'s animation
 //     removed → the words never receive the `kp-word-in` name, red on
 //     "the headline's words resolve through a blur".
@@ -161,14 +163,15 @@ for (const [channel, url] of CHANNELS) {
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const marks = dossier.locator('mark');
             expect(await marks.count(), 'the three redacted phrases').toBe(3);
-            const covered = await pseudo(marks.first(), '::after', ['clip-path', 'background-color']);
-            expect(covered['clip-path'], 'the bar covers the phrase before the trigger').toMatch(/^inset\(0px 0px 0px 0px\)$|^inset\(0px\)$/);
-            expect(covered['background-color']).toBe(await paint(page, '--foreground'));
+            const covered = await pseudo(marks.first(), '', ['background-size', 'background-image']);
+            expect(covered['background-size'], 'the bar covers the phrase before the trigger').toMatch(/^100% /);
+            expect(covered['background-image']).toContain(await paint(page, '--foreground'));
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await pseudo(marks.first(), '::after', ['clip-path']);
-            expect(cleared['clip-path'], 'the bar has cleared').toMatch(/100%.+0px.+0px\)$|100% 0px 0px\)$/);
+            await expect
+                .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the bar has cleared')
+                .toMatch(/^0(%|px) /);
         });
 
         test('the dialog rises into place with the deep shadow and the dimmed backdrop', async ({ page }) => {

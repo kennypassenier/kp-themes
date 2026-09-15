@@ -395,9 +395,12 @@
                     each in a stage tall enough for the texture to show. In <b>every</b> theme: the hero paints its own ground (the theme's hero
                     colour) and the app paints the theme's background, so the two read as two grounds; every text on both — microlabel, heading, muted
                     line, link, each button — clears its contrast floor on its own ground; and a theme's texture stays inside the surface it belongs
-                    to rather than bleeding over the stage around it. Per theme: <b>cyberpunk</b>'s hero is the yellow ground and its app the void;
-                    <b>synthwave</b>'s hero carries a striped, static sun and a floor that drifts without changing brightness; <b>phantom</b>'s hero
-                    carries its plates; <b>lapis</b> confines its girih tile to the two surfaces and turns the page-wide texture off;
+                    to rather than bleeding over the stage around it. In <b>every</b> theme no text or button touches a surface's left or right edge:
+                    the package keeps one lg step of room inside the ground (<code>--kp-surface-padding-inline</code>). The third stage is the same
+                    hero with <code>data-kp-surface-align="center"</code>, an option that is off unless a page writes it: the microlabel, heading and
+                    line centre, and the row of buttons sits in the middle. Per theme: <b>cyberpunk</b>'s hero is the yellow ground and its app the
+                    void; <b>synthwave</b>'s hero carries a striped, static sun and a floor that drifts without changing brightness; <b>phantom</b>'s
+                    hero carries its plates; <b>lapis</b> confines its girih tile to the two surfaces and turns the page-wide texture off;
                     <b>forest</b> and <b>shade-light</b> paint their own app ground; <b>titanium</b>'s ground is carbon twill under a moving light.
                 </div>
                 <p class="cat-note">Hero</p>
@@ -436,6 +439,24 @@
                             <button type="button" class="kp-button kp-button--destructive kp-button--mirror">
                                 <span class="kp-button__edge" aria-hidden="true"></span>
                                 <span class="kp-button__label">Discard</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+                <p class="cat-note">Hero, centred (<code>data-kp-surface-align="center"</code>)</p>
+                <div class="cat-stage cat-stage--block cat-stage--surface">
+                    <section class="kp-section kp-stack" data-kp-surface="hero" data-kp-surface-align="center">
+                        <p class="microlabel">Pump house 4 · preview build</p>
+                        <h2>Every reading, signed.</h2>
+                        <p class="kp-prose">The quiet line under the heading, in the hero's muted ink, with <a href="#surfaces">a link in it</a>.</p>
+                        <div class="kp-row">
+                            <button type="button" class="kp-button kp-button--primary">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Open the log</span>
+                            </button>
+                            <button type="button" class="kp-button">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Read the rota</span>
                             </button>
                         </div>
                     </section>

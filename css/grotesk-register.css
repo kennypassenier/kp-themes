@@ -139,29 +139,26 @@
         padding: 0;
     }
 
+    /* The bar is the phrase's own background, cloned onto every line the
+       phrase takes, so a phrase that wraps is covered line by line [fix-33,
+       scope-93]; a bar on an absolutely positioned ::after covered none of
+       it. It reaches 0.05em above and below the words and 0.15em past each
+       end as padding, room the words around it make, so no bar reaches past
+       the line it sits on, and it is cut toward the phrase's end, as the scaled bar was. */
     [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         z-index: 0;
         color: var(--card-foreground);
         font-weight: 400;
-    }
-
-    [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.15em;
-        background: var(--foreground);
-        transform: scaleX(0);
-        transform-origin: right center;
-        pointer-events: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) right center / 0% 100% no-repeat;
+        padding: 0.05em 0.15em;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='grotesk'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='grotesk'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
+        background-size: 100% 100%;
     }
 
     /* The divider: the double rule as razor tear [PDR, cross-cutting]: two
@@ -1168,22 +1165,20 @@
         }
 
         /* (d) The redaction: a monotone three-step cut, staggered ~90ms. */
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform var(--kp-redact-cut) steps(3, end);
-        }
-
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
-        }
-
-        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
-        }
-
         /* The text switches from transparent to ink in no time, once the
            bar has finished cutting away (KT8: no mid-transition colour). */
         [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark {
-            transition: color 0s linear var(--kp-redact-cut);
+            transition:
+                background-size var(--kp-redact-cut) steps(3, end),
+                color 0s linear var(--kp-redact-cut);
+        }
+
+        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-cut);
+        }
+
+        [data-theme='grotesk'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), var(--kp-redact-cut);
         }
 
         /* (b) The nav/footer link and (e) the button mirror-invert: colour

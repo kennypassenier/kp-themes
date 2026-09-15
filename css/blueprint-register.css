@@ -632,7 +632,13 @@
        node of its own — only `data-kp-label`); the redactions are solid
        ink blocks the same border colour as the sheet's own hairlines,
        cleared left to right on the trigger, staggered by 150ms apart
-       [S48, LIFT_PLAN row 6]. */
+       [S48, LIFT_PLAN row 6]. The block is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a block on an absolutely
+       positioned ::after covered none of it. The block reaches 0.05em above
+       and below and 0.1em past the mark's former padding at each end, all of
+       it padding the words make room for, so no block reaches past the line
+       it sits on. */
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -656,28 +662,17 @@
 
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--border), var(--border)) right center / 0% 100% no-repeat;
         color: inherit;
-        padding: 0 0.15em;
+        padding: 0.05em 0.25em;
         border-radius: 2px;
-    }
-
-    [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.1em;
-        background: var(--border);
-        border-radius: 2px;
-        clip-path: inset(0 0 0 100%);
-        pointer-events: none;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        background-size: 100% 100%;
     }
 
     [data-theme='blueprint'] .kp-dialog,
@@ -1109,18 +1104,36 @@
         }
 
         /* The redactions: the ink block narrows away from the left,
-           staggered 150ms apart — a clip-path, not a colour cross-fade, so
-           no mid-transition shade is ever legible [KT8]. */
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 400ms ease-out;
+           staggered 150ms apart — a size, not a colour cross-fade, so no
+           mid-transition shade is ever legible [KT8]. The words take their
+           ink in no time once their block is gone, because the block is a
+           different colour from the words it hides. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size 400ms ease-out,
+                color 0s linear;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
+        }
+
+        /* Opened, each phrase's words wait for its own block to go; covered
+           again, they go at once, before the block grows. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            transition-delay: 0s, 400ms;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), calc(400ms + var(--kp-redact-stagger));
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(400ms + 2 * var(--kp-redact-stagger));
         }
     }
 

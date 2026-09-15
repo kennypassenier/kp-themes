@@ -16,7 +16,9 @@
 //   - the armed redaction cover (`[data-kp-effects] .kp-card[data-kp-reveal
 //     ='emphasis'] mark:not(.is-cleared)::after { transform: scaleX(1) }`)
 //     removed → the dossier's words are readable from the first paint, red
-//     on "covered before the trigger";
+//     on "covered before the trigger" (since fix-33, scope-93, the bar is
+//     the mark's own cloned background and that rule is
+//     `mark:not(.is-cleared) { background-size: 100% 100% }`);
 //   - the headline's armed blur (`.is-sharpening { filter: blur(...)
 //     brightness(...) }`) removed → the probe never reads a blur greater
 //     than 0, red on "the headline resolves from a blur".
@@ -168,9 +170,10 @@ for (const [channel, url] of CHANNELS) {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['transform', 'background-color']);
-            expect(covered.transform, 'covered before the trigger').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-            expect(covered['background-color']).toBe(await paint(page, '--foreground'));
+            const covered = await pseudo(mark, '', ['background-size', 'background-image', 'background-position']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered['background-image']).toContain(await paint(page, '--foreground'));
+            expect(covered['background-position'], 'cut toward the phrase’s end').toMatch(/^100% 50%$|^right/);
             expect(await mark.evaluate((el) => getComputedStyle(el).color), 'the word itself is hidden while armed').toBe('rgba(0, 0, 0, 0)');
             // Measured through the paint, not the declaration: firefox
             // reports `attr()` unresolved and the old `|attr(...)`
@@ -184,8 +187,7 @@ for (const [channel, url] of CHANNELS) {
                 'the stamp swapped to its open word',
             ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
-            const lifted = await pseudo(mark, '::after', ['transform']);
-            expect(lifted.transform, 'the bar has cut away').toMatch(/^matrix\(0,/);
+            await expect.poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the bar has cut away').toBe('0% 100%');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

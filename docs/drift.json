@@ -174,12 +174,12 @@
                 "gates/check-texture.mjs",
                 "gates/config.json"
             ],
-            "hash": "fb311130fd25abfe261f058df4f5acf729ea34664c2a24ad7d7ee2f522c5da0d",
+            "hash": "f7916842402af193a89822d9c94fd642db5326c0d0fa3ec4c41cd3f0e7a0a844",
             "doc": "6b6370649ac9e2842884fb4d83e533430a11f0f5cfe8ecf94e4448b806475faf",
             "files": {
                 "gates/check-contrast.mjs": "e5d4227e381943c609c93ace3ecb38fc045742df569197d0cd0ab58a7b126c99",
                 "gates/check-invariants.mjs": "8e554d4b7422db3ce2e34cedff5944ae13c8eb7453f4972de7bd4aceebf3ba07",
-                "gates/check-motion.mjs": "027e96bf834f5c1a7d93261b6da3b6ba713c60d4a1561b7c4e3db7427c0c664e",
+                "gates/check-motion.mjs": "923a299b2c7f6ea314dacabbcac9172cf7e69d060efe300bfe54c1e39a74ae0d",
                 "gates/check-texture.mjs": "7707c0feee5af074b28ad43b4e2fbe6ee15295412bbe17cf822af340558c31c4",
                 "gates/compliance.mjs": "f89b68f8d66f867e9aa965f217433fe36db7095ab4b9f288ea628492e1429b15",
                 "gates/config.json": "ec9cd1908f462cc0d0fe1d5aefc3f024e48c819ec438b12280220f87dc7f5a43"
@@ -289,7 +289,7 @@
                 "themes/hooks.json"
             ],
             "hash": "7bdd664aabd5c196ef23d27eb6302436d4d362e4c08f76eceb1700541b9ba975",
-            "doc": "7361647ae4207fab830fc1e906c088e0f13a89902bc4d244d8beb3a2d01391c8",
+            "doc": "6ef47a9dc46f1f9c29bbedf4ad9fab7214454634f00dd5688e46231512fdf240",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",

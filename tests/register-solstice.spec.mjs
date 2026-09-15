@@ -19,7 +19,8 @@
 //     `::after` rule → red on "a mix-blend-mode overlay covers it";
 //   - the redaction bar's `background: var(--border-strong)` (the
 //     `mark::after` rule) removed → red on "the bar is the boundary
-//     colour";
+//     colour" (since fix-33, scope-93, the bar is the mark's own cloned
+//     background gradient, and the test reads that gradient's ink);
 //   - the nav dropdown caret content rule (`.kp-nav__link[aria-haspopup]
 //     ::after { content: ' ⌄' }`) removed → red on "a caret glyph".
 // A fourth was found and fixed rather than merely drilled: the mirror
@@ -187,16 +188,17 @@ for (const [channel, url] of CHANNELS) {
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
             const first = marks.first();
-            const covered = await pseudo(first, '::after', ['background-color', 'clip-path']);
-            expect(covered['background-color'], 'the bar is the boundary colour').toBe(await paint(page, '--border-strong'));
-            expect(covered['clip-path'], 'fully covering before the trigger').toMatch(/^(none|inset\(0px\))$/);
+            const covered = await pseudo(first, '', ['background-image', 'background-size', 'color']);
+            expect(covered['background-image'], 'the bar is the boundary colour').toContain(await paint(page, '--border-strong'));
+            expect(covered['background-size'], 'fully covering before the trigger').toMatch(/^calc\((100% - 2px|-2px \+ 100%)\)/);
+            expect(covered.color, 'the words wear no ink under the bar').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(first).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await pseudo(first, '::after', ['clip-path']);
-            expect(cleared['clip-path'], 'clipped away from the right').toMatch(
-                /inset\(0px 100%|inset\(0%\s*100%|inset\(0px\s*[\d.]+px\s*0px\s*0px\)/,
-            );
+            await expect
+                .poll(async () => (await pseudo(first, '', ['background-size']))['background-size'], 'narrowed away toward the left')
+                .toMatch(/^0(%|px) /);
+            await expect.poll(async () => (await pseudo(first, '', ['color'])).color, 'the words take their ink back').not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test("the stamp carries the demo's own word and rides a slight rotation", async ({ page }) => {

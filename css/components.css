@@ -5053,4 +5053,21 @@
             grid-row: auto / span var(--kp-tile-h, 1);
         }
     }
+
+    /* A surface keeps its content off its own edges [Kenny, 2026-09-15]. A
+     * surface paints a ground (css/_rules.css), and in every theme the
+     * heading, the prose and the first button stood on the ground's very
+     * edge: 0px between the text and the colour change, on the left where
+     * the eye starts a line. The room is the package's, in every theme, on
+     * the inline axis only — the block axis is the section rhythm's. The
+     * room gives way before the content does: a surface of 20rem or less (a
+     * 320px phone, where the concept page's 16rem grid already fills the
+     * surface to the pixel) keeps none, and from 22rem it keeps the whole lg
+     * step. Knob: --kp-surface-padding-inline (the lg step, from 22rem
+     * wide). Its companion,
+     * data-kp-surface-align="center", sits beside the ground in
+     * css/_rules.css, because it reaches the layout layer's row. */
+    [data-kp-surface] {
+        padding-inline: var(--kp-surface-padding-inline, max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2)));
+    }
 }

@@ -172,6 +172,10 @@ export const DESCRIPTORS = [
         variants: [
             { name: 'data-kp-surface="hero"', what: 'The opening surface: the one place a theme may be loud.' },
             { name: 'data-kp-surface="app"', what: 'The working surface: forms, tables, cards. A theme keeps it readable before anything else.' },
+            {
+                name: 'data-kp-surface-align="center"',
+                what: 'Sets a surface’s content on its middle: the text centres, a narrower child takes auto margins and a row centres its controls. Off unless a page asks; every surface keeps its content off its own inline edges either way, one lg step in.',
+            },
             { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
             {
                 name: 'data-kp-divider-shape',

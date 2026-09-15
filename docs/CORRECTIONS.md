@@ -138,6 +138,138 @@ against the surface it lies on. B: the visited link is held apart from the
 link by the generator and by nothing else, so a hand-authored value would
 slip past.
 
+**4 · How we prevent recurrence.** Kenny's option (b), scope-93: each
+register that drew the bar on an absolutely positioned `mark::after` over a
+phrase that can wrap paints it as the mark's own background — a one-colour
+gradient whose `background-size` is the reveal — with
+`box-decoration-break: clone`, as lapis, nostromo and forest already did.
+A background follows every line of the phrase, reaches past the words only
+as padding the line makes room for, and adds no reflow finding. The
+registers whose marks never wrap (`white-space: nowrap`: cyberpunk,
+synthwave, terminal, brutalism, phantom, retro, titanium, dark, shade-dark)
+and high-contrast (an inline block) keep their bars. Two package-level
+answers were tried first and refused: `white-space: nowrap` scrolled the
+concept page sideways at 320px in formal, grotesk, sepia and solstice, and
+an inline block left each bar's bleed counted as overflow in 13 themes.
+`tests/redaction-cover.spec.mjs` reads, per theme and per phrase, the
+painted redaction against the words' ink, at both review sizes and at the
+phrase's own break.
+
+**5 · What the remedy costs.** Seven registers changed, each keeping its
+direction, timing and stagger:
+
+- formal — the ink narrows toward the phrase's start, 260ms, stagger 80ms;
+  the words keep their ink, the bar's own colour, as before.
+- pastel — the plate narrows toward the start, 380ms, staggered; the word
+  takes its ink 220ms in. The plate no longer also fades (a gradient's
+  colour does not transition); it only narrows.
+- sepia — the bar lifts toward the start on the theme's own curve and
+  `--kp-redact-duration`, staggered; the word's ink returns on
+  `--fx-duration`.
+- blueprint — the block narrows away from the left, 400ms, stagger 150ms;
+  the block is not the words' colour, so each phrase's words take their ink
+  once its block is gone.
+- solstice — `kp-cal-redact` now animates the background's width, right to
+  left, staggered; the bar covers the words at rest as before, and the words
+  wear no ink until their bar has gone (they were visible under the bar
+  before, which a background cannot hide).
+- shade-light — the plate narrows toward the start, 260ms, stagger 90ms,
+  0.05em short of the words' top and bottom as before.
+- grotesk — the bar is cut toward the phrase's end in three steps,
+  staggered 90ms; the word takes its ink when the cut is done.
+
+Measured in firefox at 1400×900, the third phrase's bar against its words,
+before and after: formal 158×21 over 154, now 159×21; pastel 160×21, now
+160×20; sepia 158×21, now 158×21; blueprint 163×21, now 163×21; solstice
+158×20, now 158×20; shade-light 146×20, now 147×21; grotesk 164×21, now
+164×21. The bleed past each end is now padding in the line, so the words
+beside a phrase sit 1 to 2.4px further off and a line can break one word
+earlier. Reduced motion shows every state at once, as before. Every dossier
+block in those seven themes changes and returns for Kenny's verdict.
+
+**6 · Who enforces it.** Discipline, not code — stated as such
+deliberately. No hook or test can inspect prose that only ever exists in
+a conversation. What helps: the rule lives in this project's `CLAUDE.md`,
+so every session opened in this directory reads it before acting.
+
+**7 · How and when it gets measured.** At the next form in this project
+carrying checkable claims — the Phase 2 decision form on components and
+missing tokens. Claude counts how many claims assert a fact about code or
+another project, and how many of those carry a file:line or an explicit
+second-hand label, and reports that count at the top of that form. The
+measure works when the two numbers match. Queued in
+[MINI_ROUNDS.md](MINI_ROUNDS.md) until it has happened.
+
+**8 · The fallback if the measurement fails.** Switch to the strict form:
+a form then contains only claims that carry a source, and everything
+unverified becomes its own item asking "I do not know this — shall I
+measure it?". Slower and longer, but it makes ignorance visible instead of
+presenting it as fact.
+
+**9 · When the measure is reviewed.** At this project's retrospective
+(Phase 10). A rule without a review moment outlives its usefulness, and
+being able to remove rules is the only thing that keeps the stack
+readable.
+
+### KT1's fallback, activated 2026-09-04
+
+Field 8's fallback triggered at the Phase 7 gate, on Kenny's decision. The
+measure had already failed once after being agreed: on 2026-09-03, after
+KT1 was approved, Claude asserted that cyberpunk had no display face at
+all in the plain-CSS consumers. Kenny looked at the live kyu dashboard and
+saw Chakra Petch; both consumers set it themselves from their own
+`theme-bridge.css`. The claim was checkable and was not checked.
+
+The count KT1 asked for was finally taken at the Phase 7 gate form — nine
+claims about code, nine carrying a file:line or a measured number, so they
+matched. Kenny's answer was that one matching count does not undo a
+measure that had already been broken, and that the fallback applies from
+here.
+
+**So, from 2026-09-04, in this project:** every claim in a form carries
+its source, or it becomes its own item in that form. Not only the
+checkable ones and not only the ones a decision rests on — every claim.
+An assertion with no source is not softened with a hedge; it is either
+sourced or it is asked.
+
+## KT2 · A gate that checked one half of a two-halved property
+
+Approved 2026-09-04, all nine fields "Correct". The measurement of field 7
+happened in the same session; the correction is **closed**.
+
+**1 · What went wrong.** L3 built the derived interaction states and
+checked whether the text on such a state still reads. It never asked the
+other question: whether the state is distinguishable from the colour it
+came from. Measured 2026-09-04, the distance between a base colour and its
+pressed state, on the OKLab scale where roughly 10 means "you can see that
+it changed": formal 12.1, light 10.6, dark 10.7, pastel 11.4, forest 11.3 —
+and cyberpunk 2.6 to 7.1, terminal 4.5 to 8.4. In those two themes,
+pressing a control changed nothing anyone could see.
+
+Two things were corrected during the round, both of them my own claims:
+
+- I first reported that hover was under the threshold in every theme and
+  that this was the fault. Hover is 2.4 to 3.4 everywhere, which is the
+  same order as Material's 8% state layer. The outlier is the pressed
+  state in the two opt-out themes, and the wider claim was wrong.
+- I first measured the badge plates with a contrast ratio and read 1.04 to
+  1.40, which sounds like an invisible badge. A contrast ratio compares
+  luminance only, and those plates differ in hue; in perceptual distance
+  they sit 5.6 to 12.6 from their card. The instrument was wrong, not the
+  badges.
+
+**2 · Which gate let it through.** `checkStates` in
+`gates/check-invariants.mjs`. It reported "35 checks, all seven themes in
+order" and covered the missing half with that number. AR8 asks a gate how
+many things it checked; nothing asked whether they were the right 35.
+
+**3 · Where else the same fault sits.** Stated as *a gate checks one half
+of a two-halved property and reports green*, it was found twice more.
+A: a badge's text is gated against its plate; the plate was never measured
+against the surface it lies on. B: the visited link is held apart from the
+link by the generator and by nothing else, so a hand-authored value would
+slip past.
+
 **4 · How we prevent recurrence.** Three things. `checkStateVisibility`
 measures the missing half and was written failing, before the fix
 (standing rule 8). The derivation lets the pressed state give up chroma
@@ -3348,6 +3480,69 @@ his choice shows no text above the header.
 
 **8 · If the measurement fails.** Kenny names the theme and screen scale, and
 Claude tries to reproduce it in FireDragon itself for a new correction.
+
+**9 · When we review the measure.** At that review.
+
+## fix-33 · A redaction stood beside its phrase instead of over it (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon, on
+`catalogue/page-effects.html#dossier` in formal, pastel and grotesk: the
+third redaction was over twice the height of the others, covered none of
+its words and sat in front of "the contractor". Reproduced in firefox by
+narrowing the paragraph until a phrase breaks: seven themes (formal,
+pastel, sepia, blueprint, solstice, shade-light, grotesk) drew a bar 3 to
+5px wide and 44 to 46px tall at the end of the first line — formal's and
+solstice's words readable beside it — and at 1400×900 and 1920×1000 as
+laid out, shade-light's third phrase already broke that way. Cause: those
+registers draw the bar as an absolutely positioned `mark::after` on an
+inline `<mark>`; when the inline breaks, the bar's containing block is the
+rectangle from the start of its first line box to the end of its last
+(CSS 2 §10.1, item 4), not a box per line.
+
+**2 · Which gate let it through.** The register specs read the bar's
+computed style on the concept page, where every phrase fits its line; no
+test laid a phrase over a line break, and nothing measured the painted bar
+against the words.
+
+**3 · Where the same fault sits.** Searched with
+`grep -nE "(^|[ ,>])(mark|a|span|code|kbd|…)(…)*::?(after|before)\b" css/*-register.css css/components.css css/_rules.css`
+(40 hits outside the dossier: the lede marks of cyberpunk, phantom and
+retro, which already carry `white-space: nowrap`; nav and footer links,
+which are flex items or inline-block; `.kp-platforms span::before`, which
+is not absolutely positioned), and in the browser: every element on the
+sixteen component pages, in all 22 themes, whose computed display is
+`inline`, whose white space wraps and whose `::before` or `::after` is
+absolutely positioned — none after the repair.
+
+**4 · How we prevent recurrence.** The package keeps a redacted phrase
+one box: `[data-kp-reveal='emphasis'] mark` is an inline block in
+`css/_rules.css`, at most as wide as its line and as tall as its words
+(`line-height: normal`, a negative block margin so a tall face does not
+open the line) — high-contrast's own answer, made the package's.
+`white-space: nowrap`, dark's and shade-dark's answer, was tried first and
+refused: at 320px the concept pages' phrases are wider than the card, and
+formal, grotesk, sepia and solstice scrolled the document sideways.
+`tests/redaction-cover.spec.mjs` reads, per theme and per phrase, the
+painted redaction against the words' ink, as laid out at both review sizes
+and at the phrase's own break.
+
+**5 · What the remedy costs.** Measured in firefox at 1400×900: the bar
+keeps its height in 17 themes; shade-light and shade-dark grow 1px; light,
+high-contrast and deco, whose registers already made the mark an inline
+block, lose 4 to 5px (24px to 20 or 19.2px). No paragraph changes height.
+A bar that bleeds past its phrase now bleeds past a box, which the reflow
+and overflow audits count as that box's own overflow: 2 to 5px in 13
+themes at 320 and 768px, and on the formal concept page at every width —
+open for Kenny. Every dossier block changes and returns for his verdict.
+
+**6 · Who enforces it.** Code: the new spec, a `@sweep`, in the commit level, firefox only while the catalogue's reading never settles in chromium from dark on (measured on be9c034a); and the seven register specs, which read the mark's background-size where they read the pseudo-element before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of
+`#dossier` in FireDragon in formal, pastel and grotesk: each bar covers its
+phrase, one line tall.
+
+**8 · If the measurement fails.** Kenny names the theme and the window
+width, and Claude reproduces it at that width for a new correction.
 
 **9 · When we review the measure.** At that review.
 

@@ -28,7 +28,10 @@
 //     "not drawn before it is in view";
 //   - the redaction's `:not(.is-cleared)::after { transform: scaleX(1) }`
 //     emptied in the register → the dossier's words read before the file
-//     opens, red on "covered before the trigger".
+//     opens, red on "covered before the trigger". Since fix-33 (scope-93)
+//     the bar is the mark's own cloned background and that rule is
+//     `:not(.is-cleared) { background-size: 100% 100% }`; the test reads
+//     the size.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -204,14 +207,18 @@ for (const [channel, url] of CHANNELS) {
             expect(stamp.rotate).not.toBe('none');
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
-            const covered = await pseudo(marks.first(), '::after', ['transform']);
-            expect(covered.transform, 'covered before the trigger').toMatch(/matrix\(1,|scale\(1/);
+            const covered = await pseudo(marks.first(), '', ['background-size', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect([covered['box-decoration-break'], covered['-webkit-box-decoration-break']], 'the bar is cloned onto every line').toContain(
+                'clone',
+            );
             expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word itself is not painted').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).toHaveClass(/is-cleared/);
             await settled(page);
-            const lifted = await pseudo(marks.first(), '::after', ['transform']);
-            expect(lifted.transform, 'the bar lifted').toMatch(/matrix\(0,|scale\(0/);
+            await expect
+                .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the bar lifted')
+                .toBe('0% 100%');
             await style(marks.first(), 'color', 'the word now reads').not.toBe('rgba(0, 0, 0, 0)');
         });
 

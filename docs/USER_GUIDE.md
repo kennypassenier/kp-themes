@@ -1471,6 +1471,20 @@ ones.
 </html>
 ```
 
+A surface keeps its content off its own inline edges in every theme:
+`--kp-surface-padding-inline`, the lg step, is the room between the
+ground a surface paints and its first letter; it gives way on a surface
+of 20rem or less, where the content needs every pixel, and the block axis
+is left to the section rhythm. `data-kp-surface-align="center"` sets a surface's
+content on its middle — the text centres, a narrower child takes auto
+margins, a `.kp-row` centres its controls — and is off unless a page
+writes it. A theme that covers a phrase inside
+`data-kp-reveal="emphasis"` paints the cover as the mark's own background,
+cloned onto every line the phrase takes (`box-decoration-break: clone`), so
+a redacted phrase may wrap like any other words and stays covered line by
+line [fix-33]; a theme that answers with its own pseudo-element keeps the
+phrase from wrapping.
+
 The arrival's words are the theme's own [scope-84]: synthwave's counting
 boot reads `arrivalWordsByTheme.synthwave` ("▶ Play", "Tracking",
 "Press start"), terminal's and retro's POST lines are

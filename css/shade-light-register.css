@@ -516,34 +516,38 @@
        line plainly. Armed (module attached, not yet opened): covered.
        Opened: uncovered again, through the same clip-path the demo uses,
        staggered 90ms per line — the mechanism the demo's own DI5 entry
-       names "kp-redact-clear". */
+       names "kp-redact-clear". The plate is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a plate on an absolutely
+       positioned ::after covered none of it. It stops 0.05em short of the
+       words' top and bottom and reaches 0.15em past each end as padding,
+       room the words around it make, so no plate reaches past the line it
+       sits on; it narrows
+       toward the phrase's start as the demo's clip did. */
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
         color: var(--popover-foreground);
-        background: none;
-        padding: 0;
-        font-weight: 400;
-    }
-
-    [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 0.05em -0.15em;
-        background: var(--foreground);
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% calc(100% - 0.1em) no-repeat;
+        padding: 0 0.15em;
         border-radius: 2px;
-        clip-path: inset(0 100% 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        font-weight: 400;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
+        background-size: 100% calc(100% - 0.1em);
+    }
+
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-mark-in), and that rule would reach these too. */
+    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 0.1em);
+        animation: none;
     }
 
     /* The stamp: a small pill, the way the demo's "Reviewer's copy"
@@ -1100,20 +1104,20 @@
         }
 
         /* The redaction bars: a plain transition on the covering plate's
-           clip-path, exactly the mechanism the demo's own CSS uses
-           (`transition: clip-path 260ms var(--fx-ease); transition-delay:
-           calc(var(--i, 0) * 90ms)`) — a discrete, user-triggered,
+           width — the demo's own timing (`transition: clip-path 260ms
+           var(--fx-ease); transition-delay: calc(var(--i, 0) * 90ms)`), on
+           a background-size since fix-33 — a discrete, user-triggered,
            one-shot change per bar, staggered by nth-of-type since the
            package's markup carries no --i custom property per mark. */
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 260ms var(--fx-ease);
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 

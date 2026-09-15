@@ -223,11 +223,17 @@
         text-decoration: underline;
     }
 
+    /* The call to action: a primary plate with the radius. The words sit
+       one lg step in from either side of it [Kenny, 2026-09-15: "barely any
+       spacing between the letters and the blue box"]; the plate had 0px of
+       inline padding, so the first and last letter stood on its edge. The
+       height stays the package's (option B). */
     [data-theme='formal'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         font-weight: 600;
         border-radius: var(--radius);
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='formal'] .kp-nav__link--cta:hover {
@@ -412,32 +418,32 @@
         background: var(--muted);
     }
 
-    /* The redaction: a run of ink over the phrase, cleared left to right
-       — a scale transform on a full-cover bar, the way a redaction pen is
-       dragged off a page, not a fade. */
+    /* The redaction: a run of ink over the phrase, cleared toward its
+       start — the bar narrows away the way a redaction pen is dragged off a
+       page, not a fade. The bar is the phrase's own background, cloned onto
+       every line the phrase takes [fix-33, scope-93]: a bar on an absolutely
+       positioned ::after covered none of a phrase that wrapped. The ink
+       reaches 0.06em above and below the words and 0.1em past each end as
+       padding, room the words around it make, so no bar reaches past the
+       line it sits on. The
+       words keep their ink, the bar's own colour, so they are unreadable
+       under it and uncovered exactly where it has gone. */
     [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 100% 100% no-repeat;
         color: var(--card-foreground);
-        padding: 0;
+        padding: 0.06em 0.1em;
         border-radius: 0;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.06em -0.1em;
-        background: var(--foreground);
-        transform-origin: left center;
-        transform: scaleX(1);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        background-size: 100% 100%;
     }
 
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
-    }
-
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        transform: scaleX(0);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% 100%;
     }
 
     /* ── Panels: one hairline boundary, the card's own paper ─────────── */
@@ -854,15 +860,15 @@
             transition: transform 450ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform 260ms var(--fx-ease);
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger, 80ms);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
         }
     }

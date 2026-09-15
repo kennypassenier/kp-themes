@@ -602,37 +602,30 @@
 
     /* The dossier's redactions: a mark inside a triggered emphasis
        container is a solid ink bar over the words until the file opens,
-       then the bar lifts — the demo's own mechanism (a scaled
-       pseudo-element, transform-origin left, matching the CSS the demo
-       actually ships, not only its prose). Without the script the bar is
+       then the bar lifts toward the phrase's start — the demo's own
+       motion (a bar scaled from the left), painted as the phrase's own
+       background and cloned onto every line it takes, so a phrase that
+       wraps is covered line by line [fix-33, scope-93]; the demo's scaled
+       pseudo-element covered none of a wrapped phrase. The ink reaches
+       0.04em above and below and 0.08em past each end as padding, which the
+       words around it make room for, so no bar reaches past the line it
+       sits on. Without the script the bar is
        retracted and the words read plainly (AR34: the rest state holds
        without the module). */
     [data-theme='sepia'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
         color: var(--card-foreground);
-        background: none;
-        padding: 0;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
+        padding: 0.04em 0.08em;
         font-weight: 400;
         border-radius: 0.15em;
-    }
-
-    [data-theme='sepia'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.04em -0.08em;
-        background: var(--foreground);
-        border-radius: 0.15em;
-        transform-origin: left center;
-        transform: scaleX(0);
-        pointer-events: none;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
+        background-size: 100% 100%;
     }
 
     [data-theme='sepia'] .kp-dialog,
@@ -1116,16 +1109,18 @@
             transition: transform var(--kp-rule-duration) var(--kp-hand);
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform var(--kp-redact-duration) cubic-bezier(0.65, 0, 0.35, 1);
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size var(--kp-redact-duration) cubic-bezier(0.65, 0, 0.35, 1),
+                color var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
         }
 
-        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
+        [data-theme='sepia'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
         }
 
         [data-theme='sepia'] .kp-footer a {

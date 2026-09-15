@@ -414,34 +414,27 @@
     /* The redactions: three marks inside the dossier, covered by a bar in
        the theme's own boundary colour until the trigger opens the file,
        then lifted one after another, right to left — the demo's own
-       clip-path direction. The ink underneath is present throughout
-       (color kept, never removed): the bar is what hides it, not the
-       text itself, which is how the demo's own `.kp-redaction` reads. */
+       clip-path direction. The bar is the phrase's own background, 1px
+       inside its padding and cloned onto every line the phrase takes, so a
+       phrase that wraps is covered line by line [fix-33, scope-93]; a bar
+       on an absolutely positioned ::after covered none of it. A background
+       paints under the words rather than over them, and the bar is not the
+       words' colour, so the words wear no ink while the bar is there and
+       take it back once their bar has gone. */
     [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
-        color: var(--card-foreground);
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 1px center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+        color: transparent;
         padding: 0.05em 0.15em;
         font-weight: 400;
         border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 1px;
-        background: var(--border-strong);
-        border-radius: 3px;
-        clip-path: inset(0 0 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='solstice'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
-    }
-
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        clip-path: inset(0 100% 0 0);
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 2px);
+        color: var(--card-foreground);
     }
 
     /* Windows: a plain popover panel with the demo's soft drop shadow —
@@ -894,16 +887,19 @@
             animation: kp-cal-rule var(--kp-rule-duration) var(--fx-ease) var(--kp-rule-delay) 1 both;
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
             animation: kp-cal-redact var(--kp-redact-duration) var(--fx-ease) 1 both;
+            transition: color 0s linear var(--kp-redact-duration);
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
             animation-delay: var(--kp-redact-stagger);
+            transition-delay: calc(var(--kp-redact-duration) + var(--kp-redact-stagger));
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
             animation-delay: calc(2 * var(--kp-redact-stagger));
+            transition-delay: calc(var(--kp-redact-duration) + 2 * var(--kp-redact-stagger));
         }
     }
 
@@ -941,11 +937,11 @@
        direction (`clip-path: inset(0 100% 0 0)` at rest-cleared). */
     @keyframes kp-cal-redact {
         from {
-            clip-path: inset(0 0 0 0);
+            background-size: calc(100% - 2px) calc(100% - 2px);
         }
 
         to {
-            clip-path: inset(0 100% 0 0);
+            background-size: 0% calc(100% - 2px);
         }
     }
     /* The band [M1, M4]: Kenny picked this theme's own version over the

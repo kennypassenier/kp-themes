@@ -572,61 +572,56 @@
     }
 
     /* The redactions: an ink bar over the word, the way the demo's own
-       .kp-redaction spans work — here painted on the mark's own ::after
-       so the mechanism reaches the package's real dossier markup (three
-       <mark> phrases inside the Card, not standalone spans). At rest, and
+       .kp-redaction spans work — here painted as the mark's own background,
+       cloned onto every line the phrase takes, so the mechanism reaches the
+       package's real dossier markup (three <mark> phrases inside the Card,
+       not standalone spans) and a phrase that wraps is covered line by line
+       [fix-33, scope-93]. The plate reaches 0.05em above and below the
+       words and 0.15em past each end as padding, room the words around it
+       make, so no plate reaches past the line it sits on. At rest, and
        on any page without the effects module attached, the words are
        plain: a permanently covered redaction with no way to open it would
        be a trap, not a reveal (the pattern every lifted theme's dossier
        already holds). */
     [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-        background: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
         color: inherit;
-        padding: 0;
-        position: relative;
-    }
-
-    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.15em;
-        background: var(--foreground);
+        padding: 0.05em 0.15em;
         border-radius: 0.25rem;
-        transform-origin: left center;
-        opacity: 0;
-        transform: scaleX(0);
-        pointer-events: none;
+        position: relative;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
+        background-size: 100% 100%;
     }
 
-    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        opacity: 1;
-        transform: scaleX(1);
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-fill), and that rule would reach these too. */
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% 100%;
+        animation: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition:
-                opacity 220ms ease,
-                transform 380ms var(--fx-ease);
-        }
-
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
-        }
-
-        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
-        }
-
-        /* The word switches colour after the plate has faded, in no time
-           at all: a size, not a colour, so KT8's mid-transition colour can
-           never be read. */
+        /* The plate narrows back toward the phrase's start, 380ms, staggered;
+           the word switches colour 220ms in, in no time at all — the plate
+           is the word's own ink, so it reads only where the plate has gone,
+           and KT8's mid-transition colour can never be read. */
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-            transition: color 0s linear 220ms;
+            transition:
+                background-size 380ms var(--fx-ease),
+                color 0s linear 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 220ms;
         }
     }
 

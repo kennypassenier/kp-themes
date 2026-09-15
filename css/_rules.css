@@ -549,6 +549,26 @@
         color: var(--foreground);
     }
 
+    /* `data-kp-surface-align="center"` sets a surface's content on its
+       middle — a landing hero, an empty state — and is off unless a page
+       asks for it [Kenny, 2026-09-15]. The text centres; a narrower child (a
+       prose measure) takes auto margins, which centre it in a block surface
+       and in a flex column alike; a row keeps its full width and centres its
+       controls instead — auto margins would shrink a wrapping row to its
+       widest control in firefox and stack the buttons. A row modifier that
+       says otherwise (`.kp-row--between`) sits in a later layer and wins. */
+    [data-kp-surface][data-kp-surface-align='center'] {
+        text-align: center;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] > :not(.kp-row) {
+        margin-inline: auto;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] .kp-row {
+        justify-content: center;
+    }
+
     /* A divider between surfaces [S45, TH121]: the quiet answer is room —
        one step of the spacing scale — so a section and what follows never
        touch (the rhythm gate measured 0px under formal); a register may

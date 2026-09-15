@@ -388,7 +388,7 @@ export const TIMINGS = Object.freeze({
     // over the headline, the rule draw, and the dossier's redaction lift.
     'kp-cal-slide': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-cal-rule': { durationMs: 480, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-cal-redact': { durationMs: 320, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-cal-redact': { durationMs: 320, cycles: 1, property: 'background-size', luminanceSteps: [] },
     // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // once across a headline (the whole line, unsplit) or a redaction bar.
     // No luminance step: the mask moves, the content under it does not

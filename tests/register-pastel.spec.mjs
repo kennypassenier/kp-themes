@@ -26,7 +26,11 @@
 //     standing at 0%, red on "the lede's marks fill in";
 //   - the covered redaction rule (`[data-kp-effects] … mark:not(.is-
 //     cleared)::after`) removed → the redaction never covers the words at
-//     all, red on "the dossier: the redactions cover the words".
+//     all, red on "the dossier: the redactions cover the words". Since
+//     fix-33 (scope-93) the plate is the mark's own cloned background, so
+//     that rule is `[data-kp-effects] … mark:not(.is-cleared)` with
+//     `background-size: 100% 100%`, and the test reads the size; the plate
+//     narrows away rather than fading and narrowing.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -204,9 +208,12 @@ for (const [channel, url] of CHANNELS) {
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Proof approved/i);
             expect(stamp.rotate).toBe('-3deg');
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['opacity', 'transform']);
-            expect(covered.opacity, 'covered before the trigger').toBe('1');
-            expect(covered.transform, 'no shrink yet').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            const covered = await pseudo(mark, '', ['background-size', 'color', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered.color, 'the words wear no ink under the plate').toBe('rgba(0, 0, 0, 0)');
+            expect([covered['box-decoration-break'], covered['-webkit-box-decoration-break']], 'the plate is cloned onto every line').toContain(
+                'clone',
+            );
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             // The stamp changes when the file opens, as the demo's does
@@ -218,7 +225,9 @@ for (const [channel, url] of CHANNELS) {
                 'the stamp swapped to its open word',
             ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
-            await expect.poll(async () => (await pseudo(mark, '::after', ['opacity'])).opacity, 'the redaction faded away').toBe('0');
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the redaction narrowed away')
+                .toBe('0% 100%');
         });
 
         test('the wipe confirmation is a real dialog, styled in the theme’s own boundary and radius', async ({ page }) => {

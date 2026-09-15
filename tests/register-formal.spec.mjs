@@ -25,7 +25,11 @@
 //     it ever scrolls into view, red on "the rule starts collapsed";
 //   - the dossier's `mark.is-cleared::after { transform: scaleX(0) }`
 //     removed → the redaction bar never scales away after the trigger,
-//     the poll times out, red on "the redaction bar scales away".
+//     the poll times out, red on "the redaction bar scales away". Since
+//     fix-33 (scope-93) the bar is the mark's own cloned background and the
+//     rule is `mark.is-cleared { background-size: 0% 100% }`; the same test
+//     reads the size, and a wrapped phrase is covered line by line
+//     (tests/redaction-cover.spec.mjs).
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -189,13 +193,17 @@ for (const [channel, url] of CHANNELS) {
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Draft/i);
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
-            const covered = await pseudo(marks.first(), '::after', ['transform']);
-            expect(covered.transform, 'covered before the trigger').not.toMatch(/matrix\(0,/);
+            const covered = await pseudo(marks.first(), '', ['background-size', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(
+                [covered['box-decoration-break'], covered['-webkit-box-decoration-break']],
+                'the bar is cloned onto every line of the phrase',
+            ).toContain('clone');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).toHaveClass(/is-cleared/);
             await expect
-                .poll(async () => (await pseudo(marks.first(), '::after', ['transform'])).transform, 'the redaction bar scales away')
-                .toMatch(/matrix\(0,/);
+                .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the redaction bar narrows away')
+                .toBe('0% 100%');
             // A second press re-covers it (a toggle, not a one-way reveal).
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).not.toHaveClass(/is-cleared/);

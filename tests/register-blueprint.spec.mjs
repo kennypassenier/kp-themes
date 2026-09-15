@@ -22,7 +22,10 @@
 //   - the redaction cover (`[data-kp-effects] … mark:not(.is-cleared)
 //     ::after { clip-path: inset(0 0 0 0) }`) removed → the dossier's
 //     words are legible before the trigger is pressed, red on "the
-//     dossier's redactions are solid ink blocks".
+//     dossier's redactions are solid ink blocks". Since fix-33 (scope-93)
+//     the block is the mark's own cloned background and the cover is
+//     `mark:not(.is-cleared) { background-size: 100% 100% }`; the test
+//     reads the size and the gradient's ink.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -215,13 +218,20 @@ for (const [channel, url] of CHANNELS) {
             // alternative accepted a stamp that printed nothing [G4].
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Approved/i);
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['clip-path', 'background-color']);
-            expect(covered['clip-path'], 'covered before the trigger').toMatch(/^inset\(0(px)?\)$|^inset\(0px 0px 0px 0px\)$/);
-            expect(covered['background-color']).toBe(await paint(page, '--border'));
+            const covered = await pseudo(mark, '', ['background-size', 'background-image', 'background-position', 'color']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered['background-image'], 'the block is the sheet’s hairline ink').toContain(await paint(page, '--border'));
+            expect(covered['background-position'], 'it narrows away from the left, toward the right').toMatch(/^100% 50%$|^right/);
+            expect(covered.color, 'the words wear no ink under the block').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
-            await expect.poll(async () => (await pseudo(mark, '::after', ['clip-path']))['clip-path'], 'the block narrowed away').toMatch(/100%\)$/);
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the block narrowed away')
+                .toBe('0% 100%');
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['color'])).color, 'the words take their ink once the block is gone')
+                .not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

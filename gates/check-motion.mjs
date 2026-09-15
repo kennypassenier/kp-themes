@@ -89,7 +89,7 @@ const OUT_OF_SCOPE = {
     'kp-cal-slide':
         'a clip-path sweep, once, over the headline overlay (mix-blend-mode: difference); strictly monotonic in one direction, so it has zero opposing luminance changes, which is the threshold DI5 measures',
     'kp-cal-rule': 'a horizontal scale on a 3px rule; no luminance change and nothing over 341x256 px',
-    'kp-cal-redact': 'a clip-path narrowing over one marked phrase in a dossier paragraph, once; under 341x256 px',
+    'kp-cal-redact': 'a background narrowing over one marked phrase in a dossier paragraph, once; under 341x256 px',
     // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // once across a headline or a redaction bar (mask-position).
     'kp-wipe':
