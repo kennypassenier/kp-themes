@@ -1027,13 +1027,36 @@
         transition: none;
     }
 
-    /* Not the mirror variant, and not while pressed: the approved demo
-       draws that button dropping onto its own offset with NO shadow, and
-       these bars are a hover decoration. S49 — the demo is exact, and a
-       quirk does not quietly redraw a value it approved. */
-    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
-        background: var(--foreground);
+    /* The hover takes the colour of the variant's own border (Kenny,
+       2026-09-15, button#variants: "change the hover color to the border
+       color, and only do the effect that's unique to the 'cancel'
+       button"). Before, every variant inverted to the text colour with a
+       white inset bar down each side, so the blue primary and the red
+       destructive went black under the pointer. Now each ground is the
+       border it already draws, with the ink paired to that ground: the
+       bare, secondary and mirror buttons (border-strong) print white on
+       black, the primary and destructive keep their own plate. The inset
+       side bars stay on the ghost button alone, where the rising bottom
+       bar cuts them into the bracket that is the ghost's own gesture.
+       The mirror keeps its offset shadow from the rule above; the bars
+       were never its to carry (S49). Not while pressed: the press paints
+       below. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active) {
+        background: var(--border-strong);
         color: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:hover:not(:disabled):not(:active) {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:hover:not(:disabled):not(:active) {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--ghost:hover:not(:disabled):not(:active) {
         box-shadow:
             inset 0.35rem 0 0 var(--background),
             inset -0.35rem 0 0 var(--background);
@@ -1043,10 +1066,21 @@
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing. The base layer's own values, put back token for token —
+       per variant, since the one rule for every button painted the
+       primary and destructive presses in the secondary grey under their
+       white ink, at 1.45:1 (measured 2026-09-15). */
 
     [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
     }
 
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */

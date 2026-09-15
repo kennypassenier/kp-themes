@@ -15,6 +15,7 @@ import { expect, test } from '@playwright/test';
 import { getStrings } from '../js/strings.js';
 import { THEMES } from '../js/theme-registry.js';
 import { measured } from './paint.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const s = getStrings();
 
@@ -160,10 +161,15 @@ test.describe('the application shell', { tag: ['@component:navigation', '@compon
         });
     }
 
-    test('a slim toggle whose only content is a hidden glyph is named from the strings, and the name follows the state', async ({ page }) => {
+    test('a slim toggle whose only content is a hidden glyph is named from the strings, and the name follows the state', async ({
+        page,
+        context,
+    }) => {
         // Before: the module named a toggle only when it was empty or already
         // carried aria-label, so a button holding an aria-hidden arrow had no
         // name at all — it read as "button".
+        // An empty register: a block Kenny approved leaves the page, and the toggle would go with it.
+        await useEmptyRegister(context);
         await page.goto('/catalogue/navigation.html');
         await page.evaluate(() => {
             const button = document.createElement('button');

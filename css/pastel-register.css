@@ -923,6 +923,18 @@
         border-radius: 0.8rem;
     }
 
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (85% lightness), so the shared 14% wash of it came out at
+       ΔE 0.89 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.0. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.4, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='pastel'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
+    }
+
     [data-theme='pastel'] .kp-timeline {
         border-inline-start: 2px solid var(--border);
     }

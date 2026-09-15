@@ -22423,6 +22423,18 @@
         border-radius: 0.8rem;
     }
 
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (85% lightness), so the shared 14% wash of it came out at
+       ΔE 0.89 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.0. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.4, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='pastel'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
+    }
+
     [data-theme='pastel'] .kp-timeline {
         border-inline-start: 2px solid var(--border);
     }
@@ -26915,14 +26927,25 @@
         letter-spacing: -0.02em;
     }
 
+    /* The bar's links carry no indigo (Kenny, 2026-09-15,
+       navigation#bar-collapsed: "I don't like the blue in the navbar for
+       the links"). Before, every link read in --link, which this theme
+       derives from --primary, and took --primary again on hover, focus and
+       the current page — one indigo for four states. Now the resting link
+       is the slate muted ink, and pointing at it, focusing it or being on
+       its page brings it up to the full ink; the current page keeps the
+       base layer's weight and thick underline besides [DI4]. The indigo
+       stays where it is an action — the call to action's plate — and in
+       the side navigation. */
     [data-theme='light'] .kp-nav__link {
         border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
     }
 
     [data-theme='light'] .kp-nav__link:hover,
     [data-theme='light'] .kp-nav__link:focus-visible,
     [data-theme='light'] .kp-nav__link[aria-current] {
-        color: var(--primary);
+        color: var(--foreground);
         background: none;
     }
 
@@ -26964,6 +26987,13 @@
             background: transparent;
             box-shadow: none;
         }
+    }
+
+    /* A dropdown's and a mega menu's links in the full ink, not the indigo
+       --link, for the same note as the bar's links; the hover wash is what
+       marks the one pointed at. */
+    [data-theme='light'] .kp-nav__menu a {
+        color: var(--foreground);
     }
 
     [data-theme='light'] .kp-nav__menu a:hover,
@@ -27204,6 +27234,18 @@
     [data-theme='light'] .kp-diff__line {
         font-family: var(--theme-font-mono);
         font-size: 0.9em;
+    }
+
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (88% lightness), so the shared 14% wash of it came out at
+       ΔE 0.75 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.6. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.7, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='light'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
     }
 
     [data-theme='light'] .kp-timeline {
@@ -27581,8 +27623,9 @@
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
     /* In the voice of this register's own nav links (Kenny, 2026-09-14,
-       search-voice "Per thema"): words at the bar's own size in the link ink
-       on the theme's radius, taking the primary ink when pointed at. The
+       search-voice "Per thema"): words at the bar's own size in the links'
+       muted ink on the theme's radius, taking the full ink when pointed at,
+       as the links do since Kenny's no-indigo note of 2026-09-15. The
        link's typeface, case, spacing, shape and pointer answer are restated
        here, because the trigger is a button beside the list rather than a
        link in it. The underline a plain link carries is not: it says "this
@@ -27592,12 +27635,12 @@
         border: 0;
         border-radius: var(--radius, 0.5rem);
         background: none;
-        color: var(--link);
+        color: var(--muted-foreground);
     }
 
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
-        color: var(--primary);
+        color: var(--foreground);
     }
 }
 
@@ -37754,13 +37797,36 @@
         transition: none;
     }
 
-    /* Not the mirror variant, and not while pressed: the approved demo
-       draws that button dropping onto its own offset with NO shadow, and
-       these bars are a hover decoration. S49 — the demo is exact, and a
-       quirk does not quietly redraw a value it approved. */
-    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
-        background: var(--foreground);
+    /* The hover takes the colour of the variant's own border (Kenny,
+       2026-09-15, button#variants: "change the hover color to the border
+       color, and only do the effect that's unique to the 'cancel'
+       button"). Before, every variant inverted to the text colour with a
+       white inset bar down each side, so the blue primary and the red
+       destructive went black under the pointer. Now each ground is the
+       border it already draws, with the ink paired to that ground: the
+       bare, secondary and mirror buttons (border-strong) print white on
+       black, the primary and destructive keep their own plate. The inset
+       side bars stay on the ghost button alone, where the rising bottom
+       bar cuts them into the bracket that is the ghost's own gesture.
+       The mirror keeps its offset shadow from the rule above; the bars
+       were never its to carry (S49). Not while pressed: the press paints
+       below. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active) {
+        background: var(--border-strong);
         color: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:hover:not(:disabled):not(:active) {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:hover:not(:disabled):not(:active) {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--ghost:hover:not(:disabled):not(:active) {
         box-shadow:
             inset 0.35rem 0 0 var(--background),
             inset -0.35rem 0 0 var(--background);
@@ -37770,10 +37836,21 @@
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing. The base layer's own values, put back token for token —
+       per variant, since the one rule for every button painted the
+       primary and destructive presses in the secondary grey under their
+       white ink, at 1.45:1 (measured 2026-09-15). */
 
     [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
     }
 
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
