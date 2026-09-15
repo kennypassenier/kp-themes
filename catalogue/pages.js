@@ -69,6 +69,9 @@ export const PAGES = [
             { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
             // The scope-25 gestures beside what ships [scope-100]: sepia's ink
             // on a press and swelled rule, the shade pair's pointer light.
+            // Dark's dialog casts its shadow in dark's own ground colour, so it
+            // cannot be seen; five options measured side by side [scope-101].
+            { href: 'research/dark-dialog-shadow/demo.html', label: "Dark's dialog shadow, five options" },
         ],
     },
     {

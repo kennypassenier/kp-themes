@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-cat-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>dark's dialog shadow, five options · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only; NOT the package.
+
+               `ds-` classes are either page chrome (tags, the switcher, the
+               measurement tables) or the wrapper that holds one option. Every
+               elevation rule below reads
+
+                 [data-theme='dark'] .ds-<option> .kp-dialog     (and .kp-card, .kp-popover)
+
+               and goes into css/dark-register.css (layer kp.register) by
+               dropping `.ds-<option>` and replacing the one `filter:` line the
+               dialog carries today (css/dark-register.css line 1587) plus the
+               `box-shadow` line the popover family carries (line 915). The
+               rules here are unlayered, so they beat the register.
+
+               Three things the shapes below are working around, all of them
+               measured rather than assumed:
+
+               1. `clip-path` clips everything the element paints, its
+                  box-shadow and its filter included. `.kp-dialog::before`
+                  carries the chamfer, so the dialog itself is unclipped and
+                  can cast a drop-shadow that follows the cut shape [scope-100].
+               2. `.kp-card` carries the chamfer on ITSELF, so a box-shadow or a
+                  filter on the card is clipped away. In this page the card is
+                  wrapped in a mock `.ds-elev` that carries the elevation
+                  instead — in the register the card would need the dialog's
+                  restructure (plate and chamfer onto a pseudo-element) before
+                  it can cast anything. That is the card's cost, and the README
+                  says so.
+               3. `.kp-popover` (and the menu, toast, tooltip, confirm, picker,
+                  combobox list and palette that share its rule) is NOT clipped,
+                  so a plain box-shadow works there and is the cheap shape.
+
+               `filter: drop-shadow(0 0 0 transparent)` where an option casts no
+               filtered shadow is not decoration: the dialog's plate is a fixed
+               ::before, and the filter is what makes the dialog its containing
+               block. Take the filter away and the plate flies to the viewport.
+
+               Colour (DI9): nothing names a colour. Every stop is a token or a
+               relative colour of one; "black" is `hsl(from var(--background) h s
+               0%)`, the theme's own hue taken to zero lightness.
+
+               Motion (DI5): no keyframe, no transition, nothing that loops.
+               Option 3 is painted with `--kp-iris`, which turns with the
+               pointer — exactly as the panel's border already does, and only
+               while a hand moves.
+               ================================================================== */
+            .ds-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .ds-tag--package {
+                color: var(--success-foreground);
+            }
+            .ds-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .ds-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .ds-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+
+            /* Three panels beside each other, each in a cell of its own with
+               room for a shadow. `contain: layout` makes the cell the
+               containing block of the absolutely positioned dialog and popover
+               (both are `position: absolute` in the package), so each panel
+               stays in its own column; it does not clip, so a shadow still
+               leaves the cell. The gap is wider than any option's reach, so no
+               panel's shadow lands in another panel's measured band. */
+            .ds-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+                gap: 4rem 4rem;
+            }
+            .ds-cell {
+                contain: layout;
+                min-block-size: 16rem;
+                padding: 2rem 1.5rem;
+            }
+            .ds-cell--menu {
+                min-block-size: 18rem;
+            }
+            .ds-elev {
+                position: relative;
+                isolation: isolate;
+            }
+            .ds-caption {
+                margin: 0 0 0.35rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.72rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .ds-measure caption {
+                text-align: start;
+                padding-block-end: 0.35rem;
+                color: var(--muted-foreground);
+                font-size: 0.8rem;
+            }
+            .ds-measure td,
+            .ds-measure th {
+                font-variant-numeric: tabular-nums;
+            }
+            .ds-measure [data-ds-cell] {
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.82rem;
+            }
+            .ds-note {
+                margin-block: 0.5rem 0;
+                color: var(--muted-foreground);
+                font-size: 0.85rem;
+            }
+            .ds-side {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+                gap: 3rem;
+            }
+            .ds-live {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            /* ── 1 · As it ships ──────────────────────────────────────────
+               css/dark-register.css exactly as it stands today: the shadow is
+               the theme's own background colour at 45 %, which on the theme's
+               own ground is about two of 255 darker than what is behind it. */
+            [data-theme='dark'] .ds-ships .kp-dialog,
+            [data-theme='dark'] .ds-ships .ds-elev {
+                filter: drop-shadow(0 12px 28px hsl(from var(--background) h s l / 0.45));
+            }
+            [data-theme='dark'] .ds-ships .kp-popover {
+                box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+            }
+
+            /* ── 2 · Black with more depth ────────────────────────────────
+               The same geometry, one value changed: the theme's hue taken to
+               zero lightness, at 60 %. Nothing else moves, so the block is an
+               honest A/B against option 1. */
+            [data-theme='dark'] .ds-black .kp-dialog,
+            [data-theme='dark'] .ds-black .ds-elev {
+                filter: drop-shadow(0 12px 28px hsl(from var(--background) h s 0% / 0.6));
+            }
+            [data-theme='dark'] .ds-black .kp-popover {
+                box-shadow: 0 12px 28px hsl(from var(--background) h s 0% / 0.6);
+            }
+
+            /* ── 3 · The oxide film's colour ──────────────────────────────
+               Not a shadow: the film itself, blurred, behind the panel. The
+               same `--kp-iris` conic gradient the panel wears as its border,
+               on a pseudo-element inset outwards and blurred, so the halo
+               carries cyan, violet, magenta and lime around the four sides and
+               turns with the pointer as the border does.
+
+               The dialog keeps a filter so its fixed plate keeps its
+               containing block, and the halo goes behind the plate (z-index
+               -2 against the plate's -1). The card cannot wear it — the
+               chamfer clips it — so the mock wrapper does.
+
+               The popover cannot wear it either, and for a second reason:
+               `.kp-popover` is `overflow: auto` (it scrolls a long menu inside
+               itself), and overflow clips a pseudo-element. Measured on this
+               page: the halo on `.kp-popover::after` changed 0 of 17616 band
+               pixels. A box-shadow is NOT clipped by overflow, so there the
+               film is approximated by four shadows in its four wavelengths —
+               which do not turn with the pointer. That is a real cost of this
+               option, and the README says so.
+
+               And a third surface loses it, the one this round is actually
+               about: a dialog OPENED MODALLY. Measured here with the halo
+               forced solid red: on `<dialog open>` the halo paints in full,
+               on the same dialog after `showModal()` nothing outside the box
+               survives. The reason is the UA stylesheet — `dialog:modal` is
+               `overflow: auto`, so the top-layer dialog is a scroll container
+               and clips its own pseudo-elements. A filter is not clipped (it
+               is not a descendant), which is why options 1, 2, 4 and 5 keep
+               working there. So the modal dialog takes the four-shadow
+               approximation as well, `:modal` and all. */
+            /* Both panels keep a transparent filter. Besides the containing
+               block the dialog needs, it also keeps the measurement honest:
+               a filtered subtree is rasterised into a layer of its own, and
+               the card's 1px oxide border lands on a different device pixel
+               with and without one. Measured while building this page — the
+               switch below added a filter where this option had none, and the
+               card's own bright edge, not the halo, produced a difference of
+               ΔL* 79.86 over 756 pixels. With a filter on both sides of the
+               switch the only difference left between the two photographs is
+               the elevation. */
+            [data-theme='dark'] .ds-oxide .kp-dialog,
+            [data-theme='dark'] .ds-oxide .ds-elev {
+                filter: drop-shadow(0 0 0 transparent);
+            }
+            [data-theme='dark'] .ds-oxide .kp-dialog::after,
+            [data-theme='dark'] .ds-oxide .ds-elev::after {
+                content: '';
+                position: absolute;
+                inset: -8px;
+                z-index: -2;
+                background: var(--kp-iris);
+                filter: blur(12px);
+                opacity: 0.5;
+                pointer-events: none;
+            }
+            [data-theme='dark'] .ds-oxide .ds-elev::after {
+                z-index: -1;
+            }
+            [data-theme='dark'] .ds-oxide .kp-popover,
+            [data-theme='dark'] .ds-oxide .kp-dialog:modal {
+                box-shadow:
+                    0 10px 18px hsl(from var(--chart-2) h s l / 0.3),
+                    -10px 4px 16px hsl(from var(--chart-1) h s l / 0.26),
+                    10px 4px 16px hsl(from var(--chart-3) h s l / 0.26),
+                    0 -6px 14px hsl(from var(--chart-4) h s l / 0.2);
+            }
+
+            /* ── 4 · A hard offset plate ──────────────────────────────────
+               A machined part lifted off its backing plate: the hairline's own
+               tone, six pixels down and right, no blur. A drop-shadow with a
+               zero blur follows the cut silhouette exactly, so the riser is a
+               chamfered plate too. This is the package's own
+               `--fx-shadow-offset` language (brutalism's signature, 0px in
+               dark), written on the panels only rather than turned on as a
+               token — the token would put a riser under every button and field
+               as well. */
+            [data-theme='dark'] .ds-plate .kp-dialog,
+            [data-theme='dark'] .ds-plate .ds-elev {
+                filter: drop-shadow(6px 6px 0 var(--border));
+            }
+            [data-theme='dark'] .ds-plate .kp-popover {
+                box-shadow: 6px 6px 0 var(--border);
+            }
+
+            /* ── 5 · An edge line and a soft shadow ───────────────────────
+               Light on the cut edge, dark under the panel: a one-pixel line of
+               the ink hugging the silhouette on all four sides, and a soft
+               black shadow below it. Four chained drop-shadows make the line
+               follow the chamfer (a filter has no spread); the popover is not
+               clipped, so there one box-shadow with a 1px spread does it. */
+            [data-theme='dark'] .ds-edge .kp-dialog,
+            [data-theme='dark'] .ds-edge .ds-elev {
+                filter: drop-shadow(0 -1px 0 hsl(from var(--foreground) h s l / 0.22)) drop-shadow(0 1px 0 hsl(from var(--foreground) h s l / 0.22))
+                    drop-shadow(-1px 0 0 hsl(from var(--foreground) h s l / 0.22)) drop-shadow(1px 0 0 hsl(from var(--foreground) h s l / 0.22))
+                    drop-shadow(0 12px 28px hsl(from var(--background) h s 0% / 0.5));
+            }
+            [data-theme='dark'] .ds-edge .kp-popover {
+                box-shadow:
+                    0 0 0 1px hsl(from var(--foreground) h s l / 0.22),
+                    0 12px 28px hsl(from var(--background) h s 0% / 0.5);
+            }
+
+            /* ── The fault, made visible ──────────────────────────────────
+               Option 1's shadow with one value changed: the alarm colour in
+               place of the background token. Nothing else differs, so what
+               shows here is exactly where the shipped shadow is painted. */
+            [data-theme='dark'] .ds-proof .kp-dialog {
+                filter: drop-shadow(0 12px 28px hsl(from var(--destructive) h s l / 0.45));
+            }
+
+            /* ── The measuring switch ─────────────────────────────────────
+               The spec and the measuring script set `data-ds-elevation="off"`
+               on <html> to photograph the same page with every elevation
+               taken away; the difference between the two photographs is the
+               shadow, and nothing else can have moved. The dialog keeps a
+               transparent filter, for the containing block reason above. */
+            [data-ds-elevation='off'][data-theme='dark'] .ds-opt .kp-dialog,
+            [data-ds-elevation='off'][data-theme='dark'] .ds-opt .ds-elev {
+                filter: drop-shadow(0 0 0 transparent) !important;
+            }
+            [data-ds-elevation='off'][data-theme='dark'] .ds-opt .kp-popover {
+                box-shadow: none !important;
+            }
+            [data-ds-elevation='off'][data-theme='dark'] .ds-opt .kp-dialog::after,
+            [data-ds-elevation='off'][data-theme='dark'] .ds-opt .ds-elev::after {
+                opacity: 0 !important;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>dark's dialog shadow: five options</h1>
+            <p class="cat-intro">
+                Dark's dialog casts its shadow in the theme's own background colour at 45 % opacity. On the theme's own ground that is about two of
+                255 darker than what is behind it, so the dialog lies flat on the grid. Kenny, 2026-09-16 (scope-101), asked to see the options rather
+                than be handed one: <i>"toon alle opties in een demo"</i>. Each block below shows the same three surfaces — an open dialog, a card and
+                an open menu on a popover — under one option, with the separation each one measures printed underneath.
+            </p>
+            <p class="cat-intro">
+                The dialog, the card, the popover, the menu and their chamfers are <span class="ds-tag ds-tag--package">package</span>: nothing in
+                this page's markup differs from <code>catalogue/overlays.html</code>. Every elevation is
+                <span class="ds-tag ds-tag--mock">mock</span>: rules in this page's <code>&lt;style&gt;</code> block, written as
+                <code>[data-theme='dark'] .ds-&lt;option&gt; .kp-dialog</code> so they go into <code>css/dark-register.css</code> by dropping the
+                wrapper class. The card also carries a mock <code>.ds-elev</code> wrapper, because the card clips its own paint away and cannot cast
+                anything until it is restructured the way the dialog was — that is the card's cost, and only the card's. Registers loaded: dark,
+                titanium, nostromo; the rest are fetched on a switch.
+            </p>
+            <div class="ds-switcher" role="group" aria-label="Theme for this page">
+                <span class="ds-tag ds-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-ds-theme="dark" aria-pressed="true">dark</button>
+                <button type="button" class="kp-button kp-button--ghost" data-ds-theme="titanium" aria-pressed="false">titanium</button>
+                <button type="button" class="kp-button kp-button--ghost" data-ds-theme="nostromo" aria-pressed="false">nostromo</button>
+            </div>
+            <p class="ds-note">
+                Every block is judged in dark whatever the menu says — the stages carry <code>data-cat-theme="dark"</code>. The switcher is there to
+                show that these rules are dark's alone: the last block follows the menu.
+            </p>
+
+            <h2>How the numbers under each option were measured</h2>
+            <p class="cat-intro">
+                <b>Separation</b> is counted in device pixels in a 24px band around the panel, against the ground that would be there without the
+                shadow. The page is photographed twice at the same scroll position, once as it stands and once with
+                <code>data-ds-elevation="off"</code> on <code>&lt;html&gt;</code>, which takes every option's elevation away and changes nothing else;
+                the two photographs are subtracted pixel by pixel in CIE L*. The band is the panel's border box grown by 24px minus the border box
+                itself, so the ground inside the chamfer's cut corners is not counted. Read at devicePixelRatio 1 and 2.222, in firefox, 1280px wide.
+                The figures were produced by <code>verify.spec.mjs</code> beside this page, which re-measures on every run and fails if the page
+                prints anything else.
+            </p>
+            <p class="cat-intro">
+                Two thresholds, because one is not enough to tell these five apart. <b>Any difference (ΔL* ≥ 1)</b> is one just-noticeable step on a
+                hard edge: it says the shadow is painted at all. <b>Visible (ΔL* ≥ 3)</b> is the column to read: across a soft gradient a single step
+                is below what an eye picks up, and three is roughly where a shadow starts to lift a panel. One measured surprise, worth knowing before
+                judging: the shipped shadow is <i>not</i> painting nothing. It touches 44 % of the dialog's band by a step or more — but only where
+                dark's pool of pointer light has given it something to take away, it passes three on four tenths of a percent, and its darkest pixel
+                there is 4.34 of 100. Beside the popover, which stands away from the pool, it reaches 2.33 at its peak and not one pixel of the band
+                passes three. That is the fault: a shadow that exists, is the right shape, and cannot be seen.
+            </p>
+            <p class="cat-intro">
+                Every option is parked at the same scroll offset for the measurement, so the same patch of grid and the same amount of pointer light
+                stands behind all five and the figures can be read against each other. Two runs of the spec produce identical counts.
+            </p>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="fault" data-cat-theme="dark">
+                <h2>0 · The fault <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> two identical dialogs. The left one is what ships — look for its shadow on the grid below it and you will not find
+                    one; the grid lines run under the dialog's bottom edge unbroken. The right one is the same rule with one value changed, the alarm
+                    colour instead of the background token, and it shows you where the shipped shadow is painted: a broad pool under the bottom edge,
+                    reaching about 24px out. The shadow is there, it is the right shape, and it is a colour you cannot see — it is the page's own
+                    ground colour, so at 45 % over that ground it removes about two of 255 and no more. Both follow the cut corners, which is what the
+                    <code>::before</code> restructure of scope-100 bought: before it, the chamfer's <code>clip-path</code> cut the shadow off
+                    altogether.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row">
+                        <div class="ds-cell ds-opt ds-ships">
+                            <p class="ds-caption">as it ships</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-fault-a-title">
+                                <h2 class="kp-dialog__title" id="ds-fault-a-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-proof">
+                            <p class="ds-caption">the same shadow, painted in the alarm colour</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-fault-b-title">
+                                <h2 class="kp-dialog__title" id="ds-fault-b-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="ships" data-cat-theme="dark">
+                <h2>1 · As it ships <span class="ds-tag ds-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the reference the other four are judged against — <code>css/dark-register.css</code> untouched, on all three
+                    surfaces. The dialog and the card stand apart from the ground by their oxide border alone; the popover by its boundary alone. Put
+                    your eye on the bottom edge of each: no darkening, no edge, the grid runs straight under them. The <b>Visible</b> column under it
+                    must be near zero — 0.4 % on the dialog, nothing at all on the popover — or this page is not showing the fault.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row ds-opt ds-ships" data-ds-option="ships">
+                        <div class="ds-cell" data-ds-surface="dialog">
+                            <p class="ds-caption">dialog</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-ships-title">
+                                <h2 class="kp-dialog__title" id="ds-ships-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell" data-ds-surface="card">
+                            <p class="ds-caption">card <span class="ds-tag ds-tag--mock">wrapper</span></p>
+                            <div class="ds-elev">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Run 41</h3>
+                                    <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm, back to back with run 40.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="ds-cell ds-cell--menu" data-ds-surface="popover">
+                            <p class="ds-caption">popover and menu, open</p>
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+                                Run actions (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" role="menu">
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the trace</button></li>
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Re-reference to run 40</button></li>
+                                    <li role="separator" class="kp-menu__separator"></li>
+                                    <li role="none">
+                                        <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Discard run</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table ds-measure">
+                    <caption>
+                        Separation, measured: device pixels in the 24px band round the panel that differ from the same band without the shadow.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Surface</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>1</td>
+                            <td data-ds-cell="ships/dialog/1/band">27456</td>
+                            <td data-ds-cell="ships/dialog/1/any">11965 (43.6%)</td>
+                            <td data-ds-cell="ships/dialog/1/vis">118 (0.4%)</td>
+                            <td data-ds-cell="ships/dialog/1/peak">4.34</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="ships/dialog/2.222/band">135335</td>
+                            <td data-ds-cell="ships/dialog/2.222/any">56952 (42.1%)</td>
+                            <td data-ds-cell="ships/dialog/2.222/vis">618 (0.5%)</td>
+                            <td data-ds-cell="ships/dialog/2.222/peak">4.66</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>1</td>
+                            <td data-ds-cell="ships/card/1/band">20832</td>
+                            <td data-ds-cell="ships/card/1/any">11640 (55.9%)</td>
+                            <td data-ds-cell="ships/card/1/vis">1166 (5.6%)</td>
+                            <td data-ds-cell="ships/card/1/peak">5.92</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="ships/card/2.222/band">102899</td>
+                            <td data-ds-cell="ships/card/2.222/any">55282 (53.7%)</td>
+                            <td data-ds-cell="ships/card/2.222/vis">5328 (5.2%)</td>
+                            <td data-ds-cell="ships/card/2.222/peak">6.28</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>1</td>
+                            <td data-ds-cell="ships/popover/1/band">17616</td>
+                            <td data-ds-cell="ships/popover/1/any">46 (0.3%)</td>
+                            <td data-ds-cell="ships/popover/1/vis">0 (0.0%)</td>
+                            <td data-ds-cell="ships/popover/1/peak">2.33</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="ships/popover/2.222/band">86284</td>
+                            <td data-ds-cell="ships/popover/2.222/any">263 (0.3%)</td>
+                            <td data-ds-cell="ships/popover/2.222/vis">0 (0.0%)</td>
+                            <td data-ds-cell="ships/popover/2.222/peak">2.33</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="black" data-cat-theme="dark">
+                <h2>2 · Black with more depth <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same shadow in the same place — <code>0 12px 28px</code>, not one pixel moved — with only its colour changed
+                    to the theme's hue at zero lightness, 60 % opaque. The grid lines dim as they pass under the bottom edge and come back at full
+                    strength about two centimetres out; the cut corners keep their forty-five degrees in the darkening too. Then look at the popover
+                    on the right and ask honestly whether it is lifted at all. It is the measured weakness of this option: the ground is already at 5
+                    % lightness, so there is almost nothing left to take away — off the pointer's pool of light, pure black at 60 % peaks at ΔL* 5.04
+                    and darkens 0.2 % of the band visibly, against the dialog's 24 %. A darker shadow on a near-black ground has nowhere to go.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row ds-opt ds-black" data-ds-option="black">
+                        <div class="ds-cell" data-ds-surface="dialog">
+                            <p class="ds-caption">dialog</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-black-title">
+                                <h2 class="kp-dialog__title" id="ds-black-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell" data-ds-surface="card">
+                            <p class="ds-caption">card <span class="ds-tag ds-tag--mock">wrapper</span></p>
+                            <div class="ds-elev">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Run 41</h3>
+                                    <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm, back to back with run 40.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="ds-cell ds-cell--menu" data-ds-surface="popover">
+                            <p class="ds-caption">popover and menu, open</p>
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+                                Run actions (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" role="menu">
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the trace</button></li>
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Re-reference to run 40</button></li>
+                                    <li role="separator" class="kp-menu__separator"></li>
+                                    <li role="none">
+                                        <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Discard run</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table ds-measure">
+                    <caption>
+                        Separation, measured: device pixels in the 24px band round the panel that differ from the same band without the shadow.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Surface</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>1</td>
+                            <td data-ds-cell="black/dialog/1/band">27456</td>
+                            <td data-ds-cell="black/dialog/1/any">19699 (71.7%)</td>
+                            <td data-ds-cell="black/dialog/1/vis">6635 (24.2%)</td>
+                            <td data-ds-cell="black/dialog/1/peak">7.07</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="black/dialog/2.222/band">135335</td>
+                            <td data-ds-cell="black/dialog/2.222/any">94538 (69.9%)</td>
+                            <td data-ds-cell="black/dialog/2.222/vis">31365 (23.2%)</td>
+                            <td data-ds-cell="black/dialog/2.222/peak">7.07</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>1</td>
+                            <td data-ds-cell="black/card/1/band">20832</td>
+                            <td data-ds-cell="black/card/1/any">16678 (80.1%)</td>
+                            <td data-ds-cell="black/card/1/vis">6694 (32.1%)</td>
+                            <td data-ds-cell="black/card/1/peak">8.32</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="black/card/2.222/band">102290</td>
+                            <td data-ds-cell="black/card/2.222/any">79455 (77.7%)</td>
+                            <td data-ds-cell="black/card/2.222/vis">31288 (30.6%)</td>
+                            <td data-ds-cell="black/card/2.222/peak">8.18</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>1</td>
+                            <td data-ds-cell="black/popover/1/band">17616</td>
+                            <td data-ds-cell="black/popover/1/any">5364 (30.4%)</td>
+                            <td data-ds-cell="black/popover/1/vis">31 (0.2%)</td>
+                            <td data-ds-cell="black/popover/1/peak">5.04</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="black/popover/2.222/band">86706</td>
+                            <td data-ds-cell="black/popover/2.222/any">26587 (30.7%)</td>
+                            <td data-ds-cell="black/popover/2.222/vis">189 (0.2%)</td>
+                            <td data-ds-cell="black/popover/2.222/peak">5.26</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="oxide" data-cat-theme="dark">
+                <h2>3 · The oxide film's colour <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> not a shadow but the film itself, blurred, behind the panel — the same <code>--kp-iris</code> conic gradient the
+                    panel already wears as its border. Follow the halo round one panel: cyan on one side, violet, magenta and lime on the others, the
+                    same order as the border. Move the pointer across the page: the halo turns with the border, together, because it is the same
+                    gradient; stand still and nothing moves. Judge whether the colour is the theme speaking or a glow the theme does not need — dark's
+                    rule is that colour lives in the film and in meaning, and this is the film. Then compare the popover with the other two: it
+                    scrolls inside itself (<code>overflow: auto</code>), which clips a pseudo-element away — measured at 0 of 17616 band pixels — so
+                    there the film is faked with four shadows in its four wavelengths, and that one does <i>not</i> turn with the pointer. Judge
+                    whether the two can live beside each other — and then read the live block below, where the modal dialog turns out to need the same
+                    fake, because a dialog in the top layer clips its pseudo-elements too.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row ds-opt ds-oxide" data-ds-option="oxide">
+                        <div class="ds-cell" data-ds-surface="dialog">
+                            <p class="ds-caption">dialog</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-oxide-title">
+                                <h2 class="kp-dialog__title" id="ds-oxide-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell" data-ds-surface="card">
+                            <p class="ds-caption">card <span class="ds-tag ds-tag--mock">wrapper</span></p>
+                            <div class="ds-elev">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Run 41</h3>
+                                    <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm, back to back with run 40.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="ds-cell ds-cell--menu" data-ds-surface="popover">
+                            <p class="ds-caption">popover and menu, open</p>
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+                                Run actions (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" role="menu">
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the trace</button></li>
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Re-reference to run 40</button></li>
+                                    <li role="separator" class="kp-menu__separator"></li>
+                                    <li role="none">
+                                        <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Discard run</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table ds-measure">
+                    <caption>
+                        Separation, measured: device pixels in the 24px band round the panel that differ from the same band without the halo.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Surface</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>1</td>
+                            <td data-ds-cell="oxide/dialog/1/band">27456</td>
+                            <td data-ds-cell="oxide/dialog/1/any">26869 (97.9%)</td>
+                            <td data-ds-cell="oxide/dialog/1/vis">24256 (88.3%)</td>
+                            <td data-ds-cell="oxide/dialog/1/peak">29.84</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="oxide/dialog/2.222/band">134620</td>
+                            <td data-ds-cell="oxide/dialog/2.222/any">130422 (96.9%)</td>
+                            <td data-ds-cell="oxide/dialog/2.222/vis">116937 (86.9%)</td>
+                            <td data-ds-cell="oxide/dialog/2.222/peak">30.23</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>1</td>
+                            <td data-ds-cell="oxide/card/1/band">20832</td>
+                            <td data-ds-cell="oxide/card/1/any">20363 (97.7%)</td>
+                            <td data-ds-cell="oxide/card/1/vis">18652 (89.5%)</td>
+                            <td data-ds-cell="oxide/card/1/peak">32.98</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="oxide/card/2.222/band">102899</td>
+                            <td data-ds-cell="oxide/card/2.222/any">99020 (96.2%)</td>
+                            <td data-ds-cell="oxide/card/2.222/vis">89156 (86.6%)</td>
+                            <td data-ds-cell="oxide/card/2.222/peak">33.16</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>1</td>
+                            <td data-ds-cell="oxide/popover/1/band">17616</td>
+                            <td data-ds-cell="oxide/popover/1/any">13055 (74.1%)</td>
+                            <td data-ds-cell="oxide/popover/1/vis">10473 (59.5%)</td>
+                            <td data-ds-cell="oxide/popover/1/peak">32.32</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="oxide/popover/2.222/band">86706</td>
+                            <td data-ds-cell="oxide/popover/2.222/any">64060 (73.9%)</td>
+                            <td data-ds-cell="oxide/popover/2.222/vis">50494 (58.2%)</td>
+                            <td data-ds-cell="oxide/popover/2.222/peak">32.61</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="plate" data-cat-theme="dark">
+                <h2>4 · A hard offset plate <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a machined part lifted off its backing plate. The hairline's own tone, six pixels down and right, no blur at all,
+                    so the riser has a crisp edge and repeats the chamfer: look at the bottom-left and top-right corners and you should see the cut
+                    plate offset behind the cut panel, two parallel forty-five degree edges. Nothing is blurred, so nothing softens at
+                    devicePixelRatio 2.222. Judge whether it reads as depth or as a second panel.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row ds-opt ds-plate" data-ds-option="plate">
+                        <div class="ds-cell" data-ds-surface="dialog">
+                            <p class="ds-caption">dialog</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-plate-title">
+                                <h2 class="kp-dialog__title" id="ds-plate-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell" data-ds-surface="card">
+                            <p class="ds-caption">card <span class="ds-tag ds-tag--mock">wrapper</span></p>
+                            <div class="ds-elev">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Run 41</h3>
+                                    <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm, back to back with run 40.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="ds-cell ds-cell--menu" data-ds-surface="popover">
+                            <p class="ds-caption">popover and menu, open</p>
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+                                Run actions (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" role="menu">
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the trace</button></li>
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Re-reference to run 40</button></li>
+                                    <li role="separator" class="kp-menu__separator"></li>
+                                    <li role="none">
+                                        <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Discard run</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table ds-measure">
+                    <caption>
+                        Separation, measured: device pixels in the 24px band round the panel that differ from the same band without the riser.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Surface</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>1</td>
+                            <td data-ds-cell="plate/dialog/1/band">27456</td>
+                            <td data-ds-cell="plate/dialog/1/any">2952 (10.8%)</td>
+                            <td data-ds-cell="plate/dialog/1/vis">2940 (10.7%)</td>
+                            <td data-ds-cell="plate/dialog/1/peak">11.74</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="plate/dialog/2.222/band">135335</td>
+                            <td data-ds-cell="plate/dialog/2.222/any">14785 (10.9%)</td>
+                            <td data-ds-cell="plate/dialog/2.222/vis">14129 (10.4%)</td>
+                            <td data-ds-cell="plate/dialog/2.222/peak">11.74</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>1</td>
+                            <td data-ds-cell="plate/card/1/band">20880</td>
+                            <td data-ds-cell="plate/card/1/any">1915 (9.2%)</td>
+                            <td data-ds-cell="plate/card/1/vis">1905 (9.1%)</td>
+                            <td data-ds-cell="plate/card/1/peak">11.39</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="plate/card/2.222/band">102290</td>
+                            <td data-ds-cell="plate/card/2.222/any">10686 (10.4%)</td>
+                            <td data-ds-cell="plate/card/2.222/vis">10339 (10.1%)</td>
+                            <td data-ds-cell="plate/card/2.222/peak">11.39</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>1</td>
+                            <td data-ds-cell="plate/popover/1/band">17616</td>
+                            <td data-ds-cell="plate/popover/1/any">1878 (10.7%)</td>
+                            <td data-ds-cell="plate/popover/1/vis">1878 (10.7%)</td>
+                            <td data-ds-cell="plate/popover/1/peak">13.95</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="plate/popover/2.222/band">86284</td>
+                            <td data-ds-cell="plate/popover/2.222/any">9022 (10.5%)</td>
+                            <td data-ds-cell="plate/popover/2.222/vis">9022 (10.5%)</td>
+                            <td data-ds-cell="plate/popover/2.222/peak">13.95</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="edge" data-cat-theme="dark">
+                <h2>5 · An edge line and a soft shadow <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> light on the cut edge and dark underneath. A one-pixel line of the ink at 22 % runs right round the silhouette —
+                    over the top edge too, where a shadow can never reach — and under it the soft black shadow of option 2 at 50 %. The panel is
+                    separated twice over: on a light patch of the grid the line does the work, on a dark patch the shadow does. Check that the line
+                    follows the chamfer and does not cut across it, and that it sits outside the oxide border rather than replacing it.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-row ds-opt ds-edge" data-ds-option="edge">
+                        <div class="ds-cell" data-ds-surface="dialog">
+                            <p class="ds-caption">dialog</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-edge-title">
+                                <h2 class="kp-dialog__title" id="ds-edge-title">Discard calibration run 41?</h2>
+                                <p>The sodium line drifted 0.4 nm during the run. Discarding it keeps run 40 as the standing calibration.</p>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--ghost">Keep it</button>
+                                    <button type="button" class="kp-button">Discard</button>
+                                </div>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell" data-ds-surface="card">
+                            <p class="ds-caption">card <span class="ds-tag ds-tag--mock">wrapper</span></p>
+                            <div class="ds-elev">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Run 41</h3>
+                                    <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm, back to back with run 40.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="ds-cell ds-cell--menu" data-ds-surface="popover">
+                            <p class="ds-caption">popover and menu, open</p>
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+                                Run actions (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" role="menu">
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the trace</button></li>
+                                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Re-reference to run 40</button></li>
+                                    <li role="separator" class="kp-menu__separator"></li>
+                                    <li role="none">
+                                        <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Discard run</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table ds-measure">
+                    <caption>
+                        Separation, measured: device pixels in the 24px band round the panel that differ from the same band without the line and the
+                        shadow.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Surface</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>1</td>
+                            <td data-ds-cell="edge/dialog/1/band">27456</td>
+                            <td data-ds-cell="edge/dialog/1/any">18231 (66.4%)</td>
+                            <td data-ds-cell="edge/dialog/1/vis">5069 (18.5%)</td>
+                            <td data-ds-cell="edge/dialog/1/peak">29.48</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dialog</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="edge/dialog/2.222/band">134620</td>
+                            <td data-ds-cell="edge/dialog/2.222/any">88362 (65.6%)</td>
+                            <td data-ds-cell="edge/dialog/2.222/vis">23383 (17.4%)</td>
+                            <td data-ds-cell="edge/dialog/2.222/peak">29.48</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>1</td>
+                            <td data-ds-cell="edge/card/1/band">20880</td>
+                            <td data-ds-cell="edge/card/1/any">15745 (75.4%)</td>
+                            <td data-ds-cell="edge/card/1/vis">5353 (25.6%)</td>
+                            <td data-ds-cell="edge/card/1/peak">28.65</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Card</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="edge/card/2.222/band">102899</td>
+                            <td data-ds-cell="edge/card/2.222/any">76331 (74.2%)</td>
+                            <td data-ds-cell="edge/card/2.222/vis">25603 (24.9%)</td>
+                            <td data-ds-cell="edge/card/2.222/peak">28.65</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>1</td>
+                            <td data-ds-cell="edge/popover/1/band">17616</td>
+                            <td data-ds-cell="edge/popover/1/any">4664 (26.5%)</td>
+                            <td data-ds-cell="edge/popover/1/vis">662 (3.8%)</td>
+                            <td data-ds-cell="edge/popover/1/peak">22.32</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Popover</th>
+                            <td>2.222</td>
+                            <td data-ds-cell="edge/popover/2.222/band">86284</td>
+                            <td data-ds-cell="edge/popover/2.222/any">23154 (26.8%)</td>
+                            <td data-ds-cell="edge/popover/2.222/vis">2969 (3.4%)</td>
+                            <td data-ds-cell="edge/popover/2.222/peak">22.35</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="side-by-side" data-cat-theme="dark">
+                <h2>All five, side by side <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same dialog five times in one line of sight, which is the only way to judge how far apart they really are.
+                    Read left to right: as it ships, black, the oxide halo, the hard plate, the edge line. Ask of each one whether the dialog is
+                    <i>in front of</i> the page or <i>on</i> it, and whether what separates it belongs to an instrument. They sit in one row, so the
+                    same patch of grid and the same pool of pointer light is behind all five.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="ds-side">
+                        <div class="ds-cell ds-opt ds-ships">
+                            <p class="ds-caption">1 · as it ships</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-side-1">
+                                <h2 class="kp-dialog__title" id="ds-side-1">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-black">
+                            <p class="ds-caption">2 · black</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-side-2">
+                                <h2 class="kp-dialog__title" id="ds-side-2">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-oxide">
+                            <p class="ds-caption">3 · oxide halo</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-side-3">
+                                <h2 class="kp-dialog__title" id="ds-side-3">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-plate">
+                            <p class="ds-caption">4 · hard plate</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-side-4">
+                                <h2 class="kp-dialog__title" id="ds-side-4">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-edge">
+                            <p class="ds-caption">5 · edge line</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-side-5">
+                                <h2 class="kp-dialog__title" id="ds-side-5">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="live" data-cat-theme="dark">
+                <h2>Opened for real, over the backdrop <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> press each button. The dialog opens modally through the package's own <code>js/components.js</code>, with the
+                    backdrop dimming the page behind it. Judge that no option looks wrong over a dimmed page: the hard plate must not look like a
+                    second dialog, the edge line must not glow, and none of them may fight the backdrop. Escape closes each one and focus returns to
+                    the button you pressed. The frozen copies above, with no backdrop, stay the honest test of separation.
+                </div>
+                <div class="cat-look">
+                    <b>Look at, and this one decides option 3:</b> the dialog you open here is <i>not</i> wearing the oxide halo the block above
+                    shows. It cannot. The UA stylesheet makes <code>dialog:modal</code> a scroll container (<code>overflow: auto</code>), so a modal
+                    dialog clips its own pseudo-elements to its box — measured on this page with the halo forced solid red: full halo on
+                    <code>&lt;dialog open&gt;</code>, nothing outside the box after <code>showModal()</code>, only the two cut corners left. A filter
+                    is not a descendant and is not clipped, which is why options 1, 2, 4 and 5 arrive here unchanged. What option 3 opens with instead
+                    is the popover's fallback: four shadows in the film's four wavelengths, fixed, not turning with the pointer. Compare it with the
+                    frozen copy above and judge whether the idea survives the translation.
+                </div>
+                <div class="cat-stage">
+                    <div class="ds-live">
+                        <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ds-live-ships">1 · as it ships</button>
+                        <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ds-live-black">2 · black</button>
+                        <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ds-live-oxide">
+                            3 · oxide, as four shadows
+                        </button>
+                        <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ds-live-plate">4 · hard plate</button>
+                        <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ds-live-edge">5 · edge line</button>
+                    </div>
+                    <div class="ds-opt ds-ships">
+                        <dialog class="kp-dialog" id="ds-live-ships" aria-labelledby="ds-live-ships-title">
+                            <h2 class="kp-dialog__title" id="ds-live-ships-title">Discard calibration run 41?</h2>
+                            <p>Option 1, as it ships. The sodium line drifted 0.4 nm during the run.</p>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Keep it</button>
+                                <button type="button" class="kp-button" data-kp-dialog-close="discard">Discard</button>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div class="ds-opt ds-black">
+                        <dialog class="kp-dialog" id="ds-live-black" aria-labelledby="ds-live-black-title">
+                            <h2 class="kp-dialog__title" id="ds-live-black-title">Discard calibration run 41?</h2>
+                            <p>Option 2, black at 60 %. The sodium line drifted 0.4 nm during the run.</p>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Keep it</button>
+                                <button type="button" class="kp-button" data-kp-dialog-close="discard">Discard</button>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div class="ds-opt ds-oxide">
+                        <dialog class="kp-dialog" id="ds-live-oxide" aria-labelledby="ds-live-oxide-title">
+                            <h2 class="kp-dialog__title" id="ds-live-oxide-title">Discard calibration run 41?</h2>
+                            <p>
+                                Option 3, and not the halo: a modal dialog clips its pseudo-elements, so this is the four-shadow fallback. The sodium
+                                line drifted 0.4 nm during the run.
+                            </p>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Keep it</button>
+                                <button type="button" class="kp-button" data-kp-dialog-close="discard">Discard</button>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div class="ds-opt ds-plate">
+                        <dialog class="kp-dialog" id="ds-live-plate" aria-labelledby="ds-live-plate-title">
+                            <h2 class="kp-dialog__title" id="ds-live-plate-title">Discard calibration run 41?</h2>
+                            <p>Option 4, the hard plate. The sodium line drifted 0.4 nm during the run.</p>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Keep it</button>
+                                <button type="button" class="kp-button" data-kp-dialog-close="discard">Discard</button>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div class="ds-opt ds-edge">
+                        <dialog class="kp-dialog" id="ds-live-edge" aria-labelledby="ds-live-edge-title">
+                            <h2 class="kp-dialog__title" id="ds-live-edge-title">Discard calibration run 41?</h2>
+                            <p>Option 5, the edge line. The sodium line drifted 0.4 nm during the run.</p>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Keep it</button>
+                                <button type="button" class="kp-button" data-kp-dialog-close="discard">Discard</button>
+                            </div>
+                        </dialog>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="scope" data-cat-theme="dark">
+                <h2>Dark only <span class="ds-tag ds-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> this block is the one that follows the theme menu at the top of the page. Every option's rules are written under
+                    <code>[data-theme='dark']</code>, so in titanium or nostromo these five dialogs must be identical to each other and to that
+                    theme's ordinary dialog — no halo, no riser, no edge line anywhere. Switch the menu to titanium and back to dark; in dark the five
+                    differ again.
+                </div>
+                <div class="cat-stage cat-stage--block" data-ds-no-theme>
+                    <div class="ds-side">
+                        <div class="ds-cell ds-opt ds-ships">
+                            <p class="ds-caption">1 · as it ships</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-scope-1">
+                                <h2 class="kp-dialog__title" id="ds-scope-1">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-black">
+                            <p class="ds-caption">2 · black</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-scope-2">
+                                <h2 class="kp-dialog__title" id="ds-scope-2">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-oxide">
+                            <p class="ds-caption">3 · oxide halo</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-scope-3">
+                                <h2 class="kp-dialog__title" id="ds-scope-3">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-plate">
+                            <p class="ds-caption">4 · hard plate</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-scope-4">
+                                <h2 class="kp-dialog__title" id="ds-scope-4">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                        <div class="ds-cell ds-opt ds-edge">
+                            <p class="ds-caption">5 · edge line</p>
+                            <dialog class="kp-dialog" open aria-labelledby="ds-scope-5">
+                                <h2 class="kp-dialog__title" id="ds-scope-5">Run 41</h2>
+                                <p>Discard the drifted run?</p>
+                            </dialog>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu follows it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-ds-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.dsTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.dsTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            // The scope block is the one stage that follows the menu: judging.js
+            // pins every stage of a block with `data-cat-theme` to that theme,
+            // and this stage asks to be left alone.
+            const free = document.querySelector('[data-ds-no-theme]');
+            if (free)
+                new MutationObserver(() => free.removeAttribute('data-theme')).observe(free, { attributes: true, attributeFilter: ['data-theme'] });
+        </script>
+    </body>
+</html>
