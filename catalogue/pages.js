@@ -63,6 +63,7 @@ export const PAGES = [
         pages: [
             { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
             { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
+            { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
         ],
     },
     {

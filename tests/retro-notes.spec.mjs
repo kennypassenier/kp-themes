@@ -225,6 +225,8 @@ test(
     'no theme strikes a legend through with its fieldset’s paint [retro notes, 2026-09-15]',
     { tag: ['@component:field', '@sweep', '@component:catalogue'] },
     async ({ page }) => {
+        // A sweep over 22 themes; under a parallel run it needs more than the default 30 s.
+        test.setTimeout(120_000);
         // The search behind Kenny's retro note, kept: on 2026-09-15 retro was
         // the only one of the 22 themes with a line through a legend.
         await openCatalogue(page, '/catalogue/field.html', THEME_NAMES[0]);

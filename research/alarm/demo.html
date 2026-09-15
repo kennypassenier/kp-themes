@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="en" data-theme="cyberpunk" data-cat-theme="cyberpunk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The alarm overlay, a full-screen dramatic alert · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only. Nothing here is in the
+               package. Classes prefixed `al-` are this page's furniture; the
+               `kp-alarm` classes are the PROPOSED component, written here as a
+               prototype so Kenny can judge it before anything lands in
+               css/components.css. Unlayered on purpose, so they sit above the
+               registers (kp.register) the way a real register answer would be
+               layered in. Every paint is a token or a relative colour of one:
+               nothing names a colour (DI9).
+               ================================================================== */
+            .al-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .al-tag--package {
+                color: var(--success-foreground);
+            }
+            .al-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .al-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .al-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .al-controls {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+                gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+                padding: var(--kp-space-lg, 1rem);
+                border: 1px dashed var(--border);
+            }
+            .al-controls .kp-field {
+                max-width: none;
+            }
+            .al-call {
+                margin: 0;
+                padding: 0.75rem 1rem;
+                overflow-x: auto;
+                border: 1px solid var(--border);
+                background: var(--muted);
+                color: var(--foreground);
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.8rem;
+                line-height: 1.5;
+                white-space: pre;
+            }
+            .al-stage {
+                position: relative;
+                aspect-ratio: 16 / 9;
+                min-inline-size: 0;
+                overflow: hidden;
+                border: 1px dashed var(--border);
+                background: var(--background);
+                color: var(--foreground);
+            }
+            .al-stage__page {
+                padding: 1rem 1.25rem;
+                font-size: 0.85rem;
+                opacity: 0.9;
+            }
+            .al-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+                gap: var(--kp-space-lg, 1rem);
+            }
+            .al-grid figure {
+                min-inline-size: 0;
+                margin: 0;
+            }
+            .al-grid .al-stage {
+                aspect-ratio: 5 / 4;
+            }
+            @media (max-width: 40rem) {
+                .al-stage {
+                    aspect-ratio: 3 / 4;
+                }
+            }
+            .al-grid figcaption {
+                margin-block-start: 0.35rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.75rem;
+                color: var(--muted-foreground);
+            }
+            .al-table {
+                border-collapse: collapse;
+                inline-size: 100%;
+                font-size: 0.85rem;
+            }
+            .al-table :is(th, td) {
+                padding: 0.4rem 0.6rem;
+                border-block-end: 1px solid var(--border);
+                text-align: start;
+                vertical-align: top;
+            }
+
+            /* ── THE PROPOSED COMPONENT: kp-alarm ─────────────────────────────
+               One element, two looks (the drama) and two ways out (the mode).
+               The knobs, each a custom property a theme or a consumer sets:
+                 --kp-alarm-drama      full | restrained, read by the script
+                 --kp-alarm-ground     the plate over the page
+                 --kp-alarm-ink        the headline and the frame
+                 --kp-alarm-soft       the detail line
+                 --kp-alarm-split      the second colour of the glitch split
+                 --kp-alarm-pulse      one half-cycle of the frame's glow
+                 --kp-alarm-bar        the height of the hazard bars
+                 --kp-z-alarm          above the toast (90) and the skip link (100)
+               ------------------------------------------------------------------ */
+            :root,
+            [data-theme] {
+                --kp-alarm-drama: restrained;
+            }
+            [data-theme='cyberpunk'],
+            [data-theme='synthwave'],
+            [data-theme='terminal'],
+            [data-theme='nostromo'],
+            [data-theme='titanium'],
+            [data-theme='phantom'] {
+                --kp-alarm-drama: full;
+            }
+
+            .kp-alarm {
+                --kp-alarm-pulse: 1400ms;
+                --kp-alarm-bar: 0.9rem;
+                --kp-alarm-left: 1;
+                container-type: inline-size;
+                position: fixed;
+                inset: 0;
+                z-index: var(--kp-z-alarm, 110);
+                box-sizing: border-box;
+                inline-size: 100%;
+                block-size: 100%;
+                max-inline-size: none;
+                max-block-size: none;
+                margin: 0;
+                padding: calc(var(--kp-alarm-bar) + 2.5rem) 1.5rem;
+                border: 0;
+                overflow: hidden auto;
+                background: var(--kp-alarm-ground);
+                color: var(--kp-alarm-ink);
+                font-family: var(--theme-font-body);
+            }
+            .kp-alarm::backdrop {
+                background: transparent;
+            }
+            .kp-alarm:is([open], [data-kp-alarm-inline]) {
+                display: grid;
+                place-items: center;
+            }
+            .kp-alarm[data-kp-alarm-inline] {
+                position: absolute;
+                z-index: 1;
+                padding: calc(var(--kp-alarm-bar) + 1rem) 1rem;
+            }
+            .kp-alarm__panel {
+                position: relative;
+                z-index: 1;
+                display: grid;
+                justify-items: center;
+                gap: clamp(0.5rem, 1.6cqi, 1.25rem);
+                inline-size: min(100%, 72rem);
+                text-align: center;
+            }
+            .kp-alarm__code {
+                margin: 0;
+                font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+                font-size: clamp(0.7rem, 1.3cqi, 0.95rem);
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+            }
+            .kp-alarm__title {
+                margin: 0;
+                font-family: var(--theme-font-display, var(--theme-font-body));
+                font-weight: 700;
+                line-height: 0.95;
+                text-transform: uppercase;
+                overflow-wrap: anywhere;
+                text-wrap: balance;
+            }
+            .kp-alarm__glyphs {
+                position: relative;
+                display: inline-block;
+            }
+            .kp-alarm__word {
+                white-space: nowrap;
+            }
+            .kp-alarm__char {
+                position: relative;
+            }
+            .kp-alarm__char::before,
+            .kp-alarm__char::after {
+                position: absolute;
+                inset-block-start: 0;
+                inset-inline-start: 0;
+                opacity: 0;
+                color: var(--kp-alarm-ink);
+                pointer-events: none;
+            }
+            .kp-alarm__char::before {
+                content: attr(data-n1);
+            }
+            .kp-alarm__char::after {
+                content: attr(data-n2);
+            }
+            .kp-alarm__detail {
+                max-inline-size: 60ch;
+                margin: 0;
+                font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+                font-size: clamp(0.85rem, 1.9cqi, 1.35rem);
+                line-height: 1.45;
+                text-wrap: pretty;
+            }
+            .kp-alarm__detail:empty {
+                display: none;
+            }
+            .kp-alarm__actions {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.75rem 1rem;
+                margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+                font-size: 0.8rem;
+            }
+            .kp-alarm__hint {
+                font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+                letter-spacing: 0.08em;
+            }
+            .kp-alarm__countdown {
+                display: grid;
+                gap: 0.5rem;
+                justify-items: center;
+                inline-size: min(100%, 36rem);
+                margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+                font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+                font-size: 0.8rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+            .kp-alarm__track {
+                inline-size: 100%;
+                block-size: 0.375rem;
+                background: hsl(from currentColor h s l / 0.22);
+            }
+            .kp-alarm__fill {
+                display: block;
+                block-size: 100%;
+                background: currentColor;
+                transform: scaleX(var(--kp-alarm-left));
+                transform-origin: left center;
+            }
+            .kp-alarm:not([data-kp-alarm-mode='auto']) .kp-alarm__countdown,
+            .kp-alarm[data-kp-alarm-mode='auto'] .kp-alarm__actions {
+                display: none;
+            }
+            .kp-alarm__scan,
+            .kp-alarm__bars {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+            }
+
+            /* ── Full drama: the sci-fi themes ─────────────────────────────── */
+            .kp-alarm[data-kp-alarm-drama='full'] {
+                --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+                --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+                --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+                --kp-alarm-split: hsl(from var(--primary) h s max(l, 60));
+                color-scheme: dark;
+            }
+            .kp-alarm[data-kp-alarm-drama='full']::before {
+                /* The frame: a hairline box inside the bars. */
+                content: '';
+                position: absolute;
+                inset: calc(var(--kp-alarm-bar) + 0.75rem) 0.75rem;
+                border: 2px solid var(--kp-alarm-ink);
+                pointer-events: none;
+            }
+            .kp-alarm[data-kp-alarm-drama='full']::after {
+                /* The glow the frame breathes with. */
+                content: '';
+                position: absolute;
+                inset: 0;
+                box-shadow: inset 0 0 7rem hsl(from var(--destructive) h s max(l, 45) / 0.5);
+                pointer-events: none;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__scan {
+                background:
+                    repeating-linear-gradient(to bottom, hsl(from var(--destructive) h s max(l, 50) / 0.09) 0 1px, transparent 1px 3px),
+                    radial-gradient(ellipse at center, transparent 50%, hsl(from var(--destructive) h s 2% / 0.7));
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__scan::after {
+                content: '';
+                position: absolute;
+                inset-inline: 0;
+                block-size: 18%;
+                inset-block-start: -18%;
+                background: linear-gradient(to bottom, transparent, hsl(from var(--destructive) h s max(l, 50) / 0.08), transparent);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__bars::before,
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__bars::after {
+                content: '';
+                position: absolute;
+                inset-inline: 0;
+                block-size: var(--kp-alarm-bar);
+                background: repeating-linear-gradient(-45deg, var(--kp-alarm-ink) 0 1rem, transparent 1rem 2rem);
+                background-size: 2.8284rem 100%;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__bars::before {
+                inset-block-start: 0;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__bars::after {
+                inset-block-end: 0;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__code {
+                color: var(--kp-alarm-ink);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__title {
+                font-size: clamp(2.5rem, 12cqi, 10rem);
+                letter-spacing: 0.04em;
+                color: var(--kp-alarm-ink);
+                text-shadow: 0 0 0.3em hsl(from var(--destructive) h s max(l, 50) / 0.55);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__glyphs::before,
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__glyphs::after {
+                /* The chromatic split: two copies of the word, clipped to
+                   nothing at rest and to thin bands during a burst. */
+                content: attr(data-text);
+                position: absolute;
+                inset: 0;
+                clip-path: inset(50% 0 50% 0);
+                text-shadow: none;
+                pointer-events: none;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__glyphs::before {
+                color: var(--kp-alarm-split);
+                translate: -0.04em 0;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__glyphs::after {
+                color: var(--kp-alarm-soft);
+                translate: 0.04em 0;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__detail {
+                color: var(--kp-alarm-soft);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__detail::after {
+                /* A caret at the end of the line: one character cell. */
+                content: '';
+                display: inline-block;
+                inline-size: 0.6em;
+                block-size: 1.05em;
+                margin-inline-start: 0.2em;
+                vertical-align: text-bottom;
+                background: var(--kp-alarm-ink);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] :is(.kp-alarm__hint, .kp-alarm__countdown) {
+                color: var(--kp-alarm-ink);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__ack {
+                /* The register keeps its shape (a notch, a radius); the paint
+                   is the alarm's own. */
+                min-inline-size: 14rem;
+                border: 2px solid var(--kp-alarm-ink);
+                background: var(--kp-alarm-ink);
+                color: hsl(from var(--destructive) h s 6%);
+                font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__ack:is(:hover, :focus-visible) {
+                background: hsl(from var(--destructive) h s 6%);
+                color: var(--kp-alarm-ink);
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__ack:focus-visible,
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__keep:focus-visible {
+                outline: 3px solid var(--kp-alarm-soft);
+                outline-offset: 4px;
+            }
+            .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__keep {
+                color: var(--kp-alarm-ink);
+            }
+            [data-theme='terminal'] .kp-alarm[data-kp-alarm-drama='full'] .kp-alarm__code::before {
+                content: '> ';
+            }
+
+            /* ── Restrained: every calm theme ──────────────────────────────── */
+            .kp-alarm[data-kp-alarm-drama='restrained'] {
+                --kp-alarm-ground: hsl(from var(--background) h s l / 0.9);
+                --kp-alarm-ink: var(--destructive);
+                --kp-alarm-soft: var(--foreground);
+                --kp-alarm-bar: 0rem;
+            }
+            .kp-alarm[data-kp-alarm-drama='restrained'] .kp-alarm__panel {
+                inline-size: min(100%, 52rem);
+                padding: clamp(1.25rem, 4cqi, 3rem) clamp(1rem, 4cqi, 3.5rem);
+                border-block: 0.5rem solid var(--destructive);
+                background: var(--background);
+                color: var(--foreground);
+            }
+            .kp-alarm[data-kp-alarm-drama='restrained'] .kp-alarm__code {
+                color: var(--muted-foreground);
+                letter-spacing: 0.18em;
+            }
+            .kp-alarm[data-kp-alarm-drama='restrained'] .kp-alarm__title {
+                font-size: clamp(2rem, 7cqi, 5rem);
+                letter-spacing: 0.02em;
+                color: var(--destructive);
+            }
+            .kp-alarm[data-kp-alarm-drama='restrained'] .kp-alarm__detail {
+                font-family: var(--theme-font-body);
+                color: var(--foreground);
+            }
+            .kp-alarm[data-kp-alarm-drama='restrained'] .kp-alarm__countdown {
+                color: var(--destructive);
+            }
+            [data-theme='high-contrast'] .kp-alarm[data-kp-alarm-drama='restrained'] {
+                --kp-alarm-ground: var(--background);
+            }
+
+            /* ── Motion: only when the reader has not asked for less, and never
+               on an alarm opened with motion: 'still'. The budget, per 1 s
+               window (WCAG 2.3.1 allows 3 flashes, one flash = two opposing
+               luminance changes of 10% or more):
+                 kp-alarm-flicker-in  0 -> 1 -> 0.3 -> 1, once       1.5 flashes
+                 kp-alarm-decode      a letter cell: blank, noise, noise, letter, once
+                 kp-alarm-jitter      1 -> 0.6 -> 1, once per 5 s    0.2 per second
+                 kp-alarm-pulse       one half-cycle per 1.4 s       0.36 per second
+                 kp-alarm-caret       on/off once a second           1 per second, one cell
+                 kp-alarm-march       stripes move one period / 1.6 s, per pixel 0.63
+                 kp-alarm-sweep       a 8% tint band crossing once per 6 s
+               ------------------------------------------------------------------ */
+            @media (prefers-reduced-motion: no-preference) {
+                .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+                    animation: kp-alarm-ground-in 180ms ease-out both;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still'])::after {
+                    animation: kp-alarm-pulse var(--kp-alarm-pulse) ease-in-out infinite alternate;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                    animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
+                    animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+                    animation:
+                        kp-alarm-slice-in 600ms steps(1, end) both,
+                        kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
+                    animation:
+                        kp-alarm-slice-in 600ms 90ms steps(1, end) both,
+                        kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
+                }
+                /* The decode: each letter cell shows one noise glyph for 90 ms,
+                   a second for 90 ms, then its letter, starting 35 ms after
+                   the cell before it. A cell changes three times, ever. */
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__char {
+                    animation: kp-alarm-decode-letter calc(var(--i) * 35ms + 180ms) steps(1, end) both;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
+                    animation: kp-alarm-decode-noise 90ms calc(var(--i) * 35ms) steps(1, end) forwards;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
+                    animation: kp-alarm-decode-noise 90ms calc(var(--i) * 35ms + 90ms) steps(1, end) forwards;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+                    animation: kp-alarm-detail-in 300ms 600ms ease-out both;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
+                    animation: kp-alarm-caret 1000ms steps(1, end) infinite;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
+                    animation: kp-alarm-march 1600ms linear infinite;
+                }
+                .kp-alarm[data-kp-alarm-drama='full']:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+                    animation: kp-alarm-sweep 6000ms linear infinite;
+                }
+                .kp-alarm[data-kp-alarm-drama='restrained'][open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                    animation: kp-alarm-rise 220ms ease-out both;
+                }
+                .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
+                    transition: transform 100ms linear;
+                }
+            }
+            @keyframes kp-alarm-ground-in {
+                from {
+                    opacity: 0;
+                }
+            }
+            @keyframes kp-alarm-pulse {
+                from {
+                    opacity: 0.4;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            @keyframes kp-alarm-flicker-in {
+                0% {
+                    opacity: 0;
+                }
+                18% {
+                    opacity: 1;
+                    translate: -0.6% 0;
+                }
+                30% {
+                    opacity: 0.3;
+                    translate: 0.8% 0;
+                }
+                42% {
+                    opacity: 1;
+                    translate: 0 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            @keyframes kp-alarm-jitter {
+                0%,
+                94% {
+                    opacity: 1;
+                    translate: 0 0;
+                }
+                95% {
+                    opacity: 0.6;
+                    translate: -0.03em 0;
+                }
+                97% {
+                    opacity: 1;
+                    translate: 0.02em 0;
+                }
+                99% {
+                    translate: 0 0;
+                }
+            }
+            @keyframes kp-alarm-slice-in {
+                0% {
+                    clip-path: inset(10% 0 72% 0);
+                }
+                20% {
+                    clip-path: inset(62% 0 22% 0);
+                }
+                40% {
+                    clip-path: inset(34% 0 52% 0);
+                }
+                60% {
+                    clip-path: inset(80% 0 6% 0);
+                }
+                80%,
+                100% {
+                    clip-path: inset(50% 0 50% 0);
+                }
+            }
+            @keyframes kp-alarm-slice {
+                0%,
+                94% {
+                    clip-path: inset(50% 0 50% 0);
+                }
+                95% {
+                    clip-path: inset(20% 0 66% 0);
+                }
+                97% {
+                    clip-path: inset(58% 0 28% 0);
+                }
+                99% {
+                    clip-path: inset(50% 0 50% 0);
+                }
+            }
+            @keyframes kp-alarm-decode-letter {
+                from {
+                    color: transparent;
+                    text-shadow: none;
+                }
+            }
+            @keyframes kp-alarm-decode-noise {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+            @keyframes kp-alarm-detail-in {
+                from {
+                    opacity: 0;
+                }
+            }
+            @keyframes kp-alarm-caret {
+                50% {
+                    opacity: 0;
+                }
+            }
+            @keyframes kp-alarm-march {
+                to {
+                    background-position-x: 2.8284rem;
+                }
+            }
+            @keyframes kp-alarm-sweep {
+                to {
+                    translate: 0 680%;
+                }
+            }
+            @keyframes kp-alarm-rise {
+                from {
+                    opacity: 0;
+                    scale: 0.98;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>The alarm: a full-screen dramatic alert</h1>
+            <p class="cat-intro">
+                Kenny asked for something bigger than a toast: a full-screen overlay with animated red text, "ACCESS DENIED" as a film would show a
+                hacking attempt, with the words set by the caller, and a choice between having to click something and going away by itself after a
+                number of seconds. This page is a working prototype of <code>kp-alarm</code>. Parts marked
+                <span class="al-tag al-tag--package">package</span> are the stylesheets and scripts as they ship (the tokens, the registers,
+                <code>.kp-button</code>, <code>.kp-field</code>, <code>.kp-fieldset</code>, <code>.kp-sr-only</code>, the native
+                <code>&lt;dialog&gt;</code> the package's dialogs already use, and the decipher glyph set from <code>js/effects.js</code>). Parts
+                marked <span class="al-tag al-tag--mock">mock</span> are written on this page: every <code>kp-alarm</code> rule, its keyframes, and
+                the <code>showAlarm()</code> function. Loaded registers: cyberpunk, nostromo, terminal, synthwave, formal, light. The page opens in
+                cyberpunk.
+            </p>
+            <div class="al-switcher" role="group" aria-label="Theme for this page">
+                <span class="al-tag al-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="cyberpunk" aria-pressed="true">cyberpunk</button>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="nostromo" aria-pressed="false">nostromo</button>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="terminal" aria-pressed="false">terminal</button>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="synthwave" aria-pressed="false">synthwave</button>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="formal" aria-pressed="false">formal</button>
+                <button type="button" class="kp-button kp-button--ghost" data-al-theme="light" aria-pressed="false">light</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="try">
+                <h2>Try it <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> press <b>Raise the alarm</b> in each theme. In the four sci-fi themes the screen goes dark red, the headline
+                    flickers in, each letter decodes through two noise glyphs into the words you typed, and a split copy slices through it once; the
+                    frame breathes slowly, the hazard bars march, a faint band sweeps down. In formal and light the same call gives the restrained
+                    version: a plain panel with two thick red rules and no flicker. With <b>Must be acknowledged</b>, only the button (click, Enter or
+                    Space) closes it; Escape does nothing unless you tick it, and clicking outside the text never closes it. With
+                    <b>Closes by itself</b>, the bar empties over the seconds you set, <b>Keep open</b> turns it into the acknowledged kind, and
+                    Escape closes it. After it closes, focus must be back on the button you pressed. Set <b>Motion</b> to still to see what a reader
+                    with reduced motion gets. The controls and the trigger are package classes; the alarm itself is the mock.
+                </div>
+                <form class="al-controls" id="al-form">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-title">Headline</label>
+                        <input class="kp-field__input" id="al-title" name="title" type="text" value="Access denied" maxlength="40" />
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-code">Code line (optional)</label>
+                        <input class="kp-field__input" id="al-code" name="code" type="text" value="Security protocol 7 · lockout" />
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-detail">Detail line (optional)</label>
+                        <input
+                            class="kp-field__input"
+                            id="al-detail"
+                            name="detail"
+                            type="text"
+                            value="Three failed attempts on terminal 4. This console is locked for ten minutes."
+                        />
+                    </div>
+                    <fieldset class="kp-fieldset">
+                        <legend class="kp-field__label">How it goes away</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="mode" value="ack" checked /> Must be acknowledged</label
+                        >
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="mode" value="auto" /> Closes by itself</label
+                        >
+                    </fieldset>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-seconds">Seconds before it closes</label>
+                        <input class="kp-field__input" id="al-seconds" name="seconds" type="number" min="2" max="60" step="1" value="8" />
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-action">Button label</label>
+                        <input class="kp-field__input" id="al-action" name="action" type="text" value="Acknowledge" />
+                    </div>
+                    <div class="kp-field kp-field--check">
+                        <input class="kp-field__check" id="al-escape" name="escape" type="checkbox" />
+                        <label class="kp-field__label" for="al-escape">Escape also closes an acknowledged alarm</label>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-drama">Drama</label>
+                        <select class="kp-field__input" id="al-drama" name="drama">
+                            <option value="theme" selected>What the theme proposes</option>
+                            <option value="full">Full, in every theme</option>
+                            <option value="restrained">Restrained, in every theme</option>
+                        </select>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="al-motion">Motion</label>
+                        <select class="kp-field__input" id="al-motion" name="motion">
+                            <option value="system" selected>Follow the system setting</option>
+                            <option value="still">Still, as under reduced motion</option>
+                        </select>
+                    </div>
+                </form>
+                <div class="kp-row" style="margin-block: 1rem">
+                    <button type="button" class="kp-button kp-button--destructive" id="al-raise">Raise the alarm</button>
+                    <button type="button" class="kp-button" data-al-preset="intrusion">Preset: intrusion, closes in 6 s</button>
+                    <button type="button" class="kp-button" data-al-preset="link">Preset: connection lost, closes in 5 s</button>
+                    <span id="al-result" class="kp-text-muted" role="status"></span>
+                </div>
+                <pre class="al-call" id="al-call" aria-label="The call this button makes"></pre>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="open-ack">
+                <h2>Opened: must be acknowledged, full drama <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the alarm frozen open in a 16:9 stage, in the page's theme but always in the full drama, with its motion running:
+                    the frame's glow breathing, the bars marching, the caret blinking, and every five seconds one short jitter with a slice through
+                    the headline. Check that the headline reads at a glance from across a room, that the detail line is clearly secondary, and that
+                    the button is the only thing that looks pressable. The code line takes the theme's mono face, the headline the theme's display
+                    face, so cyberpunk, terminal, synthwave and nostromo each look like their own film. This preview is inert: it cannot be clicked.
+                </div>
+                <div class="al-stage" aria-label="Preview of an acknowledged alarm">
+                    <div class="al-stage__page">
+                        <p>Terminal 4 · night shift log</p>
+                    </div>
+                    <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-drama="full" data-kp-alarm-mode="ack" inert>
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Security protocol 7 · lockout</p>
+                            <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Access denied">Access denied</span></h3>
+                            <p class="kp-alarm__detail">Three failed attempts on terminal 4. This console is locked for ten minutes.</p>
+                            <div class="kp-alarm__actions">
+                                <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Acknowledge</button>
+                                <span class="kp-alarm__hint">Press Enter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="open-auto">
+                <h2>Opened: closes by itself, the countdown <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same alarm in the auto mode, still, with the countdown frozen at five of eight seconds left. The bar shrinks
+                    from the right towards the start and the words under it count whole seconds; a screen reader hears "Closes by itself in 8 seconds"
+                    once, when it opens, and not each tick. <b>Keep open</b> is a quiet ghost button, because the point of this mode is that nobody
+                    has to touch it. Check that the bar reads as time running out and not as progress being made.
+                </div>
+                <div class="al-stage" aria-label="Preview of an alarm that closes by itself">
+                    <div class="al-stage__page">
+                        <p>East service door · access log</p>
+                    </div>
+                    <div
+                        class="kp-alarm"
+                        data-kp-alarm-inline
+                        data-kp-alarm-drama="full"
+                        data-kp-alarm-mode="auto"
+                        data-kp-alarm-motion="still"
+                        style="--kp-alarm-left: 0.625"
+                        inert
+                    >
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Perimeter · east wing</p>
+                            <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Intrusion detected">Intrusion detected</span></h3>
+                            <p class="kp-alarm__detail">Unrecognised key presented at the east service door. Security has been notified.</p>
+                            <div class="kp-alarm__countdown">
+                                <span class="kp-alarm__track"><span class="kp-alarm__fill"></span></span>
+                                <span class="kp-alarm__left">Closes in 5 s</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm kp-alarm__keep">Keep open</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="still">
+                <h2>Opened: reduced motion, still but striking <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> what a reader who asked the system for reduced motion gets: nothing moves, nothing blinks, the words are there at
+                    once without the decode, and the caret is a solid block. The drama is carried by what does not need time: the dark red plate, the
+                    glow at full strength, the frame, the hazard bars and the size of the words. It should still feel like an alarm and not like a
+                    dialog. The live trigger above shows the same with <b>Motion: still</b>.
+                </div>
+                <div class="al-stage" aria-label="Preview of an alarm under reduced motion">
+                    <div class="al-stage__page">
+                        <p>Reactor bay · maintenance console</p>
+                    </div>
+                    <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-drama="full" data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Override refused</p>
+                            <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Clearance required">Clearance required</span></h3>
+                            <p class="kp-alarm__detail">Coolant valves stay under supervisor control. Ask the shift lead for a level 3 key.</p>
+                            <div class="kp-alarm__actions">
+                                <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Understood</button>
+                                <span class="kp-alarm__hint">Press Enter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="themes">
+                <h2>Six themes side by side, as proposed <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each stage carries its own <code>data-theme</code>, so all six show at once regardless of the switcher, still, in
+                    the drama its theme proposes (the <code>--kp-alarm-drama</code> knob). Top row: cyberpunk, nostromo, terminal, synthwave in full
+                    drama; the plate, frame and headline are all derived from each theme's own <code>--destructive</code>, and the split colour from
+                    its <code>--primary</code>. Bottom row: formal and light, restrained: the page dims to its own background, a panel with two red
+                    rules, the headline in <code>--destructive</code> in the theme's display face. Judge whether restrained is still dramatic enough
+                    for these themes, or whether Kenny wants one dramatic look for all.
+                </div>
+                <div class="al-grid">
+                    <figure data-theme="cyberpunk">
+                        <div class="al-stage" aria-label="cyberpunk preview">
+                            <div class="al-stage__page"><p>Grid access · node 12</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">ICE breach · trace running</p>
+                                    <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Access denied">Access denied</span></h3>
+                                    <p class="kp-alarm__detail">Your deck was flagged. Disconnect before the trace completes.</p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Jack out</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>cyberpunk · full</figcaption>
+                    </figure>
+                    <figure data-theme="nostromo">
+                        <div class="al-stage" aria-label="nostromo preview">
+                            <div class="al-stage__page"><p>Ship systems · deck C</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">Special order 937</p>
+                                    <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Request denied">Request denied</span></h3>
+                                    <p class="kp-alarm__detail">Crew override is not accepted at this level of clearance.</p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Acknowledge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>nostromo · full</figcaption>
+                    </figure>
+                    <figure data-theme="terminal">
+                        <div class="al-stage" aria-label="terminal preview">
+                            <div class="al-stage__page"><p>ssh ops@build-07</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">sudo: 3 incorrect password attempts</p>
+                                    <h3 class="kp-alarm__title">
+                                        <span class="kp-alarm__glyphs" data-text="Permission denied">Permission denied</span>
+                                    </h3>
+                                    <p class="kp-alarm__detail">This incident has been reported to the administrator.</p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Close session</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>terminal · full</figcaption>
+                    </figure>
+                    <figure data-theme="synthwave">
+                        <div class="al-stage" aria-label="synthwave preview">
+                            <div class="al-stage__page"><p>Arcade cabinet · player 1</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">Mainframe · level 9</p>
+                                    <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="System failure">System failure</span></h3>
+                                    <p class="kp-alarm__detail">The core overheated. Insert a coin to reboot the grid.</p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Reboot</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>synthwave · full</figcaption>
+                    </figure>
+                    <figure data-theme="formal">
+                        <div class="al-stage" aria-label="formal preview">
+                            <div class="al-stage__page"><p>Client portal · statements</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">Account security</p>
+                                    <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Account locked">Account locked</span></h3>
+                                    <p class="kp-alarm__detail">Five sign-in attempts failed. We sent a reset link to the address on file.</p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">I understand</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>formal · restrained</figcaption>
+                    </figure>
+                    <figure data-theme="light">
+                        <div class="al-stage" aria-label="light preview">
+                            <div class="al-stage__page"><p>Team workspace · billing</p></div>
+                            <div
+                                class="kp-alarm"
+                                data-kp-alarm-inline
+                                data-kp-alarm-mode="ack"
+                                data-kp-alarm-motion="still"
+                                data-al-theme-drama
+                                inert
+                            >
+                                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                                <div class="kp-alarm__panel">
+                                    <p class="kp-alarm__code">Payment</p>
+                                    <h3 class="kp-alarm__title"><span class="kp-alarm__glyphs" data-text="Payment failed">Payment failed</span></h3>
+                                    <p class="kp-alarm__detail">
+                                        The card ending in 4417 was declined. The workspace becomes read-only in three days.
+                                    </p>
+                                    <div class="kp-alarm__actions">
+                                        <button type="button" class="kp-button kp-button--destructive kp-alarm__ack">Update the card</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption>light · restrained</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="api">
+                <h2>The API sketch: script, markup, React <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> whether the option names read naturally. The script version on this page is real and runs the trigger above; the
+                    markup is what it builds; the React component is a sketch only, not built or tested. All three share one vocabulary:
+                    <code>title</code>, <code>detail</code>, <code>code</code>, <code>mode</code> (<code>ack</code> or <code>auto</code>),
+                    <code>seconds</code>, <code>escape</code>, <code>action</code>, <code>drama</code>, <code>motion</code>. The promise resolves with
+                    why it closed: <code>ack</code>, <code>timeout</code> or <code>escape</code>.
+                </div>
+                <pre class="al-call">
+// js/alarm.js (proposed): framework-free
+import { showAlarm } from '@kp-soft/themes/js/alarm.js';
+
+const reason = await showAlarm({
+    title: 'Access denied',
+    detail: 'Three failed attempts on terminal 4. This console is locked for ten minutes.',
+    code: 'Security protocol 7 · lockout',
+    mode: 'ack',          // 'ack': a button must be pressed · 'auto': closes after `seconds`
+    seconds: 8,           // auto only
+    escape: false,        // ack only: may Escape close it too
+    action: 'Acknowledge',
+    drama: 'theme',       // 'theme' reads --kp-alarm-drama · 'full' · 'restrained'
+    motion: 'system',     // 'system' follows prefers-reduced-motion · 'still'
+});                       // resolves 'ack' | 'timeout' | 'escape'</pre>
+                <pre class="al-call">
+&lt;!-- What showAlarm() builds, appended to &lt;body&gt; and opened with showModal() --&gt;
+&lt;dialog class="kp-alarm" role="alertdialog" aria-modal="true"
+        aria-labelledby="kp-alarm-1-title" aria-describedby="kp-alarm-1-detail kp-alarm-1-when"
+        data-kp-alarm-mode="ack" data-kp-alarm-drama="full" closedby="none"&gt;
+  &lt;div class="kp-alarm__scan" aria-hidden="true"&gt;&lt;/div&gt;
+  &lt;div class="kp-alarm__bars" aria-hidden="true"&gt;&lt;/div&gt;
+  &lt;div class="kp-alarm__panel"&gt;
+    &lt;p class="kp-alarm__code"&gt;Security protocol 7 · lockout&lt;/p&gt;
+    &lt;h2 class="kp-alarm__title"&gt;
+      &lt;span class="kp-sr-only" id="kp-alarm-1-title"&gt;Access denied&lt;/span&gt;
+      &lt;span class="kp-alarm__glyphs" data-text="Access denied" aria-hidden="true"&gt;Access denied&lt;/span&gt;
+    &lt;/h2&gt;
+    &lt;p class="kp-alarm__detail" id="kp-alarm-1-detail"&gt;Three failed attempts …&lt;/p&gt;
+    &lt;p class="kp-sr-only" id="kp-alarm-1-when"&gt;Press Acknowledge to continue.&lt;/p&gt;
+    &lt;div class="kp-alarm__actions"&gt;
+      &lt;button class="kp-button kp-button--destructive kp-alarm__ack" autofocus&gt;Acknowledge&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="kp-alarm__countdown"&gt;…the bar, "Closes in 8 s", Keep open…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;</pre>
+                <pre class="al-call">
+// components/Alarm.jsx (sketch, not built): the same options as props
+export function Alarm({ open, title, detail, code, mode = 'ack', seconds = 8,
+                        escape = false, action = 'Acknowledge', drama = 'theme', onClose }) {
+    const ref = useRef(null);
+    useEffect(() =&gt; {
+        const dialog = ref.current;
+        if (!open || !dialog) return;
+        dialog.showModal();                       // top layer, page inert, focus trapped
+        const onCancel = (e) =&gt; { if (mode === 'ack' &amp;&amp; !escape) e.preventDefault(); else onClose('escape'); };
+        dialog.addEventListener('cancel', onCancel);
+        const timer = mode === 'auto' ? setTimeout(() =&gt; onClose('timeout'), seconds * 1000) : 0;
+        return () =&gt; { clearTimeout(timer); dialog.removeEventListener('cancel', onCancel); dialog.close(); };
+    }, [open, mode, seconds, escape]);
+    const id = useId();
+    return (
+        &lt;dialog ref={ref} className="kp-alarm" role="alertdialog" aria-labelledby={`${id}-t`}
+                aria-describedby={`${id}-d`} data-kp-alarm-mode={mode} data-kp-alarm-drama={useDrama(drama)}&gt;
+            &lt;div className="kp-alarm__panel"&gt;
+                {code &amp;&amp; &lt;p className="kp-alarm__code"&gt;{code}&lt;/p&gt;}
+                &lt;h2 className="kp-alarm__title" id={`${id}-t`}&gt;&lt;Decipher text={title} /&gt;&lt;/h2&gt;
+                &lt;p className="kp-alarm__detail" id={`${id}-d`}&gt;{detail}&lt;/p&gt;
+                {mode === 'ack'
+                    ? &lt;button className="kp-button kp-button--destructive kp-alarm__ack" autoFocus
+                              onClick={() =&gt; onClose('ack')}&gt;{action}&lt;/button&gt;
+                    : &lt;Countdown seconds={seconds} /&gt;}
+            &lt;/div&gt;
+        &lt;/dialog&gt;
+    );
+}</pre>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="flash">
+                <h2>The flash budget, as designed <span class="al-tag al-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> every animation the full drama runs, with how often it changes brightness. WCAG 2.3.1 allows at most three flashes
+                    in any one second, a flash being a pair of opposing brightness changes of 10% or more; red flashes are judged more strictly. The
+                    worst second is the first: the headline flickers in with three changes (0, 1, 0.3, 1), which is one and a half flashes. After that
+                    the whole alarm stays under one flash per second. The measured result from the Playwright run is in the README.
+                </div>
+                <table class="al-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Keyframes</th>
+                            <th scope="col">What changes</th>
+                            <th scope="col">How often</th>
+                            <th scope="col">Flashes per second</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>kp-alarm-ground-in</code></td>
+                            <td>the plate fades in</td>
+                            <td>once, 180 ms</td>
+                            <td>0 (one direction)</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-flicker-in</code></td>
+                            <td>the panel's opacity 0, 1, 0.3, 1 with a sideways shift</td>
+                            <td>once, 600 ms</td>
+                            <td>1.5, in the first second only</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-decode-letter</code>, <code>kp-alarm-decode-noise</code></td>
+                            <td>each letter cell: blank, a noise glyph, a second noise glyph, the letter</td>
+                            <td>once, 35 ms apart per cell</td>
+                            <td>1.5 per cell, ever; a cell is far under 341 x 256 px</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-slice-in</code>, <code>kp-alarm-slice</code></td>
+                            <td>two split copies of the headline shown in thin bands</td>
+                            <td>once on entry, then 200 ms every 5 s</td>
+                            <td>under 1 per pixel</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-jitter</code></td>
+                            <td>the headline dips to 0.6 and shifts</td>
+                            <td>once every 5 s</td>
+                            <td>0.2</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-pulse</code></td>
+                            <td>the frame's inner glow, 0.4 to 1</td>
+                            <td>one half-cycle per 1.4 s</td>
+                            <td>0.36</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-caret</code></td>
+                            <td>one character cell on and off</td>
+                            <td>once a second</td>
+                            <td>1, on one cell</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-march</code></td>
+                            <td>the hazard stripes move one period</td>
+                            <td>every 1.6 s</td>
+                            <td>0.63 per pixel, on a 0.9 rem bar</td>
+                        </tr>
+                        <tr>
+                            <td><code>kp-alarm-sweep</code></td>
+                            <td>an 8% tint band crossing the screen</td>
+                            <td>every 6 s</td>
+                            <td>under the 10% change</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // ================================================================
+            // MOCK: the proposed showAlarm(), written on this page. Reuses the
+            // package's applyTheme (the switcher) and GLYPHS (the decipher set
+            // js/effects.js already uses for headlines).
+            // ================================================================
+            import { applyTheme } from '../../js/theme-core.js';
+            import { GLYPHS } from '../../js/effects.js';
+
+            let serial = 0;
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+            /** The drama a theme proposes, from its --kp-alarm-drama knob. */
+            const themeDrama = (el = document.documentElement) =>
+                getComputedStyle(el).getPropertyValue('--kp-alarm-drama').trim() === 'full' ? 'full' : 'restrained';
+
+            /**
+             * Split the headline into letter cells for the CSS decode: each cell
+             * carries its place (--i) and two noise glyphs from the package's
+             * decipher set. Layout never changes, because the noise is drawn in
+             * pseudo-elements over a letter that is only made transparent.
+             */
+            function splitGlyphs(span, text) {
+                const pick = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                span.textContent = '';
+                let i = 0;
+                for (const part of text.split(/(\s+)/)) {
+                    if (!part) continue;
+                    if (/^\s+$/.test(part)) {
+                        span.append(part);
+                        i++;
+                        continue;
+                    }
+                    const word = el('span', 'kp-alarm__word');
+                    for (const ch of part) {
+                        const cell = el('span', 'kp-alarm__char', ch);
+                        cell.style.setProperty('--i', String(i++));
+                        cell.dataset.n1 = pick();
+                        cell.dataset.n2 = pick();
+                        word.append(cell);
+                    }
+                    span.append(word);
+                }
+            }
+
+            function el(tag, className, text) {
+                const node = document.createElement(tag);
+                if (className) node.className = className;
+                if (text != null) node.textContent = text;
+                return node;
+            }
+
+            /**
+             * Raise a full-screen alarm.
+             * @param {{ title: string, detail?: string, code?: string, mode?: 'ack'|'auto', seconds?: number,
+             *           escape?: boolean, action?: string, drama?: 'theme'|'full'|'restrained', motion?: 'system'|'still' }} options
+             * @returns {Promise<'ack'|'timeout'|'escape'>}
+             */
+            function showAlarm({
+                title,
+                detail = '',
+                code = '',
+                mode = 'ack',
+                seconds = 8,
+                escape = false,
+                action = 'Acknowledge',
+                drama = 'theme',
+                motion = 'system',
+            } = {}) {
+                const id = `kp-alarm-${++serial}`;
+                const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+                const still = motion === 'still' || reducedMotion.matches;
+                const auto = mode === 'auto';
+                const secs = Math.max(1, Number(seconds) || 8);
+
+                const dialog = el('dialog', 'kp-alarm');
+                dialog.id = id;
+                dialog.setAttribute('role', 'alertdialog');
+                dialog.setAttribute('aria-modal', 'true');
+                dialog.setAttribute('aria-labelledby', `${id}-title`);
+                dialog.setAttribute('aria-describedby', `${detail ? `${id}-detail ` : ''}${id}-when`);
+                dialog.dataset.kpAlarmMode = auto ? 'auto' : 'ack';
+                dialog.dataset.kpAlarmDrama = drama === 'theme' ? themeDrama() : drama;
+                if (still) dialog.dataset.kpAlarmMotion = 'still';
+                dialog.setAttribute('closedby', auto || escape ? 'closerequest' : 'none');
+
+                const panel = el('div', 'kp-alarm__panel');
+                dialog.append(el('div', 'kp-alarm__scan'), el('div', 'kp-alarm__bars'), panel);
+                for (const layer of dialog.querySelectorAll('.kp-alarm__scan, .kp-alarm__bars')) layer.setAttribute('aria-hidden', 'true');
+
+                if (code) panel.append(el('p', 'kp-alarm__code', code));
+                const heading = el('h2', 'kp-alarm__title');
+                const name = el('span', 'kp-sr-only', title);
+                name.id = `${id}-title`;
+                const glyphs = el('span', 'kp-alarm__glyphs', title);
+                glyphs.dataset.text = title;
+                glyphs.setAttribute('aria-hidden', 'true');
+                splitGlyphs(glyphs, title);
+                heading.append(name, glyphs);
+                panel.append(heading);
+                const detailEl = el('p', 'kp-alarm__detail', detail);
+                detailEl.id = `${id}-detail`;
+                panel.append(detailEl);
+                const when = el('p', 'kp-sr-only', auto ? `Closes by itself in ${secs} seconds.` : `Press ${action} to continue.`);
+                when.id = `${id}-when`;
+                panel.append(when);
+
+                const actions = el('div', 'kp-alarm__actions');
+                const ack = el('button', 'kp-button kp-button--destructive kp-alarm__ack', action);
+                ack.type = 'button';
+                actions.append(ack, el('span', 'kp-alarm__hint', 'Press Enter'));
+                actions.lastChild.setAttribute('aria-hidden', 'true');
+                panel.append(actions);
+
+                const countdown = el('div', 'kp-alarm__countdown');
+                const track = el('span', 'kp-alarm__track');
+                track.append(el('span', 'kp-alarm__fill'));
+                track.setAttribute('aria-hidden', 'true');
+                const left = el('span', 'kp-alarm__left', `Closes in ${secs} s`);
+                left.setAttribute('aria-hidden', 'true');
+                const keep = el('button', 'kp-button kp-button--ghost kp-button--sm kp-alarm__keep', 'Keep open');
+                keep.type = 'button';
+                countdown.append(track, left, keep);
+                panel.append(countdown);
+
+                if (auto) {
+                    // The dialog itself takes focus, so nothing is pressed by
+                    // an Enter meant for the page; Tab reaches Keep open.
+                    dialog.tabIndex = -1;
+                    dialog.autofocus = true;
+                } else {
+                    ack.autofocus = true;
+                }
+
+                return new Promise((resolve) => {
+                    let reason = 'escape';
+                    let timer = 0;
+                    const close = (why) => {
+                        reason = why;
+                        if (dialog.open) dialog.close(why);
+                    };
+
+                    ack.addEventListener('click', () => close('ack'));
+                    keep.addEventListener('click', () => {
+                        clearInterval(timer);
+                        dialog.dataset.kpAlarmMode = 'ack';
+                        dialog.setAttribute('closedby', escape ? 'closerequest' : 'none');
+                        when.textContent = `Kept open. Press ${action} to continue.`;
+                        ack.focus();
+                    });
+                    // Escape: allowed in auto mode, and in ack mode only when asked.
+                    const escapeAllowed = () => dialog.dataset.kpAlarmMode === 'auto' || escape;
+                    dialog.addEventListener('cancel', (event) => {
+                        if (!escapeAllowed()) event.preventDefault();
+                        else reason = 'escape';
+                    });
+                    dialog.addEventListener('keydown', (event) => {
+                        if (event.key === 'Escape' && !escapeAllowed()) event.preventDefault();
+                    });
+                    dialog.addEventListener('close', () => {
+                        clearInterval(timer);
+                        dialog.remove();
+                        if (trigger?.isConnected) trigger.focus();
+                        dialog.dispatchEvent(new CustomEvent('kp-alarm-close', { bubbles: true, detail: { reason } }));
+                        document.dispatchEvent(new CustomEvent('kp-alarm-close', { detail: { reason, id } }));
+                        resolve(/** @type {any} */ (reason));
+                    });
+
+                    document.body.append(dialog);
+                    dialog.showModal();
+
+                    if (auto) {
+                        const total = secs * 1000;
+                        const began = performance.now();
+                        const tick = () => {
+                            const remaining = Math.max(0, total - (performance.now() - began));
+                            const whole = Math.ceil(remaining / 1000);
+                            const share = still ? whole / secs : remaining / total;
+                            dialog.style.setProperty('--kp-alarm-left', String(share));
+                            left.textContent = `Closes in ${whole} s`;
+                            if (remaining <= 0) close('timeout');
+                        };
+                        timer = setInterval(tick, 100);
+                        tick();
+                    }
+                });
+            }
+            window.showAlarm = showAlarm;
+
+            // ── The page's controls ────────────────────────────────────────
+            const form = document.getElementById('al-form');
+            const call = document.getElementById('al-call');
+            const result = document.getElementById('al-result');
+            const readOptions = () => {
+                const data = new FormData(form);
+                const mode = data.get('mode') === 'auto' ? 'auto' : 'ack';
+                const options = {
+                    title: String(data.get('title') || 'Access denied'),
+                    detail: String(data.get('detail') || ''),
+                    code: String(data.get('code') || ''),
+                    mode,
+                };
+                if (mode === 'auto') options.seconds = Number(data.get('seconds')) || 8;
+                else {
+                    options.escape = data.get('escape') === 'on';
+                    options.action = String(data.get('action') || 'Acknowledge');
+                }
+                if (data.get('drama') !== 'theme') options.drama = String(data.get('drama'));
+                if (data.get('motion') === 'still') options.motion = 'still';
+                return options;
+            };
+            const showCall = () => {
+                call.textContent = `showAlarm(${JSON.stringify(readOptions(), null, 4)});`;
+            };
+            form.addEventListener('input', showCall);
+            form.addEventListener('change', showCall);
+            showCall();
+
+            const raise = async (options) => {
+                result.textContent = '';
+                const reason = await showAlarm(options);
+                result.textContent = `Closed: ${reason}`;
+            };
+            document.getElementById('al-raise').addEventListener('click', () => raise(readOptions()));
+            const PRESETS = {
+                intrusion: {
+                    title: 'Intrusion detected',
+                    code: 'Perimeter · east wing',
+                    detail: 'Unrecognised key presented at the east service door. Security has been notified.',
+                    mode: 'auto',
+                    seconds: 6,
+                },
+                link: {
+                    title: 'Connection lost',
+                    code: 'Telemetry',
+                    detail: 'The link to pump house 4 dropped at 02:14. Readings shown are the last known values.',
+                    mode: 'auto',
+                    seconds: 5,
+                },
+            };
+            for (const button of document.querySelectorAll('[data-al-preset]')) {
+                button.addEventListener('click', () => {
+                    const motion = form.elements.motion.value === 'still' ? { motion: 'still' } : {};
+                    raise({ ...PRESETS[button.dataset.alPreset], ...motion });
+                });
+            }
+
+            // ── Previews that take their theme's proposed drama ────────────
+            for (const preview of document.querySelectorAll('[data-al-theme-drama]')) {
+                preview.dataset.kpAlarmDrama = themeDrama(preview.closest('[data-theme]'));
+            }
+
+            // ── Mock theme switcher, through the package's applyTheme ──────
+            const buttons = [...document.querySelectorAll('[data-al-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.alTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.alTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        </script>
+    </body>
+</html>

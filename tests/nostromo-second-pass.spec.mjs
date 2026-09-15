@@ -305,6 +305,8 @@ test(
     'a button hovered in a toast takes a shade of that toast’s own colour and reads at 4.5:1, in every theme [note 4]',
     { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
     async ({ page }) => {
+        // A sweep over 22 themes; under a parallel run it needs more than the default 30 s.
+        test.setTimeout(120_000);
         // Before: the theme's standard ghost hover — nostromo painted rgb(225, 215, 199) on the info, destructive and success plates alike.
         await open(page, '/catalogue/feedback.html');
         await raiseToasts(page);
