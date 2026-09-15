@@ -407,7 +407,7 @@ test(
  * inside an open alarm, motion on, in all 22 themes.
  */
 const GLITCH = [
-    'kp-alarm-flicker-in',
+    'kp-alarm-cyberpunk-flicker',
     'kp-alarm-jitter',
     'kp-alarm-slice-in',
     'kp-alarm-slice',
@@ -458,16 +458,12 @@ test('the glitch and the flicker run only in cyberpunk, in all 22 themes [scope-
  * the same arithmetic as reports/di5.md) and must read under 2.5 opposing
  * changes a second, a margin under WCAG's three.
  *
- * FINDING for Kenny, not corrected: kp-alarm-flicker-in (0 -> 1 -> 0.3 -> 1
- * in 600 ms, once) reads 3.00/s — the whole WCAG budget of its second, as its
- * TIMINGS comment has said since scope-94. Bringing it under 2.5 means a
- * shallower dip, which changes cyberpunk's approved alarm; the rendered
- * measurement below holds it at 2 per second or under. Marked as an expected
- * failure so the finding stays visible and a change to the keyframe turns
- * this red.
+ * Until scope-100 the package's kp-alarm-flicker-in (0 -> 1 -> 0.3 -> 1 in
+ * 600 ms, once) read 3.00/s here and the test was marked as an expected
+ * failure. Kenny: "Ondieper, en opnieuw kijken" — cyberpunk's own
+ * kp-alarm-cyberpunk-flicker (0 -> 0.6 -> 0.52 -> 1) reads 1.00/s.
  */
-test('the DI5 report rates every flicker cyberpunk keeps under 2.5 per second [scope-98]', { tag: ['@component:alarm'] }, async () => {
-    test.fail(true, 'finding: kp-alarm-flicker-in reads 3.00/s in the DI5 report; under 2.5 needs a change to the approved cyberpunk alarm');
+test('the DI5 report rates every flicker cyberpunk keeps under 2.5 per second [scope-98, scope-100]', { tag: ['@component:alarm'] }, async () => {
     const { TIMINGS } = await import('../js/effects.js');
     const { flashesPerSecond } = await import('../gates/check-motion.mjs');
     /** @type {string[]} */

@@ -582,9 +582,8 @@ var TIMINGS = Object.freeze({
   // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
   "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
   // The alarm [scope-94]: the plate fading in, the frame's glow breathing
-  // (one half-cycle per 1.4 s), the panel flickering in once (0, 1, 0.3, 1:
-  // three changes in the first second, the whole budget of that second and
-  // no more), each letter cell's two noise glyphs and its letter (once per
+  // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
+  // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per
   // cell), the split copies slicing through once and then every 5 s, the
   // headline's short dip every 5 s, the detail line fading in, the caret,
   // the hazard stripes marching and the faint band sweeping down. Measured
@@ -597,7 +596,10 @@ var TIMINGS = Object.freeze({
   "kp-alarm-settle": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-alarm-arrive": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-alarm-pulse": { durationMs: 1400, cycles: Infinity, property: "opacity", luminanceSteps: [0.4, 1] },
-  "kp-alarm-flicker-in": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 0.3, 1, 1] },
+  // Cyberpunk's panel striking like a failing tube [scope-100], in its
+  // register: 0, 0.6, a sag to 0.52 under the 10% step, 1 — one direction,
+  // where the package's kp-alarm-flicker-in (0, 1, 0.3, 1) read 3.00/s.
+  "kp-alarm-cyberpunk-flicker": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 0.52, 1, 1] },
   "kp-alarm-jitter": { durationMs: 5e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0.6, 1] },
   "kp-alarm-slice-in": { durationMs: 600, cycles: 1, property: "clip-path", luminanceSteps: [] },
   "kp-alarm-slice": { durationMs: 5e3, cycles: Infinity, property: "clip-path", luminanceSteps: [] },

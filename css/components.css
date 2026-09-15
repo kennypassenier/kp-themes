@@ -5110,10 +5110,11 @@
  * scanlines and the sweeping band (.kp-alarm__scan, a vignette alone by
  * default; its ::after has no content), and the hazard stripes (a
  * transparent --kp-alarm-stripe by default); and the keyframes
- * kp-alarm-flicker-in, kp-alarm-jitter, kp-alarm-slice-in, kp-alarm-slice,
- * kp-alarm-decode-letter, kp-alarm-decode-noise, kp-alarm-caret,
- * kp-alarm-march and kp-alarm-sweep. tests/alarm.spec.mjs holds that they run
- * in cyberpunk alone.
+ * kp-alarm-jitter, kp-alarm-slice-in, kp-alarm-slice, kp-alarm-decode-letter,
+ * kp-alarm-decode-noise, kp-alarm-caret, kp-alarm-march and kp-alarm-sweep.
+ * The panel's flicker is cyberpunk's own keyframe since scope-100
+ * (kp-alarm-cyberpunk-flicker, in its register). tests/alarm.spec.mjs holds
+ * that they run in cyberpunk alone.
  *
  * The knobs [KT6], the colours defaulting to the prototype's dark plate:
  * --kp-alarm-ground (the plate), --kp-alarm-ink (the headline, the frame,
@@ -5436,7 +5437,7 @@
      *   kp-alarm-arrive       the headline, whole, 0 -> 1 from a larger size, once
      *   kp-alarm-detail-in    the reason, 0 -> 1, once
      *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
-     * The glitch keyframes below (flicker-in, jitter, slice-in, slice,
+     * The glitch keyframes below (jitter, slice-in, slice,
      * decode-letter, decode-noise, caret, march, sweep) run only where a
      * register names them. Under reduced motion nothing runs: the words are
      * there at once, and the drama is the plate, the glow at full strength,
@@ -5505,27 +5506,6 @@
     @keyframes kp-alarm-pulse {
         0% {
             opacity: 0.4;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes kp-alarm-flicker-in {
-        0% {
-            opacity: 0;
-        }
-        18% {
-            opacity: 1;
-            translate: -0.6% 0;
-        }
-        30% {
-            opacity: 0.3;
-            translate: 0.8% 0;
-        }
-        42% {
-            opacity: 1;
-            translate: 0 0;
         }
         100% {
             opacity: 1;

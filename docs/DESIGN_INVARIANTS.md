@@ -626,17 +626,18 @@ through the hole. Reported, not refused, and over far more than six
 animations: the reading covers the eighty-three effects in `TIMINGS` plus every
 register keyframe, and it runs in `npm run advice`. A register may name a
 keyframe another stylesheet declares — since scope-98 cyberpunk's alarm names
-the package's `kp-alarm-flicker-in`, `kp-alarm-jitter` and
+the package's `kp-alarm-jitter`, `kp-alarm-caret` and
 `kp-alarm-decode-noise` — and the reading resolves that name across every
 stylesheet it reads, the file's own keyframe first; before scope-98 it read
 keyframes only from the file that used them and reported such a register as
 unmeasurable. The alarm (scope-94) is also measured from rendered frames in
 `tests/alarm.spec.mjs`, in eight themes, and held at two flashes a second.
 Since scope-98 its flicker, decode and split run in cyberpunk alone; the
-package's default arrives whole. The DI5 report rates `kp-alarm-flicker-in`
-at 3.00 per second, the whole budget of the second it plays in — a finding
-held in `tests/alarm.spec.mjs` for Kenny, not corrected, because a shallower
-dip would change cyberpunk's approved alarm.
+package's default arrives whole. The DI5 report rated the package's
+`kp-alarm-flicker-in` (0, 1, 0.3, 1) at 3.00 per second, the whole budget of
+the second it played in; since scope-100 ("Ondieper, en opnieuw kijken") the
+panel runs cyberpunk's own `kp-alarm-cyberpunk-flicker` (0, 0.6, a sag to
+0.52, 1), which the report rates at 1.00 per second.
 
 ## What changed on 2026-09-04, and what it cost
 

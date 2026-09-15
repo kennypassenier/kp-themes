@@ -34,7 +34,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-alarm-settle` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-alarm-arrive` | opacity | 480 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-alarm-pulse` | opacity | 1400 ms | loops | 0.4 → 1 | 0.71/s | under |
-| `kp-alarm-flicker-in` | opacity | 600 ms | 1× | 0 → 1 → 0.3 → 1 → 1 | 3.00/s | under |
+| `kp-alarm-cyberpunk-flicker` | opacity | 600 ms | 1× | 0 → 0.6 → 0.52 → 1 → 1 | 1.00/s | under |
 | `kp-alarm-jitter` | opacity | 5000 ms | loops | 1 → 1 → 0.6 → 1 | 0.40/s | under |
 | `kp-alarm-slice-in` | clip-path | 600 ms | 1× | — | 0.00/s | under |
 | `kp-alarm-slice` | clip-path | 5000 ms | loops | — | 0.00/s | under |

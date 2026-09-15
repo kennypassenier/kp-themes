@@ -346,8 +346,8 @@
                 ]
             },
             "attention": {
-                "description": "The alarm: blood red on the void with the signal-yellow split and hazard bars, running the package's flicker-in, decode, slice and marching bars in this theme's colours. Smaller asks keep to the edge: a 3px left edge on a toast or an alert, '!! ' before an error.",
-                "duration": "600ms flicker-in, 1400ms breathing glow, 1600ms march",
+                "description": "The alarm: blood red on the void with the signal-yellow split and hazard bars, striking on like a failing tube (a catch at 60%, a sag with a sideways kick, full), then the package's decode, slice and marching bars in this theme's colours. Smaller asks keep to the edge: a 3px left edge on a toast or an alert, '!! ' before an error.",
+                "duration": "600ms tube strike, 1400ms breathing glow, 1600ms march",
                 "easing": "steps(1, end) flicker; ease-in-out glow; linear march",
                 "reducedMotion": "The plate, frame, bars and glow at full strength; nothing moves.",
                 "open": false,
@@ -355,7 +355,7 @@
                 "demo": { "kind": "restamp", "example": "alarm" },
                 "proof": [
                     { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-alarm" },
-                    { "file": "css/components.css", "keyframes": "kp-alarm-flicker-in" },
+                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-alarm-cyberpunk-flicker" },
                     { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field__error::before" }
                 ]
             }

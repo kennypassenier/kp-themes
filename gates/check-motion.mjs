@@ -354,7 +354,7 @@ export function tableProblems(source, timings) {
 /**
  * The opacity keyframes a stylesheet can reach: its own first, then every
  * other stylesheet's [scope-98]. A register may name a keyframe the package
- * declares — cyberpunk's alarm names kp-alarm-flicker-in, kp-alarm-jitter and
+ * declares — cyberpunk's alarm names kp-alarm-jitter, kp-alarm-caret and
  * kp-alarm-decode-noise from css/components.css — and the cascade resolves
  * that name across files. Until scope-98 this gate read keyframes only from
  * the file that used them, so such a register was reported as animating
