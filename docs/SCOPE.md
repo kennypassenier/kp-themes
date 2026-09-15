@@ -1528,3 +1528,13 @@ thema van de intro": on `catalogue/intros.html` each block records its verdict
 under its own theme, whatever the page wears, and shows that theme beside its
 buttons. bar-sticky-look "Nog niet gekeken": asked again. step-timing
 "Akkoord".
+
+**scope-87 · Option B starts; the futuristic layouts are dropped.** Kenny,
+2026-09-15, the next-round form. next-round "Optie B": the round of
+`scope-80` begins — headings, labels, tabs, badges and navigation links take
+package sizes a register may not override (e-scope "Met B" of `scope-83`), and
+`gates/box-metrics.test.mjs` refuses a register that sets them. His remark:
+"futuristische layouts gaan we volledig schrappen" — `scope-49` (HUD
+brackets, dispatch console, LCARS elbow frame, case file) is withdrawn and
+nothing of it is built; `research/futuristic/` stays under "Archived research"
+as the record of what was considered.

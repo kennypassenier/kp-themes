@@ -1,5 +1,7 @@
 # Futuristic interface layouts — FUI research
 
+> **Withdrawn 2026-09-15 (scope-87):** Kenny dropped the futuristic layouts; nothing of this finding is built. Kept as the record of what was considered.
+
 Researched 2026-09-13 for kp-themes. FUI ("fantasy" or "fictional user
 interfaces") is the film and television craft of screens that must read
 in a second from across a set. This note extracts what actually defines
