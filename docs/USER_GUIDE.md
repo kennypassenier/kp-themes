@@ -373,6 +373,16 @@ The keyboard behaviour is the browser's, not ours: `<dialog>` traps focus,
 closes on Escape and returns focus to whatever opened it. A hand-written
 focus trap is how focus traps break, so there is none here.
 
+Both channels also say whether an overlay's box scrolls: `attachScrollbars`
+(in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and
+`Tooltip`) keeps `data-kp-popover-overflowing` on a `.kp-popover`, `.kp-dialog` or
+`.kp-dialog__body` while its content is taller than the box, with
+`--kp-scroll-view`, `--kp-scroll-ratio` and `--kp-scroll-progress` beside it.
+It draws nothing. A register that draws its own scrollbar reads them —
+retro does, the 1995 bar disabled until the box scrolls — and declares
+`--kp-scrollbar-size`, `--kp-scrollbar-inset` and `--kp-scrollbar-button`
+so a press on the drawn arrows, track and thumb scrolls the box.
+
 ## The date picker's month and year grids [scope-89]
 
 The calendar's title is a button in both channels. Pressing it (a click,

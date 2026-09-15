@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { revealTab, TOAST_MS, watchTabOverflow } from '../js/overlays.js';
+import { revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -91,6 +91,18 @@ function DialogInner(
         }
         if (!open && dialog.open) dialog.close();
     }, [open, modal, initialFocus]);
+
+    // Whether the dialog or its body scrolls, for a register that draws its
+    // own scrollbar (js/overlays.js watchScrollbar) [retro notes, 2026-09-15].
+    useEffect(() => {
+        const dialog = inner.current;
+        if (!dialog) return undefined;
+        const body = /** @type {HTMLElement | null} */ (dialog.querySelector(':scope > .kp-dialog__body'));
+        const stops = [watchScrollbar(dialog), ...(body ? [watchScrollbar(body)] : [])];
+        return () => {
+            for (const stop of stops) stop();
+        };
+    }, []);
 
     /** @param {'escape' | 'close' | 'action'} reason */
     const close = (reason) => {
@@ -209,6 +221,7 @@ function DropdownMenuInner(
         popover.addEventListener('toggle', onToggle);
         return () => popover.removeEventListener('toggle', onToggle);
     }, [onOpenChange]);
+    useEffect(() => (inner.current ? watchScrollbar(inner.current) : undefined), []);
     useEffect(() => {
         const popover = inner.current;
         if (!popover || openProp === undefined) return;
@@ -322,6 +335,9 @@ function TooltipInner(
     const inner = useRef(null);
     useImperativeHandle(ref, () => /** @type {HTMLElement} */ (inner.current), []);
     useEffect(() => () => clearTimeout(timer.current), []);
+    /** @type {import('react').RefObject<HTMLSpanElement | null>} */
+    const tip = useRef(null);
+    useEffect(() => (tip.current ? watchScrollbar(tip.current) : undefined), []);
     /** @param {boolean} next @param {number} delay */
     const schedule = (next, delay) => {
         clearTimeout(timer.current);
@@ -353,6 +369,7 @@ function TooltipInner(
                 {children}
             </span>
             <span
+                ref={tip}
                 role="tooltip"
                 id={id}
                 hidden={!shown}

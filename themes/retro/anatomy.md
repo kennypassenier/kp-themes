@@ -148,6 +148,25 @@ two-pixel checkerboard at 4%, the dither every gradient was — and the
 register reads tokens only, with relative colours for the navy bevel
 and the label's teal; `gates/check-layers.mjs` holds it there.
 
+## Kenny's notes of 2026-09-15
+
+Four notes from his review in FireDragon, each answered in
+`css/retro-register.css` and held by `tests/retro-notes.spec.mjs`:
+
+- **A press moves the label, never the row.** The pressed control is
+  translated one pixel and its face is repainted a pixel back by
+  `::before`, so the box and its neighbours keep their place; the step
+  used to be a pixel of padding that widened the button and pushed the row.
+- **A legend sits in its groove, not under it.** A fieldset with a legend
+  draws no top edge; the legend draws it left and right of its words.
+- **A window's scrollbar is the whole 1995 bar.** Arrows, the dithered
+  track and a thumb, on the one box that scrolls — disabled and embossed
+  grey until `js/overlays.js` says the content is taller than the box. It
+  replaced a stray copy of the select's arrow button that a merged
+  selector list had put on every overlay.
+- **The side navigation has the menu strip's ground**, `--background`,
+  where its links read at 9.46:1 instead of 2.81:1 on `--input`.
+
 ## What it deliberately does not do
 
 - **No Y2K.** No chrome gradient, no iridescence, no candy.

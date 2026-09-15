@@ -23,7 +23,7 @@ import {
     attachToTop,
     enforceContracts,
 } from './components.js';
-import { attachDialogs, attachDismissals, attachTabs, attachTooltips } from './overlays.js';
+import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTooltips } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachComboboxes, attachSelects } from './combobox.js';
 import { attachPalettes } from './palette.js';
@@ -59,6 +59,7 @@ export function attachAll(root = document) {
         attachDialogs(root),
         attachDismissals(root),
         attachTooltips(root),
+        attachScrollbars(root),
         attachTabs(root),
         attachThemePickers(root),
         attachComboboxes(root),

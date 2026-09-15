@@ -569,22 +569,53 @@
 
     /* Pressed: the bevel inverts and the label steps one pixel down and
        right, the way the original's did. No transition: --fx-duration is 0.
-       The button's box is the package's and centres its label [scope-80]:
-       a pixel moved from the bottom padding to the top moves the label one
-       and keeps the box's height; the icon button's own box still takes
-       the old step. */
+
+       The step is painted, never laid out (Kenny's retro notes,
+       2026-09-15: "reserve the space for the button so it doesn't shift the
+       actual interface"). It used to be a pixel of extra start padding, and
+       measured on catalogue/button.html#variants that pixel widened the
+       pressed button by 1px and pushed every button after it in the row
+       1px along, in both engines; a small or large button took the default
+       button's padding outright (+7px and -9px), and in a baseline row the
+       moved label moved the row's baseline. Now nothing of the box's
+       metrics changes on press. The whole control is translated one pixel
+       down and right — paint only, so its layout box and its neighbours
+       stay where they were — and the face is put back where it was at rest:
+       the control's own ground, border and bevel are hidden (the ground
+       clipped to the glyphs it sits under, the border replaced by a clear
+       border image, the shadow dropped), and `::before` repaints them one
+       pixel up and left, inheriting the ground and the border colour from
+       the control, so every variant and every consumer colour keeps its
+       own. What is left moving is exactly what moved in 1995: the label,
+       an icon, the accelerator's mark.
+
+       Two cheaper ways were measured and refused. A text shadow with the
+       glyphs' fill cleared draws nothing in firefox, which resolves
+       `currentcolor` in a text shadow to the cleared fill; and any padding
+       or border moved from one side to the other moves the label's
+       baseline, which moves the whole row in a baseline-aligned row
+       (catalogue/button.html#sizes). The face assumes the border of 1px
+       this register gives every button above. The control's own face is
+       hidden by the last rule of this file, after every rule that paints a
+       button's ground, because a `background` shorthand resets the clip. */
     [data-theme='retro'] .kp-button:active:not(:disabled),
     [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
-        box-shadow: var(--kp-pressed);
-        padding-inline-start: calc(0.875rem + 1px);
+        --kp-retro-press: var(--kp-pressed);
+        translate: 1px 1px;
     }
 
-    [data-theme='retro'] .kp-button:active:not(:disabled) {
-        padding-block: calc(var(--kp-space-xs) + 1px) max(0px, calc(var(--kp-space-xs) - 1px));
-    }
-
-    [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
-        padding-block-start: calc(0.375rem + 1px);
+    [data-theme='retro'] .kp-button:active:not(:disabled)::before,
+    [data-theme='retro'] .kp-icon-button:active:not(:disabled)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -2px 0 0 -2px;
+        box-sizing: border-box;
+        background-color: inherit;
+        border: 1px solid;
+        border-color: inherit;
+        box-shadow: var(--kp-retro-press);
+        pointer-events: none;
     }
 
     /* The default button: the navy fill with its own bevel. The mirror
@@ -618,8 +649,9 @@
             var(--kp-raised-navy);
     }
 
+    /* The pressed bevel is painted by the face `::before` redraws (above). */
     [data-theme='retro'] .kp-button--primary:active:not(:disabled) {
-        box-shadow: var(--kp-pressed-navy);
+        --kp-retro-press: var(--kp-pressed-navy);
     }
 
     /* Destructive: a face button whose label is the alert colour, the way
@@ -767,6 +799,78 @@
             inset -2px -2px 0 0 var(--border-strong);
     }
 
+    /* …and the caption on the groove, the way a 1995 group box cut its
+       line for the words (Kenny's retro notes, 2026-09-15, field.html#narrow:
+       "the text 'Is anyone at risk?' is struck through by the border of
+       the box below it"). A fieldset paints its box from the middle of its
+       legend down, and the groove above is a set of inset shadows, which —
+       unlike a border — no browser interrupts behind a legend: the two top
+       hairlines ran through the middle of the caption's letters. Measured
+       in firefox and chromium: the dark hairline crossed "Is anyone at
+       risk?" 10.8px below the legend's top, on a legend 21.6px tall.
+
+       So a fieldset with a legend draws no top edge of its own — its other
+       three edges are the same pixels as background layers, because inset
+       shadows whose top meets a box top at a fractional position leave a
+       faint antialiased seam across it (measured 168 against 185 on a
+       ground of 191 in firefox) — and the legend draws the top edge instead, left and right of its words: the legend
+       spans the fieldset's whole width, its words sit where they sat, and
+       its two pseudo-elements are the hairlines, each placed at 50% of the
+       legend's height — the same line the fieldset's box starts on. A
+       ground colour behind the words, the usual answer, would show as a
+       flat patch on this theme's dithered ground. */
+    [data-theme='retro'] .kp-fieldset:has(> legend) {
+        box-shadow: none;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right top / 1px 100% no-repeat,
+            linear-gradient(var(--popover), var(--popover)) left bottom / 100% 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) left 1px top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) right 1px top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom 1px / 100% 1px no-repeat;
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend {
+        display: flex;
+        align-items: baseline;
+        column-gap: 3px;
+        box-sizing: border-box;
+        inline-size: calc(100% + 2rem);
+        margin-inline: -1rem;
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::before,
+    [data-theme='retro'] .kp-fieldset > legend::after {
+        content: '';
+        flex: 1 1 0;
+        align-self: stretch;
+        min-inline-size: 3px;
+        background:
+            linear-gradient(to bottom, transparent 50%, var(--border-strong) 50% calc(50% + 2px), transparent calc(50% + 2px)) left / 1px 100%
+                no-repeat,
+            linear-gradient(
+                to bottom,
+                transparent 50%,
+                var(--border-strong) 50% calc(50% + 1px),
+                var(--popover) calc(50% + 1px) calc(50% + 2px),
+                transparent calc(50% + 2px)
+            );
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::before {
+        flex: 0 0 calc(1rem - 3px);
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::after {
+        background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            var(--border-strong) 50% calc(50% + 1px),
+            var(--popover) calc(50% + 1px) calc(50% + 2px),
+            transparent calc(50% + 2px)
+        );
+    }
+
     /* The switch [gap-11], in the checkbox's voice: a sunken square well on
        the popover, a square thumb, and the title bar's primary once on.
        The ring keeps the bevel under it, as the check's does. */
@@ -895,15 +999,243 @@
         clip-path: inset(0 0 0 0);
     }
 
-    /* Windows: raised chrome with the hard shadow; a dialog carries the
-       title bar. */
-    [data-theme='retro'] .kp-dialog,
-    [data-theme='retro'] .kp-popover,
+    /* ── The scrollbar of a window [retro notes, 2026-09-15] ────────────
+       Kenny, on overlays.html#confirm, #menu, #menu-extremes and #tooltip:
+       "it should be the whole scrollbar, greyed out so it's obvious that it
+       can't be used, just like a disabled scrollbar in old Windows OSes",
+       and for a menu "disabled if there is no actual scroll and enabled if
+       you can scroll", "not double".
+
+       What he saw was not a scrollbar. Since 27384cd (S49, A12) the rule
+       for the combo button below had started in the middle of this one's
+       selector list: the windows' own declarations were gone, and every
+       dialog, popover, menu, toast, tooltip, confirmation and date panel
+       wore the select's painted arrow button at its end with 2.1rem of
+       padding for it — twice on a menu, whose popover and list both
+       matched. Measured in firefox: 33.6px of end padding and the arrow's
+       background-image on all seven. The selector list is gone; what the
+       windows lost with it (the ground, the drop shadow) is not put back
+       here, because the dialogs, toasts and date panels as they are now
+       were approved in that state.
+
+       The bar is the 1995 one, whole: an arrow button at each end, the
+       2×2 dithered track between them, and a raised thumb sized and placed
+       by how much of the content is in view. Only the box that scrolls
+       draws it — the popover (so a menu draws one, not two), a dialog
+       without a body, or a dialog's body — and the platform's own bar is
+       hidden, so scrolling by wheel, keyboard and touch is the platform's
+       and the drawing is this register's. It is painted as background
+       layers, which a scroll box keeps still while its content moves.
+
+       Enabled and disabled come from js/overlays.js `watchScrollbar`,
+       theme-neutral: `data-kp-popover-overflowing` while the content is taller
+       than the box, with the view's height, the part in view and the
+       progress as custom properties. Without it the bar is disabled: grey
+       embossed arrows, no thumb. With it the arrows are ink and the thumb
+       is drawn; the same module makes a press on an arrow scroll a line,
+       on the track a page, and on the thumb a drag, from the three sizes
+       declared here.
+
+       Why not the platform's scrollbar styled: firefox — Kenny's browser —
+       styles only a scrollbar's two colours and its width, never its
+       arrows, and chromium stops reading ::-webkit-scrollbar the moment
+       `scrollbar-color` is set, which this register sets on the root. */
+    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
+        --kp-scrollbar-size: 16px;
+        --kp-scrollbar-button: 16px;
+        --kp-scrollbar-ink: var(--border);
+        --kp-scrollbar-emboss: var(--popover);
+        --kp-scrollbar-up:
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 8px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 0px) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 7px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 1px) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 6px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 2px) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 5px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 3px) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 7px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 1px) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 6px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 2px) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 5px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 3px) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 4px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 4px) /
+                7px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top calc(var(--kp-scrollbar-inset) + 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 16px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat;
+        --kp-scrollbar-down:
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 5px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 0px
+                ) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 6px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 1px
+                ) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 7px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 2px
+                ) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 8px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 3px
+                ) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 4px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 1px
+                ) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 5px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 2px
+                ) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 6px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 3px
+                ) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 7px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 4px
+                ) /
+                1px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) bottom
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) bottom
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) bottom calc(var(--kp-scrollbar-inset) + 1px) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 16px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat;
+        --kp-scrollbar-track:
+            linear-gradient(to left, transparent 0 calc(var(--kp-scrollbar-inset) + 16px), var(--popover) calc(var(--kp-scrollbar-inset) + 16px)),
+            conic-gradient(var(--popover) 0 25%, var(--card) 0 50%, var(--popover) 0 75%, var(--card) 0) 0 0 / 2px 2px;
+        --kp-scrollbar-thumb-paint:
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-thumb-top) + var(--kp-scrollbar-thumb) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top calc(var(--kp-scrollbar-thumb-top) + 1px) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-thumb-top) + var(--kp-scrollbar-thumb) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 16px
+                var(--kp-scrollbar-thumb) no-repeat;
+        scrollbar-width: none;
+        background: var(--kp-scrollbar-up), var(--kp-scrollbar-down), var(--kp-scrollbar-track), var(--kp-scrollbar-ground);
+    }
+
+    /* A popover's bar sits inside its two-pixel bevel, and its words keep
+       four pixels off the bar. A dialog's padding already has the room. */
+    [data-theme='retro'] .kp-popover {
+        --kp-scrollbar-inset: 2px;
+        --kp-scrollbar-ground: var(--popover);
+        padding-inline-end: calc(0.25rem + 18px);
+    }
+
+    [data-theme='retro'] .kp-popover.kp-tooltip {
+        padding-inline-end: calc(0.5rem + 18px);
+    }
+
+    [data-theme='retro'] .kp-dialog {
+        --kp-scrollbar-inset: 0px;
+        --kp-scrollbar-ground: var(--popover);
+    }
+
+    [data-theme='retro'] .kp-dialog__body {
+        --kp-scrollbar-inset: 0px;
+        --kp-scrollbar-ground: transparent;
+        padding-inline-end: 20px;
+    }
+
+    /* The three windows whose only answer was that broken selector list.
+       Square, as every window here is; their grounds stay the ones they were
+       approved with. A menu is the popover's list and draws no bar of its
+       own, a confirmation is a dialog and draws the dialog's, a toast
+       never scrolls and draws none. */
     [data-theme='retro'] .kp-menu,
-    [data-theme='retro'] .kp-toast,
-    [data-theme='retro'] .kp-tooltip,
     [data-theme='retro'] .kp-confirm,
-    [data-theme='retro'] .kp-datepicker__panel,
+    [data-theme='retro'] .kp-toast {
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Enabled: ink arrows and the thumb. The thumb is at least eight pixels
+       long, as the platform's is, and both lengths are whole pixels. */
+    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
+        --kp-scrollbar-ink: var(--foreground);
+        --kp-scrollbar-emboss: transparent;
+        --kp-scrollbar-thumb: round(
+            down,
+            max(8px, calc((var(--kp-scroll-view) - 2 * var(--kp-scrollbar-inset) - 32px) * var(--kp-scroll-ratio))),
+            1px
+        );
+        --kp-scrollbar-thumb-top: round(
+            calc(
+                var(--kp-scrollbar-inset) + 16px + (var(--kp-scroll-view) - 2 * var(--kp-scrollbar-inset) - 32px - var(--kp-scrollbar-thumb)) *
+                    var(--kp-scroll-progress)
+            ),
+            1px
+        );
+        background:
+            var(--kp-scrollbar-up), var(--kp-scrollbar-down), var(--kp-scrollbar-thumb-paint), var(--kp-scrollbar-track), var(--kp-scrollbar-ground);
+    }
 
     /* The combo button the demo paints [S49, A12]: `appearance: none` and
        a raised square with the ink arrow on it. KT8 kept the platform
@@ -1848,9 +2180,17 @@
     /* ── The side navigation [feat-nav-3] ────────────────────────────
        Everything in this theme is a window on a desktop, and a column of
        links is the one part of that desktop that was always a list box:
-       sunken, with the selection painted edge to edge. */
+       sunken, with the selection painted edge to edge.
+
+       Its ground is the menu strip's (Kenny's retro notes, 2026-09-15,
+       navigation.html#app-shell: "the sidebar should not be so dark, should
+       be same as the top navbar"; #sidenav-over: "too dark"). It was
+       `--input`, the 38% grey of a field's well, and the ink on it measured
+       2.81:1 in firefox — a channel of 26 on a ground of 97, under the 4.5 of
+       DI3 — where the bar's own ground, `--background`, carries the same ink
+       at 9.46:1. */
     [data-theme='retro'] .kp-sidenav {
-        --kp-sidenav-surface: var(--input);
+        --kp-sidenav-surface: var(--background);
         --kp-sidenav-list-pad: 0.15rem;
         --kp-sidenav-gap: 0;
         border: 2px solid;
@@ -2023,5 +2363,18 @@
     [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         background: var(--primary);
         color: var(--primary-foreground);
+    }
+
+    /* ── The pressed control's own face, hidden [retro notes 2026-09-15] ──
+       Last in the file on purpose: every rule above that gives a button
+       its ground uses the `background` shorthand, which resets
+       `background-clip`, and a destructive or toast button pressed showed
+       its own ground one pixel outside the face `::before` repaints. See
+       the pressed state under "Buttons". */
+    [data-theme='retro'] .kp-button:active:not(:disabled),
+    [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+        background-clip: text;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
     }
 }

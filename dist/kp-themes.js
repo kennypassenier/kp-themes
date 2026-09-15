@@ -1215,6 +1215,8 @@ __export(overlays_exports, {
   ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
   DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
   DISMISS_OWNED: () => DISMISS_OWNED,
+  SCROLL_BOXES: () => SCROLL_BOXES,
+  SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
   TABS_OVERFLOW: () => TABS_OVERFLOW,
   TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
   TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
@@ -1224,6 +1226,7 @@ __export(overlays_exports, {
   TOOLTIP_OWNED: () => TOOLTIP_OWNED,
   attachDialogs: () => attachDialogs,
   attachDismissals: () => attachDismissals,
+  attachScrollbars: () => attachScrollbars,
   attachTabs: () => attachTabs,
   attachTooltips: () => attachTooltips,
   closeLabel: () => closeLabel,
@@ -1231,6 +1234,7 @@ __export(overlays_exports, {
   selectTab: () => selectTab,
   toast: () => toast,
   toastRegion: () => toastRegion,
+  watchScrollbar: () => watchScrollbar,
   watchTabOverflow: () => watchTabOverflow
 });
 var TOAST_MS = 5e3;
@@ -1600,6 +1604,125 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
   }
   return () => {
     for (const c of cleanups) c();
+  };
+}
+var SCROLL_OVERFLOW = "data-kp-popover-overflowing";
+var SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
+function watchScrollbar(box) {
+  const PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
+  const measure = () => {
+    const view = box.clientHeight;
+    const size = box.scrollHeight;
+    const over = view > 0 && size > view + 1;
+    box.toggleAttribute(SCROLL_OVERFLOW, over);
+    if (!over) {
+      for (const p of PROPS) box.style.removeProperty(p);
+      return;
+    }
+    box.style.setProperty("--kp-scroll-view", `${view}px`);
+    box.style.setProperty("--kp-scroll-ratio", (view / size).toFixed(4));
+    box.style.setProperty("--kp-scroll-progress", Math.min(1, Math.max(0, box.scrollTop / (size - view))).toFixed(4));
+  };
+  const length = (name) => parseFloat(getComputedStyle(box).getPropertyValue(name));
+  const onPointerDown = (event) => {
+    const bar = length("--kp-scrollbar-size");
+    if (event.button !== 0 || !(bar > 0)) return;
+    const inset = length("--kp-scrollbar-inset") || 0;
+    const rect = box.getBoundingClientRect();
+    const right = rect.left + box.clientLeft + box.clientWidth - inset;
+    const top = rect.top + box.clientTop + inset;
+    const bottom = rect.top + box.clientTop + box.clientHeight - inset;
+    if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
+    event.preventDefault();
+    if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
+    const button = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
+    const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
+    if (event.clientY < top + button) box.scrollTop -= line;
+    else if (event.clientY > bottom - button) box.scrollTop += line;
+    else {
+      const track = bottom - top - 2 * button;
+      const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
+      const travel = track - thumb;
+      const range = box.scrollHeight - box.clientHeight;
+      const start = top + button + travel * (box.scrollTop / range);
+      if (event.clientY < start) box.scrollTop -= box.clientHeight;
+      else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
+      else if (travel > 0) {
+        const from = { y: event.clientY, scroll: box.scrollTop };
+        const onMove = (move) => {
+          box.scrollTop = from.scroll + (move.clientY - from.y) / travel * range;
+        };
+        const onUp = () => {
+          box.removeEventListener("pointermove", onMove);
+          box.removeEventListener("pointerup", onUp);
+          box.removeEventListener("pointercancel", onUp);
+        };
+        box.setPointerCapture?.(event.pointerId);
+        box.addEventListener("pointermove", onMove);
+        box.addEventListener("pointerup", onUp);
+        box.addEventListener("pointercancel", onUp);
+      }
+    }
+    measure();
+  };
+  measure();
+  box.addEventListener("scroll", measure, { passive: true });
+  box.addEventListener("pointerdown", onPointerDown);
+  let resize = null;
+  let mutation = null;
+  if (typeof ResizeObserver !== "undefined") {
+    resize = new ResizeObserver(measure);
+    const observe = () => {
+      resize?.disconnect();
+      resize?.observe(box);
+      for (const child of box.children) resize?.observe(child);
+    };
+    observe();
+    mutation = new MutationObserver(() => {
+      observe();
+      measure();
+    });
+    mutation.observe(box, { childList: true });
+  }
+  return () => {
+    resize?.disconnect();
+    mutation?.disconnect();
+    box.removeEventListener("scroll", measure);
+    box.removeEventListener("pointerdown", onPointerDown);
+    box.removeAttribute(SCROLL_OVERFLOW);
+    for (const p of PROPS) box.style.removeProperty(p);
+  };
+}
+var scrollbarsWatched = /* @__PURE__ */ new WeakSet();
+function attachScrollbars(root = document) {
+  const watched = /* @__PURE__ */ new Map();
+  const scan = (scope) => {
+    const found = [...scope.querySelectorAll(SCROLL_BOXES)];
+    if (scope instanceof Element && scope.matches(SCROLL_BOXES)) found.push(scope);
+    for (const el of found) {
+      const box = (
+        /** @type {HTMLElement} */
+        el
+      );
+      if (watched.has(box) || scrollbarsWatched.has(box)) continue;
+      scrollbarsWatched.add(box);
+      const stop = watchScrollbar(box);
+      watched.set(box, () => {
+        stop();
+        scrollbarsWatched.delete(box);
+      });
+    }
+  };
+  scan(root);
+  const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver((records) => {
+    for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
+  });
+  const target = root instanceof Document ? root.documentElement : root;
+  if (observer && target instanceof Node) observer.observe(target, { childList: true, subtree: true });
+  return () => {
+    observer?.disconnect();
+    for (const stop of watched.values()) stop();
+    watched.clear();
   };
 }
 var closeLabel = () => getStrings().close;
@@ -9835,6 +9958,7 @@ function attachAll(root = document) {
     attachDialogs(root),
     attachDismissals(root),
     attachTooltips(root),
+    attachScrollbars(root),
     attachTabs(root),
     attachThemePickers(root),
     attachComboboxes(root),
@@ -10257,6 +10381,8 @@ export {
   ROOT_ATTRIBUTE,
   ROUTINES,
   RUN_EVENT,
+  SCROLL_BOXES,
+  SCROLL_OVERFLOW,
   SELECT_EVENT,
   SERVER_DEBOUNCE_MS,
   SIDENAV_MODE_EVENT,
@@ -10317,6 +10443,7 @@ export {
   attachNavToggles,
   attachPalettes,
   attachPatterns,
+  attachScrollbars,
   attachSelect,
   attachSelects,
   attachSidenavs,
@@ -10446,6 +10573,7 @@ export {
   upload,
   upload_exports as uploadExports,
   visibleItems,
+  watchScrollbar,
   watchScrolled,
   watchTabOverflow,
   wizard,

@@ -193,8 +193,8 @@ export const PACKAGE_TOKENS = [
  * @type {Record<string, string>}
  */
 export const MAY_KEEP = {
-    "retro-register.css [data-theme='retro'] .kp-button:active:not(:disabled) padding-block":
-        'the pressed label steps one pixel down, as the original did: a pixel of block padding moved from the bottom to the top of a box that centres its label, so the box keeps its height.',
+    // The button's own entry went on 2026-09-15 (Kenny's retro notes): its
+    // pressed step is painted now, not padded, so it keeps no block metric.
     // scope-89: "Dezelfde uitzondering als de knop".
     "retro-register.css [data-theme='retro'] .kp-nav__link--cta:active padding-block":
         "the pressed call to action steps one pixel down, as the button does and as the original did: a pixel of the package's block padding moved from the bottom to the top, so the link keeps its height.",
