@@ -130,7 +130,7 @@
                 ".github/workflows/pages.yml"
             ],
             "hash": "36a1cfb05e14da541d130dac0f2a7da5b0277066adea7f44dc1beff0dd0af3b1",
-            "doc": "111136e4c89c7f14d1add1c7109a709d2fcc70ce9adcc892bc90e93c63016847",
+            "doc": "851958c02ca034ad9c69d2d39b9f07da886b78a2b8acee6a1e111a843941cc2e",
             "files": {
                 ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",

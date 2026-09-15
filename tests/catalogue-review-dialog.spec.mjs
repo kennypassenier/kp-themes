@@ -6,7 +6,7 @@
 // at its first step, because no page had a "Review in a dialog" button.
 
 import { expect, test } from '@playwright/test';
-import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 
 test.describe.configure({ timeout: 120_000 });
@@ -298,5 +298,213 @@ test(
         const focused = page.locator(':focus');
         await expect(focused).toHaveAttribute('data-cat-dialog-block', '');
         await expect(focused).toBeInViewport();
+    },
+);
+
+/* ------------------------------------------------------------ fixed actions, note in the look frame */
+
+// Kenny, 2026-09-15, reviewing in FireDragon [scope-92]: the verdict buttons
+// moved from block to block, so a second click landed elsewhere; and a long
+// review note took the room of the "Look at" text. The buttons now keep one
+// place in the dialog whatever the side holds, and the note sits at the top
+// of the look's own scrolling frame.
+//
+// Red run first, on 9a833da0 in firefox, before the change: every test failed.
+// The buttons sat at y 676.4 (1440x900) and 505.4 (1280x720) on most blocks;
+// the long review note pushed them to 1579.6 and 1570.6, below the dialog, a
+// refusal on that block to 1648.6 and 1639.6, and a verdict's message lifted
+// them by 19.2 px. The note sat outside the look's frame.
+
+const SHORT_NOTE = { rejected: 'The last row is cut off.', change: 'The scroll region now reaches the last row.', given: '2026-09-15' };
+
+/** Review notes for two blocks of the tables page: a short one (in four themes) and one long enough to fill the side. */
+const NOTES = {
+    'table--long': { formal: SHORT_NOTE, dark: SHORT_NOTE, nostromo: SHORT_NOTE, 'shade-light': SHORT_NOTE },
+    'table--datatable-sticky': {
+        formal: {
+            rejected: 'Slivers of row text show above the header row while scrolling. '.repeat(12),
+            change: 'The header ground reaches two pixels higher, so no row shows through. '.repeat(14),
+            commit: '1b9c72bd',
+            given: '2026-09-15',
+        },
+    },
+};
+
+const BUTTONS = [
+    '[data-cat-dialog-go="-1"]',
+    '[data-cat-dialog-go="1"]',
+    '[data-cat-dialog-verdict="approved"]',
+    '[data-cat-dialog-verdict="rejected"]',
+];
+
+/** The four action buttons' rects, the block's title, and what the side holds. */
+const readActions = (page) =>
+    dialogOf(page).evaluate((el, selectors) => {
+        const rect = (s) => {
+            const r = /** @type {HTMLElement} */ (el.querySelector(s)).getBoundingClientRect();
+            return [r.x, r.y, r.width, r.height].map((n) => Math.round(n * 10) / 10).join(',');
+        };
+        const refused = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-refused]'));
+        return {
+            title: el.querySelector('[data-cat-dialog-title]')?.textContent ?? '',
+            rects: selectors.map(rect).join(' | '),
+            note: Boolean(el.querySelector('[data-cat-dialog-review-note]:not([hidden])')),
+            refused: !refused.hidden,
+        };
+    }, BUTTONS);
+
+test(
+    'the verdict and move buttons keep the same rects over every block, with a review note, a refusal and a verdict message [scope-92]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, context }) => {
+        await useRegister(context, {}, NOTES);
+        for (const [width, height] of [
+            [1440, 900],
+            [1280, 720],
+        ]) {
+            await openPage(page, '/catalogue/table.html', { width, height });
+            await page.locator('.cat-bar [data-cat-dialog-open]').click();
+            await expect(dialogOf(page)).toBeVisible();
+            // The opening animation of a theme scales the dialog for its first frames.
+            await page.waitForTimeout(400);
+            const seen = [];
+            for (let i = 0; i < 17; i += 1) {
+                if (i) await page.keyboard.press('ArrowRight');
+                await expect(noteOf(page)).toBeFocused();
+                seen.push(await readActions(page));
+                if (i === 2 || i === 6) {
+                    // The refusal of an empty rejection, shown under the note.
+                    await page.keyboard.press('ArrowDown');
+                    await expect(dialogOf(page).locator('[data-cat-dialog-refused]')).toBeVisible();
+                    seen.push(await readActions(page));
+                }
+            }
+            // A verdict by mouse: the message it leaves, and the next block.
+            await dialogOf(page).locator('[data-cat-dialog-verdict="approved"]').click();
+            await expect(dialogOf(page).locator('[data-cat-dialog-live]')).toHaveText(/^Approved: /);
+            seen.push(await readActions(page));
+            expect(new Set(seen.map((s) => s.title)).size, 'different blocks').toBeGreaterThanOrEqual(10);
+            expect(
+                seen.some((s) => s.note),
+                'a block with a review note',
+            ).toBe(true);
+            expect(
+                seen.some((s) => s.refused),
+                'a refusal shown',
+            ).toBe(true);
+            for (const s of seen) expect(s.rects, `${s.title} (note ${s.note}, refused ${s.refused})`).toBe(seen[0].rects);
+            await page.keyboard.press('Escape');
+        }
+    },
+);
+
+/** The review note and the look text in the dialog, and the frame that scrolls them. */
+const readFrame = (page) =>
+    dialogOf(page).evaluate((el) => {
+        const note = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-review-note]'));
+        const look = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-look]'));
+        /** @param {Element | null} node */
+        const scroller = (node) => {
+            for (let at = node?.parentElement; at && at !== el; at = at.parentElement) {
+                if (/(auto|scroll)/.test(getComputedStyle(at).overflowY)) return at;
+            }
+            return null;
+        };
+        const frame = scroller(note);
+        const frameBox = frame?.getBoundingClientRect();
+        const noteBox = note.getBoundingClientRect();
+        const noteText = /** @type {HTMLElement} */ (note.querySelector('[data-cat-dialog-review-rejected]'));
+        /** @param {string} value an rgb() or rgba() colour */
+        const luminance = (value) => {
+            const [r, g, b] = (value.match(/[\d.]+/g) ?? []).slice(0, 3).map((n) => {
+                const c = Number(n) / 255;
+                return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        };
+        const [light, dark] = [luminance(getComputedStyle(noteText).color), luminance(getComputedStyle(note).backgroundColor)].sort((a, b) => b - a);
+        return {
+            ground: getComputedStyle(note).backgroundColor,
+            contrast: Math.round(((light + 0.05) / (dark + 0.05)) * 100) / 100,
+            visible: !note.hidden && noteBox.height > 0,
+            sameFrame: Boolean(frame) && frame === scroller(look),
+            noteFirst: Boolean(note.compareDocumentPosition(look) & Node.DOCUMENT_POSITION_FOLLOWING),
+            lookHead: look.textContent?.trim().slice(0, 8),
+            scrollTop: frame?.scrollTop ?? -1,
+            noteTopInFrame: Boolean(frameBox) && noteBox.top >= (frameBox?.top ?? 0) - 0.5 && noteBox.top < (frameBox?.bottom ?? 0),
+            scrolls: frame ? frame.scrollHeight > frame.clientHeight : false,
+            font: [getComputedStyle(noteText).fontFamily, getComputedStyle(noteText).fontSize],
+            lookFont: [getComputedStyle(look).fontFamily, getComputedStyle(look).fontSize],
+            color: getComputedStyle(noteText).color,
+            lookColor: getComputedStyle(look).color,
+        };
+    });
+
+test(
+    'the review note stands before "Look at:" in the same scrolling frame, at its top when a block opens, in the look\'s font in another colour [scope-92]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, context }) => {
+        await useRegister(context, {}, NOTES);
+        await openPage(page, '/catalogue/table.html');
+        await page.locator('#long [data-cat-dialog-block]').click();
+        await expect(titleOf(page)).toHaveText(/Long text in a cell/);
+        const short = await readFrame(page);
+        expect(short.visible, 'the note shows').toBe(true);
+        expect(short.sameFrame, 'note and look scroll in one frame').toBe(true);
+        expect(short.noteFirst, 'the note comes first').toBe(true);
+        expect(short.lookHead).toBe('Look at:');
+        expect(short.scrollTop).toBe(0);
+        expect(short.noteTopInFrame, 'the note is in view at open').toBe(true);
+        expect(short.font, 'same family and size as the look').toEqual(short.lookFont);
+        expect(short.color, 'a colour of its own').not.toBe(short.lookColor);
+
+        // The ink on its ground reads in light and dark themes alike.
+        for (const theme of ['formal', 'dark', 'nostromo', 'shade-light']) {
+            await page.keyboard.press('Escape');
+            await page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
+            await waitForJudging(page);
+            await page.locator('#long [data-cat-dialog-block]').click();
+            const reading = await readFrame(page);
+            expect(reading.visible, theme).toBe(true);
+            expect(reading.ground, `${theme}: the note has a ground`).toMatch(/^rgb/);
+            expect(reading.contrast, `${theme}: ${reading.color} on ${reading.ground}`).toBeGreaterThanOrEqual(4.5);
+            expect(reading.color, theme).not.toBe(reading.lookColor);
+        }
+    },
+);
+
+test(
+    'a long review note scrolls in the frame with the look, opens at the top on every block and moves no button [scope-92]',
+    { tag: ['@component:catalogue'] },
+    async ({ page, context }) => {
+        await useRegister(context, {}, NOTES);
+        for (const [width, height] of [
+            [1440, 900],
+            [1280, 720],
+        ]) {
+            await openPage(page, '/catalogue/table.html', { width, height });
+            await page.locator('#datatable-sticky [data-cat-dialog-block]').click();
+            await expect(titleOf(page)).toHaveText(/a header that stays/);
+            const long = await readFrame(page);
+            expect(long.scrolls, 'a long note makes the frame scroll').toBe(true);
+            expect(long.scrollTop).toBe(0);
+            expect(long.noteTopInFrame).toBe(true);
+            const before = await readActions(page);
+            await dialogOf(page).evaluate((el) => {
+                const look = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-look]'));
+                let at = look.parentElement;
+                while (at && !/(auto|scroll)/.test(getComputedStyle(at).overflowY)) at = at.parentElement;
+                at?.scrollBy(0, 200);
+            });
+            expect((await readFrame(page)).scrollTop, 'the frame scrolls').toBeGreaterThan(0);
+            expect((await readActions(page)).rects, 'scrolling the frame moves no button').toBe(before.rects);
+            await page.keyboard.press('ArrowLeft');
+            await page.keyboard.press('ArrowRight');
+            await expect(titleOf(page)).toHaveText(/a header that stays/);
+            const again = await readFrame(page);
+            expect(again.scrollTop, 'back at the top when the block opens again').toBe(0);
+            expect(again.noteTopInFrame).toBe(true);
+            await page.keyboard.press('Escape');
+        }
     },
 );

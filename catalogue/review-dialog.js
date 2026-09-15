@@ -6,6 +6,13 @@
 // back, so its behaviour stays attached; the stage scrolls and never gives its
 // size back to the dialog.
 //
+// The side is a body over a footer (Kenny, 2026-09-15 [scope-92]). The body
+// holds one scrolling frame — the block's review note first, then "Look at" —
+// the note field and the live message, and trades room inside itself. The
+// footer holds the four buttons and the keys, pinned to the bottom, so a
+// button stays under the mouse from block to block whatever the note, the
+// look, a refusal or a message take.
+//
 // Every new item puts the cursor in the note, at the end of any draft. Up
 // approves and Down rejects, a rejection only with text in the note (the
 // refusal of judging.js). Left and Right move to the previous or next block on
@@ -64,21 +71,31 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
         <div class="cat-review-dialog__grid">
             <div class="cat-review-dialog__stage" data-cat-dialog-stage></div>
             <div class="cat-review-dialog__side" data-cat-dialog-chrome>
-                <div class="cat-look" data-cat-dialog-look></div>
-                <div data-cat-dialog-review-note></div>
-                <div class="kp-field cat-review-dialog__field">
-                    <label class="kp-field__label" for="cat-review-dialog-note" data-cat-dialog-note-label>Note</label>
-                    <textarea class="kp-field__input kp-field__input--multiline" id="cat-review-dialog-note" rows="4" aria-describedby="cat-review-dialog-keys" data-cat-dialog-note></textarea>
-                    <p class="kp-field__error" id="cat-review-dialog-refused" role="alert" data-cat-dialog-refused hidden></p>
+                <div class="cat-review-dialog__body">
+                    <div class="cat-look cat-review-dialog__frame" data-cat-dialog-frame>
+                        <div class="cat-review-dialog__review-note" role="note" data-cat-dialog-review-note hidden>
+                            <p><b>Rejected — what changed</b> <span data-cat-dialog-review-meta></span></p>
+                            <p><b>Your note:</b> <span data-cat-dialog-review-rejected></span></p>
+                            <p><b>What changed:</b> <span data-cat-dialog-review-change></span></p>
+                        </div>
+                        <div data-cat-dialog-look></div>
+                    </div>
+                    <div class="kp-field cat-review-dialog__field">
+                        <label class="kp-field__label" for="cat-review-dialog-note" data-cat-dialog-note-label>Note</label>
+                        <textarea class="kp-field__input kp-field__input--multiline" id="cat-review-dialog-note" rows="4" aria-describedby="cat-review-dialog-keys" data-cat-dialog-note></textarea>
+                        <p class="kp-field__error" id="cat-review-dialog-refused" role="alert" data-cat-dialog-refused hidden></p>
+                    </div>
+                    <p class="cat-review-dialog__meta cat-review-dialog__live" role="status" aria-live="polite" data-cat-dialog-live></p>
                 </div>
-                <div class="cat-review-dialog__actions">
-                    <button type="button" class="kp-button" data-cat-dialog-go="-1">← Previous</button>
-                    <button type="button" class="kp-button" data-cat-dialog-go="1">Next →</button>
-                    <button type="button" class="kp-button kp-button--primary" data-cat-dialog-verdict="approved">↑ Approve</button>
-                    <button type="button" class="kp-button kp-button--destructive" data-cat-dialog-verdict="rejected">↓ Not approved</button>
+                <div class="cat-review-dialog__footer">
+                    <div class="cat-review-dialog__actions">
+                        <button type="button" class="kp-button" data-cat-dialog-go="-1">← Previous</button>
+                        <button type="button" class="kp-button" data-cat-dialog-go="1">Next →</button>
+                        <button type="button" class="kp-button kp-button--primary" data-cat-dialog-verdict="approved">↑ Approve</button>
+                        <button type="button" class="kp-button kp-button--destructive" data-cat-dialog-verdict="rejected">↓ Not approved</button>
+                    </div>
+                    <p class="cat-review-dialog__meta" id="cat-review-dialog-keys">${KEYS_TEXT}</p>
                 </div>
-                <p class="cat-review-dialog__meta" id="cat-review-dialog-keys">${KEYS_TEXT}</p>
-                <p class="cat-review-dialog__meta" role="status" aria-live="polite" data-cat-dialog-live></p>
             </div>
         </div>`;
     document.body.append(dialog);
@@ -89,6 +106,8 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
     refused.textContent = refusal;
     const stage = $('[data-cat-dialog-stage]');
     const live = $('[data-cat-dialog-live]');
+    const frame = $('[data-cat-dialog-frame]');
+    const reviewNote = $('[data-cat-dialog-review-note]');
 
     // The page's way in: one button in its bar, one on every block.
     const bar = document.querySelector('.cat-bar');
@@ -148,6 +167,21 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
         $('[data-cat-dialog-note-label]').textContent = `Note for ${themeLabel(theme)}`;
     }
 
+    /**
+     * The block's review note, as judging.js just wrote it into the panel for
+     * the theme on screen, at the top of the look's frame [scope-92]: in the
+     * look's own font, so a long note scrolls with the look instead of taking
+     * its room.
+     */
+    function showReviewNote(item) {
+        const source = item.reviewNote;
+        const text = (selector) => (source.hidden ? '' : (source.querySelector(selector)?.textContent ?? ''));
+        reviewNote.hidden = source.hidden;
+        $('[data-cat-dialog-review-meta]').textContent = text('[data-cat-review-note-meta]');
+        $('[data-cat-dialog-review-rejected]').textContent = text('[data-cat-review-note-rejected]');
+        $('[data-cat-dialog-review-change]').textContent = text('[data-cat-review-note-change]');
+    }
+
     /** Put `item` in the dialog; the one there goes back to its place. */
     function show(item) {
         if (current && current !== item) putBack(current);
@@ -161,12 +195,13 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
         stage.scrollTo(0, 0);
         const look = item.entry.root.querySelector(':scope > .cat-look');
         $('[data-cat-dialog-look]').innerHTML = look?.innerHTML ?? '';
-        $('[data-cat-dialog-look]').scrollTop = 0;
-        $('[data-cat-dialog-review-note]').replaceChildren(item.reviewNote.cloneNode(true));
         note.value = noteFor(item.entry.notePage, item.entry.noteBlock, themeOf(item));
         showRefusal(false);
         refresh();
+        showReviewNote(item);
         paint();
+        // Every block opens with its frame at the top: the note first.
+        frame.scrollTop = 0;
         // Every new item: the cursor in the note, at the end of any draft.
         note.focus({ preventScroll: true });
         note.setSelectionRange(note.value.length, note.value.length);
@@ -232,6 +267,7 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
         // None left: the dialog stays open on this block and says so.
         note.value = noteFor(item.entry.notePage, item.entry.noteBlock, themeOf(item));
         showRefusal(false);
+        showReviewNote(item);
         paint();
         live.textContent = endMessage(item);
     }

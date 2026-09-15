@@ -526,18 +526,65 @@
         display: none;
     }
 
+    /* The side is a body over a footer [scope-92]. The body trades room
+       inside itself — the frame shrinks when a refusal or a message shows —
+       and never gives any back to the footer, so the four buttons keep one
+       place for every block (measured before: a long review note pushed them
+       ~900 px down, out of the dialog; a verdict's message lifted them 19 px). */
     .cat-review-dialog__side {
         display: grid;
-        grid-template-rows: minmax(0, 1fr) auto auto auto auto auto;
+        grid-template-rows: minmax(0, 1fr) auto;
         gap: 0.75rem;
         min-block-size: 0;
         padding: 1rem;
         border-inline-start: 1px solid var(--border);
     }
 
-    .cat-review-dialog__side > .cat-look {
+    .cat-review-dialog__body {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto auto;
+        gap: 0.75rem;
+        min-block-size: 0;
+        overflow: hidden;
+    }
+
+    /* One frame for the review note and the look, the note first; the frame
+       scrolls and opens at its top. */
+    .cat-review-dialog__frame {
         margin: 0;
         overflow: auto;
+        overscroll-behavior: contain;
+    }
+
+    /* The note in the look's own font and size, in the theme's warning pair —
+       the ink and ground the package measures together — so it reads apart
+       from the look's muted text in every theme. */
+    .cat-review-dialog__review-note {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding: 0.45rem 0.6rem;
+        margin-block-end: 0.6rem;
+    }
+
+    .cat-review-dialog__review-note b {
+        color: inherit;
+    }
+
+    .cat-review-dialog__review-note p {
+        margin: 0;
+    }
+
+    .cat-review-dialog__review-note p + p {
+        margin-block-start: 0.35rem;
+    }
+
+    .cat-review-dialog__live:empty {
+        display: none;
+    }
+
+    .cat-review-dialog__footer {
+        display: grid;
+        gap: 0.5rem;
     }
 
     .cat-review-dialog__field {

@@ -51,6 +51,10 @@ theme its window plays, whatever the page wears [scope-86].
    move the cursor once it holds text, and after each verdict the next block
    still to judge comes in. Escape returns to the page. The dialog stores
    the same verdict, hash and note as the panel under the block [scope-90].
+   Its four buttons sit in a footer pinned to the bottom of the side column,
+   in the same place for every block; the block's review note, when it has
+   one, stands above "Look at" in one scrolling frame that opens at its top
+   [scope-92].
 2. Kenny copies the prompt and pastes it into the conversation. Its last
    block, `Verdict lines (hash version N):`, carries one line per verdict not
    yet in the register: `block key · theme · engine · verdict · hash`.
