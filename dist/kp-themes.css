@@ -19782,9 +19782,15 @@
         --kp-pixel:
             calc(-1 * var(--kp-line)) 0 0 0 var(--border-strong), var(--kp-line) 0 0 0 var(--border-strong),
             0 calc(-1 * var(--kp-line)) 0 0 var(--border-strong), 0 var(--kp-line) 0 0 var(--border-strong);
-        /* The marquee's hatch: a strip of the plate colour on the ink. */
-        --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28px);
-        --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28px);
+        /* The marquee's hatch: a strip of the plate colour on the ink. One
+           tile is --kp-hatch-tile wide and holds exactly one stripe period
+           along x: at -45deg a stripe period of tile / sqrt(2) across the
+           stripe (28.2843px for 40px) moves the stripe one whole tile along
+           the band, so a tile's right edge meets the next tile's left edge
+           with no seam. */
+        --kp-hatch-tile: 40px;
+        --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28.2843px);
+        --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28.2843px);
     }
 
     /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
@@ -19886,7 +19892,10 @@
     /* The divider: Future Pharmaceutical's marquee — a strip twice the
        band's width translated -50%, seamless, one cycle in 42 seconds,
        frozen under reduced motion. A hatch of the plate on the ink, the
-       second one the ink on the plate, running the other way. */
+       second one the ink on the plate, running the other way. The tile is
+       one stripe period, never the band's own width (which is no multiple
+       of the period, and left a seam where one tile ended), and the strip's
+       half is rounded up to whole tiles so the -50% loop lands on one. */
     [data-theme='brutalism'] [data-kp-divider] {
         display: block;
         position: relative;
@@ -19901,8 +19910,8 @@
         position: absolute;
         inset-block: 0;
         inset-inline-start: 0;
-        inline-size: 200%;
-        background: var(--kp-hatch) 0 0 / 50% 100% repeat-x;
+        inline-size: calc(2 * round(up, 100%, var(--kp-hatch-tile)));
+        background: var(--kp-hatch) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
     }
 
     [data-theme='brutalism'] [data-kp-divider='alt'] {
@@ -19910,7 +19919,7 @@
     }
 
     [data-theme='brutalism'] [data-kp-divider='alt']::before {
-        background: var(--kp-hatch-alt) 0 0 / 50% 100% repeat-x;
+        background: var(--kp-hatch-alt) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
     }
 
     /* ── The hero: paper, and the dot grid the base layer draws ───────── */
