@@ -67,6 +67,9 @@ export const PAGES = [
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
             { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
             { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
+            // The scope-25 gestures beside what ships [scope-100]: sepia's ink
+            // on a press and swelled rule, the shade pair's pointer light.
+            { href: 'research/scope25-gestures/demo.html', label: 'The scope-25 gestures beside what ships' },
         ],
     },
     {
